@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input_lines.c	5.3 (Berkeley) %G%"
+literal|"@(#)input_lines.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,8 +149,6 @@ name|int
 name|l_nn_max
 init|=
 name|nn_max
-decl_stmt|,
-name|l_jmp_flag
 decl_stmt|;
 name|char
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)r.c	5.3 (Berkeley) %G%"
+literal|"@(#)r.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,8 +538,6 @@ argument_list|(
 name|l_filename_read
 argument_list|)
 expr_stmt|;
-name|point
-label|:
 name|fclose
 argument_list|(
 name|l_fp

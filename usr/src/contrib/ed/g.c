@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)g.c	5.3 (Berkeley) %G%"
+literal|"@(#)g.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1393,15 +1393,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|ungetc
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|,
 name|inputt
 argument_list|)
 expr_stmt|;
-block|}
 name|GV_flag
 operator|=
 literal|0
