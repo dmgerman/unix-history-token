@@ -195,6 +195,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_MIRROR_SYNC_BLOCK_SIZE
+value|131072
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_MIRROR_BIO_FLAG_REGULAR
 value|0x01
 end_define
@@ -232,6 +239,10 @@ name|u_int
 name|ds_syncid
 decl_stmt|;
 comment|/* Disk's synchronization ID. */
+name|u_char
+modifier|*
+name|ds_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -250,18 +261,10 @@ modifier|*
 name|ds_geom
 decl_stmt|;
 comment|/* Synchronization geom. */
-name|size_t
-name|ds_block
-decl_stmt|;
-comment|/* Synchronization request size. */
 name|u_int
 name|ds_ndisks
 decl_stmt|;
 comment|/* Number of disks in SYNCHRONIZING 					   state. */
-name|uma_zone_t
-name|ds_zone
-decl_stmt|;
-comment|/* UMA zone for synchronization 					   blocks. */
 block|}
 struct|;
 end_struct
