@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_access[] = "@(#)access_.c	1.1";  *  * determine accessability of a file  *  * calling format:  *	integer access  *	ierror = access(filename, mode)  * where:  *	ierror will be 0 for successful access; an error number otherwise.  *	filename is a character string  *	mode is a character string which may include any combination of  *	'r', 'w', 'x', ' '. (' ' => test for existence)  */
+comment|/* char id_access[] = "@(#)access_.c	1.2";  *  * determine accessability of a file  *  * calling format:  *	integer access  *	ierror = access(filename, mode)  * where:  *	ierror will be 0 for successful access; an error number otherwise.  *	filename is a character string  *	mode is a character string which may include any combination of  *	'r', 'w', 'x', ' '. (' ' => test for existence)  */
 end_comment
 
 begin_include
@@ -51,6 +51,25 @@ name|m
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|namlen
+operator|>=
+sizeof|sizeof
+name|buf
+condition|)
+return|return
+operator|(
+call|(
+name|long
+call|)
+argument_list|(
+name|errno
+operator|=
+name|F_ERARG
+argument_list|)
+operator|)
+return|;
 name|g_char
 argument_list|(
 name|name
@@ -77,7 +96,7 @@ call|)
 argument_list|(
 name|errno
 operator|=
-name|F_ERARG
+name|ENOENT
 argument_list|)
 operator|)
 return|;
