@@ -403,7 +403,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"%d %s"
+argument_list|,
+name|__LINE__
 argument_list|,
 name|devstat_errbuf
 argument_list|)
