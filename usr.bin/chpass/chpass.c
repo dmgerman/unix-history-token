@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chpass.c,v 1.7 1996/02/23 16:08:56 wpaul Exp $"
+literal|"$Id: chpass.c,v 1.8 1996/05/25 01:05:17 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,6 +280,10 @@ modifier|*
 name|pw
 decl_stmt|,
 name|lpw
+decl_stmt|;
+name|char
+modifier|*
+name|username
 decl_stmt|;
 name|int
 name|ch
@@ -647,6 +651,12 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+name|username
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -856,7 +866,9 @@ if|if
 condition|(
 operator|!
 name|pw_mkdb
-argument_list|()
+argument_list|(
+name|username
+argument_list|)
 condition|)
 name|pw_error
 argument_list|(

@@ -62,7 +62,8 @@ name|pw_mkdb
 name|__P
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

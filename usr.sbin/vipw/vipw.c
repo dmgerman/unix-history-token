@@ -328,7 +328,13 @@ block|}
 if|if
 condition|(
 name|pw_mkdb
-argument_list|()
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 condition|)
 break|break;
 name|pw_prompt
