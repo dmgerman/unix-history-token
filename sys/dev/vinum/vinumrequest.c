@@ -145,18 +145,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|free_rqg
-parameter_list|(
-name|struct
-name|rqgroup
-modifier|*
-name|rqg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|find_alternate_sd
 parameter_list|(
@@ -4512,11 +4500,7 @@ decl_stmt|;
 comment|/* point to the request chain */
 if|if
 condition|(
-name|rqg
-operator|->
-name|rq
-operator|->
-name|rqg
+name|rqgc
 operator|==
 name|rqg
 condition|)
@@ -4536,19 +4520,51 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
+name|rqgc
+operator|->
+name|next
+operator|!=
+name|NULL
+operator|)
+comment|/* find the group */
+operator|&&
+operator|(
 name|rqgc
 operator|->
 name|next
 operator|!=
 name|rqg
+operator|)
 condition|)
-comment|/* find the group */
 name|rqgc
 operator|=
 name|rqgc
 operator|->
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|rqgc
+operator|->
+name|next
+operator|==
+name|NULL
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vinum deallocrqg: rqg %p not found in request %p\n"
+argument_list|,
+name|rqg
+operator|->
+name|rq
+argument_list|,
+name|rqg
+argument_list|)
+expr_stmt|;
+else|else
 name|rqgc
 operator|->
 name|next
@@ -4557,10 +4573,11 @@ name|rqg
 operator|->
 name|next
 expr_stmt|;
+comment|/* make the chain jump over us */
 block|}
 name|Free
 argument_list|(
-name|rqgc
+name|rqg
 argument_list|)
 expr_stmt|;
 block|}
