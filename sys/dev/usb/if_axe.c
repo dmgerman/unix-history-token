@@ -228,6 +228,12 @@ name|USB_PRODUCT_NETGEAR_FA120
 block|}
 block|,
 block|{
+name|USB_VENDOR_SYSTEMTALKS
+block|,
+name|USB_PRODUCT_SYSTEMTALKS_SGCX2UL
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
