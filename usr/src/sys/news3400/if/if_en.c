@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_en.c,v 4.300 91/06/09 06:25:54 root Rel41 $ SONY  *  *	@(#)if_en.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_en.c,v 4.300 91/06/09 06:25:54 root Rel41 $ SONY  *  *	@(#)if_en.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fix_machine_type.h>
 end_include
 
 begin_include
@@ -1230,19 +1224,6 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"_enxint: error (unit=%d)\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|es
 operator|->
 name|es_if
@@ -1250,24 +1231,10 @@ operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|collision
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"_enxint: collision (unit=%d)\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|es
 operator|->
 name|es_if
@@ -1275,7 +1242,6 @@ operator|.
 name|if_collisions
 operator|++
 expr_stmt|;
-block|}
 name|enstart
 argument_list|(
 operator|&
