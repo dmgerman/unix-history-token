@@ -5992,7 +5992,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|scp
+name|cur_console
 operator|->
 name|status
 operator|&
