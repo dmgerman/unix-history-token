@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.27 1999/11/13 06:18:02 assar Exp $"
+literal|"$Id: main.c,v 1.30 2000/11/15 22:56:35 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -99,11 +99,19 @@ name|autologin
 operator|=
 literal|1
 expr_stmt|;
+name|lineedit
+operator|=
+literal|1
+expr_stmt|;
 name|passivemode
 operator|=
 literal|0
 expr_stmt|;
 comment|/* passive mode not active */
+name|use_kerberos
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -115,7 +123,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dginptv"
+literal|"dgilnptvK"
 argument_list|)
 operator|)
 operator|!=
@@ -156,6 +164,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'l'
+case|:
+name|lineedit
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|autologin
@@ -185,12 +201,21 @@ name|verbose
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'K'
+case|:
+comment|/* Disable Kerberos authentication */
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ftp [-dginptv] [host [port]]\n"
+literal|"usage: ftp [-dgilnptvK] [host [port]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -608,17 +633,11 @@ begin_comment
 comment|/* char * tail(filename) 	char *filename; { 	char *s; 	 	while (*filename) { 		s = strrchr(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		*s = '\0'; 	} 	return (filename); } */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_READLINE
-end_ifndef
-
 begin_function
 specifier|static
 name|char
 modifier|*
-name|readline
+name|simple_readline
 parameter_list|(
 name|char
 modifier|*
@@ -692,6 +711,32 @@ return|return
 name|strdup
 argument_list|(
 name|buf
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_READLINE
+end_ifndef
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|readline
+parameter_list|(
+name|char
+modifier|*
+name|prompt
+parameter_list|)
+block|{
+return|return
+name|simple_readline
+argument_list|(
+name|prompt
 argument_list|)
 return|;
 block|}
@@ -789,9 +834,21 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|lineedit
+condition|)
 name|p
 operator|=
 name|readline
+argument_list|(
+literal|"ftp> "
+argument_list|)
+expr_stmt|;
+else|else
+name|p
+operator|=
+name|simple_readline
 argument_list|(
 literal|"ftp> "
 argument_list|)
@@ -802,6 +859,12 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|quit
 argument_list|(
 literal|0
@@ -809,6 +872,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|strlcpy
 argument_list|(
 name|line
@@ -821,6 +885,10 @@ name|line
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lineedit
+condition|)
 name|add_history
 argument_list|(
 name|p

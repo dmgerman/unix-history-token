@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: warnerr.c,v 1.8 1999/12/02 16:58:54 joda Exp $"
+literal|"$Id: warnerr.c,v 1.9 2000/07/25 09:54:05 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -58,6 +58,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|get_progname
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|__progname
+return|;
+block|}
+end_function
 
 begin_function
 name|void

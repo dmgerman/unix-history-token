@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cmds.c,v 1.36 1999/09/16 20:37:28 assar Exp $"
+literal|"$Id: cmds.c,v 1.41 2000/07/18 10:00:31 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1881,7 +1881,9 @@ function_decl|(
 modifier|*
 name|oldintr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 name|int
 name|ointer
@@ -2633,6 +2635,7 @@ if|if
 condition|(
 name|restart_point
 condition|)
+block|{
 if|if
 condition|(
 name|curtype
@@ -2648,7 +2651,9 @@ name|mode
 operator|=
 literal|"r+w"
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|curtype
@@ -2664,6 +2669,7 @@ name|mode
 operator|=
 literal|"w"
 expr_stmt|;
+block|}
 name|getit
 argument_list|(
 name|argc
@@ -3085,6 +3091,13 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
+name|time_t
+name|mtime
+init|=
+name|stbuf
+operator|.
+name|st_mtime
+decl_stmt|;
 name|overbose
 operator|=
 name|verbose
@@ -3182,9 +3195,7 @@ operator|=
 name|gmtime
 argument_list|(
 operator|&
-name|stbuf
-operator|.
-name|st_mtime
+name|mtime
 argument_list|)
 expr_stmt|;
 name|tm
@@ -5880,13 +5891,17 @@ argument_list|(
 operator|*
 name|old1
 argument_list|)
-argument_list|()
+argument_list|(
+name|int
+argument_list|)
 decl_stmt|,
 argument_list|(
 operator|*
 name|old2
 argument_list|)
-argument_list|()
+argument_list|(
+name|int
+argument_list|)
 decl_stmt|;
 name|char
 name|shellnam
@@ -7700,7 +7715,9 @@ function_decl|(
 modifier|*
 name|oldintr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 if|if
 condition|(

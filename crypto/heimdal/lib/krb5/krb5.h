@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: krb5.h,v 1.164 2000/02/06 07:40:57 assar Exp $ */
+comment|/* $Id: krb5.h,v 1.179 2000/12/15 17:11:12 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -153,71 +153,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-enum|enum
-name|krb5_cksumtype
-block|{
-name|CKSUMTYPE_NONE
-init|=
-literal|0
-block|,
-name|CKSUMTYPE_CRC32
-init|=
-literal|1
-block|,
-name|CKSUMTYPE_RSA_MD4
-init|=
-literal|2
-block|,
-name|CKSUMTYPE_RSA_MD4_DES
-init|=
-literal|3
-block|,
-name|CKSUMTYPE_DES_MAC
-init|=
-literal|4
-block|,
-name|CKSUMTYPE_DES_MAC_K
-init|=
-literal|5
-block|,
-name|CKSUMTYPE_RSA_MD4_DES_K
-init|=
-literal|6
-block|,
-name|CKSUMTYPE_RSA_MD5
-init|=
-literal|7
-block|,
-name|CKSUMTYPE_RSA_MD5_DES
-init|=
-literal|8
-block|,
-name|CKSUMTYPE_RSA_MD5_DES3
-init|=
-literal|9
-block|,
-comment|/*  CKSUMTYPE_SHA1		= 10,*/
-name|CKSUMTYPE_HMAC_SHA1_DES3
-init|=
-literal|12
-block|,
-name|CKSUMTYPE_SHA1
-init|=
-literal|1000
-block|,
-comment|/* correct value? */
-name|CKSUMTYPE_HMAC_MD5
-init|=
-operator|-
-literal|138
-block|,
-comment|/* unofficial microsoft number */
-name|CKSUMTYPE_HMAC_MD5_ENC
-init|=
-operator|-
-literal|1138
-comment|/* even more unofficial */
-block|}
+name|CKSUMTYPE
 name|krb5_cksumtype
 typedef|;
 end_typedef
@@ -282,11 +218,28 @@ literal|48
 block|,
 name|ETYPE_DES_CBC_NONE
 init|=
+operator|-
 literal|0x1000
 block|,
 name|ETYPE_DES3_CBC_NONE
 init|=
+operator|-
 literal|0x1001
+block|,
+name|ETYPE_DES_CFB64_NONE
+init|=
+operator|-
+literal|0x1002
+block|,
+name|ETYPE_DES_PCBC_NONE
+init|=
+operator|-
+literal|0x1003
+block|,
+name|ETYPE_DES3_CBC_NONE_IVEC
+init|=
+operator|-
+literal|0x1004
 block|}
 name|krb5_enctype
 typedef|;
@@ -294,25 +247,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-enum|enum
-name|krb5_preauthtype
-block|{
-name|KRB5_PADATA_NONE
-init|=
-literal|0
-block|,
-name|KRB5_PADATA_AP_REQ
-block|,
-name|KRB5_PADATA_TGS_REQ
-init|=
-literal|1
-block|,
-name|KRB5_PADATA_ENC_TIMESTAMP
-init|=
-literal|2
-block|,
-name|KRB5_PADATA_ENC_SECURID
-block|}
+name|PADATA_TYPE
 name|krb5_preauthtype
 typedef|;
 end_typedef
@@ -405,7 +340,42 @@ comment|/* Data which is defined in some specification outside of        Kerbero
 name|KRB5_KU_OTHER_CKSUM
 init|=
 literal|17
+block|,
 comment|/* Data which is defined in some specification outside of        Kerberos to be checksummed using an RFC1510 checksum type. */
+name|KRB5_KU_KRB_ERROR
+init|=
+literal|18
+block|,
+comment|/* Krb-error checksum */
+name|KRB5_KU_AD_KDC_ISSUED
+init|=
+literal|19
+block|,
+comment|/* AD-KDCIssued checksum */
+name|KRB5_KU_MANDATORY_TICKET_EXTENSION
+init|=
+literal|20
+block|,
+comment|/* Checksum for Mandatory Ticket Extensions */
+name|KRB5_KU_AUTH_DATA_TICKET_EXTENSION
+init|=
+literal|21
+block|,
+comment|/* Checksum in Authorization Data in Ticket Extensions */
+name|KRB5_KU_USAGE_SEAL
+init|=
+literal|22
+block|,
+comment|/* seal in GSSAPI krb5 mechanism */
+name|KRB5_KU_USAGE_SIGN
+init|=
+literal|23
+block|,
+comment|/* sign in GSSAPI krb5 mechanism */
+name|KRB5_KU_USAGE_SEQ
+init|=
+literal|24
+comment|/* SEQ in GSSAPI krb5 mechanism */
 block|}
 name|krb5_key_usage
 typedef|;
@@ -418,11 +388,11 @@ name|krb5_salttype
 block|{
 name|KRB5_PW_SALT
 init|=
-name|pa_pw_salt
+name|KRB5_PADATA_PW_SALT
 block|,
 name|KRB5_AFS3_SALT
 init|=
-name|pa_afs3_salt
+name|KRB5_PADATA_AFS3_SALT
 block|}
 name|krb5_salttype
 typedef|;
@@ -585,8 +555,26 @@ end_struct_decl
 begin_define
 define|#
 directive|define
+name|KRB5_DEFAULT_CCFILE_ROOT
+value|"/tmp/krb5cc_"
+end_define
+
+begin_define
+define|#
+directive|define
 name|KRB5_DEFAULT_CCROOT
-value|"FILE:/tmp/krb5cc_"
+value|"FILE:" KRB5_DEFAULT_CCFILE_ROOT
+end_define
+
+begin_define
+define|#
+directive|define
+name|KRB5_ACCEPT_NULL_ADDRESSES
+parameter_list|(
+name|C
+parameter_list|)
+define|\
+value|krb5_config_get_bool_default((C), NULL, TRUE, 			 \ 				 "libdefaults", "accept_null_addresses", \ 				 NULL)
 end_define
 
 begin_typedef
@@ -1348,40 +1336,15 @@ modifier|*
 name|kt_types
 decl_stmt|;
 comment|/* registered keytab types */
+specifier|const
+name|char
+modifier|*
+name|date_fmt
+decl_stmt|;
 block|}
 name|krb5_context_data
 typedef|;
 end_typedef
-
-begin_enum
-enum|enum
-block|{
-name|KRB5_NT_UNKNOWN
-init|=
-literal|0
-block|,
-name|KRB5_NT_PRINCIPAL
-init|=
-literal|1
-block|,
-name|KRB5_NT_SRV_INST
-init|=
-literal|2
-block|,
-name|KRB5_NT_SRV_HST
-init|=
-literal|3
-block|,
-name|KRB5_NT_SRV_XHST
-init|=
-literal|4
-block|,
-name|KRB5_NT_UID
-init|=
-literal|5
-block|}
-enum|;
-end_enum
 
 begin_typedef
 typedef|typedef
@@ -1435,7 +1398,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|Authenticator
-name|krb5_donot_reply
+name|krb5_donot_replay
 typedef|;
 end_typedef
 
@@ -1502,6 +1465,7 @@ name|struct
 name|krb5_storage
 modifier|*
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -1784,6 +1748,29 @@ name|krb5_keytab_key_proc_args
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|krb5_replay_data
+block|{
+name|krb5_timestamp
+name|timestamp
+decl_stmt|;
+name|u_int32_t
+name|usec
+decl_stmt|;
+name|u_int32_t
+name|seq
+decl_stmt|;
+block|}
+name|krb5_replay_data
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* flags for krb5_auth_con_setflags */
+end_comment
+
 begin_enum
 enum|enum
 block|{
@@ -1802,6 +1789,36 @@ block|,
 name|KRB5_AUTH_CONTEXT_RET_SEQUENCE
 init|=
 literal|8
+block|,
+name|KRB5_AUTH_CONTEXT_PERMIT_ALL
+init|=
+literal|16
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* flags for krb5_auth_con_genaddrs */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|KRB5_AUTH_CONTEXT_GENERATE_LOCAL_ADDR
+init|=
+literal|1
+block|,
+name|KRB5_AUTH_CONTEXT_GENERATE_LOCAL_FULL_ADDR
+init|=
+literal|3
+block|,
+name|KRB5_AUTH_CONTEXT_GENERATE_REMOTE_ADDR
+init|=
+literal|4
+block|,
+name|KRB5_AUTH_CONTEXT_GENERATE_REMOTE_FULL_ADDR
+init|=
+literal|12
 block|}
 enum|;
 end_enum
@@ -1841,10 +1858,10 @@ name|krb5_keyblock
 modifier|*
 name|remote_subkey
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|local_seqnumber
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|remote_seqnumber
 decl_stmt|;
 name|krb5_authenticator
@@ -1892,6 +1909,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|heimdal_version
@@ -2144,6 +2162,9 @@ decl_stmt|;
 name|int
 name|proxiable
 decl_stmt|;
+name|int
+name|anonymous
+decl_stmt|;
 name|krb5_enctype
 modifier|*
 name|etype_list
@@ -2235,6 +2256,13 @@ name|KRB5_GET_INIT_CREDS_OPT_SALT
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|KRB5_GET_INIT_CREDS_OPT_ANONYMOUS
+value|0x0100
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2295,6 +2323,14 @@ specifier|extern
 specifier|const
 name|krb5_kt_ops
 name|krb5_akf_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|krb5_kt_ops
+name|krb4_fkt_ops
 decl_stmt|;
 end_decl_stmt
 

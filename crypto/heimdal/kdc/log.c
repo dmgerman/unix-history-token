@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log.c,v 1.12 1999/12/02 17:05:00 joda Exp $"
+literal|"$Id: log.c,v 1.13 2000/09/10 19:27:29 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -135,9 +135,7 @@ name|context
 argument_list|,
 name|logf
 argument_list|,
-literal|"0-1/FILE:"
-name|HDB_DB_DIR
-literal|"/kdc.log"
+name|DEFAULT_LOG_DEST
 argument_list|)
 expr_stmt|;
 name|krb5_set_warn_dest

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: expand_hostname.c,v 1.8 2000/02/20 02:25:29 assar Exp $"
+literal|"$Id: expand_hostname.c,v 1.9 2000/02/23 03:12:07 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -441,7 +441,9 @@ name|copy_hostname
 argument_list|(
 name|context
 argument_list|,
-name|orig_hostname
+name|a
+operator|->
+name|ai_canonname
 argument_list|,
 name|new_hostname
 argument_list|)

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: hdb_locl.h,v 1.13 2000/02/06 05:17:05 assar Exp $ */
+comment|/* $Id: hdb_locl.h,v 1.14 2000/11/14 06:57:17 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -182,16 +182,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_NDBM_H
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<ndbm.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_GDBM_NDBM_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gdbm/ndbm.h>
 end_include
 
 begin_endif

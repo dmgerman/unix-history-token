@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: init.c,v 1.23 1999/12/02 17:04:58 joda Exp $"
+literal|"$Id: init.c,v 1.27 2000/09/10 19:20:16 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -342,9 +342,9 @@ name|args
 argument_list|,
 name|num_args
 argument_list|,
-literal|"ank"
+literal|"init"
 argument_list|,
-literal|"principal"
+literal|"realm..."
 argument_list|)
 expr_stmt|;
 block|}
@@ -430,6 +430,22 @@ argument_list|,
 operator|&
 name|optind
 argument_list|)
+condition|)
+block|{
+name|usage
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|argc
+operator|-
+name|optind
+operator|<
+literal|1
 condition|)
 block|{
 name|usage
@@ -591,7 +607,7 @@ name|princ
 argument_list|,
 name|realm
 argument_list|,
-literal|"krbtgt"
+name|KRB5_TGS_NAME
 argument_list|,
 name|realm
 argument_list|,
@@ -783,7 +799,50 @@ literal|60
 operator|*
 literal|60
 argument_list|,
-literal|0
+name|KRB5_KDB_DISALLOW_TGT_BASED
+operator||
+name|KRB5_KDB_PWCHANGE_SERVICE
+argument_list|)
+expr_stmt|;
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|princ
+argument_list|)
+expr_stmt|;
+comment|/* Create `kadmin/hprop' for database propagation */
+name|krb5_make_principal
+argument_list|(
+name|context
+argument_list|,
+operator|&
+name|princ
+argument_list|,
+name|realm
+argument_list|,
+literal|"kadmin"
+argument_list|,
+literal|"hprop"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|create_random_entry
+argument_list|(
+name|princ
+argument_list|,
+literal|60
+operator|*
+literal|60
+argument_list|,
+literal|60
+operator|*
+literal|60
+argument_list|,
+name|KRB5_KDB_REQUIRES_PRE_AUTH
+operator||
+name|KRB5_KDB_DISALLOW_TGT_BASED
 argument_list|)
 expr_stmt|;
 name|krb5_free_principal

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: export_sec_context.c,v 1.2 2000/02/12 21:25:24 assar Exp $"
+literal|"$Id: export_sec_context.c,v 1.3 2000/07/08 11:42:22 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -39,16 +39,6 @@ name|sp
 decl_stmt|;
 name|krb5_auth_context
 name|ac
-decl_stmt|;
-name|unsigned
-name|char
-name|auth_buf
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|size_t
-name|sz
 decl_stmt|;
 name|int
 name|ret
@@ -303,7 +293,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|ret = encode_Authenticator (auth_buf, sizeof(auth_buf), 				ac->authenticator,&sz);     if (ret) { 	krb5_storage_free (sp); 	*minor_status = ret; 	return GSS_S_FAILURE;     }     data.data   = auth_buf;     data.length = sz;     krb5_store_data (sp, data);
+block|{ 	size_t sz; 	unsigned char auth_buf[1024];  	ret = encode_Authenticator (auth_buf, sizeof(auth_buf), 				    ac->authenticator,&sz); 	if (ret) { 	    krb5_storage_free (sp); 	    *minor_status = ret; 	    return GSS_S_FAILURE; 	} 	data.data   = auth_buf; 	data.length = sz; 	krb5_store_data (sp, data);     }
 endif|#
 directive|endif
 name|krb5_store_int32

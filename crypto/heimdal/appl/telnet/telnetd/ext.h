@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ext.h,v 1.19 1999/09/05 19:15:21 assar Exp $ */
+comment|/* $Id: ext.h,v 1.20 2000/11/15 23:03:38 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -299,6 +299,7 @@ name|char
 modifier|*
 name|telnet_getenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|val

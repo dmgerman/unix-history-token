@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c,v 1.23 1998/06/09 19:24:46 joda Exp $"
+literal|"$Id: sys_bsd.c,v 1.26 2000/10/19 21:19:57 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1084,7 +1084,9 @@ begin_function_decl
 specifier|static
 name|RETSIGTYPE
 name|susp
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1107,7 +1109,9 @@ begin_function_decl
 specifier|static
 name|RETSIGTYPE
 name|ayt
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1900,8 +1904,10 @@ directive|ifdef
 name|SIGINFO
 name|RETSIGTYPE
 name|ayt_status
-parameter_list|()
-function_decl|;
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINFO
@@ -3057,6 +3063,27 @@ block|}
 decl_stmt|;
 if|if
 condition|(
+name|net
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|tout
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|tin
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"fd too large"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|netout
 condition|)
 block|{
@@ -3141,7 +3168,7 @@ name|c
 operator|=
 name|select
 argument_list|(
-literal|16
+name|FD_SETSIZE
 argument_list|,
 operator|&
 name|ibits

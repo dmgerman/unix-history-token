@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utilities.c,v 1.22 1999/09/16 20:41:36 assar Exp $"
+literal|"$Id: utilities.c,v 1.24 2000/10/08 22:30:15 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4255,6 +4255,19 @@ name|FD_ZERO
 argument_list|(
 operator|&
 name|outs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tout
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|ExitString
+argument_list|(
+literal|"fd too large"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -40,7 +40,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb4.c,v 1.37 1999/12/06 17:10:13 assar Exp $"
+literal|"$Id: krb4.c,v 1.38 2000/06/21 02:46:09 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -973,6 +973,23 @@ end_comment
 begin_function
 specifier|static
 name|int
+name|krb4_init
+parameter_list|(
+name|void
+modifier|*
+name|app_data
+parameter_list|)
+block|{
+return|return
+operator|!
+name|use_kerberos
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|mk_auth
 parameter_list|(
 name|struct
@@ -1660,7 +1677,7 @@ expr|struct
 name|krb4_data
 argument_list|)
 block|,
-name|NULL
+name|krb4_init
 block|,
 comment|/* init */
 name|krb4_auth

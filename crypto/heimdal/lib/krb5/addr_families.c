@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: addr_families.c,v 1.23 2000/02/16 02:09:00 assar Exp $"
+literal|"$Id: addr_families.c,v 1.24 2000/07/08 13:05:43 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2685,8 +2685,10 @@ condition|(
 name|error
 condition|)
 return|return
-operator|-
-literal|1
+name|krb5_eai_to_heim_errno
+argument_list|(
+name|error
+argument_list|)
 return|;
 name|n
 operator|=

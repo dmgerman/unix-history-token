@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/*   * $Id: kadmin_locl.h,v 1.25 2000/02/06 05:16:35 assar Exp $  */
+comment|/*   * $Id: kadmin_locl.h,v 1.34 2000/09/19 12:46:18 assar Exp $  */
 end_comment
 
 begin_ifndef
@@ -66,6 +66,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -76,6 +82,23 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SELECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
 end_include
 
 begin_endif
@@ -110,6 +133,23 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SELECT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
 end_include
 
 begin_endif
@@ -161,6 +201,23 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<util.h>
 end_include
 
 begin_endif
@@ -224,6 +281,12 @@ begin_include
 include|#
 directive|include
 file|<krb5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb5_locl.h>
 end_include
 
 begin_include
@@ -420,6 +483,12 @@ name|merge
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|ALLOC
+end_undef
 
 begin_define
 define|#
@@ -789,6 +858,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|parse_des_key
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|key_string
+parameter_list|,
+name|krb5_key_data
+modifier|*
+name|key_data
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|err
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* server.c */
 end_comment
@@ -819,6 +910,9 @@ parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
+name|krb5_keytab
+name|keytab
+parameter_list|,
 name|int
 name|len
 parameter_list|,
@@ -842,6 +936,59 @@ name|pw
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* kadm_conn.c */
+end_comment
+
+begin_decl_stmt
+name|sig_atomic_t
+name|term_flag
+decl_stmt|,
+name|doing_useful_work
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|parse_ports
+parameter_list|(
+name|krb5_context
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|start_server
+parameter_list|(
+name|krb5_context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* server.c */
+end_comment
+
+begin_function_decl
+name|krb5_error_code
+name|kadmind_loop
+parameter_list|(
+name|krb5_context
+parameter_list|,
+name|krb5_auth_context
+parameter_list|,
+name|krb5_keytab
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

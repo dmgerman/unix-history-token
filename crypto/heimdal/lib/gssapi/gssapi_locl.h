@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: gssapi_locl.h,v 1.12 2000/02/12 21:26:26 assar Exp $ */
+comment|/* $Id: gssapi_locl.h,v 1.14 2000/08/27 04:19:00 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<gssapi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_decl_stmt
@@ -58,6 +64,10 @@ parameter_list|,
 name|OM_uint32
 name|flags
 parameter_list|,
+name|krb5_data
+modifier|*
+name|fwd_data
+parameter_list|,
 name|Checksum
 modifier|*
 name|result
@@ -80,6 +90,10 @@ parameter_list|,
 name|OM_uint32
 modifier|*
 name|flags
+parameter_list|,
+name|krb5_data
+modifier|*
+name|fwd_data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -88,6 +102,7 @@ begin_function_decl
 name|OM_uint32
 name|gssapi_krb5_encapsulate
 parameter_list|(
+specifier|const
 name|krb5_data
 modifier|*
 name|in_data
@@ -184,9 +199,31 @@ specifier|const
 name|gss_ctx_id_t
 name|context_handle
 parameter_list|,
-name|des_cblock
+name|krb5_keyblock
+modifier|*
 modifier|*
 name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|krb5_error_code
+name|gss_address_to_krb5addr
+parameter_list|(
+name|OM_uint32
+name|gss_addr_type
+parameter_list|,
+name|gss_buffer_desc
+modifier|*
+name|gss_addr
+parameter_list|,
+name|int16_t
+name|port
+parameter_list|,
+name|krb5_address
+modifier|*
+name|address
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/*   * $Id: headers.h,v 1.6 2000/02/06 06:04:36 assar Exp $   */
+comment|/*   * $Id: headers.h,v 1.10 2000/08/04 11:21:38 joda Exp $   */
 end_comment
 
 begin_ifndef
@@ -225,6 +225,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<util.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -265,6 +282,12 @@ begin_include
 include|#
 directive|include
 file|<krb5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<krb5_locl.h>
 end_include
 
 begin_include
@@ -325,6 +348,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|ALLOC
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -333,6 +362,24 @@ parameter_list|(
 name|X
 parameter_list|)
 value|((X) = malloc(sizeof(*(X))))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ALLOC_SEQ
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ALLOC_SEQ
+parameter_list|(
+name|X
+parameter_list|,
+name|N
+parameter_list|)
+value|do { (X)->len = (N); \ (X)->val = calloc((X)->len, sizeof(*(X)->val)); } while(0)
 end_define
 
 begin_endif

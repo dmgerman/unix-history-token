@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/*   * $Id: ktutil_locl.h,v 1.11 2000/02/07 04:26:37 assar Exp $  */
+comment|/*   * $Id: ktutil_locl.h,v 1.12 2000/07/19 13:58:19 assar Exp $  */
 end_comment
 
 begin_ifndef
@@ -93,6 +93,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<parse_time.h>
+end_include
 
 begin_include
 include|#
