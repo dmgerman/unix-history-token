@@ -1757,7 +1757,7 @@ name|FAKE_LOOPBACK_IF
 name|int
 name|deliverifid
 decl_stmt|;
-comment|/* 			 * Get a "real" delivered interface, which should be 			 * embedded in the second 16 bits of the destination 			 * address.  We can probably trust the value, but we 			 * add validation for the value just for safety. 			 */
+comment|/* 			 * Get the "real" delivered interface, which should be 			 * embedded in the second 16 bits of the destination 			 * address.  We can probably trust the value, but we 			 * add validation for the value just for safety. 			 */
 name|deliverifid
 operator|=
 name|ntohs
