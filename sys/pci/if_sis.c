@@ -1261,11 +1261,19 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -1529,10 +1537,28 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 name|btag
 operator|=
 name|I386_BUS_SPACE_IO
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+name|btag
+operator|=
+name|AMD64_BUS_SPACE_IO
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -4353,9 +4379,17 @@ case|case
 name|SIS_VENDORID
 case|:
 default|default:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 comment|/* 		 * If this is a SiS 630E chipset with an embedded 		 * SiS 900 controller, we have to read the MAC address 		 * from the APC CMOS RAM. Our method for doing this 		 * is very ugly since we have to reach out and grab 		 * ahold of hardware for which we cannot properly 		 * allocate resources. This code is only compiled on 		 * the i386 architecture since the SiS 630E chipset 		 * is for x86 motherboards only. Note that there are 		 * a lot of magic numbers in this hack. These are 		 * taken from SiS's Linux driver. I'd like to replace 		 * them with proper symbolic definitions, but that 		 * requires some datasheets that I don't have access 		 * to at the moment. 		 */
 if|if
 condition|(
@@ -6273,9 +6307,17 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* No errors; receive the packet. */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 comment|/* 		 * On the x86 we do not have alignment problems, so try to 		 * allocate a new buffer for the receive ring, and pass up 		 * the one where the packet is already, saving the expensive 		 * copy done in m_devget(). 		 * If we are on an architecture with alignment problems, or 		 * if the allocation fails, then use m_devget and leave the 		 * existing buffer in the receive ring. 		 */
 if|if
 condition|(
