@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.8 (Berkeley) %G%"
+literal|"@(#)pk1.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +193,14 @@ name|int
 name|pktimeout
 init|=
 literal|4
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pktimeskew
+init|=
+literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,9 +1058,13 @@ name|pk
 operator|->
 name|p_rpr
 operator|=
+operator|(
 name|h
 operator|->
 name|cntl
+operator|>>
+literal|3
+operator|)
 operator|&
 name|MOD8
 expr_stmt|;
@@ -1999,9 +2011,22 @@ block|{
 name|Ntimeout
 operator|++
 expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"pkcget: alarm %d\n"
+argument_list|,
+name|pktimeout
+operator|*
+literal|1000
+operator|+
+name|Ntimeout
+argument_list|)
+expr_stmt|;
 name|pktimeout
 operator|+=
-literal|2
+name|pktimeskew
 expr_stmt|;
 if|if
 condition|(
@@ -2012,15 +2037,6 @@ condition|)
 name|pktimeout
 operator|=
 name|MAXPKTIME
-expr_stmt|;
-name|DEBUG
-argument_list|(
-literal|4
-argument_list|,
-literal|"pkcget: alarm %d\n"
-argument_list|,
-name|Ntimeout
-argument_list|)
 expr_stmt|;
 return|return
 name|FAIL
