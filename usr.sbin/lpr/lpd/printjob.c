@@ -548,19 +548,19 @@ begin_comment
 comment|/* page width in pixels */
 end_comment
 
+begin_comment
+comment|/* tempstderr is the filename used to catch stderr from exec-ing filters */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|tempfile
+name|tempstderr
 index|[]
 init|=
-literal|"errsXXXXXX"
+literal|"errs.XXXXXXX"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* file name for filter errors */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1027,6 +1027,9 @@ name|count
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|tempfd
+decl_stmt|;
 name|init
 argument_list|(
 name|pp
@@ -1140,14 +1143,6 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|abortpr
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mktemp
-argument_list|(
-name|tempfile
 argument_list|)
 expr_stmt|;
 comment|/* 	 * uses short form file names 	 */
@@ -1457,6 +1452,83 @@ name|lock_file
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* create a file which will be used to hold stderr from filters */
+if|if
+condition|(
+operator|(
+name|tempfd
+operator|=
+name|mkstemp
+argument_list|(
+name|tempstderr
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: mkstemp(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|tempstderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|fchmod
+argument_list|(
+name|tempfd
+argument_list|,
+literal|0664
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: fchmod(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
+argument_list|,
+name|tempstderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* lpd doesn't need it to be open, it just needs it to exist */
+name|close
+argument_list|(
+name|tempfd
+argument_list|)
+expr_stmt|;
 name|openpr
 argument_list|(
 name|pp
@@ -2049,7 +2121,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4380,15 +4452,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* setup stderr for the filter (child process) 		 * so it goes to our temporary errors file */
 name|n
 operator|=
 name|open
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|,
 name|O_WRONLY
-operator||
-name|O_CREAT
 operator||
 name|O_TRUNC
 argument_list|,
@@ -4528,7 +4599,7 @@ name|tof
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Copy filter output to "lf" logfile */
+comment|/* Copy the filter's output to "lf" logfile */
 if|if
 condition|(
 operator|(
@@ -4536,7 +4607,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|,
 literal|"r"
 argument_list|)
@@ -5270,6 +5341,10 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -5606,19 +5681,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* setup stderr for the filter (child process) 				 * so it goes to our temporary errors file */
 name|n
 operator|=
 name|open
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|,
 name|O_WRONLY
 operator||
-name|O_CREAT
-operator||
 name|O_TRUNC
 argument_list|,
-name|TEMP_FILE_MODE
+literal|0664
 argument_list|)
 expr_stmt|;
 if|if
@@ -5718,6 +5792,49 @@ operator|!=
 name|ifilter
 condition|)
 empty_stmt|;
+comment|/* Copy the filter's output to "lf" logfile */
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|tempstderr
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+condition|)
+block|{
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+condition|)
+name|fputs
+argument_list|(
+name|buf
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* process the return-code from the filter */
 switch|switch
 condition|(
 name|status
@@ -7570,7 +7687,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|,
 operator|&
 name|stb
@@ -7589,7 +7706,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|,
 literal|"r"
 argument_list|)
@@ -7941,7 +8058,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tempfile
+name|tempstderr
 argument_list|)
 expr_stmt|;
 name|kill
