@@ -661,7 +661,7 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* #define    I2O_EVENT_IND_RESERVE_RELEASE               0x10000000 */
+comment|/* #define	   I2O_EVENT_IND_RESERVE_RELEASE               0x10000000 */
 end_comment
 
 begin_define

@@ -589,7 +589,7 @@ file|<sys/scsi/scsi.h>
 end_include
 
 begin_comment
-comment|/*#define _KERNEL */
+comment|/*#define	_KERNEL */
 end_comment
 
 begin_include
@@ -677,7 +677,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* #define I2ORESCANCMD 8 */
+comment|/* #define	I2ORESCANCMD 8 */
 end_comment
 
 begin_comment
@@ -685,7 +685,7 @@ comment|/* Use DPT_IO_ACCESS instead */
 end_comment
 
 begin_comment
-comment|/* #define I2ORESETCMD  9 */
+comment|/* #define	I2ORESETCMD  9 */
 end_comment
 
 begin_comment

@@ -36,47 +36,47 @@ comment|/*----------------------------- */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_MSDOS      */
+comment|/*#define	              _DPT_MSDOS      */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_WIN_3X     */
+comment|/*#define	              _DPT_WIN_3X     */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_WIN_4X     */
+comment|/*#define	              _DPT_WIN_4X     */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_WIN_NT     */
+comment|/*#define	              _DPT_WIN_NT     */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_NETWARE    */
+comment|/*#define	              _DPT_NETWARE    */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_OS2        */
+comment|/*#define	              _DPT_OS2        */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_SCO        */
+comment|/*#define	              _DPT_SCO        */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_UNIXWARE   */
+comment|/*#define	              _DPT_UNIXWARE   */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_SOLARIS    */
+comment|/*#define	              _DPT_SOLARIS    */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_NEXTSTEP   */
+comment|/*#define	              _DPT_NEXTSTEP   */
 end_comment
 
 begin_comment
-comment|/*#define               _DPT_BANYAN     */
+comment|/*#define	              _DPT_BANYAN     */
 end_comment
 
 begin_comment
@@ -92,15 +92,15 @@ comment|/*-------------------------------- */
 end_comment
 
 begin_comment
-comment|/*#define       OS_SELECTION    From Above List */
+comment|/*#define	      OS_SELECTION    From Above List */
 end_comment
 
 begin_comment
-comment|/*#define       SEMAPHORE_T     ??? */
+comment|/*#define	      SEMAPHORE_T     ??? */
 end_comment
 
 begin_comment
-comment|/*#define       DLL_HANDLE_T    ??? */
+comment|/*#define	      DLL_HANDLE_T    ??? */
 end_comment
 
 begin_if
@@ -995,7 +995,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* netware */
-comment|/*-------------------------------------*  * Network order swap functions        *  *                                     *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.                          *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define DPT_PORTABLE to begin  *  * using the modifications.            *  *-------------------------------------*/
+comment|/*-------------------------------------*  * Network order swap functions        *  *                                     *  * These functions/macros will be used *  * by the structure insert()/extract() *  * functions.                          *  *  * We will enclose all structure       *  * portability modifications inside    *  * #ifdefs.  When we are ready, we     *  * will #define	DPT_PORTABLE to begin  *  * using the modifications.            *  *-------------------------------------*/
 name|uLONG
 name|netSwap4
 parameter_list|(

@@ -3198,7 +3198,7 @@ value|_F_set12bit(x,IOP_ID,IOP_ID,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_EXEC_SYS_TAB_SET_MESSAGE_getreserved1(x) */
+comment|/* #define	I2O_EXEC_SYS_TAB_SET_MESSAGE_getreserved1(x) */
 end_comment
 
 begin_define
@@ -3418,7 +3418,7 @@ value|setLU2((&((x)->OrganizationID)),0,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_IOP_ENTRY_getreserved U16; */
+comment|/* #define	I2O_IOP_ENTRY_getreserved U16; */
 end_comment
 
 begin_define
@@ -5987,7 +5987,7 @@ value|_F_get8bit(x,Severity,1,FailureCode,y)
 end_define
 
 begin_comment
-comment|/*  * #define I2O_FAILURE_REPLY_MESSAGE_FRAME_getFailingHostUnitID(x)\  *               _F_get16bit(x,reserved,1,FailingHostUnitID)  * #define I2O_FAILURE_REPLY_MESSAGE_FRAME_setFailingHostUnitID(x,y)\  *               _F_set16bit(x,reserved,1,FailingHostUnitID,y)  */
+comment|/*  * #define	I2O_FAILURE_REPLY_MESSAGE_FRAME_getFailingHostUnitID(x)\  *               _F_get16bit(x,reserved,1,FailingHostUnitID)  * #define	I2O_FAILURE_REPLY_MESSAGE_FRAME_setFailingHostUnitID(x,y)\  *               _F_set16bit(x,reserved,1,FailingHostUnitID,y)  */
 end_comment
 
 begin_define
@@ -6043,7 +6043,7 @@ value|setLU2((&(x)->OrganizationID),0,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_EXEC_STATUS_GET_REPLY_getreserved; */
+comment|/* #define	I2O_EXEC_STATUS_GET_REPLY_getreserved; */
 end_comment
 
 begin_define
@@ -6071,7 +6071,7 @@ value|_F_set12bit(x,IOP_ID,0,IOP_ID,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_EXEC_STATUS_GET_REPLY_getreserved1(x) */
+comment|/* #define	I2O_EXEC_STATUS_GET_REPLY_getreserved1(x) */
 end_comment
 
 begin_define
@@ -6243,7 +6243,7 @@ value|setU1((&(x)->InitCode),0,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_EXEC_STATUS_GET_REPLY_getreserved2(x) */
+comment|/* #define	I2O_EXEC_STATUS_GET_REPLY_getreserved2(x) */
 end_comment
 
 begin_define
@@ -6319,7 +6319,7 @@ value|setLU4((&(x)->MaxOutboundMFrames),0,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_EXEC_STATUS_GET_REPLY_getProductIDString(x) */
+comment|/* #define	I2O_EXEC_STATUS_GET_REPLY_getProductIDString(x) */
 end_comment
 
 begin_define
@@ -6515,7 +6515,7 @@ value|setLU4((&(x)->CurrentPrivateIOBase),0,y)
 end_define
 
 begin_comment
-comment|/* #define I2O_EXEC_STATUS_GET_REPLY_getreserved3(x) */
+comment|/* #define	I2O_EXEC_STATUS_GET_REPLY_getreserved3(x) */
 end_comment
 
 begin_define
