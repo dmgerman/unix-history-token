@@ -1070,6 +1070,15 @@ name|d_name
 argument_list|,
 literal|"console"
 argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+literal|"vga"
+argument_list|)
 condition|)
 continue|continue;
 operator|(
