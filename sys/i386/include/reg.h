@@ -344,7 +344,7 @@ name|d
 parameter_list|,
 name|x
 parameter_list|)
-value|(d->dr[(x)])
+value|((d)->dr[(x)])
 end_define
 
 begin_comment
