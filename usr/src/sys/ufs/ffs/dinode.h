@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.5	81/03/09	*/
+comment|/*	dinode.h	4.6	81/06/15	*/
 end_comment
 
 begin_comment
@@ -154,6 +154,27 @@ define|#
 directive|define
 name|i_group
 value|i_d.I_group
+struct|struct
+block|{
+name|daddr_t
+name|I_port0
+decl_stmt|;
+comment|/* low 16 bits of portid */
+name|daddr_t
+name|I_port1
+decl_stmt|;
+comment|/* high 16 bits of portid */
+block|}
+name|i_p
+struct|;
+define|#
+directive|define
+name|i_port0
+value|i_p.I_port0
+define|#
+directive|define
+name|i_port1
+value|i_p.I_port1
 block|}
 name|i_un
 union|;
@@ -424,6 +445,17 @@ end_define
 
 begin_comment
 comment|/* regular */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFPORT
+value|0010000
+end_define
+
+begin_comment
+comment|/* named port */
 end_comment
 
 begin_define
