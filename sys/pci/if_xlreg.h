@@ -2878,6 +2878,9 @@ decl_stmt|;
 name|u_int16_t
 name|xl_tx_thresh
 decl_stmt|;
+name|int
+name|xl_if_flags
+decl_stmt|;
 name|struct
 name|xl_list_data
 modifier|*
