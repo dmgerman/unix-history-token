@@ -1322,7 +1322,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlock_timedrwlock
+name|pthread_rwlock_timedwrlock
 parameter_list|(
 name|pthread_rwlock_t
 modifier|*
