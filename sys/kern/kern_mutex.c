@@ -3703,7 +3703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _rel_spin_lock() macro for the details.   */
+comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _rel_spin_lock() macro for the details.  */
 end_comment
 
 begin_comment
@@ -4410,7 +4410,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Encapsulated Giant mutex routines.  These routines provide encapsulation  * control for the Giant mutex, allowing sysctls to be used to turn on and  * off Giant around certain subsystems.  The default value for the sysctls  * are set to what developers believe is stable and working in regards to  * the Giant pushdown.  Developers should not turn off Giant via these  * sysctls unless they know what they are doing.  *  * Callers of mtx_lock_giant() are expected to pass the return value to an  * accompanying mtx_unlock_giant() later on.  If multiple subsystems are   * effected by a Giant wrap, all related sysctl variables must be zero for  * the subsystem call to operate without Giant (as determined by the caller).  */
+comment|/*  * Encapsulated Giant mutex routines.  These routines provide encapsulation  * control for the Giant mutex, allowing sysctls to be used to turn on and  * off Giant around certain subsystems.  The default value for the sysctls  * are set to what developers believe is stable and working in regards to  * the Giant pushdown.  Developers should not turn off Giant via these  * sysctls unless they know what they are doing.  *  * Callers of mtx_lock_giant() are expected to pass the return value to an  * accompanying mtx_unlock_giant() later on.  If multiple subsystems are  * effected by a Giant wrap, all related sysctl variables must be zero for  * the subsystem call to operate without Giant (as determined by the caller).  */
 end_comment
 
 begin_expr_stmt
