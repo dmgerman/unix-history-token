@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -257,10 +263,6 @@ name|sigset_t
 name|oblock
 decl_stmt|,
 name|nblock
-decl_stmt|;
-name|struct
-name|stat
-name|sbuf
 decl_stmt|;
 name|struct
 name|group
@@ -653,11 +655,15 @@ name|pc2
 operator|=
 name|PT_DEV2
 init|;
+operator|(
 operator|*
 name|mc2
 operator|=
 operator|*
 name|pc2
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|pc2
