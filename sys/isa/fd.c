@@ -2589,7 +2589,7 @@ return|;
 comment|/* If command is invalid, return */
 name|j
 operator|=
-literal|100000
+name|FDSTS_TIMEOUT
 expr_stmt|;
 while|while
 condition|(
@@ -2615,6 +2615,7 @@ operator|--
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -2634,6 +2635,12 @@ expr_stmt|;
 return|return
 name|FD_FAILED
 return|;
+block|}
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6763,7 +6770,7 @@ name|i
 decl_stmt|,
 name|j
 init|=
-literal|100000
+name|FDSTS_TIMEOUT
 decl_stmt|;
 while|while
 condition|(
@@ -6793,6 +6800,7 @@ operator|--
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|i
@@ -6807,6 +6815,12 @@ argument_list|,
 literal|"ready for output in input\n"
 argument_list|)
 return|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|j
@@ -6901,7 +6915,7 @@ decl_stmt|;
 comment|/* Check that the direction bit is set */
 name|i
 operator|=
-literal|100000
+name|FDSTS_TIMEOUT
 expr_stmt|;
 while|while
 condition|(
@@ -6919,7 +6933,11 @@ operator|--
 operator|>
 literal|0
 condition|)
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -6937,7 +6955,7 @@ return|;
 comment|/* Check that the floppy controller is ready for a command */
 name|i
 operator|=
-literal|100000
+name|FDSTS_TIMEOUT
 expr_stmt|;
 while|while
 condition|(
@@ -6957,7 +6975,11 @@ operator|--
 operator|>
 literal|0
 condition|)
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
