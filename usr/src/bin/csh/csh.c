@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.16 (Berkeley) %G%"
+literal|"@(#)csh.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,13 +208,18 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
+begin_decl_stmt
 name|void
+name|pintr
+argument_list|()
+decl_stmt|,
+name|pchild
+argument_list|()
+decl_stmt|,
 name|srcunit
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -2648,12 +2653,10 @@ begin_comment
 comment|/*  * Catch an interrupt, e.g. during lexical input.  * If we are an interactive shell, we reset the interrupt catch  * immediately.  In any case we drain the shell output,  * and finally go through the normal error mechanism, which  * gets a chance to make the shell go away.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|pintr1
 argument_list|(
@@ -2661,7 +2664,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|pintr1

@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)alloc.c	5.3 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1062,6 +1062,11 @@ name|was_alloced
 init|=
 literal|0
 decl_stmt|;
+specifier|static
+name|int
+name|findbucket
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|cp

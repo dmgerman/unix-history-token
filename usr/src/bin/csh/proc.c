@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.12 (Berkeley) %G%"
+literal|"@(#)proc.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,12 +79,10 @@ begin_comment
 comment|/*  * pchild - called at interrupt level by the SIGCHLD signal  *	indicating that at least one child has terminated or stopped  *	thus at least one wait system call will definitely return a  *	childs status.  Top level routines (like pwait) must be sure  *	to mask interrupts when playing with the proclist data structures!  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -123,6 +121,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|w
 argument_list|,
@@ -715,7 +717,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|pnote

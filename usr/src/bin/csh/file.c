@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c	5.9 (Berkeley) %G%"
+literal|"@(#)file.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1716,9 +1716,15 @@ name|entry
 decl_stmt|;
 specifier|static
 name|int
+name|ignored
+argument_list|()
+decl_stmt|,
 name|is_prefix
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+name|recognize
+argument_list|()
+decl_stmt|;
 define|#
 directive|define
 name|MAXITEMS
