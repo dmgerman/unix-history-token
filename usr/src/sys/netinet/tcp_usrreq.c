@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.13 81/10/29 */
+comment|/* tcp_usrreq.c 1.14 81/10/29 */
 end_comment
 
 begin_include
@@ -18,37 +18,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../bbnnet/net.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/mbuf.h"
+file|"../h/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/tcp.h"
+file|"../inet/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/ip.h"
+file|"../inet/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/imp.h"
+file|"../inet/imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/ucb.h"
+file|"../inet/ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../inet/tcp.h"
 end_include
 
 begin_define
@@ -77,7 +83,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../bbnnet/fsm.h"
+file|"../inet/tcp_fsm.h"
 end_include
 
 begin_macro
@@ -109,9 +115,7 @@ for|for
 control|(
 name|tp
 operator|=
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 init|;
 name|tp
 operator|!=
@@ -260,9 +264,7 @@ name|t_xmt
 operator|++
 expr_stmt|;
 block|}
-name|netcb
-operator|.
-name|n_iss
+name|tcp_iss
 operator|+=
 name|ISSINCR
 expr_stmt|;
@@ -816,22 +818,16 @@ expr_stmt|;
 comment|/* enqueue the tcb */
 if|if
 condition|(
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 operator|==
 name|NULL
 condition|)
 block|{
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 operator|=
 name|tp
 expr_stmt|;
-name|netcb
-operator|.
-name|n_tcb_tail
+name|tcb_tail
 operator|=
 name|tp
 expr_stmt|;
@@ -842,21 +838,15 @@ name|tp
 operator|->
 name|t_tcb_next
 operator|=
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 expr_stmt|;
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 operator|->
 name|t_tcb_prev
 operator|=
 name|tp
 expr_stmt|;
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 operator|=
 name|tp
 expr_stmt|;
@@ -914,9 +904,7 @@ name|tp
 operator|->
 name|iss
 operator|=
-name|netcb
-operator|.
-name|n_iss
+name|tcp_iss
 expr_stmt|;
 name|tp
 operator|->
@@ -928,9 +916,7 @@ name|iss
 operator|+
 literal|1
 expr_stmt|;
-name|netcb
-operator|.
-name|n_iss
+name|tcp_iss
 operator|+=
 operator|(
 name|ISSINCR
@@ -1066,9 +1052,7 @@ name|t_tcb_prev
 operator|==
 name|NULL
 condition|)
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 operator|=
 name|tp
 operator|->
@@ -1093,9 +1077,7 @@ name|t_tcb_next
 operator|==
 name|NULL
 condition|)
-name|netcb
-operator|.
-name|n_tcb_tail
+name|tcb_tail
 operator|=
 name|tp
 operator|->
@@ -1233,6 +1215,30 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|up
+operator|->
+name|uc_template
+condition|)
+block|{
+name|m_free
+argument_list|(
+name|dtom
+argument_list|(
+name|up
+operator|->
+name|uc_template
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|uc_template
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|m
 operator|=
 name|dtom
@@ -1258,9 +1264,9 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* lower buffer allocation and decrement host entry */
-name|netcb
+name|mbstat
 operator|.
-name|n_lowat
+name|m_lowat
 operator|-=
 name|up
 operator|->
@@ -1276,15 +1282,15 @@ operator|)
 operator|+
 literal|2
 expr_stmt|;
-name|netcb
+name|mbstat
 operator|.
-name|n_hiwat
+name|m_hiwat
 operator|=
 literal|2
 operator|*
-name|netcb
+name|mbstat
 operator|.
-name|n_lowat
+name|m_lowat
 expr_stmt|;
 if|if
 condition|(

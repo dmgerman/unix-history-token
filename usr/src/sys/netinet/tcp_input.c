@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.6 81/10/29 */
+comment|/* tcp_input.c 1.7 81/10/29 */
 end_comment
 
 begin_include
@@ -18,67 +18,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../bbnnet/net.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/mbuf.h"
+file|"../h/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/host.h"
+file|"../inet/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/imp.h"
+file|"../inet/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/ucb.h"
+file|"../inet/imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/tcp.h"
+file|"../inet/inet_host.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/ip.h"
+file|"../inet/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"../inet/tcp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../bbnnet/fsm.h"
+file|"../inet/tcp_fsm.h"
 end_include
 
 begin_decl_stmt
@@ -317,9 +305,7 @@ for|for
 control|(
 name|tp
 operator|=
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 init|;
 name|tp
 operator|!=
@@ -368,9 +354,7 @@ for|for
 control|(
 name|tp
 operator|=
-name|netcb
-operator|.
-name|n_tcb_head
+name|tcb_head
 init|;
 name|tp
 operator|!=
@@ -836,13 +820,13 @@ name|t_len
 operator|!=
 literal|0
 operator|&&
-name|netcb
+name|mbstat
 operator|.
-name|n_bufs
+name|m_bufs
 operator|<
-name|netcb
+name|mbstat
 operator|.
-name|n_lowat
+name|m_lowat
 condition|)
 block|{
 name|mp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.5 81/10/26 */
+comment|/* ip_output.c 1.5 81/10/29 */
 end_comment
 
 begin_include
@@ -12,43 +12,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../bbnnet/net.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/mbuf.h"
+file|"../h/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/host.h"
+file|"../inet/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/tcp.h"
+file|"../inet/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/ip.h"
+file|"../inet/imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/imp.h"
+file|"../inet/inet_host.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/ucb.h"
+file|"../inet/ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../inet/tcp.h"
 end_include
 
 begin_macro
@@ -163,7 +169,7 @@ name|p
 operator|->
 name|ip_off
 operator|&
-name|ip_df
+name|IP_DF
 operator|)
 expr_stmt|;
 name|p
@@ -176,9 +182,7 @@ name|p
 operator|->
 name|ip_id
 operator|=
-name|netcb
-operator|.
-name|n_ip_cnt
+name|ip_id
 operator|++
 expr_stmt|;
 if|if
@@ -197,7 +201,7 @@ name|p
 operator|->
 name|ip_off
 operator|&
-name|ip_df
+name|IP_DF
 condition|)
 return|return
 operator|(
@@ -303,7 +307,7 @@ operator|->
 name|ip_off
 operator|&
 operator|~
-name|ip_mf
+name|IP_MF
 expr_stmt|;
 name|p
 operator|->
@@ -342,7 +346,7 @@ name|p
 operator|->
 name|ip_off
 operator||=
-name|ip_mf
+name|IP_MF
 expr_stmt|;
 comment|/* terminate fragment at 8 byte boundary (round down) */
 name|i
@@ -659,9 +663,37 @@ name|ip_sum
 operator|=
 literal|0
 expr_stmt|;
-name|ip_bswap
+name|p
+operator|->
+name|ip_len
+operator|=
+name|htons
 argument_list|(
 name|p
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|ip_id
+operator|=
+name|htons
+argument_list|(
+name|p
+operator|->
+name|ip_id
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|ip_off
+operator|=
+name|htons
+argument_list|(
+name|p
+operator|->
+name|ip_off
 argument_list|)
 expr_stmt|;
 name|p
@@ -704,7 +736,7 @@ name|IMPLOOP
 comment|/* put output message on queue */
 name|s
 operator|=
-name|spl_imp
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -927,8 +959,6 @@ name|ip_src
 operator|.
 name|s_addr
 operator|=
-name|netcb
-operator|.
 name|n_lhost
 operator|.
 name|s_addr

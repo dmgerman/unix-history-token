@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.8 81/10/28 */
+comment|/* ip_input.c 1.9 81/10/29 */
 end_comment
 
 begin_include
@@ -1589,7 +1589,7 @@ decl_stmt|,
 name|s
 decl_stmt|;
 name|struct
-name|inet_addr
+name|socket
 modifier|*
 name|sp
 decl_stmt|;
@@ -1705,7 +1705,7 @@ name|sp
 operator|=
 operator|(
 expr|struct
-name|inet_addr
+name|socket
 operator|*
 operator|)
 operator|(
@@ -1820,7 +1820,7 @@ name|sp
 operator|=
 operator|(
 expr|struct
-name|inet_addr
+name|socket
 operator|*
 operator|)
 operator|(

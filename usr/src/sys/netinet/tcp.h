@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.8 81/10/29 */
+comment|/* tcp.h 1.9 81/10/29 */
 end_comment
 
 begin_comment
-comment|/*  * Tcp header (fits over ip header).  */
+comment|/*  * Tcp header.  Fits over the ip header after option removed.  *  * SHOULD MAKE A CLEAN HEADER FOR USE BY USERS.  */
 end_comment
 
 begin_struct
@@ -378,6 +378,45 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * TCP timers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TINIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREXMT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TREXMTTL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPERSIST
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TFINACK
+value|5
+end_define
+
+begin_comment
 comment|/*  * Tcp machine predicates  */
 end_comment
 
@@ -430,6 +469,10 @@ parameter_list|)
 define|\
 value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
 end_define
+
+begin_comment
+comment|/*  * THESE NEED TO BE JUSTIFIED!  */
+end_comment
 
 begin_define
 define|#
@@ -623,11 +666,41 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_decl_stmt
+name|struct
+name|tcb
+modifier|*
+name|tcb_head
+decl_stmt|,
+modifier|*
+name|tcb_tail
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tcp tcb list */
+end_comment
+
+begin_decl_stmt
+name|seq_t
+name|tcp_iss
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tcp initial send seq # */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -639,6 +712,12 @@ begin_comment
 comment|/* set to 1 traces on console */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPDEBUG
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|tcp_debug
@@ -648,6 +727,11 @@ name|TDBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -659,10 +743,14 @@ begin_comment
 comment|/* rotating index into tcp_debug */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|struct
+name|th
+modifier|*
+name|tcp_template
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

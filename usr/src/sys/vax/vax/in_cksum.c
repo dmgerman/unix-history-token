@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.6 81/10/28 */
+comment|/* in_cksum.c 1.7 81/10/29 */
 end_comment
 
 begin_include
@@ -12,19 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../bbnnet/net.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/mbuf.h"
+file|"../inet/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../bbnnet/count.h"
+file|"../inet/inet_systm.h"
 end_include
 
 begin_comment
