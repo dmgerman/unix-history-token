@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.22 (Berkeley) %G%"
+literal|"@(#)err.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -815,8 +815,13 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+comment|/* if DisConnected, OutChannel now points to the transcript */
 if|if
 condition|(
+operator|!
+name|DisConnected
+operator|&&
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
@@ -828,6 +833,7 @@ operator|||
 name|OpMode
 operator|==
 name|MD_ARPAFTP
+operator|)
 condition|)
 name|fprintf
 argument_list|(
@@ -910,6 +916,8 @@ name|ferror
 argument_list|(
 name|OutChannel
 argument_list|)
+operator|||
+name|DisConnected
 condition|)
 return|return;
 comment|/* 	**  Error on output -- if reporting lost channel, just ignore it. 	**  Also, ignore errors from QUIT response (221 message) -- some 	**	rude servers don't read result. 	*/

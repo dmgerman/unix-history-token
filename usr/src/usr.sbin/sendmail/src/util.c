@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.30 (Berkeley) %G%"
+literal|"@(#)util.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2447,16 +2447,32 @@ operator|>=
 literal|0
 condition|)
 break|break;
-if|if
+switch|switch
 condition|(
 name|errno
-operator|!=
-name|ENFILE
-operator|&&
-name|errno
-operator|!=
-name|EINTR
 condition|)
+block|{
+case|case
+name|ENFILE
+case|:
+comment|/* system file table full */
+case|case
+name|EINTR
+case|:
+comment|/* interrupted syscall */
+ifdef|#
+directive|ifdef
+name|ETXTBSY
+case|case
+name|ETXTBSY
+case|:
+comment|/* Apollo: net file locked */
+endif|#
+directive|endif
+break|break;
+default|default:
+continue|continue;
+block|}
 break|break;
 block|}
 if|if

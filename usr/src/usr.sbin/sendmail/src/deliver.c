@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.70 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.71 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4716,6 +4716,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
@@ -4725,6 +4726,10 @@ operator|==
 name|MD_DAEMON
 operator|||
 name|HoldErrs
+operator|)
+operator|&&
+operator|!
+name|DisConnected
 condition|)
 block|{
 comment|/* put mailer output in transcript */
@@ -4917,7 +4922,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set up the mailer environment */
+comment|/* 			**  Set up the mailer environment 			**	TZ is timezone information. 			**	SYSTYPE is Apollo software sys type (required). 			**	ISP is Apollo hardware system type (required). 			*/
 name|i
 operator|=
 literal|0
@@ -4955,6 +4960,30 @@ argument_list|,
 literal|"TZ="
 argument_list|,
 literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+operator|*
+name|ep
+argument_list|,
+literal|"ISP="
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+operator|*
+name|ep
+argument_list|,
+literal|"SYSTYPE="
+argument_list|,
+literal|8
 argument_list|)
 operator|==
 literal|0

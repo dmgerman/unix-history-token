@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.72 (Berkeley) %G%"
+literal|"@(#)conf.c	8.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6233,6 +6233,16 @@ case|case
 name|EADDRNOTAVAIL
 case|:
 comment|/* Can't assign requested address */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ETXTBSY
+name|:
+case|case
+name|ETXTBSY
+case|:
+comment|/* (Apollo) file locked */
 endif|#
 directive|endif
 if|#

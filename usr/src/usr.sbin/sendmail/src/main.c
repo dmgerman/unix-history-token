@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.48 (Berkeley) %G%"
+literal|"@(#)main.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5512,6 +5512,10 @@ expr_stmt|;
 name|Verbose
 operator|=
 name|FALSE
+expr_stmt|;
+name|DisConnected
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* all input from /dev/null */
 if|if

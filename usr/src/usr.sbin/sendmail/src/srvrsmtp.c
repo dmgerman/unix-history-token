@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.28 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.29 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.28 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.29 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +732,13 @@ name|NULL
 condition|)
 block|{
 comment|/* end of file, just die */
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
 literal|"421 %s Lost input channel from %s"
@@ -2459,9 +2466,12 @@ name|MyHostName
 argument_list|)
 expr_stmt|;
 comment|/* avoid future 050 messages */
-name|Verbose
-operator|=
-name|FALSE
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3347,17 +3357,25 @@ expr_stmt|;
 comment|/* if we exited on a QUIT command, complete the process */
 if|if
 condition|(
+name|WEXITSTATUS
+argument_list|(
 name|st
+argument_list|)
 operator|==
-operator|(
 name|EX_QUIT
-operator|<<
-literal|8
-operator|)
 condition|)
+block|{
+name|disconnect
+argument_list|(
+literal|1
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
