@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.62 2004/01/18 10:32:49 das Exp");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.65 2004/05/02 10:55:05 das  Exp");
 endif|#
 directive|endif
 end_endif
@@ -160,22 +160,6 @@ directive|include
 file|"fvwrite.h"
 end_include
 
-begin_comment
-comment|/* Define FLOATING_POINT to get floating point, HEXFLOAT to get %a. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLOATING_POINT
-end_define
-
-begin_define
-define|#
-directive|define
-name|HEXFLOAT
-end_define
-
 begin_union
 union|union
 name|arg
@@ -255,9 +239,9 @@ name|intmax_t
 modifier|*
 name|pintmaxarg
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 name|double
 name|doublearg
 decl_stmt|;
@@ -1791,11 +1775,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
 
 begin_define
 define|#
@@ -1863,7 +1847,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FLOATING_POINT */
+comment|/* !NO_FLOATING_POINT */
 end_comment
 
 begin_comment
@@ -2112,9 +2096,9 @@ modifier|*
 name|grouping
 decl_stmt|;
 comment|/* locale specific numeric grouping rules */
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 comment|/* 	 * We can decompose the printed representation of floating 	 * point numbers into several parts, some of which may be empty: 	 * 	 * [+|-| ] [0x|0X] MMM . NNN [e|E|p|P] [+|-] ZZ 	 *    A       B     ---C---      D       E   F 	 * 	 * A:	'sign' holds this value if present; '\0' otherwise 	 * B:	ox[1] holds the 'x' or 'X'; '\0' if not hexadecimal 	 * C:	cp points to the string MMMNNN.  Leading and trailing 	 *	zeros are not in the string and must be added. 	 * D:	expchar holds this character; '\0' if no exponent, e.g. %f 	 * F:	at least two digits for decimal, at least one digit for hex 	 */
 name|char
 modifier|*
@@ -2456,9 +2440,9 @@ name|grouping
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 name|decimal_point
 operator|=
 name|localeconv
@@ -2954,9 +2938,9 @@ expr_stmt|;
 goto|goto
 name|reswitch
 goto|;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 literal|'L'
 case|:
@@ -3208,12 +3192,9 @@ expr_stmt|;
 goto|goto
 name|number
 goto|;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-ifdef|#
-directive|ifdef
-name|HEXFLOAT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 literal|'a'
 case|:
@@ -3405,9 +3386,6 @@ expr_stmt|;
 goto|goto
 name|fp_common
 goto|;
-endif|#
-directive|endif
-comment|/* HEXFLOAT */
 case|case
 literal|'e'
 case|:
@@ -3906,7 +3884,7 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* FLOATING_POINT */
+comment|/* !NO_FLOATING_POINT */
 case|case
 literal|'n'
 case|:
@@ -4711,9 +4689,9 @@ name|zeroes
 argument_list|)
 expr_stmt|;
 comment|/* the string or number proper */
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 if|if
 condition|(
 operator|(
@@ -5458,9 +5436,9 @@ expr_stmt|;
 goto|goto
 name|reswitch
 goto|;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 literal|'L'
 case|:
@@ -5617,20 +5595,15 @@ name|ADDSARG
 argument_list|()
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-ifdef|#
-directive|ifdef
-name|HEXFLOAT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 literal|'a'
 case|:
 case|case
 literal|'A'
 case|:
-endif|#
-directive|endif
 case|case
 literal|'e'
 case|:
@@ -5666,7 +5639,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* FLOATING_POINT */
+comment|/* !NO_FLOATING_POINT */
 case|case
 literal|'n'
 case|:
@@ -6323,9 +6296,9 @@ operator|*
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 name|T_DOUBLE
 case|:
@@ -6655,11 +6628,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
 
 begin_function
 specifier|static
@@ -6837,7 +6810,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FLOATING_POINT */
+comment|/* !NO_FLOATING_POINT */
 end_comment
 
 end_unit
