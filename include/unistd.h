@@ -2527,6 +2527,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GETOPT_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GETOPT_DECLARED
+end_define
+
 begin_function_decl
 name|int
 name|getopt
@@ -2567,6 +2579,15 @@ decl_stmt|,
 name|optopt
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _GETOPT_DECLARED */
+end_comment
 
 begin_endif
 endif|#
