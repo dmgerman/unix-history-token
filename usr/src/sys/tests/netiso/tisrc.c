@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisrc.c	7.2 (Berkeley) %G%"
+literal|"@(#)tisrc.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|tp_conn_param
+name|tp_params
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|fd_set
 name|readfds
 decl_stmt|,
@@ -259,6 +266,10 @@ decl_stmt|,
 name|debug
 init|=
 literal|0
+decl_stmt|,
+name|tp0mode
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -914,6 +925,14 @@ init|=
 literal|8
 decl_stmt|,
 name|n
+decl_stmt|,
+name|proto
+init|=
+name|tp0mode
+condition|?
+name|ISOPROTO_TP0
+else|:
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -932,7 +951,7 @@ name|AF_ISO
 operator|,
 name|type
 operator|,
-literal|0
+name|proto
 operator|)
 argument_list|,
 literal|""
