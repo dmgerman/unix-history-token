@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)net.c	8.4 (Berkeley) 4/28/95";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)net.c	8.4 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -62,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -205,7 +229,7 @@ operator|*
 name|host
 operator|++
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -295,14 +319,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: unknown host: %s\n"
+literal|"unknown host: %s"
 argument_list|,
 name|host
 argument_list|)
@@ -324,14 +343,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: tcp/finger: unknown service\n"
+literal|"tcp/finger: unknown service"
 argument_list|)
 expr_stmt|;
 return|return;

@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)util.c	8.3 (Berkeley) 4/28/95";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)util.c	8.3 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -494,7 +512,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|ll
 operator|.
@@ -1993,21 +2011,11 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|tbuf
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2059,9 +2067,6 @@ modifier|*
 name|pw
 decl_stmt|;
 block|{
-name|int
-name|fd
-decl_stmt|;
 name|char
 name|buf
 index|[

@@ -38,15 +38,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)finger.c	8.5 (Berkeley) 5/4/95";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.5 (Berkeley) 5/4/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -207,6 +225,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|userlist
 name|__P
 argument_list|(
@@ -336,6 +367,22 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|optind
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
 operator|(
 name|void
 operator|)
@@ -352,13 +399,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|optind
-return|;
-block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -375,8 +419,6 @@ name|argv
 decl_stmt|;
 block|{
 name|int
-name|ch
-decl_stmt|,
 name|envargc
 decl_stmt|,
 name|argcnt
@@ -624,7 +666,7 @@ index|[
 name|UT_NAMESIZE
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 while|while
 condition|(
@@ -1035,14 +1077,9 @@ name|pw
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: %s: no such user\n"
+literal|"%s: no such user"
 argument_list|,
 operator|*
 name|p
@@ -1135,14 +1172,9 @@ operator|!
 operator|*
 name|ip
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: %s: no such user\n"
+literal|"%s: no such user"
 argument_list|,
 operator|*
 name|p
