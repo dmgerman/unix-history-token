@@ -44,5 +44,9 @@ name|_PATH_RMT
 value|"/etc/rmt"
 end_define
 
+begin_comment
+comment|/* path on remote host */
+end_comment
+
 end_unit
 

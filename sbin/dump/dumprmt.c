@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)dumprmt.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -325,6 +331,46 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERBEROS
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|krcmd
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+comment|/*u_short*/
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -332,6 +378,13 @@ name|errfd
 init|=
 operator|-
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dokerberos
 decl_stmt|;
 end_decl_stmt
 
@@ -622,6 +675,10 @@ name|sp
 operator|=
 name|getservbyname
 argument_list|(
+name|dokerberos
+condition|?
+literal|"kshell"
+else|:
 literal|"shell"
 argument_list|,
 literal|"tcp"
@@ -636,7 +693,13 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"shell/tcp: unknown service\n"
+literal|"%s/tcp: unknown service\n"
+argument_list|,
+name|dokerberos
+condition|?
+literal|"kshell"
+else|:
+literal|"shell"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -677,7 +740,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|rmtpeer
 argument_list|,
@@ -745,6 +808,41 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+name|dokerberos
+condition|)
+name|rmtape
+operator|=
+name|krcmd
+argument_list|(
+operator|&
+name|rmtpeer
+argument_list|,
+name|sp
+operator|->
+name|s_port
+argument_list|,
+name|tuser
+argument_list|,
+name|rmt
+argument_list|,
+operator|&
+name|errfd
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|rmtape
 operator|=
 name|rcmd
