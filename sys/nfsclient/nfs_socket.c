@@ -2016,6 +2016,7 @@ condition|(
 name|error
 condition|)
 block|{
+comment|/* 		 * Don't report EPIPE errors on nfs sockets. 		 * These can be due to idle tcp mounts which will be closed by 		 * netapp, solaris, etc. if left idle too long. 		 */
 if|if
 condition|(
 name|error
