@@ -1799,7 +1799,7 @@ name|proc
 operator|.
 name|p_siglist
 expr_stmt|;
-name|SIGANDSET
+name|SIGSETOR
 argument_list|(
 name|kp
 operator|->
