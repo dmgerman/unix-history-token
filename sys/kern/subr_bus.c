@@ -1752,10 +1752,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|printf
 argument_list|(
 literal|"%s-: %s%d already exists, skipping it\n"
