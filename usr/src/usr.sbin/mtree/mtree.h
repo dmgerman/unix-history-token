@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtree.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -111,6 +111,7 @@ comment|/* items set */
 name|off_t
 name|st_size
 decl_stmt|;
+comment|/* size */
 name|u_long
 name|cksum
 decl_stmt|;
@@ -118,9 +119,11 @@ comment|/* check sum */
 name|uid_t
 name|st_uid
 decl_stmt|;
+comment|/* owner */
 name|gid_t
 name|st_gid
 decl_stmt|;
+comment|/* group */
 define|#
 directive|define
 name|MBITS
@@ -128,9 +131,11 @@ value|(S_ISUID|S_ISGID|S_ISTXT|S_IRWXU|S_IRWXG|S_IRWXO)
 name|mode_t
 name|st_mode
 decl_stmt|;
+comment|/* mode */
 name|nlink_t
 name|st_nlink
 decl_stmt|;
+comment|/* link count */
 name|char
 modifier|*
 name|slink
@@ -175,18 +180,25 @@ value|0x01
 comment|/* directory done */
 define|#
 directive|define
-name|F_VISIT
+name|F_MAGIC
 value|0x02
+comment|/* name has magic chars */
+define|#
+directive|define
+name|F_VISIT
+value|0x04
 comment|/* visited this node */
 name|u_char
 name|flags
 decl_stmt|;
 comment|/* flags */
 name|char
-modifier|*
 name|name
+index|[
+literal|1
+index|]
 decl_stmt|;
-comment|/* node name */
+comment|/* file name (must be last) */
 block|}
 name|ENTRY
 typedef|;
