@@ -133,6 +133,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+name|void
+name|callback_func
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|void
+name|callback_register
+parameter_list|(
+name|callback_func
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Macros for declaring command functions and initializing entries.  */
 end_comment
