@@ -388,6 +388,11 @@ modifier|*
 name|vm
 decl_stmt|;
 name|struct
+name|vnode
+modifier|*
+name|vtmp
+decl_stmt|;
+name|struct
 name|exitlist
 modifier|*
 name|ep
@@ -952,17 +957,29 @@ expr_stmt|;
 comment|/* don't trace the vrele() */
 if|if
 condition|(
+operator|(
+name|vtmp
+operator|=
 name|p
 operator|->
 name|p_tracep
+operator|)
+operator|!=
+name|NULL
 condition|)
+block|{
+name|p
+operator|->
+name|p_tracep
+operator|=
+name|NULL
+expr_stmt|;
 name|vrele
 argument_list|(
-name|p
-operator|->
-name|p_tracep
+name|vtmp
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
