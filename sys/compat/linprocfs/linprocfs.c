@@ -3929,7 +3929,7 @@ name|pi
 operator|->
 name|pi_root
 expr_stmt|;
-comment|/* /proc/* */
+comment|/* /proc/... */
 name|pfs_create_file
 argument_list|(
 name|root
@@ -4086,7 +4086,7 @@ argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
-comment|/* /proc/net/* */
+comment|/* /proc/net/... */
 name|dir
 operator|=
 name|pfs_create_dir
@@ -4118,7 +4118,7 @@ argument_list|,
 name|PFS_RD
 argument_list|)
 expr_stmt|;
-comment|/* /proc/<pid>/* */
+comment|/* /proc/<pid>/... */
 name|dir
 operator|=
 name|pfs_create_dir
