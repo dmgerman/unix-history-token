@@ -170,7 +170,7 @@ comment|/*  * Select keys from +-x/ to be asked addition, subtraction, multiplic
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
