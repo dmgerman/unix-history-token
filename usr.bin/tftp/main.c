@@ -1161,9 +1161,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|argc
+operator|<
+literal|2
+operator|)
+operator|||
+operator|(
+name|argv
 operator|>
 literal|3
+operator|)
 condition|)
 block|{
 name|printf
