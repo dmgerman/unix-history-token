@@ -24,7 +24,7 @@ empty|#ident	"@(#)cpio:cpio.c	1.30.1.11"
 end_empty
 
 begin_comment
-comment|/*	/sccs/src/cmd/s.cpio.c 	cpio.c	1.30.1.11	1/11/86 13:46:48 	Reworked cpio which uses getopt(3) to interpret flag arguments and 	changes reels to the save file name. 	Performance and size improvements. */
+comment|/*	/sccs/src/cmd/s.cpio.c 	cpio.c	1.30.1.11	1/11/86 13:46:48 	Reworked cpio which uses getopt(3) to interpret flag arguments and 	changes reels to the save file name. 	Performance and size improvements.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00048  * --------------------         -----   ----------------------  *  * 16 Aug 92	Guy Harris		Symbolic link fix */
 end_comment
 
 begin_comment
@@ -2422,12 +2422,16 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 16 Aug 92*/
 if|if
 condition|(
 name|PassLink
 operator|&&
 operator|!
 name|A_directory
+operator|&&
+operator|!
+name|A_symlink
 operator|&&
 name|Dev
 operator|==
