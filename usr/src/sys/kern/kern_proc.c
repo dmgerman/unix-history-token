@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -308,6 +308,12 @@ end_expr_stmt
 begin_decl_stmt
 name|pid_t
 name|pgid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mksess
 decl_stmt|;
 end_decl_stmt
 
@@ -940,12 +946,13 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|orphanpg
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Adjust pgrp jobc counters when specified process changes process group.  * We count the number of processes in each process group that "qualify"  * the group for terminal job control (those with a parent in a different  * process group of the same session).  If that count reaches zero, the  * process group becomes orphaned.  Check both the specified process'  * process group and that of its children.  * entering == 0 => p is leaving specified group.  * entering == 1 => p is entering specified group.  */
@@ -1118,20 +1125,18 @@ begin_comment
 comment|/*   * A process group has become orphaned;  * if there are any stopped processes in the group,  * hang-up all process in that group.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|orphanpg
-argument_list|(
-argument|pg
-argument_list|)
-expr|struct
-name|pgrp
-operator|*
+parameter_list|(
 name|pg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|struct
+name|pgrp
+modifier|*
+name|pg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1201,7 +1206,7 @@ return|return;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
