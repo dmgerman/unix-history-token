@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: reverse.c,v 1.5.2.1 1997/08/14 06:34:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -351,7 +351,7 @@ name|size
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_SHARED
 argument_list|,
 name|fileno
 argument_list|(
@@ -365,11 +365,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|caddr_t
-operator|)
-operator|-
-literal|1
+name|MAP_FAILED
 condition|)
 block|{
 name|ierr
