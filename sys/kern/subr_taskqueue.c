@@ -1619,7 +1619,7 @@ name|taskqueue_fast
 operator|->
 name|tq_mutex
 argument_list|,
-literal|"taskqueue"
+literal|"taskqueue_fast"
 argument_list|,
 name|NULL
 argument_list|,
