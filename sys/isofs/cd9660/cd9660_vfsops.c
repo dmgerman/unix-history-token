@@ -3016,7 +3016,9 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|,
-literal|0
+name|ip
+operator|->
+name|i_size
 argument_list|,
 name|curthread
 argument_list|)
