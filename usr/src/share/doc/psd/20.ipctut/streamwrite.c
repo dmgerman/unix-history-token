@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1986 The Regents of the University of California. .\" All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)streamwrite.c	6.4 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<netinet/in.h> #include<netdb.h> #include<stdio.h>  #define DATA "
+literal|" Copyright (c) 1986, 1993 .\"	The Regents of the University of California.  All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)streamwrite.c	8.1 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<netinet/in.h> #include<netdb.h> #include<stdio.h>  #define DATA "
 name|Half
 name|a
 name|league

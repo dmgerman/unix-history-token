@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1986 The Regents of the University of California. .\" All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)ustreamread.c	6.5 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<sys/un.h> #include<stdio.h>  #define NAME "
+literal|" Copyright (c) 1986, 1993 .\"	The Regents of the University of California.  All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)ustreamread.c	8.1 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<sys/un.h> #include<stdio.h>  #define NAME "
 name|socket
 literal|"  /*  * This program creates a socket in the UNIX domain and binds a name to it.   * After printing the socket's name it begins a loop. Each time through the  * loop it accepts a connection and prints out messages from it.  When the  * connection breaks, or a termination message comes through, the program  * accepts a new connection.   */ main() { 	int sock, msgsock, rval; 	struct sockaddr_un server; 	char buf[1024];  	/* Create socket */ 	sock = socket(AF_UNIX, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
 name|opening

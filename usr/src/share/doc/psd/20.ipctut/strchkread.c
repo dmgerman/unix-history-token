@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1986 The Regents of the University of California. .\" All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)strchkread.c	6.4 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<sys/time.h> #include<netinet/in.h> #include<netdb.h> #include<stdio.h> #define TRUE 1  /*  * This program uses select() to check that someone is trying to connect  * before calling accept().   */  main() { 	int sock, length; 	struct sockaddr_in server; 	int msgsock; 	char buf[1024]; 	int rval; 	fd_set ready; 	struct timeval to;  	/* Create socket */ 	sock = socket(AF_INET, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
+literal|" Copyright (c) 1986, 1993 .\"	The Regents of the University of California.  All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)strchkread.c	8.1 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<sys/time.h> #include<netinet/in.h> #include<netdb.h> #include<stdio.h> #define TRUE 1  /*  * This program uses select() to check that someone is trying to connect  * before calling accept().   */  main() { 	int sock, length; 	struct sockaddr_in server; 	int msgsock; 	char buf[1024]; 	int rval; 	fd_set ready; 	struct timeval to;  	/* Create socket */ 	sock = socket(AF_INET, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
 name|opening
 name|stream
 name|socket

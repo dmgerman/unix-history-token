@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1986 The Regents of the University of California. .\" All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)pipe.c	6.4 (Berkeley) %G% .\" #include<stdio.h>  #define DATA "
+literal|" Copyright (c) 1986, 1993 .\"	The Regents of the University of California.  All rights reserved. .\" .\" %sccs.include.redist.roff% .\" .\"	@(#)pipe.c	8.1 (Berkeley) %G% .\" #include<stdio.h>  #define DATA "
 name|Bright
 name|star
 operator|,
