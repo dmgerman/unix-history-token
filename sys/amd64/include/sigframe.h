@@ -95,18 +95,14 @@ decl_stmt|;
 block|}
 name|sf_ahu
 union|;
-name|register_t
-name|sf_sigreturn
-decl_stmt|;
-comment|/* sigreturn to use */
-name|siginfo_t
-name|sf_si
-decl_stmt|;
-comment|/* = *sf_siginfo (SA_SIGINFO case) */
 name|ucontext_t
 name|sf_uc
 decl_stmt|;
 comment|/* = *sf_ucontext */
+name|siginfo_t
+name|sf_si
+decl_stmt|;
+comment|/* = *sf_siginfo (SA_SIGINFO case) */
 block|}
 struct|;
 end_struct
