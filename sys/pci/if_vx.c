@@ -1077,8 +1077,7 @@ operator|=
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
-operator||
-name|IFF_NOTRAILERS
+comment|/*| IFF_NOTRAILERS*/
 expr_stmt|;
 name|ifp
 operator|->
