@@ -8,6 +8,10 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  *	raw.c  *  *	Routines:  *		raw()  *		cbreak()  *		noraw()  *		nocbreak()  *		qiflush()  *		noqiflush()  *		intrflush()  *  */
 end_comment
 
@@ -169,6 +173,26 @@ begin_comment
 comment|/* TRACE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERMIOS
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|tcflag_t
+name|iexten
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|raw
@@ -231,6 +255,22 @@ argument_list|(
 literal|"raw"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|iexten
+operator|==
+literal|0
+condition|)
+name|iexten
+operator|=
+name|cur_term
+operator|->
+name|Nttyb
+operator|.
+name|c_lflag
+operator|&
+name|IEXTEN
+expr_stmt|;
 name|cur_term
 operator|->
 name|Nttyb
@@ -242,6 +282,8 @@ operator|(
 name|ICANON
 operator||
 name|ISIG
+operator||
+name|IEXTEN
 operator|)
 expr_stmt|;
 name|cur_term
@@ -558,6 +600,8 @@ operator||=
 name|ISIG
 operator||
 name|ICANON
+operator||
+name|iexten
 expr_stmt|;
 name|cur_term
 operator|->
