@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.44	%G%"
+literal|"@(#)deliver.c	3.45	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,10 +93,12 @@ name|char
 modifier|*
 name|host
 decl_stmt|;
+comment|/* host being sent to */
 name|char
 modifier|*
 name|user
 decl_stmt|;
+comment|/* user being sent to */
 name|char
 modifier|*
 modifier|*
@@ -119,6 +121,7 @@ name|mailer
 modifier|*
 name|m
 decl_stmt|;
+comment|/* mailer for this recipient */
 specifier|register
 name|int
 name|i
@@ -160,6 +163,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* text line of to people */
+end_comment
+
 begin_decl_stmt
 name|char
 name|buf
@@ -181,6 +188,29 @@ specifier|extern
 name|ADDRESS
 modifier|*
 name|getctladdr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|char
+name|tfrombuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* translated from person */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|prescan
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -268,20 +298,104 @@ name|q_host
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* rewrite from address, using rewriting rules */
+end_comment
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+name|m
+operator|->
+name|m_from
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mvp
+operator|=
+name|prescan
+argument_list|(
+name|buf
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|mvp
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"bad mailer from translate \"%s\""
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EX_SOFTWARE
+operator|)
+return|;
+block|}
+end_if
+
+begin_expr_stmt
+name|rewrite
+argument_list|(
+name|mvp
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|cataddr
+argument_list|(
+name|mvp
+argument_list|,
+name|tfrombuf
+argument_list|,
+sizeof|sizeof
+name|tfrombuf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|define
 argument_list|(
 literal|'g'
 argument_list|,
-name|m
-operator|->
-name|m_from
+name|tfrombuf
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* translated from address */
+comment|/* translated sender address */
 end_comment
 
 begin_expr_stmt
@@ -2544,6 +2658,13 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Output the body of the message 	*/
+if|if
+condition|(
+name|TempFile
+operator|!=
+name|NULL
+condition|)
+block|{
 name|rewind
 argument_list|(
 name|TempFile
@@ -2585,6 +2706,31 @@ literal|1
 argument_list|,
 name|i
 argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|TempFile
+argument_list|)
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"putmessage: read error"
+argument_list|)
+expr_stmt|;
+name|setstat
+argument_list|(
+name|EX_IOERR
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|fflush
+argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;

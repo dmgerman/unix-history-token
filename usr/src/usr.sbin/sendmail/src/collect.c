@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.22	%G%"
+literal|"@(#)collect.c	3.23	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -580,14 +580,14 @@ argument_list|)
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"Out of disk space for temp file"
+literal|"collect: Out of disk space for temp file"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|syserr
 argument_list|(
-literal|"Cannot write %s"
+literal|"collect: Cannot write %s"
 argument_list|,
 name|InFileName
 argument_list|)
