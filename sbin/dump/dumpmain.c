@@ -43,6 +43,16 @@ literal|"@(#)dumpmain.c	5.16 (Berkeley) 4/24/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/dump/dumpmain.c,v 1.4 1993/04/20 09:07:41 mycroft Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -409,6 +419,8 @@ operator|*
 name|argv
 operator|++
 init|;
+name|cp
+operator|&&
 operator|*
 name|cp
 condition|;

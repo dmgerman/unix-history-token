@@ -19,6 +19,16 @@ literal|"@(#)dumpoptr.c	5.8 (Berkeley) 3/7/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/dump/dumpoptr.c,v 1.4 1993/04/20 09:30:45 mycroft Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1916,6 +1926,10 @@ operator|->
 name|pf_next
 control|)
 block|{
+name|char
+modifier|*
+name|disk
+decl_stmt|;
 name|fs
 operator|=
 name|pf
@@ -1946,19 +1960,27 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-name|strcmp
-argument_list|(
+operator|(
+operator|(
+name|disk
+operator|=
 name|rawname
 argument_list|(
 name|fs
 operator|->
 name|fs_spec
 argument_list|)
+operator|)
+operator|&&
+name|strcmp
+argument_list|(
+name|disk
 argument_list|,
 name|key
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 return|return
 operator|(

@@ -19,6 +19,16 @@ literal|"@(#)dumprmt.c	5.11 (Berkeley) 3/7/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/dump/dumprmt.c,v 1.3 1993/03/23 00:27:12 cgd Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

@@ -19,6 +19,16 @@ literal|"@(#)dumptape.c	5.18 (Berkeley) 4/24/91"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: /b/source/CVS/src/sbin/dump/dumptape.c,v 1.3 1993/03/23 00:27:15 cgd Exp $"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
