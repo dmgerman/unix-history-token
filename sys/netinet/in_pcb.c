@@ -2057,8 +2057,6 @@ name|last
 decl_stmt|;
 name|int
 name|count
-decl_stmt|,
-name|loopcount
 decl_stmt|;
 if|if
 condition|(
@@ -2179,10 +2177,6 @@ name|lastport
 expr_stmt|;
 block|}
 comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 * 		 * We split the two cases (up and down) so that the direction 		 * is not being tested on each round of the loop. 		 */
-name|loopcount
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|first
