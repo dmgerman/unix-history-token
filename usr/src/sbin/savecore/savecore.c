@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.5 (Berkeley) 81/05/14"
+literal|"@(#)savecore.c	4.6 (Berkeley) 81/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,14 +296,6 @@ name|panicstr
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|do_the_dump
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|off_t
 name|lseek
@@ -401,8 +393,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|do_the_dump
-operator|&&
 name|get_crashtime
 argument_list|()
 operator|&&
@@ -411,6 +401,12 @@ argument_list|()
 condition|)
 name|save_core
 argument_list|()
+expr_stmt|;
+else|else
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1281,9 +1277,21 @@ name|dumptime
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"dump time is 0\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
+block|}
 name|printf
 argument_list|(
 literal|"System went down at %s"
