@@ -4894,7 +4894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  OSF/1 defines _POSIX_SAVED_IDS, which means that our normal  *  setuid() won't work.  *  *  Instead, by P1003.1b-1993, setuid() is supposed to work like:  *	If the process has appropriate [super-user] priviledges, the  *	    setuid() function sets the real user ID, effective user  *	    ID, and the saved set-user-ID to uid.  *	If the process does not have appropriate priviledges, but uid  *	    is equal to the real user ID or the saved set-user-ID, the  *	    setuid() function sets the effective user ID to uid; the  *	    real user ID and saved set-user-ID remain unchanged by  *	    this function call.  */
+comment|/*  *  OSF/1 defines _POSIX_SAVED_IDS, which means that our normal  *  setuid() won't work.  *  *  Instead, by P1003.1b-1993, setuid() is supposed to work like:  *	If the process has appropriate [super-user] privileges, the  *	    setuid() function sets the real user ID, effective user  *	    ID, and the saved set-user-ID to uid.  *	If the process does not have appropriate privileges, but uid  *	    is equal to the real user ID or the saved set-user-ID, the  *	    setuid() function sets the effective user ID to uid; the  *	    real user ID and saved set-user-ID remain unchanged by  *	    this function call.  */
 end_comment
 
 begin_function
