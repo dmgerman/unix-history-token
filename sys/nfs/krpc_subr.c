@@ -4,7 +4,7 @@ comment|/*	$NetBSD: krpc_subr.c,v 1.12.4.1 1996/06/07 00:52:26 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: krpc_subr.c,v 1.8 1998/03/14 03:25:16 tegge Exp $	*/
+comment|/*	$Id: krpc_subr.c,v 1.9 1998/03/28 10:33:15 bde Exp $	*/
 end_comment
 
 begin_comment
@@ -1265,8 +1265,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"RPC timeout for server 0x%x\n"
+literal|"RPC timeout for server 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|sa

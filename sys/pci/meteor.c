@@ -3018,6 +3018,10 @@ argument_list|(
 name|mtr
 argument_list|)
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 operator|(
 name|mtr
 operator|->
@@ -3029,6 +3033,7 @@ literal|0xff000000L
 operator|)
 operator|>>
 literal|28
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3369,7 +3374,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %d.\n"
+literal|" %lu.\n"
 argument_list|,
 name|latency
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.12 1998/03/28 10:33:15 bde Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.13 1998/03/30 09:53:38 phk Exp $	*/
 end_comment
 
 begin_comment
@@ -1794,8 +1794,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"BOOTP timeout for server 0x%x\n"
+literal|"BOOTP timeout for server 0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|sin

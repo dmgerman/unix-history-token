@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.1 1998/05/30 18:28:11 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
 
 begin_ifndef
@@ -383,10 +383,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mapped physbase %p to virbase %p\n"
+literal|"Mapped physbase %#lx to virbase %#lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|physbase
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|virbase
 argument_list|)
 expr_stmt|;
@@ -417,8 +423,6 @@ argument_list|,
 literal|0600
 argument_list|,
 literal|"xrpu0"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
