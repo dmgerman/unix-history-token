@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.16 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4086,13 +4086,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * Requesting the error status (|= 2) 		 * may hang older controllers. 		 */
-name|udaddr
-operator|->
-name|udasa
+name|i
 operator|=
 name|UDA_GO
 operator||
 operator|(
+name|udaerror
+condition|?
+literal|2
+else|:
+literal|0
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|udaburst
+index|[
+name|d
+index|]
+condition|)
+name|i
+operator||=
 operator|(
 name|udaburst
 index|[
@@ -4103,15 +4117,12 @@ literal|1
 operator|)
 operator|<<
 literal|2
-operator|)
-operator||
-operator|(
-name|udaerror
-condition|?
-literal|2
-else|:
-literal|0
-operator|)
+expr_stmt|;
+name|udaddr
+operator|->
+name|udasa
+operator|=
+name|i
 expr_stmt|;
 name|udaddr
 operator|->
