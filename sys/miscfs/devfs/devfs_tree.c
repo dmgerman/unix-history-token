@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.11 1995/12/09 09:11:01 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.12 1996/01/02 09:14:44 peter Exp $  */
 end_comment
 
 begin_include
@@ -1865,22 +1865,22 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************  * remove all instances of this devicename [for backing nodes..]  * note.. if there is another link to the node (non dir nodes only)  * then the devfs_node will still exist as the ref count will be non-0  * removing a directory node will remove all sup-nodes on all planes (ZAP)  *  * Used be device drivers to remove nodes that are no longer relevant  ***********************************************************************/
+comment|/***********************************************************************  * remove all instances of this devicename [for backing nodes..]  * note.. if there is another link to the node (non dir nodes only)  * then the devfs_node will still exist as the ref count will be non-0  * removing a directory node will remove all sup-nodes on all planes (ZAP)  *  * Used by device drivers to remove nodes that are no longer relevant  * The argument is the 'cookie' they were given when they created the node  * this function is exported.. see sys/devfsext.h  ***********************************************************************/
 end_comment
 
 begin_function
 name|void
-name|dev_remove_dev
+name|devfs_remove_dev
 parameter_list|(
-name|devnm_p
+name|void
+modifier|*
 name|devnmp
 parameter_list|)
-comment|/*proto*/
 block|{
 name|DBPRINT
 argument_list|(
 operator|(
-literal|"dev_remove_dev\n"
+literal|"devfs_remove_dev\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3162,7 +3162,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* * The appropriate type... (called (sometimes indirectly) by drivers..)	* \***********************************************************************/
+comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* * The appropriate type... (called (sometimes indirectly) by drivers..)	* * this function is exported.. see sys/devfsext.h			* \***********************************************************************/
 end_comment
 
 begin_function
@@ -3427,7 +3427,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* *  a link to the already created device given as an arg..		* \***********************************************************************/
+comment|/***********************************************************************\ * Add the named device entry into the given directory, and make it 	* *  a link to the already created device given as an arg..		* * this function is exported.. see sys/devfsext.h			* \***********************************************************************/
 end_comment
 
 begin_function

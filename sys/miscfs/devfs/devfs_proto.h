@@ -138,17 +138,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|dev_remove_dev
-parameter_list|(
-name|devnm_p
-name|devnmp
-parameter_list|)
-comment|/*proto*/
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dev_dup_plane
 parameter_list|(

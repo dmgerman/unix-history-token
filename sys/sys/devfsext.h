@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.4 1995/12/08 11:19:28 julian Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.5 1995/12/09 09:11:25 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -82,6 +82,21 @@ end_function_decl
 begin_comment
 comment|/* the result of a previous dev_link 					or dev_add operation */
 end_comment
+
+begin_comment
+comment|/* remove the device the cookie represents */
+end_comment
+
+begin_function_decl
+name|void
+name|devfs_remove_dev
+parameter_list|(
+name|void
+modifier|*
+name|devnmp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
