@@ -3970,9 +3970,25 @@ name|intline
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__ia64__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+operator|)
 comment|/* 		 * Re-route interrupts on ia64 so that we can get the 		 * I/O SAPIC interrupt numbers (the BIOS leaves legacy 		 * PIC interrupt numbers in the intline registers). 		 */
 name|cfg
 operator|->
