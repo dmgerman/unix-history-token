@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.6 (Berkeley) %G%"
+literal|"@(#)dir.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2855,8 +2855,6 @@ condition|(
 name|bp
 operator|->
 name|b_errs
-operator|!=
-name|NULL
 condition|)
 goto|goto
 name|bad
@@ -2890,8 +2888,6 @@ condition|(
 name|bp
 operator|->
 name|b_errs
-operator|!=
-name|NULL
 condition|)
 goto|goto
 name|bad
@@ -2992,8 +2988,6 @@ condition|(
 name|bp
 operator|->
 name|b_errs
-operator|!=
-name|NULL
 condition|)
 goto|goto
 name|bad
@@ -3222,8 +3216,6 @@ condition|(
 name|bp
 operator|->
 name|b_errs
-operator|!=
-name|NULL
 condition|)
 block|{
 name|freeino
