@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -97,10 +97,6 @@ modifier|*
 name|ndp
 decl_stmt|;
 block|{
-name|USES_VOP_READLINK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|filedesc
@@ -866,12 +862,6 @@ modifier|*
 name|ndp
 decl_stmt|;
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_LOOKUP
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|char
 modifier|*
