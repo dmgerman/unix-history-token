@@ -80,6 +80,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* List of sub directories to look for under a given FTP server. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ftp_dirs
+index|[]
+init|=
+block|{
+literal|"."
+block|,
+literal|"releases/"
+name|MACHINE
+block|,
+literal|"snapshots/"
+name|MACHINE
+block|,
+literal|"pub/FreeBSD"
+block|,
+literal|"pub/FreeBSD/releases/"
+name|MACHINE
+block|,
+literal|"pub/FreeBSD/snapshots/"
+name|MACHINE
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Brings up attached network device, if any - takes FTP device as arg */
 end_comment
 
@@ -180,6 +214,8 @@ decl_stmt|,
 name|code
 decl_stmt|,
 name|af
+decl_stmt|,
+name|fdir
 decl_stmt|;
 name|char
 modifier|*
@@ -580,7 +616,7 @@ name|punt
 goto|;
 block|}
 block|}
-comment|/* Give it a shot - can't hurt to try and zoom in if we can, unless the release is set to        __RELEASE or "none" which signifies that it's not set */
+comment|/*      * Now that we've verified that the path we're given is ok, let's try to      * be a bit intelligent in locating the release we are looking for.  First      * off, if the release is specified as "__RELEASE" or "none", then just      * assume that the current directory is the one we want and give up.      */
 name|rel
 operator|=
 name|variable_get
@@ -604,33 +640,91 @@ argument_list|,
 literal|"none"
 argument_list|)
 condition|)
-name|i
+block|{
+comment|/* 	 * Ok, since we have a release variable, let's walk through the list 	 * of directories looking for a release directory.  The first one to 	 * match wins.  For each case, we chdir to ftp_dirs[fdir] first.  If 	 * that fails, we skip to the next one.  Otherwise, we try to chdir to 	 * rel.  If it succeeds we break out.  If it fails, then we go back to 	 * the base directory and try again.  Lots of chdirs, but oh well. :) 	 */
+name|fdir
 operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|ftp_dirs
+index|[
+name|fdir
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|ftpChdir
+argument_list|(
+name|OpenConn
+argument_list|,
+name|ftp_dirs
+index|[
+name|fdir
+operator|++
+index|]
+argument_list|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
 name|ftpChdir
 argument_list|(
 name|OpenConn
 argument_list|,
 name|rel
 argument_list|)
-expr_stmt|;
-else|else
-name|i
-operator|=
+operator|==
 literal|0
+condition|)
+block|{
+name|ftpInitted
+operator|=
+name|TRUE
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+name|ftpChdir
+argument_list|(
+name|OpenConn
+argument_list|,
+literal|"/"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|dir
+operator|&&
+operator|*
+name|dir
+operator|!=
+literal|'\0'
 condition|)
-block|{
+name|ftpChdir
+argument_list|(
+name|OpenConn
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If we get here, then all of the directories we tried failed, so 	 * print out the error message and ask the user if they want to try 	 * again. 	 */
 if|if
 condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Warning:  Can't CD to `%s' distribution on this\n"
+literal|"Warning:  Can't find the `%s' distribution on this\n"
 literal|"FTP server.  You may need to visit a different server for\n"
-literal|"the release you're trying to fetch or go to the Options\n"
+literal|"the release you are trying to fetch or go to the Options\n"
 literal|"menu and to set the release name to explicitly match what's\n"
 literal|"available on %s (or set to \"none\").\n\n"
 literal|"Would you like to select another FTP server?"
@@ -655,22 +749,16 @@ argument_list|(
 name|NULL
 argument_list|)
 argument_list|)
-operator|==
+operator|!=
 name|DITEM_FAILURE
 condition|)
-goto|goto
-name|punt
-goto|;
-else|else
 goto|goto
 name|try
 goto|;
 block|}
-else|else
-goto|goto
-name|punt
-goto|;
 block|}
+else|else
+block|{
 name|ftpInitted
 operator|=
 name|TRUE
@@ -678,6 +766,7 @@ expr_stmt|;
 return|return
 name|TRUE
 return|;
+block|}
 name|punt
 label|:
 name|ftpInitted
