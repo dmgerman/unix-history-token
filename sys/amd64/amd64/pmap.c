@@ -9265,7 +9265,7 @@ operator|->
 name|pindex
 operator|-
 name|pindex
-operator|>
+operator|>=
 name|psize
 condition|)
 block|{
