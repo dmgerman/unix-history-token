@@ -28,6 +28,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Routines to decode user commands.  *  * This is all table driven.  * A command table is a sequence of command descriptors.  * Each command descriptor is a sequence of bytes with the following format:  *<c1><c2>...<cN><0><action>  * The characters c1,c2,...,cN are the command string; that is,  * the characters which the user must type.  * It is terminated by a null<0> byte.  * The byte after the null byte is the action code associated  * with the command string.  *  * The default commands are described by cmdtable.  */
 end_comment
@@ -35,13 +61,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -53,7 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<less.h>
+file|"less.h"
 end_include
 
 begin_comment
@@ -70,6 +96,10 @@ parameter_list|)
 value|((c)&037)
 end_define
 
+begin_comment
+comment|/*  * Ideally the home and end keys would reset the horiz_scroll, too,  * but this whole thing needs to be made dynamic along with some type  * of macro commands.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -77,6 +107,46 @@ name|cmdtable
 index|[]
 init|=
 block|{
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'B'
+block|,
+literal|0
+block|,
+name|A_F_LINE
+block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'A'
+block|,
+literal|0
+block|,
+name|A_B_LINE
+block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'C'
+block|,
+literal|0
+block|,
+name|A_R_COL
+block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'D'
+block|,
+literal|0
+block|,
+name|A_L_COL
+block|,
 literal|'\r'
 block|,
 literal|0
@@ -152,6 +222,16 @@ literal|0
 block|,
 name|A_F_SCREEN
 block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'G'
+block|,
+literal|0
+block|,
+name|A_F_SCREEN
+block|,
 literal|'b'
 block|,
 literal|0
@@ -162,6 +242,16 @@ name|CONTROL
 argument_list|(
 literal|'B'
 argument_list|)
+block|,
+literal|0
+block|,
+name|A_B_SCREEN
+block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'I'
 block|,
 literal|0
 block|,
@@ -194,6 +284,16 @@ literal|0
 block|,
 name|A_GOLINE
 block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'H'
+block|,
+literal|0
+block|,
+name|A_HOME
+block|,
 literal|'p'
 block|,
 literal|0
@@ -207,6 +307,16 @@ block|,
 name|A_PERCENT
 block|,
 literal|'G'
+block|,
+literal|0
+block|,
+name|A_GOEND
+block|,
+literal|'\e'
+block|,
+literal|'['
+block|,
+literal|'F'
 block|,
 literal|0
 block|,

@@ -28,6 +28,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Primitives for displaying the file on the screen.  */
 end_comment
@@ -41,19 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<regex.h>
 end_include
 
 begin_include
@@ -65,7 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<less.h>
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"less.h"
 end_include
 
 begin_decl_stmt
@@ -84,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* keeps track of how many times we hit end of file */
+comment|/* true if we're displaying the end of the input */
 end_comment
 
 begin_decl_stmt
@@ -120,6 +146,13 @@ name|int
 name|sc_width
 decl_stmt|,
 name|sc_height
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|horiz_off
 decl_stmt|;
 end_decl_stmt
 
@@ -192,16 +225,14 @@ begin_comment
 comment|/*  * Check to see if the end of file is currently "displayed".  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|eof_check
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|off_t
 name|pos
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|sigs
@@ -215,6 +246,9 @@ argument_list|(
 name|BOTTOM_PLUS_ONE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|pos
@@ -229,14 +263,15 @@ condition|)
 name|hit_eof
 operator|++
 expr_stmt|;
-block|}
-end_block
+end_if
 
 begin_comment
+unit|}
 comment|/*  * If the screen is "squished", repaint it.  * "Squished" means the first displayed line is not at the top  * of the screen; this can happen when we display a short file  * for the first time.  */
 end_comment
 
 begin_macro
+unit|static
 name|squish_check
 argument_list|()
 end_macro
@@ -264,6 +299,7 @@ comment|/*  * Display n lines, scrolling forward, starting at position pos in th
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|forw
 argument_list|(
 name|n
@@ -542,6 +578,7 @@ comment|/*  * Display n lines, scrolling backward.  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|back
 argument_list|(
 name|n
@@ -1375,15 +1412,24 @@ begin_comment
 comment|/* For quote */
 end_comment
 
-begin_decl_stmt
+begin_struct
 specifier|static
+struct|struct
+name|mark
+block|{
+name|int
+name|horiz_off
+decl_stmt|;
 name|off_t
+name|pos
+decl_stmt|;
+block|}
 name|marks
 index|[
 name|NMARKS
 index|]
-decl_stmt|;
-end_decl_stmt
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Initialize the mark table to show no marks are set.  */
@@ -1416,6 +1462,8 @@ name|marks
 index|[
 name|i
 index|]
+operator|.
+name|pos
 operator|=
 name|NULL_POSITION
 expr_stmt|;
@@ -1500,11 +1548,24 @@ name|c
 operator|-
 literal|'a'
 index|]
+operator|.
+name|pos
 operator|=
 name|position
 argument_list|(
 name|TOP
 argument_list|)
+expr_stmt|;
+name|marks
+index|[
+name|c
+operator|-
+literal|'a'
+index|]
+operator|.
+name|horiz_off
+operator|=
+name|horiz_off
 expr_stmt|;
 block|}
 end_block
@@ -1520,11 +1581,22 @@ name|marks
 index|[
 name|LASTMARK
 index|]
+operator|.
+name|pos
 operator|=
 name|position
 argument_list|(
 name|TOP
 argument_list|)
+expr_stmt|;
+name|marks
+index|[
+name|LASTMARK
+index|]
+operator|.
+name|horiz_off
+operator|=
+name|horiz_off
 expr_stmt|;
 block|}
 end_block
@@ -1551,6 +1623,9 @@ block|{
 name|off_t
 name|pos
 decl_stmt|;
+name|int
+name|new_horiz_off
+decl_stmt|;
 if|if
 condition|(
 name|c
@@ -1564,6 +1639,8 @@ name|marks
 index|[
 name|LASTMARK
 index|]
+operator|.
+name|pos
 expr_stmt|;
 if|if
 condition|(
@@ -1574,6 +1651,15 @@ condition|)
 name|pos
 operator|=
 literal|0
+expr_stmt|;
+name|new_horiz_off
+operator|=
+name|marks
+index|[
+name|LASTMARK
+index|]
+operator|.
+name|horiz_off
 expr_stmt|;
 block|}
 else|else
@@ -1594,6 +1680,8 @@ name|c
 operator|-
 literal|'a'
 index|]
+operator|.
+name|pos
 expr_stmt|;
 if|if
 condition|(
@@ -1609,12 +1697,71 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|new_horiz_off
+operator|=
+name|marks
+index|[
+name|c
+operator|-
+literal|'a'
+index|]
+operator|.
+name|horiz_off
+expr_stmt|;
 block|}
+comment|/* Try to be nice about changing the horizontal scroll */
+if|if
+condition|(
+operator|!
+operator|(
+name|horiz_off
+operator|==
+name|NO_HORIZ_OFF
+operator|&&
+name|new_horiz_off
+operator|<=
+name|sc_width
+operator|)
+condition|)
+block|{
+comment|/* 		 * We're going to have to change the horiz_off, even if 		 * it's currently set to NO_HORIZ_OFF: if we don't change 		 * horiz_off the bookmarked location won't show on the screen. 		 */
+if|if
+condition|(
+name|horiz_off
+operator|!=
+name|new_horiz_off
+condition|)
+block|{
+comment|/* We'll need to repaint(), too... */
+name|horiz_off
+operator|=
+name|new_horiz_off
+expr_stmt|;
+name|prepaint
+argument_list|(
+name|pos
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* No need to repaint. */
 name|jump_loc
 argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * The user doesn't want horizontal scrolling, and we can 		 * fortunately honour the bookmark request without doing 		 * any horizontal scrolling. 		 */
+name|jump_loc
+argument_list|(
+name|pos
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1823,7 +1970,9 @@ name|rx
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|oncethru
@@ -1844,10 +1993,12 @@ literal|"No previous regular expression"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-comment|/* 	 * Figure out where to start the search. 	 */
+comment|/* 	 * Figure out where to start the search. 	 * 	 * XXX This should probably be adapted to handle horizontal 	 * scrolling.  Consider a long line at the top of the screen 	 * that might be hiding more matches to its right (when doing 	 * successive searches). 	 */
 if|if
 condition|(
 name|position
@@ -2018,46 +2169,6 @@ name|linenum
 argument_list|,
 name|pos
 argument_list|)
-expr_stmt|;
-comment|/* 		 * If this is a caseless search, convert uppercase in the 		 * input line to lowercase. 		 */
-if|if
-condition|(
-name|caseless
-condition|)
-for|for
-control|(
-name|p
-operator|=
-name|q
-operator|=
-name|line
-init|;
-operator|*
-name|p
-condition|;
-name|p
-operator|++
-operator|,
-name|q
-operator|++
-control|)
-operator|*
-name|q
-operator|=
-name|isupper
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|?
-name|tolower
-argument_list|(
-operator|*
-name|p
-argument_list|)
-else|:
-operator|*
-name|p
 expr_stmt|;
 comment|/* 		 * Remove any backspaces along with the preceeding char. 		 * This allows us to match text which is underlined or 		 * overstruck. 		 */
 for|for
