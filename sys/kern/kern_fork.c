@@ -1233,6 +1233,12 @@ operator|&
 name|runtime
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
 name|p2
 operator|->
 name|p_stats
