@@ -6038,6 +6038,26 @@ argument_list|,
 name|idx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rip6
+argument_list|)
+condition|)
+block|{
+name|trace
+argument_list|(
+literal|1
+argument_list|,
+literal|"Packet too short\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|nh
 operator|=
 name|fsock
