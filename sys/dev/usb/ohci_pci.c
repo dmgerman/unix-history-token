@@ -178,6 +178,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_OHCI_VENDORID_NVIDIA2
+value|0x10DE
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_OHCI_VENDORID_OPTI
 value|0x1045
 end_define
@@ -899,6 +906,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PCI_OHCI_VENDORID_NVIDIA
+case|:
+case|case
+name|PCI_OHCI_VENDORID_NVIDIA2
 case|:
 name|sprintf
 argument_list|(
