@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.12 (Berkeley) %G%"
+literal|"@(#)function.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1019,7 +1019,7 @@ name|cnt
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_char
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1097,7 +1097,7 @@ argument_list|(
 operator|(
 name|u_int
 operator|)
-literal|1024
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 name|new
@@ -1107,7 +1107,7 @@ index|[
 name|cnt
 index|]
 operator|=
-literal|1024
+name|MAXPATHLEN
 expr_stmt|;
 break|break;
 block|}
