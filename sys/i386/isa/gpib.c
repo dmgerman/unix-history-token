@@ -108,6 +108,18 @@ end_include
 begin_define
 define|#
 directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a< b) ? a : b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GPIBPRI
 value|(PZERO+8)|PCATCH
 end_define
@@ -340,15 +352,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|gpprobe
-argument_list|()
-decl_stmt|,
 name|gpattach
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
