@@ -406,6 +406,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|_fetch_netrc_auth
+parameter_list|(
+name|struct
+name|url
+modifier|*
+name|url
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
