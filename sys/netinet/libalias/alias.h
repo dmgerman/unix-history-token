@@ -4,7 +4,7 @@ comment|/*lint -save -library Flexelint comment for external headers */
 end_comment
 
 begin_comment
-comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution. */
+comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution.      $Id$ */
 end_comment
 
 begin_ifndef
@@ -250,6 +250,28 @@ end_function_decl
 begin_comment
 comment|/* Miscellaneous Functions */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|PacketAliasSetTarget
+parameter_list|(
+name|struct
+name|in_addr
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|PacketAliasCheckNewLink
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
