@@ -2417,6 +2417,11 @@ operator|)
 return|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2955,18 +2960,6 @@ name|amount
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|;
-name|u_long
-name|tmpuva
-init|=
-name|uva
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|char
-modifier|*
-name|chr
 decl_stmt|;
 name|cp
 operator|=

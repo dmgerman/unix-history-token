@@ -219,12 +219,6 @@ name|kd
 operator|->
 name|arglen
 decl_stmt|,
-name|needed
-init|=
-name|buflen
-decl_stmt|,
-name|error
-decl_stmt|,
 name|n
 init|=
 literal|0
@@ -233,8 +227,6 @@ name|struct
 name|file
 modifier|*
 name|fp
-decl_stmt|,
-name|file
 decl_stmt|,
 modifier|*
 name|filehead
@@ -247,12 +239,6 @@ init|=
 name|kd
 operator|->
 name|argspc
-decl_stmt|;
-name|char
-modifier|*
-name|start
-init|=
-name|where
 decl_stmt|;
 comment|/* 	 * first copyout filehead 	 */
 if|if

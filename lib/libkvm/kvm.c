@@ -1296,7 +1296,7 @@ name|sf
 parameter_list|,
 name|flag
 parameter_list|,
-name|program
+name|errstr
 parameter_list|)
 specifier|const
 name|char
@@ -1319,7 +1319,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|program
+name|errstr
 decl_stmt|;
 block|{
 specifier|register
@@ -1343,10 +1343,6 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|&&
-name|program
-operator|!=
-name|NULL
 condition|)
 block|{
 operator|(
@@ -1357,6 +1353,12 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: %s\n"
+argument_list|,
+name|errstr
+condition|?
+name|errstr
+else|:
+literal|"kvm_open"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1374,7 +1376,7 @@ name|kd
 operator|->
 name|program
 operator|=
-name|program
+name|errstr
 expr_stmt|;
 return|return
 operator|(
