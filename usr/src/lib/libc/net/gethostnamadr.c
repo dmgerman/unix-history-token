@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.10 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -50,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
