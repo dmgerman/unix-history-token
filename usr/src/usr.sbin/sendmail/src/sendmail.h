@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.51 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.50		%G%"
+literal|"@(#)sendmail.h	6.51		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -678,6 +678,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ESMTP
+value|'a'
+end_define
+
+begin_comment
+comment|/* run Extended SMTP protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_NOCOMMENT
 value|'c'
 end_define
@@ -899,6 +910,10 @@ end_comment
 
 begin_comment
 comment|/*	'V'	/* UIUC: !-relativize all addresses */
+end_comment
+
+begin_comment
+comment|/*	'x'	/* CF: include Full-Name: */
 end_comment
 
 begin_define
@@ -2151,8 +2166,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCIO_EXPN
+name|MCIO_ESMTP
 value|0x0001
+end_define
+
+begin_comment
+comment|/* this host speaks ESMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIO_EXPN
+value|0x0002
 end_define
 
 begin_comment
@@ -2163,11 +2189,22 @@ begin_define
 define|#
 directive|define
 name|MCIO_SIZE
-value|0x0002
+value|0x0004
 end_define
 
 begin_comment
 comment|/* SIZE option supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIO_8BITMIME
+value|0x0008
+end_define
+
+begin_comment
+comment|/* BODY=8BITMIME supported */
 end_comment
 
 begin_escape
