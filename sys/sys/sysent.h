@@ -15,12 +15,6 @@ directive|define
 name|_SYS_SYSENT_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|proc
@@ -82,6 +76,12 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|image_params
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|__sigset
 struct_decl|;
 end_struct_decl
 
@@ -182,7 +182,8 @@ argument_list|)
 operator|,
 name|int
 operator|,
-name|sigset_t
+expr|struct
+name|__sigset
 operator|*
 operator|,
 name|u_long
@@ -237,7 +238,6 @@ operator|(
 expr|struct
 name|proc
 operator|*
-name|p
 operator|,
 expr|struct
 name|vnode
