@@ -3611,6 +3611,16 @@ literal|0
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|hp
+operator|->
+name|h_addrtype
+operator|==
+name|afd
+operator|->
+name|a_af
+condition|)
 name|GET_AI
 argument_list|(
 name|cur
@@ -3623,6 +3633,17 @@ name|h_addr_list
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* IPv4 mapped IPv6 addr case */
+name|GET_AI
+argument_list|(
+name|cur
+argument_list|,
+name|afd
+argument_list|,
+name|numaddr
 argument_list|)
 expr_stmt|;
 name|GET_PORT
