@@ -3,42 +3,24 @@ begin_comment
 comment|/*  *      Copyright (c) 1994 Christopher G. Demetriou.  *      @(#)Copyright (c) 1994, Simon J. Gerraty.  *  *      This is free software.  It comes with NO WARRANTY.  *      Permission to use, modify and distribute this source code  *      is granted subject to the following conditions.  *      1/ that the above copyright notice and this notice  *      are preserved in all copies and that due credit be given  *      to the author.  *      2/ that any changes to this code are clearly commented  *      as such so that the author does not get blamed for bugs  *      other than his own.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -69,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -183,7 +159,7 @@ operator|+
 literal|3
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -1262,7 +1238,10 @@ index|[
 name|optind
 index|]
 argument_list|,
-literal|0L
+operator|(
+name|time_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
