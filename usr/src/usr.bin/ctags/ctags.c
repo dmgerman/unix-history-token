@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctags.c	5.7 (Berkeley) %G%"
+literal|"@(#)ctags.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctags.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ctags.h"
 end_include
 
 begin_comment

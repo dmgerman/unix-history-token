@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	5.4 (Berkeley) %G%"
+literal|"@(#)fortran.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctags.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -39,6 +39,20 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ctags.h"
+end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|takeprec
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
@@ -510,10 +524,11 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|takeprec
-argument_list|()
+parameter_list|()
 block|{
 for|for
 control|(
@@ -528,9 +543,6 @@ operator|++
 name|lbp
 control|)
 empty_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|*
@@ -579,8 +591,8 @@ argument_list|)
 condition|)
 empty_stmt|;
 block|}
-end_if
+block|}
+end_function
 
-unit|}
 end_unit
 

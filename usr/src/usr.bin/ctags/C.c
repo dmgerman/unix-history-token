@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)C.c	5.4 (Berkeley) %G%"
+literal|"@(#)C.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,8 +37,33 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctags.h>
+file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ctags.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|func_entry
+argument_list|()
+decl_stmt|,
+name|str_entry
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|hash_entry
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * c_entries --  *	read .c and .h files and call appropriate routines  */
@@ -678,13 +703,11 @@ unit|}
 comment|/*  * hash_entry --  *	handle a line starting with a '#'  */
 end_comment
 
-begin_macro
+begin_function
 unit|static
+name|void
 name|hash_entry
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -903,7 +926,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * str_entry --  *	handle a struct, union or enum entry  */

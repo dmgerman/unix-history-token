@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.3 (Berkeley) %G%"
+literal|"@(#)print.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctags.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ctags.h"
 end_include
 
 begin_decl_stmt
@@ -409,88 +421,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_function
-name|char
-modifier|*
-name|savestr
-parameter_list|(
-name|str
-parameter_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-block|{
-specifier|register
-name|u_int
-name|len
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|space
-decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|space
-operator|=
-name|malloc
-argument_list|(
-operator|(
-name|u_int
-operator|)
-name|len
-argument_list|)
-operator|)
-condition|)
-block|{
-comment|/* 		 * should probably free up the tree, here, 		 * we're just as likely to fail here as we 		 * are when getting the NODE structure 		 */
-name|fputs
-argument_list|(
-literal|"ctags: no more space.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|bcopy
-argument_list|(
-name|str
-argument_list|,
-name|space
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|space
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 
