@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet6/ipsec6.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netkey/key.h>
 end_include
 
