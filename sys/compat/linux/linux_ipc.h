@@ -15,6 +15,12 @@ directive|define
 name|_LINUX_IPC_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|linux_msgctl
@@ -212,6 +218,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_endif
 endif|#

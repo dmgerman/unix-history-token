@@ -32,6 +32,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|bsd_to_linux_sigset
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+operator|,
+name|linux_sigset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|linux_do_sigaction
 name|__P

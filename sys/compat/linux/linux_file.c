@@ -93,17 +93,45 @@ directive|include
 file|<machine/../linux/linux.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<compat/linux/linux_util.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -204,6 +232,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_function
 name|int
@@ -1269,7 +1306,7 @@ operator|.
 name|arg
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|bsd_flock
 expr_stmt|;
@@ -1374,7 +1411,7 @@ operator|.
 name|arg
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|bsd_flock
 expr_stmt|;
@@ -1440,7 +1477,7 @@ operator|.
 name|arg
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|bsd_flock
 expr_stmt|;
@@ -1598,6 +1635,12 @@ name|error
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -1757,6 +1800,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
+
 begin_struct
 struct|struct
 name|linux_dirent
@@ -1795,6 +1847,12 @@ parameter_list|)
 define|\
 value|ALIGN((((char *)&(de)->dname - (char *)de) + (namlen) + 1))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -1848,6 +1906,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_function
 name|int
@@ -4036,6 +4103,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_function
 name|int
 name|linux_fdatasync
@@ -4078,6 +4151,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_function
 name|int

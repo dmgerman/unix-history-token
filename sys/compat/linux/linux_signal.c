@@ -39,11 +39,33 @@ directive|include
 file|<machine/../linux/linux.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -145,6 +167,18 @@ name|l
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|b
+operator|=
+name|_SIG_IDX
+argument_list|(
+name|l
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|b
 operator|=
 name|linux_to_bsd_signal
@@ -155,6 +189,8 @@ name|l
 argument_list|)
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|b
@@ -260,6 +296,18 @@ name|b
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|__alpha__
+name|l
+operator|=
+name|_SIG_IDX
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|l
 operator|=
 name|bsd_to_linux_signal
@@ -270,6 +318,8 @@ name|b
 argument_list|)
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|l
@@ -696,6 +746,9 @@ name|nsa
 operator|=
 name|NULL
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 if|if
 condition|(
 name|linux_sig
@@ -715,6 +768,8 @@ argument_list|)
 index|]
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|sa_args
 operator|.
 name|sig
@@ -772,6 +827,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -887,6 +948,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
+
 begin_function
 name|int
 name|linux_rt_sigaction
@@ -915,7 +985,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): rt_sigaction(%d, %p, %p, %d)\n"
+literal|"Linux-emul(%ld): rt_sigaction(%ld, %p, %p, %ld)\n"
 argument_list|,
 operator|(
 name|long
@@ -924,6 +994,9 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|args
 operator|->
 name|sig
@@ -944,6 +1017,9 @@ name|args
 operator|->
 name|oact
 argument_list|,
+operator|(
+name|long
+operator|)
 name|args
 operator|->
 name|sigsetsize
@@ -1225,6 +1301,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_function
 name|int
 name|linux_sigprocmask
@@ -1395,6 +1477,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
+
 begin_function
 name|int
 name|linux_rt_sigprocmask
@@ -1423,7 +1514,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): rt_sigprocmask(%d, %p, %p, %d)\n"
+literal|"Linux-emul(%ld): rt_sigprocmask(%d, %p, %p, %ld)\n"
 argument_list|,
 operator|(
 name|long
@@ -1452,6 +1543,9 @@ name|args
 operator|->
 name|omask
 argument_list|,
+operator|(
+name|long
+operator|)
 name|args
 operator|->
 name|sigsetsize
@@ -1575,6 +1669,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -1863,6 +1963,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
+
 begin_function
 name|int
 name|linux_kill
@@ -1923,6 +2032,9 @@ condition|)
 return|return
 name|EINVAL
 return|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 if|if
 condition|(
 name|args
@@ -1952,6 +2064,8 @@ argument_list|)
 index|]
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|tmp
 operator|.
 name|signum

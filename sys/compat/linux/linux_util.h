@@ -273,6 +273,56 @@ parameter_list|)
 value|CHECKALT(p, sgp, path, 1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DUMMY
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|int									\ linux_ ## s(struct proc *p, struct linux_ ## s ## _args *args)		\ {									\ 	return (unsupported_msg(p, #s));				\ }									\ struct __hack
+end_define
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|unsupported_msg
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"linux: syscall %s is obsoleted or not implemented (pid=%ld)\n"
+argument_list|,
+name|fname
+argument_list|,
+operator|(
+name|long
+operator|)
+name|p
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
