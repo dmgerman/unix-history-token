@@ -6142,9 +6142,6 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pv
 operator|=
 name|get_pv_entry
@@ -6167,6 +6164,9 @@ operator|->
 name|pv_ptem
 operator|=
 name|mpte
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
