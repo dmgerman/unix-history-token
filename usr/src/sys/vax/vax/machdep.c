@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.1	%G%	*/
+comment|/*	machdep.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.1) %G% \n"
+literal|"VM/UNIX (Berkeley Version 4.2) %G% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1770,11 +1770,18 @@ operator|&
 name|RB_HALT
 operator|)
 condition|)
+block|{
+name|tocons
+argument_list|(
+literal|0xf01
+argument_list|)
+expr_stmt|;
 name|tocons
 argument_list|(
 name|TXDB_WSI
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1786,6 +1793,11 @@ empty_stmt|;
 comment|/* sent TXDB_CWSI at boot */
 else|else
 block|{
+name|tocons
+argument_list|(
+literal|0xf01
+argument_list|)
+expr_stmt|;
 name|tocons
 argument_list|(
 name|TXDB_WSI
