@@ -166,7 +166,7 @@ end_ifdef
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|DRIVER_NAME
+name|radeon
 argument_list|,
 name|pci
 argument_list|,
