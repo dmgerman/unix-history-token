@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cal.c	4.8 (Berkeley) %G%"
+literal|"@(#)cal.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,17 @@ end_define
 
 begin_comment
 comment|/* 11 day correction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDAYS
+value|42
+end_define
+
+begin_comment
+comment|/* max slots in a month array */
 end_comment
 
 begin_define
@@ -203,11 +214,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|sep1752
 index|[
-literal|42
+name|MAXDAYS
 index|]
 init|=
 block|{
@@ -298,7 +308,7 @@ block|, }
 decl_stmt|,
 name|j_sep1752
 index|[
-literal|42
+name|MAXDAYS
 index|]
 init|=
 block|{
@@ -386,11 +396,101 @@ name|SPACE
 block|,
 name|SPACE
 block|, }
+decl_stmt|,
+name|empty
+index|[
+name|MAXDAYS
+index|]
+init|=
+block|{
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|,
+name|SPACE
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|month_names
@@ -427,22 +527,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|day_headings
 init|=
-literal|" S  M  Tu W  Th F  S"
+literal|" S  M Tu  W Th  F  S"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|j_day_headings
 init|=
-literal|" S   M   Tu  W   Th  F   S"
+literal|"  S   M  Tu   W  Th   F   S"
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +713,10 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|month
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|argc
@@ -650,7 +752,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cal: illegal month value.\n"
+literal|"cal: illegal month value: use 0-12\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -689,7 +791,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cal: illegal year value.\n"
+literal|"cal: illegal year value: use 0-9999\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -840,7 +942,7 @@ begin_define
 define|#
 directive|define
 name|J_HEAD_SEP
-value|3
+value|2
 end_define
 
 begin_macro
@@ -878,7 +980,7 @@ name|len
 decl_stmt|,
 name|days
 index|[
-literal|42
+name|MAXDAYS
 index|]
 decl_stmt|;
 name|char
@@ -1059,7 +1161,7 @@ index|[
 literal|12
 index|]
 index|[
-literal|42
+name|MAXDAYS
 index|]
 decl_stmt|;
 name|char
@@ -1122,13 +1224,9 @@ literal|1
 argument_list|,
 name|year
 argument_list|,
-operator|&
 name|days
 index|[
 name|i
-index|]
-index|[
-literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -1369,7 +1467,7 @@ index|[
 literal|12
 index|]
 index|[
-literal|42
+name|MAXDAYS
 index|]
 decl_stmt|;
 name|char
@@ -1434,13 +1532,9 @@ literal|1
 argument_list|,
 name|year
 argument_list|,
-operator|&
 name|days
 index|[
 name|i
-index|]
-index|[
-literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -1699,10 +1793,52 @@ decl_stmt|,
 name|dw
 decl_stmt|,
 name|dm
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
+if|if
+condition|(
+name|month
+operator|==
+literal|9
+operator|&&
+name|year
+operator|==
+literal|1752
+condition|)
+block|{
+name|bcopy
+argument_list|(
+name|julian
+condition|?
+name|j_sep1752
+else|:
+name|sep1752
+argument_list|,
+name|days
+argument_list|,
+name|MAXDAYS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|bcopy
+argument_list|(
+name|empty
+argument_list|,
+name|days
+argument_list|,
+name|MAXDAYS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dm
 operator|=
 name|days_in_month
@@ -1726,68 +1862,6 @@ name|month
 argument_list|,
 name|year
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|month
-operator|==
-literal|9
-operator|&&
-name|year
-operator|==
-literal|1752
-condition|)
-block|{
-name|p
-operator|=
-name|julian
-condition|?
-name|j_sep1752
-else|:
-name|sep1752
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|42
-condition|;
-name|i
-operator|++
-control|)
-operator|*
-name|days
-operator|++
-operator|=
-operator|*
-name|p
-operator|++
-expr_stmt|;
-return|return;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|42
-operator|,
-name|p
-operator|=
-name|days
-init|;
-name|i
-operator|--
-condition|;
-control|)
-operator|*
-name|p
-operator|++
-operator|=
-name|SPACE
 expr_stmt|;
 name|day
 operator|=
@@ -2036,6 +2110,78 @@ name|display
 decl_stmt|,
 name|val
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|aday
+index|[]
+init|=
+block|{
+literal|""
+block|,
+literal|" 1 "
+block|,
+literal|" 2 "
+block|,
+literal|" 3 "
+block|,
+literal|" 4 "
+block|,
+literal|" 5 "
+block|,
+literal|" 6 "
+block|,
+literal|" 7 "
+block|,
+literal|" 8 "
+block|,
+literal|" 9 "
+block|,
+literal|"10 "
+block|,
+literal|"11 "
+block|,
+literal|"12 "
+block|,
+literal|"13 "
+block|,
+literal|"14 "
+block|,
+literal|"15 "
+block|,
+literal|"16 "
+block|,
+literal|"17 "
+block|,
+literal|"18 "
+block|,
+literal|"19 "
+block|,
+literal|"20 "
+block|,
+literal|"21 "
+block|,
+literal|"22 "
+block|,
+literal|"23 "
+block|,
+literal|"24 "
+block|,
+literal|"25 "
+block|,
+literal|"26 "
+block|,
+literal|"27 "
+block|,
+literal|"28 "
+block|,
+literal|"29 "
+block|,
+literal|"30 "
+block|,
+literal|"31 "
+block|, 	}
+decl_stmt|;
 if|if
 condition|(
 name|day
@@ -2051,22 +2197,56 @@ literal|' '
 argument_list|,
 name|julian
 condition|?
-literal|4
+name|J_DAY_LEN
 else|:
-literal|3
+name|DAY_LEN
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|display
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
+operator|!
 name|julian
 condition|)
 block|{
+operator|*
+name|p
+operator|++
+operator|=
+name|aday
+index|[
+name|day
+index|]
+index|[
+literal|0
+index|]
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+name|aday
+index|[
+name|day
+index|]
+index|[
+literal|1
+index|]
+expr_stmt|;
+operator|*
+name|p
+operator|=
+name|aday
+index|[
+name|day
+index|]
+index|[
+literal|2
+index|]
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|val
@@ -2094,11 +2274,16 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 operator|*
 name|p
 operator|++
 operator|=
 literal|' '
+expr_stmt|;
+name|display
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|val
