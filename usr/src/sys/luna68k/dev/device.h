@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -355,6 +355,13 @@ define|#
 directive|define
 name|D_SIO
 value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_BMC
+value|0x0A
 end_define
 
 begin_define
