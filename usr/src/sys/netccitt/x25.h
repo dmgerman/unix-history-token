@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.2 (Berkeley) %G%  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -219,7 +223,7 @@ decl_stmt|,
 comment|/* default packet size 7=128, 8=256, ... */
 name|xc_type
 range|:
-literal|2
+literal|3
 decl_stmt|,
 comment|/* network type */
 define|#
@@ -234,6 +238,14 @@ define|#
 directive|define
 name|X25_1984
 value|2
+define|#
+directive|define
+name|X25_DDN
+value|3
+define|#
+directive|define
+name|X25_BASIC
+value|4
 name|xc_ptrace
 range|:
 literal|1
@@ -241,7 +253,7 @@ decl_stmt|,
 comment|/* packet level tracing flag */
 name|xc_rsvd2
 range|:
-literal|6
+literal|5
 decl_stmt|;
 name|u_char
 name|xc_maxlcn
@@ -262,7 +274,10 @@ begin_struct
 struct|struct
 name|sockaddr_x25
 block|{
-name|short
+name|u_char
+name|x25_len
+decl_stmt|;
+name|u_char
 name|x25_family
 decl_stmt|;
 comment|/* must be AF_CCITT */
