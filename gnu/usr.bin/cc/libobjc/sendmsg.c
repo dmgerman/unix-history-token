@@ -372,6 +372,9 @@ directive|else
 warning|#
 directive|warning
 warning|performv:: will not work
+name|va_list
+name|nothing
+decl_stmt|;
 call|(
 modifier|*
 name|_objc_error
@@ -381,7 +384,7 @@ name|object
 argument_list|,
 literal|"objc_msg_sendv (performv::) not supported\n"
 argument_list|,
-literal|0
+name|nothing
 argument_list|)
 expr_stmt|;
 return|return

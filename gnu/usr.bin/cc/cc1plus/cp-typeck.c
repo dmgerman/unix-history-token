@@ -15253,6 +15253,13 @@ argument_list|(
 name|arg
 argument_list|)
 operator|&&
+name|DECL_CONTEXT
+argument_list|(
+name|arg
+argument_list|)
+operator|==
+name|NULL_TREE
+operator|&&
 name|IDENTIFIER_LENGTH
 argument_list|(
 name|DECL_NAME

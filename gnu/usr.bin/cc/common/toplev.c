@@ -7524,7 +7524,8 @@ name|decl
 argument_list|)
 condition|)
 block|{
-name|pedwarn_with_decl
+comment|/* This should be a pedwarn, except that there is 	       no easy way to prevent it from happening when the 	       name is used only inside a sizeof. 	       This at least avoids being incorrect.  */
+name|warning_with_decl
 argument_list|(
 name|decl
 argument_list|,

@@ -482,14 +482,6 @@ end_function_decl
 
 begin_typedef
 typedef|typedef
-name|void
-modifier|*
-name|__gnuc_va_list
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|size_t
 expr_stmt|;
 end_typedef
@@ -1167,7 +1159,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1180,7 +1173,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1196,7 +1190,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1380,7 +1375,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1393,7 +1389,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1410,7 +1407,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1499,7 +1497,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__gnuc_va_list
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

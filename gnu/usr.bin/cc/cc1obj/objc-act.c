@@ -25869,6 +25869,16 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|TREE_INT_CST_HIGH
+argument_list|(
+name|TYPE_MIN_VALUE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* unsigned integer types */
@@ -25946,6 +25956,25 @@ argument_list|)
 expr_stmt|;
 comment|/* 'I' */
 block|}
+elseif|else
+if|if
+condition|(
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|DImode
+condition|)
+comment|/* 'Q' */
+name|obstack_1grow
+argument_list|(
+operator|&
+name|util_obstack
+argument_list|,
+literal|'Q'
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 comment|/* signed integer types */
@@ -26025,6 +26054,25 @@ argument_list|)
 expr_stmt|;
 comment|/* 'i' */
 block|}
+elseif|else
+if|if
+condition|(
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|DImode
+condition|)
+comment|/* 'q' */
+name|obstack_1grow
+argument_list|(
+operator|&
+name|util_obstack
+argument_list|,
+literal|'q'
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 elseif|else

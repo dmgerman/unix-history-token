@@ -3714,27 +3714,13 @@ argument_list|)
 operator|!=
 literal|0
 comment|/* Long ago, Tiemann said this creates output that "confuses GDB". 		In April 93, mrs@cygnus.com said there is no such problem. 		The type decls made automatically by struct specifiers 		are marked with DECL_IGNORED_P in C++.  */
-operator|&&
-operator|!
-operator|(
-name|TREE_CODE
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_DECL
-operator|&&
-name|DECL_IGNORED_P
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-operator|)
+if|#
+directive|if
+literal|0
+comment|/* This creates output for anonymous classes which confuses GDB. */
+expr|&& ! (TREE_CODE (TYPE_NAME (type)) == TYPE_DECL&& DECL_IGNORED_P (TYPE_NAME (type)))
+endif|#
+directive|endif
 operator|&&
 operator|!
 name|full

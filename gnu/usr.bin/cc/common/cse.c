@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Common subexpression elimination for GNU compiler.    Copyright (C) 1987, 1988, 1989, 1992. 1993 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Common subexpression elimination for GNU compiler.    Copyright (C) 1987, 1988, 1989, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -23983,6 +23983,18 @@ operator|==
 name|REG
 condition|)
 block|{
+comment|/* Look it up again--in case op0 and op1 are the same.  */
+name|op1_elt
+operator|=
+name|lookup
+argument_list|(
+name|op1
+argument_list|,
+name|op1_hash_code
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 comment|/* Put OP1 in the hash table so it gets a new quantity number.  */
 if|if
 condition|(
@@ -31547,6 +31559,19 @@ argument_list|,
 operator|&
 name|skipped_writes_memory
 argument_list|)
+expr_stmt|;
+comment|/* There are times when an address can appear varying and be a PLUS      during this scan when it would be a fixed address were we to know      the proper equivalences.  So promote "nonscalar" to be "all".  */
+if|if
+condition|(
+name|skipped_writes_memory
+operator|.
+name|nonscalar
+condition|)
+name|skipped_writes_memory
+operator|.
+name|all
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(

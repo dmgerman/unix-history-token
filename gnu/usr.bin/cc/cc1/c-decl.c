@@ -7371,6 +7371,16 @@ argument_list|(
 name|oldglobal
 argument_list|)
 expr_stmt|;
+name|DECL_FRAME_SIZE
+argument_list|(
+name|x
+argument_list|)
+operator|=
+name|DECL_FRAME_SIZE
+argument_list|(
+name|oldglobal
+argument_list|)
+expr_stmt|;
 name|DECL_ARGUMENTS
 argument_list|(
 name|x
@@ -12781,6 +12791,14 @@ name|TREE_PERMANENT
 argument_list|(
 name|decl
 argument_list|)
+comment|/* DECL_INITIAL is not defined in PARM_DECLs, since it shares 	 space with DECL_ARG_TYPE.  */
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|!=
+name|PARM_DECL
 condition|)
 block|{
 comment|/* We need to remember that this array HAD an initialization, 	 but discard the actual temporary nodes, 	 since we can't have a permanent node keep pointing to them.  */

@@ -2493,13 +2493,6 @@ block|,
 else|#
 directive|else
 comment|/* not CROSS_COMPILE */
-comment|/* This should be /use/local/include and should come before        the fixincludes-fixed header files.  */
-comment|/* I've taken all these out because we want gcc to behave as though it's    the native compiler and only search /usr/include. 	Paul Richards 93/6/19 */
-comment|/*{ LOCAL_INCLUDE_DIR, 0},*/
-comment|/* This is here ahead of GCC_INCLUDE_DIR because assert.h goes here.        Likewise, behind LOCAL_INCLUDE_DIR, where glibc puts its assert.h.  */
-comment|/*{ TOOL_INCLUDE_DIR, 0},*/
-comment|/* This is the dir for fixincludes.  Put it just before        the files that we fix.  */
-comment|/*{ GCC_INCLUDE_DIR, 0},*/
 comment|/* Some systems have an extra dir of include files.  */
 ifdef|#
 directive|ifdef

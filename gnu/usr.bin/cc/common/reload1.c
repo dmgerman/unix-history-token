@@ -12479,7 +12479,11 @@ operator|&&
 name|ep
 operator|->
 name|can_eliminate
-operator|&&
+condition|)
+block|{
+comment|/* We must stop at the first elimination that will be used. 		 If this one would replace the PLUS with a REG, do it 		 now.  Otherwise, quit the loop and let eliminate_regs 		 do its normal replacement.  */
+if|if
+condition|(
 name|ep
 operator|->
 name|offset
@@ -12535,6 +12539,8 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
+break|break;
 block|}
 block|}
 name|old_asm_operands_vec

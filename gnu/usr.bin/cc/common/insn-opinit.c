@@ -1997,6 +1997,20 @@ name|insn_code
 operator|=
 name|CODE_FOR_ffshi2
 expr_stmt|;
+name|strlen_optab
+operator|->
+name|handlers
+index|[
+operator|(
+name|int
+operator|)
+name|SImode
+index|]
+operator|.
+name|insn_code
+operator|=
+name|CODE_FOR_strlensi
+expr_stmt|;
 block|}
 end_function
 

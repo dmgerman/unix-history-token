@@ -16518,6 +16518,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Return a mem ref for the memory equivalent of reg REGNO.    This mem ref is not shared with anything.  */
+end_comment
+
 begin_function
 specifier|static
 name|rtx
@@ -16546,42 +16550,13 @@ index|[
 name|regno
 index|]
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
+if|#
+directive|if
 literal|0
-init|;
-name|i
-operator|<
-name|n_memlocs
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|rtx_equal_p
-argument_list|(
-name|tem
-argument_list|,
-name|XEXP
-argument_list|(
-name|memlocs
-index|[
-name|i
-index|]
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-condition|)
-return|return
-name|memlocs
-index|[
-name|i
-index|]
-return|;
+comment|/* We cannot safely reuse a memloc made here; 	 if the pseudo appears twice, and its mem needs a reload, 	 it gets two separate reloads assigned, but it only 	 gets substituted with the second of them; 	 then it can get used before that reload reg gets loaded up.  */
+block|for (i = 0; i< n_memlocs; i++)     if (rtx_equal_p (tem, XEXP (memlocs[i], 0)))       return memlocs[i];
+endif|#
+directive|endif
 comment|/* If TEM might contain a pseudo, we must copy it to avoid      modifying it when we do the substitution for the reload.  */
 if|if
 condition|(

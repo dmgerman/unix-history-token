@@ -419,6 +419,16 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|REAL_VALUE_TYPE
+name|ereal_from_float
+argument_list|()
+decl_stmt|,
+name|ereal_from_double
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -616,6 +626,20 @@ value|(etardouble ((IN), (OUT)))
 end_define
 
 begin_comment
+comment|/* d is an array of longs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_FROM_TARGET_DOUBLE
+parameter_list|(
+name|d
+parameter_list|)
+value|(ereal_from_double (d))
+end_define
+
+begin_comment
 comment|/* IN is a REAL_VALUE_TYPE.  OUT is a long. */
 end_comment
 
@@ -629,6 +653,20 @@ parameter_list|,
 name|OUT
 parameter_list|)
 value|((OUT) = etarsingle ((IN)))
+end_define
+
+begin_comment
+comment|/* f is a long. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REAL_VALUE_FROM_TARGET_SINGLE
+parameter_list|(
+name|f
+parameter_list|)
+value|(ereal_from_float (f))
 end_define
 
 begin_comment

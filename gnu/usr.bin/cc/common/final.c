@@ -8500,11 +8500,11 @@ directive|if
 name|HOST_BITS_PER_WIDE_INT
 operator|!=
 name|HOST_BITS_PER_INT
-literal|" 0x%lx%016lx"
+literal|"0x%lx%016lx"
 argument_list|,
 else|#
 directive|else
-literal|" 0x%x%016x"
+literal|"0x%x%016x"
 argument_list|,
 endif|#
 directive|endif
@@ -8515,11 +8515,11 @@ directive|if
 name|HOST_BITS_PER_WIDE_INT
 operator|!=
 name|HOST_BITS_PER_INT
-literal|" 0x%lx%08lx"
+literal|"0x%lx%08lx"
 argument_list|,
 else|#
 directive|else
-literal|" 0x%x%08x"
+literal|"0x%x%08x"
 argument_list|,
 endif|#
 directive|endif

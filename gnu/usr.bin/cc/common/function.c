@@ -14235,7 +14235,7 @@ name|warning_with_decl
 argument_list|(
 name|decl
 argument_list|,
-literal|"variable `%s' may be clobbered by `longjmp'"
+literal|"variable `%s' may be clobbered by `longjmp' or `vfork'"
 argument_list|)
 expr_stmt|;
 block|}
@@ -14335,7 +14335,7 @@ name|warning_with_decl
 argument_list|(
 name|decl
 argument_list|,
-literal|"argument `%s' may be clobbered by `longjmp'"
+literal|"argument `%s' may be clobbered by `longjmp' or `vfork'"
 argument_list|)
 expr_stmt|;
 block|}

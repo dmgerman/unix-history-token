@@ -4762,9 +4762,16 @@ argument_list|(
 name|mode
 argument_list|)
 return|;
+comment|/* Check for NaN first, because some ports (specifically the i386) do not      emit correct ieee-fp code by default, and thus will generate a core      dump here if we pass a NaN to REAL_VALUES_EQUAL and if REAL_VALUES_EQUAL      does a floating point comparison.  */
 elseif|else
 if|if
 condition|(
+operator|!
+name|REAL_VALUE_ISNAN
+argument_list|(
+name|d
+argument_list|)
+operator|&&
 name|REAL_VALUES_EQUAL
 argument_list|(
 name|dconst1

@@ -4720,6 +4720,19 @@ argument_list|,
 name|target
 argument_list|)
 operator|)
+comment|/* ??? We must always copy a SUBREG into a REG, because it might 		 get substituted into an address, and not all ports correctly 		 handle SUBREGs in addresses.  */
+operator|||
+operator|(
+name|GET_CODE
+argument_list|(
+name|arg_vals
+index|[
+name|i
+index|]
+argument_list|)
+operator|==
+name|SUBREG
+operator|)
 operator|)
 condition|)
 name|arg_vals

@@ -37930,8 +37930,11 @@ name|decl1
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* CTYPE could be null here if we're dealing with a template; 	     for example, `inline friend float foo()' inside a template 	     will have no CTYPE set.  */
 if|if
 condition|(
+name|ctype
+operator|&&
 name|TREE_CODE
 argument_list|(
 name|ctype
@@ -41838,35 +41841,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Must mark the RESULT_DECL as being in this function.  */
-name|DECL_CONTEXT
-argument_list|(
-name|DECL_RESULT
-argument_list|(
-name|fndecl
-argument_list|)
-argument_list|)
-operator|=
-name|DECL_INITIAL
-argument_list|(
-name|fndecl
-argument_list|)
-expr_stmt|;
-comment|/* Obey `register' declarations if `setjmp' is called in this fn.  */
-if|if
-condition|(
-name|flag_traditional
-operator|&&
-name|current_function_calls_setjmp
-condition|)
-name|setjmp_protect
-argument_list|(
-name|DECL_INITIAL
-argument_list|(
-name|fndecl
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cleanup_label
@@ -42047,6 +42021,35 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Must mark the RESULT_DECL as being in this function.  */
+name|DECL_CONTEXT
+argument_list|(
+name|DECL_RESULT
+argument_list|(
+name|fndecl
+argument_list|)
+argument_list|)
+operator|=
+name|DECL_INITIAL
+argument_list|(
+name|fndecl
+argument_list|)
+expr_stmt|;
+comment|/* Obey `register' declarations if `setjmp' is called in this fn.  */
+if|if
+condition|(
+name|flag_traditional
+operator|&&
+name|current_function_calls_setjmp
+condition|)
+name|setjmp_protect
+argument_list|(
+name|DECL_INITIAL
+argument_list|(
+name|fndecl
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set the BLOCK_SUPERCONTEXT of the outermost function scope to point      to the FUNCTION_DECL node itself.  */

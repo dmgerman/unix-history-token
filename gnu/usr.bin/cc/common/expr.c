@@ -23033,7 +23033,7 @@ name|singleton
 argument_list|,
 name|ignore
 condition|?
-name|const1_rtx
+name|const0_rtx
 else|:
 name|NULL_RTX
 argument_list|,

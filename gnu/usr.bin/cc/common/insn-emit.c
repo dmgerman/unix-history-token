@@ -11589,7 +11589,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|call_insn_operand
+name|expander_call_insn_operand
 argument_list|(
 name|operands
 index|[
@@ -11842,7 +11842,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|call_insn_operand
+name|expander_call_insn_operand
 argument_list|(
 name|operands
 index|[
@@ -12071,7 +12071,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|call_insn_operand
+name|expander_call_insn_operand
 argument_list|(
 name|operands
 index|[
@@ -12352,7 +12352,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|call_insn_operand
+name|expander_call_insn_operand
 argument_list|(
 name|operands
 index|[
@@ -12598,7 +12598,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|call_insn_operand
+name|expander_call_insn_operand
 argument_list|(
 name|operands
 index|[

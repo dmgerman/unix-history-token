@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Try to unroll loops, and split induction variables.    Copyright (C) 1992 Free Software Foundation, Inc.    Contributed by James E. Wilson, Cygnus Support/UC Berkeley.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Try to unroll loops, and split induction variables.    Copyright (C) 1992, 1993 Free Software Foundation, Inc.    Contributed by James E. Wilson, Cygnus Support/UC Berkeley.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -3952,6 +3952,18 @@ block|{
 name|rtx
 name|increment
 decl_stmt|;
+name|rtx
+name|increment_total
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|tries
+init|=
+literal|0
+decl_stmt|;
+name|retry
+label|:
 comment|/* Verify that we have an increment insn here.  First check for a plus      as the set source.  */
 if|if
 condition|(
@@ -4028,16 +4040,20 @@ name|CONST_INT
 condition|)
 block|{
 comment|/* SR sometimes puts the constant in a register, especially if it is 	 too big to be an add immed operand.  */
+name|src_insn
+operator|=
+name|PREV_INSN
+argument_list|(
+name|src_insn
+argument_list|)
+expr_stmt|;
 name|increment
 operator|=
 name|SET_SRC
 argument_list|(
 name|PATTERN
 argument_list|(
-name|PREV_INSN
-argument_list|(
 name|src_insn
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4080,7 +4096,31 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check that the source register is the same as the dest register.  */
+if|if
+condition|(
+name|increment_total
+condition|)
+name|increment_total
+operator|=
+name|GEN_INT
+argument_list|(
+name|INTVAL
+argument_list|(
+name|increment_total
+argument_list|)
+operator|+
+name|INTVAL
+argument_list|(
+name|increment
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|increment_total
+operator|=
+name|increment
+expr_stmt|;
+comment|/* Check that the source register is the same as the register we expected      to see as the source.  If not, something is seriously wrong.  */
 if|if
 condition|(
 name|GET_CODE
@@ -4113,11 +4153,48 @@ argument_list|)
 operator|!=
 name|regno
 condition|)
+block|{
+comment|/* Some machines (e.g. the romp), may emit two add instructions for 	 certain constants, so lets try looking for another add immediately 	 before this one if we have only seen one add insn so far.  */
+if|if
+condition|(
+name|tries
+operator|==
+literal|0
+condition|)
+block|{
+name|tries
+operator|++
+expr_stmt|;
+name|src_insn
+operator|=
+name|PREV_INSN
+argument_list|(
+name|src_insn
+argument_list|)
+expr_stmt|;
+name|pattern
+operator|=
+name|PATTERN
+argument_list|(
+name|src_insn
+argument_list|)
+expr_stmt|;
+name|delete_insn
+argument_list|(
+name|get_last_insn
+argument_list|()
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 name|abort
 argument_list|()
 expr_stmt|;
+block|}
 return|return
-name|increment
+name|increment_total
 return|;
 block|}
 end_function

@@ -61,7 +61,7 @@ specifier|extern
 ifdef|#
 directive|ifdef
 name|__GNUC__
-specifier|volatile
+specifier|__volatile__
 endif|#
 directive|endif
 name|void
