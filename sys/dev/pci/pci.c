@@ -993,7 +993,7 @@ name|pci_do_powerstate
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable setting the power states of the PCI devices.  This means that we\n\ set devices into D3 if it fail to attach."
+literal|"Enable setting the power states of the PCI devices.  This means that we\n\ set devices into D3 for all devices that fail to attach a driver."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
