@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.75	83/02/22	*/
+comment|/*	tcp_usrreq.c	1.76	83/05/12	*/
 end_comment
 
 begin_include
@@ -718,6 +718,18 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENOBUFS
+condition|)
+comment|/* XXX */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
 break|break;
 comment|/* 	 * Abort the TCP. 	 */
 case|case
