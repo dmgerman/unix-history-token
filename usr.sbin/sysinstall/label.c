@@ -5375,7 +5375,7 @@ literal|2
 index|]
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|physmem
 decl_stmt|;
 name|size_t
