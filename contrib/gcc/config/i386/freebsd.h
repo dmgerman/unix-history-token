@@ -409,6 +409,10 @@ name|ASM_COMMENT_START
 value|"#"
 end_define
 
+begin_comment
+comment|/* Override the default comment-starter of "/APP" from unix.h.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
