@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getdomainname.c,v 1.1 1994/08/08 00:40:23 wollman Exp $"
+literal|"$Id: getdomainname.c,v 1.2 1996/07/12 19:55:19 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|KERN_DOMAINNAME
+name|KERN_NISDOMAINNAME
 expr_stmt|;
 name|size
 operator|=
