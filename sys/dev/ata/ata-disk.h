@@ -505,6 +505,10 @@ define|#
 directive|define
 name|AR_F_DMA_USED
 value|0x0004
+define|#
+directive|define
+name|AR_F_FORCE_PIO
+value|0x0008
 name|int8_t
 modifier|*
 name|data
