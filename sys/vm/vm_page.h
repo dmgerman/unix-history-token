@@ -239,32 +239,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * note: currently use SWAPBLK_NONE as an absolute value rather then   * a flag bit.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWAPBLK_MASK
-value|((daddr_t)((u_daddr_t)-1>> 1))
-end_define
-
-begin_comment
-comment|/* mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWAPBLK_NONE
-value|((daddr_t)((u_daddr_t)SWAPBLK_MASK + 1))
-end_define
-
-begin_comment
-comment|/* flag */
-end_comment
-
 begin_if
 if|#
 directive|if
