@@ -66,7 +66,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) Only foreground processes are eligible - implied.  *	2) Runnable processes are favored over anything else.  The runner  *	   with the highest cpu utilization is picked (p_estcpu).  Ties are  *	   broken by picking the highest pid.  *	3) The sleeper with the shortest sleep time is next.  With ties,  *	   we pick out just "short-term" sleepers (P_SINTR == 0).  *	4) Further ties are broken by picking the highest pid.  *  * If you change this, be sure to consider making the change in the kernel  * too (^T in kern/tty.c).  *  * TODO - consider whether pctcpu should be used.  */
+comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) Only foreground processes are eligible - implied.  *	2) Runnable processes are favored over anything else.  The runner  *	   with the highest cpu utilization is picked (p_estcpu).  Ties are  *	   broken by picking the highest pid.  *	3) The sleeper with the shortest sleep time is next.  With ties,  *	   we pick out just "short-term" sleepers (PS_SINTR == 0).  *	4) Further ties are broken by picking the highest pid.  *  * If you change this, be sure to consider making the change in the kernel  * too (^T in kern/tty.c).  *  * TODO - consider whether pctcpu should be used.  */
 end_comment
 
 begin_define
@@ -310,16 +310,16 @@ if|if
 condition|(
 name|p1
 operator|->
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_SINTR
+name|PS_SINTR
 operator|&&
 operator|(
 name|p2
 operator|->
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_SINTR
+name|PS_SINTR
 operator|)
 operator|==
 literal|0
@@ -333,16 +333,16 @@ if|if
 condition|(
 name|p2
 operator|->
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_SINTR
+name|PS_SINTR
 operator|&&
 operator|(
 name|p1
 operator|->
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_SINTR
+name|PS_SINTR
 operator|)
 operator|==
 literal|0
