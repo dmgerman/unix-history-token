@@ -1977,13 +1977,15 @@ name|entries
 decl_stmt|,
 name|needstats
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|user
 decl_stmt|,
 modifier|*
 name|group
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|flags
 decl_stmt|,
