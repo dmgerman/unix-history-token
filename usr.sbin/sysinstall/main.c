@@ -314,7 +314,7 @@ literal|"modulesInitialize=1"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize PC-card, if we haven't already done so. */
+comment|/* Initialize PC Card, if we haven't already done so. */
 ifdef|#
 directive|ifdef
 name|PCCARD_ARCH

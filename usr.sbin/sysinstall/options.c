@@ -366,7 +366,7 @@ block|,
 block|{
 literal|"Skip PCCARD"
 block|,
-literal|"Skip PC-card probing, do not use PC-card devices for installation"
+literal|"Skip PC Card probing, do not use PC Card devices for installation"
 block|,
 name|OPT_IS_VAR
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * PC-card support for sysinstall  *  * $FreeBSD$  *  * Copyright (c) 1997-1999  *	Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>.  All rights reserved.  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  */
+comment|/*  * PC Card support for sysinstall  *  * $FreeBSD$  *  * Copyright (c) 1997-1999  *	Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>.  All rights reserved.  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  */
 end_comment
 
 begin_include
@@ -389,9 +389,9 @@ name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Please select free address area used by PC-card controller"
+literal|"Please select free address area used by PC Card controller"
 block|,
-literal|"PC-card controller uses memory area to get card information.\n"
+literal|"PC Card controller uses memory area to get card information.\n"
 literal|"Please specify an address that is not used by other devices.\n"
 literal|"If you're uncertain of detailed specification of your hardware,\n"
 ifdef|#
@@ -506,7 +506,7 @@ name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Please specify the IRQs that may be used by PC-Cards"
+literal|"Please specify the IRQs that may be used by PC Cards"
 block|,
 literal|"(NOTE: remove any cards that will NOT be used for installation).\n"
 literal|"The IRQs that you choose must be free (unshared), or you risk \n"
@@ -515,7 +515,7 @@ literal|"One way to determine which IRQs are available is to \"cheat\" and\n"
 literal|"use the Windows 9x/2000 Device Manager as a reference prior to the\n"
 literal|"installation.\n"
 block|,
-literal|"Select Free IRQ for PC-Cardd"
+literal|"Select Free IRQ for pccardd"
 block|,
 name|NULL
 block|,
@@ -612,7 +612,7 @@ block|,
 block|{
 literal|"5 IRQ 6"
 block|,
-literal|"(INT 2) is PC-card Controller"
+literal|"(INT 2) is PC Card Controller"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -1045,7 +1045,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Can't open PC-card controller %s.\n"
+literal|"Can't open PC Card controller %s.\n"
 argument_list|,
 name|card_device
 argument_list|)
@@ -1057,8 +1057,8 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Found PC-card slot(s).\n"
-literal|"Use PC-card device as installation media?\n"
+literal|"Found PC Card slot(s).\n"
+literal|"Use PC Card device as installation media?\n"
 argument_list|)
 condition|)
 block|{
@@ -1280,12 +1280,12 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Now we start initializing PC-card controller and cards.\n"
-literal|"If you've executed this installer from a PC-card floppy\n"
+literal|"Now we start initializing PC Card controller and cards.\n"
+literal|"If you've executed this installer from a PC Card floppy\n"
 literal|"drive, this is the last chance to replace it with\n"
-literal|"installation media (PC-card Ethernet, CD, DVD, etc.).\n"
+literal|"installation media (PC Card Ethernet, CD, DVD, etc.).\n"
 literal|"Please insert installation media and press [Enter].\n"
-literal|"If you've not plugged the PC-card installation media\n"
+literal|"If you've not plugged the PC Card installation media\n"
 literal|"in yet, please plug it in now and press [Enter].\n"
 literal|"Otherwise, just press [Enter] to proceed."
 argument_list|)
@@ -1295,7 +1295,7 @@ argument_list|()
 expr_stmt|;
 name|msgNotify
 argument_list|(
-literal|"Initializing PC-card controller...."
+literal|"Initializing PC Card controller...."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1322,7 +1322,7 @@ condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Can't open PC-card controller %s.\n"
+literal|"Can't open PC Card controller %s.\n"
 argument_list|,
 name|card_device
 argument_list|)
