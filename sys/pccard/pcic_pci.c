@@ -5344,7 +5344,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_teardown_intr
 argument_list|,
-name|bus_generic_teardown_intr
+name|pcic_teardown_intr
 argument_list|)
 block|,
 comment|/* Card interface */
