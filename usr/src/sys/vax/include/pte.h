@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	4.6	81/02/23	*/
+comment|/*	pte.h	4.7	81/02/27	*/
 end_comment
 
 begin_comment
@@ -392,9 +392,7 @@ specifier|extern
 name|struct
 name|pte
 name|Nexmap
-index|[
-literal|16
-index|]
+index|[]
 index|[
 literal|16
 index|]
