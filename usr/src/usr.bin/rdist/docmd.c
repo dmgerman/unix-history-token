@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.11 (Berkeley) 83/12/19"
+literal|"@(#)docmd.c	4.12 (Berkeley) 84/01/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -1975,7 +1975,7 @@ operator|->
 name|b_name
 argument_list|)
 operator|&&
-name|host
+name|rhost
 operator|!=
 name|NULL
 condition|)
@@ -2029,7 +2029,7 @@ operator|->
 name|b_name
 argument_list|)
 operator|&&
-name|host
+name|rhost
 operator|!=
 name|NULL
 condition|)
