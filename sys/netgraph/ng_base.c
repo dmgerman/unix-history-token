@@ -11205,7 +11205,7 @@ name|item
 init|=
 name|NULL
 decl_stmt|;
-comment|/* 	 * Try get a cached queue block, or else allocate a new one 	 * If we are less than our reserve, try malloc. If malloc 	 * fails, then that's what the reserve is for... 	 * Don't completely trust ngqfreesize, as it is subject 	 * to races.. (it'll eventually catch up but may be out by one or two 	 * for brief moments(under SMP or interrupts). 	 * ngqfree is the final arbiter. We have our little reserve 	 * because we use M_NOWAIT for malloc. This just helps us 	 * avoid dropping packets while not increasing the time 	 * we take to service the interrupt (on average) (we hope). 	 */
+comment|/* 	 * Try get a cached queue block, or else allocate a new one 	 * If we are less than our reserve, try malloc. If malloc 	 * fails, then that's what the reserve is for... 	 * Don't completely trust ngqfreesize, as it is subject 	 * to races.. (it'll eventually catch up but may be out by one or two 	 * for brief moments(under SMP or interrupts). 	 * ngqfree is the final arbiter. We have our little reserve 	 * because we use M_NOWAIT for malloc. This just helps us 	 * avoid dropping packets while not increasing the time 	 * we take to service the interrupt (on average) (I hope). 	 */
 for|for
 control|(
 init|;
@@ -11325,8 +11325,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|item
+operator|->
+name|el_flags
+operator|&=
+operator|~
+name|NGQF_FREE
+expr_stmt|;
 break|break;
 block|}
+comment|/*  			 * something got there before we did.. try again 			 * (go around the loop again) 			 */
 name|item
 operator|=
 name|NULL
@@ -11338,13 +11346,6 @@ comment|/* We really ran out */
 break|break;
 block|}
 block|}
-name|item
-operator|->
-name|el_flags
-operator|&=
-operator|~
-name|NGQF_FREE
-expr_stmt|;
 return|return
 operator|(
 name|item
