@@ -330,10 +330,6 @@ name|int
 name|ignoreebusy
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 if|if
 condition|(
 name|swapon

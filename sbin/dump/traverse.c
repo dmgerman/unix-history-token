@@ -138,6 +138,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -2539,10 +2545,6 @@ name|int
 name|cnt
 decl_stmt|,
 name|i
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|loop
 label|:

@@ -2130,10 +2130,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|name
 index|[
 literal|0
@@ -2235,10 +2231,6 @@ literal|2
 index|]
 decl_stmt|,
 name|curlevel
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|curlevel
 operator|=

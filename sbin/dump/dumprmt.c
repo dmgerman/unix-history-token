@@ -162,6 +162,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -1758,10 +1764,6 @@ name|emsg
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|rmtgets
 argument_list|(

@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -165,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -4618,10 +4618,6 @@ operator|<
 literal|0
 condition|)
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 if|if
 condition|(
 name|errno
