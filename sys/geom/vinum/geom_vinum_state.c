@@ -180,6 +180,20 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Save the config back to disk. */
+if|if
+condition|(
+name|flags
+operator|&
+name|GV_SETSTATE_CONFIG
+condition|)
+name|gv_save_config_all
+argument_list|(
+name|d
+operator|->
+name|vinumconf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1

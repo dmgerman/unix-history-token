@@ -1535,6 +1535,8 @@ argument_list|,
 name|GV_DRIVE_DOWN
 argument_list|,
 name|GV_SETSTATE_FORCE
+operator||
+name|GV_SETSTATE_CONFIG
 argument_list|)
 expr_stmt|;
 block|}
