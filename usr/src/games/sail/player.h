@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)player.h	2.6 %G%";  */
+comment|/*  * sccsid = "@(#)player.h	2.7 %G%";  */
 end_comment
 
 begin_include
@@ -113,8 +113,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TURN_X
-value|9
+name|TURN_Y
+value|1
 end_define
 
 begin_define
@@ -127,8 +127,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TURN_Y
-value|1
+name|TURN_X
+value|9
 end_define
 
 begin_define
@@ -155,13 +155,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|STAT_L
-value|(BOX_R+2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|STAT_B
 value|BOX_B
 end_define
@@ -169,15 +162,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|STAT_R
-value|(COLS-1)
+name|STAT_L
+value|(BOX_R+2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|STAT_X
-value|(STAT_R-STAT_L+1)
+value|14
 end_define
 
 begin_define
@@ -185,6 +178,13 @@ define|#
 directive|define
 name|STAT_Y
 value|(STAT_B-STAT_T+1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STAT_R
+value|(STAT_L+STAT_X-1)
 end_define
 
 begin_define
@@ -240,14 +240,14 @@ begin_define
 define|#
 directive|define
 name|SCROLL_X
-value|COLS
+value|(SCROLL_R-SCROLL_L+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCROLL_Y
-value|(LINES-SCROLL_T)
+value|(SCROLL_B-SCROLL_T+1)
 end_define
 
 begin_define
@@ -333,6 +333,38 @@ directive|define
 name|SLOT_R
 value|(SLOT_L+SLOT_X-1)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SCREENTEST
+parameter_list|()
+value|(initscr() != ERR&& signal(SIGTSTP, SIG_DFL) != BADSIG&& STAT_R< COLS&& SCROLL_Y> 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCREENTEST
+parameter_list|()
+value|(initscr() != ERR&& STAT_R< COLS&& SCROLL_Y> 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|WINDOW
@@ -504,6 +536,13 @@ define|#
 directive|define
 name|LEAVE_FORK
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAVE_SYNC
+value|5
 end_define
 
 end_unit
