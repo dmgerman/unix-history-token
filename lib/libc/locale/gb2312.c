@@ -54,16 +54,7 @@ file|"mblocal.h"
 end_include
 
 begin_function_decl
-name|int
-name|_GB2312_init
-parameter_list|(
-name|_RuneLocale
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|size_t
 name|_GB2312_mbrtowc
 parameter_list|(
@@ -86,6 +77,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|_GB2312_mbsinit
 parameter_list|(
@@ -97,6 +89,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_GB2312_wcrtomb
 parameter_list|(
@@ -169,6 +162,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|_GB2312_mbsinit
 parameter_list|(
@@ -328,6 +322,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_GB2312_mbrtowc
 parameter_list|(
@@ -585,6 +580,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_GB2312_wcrtomb
 parameter_list|(

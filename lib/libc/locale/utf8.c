@@ -60,6 +60,7 @@ file|"mblocal.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_UTF8_mbrtowc
 parameter_list|(
@@ -82,6 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|_UTF8_mbsinit
 parameter_list|(
@@ -93,6 +95,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_UTF8_mbsnrtowcs
 parameter_list|(
@@ -118,6 +121,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_UTF8_wcrtomb
 parameter_list|(
@@ -135,6 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_UTF8_wcsnrtombs
 parameter_list|(
@@ -223,6 +228,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|_UTF8_mbsinit
 parameter_list|(
@@ -256,6 +262,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_UTF8_mbrtowc
 parameter_list|(
@@ -812,6 +819,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_UTF8_mbsnrtowcs
 parameter_list|(
@@ -1206,6 +1214,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_UTF8_wcrtomb
 parameter_list|(
@@ -1509,6 +1518,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_UTF8_wcsnrtombs
 parameter_list|(

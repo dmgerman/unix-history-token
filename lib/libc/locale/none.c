@@ -106,16 +106,7 @@ file|"mblocal.h"
 end_include
 
 begin_function_decl
-name|int
-name|_none_init
-parameter_list|(
-name|_RuneLocale
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|size_t
 name|_none_mbrtowc
 parameter_list|(
@@ -138,6 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|_none_mbsinit
 parameter_list|(
@@ -149,6 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_none_mbsnrtowcs
 parameter_list|(
@@ -180,6 +173,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_none_wcrtomb
 parameter_list|(
@@ -197,6 +191,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_none_wcsnrtombs
 parameter_list|(
@@ -267,6 +262,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|_none_mbsinit
 parameter_list|(
@@ -287,6 +283,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_none_mbrtowc
 parameter_list|(
@@ -371,6 +368,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_none_wcrtomb
 parameter_list|(
@@ -444,6 +442,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_none_mbsnrtowcs
 parameter_list|(
@@ -585,6 +584,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_none_wcsnrtombs
 parameter_list|(
@@ -780,6 +780,143 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* setup defaults */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__mb_cur_max
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|size_t
+function_decl|(
+modifier|*
+name|__mbrtowc
+function_decl|)
+parameter_list|(
+name|wchar_t
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+init|=
+name|_none_mbrtowc
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|__mbsinit
+function_decl|)
+parameter_list|(
+specifier|const
+name|mbstate_t
+modifier|*
+parameter_list|)
+init|=
+name|_none_mbsinit
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+function_decl|(
+modifier|*
+name|__mbsnrtowcs
+function_decl|)
+parameter_list|(
+name|wchar_t
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+init|=
+name|_none_mbsnrtowcs
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+function_decl|(
+modifier|*
+name|__wcrtomb
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+name|wchar_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+init|=
+name|_none_wcrtomb
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+function_decl|(
+modifier|*
+name|__wcsnrtombs
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+modifier|*
+name|__restrict
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|mbstate_t
+modifier|*
+name|__restrict
+parameter_list|)
+init|=
+name|_none_wcsnrtombs
+function_decl|;
+end_function_decl
 
 end_unit
 

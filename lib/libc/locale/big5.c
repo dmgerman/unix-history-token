@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_expr_stmt
@@ -50,6 +50,12 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -88,16 +94,7 @@ file|"mblocal.h"
 end_include
 
 begin_function_decl
-name|int
-name|_BIG5_init
-parameter_list|(
-name|_RuneLocale
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|size_t
 name|_BIG5_mbrtowc
 parameter_list|(
@@ -120,6 +117,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|_BIG5_mbsinit
 parameter_list|(
@@ -131,6 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|size_t
 name|_BIG5_wcrtomb
 parameter_list|(
@@ -197,6 +196,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|_BIG5_mbsinit
 parameter_list|(
@@ -264,6 +264,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_BIG5_mbrtowc
 parameter_list|(
@@ -576,6 +577,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|size_t
 name|_BIG5_wcrtomb
 parameter_list|(
