@@ -705,24 +705,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Parameters to the semconfig system call  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|SEM_CONFIG_FREEZE
-block|,
-comment|/* Freeze the semaphore facility. */
-name|SEM_CONFIG_THAW
-comment|/* Thaw the semaphore facility. */
-block|}
-name|semconfig_ctl_t
-typedef|;
-end_typedef
-
 begin_decl_stmt
 name|void
 name|seminit
