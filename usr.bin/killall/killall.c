@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -110,6 +116,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
+name|__dead2
 name|usage
 parameter_list|(
 name|void
@@ -540,6 +547,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"-help"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|*
