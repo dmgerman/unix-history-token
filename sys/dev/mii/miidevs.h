@@ -506,20 +506,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MII_MODEL_xxBROADCOM_BCM5703
-value|0x0016
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_STR_xxBROADCOM_BCM5703
-value|"BCM5703 10/100/1000baseTX PHY"
-end_define
-
-begin_define
-define|#
-directive|define
 name|MII_MODEL_xxBROADCOM_BCM5704
 value|0x0019
 end_define
