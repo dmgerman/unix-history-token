@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char sccsid[] = "@(#)OPnames.h 1.4 %G%"; */
+comment|/* static	char sccsid[] = "@(#)OPnames.h 1.5 %G%"; */
 end_comment
 
 begin_decl_stmt
@@ -446,15 +446,15 @@ literal|" PACK"
 block|,
 literal|" UNPACK"
 block|,
+literal|" NEW"
+block|,
+literal|" DISPOSE"
+block|,
+literal|" DFDISP"
+block|,
 literal|" ARGC"
 block|,
 literal|" ARGV"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -464,15 +464,15 @@ literal|" WCLCK"
 block|,
 literal|" SCLCK"
 block|,
-literal|" DISPOSE"
-block|,
-literal|" NEW"
-block|,
 literal|" DATE"
 block|,
 literal|" TIME"
 block|,
 literal|" UNDEF"
+block|,
+literal|0
+block|,
+literal|0
 block|,
 literal|" ATAN"
 block|,
