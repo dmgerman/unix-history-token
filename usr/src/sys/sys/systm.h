@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.16	81/04/28	*/
+comment|/*	systm.h	4.17	81/05/05	*/
 end_comment
 
 begin_comment
@@ -492,6 +492,16 @@ name|int
 name|wantin
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|boothowto
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reboot flags, from console subsystem */
+end_comment
 
 end_unit
 
