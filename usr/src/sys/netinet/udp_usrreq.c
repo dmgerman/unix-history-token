@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.15	81/12/09	*/
+comment|/*	udp_usrreq.c	4.16	81/12/09	*/
 end_comment
 
 begin_include
@@ -282,26 +282,6 @@ argument_list|)
 operator|+
 name|ulen
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"len %d, ulen %d, ((struct ip *)ui)->ip_len %d\n"
-argument_list|,
-name|len
-argument_list|,
-name|ulen
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|ui
-operator|)
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -512,35 +492,6 @@ expr|struct
 name|udpiphdr
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"sbappendaddr called with m %x m->m_len %d m->m_off %d\n"
-argument_list|,
-name|m
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|,
-name|m
-operator|->
-name|m_off
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"*mtod(m, char *) %x\n"
-argument_list|,
-operator|*
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|char
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sbappendaddr
@@ -606,11 +557,6 @@ block|{
 name|COUNT
 argument_list|(
 name|UDP_CTLINPUT
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"udp_ctlinput\n"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -992,13 +938,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"udp_usrreq %d\n"
-argument_list|,
-name|req
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|req
@@ -1176,18 +1115,11 @@ name|inp_faddr
 operator|.
 name|s_addr
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"EISCONN\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EISCONN
 operator|)
 return|;
-block|}
 name|error
 operator|=
 name|in_pcbconnect
@@ -1206,20 +1138,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pcbconnect error %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -1239,11 +1162,6 @@ name|ENOTCONN
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"to udp_output\n"
-argument_list|)
-expr_stmt|;
 name|udp_output
 argument_list|(
 name|inp
