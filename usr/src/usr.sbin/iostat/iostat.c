@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.15 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -85,25 +85,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -121,25 +133,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<kvm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
 name|struct
 name|nlist
-name|nl
+name|namelist
 index|[]
 init|=
 block|{
@@ -389,7 +389,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|kvm_read(kd, nl[x].n_value,&(v), sizeof(v))
+value|kvm_read(kd, namelist[x].n_value,&(v), sizeof(v))
 end_define
 
 begin_include
@@ -663,7 +663,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 argument_list|)
 operator|==
 operator|-
@@ -681,7 +681,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|X_DK_NDRIVE
 index|]
@@ -950,7 +950,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_DK_WPMS
 index|]
@@ -1252,7 +1252,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_DK_TIME
 index|]
@@ -1278,7 +1278,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_DK_XFER
 index|]
@@ -1304,7 +1304,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_DK_WDS
 index|]
@@ -1330,7 +1330,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_DK_SEEK
 index|]
@@ -1356,7 +1356,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_TK_NIN
 index|]
@@ -1383,7 +1383,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_TK_NOUT
 index|]
@@ -1410,7 +1410,7 @@ name|kvm_read
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|X_CP_TIME
 index|]
