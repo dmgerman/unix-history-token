@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/dpt_pci.h>
+file|<dev/dpt/dpt_pci.h>
 end_include
 
 begin_define
