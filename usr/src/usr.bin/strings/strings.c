@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.8 (Berkeley) %G%"
+literal|"@(#)strings.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -80,6 +92,18 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -160,6 +184,14 @@ begin_comment
 comment|/* buffer for struct exec */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -201,12 +233,9 @@ modifier|*
 name|head
 decl_stmt|;
 name|int
-name|minlen
-decl_stmt|;
-name|int
 name|exitcode
-init|=
-literal|0
+decl_stmt|,
+name|minlen
 decl_stmt|;
 name|short
 name|asdata
@@ -225,17 +254,15 @@ name|file
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 comment|/* 	 * for backward compatibility, allow '-' to specify 'a' flag; no 	 * longer documented in the man page or usage string. 	 */
 name|asdata
 operator|=
-name|oflg
+name|exitcode
 operator|=
 name|fflg
+operator|=
+name|oflg
 operator|=
 literal|0
 expr_stmt|;
@@ -255,7 +282,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-0123456789aof"
+literal|"-0123456789anof"
 argument_list|)
 operator|)
 operator|!=
@@ -374,14 +401,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'o'
-case|:
-name|oflg
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'f'
 case|:
 name|fflg
@@ -390,20 +409,30 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|minlen
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|oflg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: strings [-ao] [-#] [file ... ]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -431,10 +460,6 @@ operator|!
 operator|(
 name|bfr
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -445,11 +470,19 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"strings: no space.\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"strings: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -496,9 +529,21 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"strings; %s: %s\n"
+argument_list|,
 name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exitcode
@@ -552,10 +597,6 @@ argument_list|(
 name|stdin
 argument_list|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|head
 argument_list|,
 sizeof|sizeof
@@ -603,7 +644,7 @@ name|stdin
 argument_list|,
 name|foff
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
@@ -713,15 +754,11 @@ name|bfr
 argument_list|)
 expr_stmt|;
 else|else
-name|fputs
+name|printf
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|bfr
+literal|"%s"
 argument_list|,
-name|stdout
+name|bfr
 argument_list|)
 expr_stmt|;
 while|while
@@ -844,6 +881,30 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: strings [-afo] [-n length] [file ... ]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
