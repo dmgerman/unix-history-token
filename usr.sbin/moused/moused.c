@@ -655,6 +655,10 @@ literal|"x10mouseremote"
 block|,
 literal|"kidspad"
 block|,
+literal|"versapad"
+block|,
+literal|"jogdial"
+block|,
 if|#
 directive|if
 name|notyet
@@ -1442,6 +1446,9 @@ name|HUPCL
 operator|)
 block|,
 comment|/* VersaPad */
+literal|0
+block|,
+comment|/* JogDial */
 if|#
 directive|if
 name|notyet
@@ -5581,6 +5588,23 @@ literal|0xff
 block|}
 block|,
 comment|/* VersaPad */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|1
+block|,
+literal|0x00
+block|,
+literal|0xff
+block|}
+block|,
+comment|/* JogDial */
 if|#
 directive|if
 name|notyet
@@ -7181,6 +7205,10 @@ break|break;
 block|}
 break|break;
 case|case
+name|MOUSE_PROTO_JOGDIAL
+case|:
+break|break;
+case|case
 name|MOUSE_PROTO_MSC
 case|:
 name|setmousespeed
@@ -8126,6 +8154,10 @@ break|break;
 endif|#
 directive|endif
 comment|/* notyet */
+case|case
+name|MOUSE_PROTO_JOGDIAL
+case|:
+break|break;
 comment|/* 	 * IntelliMouse, NetMouse (including NetMouse Pro) and Mie Mouse 	 * always send the fourth byte, whereas the fourth byte is 	 * optional for GlidePoint and ThinkingMouse. The fourth byte  	 * is also optional for MouseMan+ and FirstMouse+ in their  	 * native mode. It is always sent if they are in the IntelliMouse  	 * compatible mode. 	 */
 case|case
 name|MOUSE_PROTO_INTELLI
@@ -8857,6 +8889,60 @@ literal|4
 index|]
 argument_list|)
 operator|)
+expr_stmt|;
+break|break;
+case|case
+name|MOUSE_PROTO_JOGDIAL
+case|:
+comment|/* JogDial */
+if|if
+condition|(
+name|rBuf
+operator|==
+literal|0x6c
+condition|)
+name|act
+operator|->
+name|dz
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|rBuf
+operator|==
+literal|0x72
+condition|)
+name|act
+operator|->
+name|dz
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|rBuf
+operator|==
+literal|0x64
+condition|)
+name|act
+operator|->
+name|button
+operator|=
+name|MOUSE_BUTTON1DOWN
+expr_stmt|;
+if|if
+condition|(
+name|rBuf
+operator|==
+literal|0x75
+condition|)
+name|act
+operator|->
+name|button
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case

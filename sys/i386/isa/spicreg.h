@@ -70,5 +70,66 @@ name|SPIC_IRQ_SHIFT
 value|22
 end_define
 
+begin_comment
+comment|/* Define SPIC model type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPIC_DEVICE_MODEL_TYPE1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPIC_DEVICE_MODEL_TYPE2
+value|2
+end_define
+
+begin_comment
+comment|/* type2 series specifics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPIC_SIRQ
+value|0x9b
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPIC_SLOB
+value|0x9c
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPIC_SHIB
+value|0x9d
+end_define
+
+begin_comment
+comment|/* ioports used for brightness and type2 events */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPIC_DATA_IOPORT
+value|0x62
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPIC_CST_IOPORT
+value|0x66
+end_define
+
 end_unit
 
