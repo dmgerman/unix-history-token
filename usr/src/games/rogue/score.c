@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)score.c	5.1 (Berkeley) %G%"
+literal|"@(#)score.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -948,7 +948,7 @@ name|fopen
 argument_list|(
 name|SCORE_FILE
 argument_list|,
-literal|"r+w"
+literal|"a+"
 argument_list|)
 operator|)
 operator|==
@@ -966,6 +966,11 @@ name|sf_error
 argument_list|()
 expr_stmt|;
 block|}
+name|rewind
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
