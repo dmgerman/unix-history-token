@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -153,7 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Perform process accounting functions.  */
+comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
 end_comment
 
 begin_comment
@@ -555,7 +555,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * On exit, write a record on the accounting file.  */
+comment|/*  * This routine calculates an accounting record for a process and,  * if accounting is enabled, writes it to the accounting file.  */
 end_comment
 
 begin_expr_stmt
