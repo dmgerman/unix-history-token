@@ -5087,7 +5087,7 @@ operator|.
 name|sin6_addr
 argument_list|)
 operator|||
-name|IN6_IS_ADDR_LINKLOCAL
+name|IN6_IS_ADDR_MC_LINKLOCAL
 argument_list|(
 operator|&
 name|su
