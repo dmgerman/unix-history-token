@@ -1604,6 +1604,12 @@ name|isa_config
 modifier|*
 name|cfg
 decl_stmt|;
+name|char
+modifier|*
+name|reason
+init|=
+literal|"Empty ISA id_configs"
+decl_stmt|;
 name|cfg
 operator|=
 name|malloc
@@ -1641,6 +1647,10 @@ argument_list|,
 argument|ice_link
 argument_list|)
 block|{
+name|reason
+operator|=
+literal|"memory"
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1657,6 +1667,10 @@ name|cfg
 argument_list|)
 condition|)
 continue|continue;
+name|reason
+operator|=
+literal|"port"
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1673,6 +1687,10 @@ name|cfg
 argument_list|)
 condition|)
 continue|continue;
+name|reason
+operator|=
+literal|"irq"
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1689,6 +1707,10 @@ name|cfg
 argument_list|)
 condition|)
 continue|continue;
+name|reason
+operator|=
+literal|"drq"
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1706,6 +1728,10 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* 		 * A working configuration was found enable the device  		 * with this configuration. 		 */
+name|reason
+operator|=
+literal|"no callback"
+expr_stmt|;
 if|if
 condition|(
 name|idev
@@ -1751,7 +1777,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" can't assign resources\n"
+literal|" can't assign resources (%s)\n"
+argument_list|,
+name|reason
 argument_list|)
 expr_stmt|;
 if|if
