@@ -678,7 +678,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 		splx(_ms); \ 	} else { \ 		splx(_ms); \ 		(m) = m_retryhdr((how), (type)); \ 	} \ }
+value|{ \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 		(m)->m_pkthdr.rcvif = NULL; \ 		splx(_ms); \ 	} else { \ 		splx(_ms); \ 		(m) = m_retryhdr((how), (type)); \ 	} \ }
 end_define
 
 begin_comment
