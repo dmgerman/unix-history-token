@@ -1970,13 +1970,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: su [-] [-flm] [-c class] [login [args]]"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"usage: su [%s] [login [args]]"
-argument_list|,
-name|ARGSTR
 argument_list|)
 expr_stmt|;
 block|}
