@@ -363,9 +363,7 @@ name|void
 operator|)
 name|setlocale
 argument_list|(
-name|LC_TIME
-operator||
-name|LC_CTYPE
+name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
