@@ -176,22 +176,11 @@ begin_comment
 comment|/* IPSEC */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ip6_fw.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1384,12 +1373,11 @@ name|type
 operator|=
 name|ND_REDIRECT
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
+name|ip6_fw_enable
+operator|&&
 name|ip6_fw_chk_ptr
 condition|)
 block|{
@@ -1439,8 +1427,6 @@ goto|goto
 name|freecopy
 goto|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Fake scoped addresses. Note that even link-local source or 	 * destinaion can appear, if the originating node just sends the 	 * packet to us (without address resolution for the destination). 	 * Since both icmp6_error and icmp6_redirect_output fill the embedded 	 * link identifiers, we can do this stuff after make a copy for 	 * returning error. 	 */
 if|if
 condition|(
