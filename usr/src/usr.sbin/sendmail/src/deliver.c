@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.21 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5246,8 +5246,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+specifier|extern
+name|char
+name|Arpa_PSyserr
+index|[]
+decl_stmt|;
 name|message
 argument_list|(
+name|Arpa_PSyserr
+argument_list|,
 literal|"cannot open"
 argument_list|)
 expr_stmt|;
@@ -5320,8 +5327,15 @@ name|f
 argument_list|)
 condition|)
 block|{
+specifier|extern
+name|char
+name|Arpa_TSyserr
+index|[]
+decl_stmt|;
 name|message
 argument_list|(
+name|Arpa_TSyserr
+argument_list|,
 literal|"I/O error"
 argument_list|)
 expr_stmt|;
@@ -5479,8 +5493,16 @@ name|bool
 name|shouldqueue
 parameter_list|()
 function_decl|;
+name|mode
+operator|=
+name|SendMode
+expr_stmt|;
 if|if
 condition|(
+name|mode
+operator|!=
+name|SM_VERIFY
+operator|&&
 name|shouldqueue
 argument_list|(
 name|e
@@ -5495,11 +5517,6 @@ condition|)
 name|mode
 operator|=
 name|SM_QUEUE
-expr_stmt|;
-else|else
-name|mode
-operator|=
-name|SendMode
 expr_stmt|;
 block|}
 if|if
