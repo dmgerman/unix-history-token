@@ -3874,7 +3874,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|optarg
+name|s
 operator|==
 literal|'\0'
 operator|||
@@ -3892,7 +3892,7 @@ name|warnx
 argument_list|(
 literal|"FTP_TIMEOUT (%s) is not a positive integer"
 argument_list|,
-name|optarg
+name|s
 argument_list|)
 expr_stmt|;
 name|ftp_timeout
@@ -3930,7 +3930,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|optarg
+name|s
 operator|==
 literal|'\0'
 operator|||
@@ -3948,7 +3948,7 @@ name|warnx
 argument_list|(
 literal|"HTTP_TIMEOUT (%s) is not a positive integer"
 argument_list|,
-name|optarg
+name|s
 argument_list|)
 expr_stmt|;
 name|http_timeout
