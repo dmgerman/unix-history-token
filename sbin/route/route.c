@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.24 1997/04/02 17:05:30 phk Exp $"
+literal|"$Id: route.c,v 1.25 1997/06/18 06:30:34 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3879,14 +3879,6 @@ operator|=
 operator|&
 name|so_dst
 expr_stmt|;
-name|su
-operator|->
-name|sa
-operator|.
-name|sa_family
-operator|=
-name|af
-expr_stmt|;
 break|break;
 case|case
 name|RTA_GATEWAY
@@ -4140,14 +4132,6 @@ operator|)
 return|;
 block|}
 block|}
-name|su
-operator|->
-name|sa
-operator|.
-name|sa_family
-operator|=
-name|af
-expr_stmt|;
 break|break;
 case|case
 name|RTA_NETMASK
@@ -4175,14 +4159,6 @@ operator|=
 operator|&
 name|so_ifp
 expr_stmt|;
-name|su
-operator|->
-name|sa
-operator|.
-name|sa_family
-operator|=
-name|af
-expr_stmt|;
 break|break;
 case|case
 name|RTA_IFA
@@ -4191,14 +4167,6 @@ name|su
 operator|=
 operator|&
 name|so_ifa
-expr_stmt|;
-name|su
-operator|->
-name|sa
-operator|.
-name|sa_family
-operator|=
-name|af
 expr_stmt|;
 break|break;
 default|default:
@@ -4217,6 +4185,15 @@ name|sa_len
 operator|=
 name|aflen
 expr_stmt|;
+name|su
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|=
+name|af
+expr_stmt|;
+comment|/* cases that don't want it have left already */
 if|if
 condition|(
 name|strcmp
@@ -4229,6 +4206,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Default is net 0.0.0.0/0  		 */
 switch|switch
 condition|(
 name|which
@@ -4240,6 +4218,8 @@ case|:
 name|forcenet
 operator|++
 expr_stmt|;
+comment|/* bzero(su, sizeof(*su)); */
+comment|/* for readability */
 operator|(
 name|void
 operator|)
@@ -4259,14 +4239,8 @@ case|:
 case|case
 name|RTA_GENMASK
 case|:
-name|su
-operator|->
-name|sa
-operator|.
-name|sa_len
-operator|=
-literal|0
-expr_stmt|;
+comment|/* bzero(su, sizeof(*su)); */
+comment|/* for readability */
 block|}
 return|return
 operator|(
