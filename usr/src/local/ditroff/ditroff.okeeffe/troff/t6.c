@@ -1417,6 +1417,7 @@ name|p
 index|[
 literal|0
 index|]
+argument_list|)
 operator|&&
 operator|(
 name|p
@@ -1434,7 +1435,6 @@ literal|1
 index|]
 argument_list|)
 operator|)
-argument_list|)
 condition|)
 block|{
 name|k
@@ -2370,6 +2370,10 @@ operator|==
 operator|-
 literal|1
 condition|)
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* findft does the setfp if possible */
 if|if
 condition|(
 operator|(
@@ -2389,6 +2393,8 @@ operator|-
 literal|1
 condition|)
 comment|/* try to put it in position 0 */
+endif|#
+directive|endif
 return|return;
 name|s0
 label|:
