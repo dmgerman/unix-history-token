@@ -711,6 +711,26 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
+comment|/* 		 * the Microtech USB CameraMate does not like 		 * the sync-cache command, or READ_6. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"eUSB    Compact*"
+block|,
+literal|"Compact Flash*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * The vendor, product and version strings coming from the 		 * controller are null terminated instead of being padded with 		 * spaces. The trailing wildcard character '*' is required. 		 */
 block|{
 name|T_DIRECT
@@ -720,6 +740,26 @@ block|,
 literal|"SMSC*"
 block|,
 literal|"USB FDC*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Olympus digital cameras (C-3040ZOOM, C-2040ZOOM, C-1) 		 * do not support READ_6 commands, only READ_10. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"OLYMPUS"
+block|,
+literal|"C-*"
 block|,
 literal|"*"
 block|}
