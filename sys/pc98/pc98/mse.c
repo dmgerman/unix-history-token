@@ -2305,7 +2305,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2317,9 +2317,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|mse_softc_t
@@ -2537,7 +2537,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2549,9 +2549,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|mse_softc_t
@@ -3060,7 +3060,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -3075,9 +3075,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|mse_softc_t
@@ -3619,7 +3619,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -3628,9 +3628,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|mse_softc_t
@@ -3722,7 +3722,7 @@ block|{
 comment|/* 			 * Since this is an exclusive open device, any previous 			 * proc pointer is trash now, so we can just assign it. 			 */
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sc
