@@ -164,7 +164,8 @@ argument_list|)
 decl_stmt|;
 else|#
 directive|else
-name|_G_size_t
+specifier|const
+name|int
 name|getpagesize
 name|_G_ARGS
 argument_list|(

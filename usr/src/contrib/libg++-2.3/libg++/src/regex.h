@@ -424,6 +424,7 @@ name|char
 modifier|*
 name|re_comp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -432,6 +433,7 @@ specifier|extern
 name|int
 name|re_exec
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

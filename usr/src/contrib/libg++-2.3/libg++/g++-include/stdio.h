@@ -345,6 +345,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+name|unsigned
 name|int
 parameter_list|,
 name|FILE

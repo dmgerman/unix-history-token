@@ -902,7 +902,8 @@ end_ifdef
 
 begin_function
 specifier|inline
-name|int
+name|char
+modifier|*
 function|(
 name|standend
 function|)
@@ -934,7 +935,8 @@ end_ifdef
 
 begin_function
 specifier|inline
-name|int
+name|char
+modifier|*
 function|(
 name|standout
 function|)
@@ -2131,11 +2133,13 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-name|int
+name|char
+modifier|*
 name|standout
 parameter_list|()
 function_decl|;
-name|int
+name|char
+modifier|*
 name|standend
 parameter_list|()
 function_decl|;
@@ -2190,7 +2194,7 @@ block|{
 return|return
 name|w
 operator|->
-name|_begx
+name|begx
 return|;
 block|}
 end_expr_stmt
@@ -2206,7 +2210,7 @@ block|{
 return|return
 name|w
 operator|->
-name|_begy
+name|begy
 return|;
 block|}
 end_expr_stmt
@@ -2222,7 +2226,7 @@ block|{
 return|return
 name|w
 operator|->
-name|_maxx
+name|maxx
 return|;
 block|}
 end_expr_stmt
@@ -2238,7 +2242,7 @@ block|{
 return|return
 name|w
 operator|->
-name|_maxy
+name|maxy
 return|;
 block|}
 end_expr_stmt
@@ -3132,7 +3136,8 @@ name|x
 argument_list|)
 block|;  }
 specifier|inline
-name|int
+name|char
+operator|*
 name|CursesWindow
 operator|::
 name|standout
@@ -3150,7 +3155,8 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|int
+name|char
+operator|*
 name|CursesWindow
 operator|::
 name|standend

@@ -147,9 +147,9 @@ parameter_list|(
 name|WINDOW
 modifier|*
 parameter_list|,
-name|_G_chtype
+name|int
 parameter_list|,
-name|_G_chtype
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -243,7 +243,7 @@ parameter_list|(
 name|WINDOW
 modifier|*
 parameter_list|,
-name|_G_chtype
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -342,7 +342,7 @@ parameter_list|(
 name|WINDOW
 modifier|*
 parameter_list|,
-name|_G_chtype
+name|int
 parameter_list|)
 function_decl|;
 name|int
@@ -376,7 +376,8 @@ name|WINDOW
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|char
+modifier|*
 function_decl|(
 name|wstandend
 function_decl|)
@@ -385,7 +386,8 @@ name|WINDOW
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|char
+modifier|*
 function_decl|(
 name|wstandout
 function_decl|)
