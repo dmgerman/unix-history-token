@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pcb.h	6.2	84/07/31	*/
+comment|/*	pcb.h	6.3	85/03/07	*/
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ decl_stmt|;
 name|int
 name|pcb_sigc
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
 block|}
