@@ -30,14 +30,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|NoDeInstall
+name|CleanDirs
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|Boolean
-name|CleanDirs
+name|Interactive
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|NoDeInstall
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +68,13 @@ specifier|extern
 name|char
 modifier|*
 name|PkgName
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|match_t
+name|MatchType
 decl_stmt|;
 end_decl_stmt
 
