@@ -1984,24 +1984,12 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_FW_PUNCH
-if|if
-condition|(
-name|ftp_message_type
-operator|==
-name|FTP_PORT_COMMAND
-operator|||
-name|ftp_message_type
-operator|==
-name|FTP_EPRT_COMMAND
-condition|)
-block|{
 comment|/* Punch hole in firewall */
 name|PunchFWHole
 argument_list|(
 name|ftp_link
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* Calculate data length of TCP packet */
