@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_vnops.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_vnops.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -521,11 +521,6 @@ operator||
 name|ICHG
 expr_stmt|;
 block|}
-name|iput
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Remove inode so that it will be reloaded by iget and 	 * checked to see if it is an alias of an existing entry 	 * in the inode cache. 	 */
 name|remque
 argument_list|(
@@ -543,6 +538,20 @@ operator|->
 name|i_back
 operator|=
 name|ip
+expr_stmt|;
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
+operator|->
+name|v_type
+operator|=
+name|VNON
+expr_stmt|;
+name|iput
+argument_list|(
+name|ip
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
