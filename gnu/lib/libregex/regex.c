@@ -284,6 +284,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* isalpha etc. are used for the character classes.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -361,55 +371,22 @@ for|for
 control|(
 name|c
 operator|=
-literal|'a'
+literal|0
 init|;
 name|c
-operator|<=
-literal|'z'
+operator|<
+name|CHAR_SET_SIZE
 condition|;
 name|c
 operator|++
 control|)
-name|re_syntax_table
-index|[
+if|if
+condition|(
+name|isalnum
+argument_list|(
 name|c
-index|]
-operator|=
-name|Sword
-expr_stmt|;
-for|for
-control|(
-name|c
-operator|=
-literal|'A'
-init|;
-name|c
-operator|<=
-literal|'Z'
-condition|;
-name|c
-operator|++
-control|)
-name|re_syntax_table
-index|[
-name|c
-index|]
-operator|=
-name|Sword
-expr_stmt|;
-for|for
-control|(
-name|c
-operator|=
-literal|'0'
-init|;
-name|c
-operator|<=
-literal|'9'
-condition|;
-name|c
-operator|++
-control|)
+argument_list|)
+condition|)
 name|re_syntax_table
 index|[
 name|c
@@ -472,37 +449,6 @@ directive|include
 file|"regex.h"
 end_include
 
-begin_comment
-comment|/* isalpha etc. are used for the character classes.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|isascii
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|isascii
-parameter_list|(
-name|c
-parameter_list|)
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -516,7 +462,7 @@ name|ISBLANK
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isblank (c))
+value|isblank (c)
 end_define
 
 begin_else
@@ -552,7 +498,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isgraph (c))
+value|isgraph (c)
 end_define
 
 begin_else
@@ -567,7 +513,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c)&& !isspace (c))
+value|(isprint (c)&& !isspace (c))
 end_define
 
 begin_endif
@@ -582,7 +528,7 @@ name|ISPRINT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c))
+value|isprint (c)
 end_define
 
 begin_define
@@ -592,7 +538,7 @@ name|ISDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isdigit (c))
+value|isdigit (c)
 end_define
 
 begin_define
@@ -602,7 +548,7 @@ name|ISALNUM
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isalnum (c))
+value|isalnum (c)
 end_define
 
 begin_define
@@ -612,7 +558,7 @@ name|ISALPHA
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isalpha (c))
+value|isalpha (c)
 end_define
 
 begin_define
@@ -622,7 +568,7 @@ name|ISCNTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& iscntrl (c))
+value|iscntrl (c)
 end_define
 
 begin_define
@@ -632,7 +578,7 @@ name|ISLOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& islower (c))
+value|islower (c)
 end_define
 
 begin_define
@@ -642,7 +588,7 @@ name|ISPUNCT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& ispunct (c))
+value|ispunct (c)
 end_define
 
 begin_define
@@ -652,7 +598,7 @@ name|ISSPACE
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isspace (c))
+value|isspace (c)
 end_define
 
 begin_define
@@ -662,7 +608,7 @@ name|ISUPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isupper (c))
+value|isupper (c)
 end_define
 
 begin_define
@@ -672,7 +618,7 @@ name|ISXDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isxdigit (c))
+value|isxdigit (c)
 end_define
 
 begin_ifndef
