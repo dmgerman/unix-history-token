@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.28 (Berkeley) %G%"
+literal|"@(#)local2.c	1.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3537,7 +3537,7 @@ value|putchar(convtab[len])
 end_define
 
 begin_comment
-comment|/*  * Generate code for integral scalar conversions.  * Some of this code is designed to work around a tahoe misfeature  *	that causes sign- and zero- extension to be defeated in  *	certain circumstances.  * Basically if the source operand of a CVT or MOVZ instruction is  *	shorter than the destination, and the source is a register  *	or an immediate constant, sign- and zero- extension are  *	ignored and the high bits of the source are copied.  (Note  *	that zero-extension is not a problem for immediate  *	constants.)  */
+comment|/*  * Generate code for integral scalar conversions.  * Some of this code is designed to work around a tahoe misfeature  *	that causes sign- and zero- extension to be defeated in  *	certain circumstances.  * Basically if the source operand of a CVT or MOVZ instruction is  *	shorter than the destination, and the source is a register  *	or an immediate constant, sign- and zero- extension are  *	ignored and the high bits of the source are copied.  (Note  *	that zero-extension is not a problem for immediate  *	constants.)  * Another problem -- condition codes for a conversion with a  *	register source reflect the source rather than the destination.  */
 end_comment
 
 begin_macro
@@ -4082,6 +4082,8 @@ argument_list|,
 name|src
 argument_list|,
 name|dst
+argument_list|,
+name|forcc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4401,6 +4403,8 @@ argument_list|,
 name|tmp
 argument_list|,
 name|dst
+argument_list|,
+name|forcc
 argument_list|)
 expr_stmt|;
 name|tmp
@@ -4444,6 +4448,8 @@ argument_list|,
 name|src
 argument_list|,
 name|dst
+argument_list|,
+name|forcc
 argument_list|)
 expr_stmt|;
 block|}
@@ -4461,6 +4467,8 @@ argument_list|,
 argument|src
 argument_list|,
 argument|dst
+argument_list|,
+argument|forcc
 argument_list|)
 end_macro
 
@@ -4486,6 +4494,12 @@ name|src
 decl_stmt|,
 modifier|*
 name|dst
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|forcc
 decl_stmt|;
 end_decl_stmt
 
@@ -4568,6 +4582,45 @@ argument_list|(
 name|dst
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This hack is made necessary by architecture problems 	 *	described above 	 */
+if|if
+condition|(
+name|forcc
+operator|&&
+name|src
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|REG
+operator|&&
+name|srclen
+operator|>
+name|dstlen
+condition|)
+block|{
+name|putstr
+argument_list|(
+literal|"\n\ttst"
+argument_list|)
+expr_stmt|;
+name|prlen
+argument_list|(
+name|dstlen
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
+name|adrput
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
