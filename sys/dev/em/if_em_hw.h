@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001-2002, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2003, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -75,9 +75,31 @@ name|em_82545
 block|,
 name|em_82546
 block|,
+name|em_82541
+block|,
+name|em_82547
+block|,
 name|em_num_macs
 block|}
 name|em_mac_type
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_eeprom_uninitialized
+init|=
+literal|0
+block|,
+name|em_eeprom_spi
+block|,
+name|em_eeprom_microwire
+block|,
+name|em_num_eeprom_types
+block|}
+name|em_eeprom_type
 typedef|;
 end_typedef
 
@@ -257,6 +279,86 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|em_igp_cable_length_10
+init|=
+literal|10
+block|,
+name|em_igp_cable_length_20
+init|=
+literal|20
+block|,
+name|em_igp_cable_length_30
+init|=
+literal|30
+block|,
+name|em_igp_cable_length_40
+init|=
+literal|40
+block|,
+name|em_igp_cable_length_50
+init|=
+literal|50
+block|,
+name|em_igp_cable_length_60
+init|=
+literal|60
+block|,
+name|em_igp_cable_length_70
+init|=
+literal|70
+block|,
+name|em_igp_cable_length_80
+init|=
+literal|80
+block|,
+name|em_igp_cable_length_90
+init|=
+literal|90
+block|,
+name|em_igp_cable_length_100
+init|=
+literal|100
+block|,
+name|em_igp_cable_length_110
+init|=
+literal|110
+block|,
+name|em_igp_cable_length_120
+init|=
+literal|120
+block|,
+name|em_igp_cable_length_130
+init|=
+literal|130
+block|,
+name|em_igp_cable_length_140
+init|=
+literal|140
+block|,
+name|em_igp_cable_length_150
+init|=
+literal|150
+block|,
+name|em_igp_cable_length_160
+init|=
+literal|160
+block|,
+name|em_igp_cable_length_170
+init|=
+literal|170
+block|,
+name|em_igp_cable_length_180
+init|=
+literal|180
+block|}
+name|em_igp_cable_length
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
 name|em_10bt_ext_dist_enable_normal
 init|=
 literal|0
@@ -286,6 +388,24 @@ init|=
 literal|0xFF
 block|}
 name|em_rev_polarity
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_downshift_normal
+init|=
+literal|0
+block|,
+name|em_downshift_activated
+block|,
+name|em_downshift_undefined
+init|=
+literal|0xFF
+block|}
+name|em_downshift
 typedef|;
 end_typedef
 
@@ -347,6 +467,24 @@ name|em_1000t_rx_status
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|em_phy_m88
+init|=
+literal|0
+block|,
+name|em_phy_igp
+block|,
+name|em_phy_undefined
+init|=
+literal|0xFF
+block|}
+name|em_phy_type
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|em_phy_info
@@ -359,6 +497,9 @@ name|extended_10bt_distance
 decl_stmt|;
 name|em_rev_polarity
 name|cable_polarity
+decl_stmt|;
+name|em_downshift
+name|downshift
 decl_stmt|;
 name|em_polarity_reversal
 name|polarity_correction
@@ -385,6 +526,32 @@ name|idle_errors
 decl_stmt|;
 name|uint32_t
 name|receive_errors
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|em_eeprom_info
+block|{
+name|em_eeprom_type
+name|type
+decl_stmt|;
+name|uint16_t
+name|word_size
+decl_stmt|;
+name|uint16_t
+name|opcode_bits
+decl_stmt|;
+name|uint16_t
+name|address_bits
+decl_stmt|;
+name|uint16_t
+name|delay_usec
+decl_stmt|;
+name|uint16_t
+name|page_size
 decl_stmt|;
 block|}
 struct|;
@@ -434,6 +601,13 @@ define|#
 directive|define
 name|E1000_ERR_MAC_TYPE
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ERR_PHY_TYPE
+value|6
 end_define
 
 begin_comment
@@ -672,6 +846,88 @@ end_function_decl
 
 begin_function_decl
 name|int32_t
+name|em_phy_m88_get_info
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|struct
+name|em_phy_info
+modifier|*
+name|phy_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_phy_igp_get_info
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|struct
+name|em_phy_info
+modifier|*
+name|phy_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_get_cable_length
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|uint16_t
+modifier|*
+name|min_length
+parameter_list|,
+name|uint16_t
+modifier|*
+name|max_length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_check_polarity
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|,
+name|uint16_t
+modifier|*
+name|polarity
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
+name|em_check_downshift
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int32_t
 name|em_validate_mdi_setting
 parameter_list|(
 name|struct
@@ -687,6 +943,18 @@ comment|/* EEPROM Functions */
 end_comment
 
 begin_function_decl
+name|void
+name|em_init_eeprom_params
+parameter_list|(
+name|struct
+name|em_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int32_t
 name|em_read_eeprom
 parameter_list|(
@@ -697,6 +965,9 @@ name|hw
 parameter_list|,
 name|uint16_t
 name|reg
+parameter_list|,
+name|uint16_t
+name|words
 parameter_list|,
 name|uint16_t
 modifier|*
@@ -742,6 +1013,10 @@ name|uint16_t
 name|reg
 parameter_list|,
 name|uint16_t
+name|words
+parameter_list|,
+name|uint16_t
+modifier|*
 name|data
 parameter_list|)
 function_decl|;
@@ -1304,8 +1579,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82541EI
+value|0x1013
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82541EP
+value|0x1018
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DEV_ID_82547EI
+value|0x1019
+end_define
+
+begin_define
+define|#
+directive|define
 name|NUM_DEV_IDS
-value|16
+value|19
 end_define
 
 begin_define
@@ -1383,7 +1679,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* The sizes (in bytes) of an ethernet packet */
+comment|/* The sizes (in bytes) of a ethernet packet */
 end_comment
 
 begin_define
@@ -1523,7 +1819,7 @@ value|0x11
 end_define
 
 begin_comment
-comment|/* This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error   */
+comment|/* This defines the bits that are set in the Interrupt Mask  * Set/Read Register.  Each bit is documented below:  *   o RXDMT0 = Receive Descriptor Minimum Threshold hit (ring 0)  *   o RXSEQ  = Receive Sequence Error  */
 end_comment
 
 begin_define
@@ -1545,14 +1841,14 @@ value|( \     E1000_IMS_RXT0   |    \     E1000_IMS_TXDW   |    \     E1000_IMS_
 end_define
 
 begin_comment
-comment|/* The number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor. We  * reserve one of these spots for our directed address, allowing us room for  * E1000_RAR_ENTRIES - 1 multicast addresses.   */
+comment|/* The number of high/low register pairs in the RAR. The RAR (Receive Address  * Registers) holds the directed and multicast addresses that we monitor. We  * reserve one of these spots for our directed address, allowing us room for  * E1000_RAR_ENTRIES - 1 multicast addresses.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|E1000_RAR_ENTRIES
-value|16
+value|15
 end_define
 
 begin_define
@@ -2516,7 +2812,7 @@ value|E1000_FLEXIBLE_FILTER_SIZE_MAX
 end_define
 
 begin_comment
-comment|/* Register Set. (82543, 82544)  *  * Registers are defined to be 32 bits and  should be accessed as 32 bit values.  * These registers are physically located on the NIC, but are mapped into the   * host memory address space.  *  * RW - register is both readable and writable  * RO - register is read only  * WO - register is write only  * R/clr - register is read only and is cleared when read  * A - register array  */
+comment|/* Register Set. (82543, 82544)  *  * Registers are defined to be 32 bits and  should be accessed as 32 bit values.  * These registers are physically located on the NIC, but are mapped into the  * host memory address space.  *  * RW - register is both readable and writable  * RO - register is read only  * WO - register is write only  * R/clr - register is read only and is cleared when read  * A - register array  */
 end_comment
 
 begin_define
@@ -2572,6 +2868,17 @@ end_define
 
 begin_comment
 comment|/* Extended Device Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FLA
+value|0x0001C
+end_define
+
+begin_comment
+comment|/* Flash Access Register - RW */
 end_comment
 
 begin_define
@@ -2924,6 +3231,61 @@ end_define
 
 begin_comment
 comment|/* TX DMA Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TDFH
+value|0x03410
+end_define
+
+begin_comment
+comment|/* TX Data FIFO Head - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TDFT
+value|0x03418
+end_define
+
+begin_comment
+comment|/* TX Data FIFO Tail - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TDFHS
+value|0x03420
+end_define
+
+begin_comment
+comment|/* TX Data FIFO Head Saved - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TDFTS
+value|0x03428
+end_define
+
+begin_comment
+comment|/* TX Data FIFO Tail Saved - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TDFPC
+value|0x03430
+end_define
+
+begin_comment
+comment|/* TX Data FIFO Packet Count - RW */
 end_comment
 
 begin_define
@@ -3881,6 +4243,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_82542_FLA
+value|E1000_FLA
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_82542_MDIC
 value|E1000_MDIC
 end_define
@@ -4163,6 +4532,27 @@ define|#
 directive|define
 name|E1000_82542_TXDMAC
 value|E1000_TXDMAC
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_TDFHS
+value|E1000_TDFHS
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_TDFTS
+value|E1000_TDFTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_TDFPC
+value|E1000_TDFPC
 end_define
 
 begin_define
@@ -4672,6 +5062,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_82542_TDFH
+value|0x08010
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_TDFT
+value|0x08018
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_82542_FFMT
 value|E1000_FFMT
 end_define
@@ -4884,6 +5288,12 @@ decl_stmt|;
 name|em_mac_type
 name|mac_type
 decl_stmt|;
+name|em_phy_type
+name|phy_type
+decl_stmt|;
+name|uint32_t
+name|phy_init_script
+decl_stmt|;
 name|em_media_type
 name|media_type
 decl_stmt|;
@@ -4902,6 +5312,10 @@ name|bus_width
 decl_stmt|;
 name|em_bus_type
 name|bus_type
+decl_stmt|;
+name|struct
+name|em_eeprom_info
+name|eeprom
 decl_stmt|;
 name|uint32_t
 name|io_base
@@ -5025,6 +5439,9 @@ index|]
 decl_stmt|;
 name|boolean_t
 name|disable_polarity_correction
+decl_stmt|;
+name|boolean_t
+name|speed_downgraded
 decl_stmt|;
 name|boolean_t
 name|get_link_status
@@ -5725,17 +6142,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E1000_EECD_SIZE
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* EEPROM Size (0=64 word 1=256 word) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|E1000_EECD_REQ
 value|0x00000040
 end_define
@@ -5765,6 +6171,61 @@ end_define
 begin_comment
 comment|/* EEPROM Present */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_SIZE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* EEPROM Size (0=64 word 1=256 word) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_ADDR_BITS
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* EEPROM Addressing bits based on type 					 * (0-small, 1-large) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EECD_TYPE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* EEPROM Type (1-SPI, 0-Microwire) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|E1000_EEPROM_GRANT_ATTEMPTS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|E1000_EEPROM_GRANT_ATTEMPTS
+value|1000
+end_define
+
+begin_comment
+comment|/* EEPROM # attempts to gain grant */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* EEPROM Read */
@@ -5827,6 +6288,45 @@ end_define
 begin_comment
 comment|/* Read Data */
 end_comment
+
+begin_comment
+comment|/* SPI EEPROM Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STATUS_RDY_SPI
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STATUS_WEN_SPI
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STATUS_BP0_SPI
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STATUS_BP1_SPI
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_STATUS_WPEN_SPI
+value|0x80
+end_define
 
 begin_comment
 comment|/* Extended Device Control */
@@ -8048,6 +8548,17 @@ begin_comment
 comment|/* Assert PME on APM Wakeup */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_WUC_SPM
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Enable SPM */
+end_comment
+
 begin_comment
 comment|/* Wake Up Filter Control */
 end_comment
@@ -8475,7 +8986,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* Enable Neighbor Discovery                                               * Filtering */
+comment|/* Enable Neighbor Discovery                                              * Filtering */
 end_comment
 
 begin_define
@@ -8622,63 +9133,215 @@ value|4096
 end_define
 
 begin_comment
-comment|/* EEPROM Commands */
+comment|/* EEPROM Commands - Microwire */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EEPROM_READ_OPCODE
+name|EEPROM_READ_OPCODE_MICROWIRE
 value|0x6
 end_define
 
 begin_comment
-comment|/* EERPOM read opcode */
+comment|/* EEPROM read opcode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EEPROM_WRITE_OPCODE
+name|EEPROM_WRITE_OPCODE_MICROWIRE
 value|0x5
 end_define
 
 begin_comment
-comment|/* EERPOM write opcode */
+comment|/* EEPROM write opcode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EEPROM_ERASE_OPCODE
+name|EEPROM_ERASE_OPCODE_MICROWIRE
 value|0x7
 end_define
 
 begin_comment
-comment|/* EERPOM erase opcode */
+comment|/* EEPROM erase opcode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EEPROM_EWEN_OPCODE
+name|EEPROM_EWEN_OPCODE_MICROWIRE
 value|0x13
 end_define
 
 begin_comment
-comment|/* EERPOM erase/write enable */
+comment|/* EEPROM erase/write enable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EEPROM_EWDS_OPCODE
+name|EEPROM_EWDS_OPCODE_MICROWIRE
 value|0x10
 end_define
 
 begin_comment
-comment|/* EERPOM erast/write disable */
+comment|/* EEPROM erast/write disable */
 end_comment
+
+begin_comment
+comment|/* EEPROM Commands - SPI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_MAX_RETRY_SPI
+value|5000
+end_define
+
+begin_comment
+comment|/* Max wait of 5ms, for RDY signal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_READ_OPCODE_SPI
+value|0x3
+end_define
+
+begin_comment
+comment|/* EEPROM read opcode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_WRITE_OPCODE_SPI
+value|0x2
+end_define
+
+begin_comment
+comment|/* EEPROM write opcode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_A8_OPCODE_SPI
+value|0x8
+end_define
+
+begin_comment
+comment|/* opcode bit-3 = address bit-8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_WREN_OPCODE_SPI
+value|0x6
+end_define
+
+begin_comment
+comment|/* EEPROM set Write Enable latch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_WRDI_OPCODE_SPI
+value|0x4
+end_define
+
+begin_comment
+comment|/* EEPROM reset Write Enable latch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_RDSR_OPCODE_SPI
+value|0x5
+end_define
+
+begin_comment
+comment|/* EEPROM read Status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_WRSR_OPCODE_SPI
+value|0x1
+end_define
+
+begin_comment
+comment|/* EEPROM write Status register */
+end_comment
+
+begin_comment
+comment|/* EEPROM Size definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_16KB
+value|0x1800
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_8KB
+value|0x1400
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_4KB
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_2KB
+value|0x0C00
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_1KB
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_512B
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_128B
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_SIZE_MASK
+value|0x1C00
+end_define
 
 begin_comment
 comment|/* EEPROM Word Offsets */
@@ -8710,6 +9373,13 @@ define|#
 directive|define
 name|EEPROM_INIT_CONTROL2_REG
 value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|EEPROM_CFG
+value|0x0012
 end_define
 
 begin_define
@@ -8814,22 +9484,25 @@ name|ID_LED_OFF1_OFF2
 value|0x9
 end_define
 
-begin_comment
-comment|/* Mask bits for fields in Word 0x03 of the EEPROM */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|EEPROM_COMPAT_SERVER
-value|0x0400
+name|IGP_ACTIVITY_LED_MASK
+value|0xFFFFF0FF
 end_define
 
 begin_define
 define|#
 directive|define
-name|EEPROM_COMPAT_CLIENT
-value|0x0200
+name|IGP_ACTIVITY_LED_ENABLE
+value|0x0300
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP_LED3_MODE
+value|0x07000000
 end_define
 
 begin_comment
@@ -9215,8 +9888,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_PBA_22K
+value|0x0016
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_PBA_24K
 value|0x0018
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PBA_30K
+value|0x001E
 end_define
 
 begin_define
@@ -9367,7 +10054,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift right to move the "pause"  * bits from the EEPROM (bits 13:12) to the "pause" (bits 8:7) field  * in the TXCW register   */
+comment|/* The number of bits that we need to shift right to move the "pause"  * bits from the EEPROM (bits 13:12) to the "pause" (bits 8:7) field  * in the TXCW register  */
 end_comment
 
 begin_define
@@ -9378,7 +10065,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift left to move the "SWDPIO"  * bits from the EEPROM (bits 8:5) to the "SWDPIO" (bits 25:22) field  * in the CTRL register   */
+comment|/* The number of bits that we need to shift left to move the "SWDPIO"  * bits from the EEPROM (bits 8:5) to the "SWDPIO" (bits 25:22) field  * in the CTRL register  */
 end_comment
 
 begin_define
@@ -9389,7 +10076,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift left to move the "SWDPIO_EXT"  * bits from the EEPROM word F (bits 7:4) to the bits 11:8 of The  * Extended CTRL register.  * in the CTRL register   */
+comment|/* The number of bits that we need to shift left to move the "SWDPIO_EXT"  * bits from the EEPROM word F (bits 7:4) to the bits 11:8 of The  * Extended CTRL register.  * in the CTRL register  */
 end_comment
 
 begin_define
@@ -9400,7 +10087,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* The number of bits that we need to shift left to move the "ILOS"  * bit from the EEPROM (bit 4) to the "ILOS" (bit 7) field  * in the CTRL register   */
+comment|/* The number of bits that we need to shift left to move the "ILOS"  * bit from the EEPROM (bit 4) to the "ILOS" (bit 7) field  * in the CTRL register  */
 end_comment
 
 begin_define
@@ -9447,7 +10134,7 @@ value|0x0F
 end_define
 
 begin_comment
-comment|/* TBI_ACCEPT macro definition:  *  * This macro requires:  *      adapter = a pointer to struct em_hw   *      status = the 8 bit status field of the RX descriptor with EOP set  *      error = the 8 bit error field of the RX descriptor with EOP set  *      length = the sum of all the length fields of the RX descriptors that  *               make up the current frame  *      last_byte = the last byte of the frame DMAed by the hardware  *      max_frame_length = the maximum frame length we want to accept.  *      min_frame_length = the minimum frame length we want to accept.  *  * This macro is a conditional that should be used in the interrupt   * handler's Rx processing routine when RxErrors have been detected.  *  * Typical use:  *  ...  *  if (TBI_ACCEPT) {  *      accept_frame = TRUE;  *      em_tbi_adjust_stats(adapter, MacAddress);  *      frame_length--;  *  } else {  *      accept_frame = FALSE;  *  }  *  ...  */
+comment|/* TBI_ACCEPT macro definition:  *  * This macro requires:  *      adapter = a pointer to struct em_hw  *      status = the 8 bit status field of the RX descriptor with EOP set  *      error = the 8 bit error field of the RX descriptor with EOP set  *      length = the sum of all the length fields of the RX descriptors that  *               make up the current frame  *      last_byte = the last byte of the frame DMAed by the hardware  *      max_frame_length = the maximum frame length we want to accept.  *      min_frame_length = the minimum frame length we want to accept.  *  * This macro is a conditional that should be used in the interrupt  * handler's Rx processing routine when RxErrors have been detected.  *  * Typical use:  *  ...  *  if (TBI_ACCEPT) {  *      accept_frame = TRUE;  *      em_tbi_adjust_stats(adapter, MacAddress);  *      frame_length--;  *  } else {  *      accept_frame = FALSE;  *  }  *  ...  */
 end_comment
 
 begin_define
@@ -9742,6 +10429,141 @@ end_define
 begin_comment
 comment|/* Receive Error Counter */
 end_comment
+
+begin_comment
+comment|/* IGP01E1000 Specific Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_PORT_CONFIG
+value|0x10
+end_define
+
+begin_comment
+comment|/* PHY Specific Port Config Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_PORT_STATUS
+value|0x11
+end_define
+
+begin_comment
+comment|/* PHY Specific Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_PORT_CTRL
+value|0x12
+end_define
+
+begin_comment
+comment|/* PHY Specific Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_LINK_HEALTH
+value|0x13
+end_define
+
+begin_comment
+comment|/* PHY Link Health Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_GMII_FIFO
+value|0x14
+end_define
+
+begin_comment
+comment|/* GMII FIFO Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_CHANNEL_QUALITY
+value|0x15
+end_define
+
+begin_comment
+comment|/* PHY Channel Quality Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_PAGE_SELECT
+value|0x1F
+end_define
+
+begin_comment
+comment|/* PHY Page Select Core Register */
+end_comment
+
+begin_comment
+comment|/* IGP01E1000 AGC Registers - stores the cable length values*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_A
+value|0x1172
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_B
+value|0x1272
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_C
+value|0x1472
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_D
+value|0x1872
+end_define
+
+begin_comment
+comment|/* Number of AGC registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_AGC_NUM
+value|4
+end_define
+
+begin_comment
+comment|/* IGP01E1000 PCS Initialization register - stores the polarity status when  * speed = 1000 Mbps. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_PCS_INIT_REG
+value|0x00B4
+end_define
 
 begin_define
 define|#
@@ -10328,7 +11150,7 @@ begin_define
 define|#
 directive|define
 name|NWAY_ER_PAR_DETECT_FAULT
-value|0x0100
+value|0x0010
 end_define
 
 begin_comment
@@ -10391,7 +11213,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* 1 = addition NP will follow                                      * 0 = sending last NP                                     */
+comment|/* 1 = addition NP will follow                                     * 0 = sending last NP                                     */
 end_comment
 
 begin_comment
@@ -10428,7 +11250,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* 1 = will comply with msg                                         * 0 = cannot comply with msg                                        */
+comment|/* 1 = will comply with msg                                        * 0 = cannot comply with msg                                        */
 end_comment
 
 begin_define
@@ -10461,7 +11283,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* 1 = addition NP will follow                                         * 0 = sending last NP                                          */
+comment|/* 1 = addition NP will follow                                         * 0 = sending last NP                                         */
 end_comment
 
 begin_comment
@@ -10837,7 +11659,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* 1=CLK125 low,                                                  * 0=CLK125 toggling                                                 */
+comment|/* 1=CLK125 low,                                                 * 0=CLK125 toggling                                                 */
 end_comment
 
 begin_define
@@ -10874,7 +11696,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* 1000BASE-T: Auto crossover,                                                 *  100BASE-TX/10BASE-T:                                                  *  MDI Mode                                                 */
+comment|/* 1000BASE-T: Auto crossover,                                                 *  100BASE-TX/10BASE-T:                                                 *  MDI Mode                                                 */
 end_comment
 
 begin_define
@@ -10885,7 +11707,7 @@ value|0x0060
 end_define
 
 begin_comment
-comment|/* Auto crossover enabled                                                  * all speeds.                                                  */
+comment|/* Auto crossover enabled                                                 * all speeds.                                                 */
 end_comment
 
 begin_define
@@ -10988,6 +11810,17 @@ end_define
 
 begin_comment
 comment|/* 1=Polarity reversed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M88E1000_PSSR_DOWNSHIFT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 1=Downshifted */
 end_comment
 
 begin_define
@@ -11110,6 +11943,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|M88E1000_PSSR_DOWNSHIFT_SHIFT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|M88E1000_PSSR_MDIX_SHIFT
 value|6
 end_define
@@ -11144,7 +11984,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* 1=Lost lock detect enabled.                                               * Will assert lost lock and bring                                               * link down if idle not seen                                               * within 1ms in 1000BASE-T                                                */
+comment|/* 1=Lost lock detect enabled.                                               * Will assert lost lock and bring                                               * link down if idle not seen                                               * within 1ms in 1000BASE-T                                               */
 end_comment
 
 begin_comment
@@ -11259,6 +12099,689 @@ comment|/* NO  TX_CLK */
 end_comment
 
 begin_comment
+comment|/* IGP01E1000 Specific Port Config Register - R/W */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCFR_AUTO_MDIX_PAR_DETECT
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCFR_PRE_EN
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCFR_SMART_SPEED
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCFR_DISABLE_TPLOOPBACK
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCFR_DISABLE_JABBER
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCFR_DISABLE_TRANSMIT
+value|0x2000
+end_define
+
+begin_comment
+comment|/* IGP01E1000 Specific Port Status Register - R/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_AUTONEG_FAILED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* RO LH SC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_POLARITY_REVERSED
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_CABLE_LENGTH
+value|0x007C
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_FULL_DUPLEX
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_LINK_UP
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_MDIX
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_SPEED_MASK
+value|0xC000
+end_define
+
+begin_comment
+comment|/* speed bits mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_SPEED_10MBPS
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_SPEED_100MBPS
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_SPEED_1000MBPS
+value|0xC000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_CABLE_LENGTH_SHIFT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* shift right 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSSR_MDIX_SHIFT
+value|0x000B
+end_define
+
+begin_comment
+comment|/* shift right 11 */
+end_comment
+
+begin_comment
+comment|/* IGP01E1000 Specific Port Control Register - R/W */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCR_TP_LOOPBACK
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCR_CORRECT_NC_SCMBLR
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCR_TEN_CRS_SELECT
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCR_FLIP_CHIP
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCR_AUTO_MDIX
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PSCR_FORCE_MDI_MDIX
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 0-MDI, 1-MDIX */
+end_comment
+
+begin_comment
+comment|/* IGP01E1000 Specific Port Link Health Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_SS_DOWNGRADE
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_GIG_SCRAMBLER_ERROR
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_GIG_REM_RCVR_NOK
+value|0x0800
+end_define
+
+begin_comment
+comment|/* LH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_IDLE_ERROR_CNT_OFLOW
+value|0x0400
+end_define
+
+begin_comment
+comment|/* LH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_DATA_ERR_1
+value|0x0200
+end_define
+
+begin_comment
+comment|/* LH */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_DATA_ERR_0
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_AUTONEG_FAULT
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_AUTONEG_ACTIVE
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_VALID_CHANNEL_D
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_VALID_CHANNEL_C
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_VALID_CHANNEL_B
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PLHR_VALID_CHANNEL_A
+value|0x0000
+end_define
+
+begin_comment
+comment|/* IGP01E1000 Channel Quality Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_MSE_CHANNEL_D
+value|0x000F
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_MSE_CHANNEL_C
+value|0x00F0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_MSE_CHANNEL_B
+value|0x0F00
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_MSE_CHANNEL_A
+value|0xF000
+end_define
+
+begin_comment
+comment|/* IGP01E1000 AGC Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_AGC_LENGTH_SHIFT
+value|7
+end_define
+
+begin_comment
+comment|/* Coarse - 13:11, Fine - 10:7 */
+end_comment
+
+begin_comment
+comment|/* 7 bits (3 Coarse + 4 Fine) --> 128 optional values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_AGC_LENGTH_TABLE_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* The precision of the length is +/- 10 meters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_AGC_RANGE
+value|10
+end_define
+
+begin_comment
+comment|/* IGP cable length table */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|uint16_t
+name|em_igp_cable_length_table
+index|[
+name|IGP01E1000_AGC_LENGTH_TABLE_SIZE
+index|]
+init|=
+block|{
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|5
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|10
+block|,
+literal|20
+block|,
+literal|20
+block|,
+literal|20
+block|,
+literal|20
+block|,
+literal|20
+block|,
+literal|25
+block|,
+literal|25
+block|,
+literal|25
+block|,
+literal|25
+block|,
+literal|25
+block|,
+literal|25
+block|,
+literal|25
+block|,
+literal|30
+block|,
+literal|30
+block|,
+literal|30
+block|,
+literal|30
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|40
+block|,
+literal|50
+block|,
+literal|50
+block|,
+literal|50
+block|,
+literal|50
+block|,
+literal|50
+block|,
+literal|50
+block|,
+literal|50
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|60
+block|,
+literal|70
+block|,
+literal|70
+block|,
+literal|70
+block|,
+literal|70
+block|,
+literal|70
+block|,
+literal|70
+block|,
+literal|80
+block|,
+literal|80
+block|,
+literal|80
+block|,
+literal|80
+block|,
+literal|80
+block|,
+literal|80
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|90
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|100
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|110
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|,
+literal|120
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IGP01E1000 PCS Initialization register */
+end_comment
+
+begin_comment
+comment|/* bits 3:6 in the PCS registers stores the channels polarity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_PHY_POLARITY_MASK
+value|0x0078
+end_define
+
+begin_comment
+comment|/* IGP01E1000 GMII FIFO Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_GMII_FLEX_SPD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Enable flexible speed                                                      * on Link-Up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_GMII_SPD
+value|0x20
+end_define
+
+begin_comment
+comment|/* Enable SPD */
+end_comment
+
+begin_comment
 comment|/* Bit definitions for valid PHY IDs. */
 end_comment
 
@@ -11281,6 +12804,13 @@ define|#
 directive|define
 name|M88E1011_I_PHY_ID
 value|0x01410C20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGP01E1000_I_PHY_ID
+value|0x02A80380
 end_define
 
 begin_define
