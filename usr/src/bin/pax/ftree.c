@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftree.c	1.1 (Berkeley) %G%"
+literal|"@(#)ftree.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,19 +210,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* current file tree entry */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|refcnt
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ref count for stdin supplied arg */
 end_comment
 
 begin_decl_stmt
@@ -658,11 +645,6 @@ name|refcnt
 operator|=
 literal|1
 expr_stmt|;
-else|else
-name|refcnt
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 	 * if -n we are done with this arg, force a skip to the next arg when 	 * pax asks for the next file in next_file(). 	 * if -d we tell fts only to match the directory (if the arg is a dir) 	 * and not the entire file tree rooted at that point. 	 */
 if|if
 condition|(
@@ -879,11 +861,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * the user didn't supply any args, get the file trees 			 * to process from stdin; if the refenece count is 0 			 * complain that the last stdin read file tree did not 			 * supply any selected members 			 */
-name|refcnt
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 			 * the user didn't supply any args, get the file trees 			 * to process from stdin;  			 */
 if|if
 condition|(
 name|fgets
@@ -934,22 +912,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * the user supplied the file args as arguements to pax 			 * store the current reference count (unless we have not 			 * processed any files yet). 			 */
+comment|/* 			 * the user supplied the file args as arguements to pax 			 */
 if|if
 condition|(
+name|ftcur
+operator|==
+name|NULL
+condition|)
+name|ftcur
+operator|=
+name|fthead
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
 name|ftcur
 operator|!=
 name|NULL
-condition|)
-block|{
-name|ftcur
-operator|->
-name|refcnt
-operator|=
-name|refcnt
-expr_stmt|;
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 operator|(
 name|ftcur
 operator|=
@@ -959,6 +942,7 @@ name|fow
 operator|)
 operator|==
 name|NULL
+operator|)
 condition|)
 return|return
 operator|(
@@ -966,12 +950,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-else|else
-name|ftcur
-operator|=
-name|fthead
-expr_stmt|;
 name|farray
 index|[
 literal|0
