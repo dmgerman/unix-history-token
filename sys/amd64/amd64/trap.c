@@ -1715,14 +1715,14 @@ name|PSL_T
 expr_stmt|;
 return|return;
 block|}
-comment|/*                          * Ignore debug register trace traps due to                          * accesses in the user's address space, which                          * can happen under several conditions such as                          * if a user sets a watchpoint on a buffer and                          * then passes that buffer to a system call.                          * We still want to get TRCTRAPS for addresses                          * in kernel space because that is useful when                          * debugging the kernel.                          */
+comment|/* 			 * Ignore debug register trace traps due to 			 * accesses in the user's address space, which 			 * can happen under several conditions such as 			 * if a user sets a watchpoint on a buffer and 			 * then passes that buffer to a system call. 			 * We still want to get TRCTRAPS for addresses 			 * in kernel space because that is useful when 			 * debugging the kernel. 			 */
 if|if
 condition|(
 name|user_dbreg_trap
 argument_list|()
 condition|)
 block|{
-comment|/*                                  * Reset breakpoint bits because the                                  * processor doesn't                                  */
+comment|/* 				 * Reset breakpoint bits because the 				 * processor doesn't 				 */
 name|load_dr6
 argument_list|(
 name|rdr6
