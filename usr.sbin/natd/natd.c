@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  * $Id$  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  * $Id: natd.c,v 1.8 1997/12/27 19:31:11 alex Exp $  */
 end_comment
 
 begin_include
@@ -2644,7 +2644,7 @@ name|req
 operator|.
 name|ifr_addr
 expr_stmt|;
-name|SetPacketAliasAddress
+name|PacketAliasSetAddress
 argument_list|(
 name|addr
 operator|->
@@ -4006,6 +4006,10 @@ name|struct
 name|in_addr
 name|dstAddr
 decl_stmt|;
+name|struct
+name|in_addr
+name|null_address
+decl_stmt|;
 name|u_short
 name|srcPort
 decl_stmt|;
@@ -4157,7 +4161,13 @@ argument_list|,
 name|protoName
 argument_list|)
 expr_stmt|;
-name|PacketAliasPermanentLink
+name|null_address
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+name|PacketAliasRedirectPort
 argument_list|(
 name|srcAddr
 argument_list|,
@@ -4166,6 +4176,8 @@ argument_list|,
 name|dstAddr
 argument_list|,
 name|dstPort
+argument_list|,
+name|null_address
 argument_list|,
 name|aliasPort
 argument_list|,
