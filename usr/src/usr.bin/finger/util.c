@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.12 (Berkeley) %G%"
+literal|"@(#)util.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,13 +67,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"finger.h"
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|"finger.h"
 end_include
 
 begin_expr_stmt
