@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.6	81/12/01	*/
+comment|/*	ht.c	4.7	82/03/07	*/
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/fs.h"
 end_include
 
 begin_include
