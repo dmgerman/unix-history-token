@@ -52,25 +52,16 @@ comment|/*  * Glue code to load sound(4). Though fdc(4), ppc(4) don't work on  *
 end_comment
 
 begin_function
-name|int
-name|isa_dma_init
+name|void
+name|isa_dmainit
 parameter_list|(
 name|int
 name|chan
 parameter_list|,
 name|u_int
 name|bouncebufsize
-parameter_list|,
-name|int
-name|flag
 parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+block|{  }
 end_function
 
 begin_function
