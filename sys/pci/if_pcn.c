@@ -2025,6 +2025,9 @@ case|case
 name|Am79C973
 case|:
 case|case
+name|Am79C975
+case|:
+case|case
 name|Am79C976
 case|:
 case|case
