@@ -698,6 +698,18 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|dev_t
+name|sc_dev_t
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* defined(__FreeBSD__) */
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
 argument_list|)
 operator|||
@@ -1268,9 +1280,10 @@ operator|>=
 literal|4
 operator|)
 comment|/* XXX no error trapping, no storing of dev_t */
-operator|(
-name|void
-operator|)
+name|sc
+operator|->
+name|sc_dev_t
+operator|=
 name|make_dev
 argument_list|(
 operator|&
@@ -3204,13 +3217,6 @@ argument_list|,
 name|VCHR
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-comment|/* XXX not implemented yet */
 endif|#
 directive|endif
 name|usbd_add_drv_event
@@ -3264,6 +3270,16 @@ name|device_t
 name|self
 parameter_list|)
 block|{
+name|struct
+name|urio_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|self
+argument_list|)
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -3276,6 +3292,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|sc
+operator|->
+name|sc_dev_t
+argument_list|)
+expr_stmt|;
+comment|/* XXX not implemented yet */
 name|device_set_desc
 argument_list|(
 name|self
