@@ -386,34 +386,18 @@ begin_comment
 comment|/*  * Nfs server daemon mostly just a user context for nfssvc()  *  * 1 - do file descriptor and signal cleanup  * 2 - fork the nfsd(s)  * 3 - create server socket(s)  * 4 - register socket with rpcbind  *  * For connectionless protocols, just pass the socket into the kernel via.  * nfssvc().  * For connection based sockets, loop doing accepts. When you get a new  * socket from accept, pass the msgsock into the kernel via. nfssvc().  * The arguments are:  *	-r - reregister with rpcbind  *	-d - unregister with rpcbind  *	-t - support tcp nfs clients  *	-u - support udp nfs clients  * followed by "n" which is the number of nfsds' to fork off  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
-decl|main
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|envp
-argument_list|)
+name|main
+parameter_list|(
 name|int
 name|argc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
-name|argv
-index|[]
-decl_stmt|,
 modifier|*
-name|envp
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|argv
+parameter_list|)
 block|{
 name|struct
 name|nfsd_args
@@ -3967,7 +3951,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -4216,11 +4200,10 @@ begin_function
 name|void
 name|nonfs
 parameter_list|(
-name|signo
-parameter_list|)
+name|__unused
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|syslog
 argument_list|(
@@ -4236,11 +4219,10 @@ begin_function
 name|void
 name|reapchild
 parameter_list|(
-name|signo
-parameter_list|)
+name|__unused
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 name|pid_t
 name|pid
@@ -4394,6 +4376,8 @@ begin_function
 name|void
 name|cleanup
 parameter_list|(
+name|__unused
+name|int
 name|signo
 parameter_list|)
 block|{
@@ -4413,6 +4397,8 @@ begin_function
 name|void
 name|child_cleanup
 parameter_list|(
+name|__unused
+name|int
 name|signo
 parameter_list|)
 block|{
