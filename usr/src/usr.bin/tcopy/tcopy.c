@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.10 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,11 +277,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"tcopy: illegal block size\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"tcopy: illegal block size\n"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -1086,11 +1086,7 @@ argument_list|(
 literal|"tcopy: read error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
 name|r1
 label|:
@@ -1156,11 +1152,7 @@ argument_list|(
 literal|"tcopy: read error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
 name|r2
 label|:
@@ -1170,7 +1162,18 @@ name|inn
 operator|!=
 name|outn
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"tcopy: tapes have different block sizes; %d != %d.\n"
+argument_list|,
+name|inn
+argument_list|,
+name|outn
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -1183,9 +1186,9 @@ name|eot
 operator|++
 condition|)
 block|{
-name|puts
+name|printf
 argument_list|(
-literal|"tcopy: tapes are identical."
+literal|"tcopy: tapes are identical.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1204,18 +1207,20 @@ argument_list|,
 name|inn
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"tcopy: tapes have different data.\n"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|eot
 operator|=
 literal|0
 expr_stmt|;
 block|}
 block|}
-name|puts
-argument_list|(
-literal|"tcopy: tapes are different."
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -1322,11 +1327,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"tcopy: no memory\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"tcopy: no memory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1421,11 +1426,11 @@ end_macro
 
 begin_block
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"usage: tcopy [-cv] [-s maxblk] src [dest]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: tcopy [-cv] [-s maxblk] src [dest]\n"
 argument_list|)
 expr_stmt|;
 name|exit
