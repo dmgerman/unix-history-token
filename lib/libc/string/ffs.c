@@ -99,12 +99,14 @@ condition|;
 name|bit
 operator|++
 control|)
+name|mask
+operator|=
 operator|(
 name|unsigned
 name|int
 operator|)
 name|mask
-operator|>>=
+operator|>>
 literal|1
 expr_stmt|;
 return|return
