@@ -95,6 +95,11 @@ case|case
 name|IBCS2_SECURE_GETLUID
 case|:
 comment|/* get login uid */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -107,6 +112,11 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_uid
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

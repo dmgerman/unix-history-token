@@ -374,6 +374,14 @@ directive|endif
 case|case
 name|IBCS2_GETPSIZE
 case|:
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -5214,6 +5222,11 @@ case|case
 literal|0
 case|:
 comment|/* getpgrp */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -5226,6 +5239,11 @@ operator|->
 name|p_pgrp
 operator|->
 name|pg_id
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -5267,6 +5285,11 @@ operator|&
 name|sa
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -5279,6 +5302,11 @@ operator|->
 name|p_pgrp
 operator|->
 name|pg_id
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

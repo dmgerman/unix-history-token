@@ -982,10 +982,15 @@ name|uap
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
 endif|#
 directive|endif
 comment|/* SPX_HACK */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1035,6 +1040,11 @@ literal|0
 index|]
 index|]
 decl_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* ignore any error, just give it a try */
 if|if
 condition|(
@@ -1059,6 +1069,12 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
