@@ -1201,6 +1201,12 @@ operator|(
 name|EACCES
 operator|)
 return|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|FOREACH_KSEGRP_IN_PROC
 argument_list|(
 argument|p
@@ -1216,6 +1222,12 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
