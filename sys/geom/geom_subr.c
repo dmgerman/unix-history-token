@@ -2850,6 +2850,25 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|dcr
+operator|!=
+literal|0
+operator|||
+name|dcw
+operator|!=
+literal|0
+operator|||
+name|dce
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"NOP access request"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|pp
 operator|->
 name|geom
