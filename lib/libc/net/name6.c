@@ -6050,11 +6050,6 @@ operator|+=
 name|nn
 expr_stmt|;
 block|}
-name|obp
-operator|=
-name|bp
-expr_stmt|;
-comment|/* ALIGN rounds up */
 name|bp
 operator|=
 operator|(
@@ -6065,14 +6060,6 @@ name|ALIGN
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|buflen
-operator|-=
-operator|(
-name|bp
-operator|-
-name|obp
-operator|)
 expr_stmt|;
 name|DNS_FATAL
 argument_list|(
