@@ -961,7 +961,7 @@ name|opt_s
 operator|=
 literal|1
 expr_stmt|;
-comment|/* -b defaults to default path + /usr/libexec + user's path */
+comment|/* -b defaults to default path + /usr/libexec + 	 * /usr/games + user's path */
 if|if
 condition|(
 operator|!
@@ -1074,7 +1074,7 @@ argument_list|,
 operator|(
 name|nele
 operator|+
-literal|2
+literal|3
 operator|)
 operator|*
 sizeof|sizeof
@@ -1100,6 +1100,14 @@ operator|++
 index|]
 operator|=
 literal|"/usr/libexec"
+expr_stmt|;
+name|bindirs
+index|[
+name|nele
+operator|++
+index|]
+operator|=
+literal|"/usr/games"
 expr_stmt|;
 name|bindirs
 index|[

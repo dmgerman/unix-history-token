@@ -12,7 +12,7 @@ define|#
 directive|define
 name|PATH_SOURCES
 define|\
-value|"/usr/src/bin:/usr/src/usr.bin:/usr/src/sbin:"		\ "/usr/src/usr.sbin:/usr/src/libexec:"			\ "/usr/src/gnu/bin:/usr/src/gnu/usr.bin:"		\ "/usr/src/gnu/sbin:/usr/src/gnu/usr.sbin:"		\ "/usr/src/gnu/libexec:/usr/src/contrib:"		\ "/usr/src/secure/bin:/usr/src/secure/usr.bin:"		\ "/usr/src/secure/sbin:/usr/src/secure/usr.sbin:"	\ "/usr/src/secure/libexec:/usr/src/crypto"
+value|"/usr/src/bin:/usr/src/usr.bin:/usr/src/sbin:"		\ "/usr/src/usr.sbin:/usr/src/libexec:"			\ "/usr/src/gnu/bin:/usr/src/gnu/usr.bin:"		\ "/usr/src/gnu/sbin:/usr/src/gnu/usr.sbin:"		\ "/usr/src/gnu/libexec:/usr/src/contrib:"		\ "/usr/src/secure/bin:/usr/src/secure/usr.bin:"		\ "/usr/src/secure/sbin:/usr/src/secure/usr.sbin:"	\ "/usr/src/secure/libexec:/usr/src/crypto:"		\ "/usr/src/games"
 end_define
 
 begin_comment
@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|MANWHEREISCMD
-value|"man -S1:8 -w %s 2>/dev/null"
+value|"man -S1:8:6 -w %s 2>/dev/null"
 end_define
 
 begin_define
