@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.60 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.59		%G%"
+literal|"@(#)sendmail.h	8.60		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,10 +457,6 @@ modifier|*
 name|q_fullname
 decl_stmt|;
 comment|/* full name of this person */
-name|time_t
-name|q_timeout
-decl_stmt|;
-comment|/* timeout for this address */
 name|struct
 name|address
 modifier|*
@@ -1830,6 +1826,10 @@ name|short
 name|e_errormode
 decl_stmt|;
 comment|/* error return mode */
+name|short
+name|e_timeoutclass
+decl_stmt|;
+comment|/* message timeout class */
 name|int
 argument_list|(
 argument|*e_puthdr
@@ -2706,6 +2706,28 @@ decl_stmt|;
 comment|/* an "extra" database pointer */
 name|char
 modifier|*
+name|map_keycolnm
+decl_stmt|;
+comment|/* key column name */
+name|char
+modifier|*
+name|map_valcolnm
+decl_stmt|;
+comment|/* value column name */
+name|u_char
+name|map_keycolno
+decl_stmt|;
+comment|/* key column number */
+name|u_char
+name|map_valcolno
+decl_stmt|;
+comment|/* value column number */
+name|char
+name|map_coldelim
+decl_stmt|;
+comment|/* column delimiter */
+name|char
+modifier|*
 name|map_app
 decl_stmt|;
 comment|/* to append to successful matches */
@@ -2723,6 +2745,21 @@ name|time_t
 name|map_mtime
 decl_stmt|;
 comment|/* last database modification time */
+name|MAP
+modifier|*
+name|map_stack
+index|[
+name|MAXMAPSTACK
+index|]
+decl_stmt|;
+comment|/* list for stacked maps */
+name|short
+name|map_return
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* return bitmaps for stacked maps */
 block|}
 end_block
 
@@ -2897,6 +2934,43 @@ end_define
 
 begin_comment
 comment|/* this map is world writable */
+end_comment
+
+begin_comment
+comment|/* indices for map_actions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MA_NOTFOUND
+value|0
+end_define
+
+begin_comment
+comment|/* member map returned "not found" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MA_UNAVAIL
+value|1
+end_define
+
+begin_comment
+comment|/* member map is not available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MA_TRYAGAIN
+value|2
+end_define
+
+begin_comment
+comment|/* member map returns temp failure */
 end_comment
 
 begin_comment
@@ -5129,16 +5203,59 @@ comment|/* opening :include: and .forward files */
 comment|/* following are per message */
 name|time_t
 name|to_q_return
+index|[
+name|MAXTOCLASS
+index|]
 decl_stmt|;
-comment|/* queue return timeout */
+comment|/* queue return timeouts */
 name|time_t
 name|to_q_warning
+index|[
+name|MAXTOCLASS
+index|]
 decl_stmt|;
-comment|/* queue warning timeout */
+comment|/* queue warning timeouts */
 block|}
 name|TimeOuts
 struct|;
 end_struct
+
+begin_comment
+comment|/* timeout classes for return and warning timeouts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOC_NORMAL
+value|0
+end_define
+
+begin_comment
+comment|/* normal delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOC_URGENT
+value|1
+end_define
+
+begin_comment
+comment|/* urgent delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOC_NONURGENT
+value|2
+end_define
+
+begin_comment
+comment|/* non-urgent delivery */
+end_comment
 
 begin_comment
 comment|/* **  Trace information */

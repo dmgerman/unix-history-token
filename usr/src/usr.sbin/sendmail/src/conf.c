@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.101 (Berkeley) %G%"
+literal|"@(#)conf.c	8.102 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,6 +364,9 @@ end_expr_stmt
 
 begin_block
 block|{
+name|int
+name|i
+decl_stmt|;
 name|SpaceSub
 operator|=
 literal|' '
@@ -475,21 +478,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* option r */
-name|TimeOuts
-operator|.
-name|to_q_return
-operator|=
-literal|5
-name|DAYS
-expr_stmt|;
-comment|/* option T */
-name|TimeOuts
-operator|.
-name|to_q_warning
-operator|=
-literal|0
-expr_stmt|;
-comment|/* option T */
 name|PrivacyFlags
 operator|=
 literal|0
@@ -502,6 +490,42 @@ operator||
 name|MM_PASS8BIT
 expr_stmt|;
 comment|/* option 8 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXTOCLASS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|TimeOuts
+operator|.
+name|to_q_return
+index|[
+name|i
+index|]
+operator|=
+literal|5
+name|DAYS
+expr_stmt|;
+comment|/* option T */
+name|TimeOuts
+operator|.
+name|to_q_warning
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* option T */
+block|}
 name|setdefuser
 argument_list|()
 expr_stmt|;
@@ -910,11 +934,66 @@ name|map_parseargs
 argument_list|,
 name|nis_map_open
 argument_list|,
-name|nis_map_close
+name|null_map_close
 argument_list|,
 name|nis_map_lookup
 argument_list|,
-name|nis_map_store
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NISPLUS
+name|MAPDEF
+argument_list|(
+literal|"nisplus"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|nisplus_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|nisplus_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NAMED_BIND
+if|#
+directive|if
+literal|0
+block|MAPDEF("dns", NULL, 0, 		dns_map_init, null_map_open, null_map_close, 		dns_map_lookup, null_map_store);
+endif|#
+directive|endif
+comment|/* old name for back compat */
+name|MAPDEF
+argument_list|(
+literal|"host"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|host_map_init
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|host_map_lookup
+argument_list|,
+name|null_map_store
 argument_list|)
 expr_stmt|;
 endif|#
@@ -933,7 +1012,7 @@ name|map_parseargs
 argument_list|,
 name|stab_map_open
 argument_list|,
-name|stab_map_close
+name|null_map_close
 argument_list|,
 name|stab_map_lookup
 argument_list|,
@@ -963,22 +1042,22 @@ argument_list|,
 name|impl_map_store
 argument_list|)
 expr_stmt|;
-comment|/* host DNS lookup */
+comment|/* access to system passwd file */
 name|MAPDEF
 argument_list|(
-literal|"host"
+literal|"user"
 argument_list|,
 name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|host_map_init
+name|map_parseargs
 argument_list|,
-name|null_map_open
+name|user_map_open
 argument_list|,
 name|null_map_close
 argument_list|,
-name|host_map_lookup
+name|user_map_lookup
 argument_list|,
 name|null_map_store
 argument_list|)
@@ -1015,6 +1094,26 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* sequenced maps */
+name|MAPDEF
+argument_list|(
+literal|"sequence"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+argument_list|,
+name|seq_map_parse
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|seq_map_lookup
+argument_list|,
+name|seq_map_store
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1023,6 +1122,26 @@ undef|#
 directive|undef
 name|MAPDEF
 end_undef
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  INITHOSTMAPS -- initial host-dependent maps ** **	This should act as an interface to any local service switch **	provided by the host operating system. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Should define maps "host" and "passwd" as necessary **		for this OS.  If they are not defined, they will get **		a default value later.  It should check to make sure **		they are not defined first, since it's possible that **		the config file has provided an override. */
+end_comment
+
+begin_function
+name|void
+name|inithostmaps
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|SOLARIS
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_escape
 end_escape

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.116 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.117 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -194,6 +194,28 @@ end_define
 
 begin_comment
 comment|/* max # of alias databases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXMAPSTACK
+value|12
+end_define
+
+begin_comment
+comment|/* max # of stacked or sequenced maps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXTOCLASS
+value|8
+end_define
+
+begin_comment
+comment|/* max # of message timeout classes */
 end_comment
 
 begin_ifndef
