@@ -505,10 +505,16 @@ name|kern_pg
 operator|->
 name|pindex
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|kern_pg
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_rename
 argument_list|(
