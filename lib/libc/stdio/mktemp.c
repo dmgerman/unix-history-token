@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mktemp.c,v 1.8 1998/02/13 02:13:24 imp Exp $"
+literal|"$Id: mktemp.c,v 1.9 1998/03/03 14:38:36 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +677,7 @@ condition|(
 operator|*
 name|trv
 operator|==
-literal|'z'
+literal|'Z'
 condition|)
 operator|*
 name|trv
@@ -699,6 +699,20 @@ operator|*
 name|trv
 operator|=
 literal|'a'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|trv
+operator|==
+literal|'z'
+condition|)
+comment|/* inc from z to A */
+operator|*
+name|trv
+operator|=
+literal|'A'
 expr_stmt|;
 else|else
 operator|++
