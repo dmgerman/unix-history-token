@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: name6.c,v 1.22 2000/05/01 08:19:08 itojun Exp $	*/
+comment|/*	$KAME: name6.c,v 1.25 2000/06/26 16:44:40 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -5335,6 +5335,7 @@ name|count
 parameter_list|)
 define|\
 value|do { \ 		if ((ptr) + (count)> eom) { \ 			*errp = NO_RECOVERY; \ 			return (NULL); \ 		} \ 	} while (0)
+comment|/* XXX do {} while (0) cannot be put here */
 define|#
 directive|define
 name|DNS_ASSERT
@@ -5342,7 +5343,8 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (!(x)) {		\ 			cp += n;	\ 			continue;	\ 		}			\ 	} while (0)
+value|{				\ 		if (!(x)) {		\ 			cp += n;	\ 			continue;	\ 		}			\ 	}
+comment|/* XXX do {} while (0) cannot be put here */
 define|#
 directive|define
 name|DNS_FATAL
@@ -5350,7 +5352,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (!(x)) {		\ 			had_error++;	\ 			continue;	\ 		}			\ 	} while (0)
+value|{				\ 		if (!(x)) {		\ 			had_error++;	\ 			continue;	\ 		}			\ 	}
 name|tname
 operator|=
 name|qname
@@ -6796,6 +6798,12 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hp
+condition|)
+continue|continue;
 name|hp
 operator|=
 name|_hpcopy
@@ -6941,6 +6949,12 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hp
+condition|)
+continue|continue;
 name|hp
 operator|=
 name|_hpcopy
@@ -7148,6 +7162,12 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hp
+condition|)
+continue|continue;
 name|hp
 operator|=
 name|_hpcopy
@@ -7384,6 +7404,12 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hp
+condition|)
+continue|continue;
 name|hp
 operator|=
 name|_hpcopy
@@ -8040,6 +8066,14 @@ argument_list|,
 name|errp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hp
+condition|)
+return|return
+name|NULL
+return|;
 name|hbuf
 operator|.
 name|h_addrtype
