@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4014,7 +4014,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Create a core dump.  * The file name should probably be "core.progname"  * (or "mos.progname", or "dram.progname", or ...).  * Core dumps aren't created if the process   */
+comment|/*  * Create a core dump.  * The file name is "core.progname.pid".  * Core dumps are not created if the process is setuid.  */
 end_comment
 
 begin_expr_stmt
@@ -4079,6 +4079,15 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|char
+name|name
+index|[
+name|MAXCOMLEN
+operator|+
+literal|12
+index|]
+decl_stmt|;
+comment|/* core.progname.pid */
 if|if
 condition|(
 name|pcred
@@ -4131,17 +4140,32 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-name|nd
-operator|.
-name|ni_segflg
-operator|=
-name|UIO_SYSSPACE
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"core.%s.%d"
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|)
 expr_stmt|;
 name|nd
 operator|.
 name|ni_dirp
 operator|=
-literal|"core"
+name|name
+expr_stmt|;
+name|nd
+operator|.
+name|ni_segflg
+operator|=
+name|UIO_SYSSPACE
 expr_stmt|;
 if|if
 condition|(
