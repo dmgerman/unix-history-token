@@ -13829,6 +13829,12 @@ operator|&
 name|WI_EV_ALLOC
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -13848,12 +13854,6 @@ expr_stmt|;
 return|return
 name|ETIMEDOUT
 return|;
-block|}
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 operator|*
 name|idp
