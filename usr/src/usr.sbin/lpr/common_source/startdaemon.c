@@ -177,6 +177,18 @@ argument_list|,
 name|_PATH_SOCKETNAME
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SUN_LEN
+define|#
+directive|define
+name|SUN_LEN
+parameter_list|(
+name|unp
+parameter_list|)
+value|(strlen((unp)->sun_path) + 2)
+endif|#
+directive|endif
 if|if
 condition|(
 name|connect
@@ -191,14 +203,11 @@ operator|)
 operator|&
 name|un
 argument_list|,
-name|strlen
+name|SUN_LEN
 argument_list|(
+operator|&
 name|un
-operator|.
-name|sun_path
 argument_list|)
-operator|+
-literal|2
 argument_list|)
 operator|<
 literal|0
