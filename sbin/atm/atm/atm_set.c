@@ -244,7 +244,7 @@ name|argv
 operator|++
 expr_stmt|;
 comment|/* 	 * Get the ARP server's ATM address 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|server
@@ -385,7 +385,7 @@ expr|struct
 name|air_netif_rsp
 argument_list|)
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -515,7 +515,7 @@ name|lis
 operator|->
 name|sin_addr
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|int_info
 argument_list|)
@@ -669,7 +669,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Build ioctl request 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|asr
@@ -1087,7 +1087,7 @@ name|asr_mac_intf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|mac
@@ -1791,7 +1791,7 @@ name|asr_prf_intf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|prefix
 argument_list|,

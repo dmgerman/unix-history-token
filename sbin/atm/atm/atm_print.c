@@ -1064,7 +1064,7 @@ name|sin_addr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decode the flags 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|flags
 argument_list|,
@@ -1167,7 +1167,7 @@ literal|"-"
 expr_stmt|;
 block|}
 comment|/* 	 * Format the age 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|age
 argument_list|,
@@ -1805,7 +1805,7 @@ name|anp_addr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the range of NIFs on the physical interface 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|nif_names
 argument_list|,
@@ -2056,7 +2056,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Decode VCC flags 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|flags
 argument_list|,
@@ -2655,7 +2655,7 @@ operator|=
 literal|"SVC"
 expr_stmt|;
 comment|/* 	 * Translate VCC direction 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|dir_name
 argument_list|,

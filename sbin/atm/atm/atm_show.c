@@ -253,7 +253,7 @@ block|}
 name|host_addr
 union|;
 comment|/* 	 * Get IP address of specified host name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|host_addr
@@ -342,7 +342,7 @@ name|INADDR_ANY
 expr_stmt|;
 block|}
 comment|/* 	 * Get ARP information from the kernel 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -510,7 +510,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Release the information from the kernel 	 */
-name|UM_FREE
+name|free
 argument_list|(
 name|arp_info_base
 argument_list|)
@@ -572,7 +572,7 @@ modifier|*
 name|asrv_info_base
 decl_stmt|;
 comment|/* 	 * Validate interface name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -792,7 +792,7 @@ operator|*
 literal|2
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|asrv_info_base
 argument_list|)
@@ -852,7 +852,7 @@ modifier|*
 name|cfg_info_base
 decl_stmt|;
 comment|/* 	 * Validate interface name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -1043,7 +1043,7 @@ name|cfg_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg_info_base
 argument_list|)
@@ -1103,7 +1103,7 @@ modifier|*
 name|int_info_base
 decl_stmt|;
 comment|/* 	 * Validate interface name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -1291,7 +1291,7 @@ name|int_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|int_info_base
 argument_list|)
@@ -1375,7 +1375,7 @@ block|}
 name|host_addr
 union|;
 comment|/* 	 * First parameter can be a netif name, an IP host name, or 	 * an IP address.  Figure out which it is. 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|host_addr
@@ -1707,7 +1707,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Release the information from the kernel 	 */
-name|UM_FREE
+name|free
 argument_list|(
 name|ip_info_base
 argument_list|)
@@ -1767,7 +1767,7 @@ modifier|*
 name|int_info_base
 decl_stmt|;
 comment|/* 	 * Validate network interface name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -1958,7 +1958,7 @@ name|int_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|int_info_base
 argument_list|)
@@ -2021,7 +2021,7 @@ modifier|*
 name|cfg_info
 decl_stmt|;
 comment|/* 	 * Validate interface name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|intf
 argument_list|,
@@ -2240,7 +2240,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg_info
 argument_list|)
@@ -2387,7 +2387,7 @@ name|pstat_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
@@ -2811,7 +2811,7 @@ name|vcc_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|vcc_info_base
 argument_list|)
@@ -3297,7 +3297,7 @@ name|vcc_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|vcc_info_base
 argument_list|)
@@ -3472,7 +3472,7 @@ name|ver_info
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|ver_info_base
 argument_list|)

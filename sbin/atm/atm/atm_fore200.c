@@ -471,7 +471,7 @@ name|argv
 operator|++
 expr_stmt|;
 comment|/* 	 * Get adapter configuration from the kernel 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -583,7 +583,7 @@ operator|.
 name|air_buf_addr
 expr_stmt|;
 comment|/* 	 * Get vendor-specific statistics from the kernel 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -713,12 +713,12 @@ name|Fore_stats
 argument_list|)
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|stats
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg
 argument_list|)
@@ -824,12 +824,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|stats
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg
 argument_list|)

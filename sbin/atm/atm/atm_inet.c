@@ -249,7 +249,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Validate and set network interface 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|app
 operator|->
@@ -453,7 +453,7 @@ name|argv
 operator|++
 expr_stmt|;
 comment|/* 	 * Set PVC destination address 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|app

@@ -2031,7 +2031,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|air
 operator|.
@@ -2789,7 +2789,7 @@ block|}
 name|host_ip
 union|;
 comment|/* 	 * Initialize add request structure 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|apr
@@ -2836,7 +2836,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/*          * Get IP address of specified host name          */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|host_ip
@@ -3663,7 +3663,7 @@ block|}
 name|host_addr
 union|;
 comment|/* 	 * Set opcode 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|apr
@@ -3716,7 +3716,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/*          * Get IP address of specified host name          */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|host_addr

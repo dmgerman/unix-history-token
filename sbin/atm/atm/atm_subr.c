@@ -628,7 +628,7 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* 	 * Initialize 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -639,7 +639,7 @@ name|air
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|name
 argument_list|,
@@ -737,7 +737,7 @@ name|acp_device
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg
 argument_list|)
@@ -785,7 +785,7 @@ literal|"-"
 operator|)
 return|;
 comment|/* 	 * Clear the returned string 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|str
 argument_list|,

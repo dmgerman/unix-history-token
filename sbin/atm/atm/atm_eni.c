@@ -384,7 +384,7 @@ name|argv
 operator|++
 expr_stmt|;
 comment|/* 	 * Get vendor-specific statistics from the kernel 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -514,7 +514,7 @@ name|Eni_stats
 argument_list|)
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|stats
 argument_list|)
@@ -572,7 +572,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|stats
 argument_list|)
