@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)write.c	4.19 (Berkeley) %G%"
+literal|"@(#)write.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,10 +159,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|mytty
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
 decl_stmt|,
 modifier|*
 name|ttyname
@@ -1217,6 +1213,10 @@ name|time
 argument_list|()
 decl_stmt|;
 name|char
+modifier|*
+name|getlogin
+argument_list|()
+decl_stmt|,
 name|path
 index|[
 name|MAXPATHLEN
