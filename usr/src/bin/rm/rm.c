@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.9 (Berkeley) %G%"
+literal|"@(#)rm.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,6 +533,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|buf
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFLNK
+operator|&&
 name|access
 argument_list|(
 name|arg
