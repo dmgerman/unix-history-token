@@ -460,11 +460,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|ds_mchash
 parameter_list|(
-name|caddr_t
-name|addr
+specifier|const
+name|uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13308,12 +13309,14 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|ds_mchash
 parameter_list|(
 name|addr
 parameter_list|)
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 decl_stmt|;
 block|{
@@ -13322,7 +13325,7 @@ directive|define
 name|ED_POLYNOMIAL
 value|0x04c11db6
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|crc
 init|=
 literal|0xffffffff
@@ -13336,7 +13339,7 @@ decl_stmt|,
 name|bit
 decl_stmt|;
 specifier|register
-name|u_char
+name|uint8_t
 name|data
 decl_stmt|;
 for|for

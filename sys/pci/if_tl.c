@@ -828,10 +828,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|tl_mchash
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3450,12 +3452,14 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|tl_mchash
 parameter_list|(
 name|addr
 parameter_list|)
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 decl_stmt|;
 block|{

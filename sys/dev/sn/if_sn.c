@@ -354,7 +354,6 @@ parameter_list|(
 specifier|const
 name|uint8_t
 modifier|*
-name|addr
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -7179,10 +7179,12 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fe_mchash
 parameter_list|(
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 block|{
@@ -7190,7 +7192,7 @@ define|#
 directive|define
 name|FE_POLY
 value|0xEDB88320L
-name|u_long
+name|uint32_t
 name|carry
 decl_stmt|,
 name|crc
@@ -7202,7 +7204,7 @@ name|idx
 decl_stmt|,
 name|bit
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|data
 decl_stmt|;
 for|for

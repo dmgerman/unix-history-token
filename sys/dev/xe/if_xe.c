@@ -463,7 +463,9 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 function_decl|;
@@ -5747,11 +5749,13 @@ name|xe_softc
 modifier|*
 name|scp
 parameter_list|,
-name|caddr_t
+specifier|const
+name|uint8_t
+modifier|*
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|crc
 init|=
 literal|0xffffffff
@@ -5761,7 +5765,7 @@ name|idx
 decl_stmt|,
 name|bit
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|carry
 decl_stmt|,
 name|byte
