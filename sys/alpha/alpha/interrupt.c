@@ -2491,6 +2491,18 @@ name|i
 operator|->
 name|disable
 condition|)
+block|{
+name|CTR1
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"alpha_dispatch_intr: disabling vector 0x%x"
+argument_list|,
+name|i
+operator|->
+name|vector
+argument_list|)
+expr_stmt|;
 name|i
 operator|->
 name|disable
@@ -2500,6 +2512,7 @@ operator|->
 name|vector
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_exit
 argument_list|(
 operator|&
