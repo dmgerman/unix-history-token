@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.21 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|_PATH_MAIL
+name|_PATH_MAILDIR
 argument_list|)
 condition|)
 block|{
@@ -322,7 +322,7 @@ name|LOG_ERR
 argument_list|,
 literal|"chdir: %s: %m"
 argument_list|,
-name|_PATH_MAIL
+name|_PATH_MAILDIR
 argument_list|)
 expr_stmt|;
 name|exit
