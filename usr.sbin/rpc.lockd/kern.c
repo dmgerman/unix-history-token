@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -122,6 +128,13 @@ include|#
 directive|include
 file|<nfsclient/nfs.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|DAEMON_USERNAME
+value|"daemon"
+end_define
 
 begin_define
 define|#
@@ -225,12 +238,6 @@ begin_comment
 comment|/*  * will break because fifo needs to be repopened when EOF'd  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SETUID_DAEMON
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -240,26 +247,6 @@ name|uid
 parameter_list|)
 value|seteuid(uid)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|lockd_seteuid
-parameter_list|(
-name|uid
-parameter_list|)
-value|(1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -353,6 +340,17 @@ decl_stmt|;
 name|pid_t
 name|child
 decl_stmt|;
+name|uid_t
+name|daemon_uid
+decl_stmt|;
+name|mode_t
+name|old_umask
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
 comment|/* Recreate the NLM fifo. */
 operator|(
 name|void
@@ -362,9 +360,8 @@ argument_list|(
 name|_PATH_LCKFIFO
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|old_umask
+operator|=
 name|umask
 argument_list|(
 name|S_IXGRP
@@ -399,6 +396,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|umask
+argument_list|(
+name|old_umask
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a separate process, the client code is really a separate 	 * daemon that shares a lot of code. 	 */
 switch|switch
 condition|(
@@ -493,9 +495,11 @@ operator||
 name|O_NONBLOCK
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -504,6 +508,43 @@ literal|"open: %s: %m"
 argument_list|,
 name|_PATH_LCKFIFO
 argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|DAEMON_USERNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"getpwnam: %s: %m"
+argument_list|,
+name|DAEMON_USERNAME
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+name|daemon_uid
+operator|=
+name|pw
+operator|->
+name|pw_uid
 expr_stmt|;
 comment|/* drop our root priviledges */
 operator|(
