@@ -34,7 +34,7 @@ name|PAD_
 parameter_list|(
 name|t
 parameter_list|)
-value|sizeof(register_t)<= sizeof(t) ? \ 		0 : sizeof(register_t) - sizeof(t)
+value|(sizeof(register_t)<= sizeof(t) ? \ 		0 : sizeof(register_t) - sizeof(t))
 end_define
 
 begin_struct
