@@ -11005,7 +11005,7 @@ literal|"netgraph types mutex"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -11017,7 +11017,7 @@ literal|"netgraph nodelist mutex"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -11029,7 +11029,7 @@ literal|"netgraph idhash mutex"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -11041,7 +11041,7 @@ literal|"netgraph free item list mutex"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|s
