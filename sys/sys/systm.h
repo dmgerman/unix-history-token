@@ -2658,6 +2658,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|delete_unrhdr
+parameter_list|(
+name|struct
+name|unrhdr
+modifier|*
+name|uh
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int
 name|alloc_unr
 parameter_list|(
