@@ -420,10 +420,11 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|pccard_product
-name|sn_pccard_products
+name|ed_pccard_products
 index|[]
 init|=
 block|{
@@ -472,11 +473,11 @@ name|pccard_product_lookup
 argument_list|(
 name|dev
 argument_list|,
-name|sn_pccard_products
+name|ed_pccard_products
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sn_pccard_products
+name|ed_pccard_products
 index|[
 literal|0
 index|]
