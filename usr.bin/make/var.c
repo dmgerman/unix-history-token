@@ -1697,6 +1697,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|v
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|v
 argument_list|)
 expr_stmt|;
 operator|*
