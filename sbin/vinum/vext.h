@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/*  * $Id: vext.h,v 1.15 2000/02/17 05:10:47 grog Exp grog $  * $FreeBSD$  */
+comment|/*  * $Id: vext.h,v 1.17 2000/05/07 04:17:12 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -1464,6 +1464,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* set to 1 to force some dangerous ops */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|interval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interval in ms between init/revive */
 end_comment
 
 begin_decl_stmt
