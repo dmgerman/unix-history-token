@@ -3810,7 +3810,7 @@ expr_stmt|;
 comment|/* These should only be active if attach succeeded */
 if|if
 condition|(
-name|device_is_alive
+name|device_is_attached
 argument_list|(
 name|dev
 argument_list|)

@@ -4002,7 +4002,7 @@ expr_stmt|;
 comment|/*  	 * Delete any miibus and phy devices attached to this interface. 	 * This should only be done if attach succeeded. 	 */
 if|if
 condition|(
-name|device_is_alive
+name|device_is_attached
 argument_list|(
 name|dev
 argument_list|)
