@@ -12526,6 +12526,20 @@ goto|goto
 name|check_action
 goto|;
 case|case
+name|O_DIVERT
+case|:
+case|case
+name|O_TEE
+case|:
+ifndef|#
+directive|ifndef
+name|IPDIVERT
+return|return
+name|EINVAL
+return|;
+endif|#
+directive|endif
+case|case
 name|O_FORWARD_MAC
 case|:
 comment|/* XXX not implemented yet */
@@ -12546,12 +12560,6 @@ name|O_REJECT
 case|:
 case|case
 name|O_SKIPTO
-case|:
-case|case
-name|O_DIVERT
-case|:
-case|case
-name|O_TEE
 case|:
 if|if
 condition|(
