@@ -31760,14 +31760,14 @@ argument_list|,
 literal|118
 argument_list|)
 block|,
-name|XRB_MASK
+name|XTO_MASK
 block|,
 name|POWER
 block|,
 block|{
-name|RT
-block|,
 name|RA
+block|,
+name|RB
 block|}
 block|}
 block|,

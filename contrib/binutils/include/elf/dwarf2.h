@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations and definitions of codes relating to the DWARF symbolic    debugging information format.    Copyright 1992, 1993, 1995, 1996, 1999 Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright 1992, 1993, 1995, 1996, 1999, 2000, 2001    Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file is derived from the DWARF specification (a public document)    Revision 2.0.0 (July 27, 1993) developed by the UNIX International    Programming Languages Special Interest Group (UI/PLSIG) and distributed    by UNIX International.  Copies of this specification are available from    UNIX International, 20 Waterview Boulevard, Parsippany, NJ, 07054.  */
+comment|/* This file is derived from the DWARF specification (a public document)    Revision 2.0.0 (July 27, 1993) developed by the UNIX International    Programming Languages Special Interest Group (UI/PLSIG) and distributed    by UNIX International.  Copies of this specification are available from    UNIX International, 20 Waterview Boulevard, Parsippany, NJ, 07054.      This file also now contains definitions from the DWARF 2.1 specification.  */
+end_comment
+
+begin_comment
+comment|/* This file is shared between GCC and GDB, and should not contain    prototypes.  */
 end_comment
 
 begin_ifndef
@@ -533,17 +537,17 @@ name|DW_TAG_volatile_type
 init|=
 literal|0x35
 block|,
-comment|/* SGI/MIPS Extensions */
+comment|/* SGI/MIPS Extensions.  */
 name|DW_TAG_MIPS_loop
 init|=
 literal|0x4081
 block|,
-comment|/* GNU extensions */
+comment|/* GNU extensions.  */
 name|DW_TAG_format_label
 init|=
 literal|0x4101
 block|,
-comment|/* for FORTRAN 77 and Fortran 90 */
+comment|/* For FORTRAN 77 and Fortran 90.  */
 name|DW_TAG_function_template
 init|=
 literal|0x4102
@@ -552,7 +556,15 @@ comment|/* for C++ */
 name|DW_TAG_class_template
 init|=
 literal|0x4103
+block|,
 comment|/* for C++ */
+name|DW_TAG_GNU_BINCL
+init|=
+literal|0x4104
+block|,
+name|DW_TAG_GNU_EINCL
+init|=
+literal|0x4105
 block|}
 enum|;
 end_enum
@@ -572,7 +584,7 @@ value|0xffff
 end_define
 
 begin_comment
-comment|/* flag that tells whether entry has a child or not */
+comment|/* Flag that tells whether entry has a child or not.  */
 end_comment
 
 begin_define
@@ -940,7 +952,56 @@ name|DW_AT_vtable_elem_location
 init|=
 literal|0x4d
 block|,
-comment|/* SGI/MIPS Extensions */
+comment|/* DWARF 2.1 values.  */
+name|DW_AT_allocated
+init|=
+literal|0x4e
+block|,
+name|DW_AT_associated
+init|=
+literal|0x4f
+block|,
+name|DW_AT_data_location
+init|=
+literal|0x50
+block|,
+name|DW_AT_stride
+init|=
+literal|0x51
+block|,
+name|DW_AT_entry_pc
+init|=
+literal|0x52
+block|,
+name|DW_AT_use_UTF8
+init|=
+literal|0x53
+block|,
+name|DW_AT_extension
+init|=
+literal|0x54
+block|,
+name|DW_AT_ranges
+init|=
+literal|0x55
+block|,
+name|DW_AT_trampoline
+init|=
+literal|0x56
+block|,
+name|DW_AT_call_column
+init|=
+literal|0x57
+block|,
+name|DW_AT_call_file
+init|=
+literal|0x58
+block|,
+name|DW_AT_call_line
+init|=
+literal|0x59
+block|,
+comment|/* SGI/MIPS Extensions.  */
 name|DW_AT_MIPS_fde
 init|=
 literal|0x2001
@@ -1021,7 +1082,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* implementation-defined range start */
+comment|/* Implementation-defined range start.  */
 end_comment
 
 begin_define
@@ -1032,7 +1093,7 @@ value|0x3ff0
 end_define
 
 begin_comment
-comment|/* implementation-defined range end */
+comment|/* Implementation-defined range end.  */
 end_comment
 
 begin_comment
@@ -1622,6 +1683,25 @@ block|,
 name|DW_OP_nop
 init|=
 literal|0x96
+block|,
+comment|/* DWARF 2.1 extensions.  */
+name|DW_OP_push_object_address
+init|=
+literal|0x97
+block|,
+name|DW_OP_call2
+init|=
+literal|0x98
+block|,
+comment|/* 1 2-byte offset of DIE.  */
+name|DW_OP_call4
+init|=
+literal|0x99
+block|,
+comment|/* 1 4-byte offset of DIE.  */
+name|DW_OP_calli
+init|=
+literal|0x9a
 block|}
 enum|;
 end_enum
@@ -1634,7 +1714,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* implementation-defined range start */
+comment|/* Implementation-defined range start.  */
 end_comment
 
 begin_define
@@ -1645,7 +1725,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* implementation-defined range end */
+comment|/* Implementation-defined range end.  */
 end_comment
 
 begin_comment
@@ -1729,7 +1809,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* access attribute */
+comment|/* Access attribute.  */
 end_comment
 
 begin_enum
@@ -1752,7 +1832,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* visibility */
+comment|/* Visibility.  */
 end_comment
 
 begin_enum
@@ -1775,7 +1855,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* virtuality */
+comment|/* Virtuality.  */
 end_comment
 
 begin_enum
@@ -1798,7 +1878,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* case sensitivity */
+comment|/* Case sensitivity.  */
 end_comment
 
 begin_enum
@@ -1825,7 +1905,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* calling convention */
+comment|/* Calling convention.  */
 end_comment
 
 begin_enum
@@ -1862,7 +1942,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* inline attribute */
+comment|/* Inline attribute.  */
 end_comment
 
 begin_enum
@@ -1889,7 +1969,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* descriminant lists */
+comment|/* Descriminant lists.  */
 end_comment
 
 begin_enum
@@ -1908,7 +1988,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* line number opcodes */
+comment|/* Line number opcodes.  */
 end_comment
 
 begin_enum
@@ -1959,7 +2039,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* line number extended opcodes */
+comment|/* Line number extended opcodes.  */
 end_comment
 
 begin_enum
@@ -1982,7 +2062,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* call frame information */
+comment|/* Call frame information.  */
 end_comment
 
 begin_enum
@@ -2061,10 +2141,44 @@ name|DW_CFA_def_cfa_offset
 init|=
 literal|0x0e
 block|,
-comment|/* SGI/MIPS specific */
+name|DW_CFA_def_cfa_expression
+init|=
+literal|0x0f
+block|,
+name|DW_CFA_expression
+init|=
+literal|0x10
+block|,
+comment|/* Dwarf 2.1.  */
+name|DW_CFA_offset_extended_sf
+init|=
+literal|0x11
+block|,
+name|DW_CFA_def_cfa_sf
+init|=
+literal|0x12
+block|,
+name|DW_CFA_def_cfa_offset_sf
+init|=
+literal|0x13
+block|,
+comment|/* SGI/MIPS specific.  */
 name|DW_CFA_MIPS_advance_loc8
 init|=
 literal|0x1d
+block|,
+comment|/* GNU extensions.  */
+name|DW_CFA_GNU_window_save
+init|=
+literal|0x2d
+block|,
+name|DW_CFA_GNU_args_size
+init|=
+literal|0x2e
+block|,
+name|DW_CFA_GNU_negative_offset_extended
+init|=
+literal|0x2f
 block|}
 enum|;
 end_enum
@@ -2192,7 +2306,7 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* implementation-defined range start */
+comment|/* Implementation-defined range start.  */
 end_comment
 
 begin_define
@@ -2203,7 +2317,7 @@ value|0xffff
 end_define
 
 begin_comment
-comment|/* implementation-defined range start */
+comment|/* Implementation-defined range start.  */
 end_comment
 
 begin_comment

@@ -7297,7 +7297,13 @@ operator|=
 name|DEBUG_ECOFF
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|debug_type
+operator|==
+name|DEBUG_UNSPECIFIED
+condition|)
 name|debug_type
 operator|=
 name|DEBUG_NONE

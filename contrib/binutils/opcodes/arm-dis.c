@@ -1134,7 +1134,7 @@ name|func
 argument_list|(
 name|stream
 argument_list|,
-literal|", #%x]"
+literal|", #%d]"
 argument_list|,
 name|offset
 argument_list|)
@@ -1167,7 +1167,7 @@ name|func
 argument_list|(
 name|stream
 argument_list|,
-literal|"], #%x"
+literal|"], #%d"
 argument_list|,
 name|offset
 argument_list|)
@@ -1482,7 +1482,7 @@ name|func
 argument_list|(
 name|stream
 argument_list|,
-literal|"[pc, #%x]\t; "
+literal|"[pc, #%d]\t; "
 argument_list|,
 name|offset
 argument_list|)
