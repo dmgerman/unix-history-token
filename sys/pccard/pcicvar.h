@@ -426,6 +426,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|driver_intr_t
+name|pcic_isa_intr
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|pcic_isa_intr1
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|pcic_putb_io
@@ -564,6 +580,12 @@ name|cookie
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|timeout_t
+name|pcic_timeout
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
