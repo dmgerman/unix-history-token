@@ -3254,6 +3254,38 @@ name|vendor
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* skip to the unit directory for SBP-2 */
+while|while
+condition|(
+operator|(
+name|reg
+operator|=
+name|crom_search_key
+argument_list|(
+name|cc
+argument_list|,
+name|CSRKEY_VER
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|reg
+operator|->
+name|val
+operator|==
+name|CSRVAL_T10SBP2
+condition|)
+break|break;
+name|crom_next
+argument_list|(
+name|cc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* get firmware revision */
 name|reg
 operator|=
@@ -8114,7 +8146,9 @@ argument|) 		printf(
 literal|"sbp_detach_target %d\n"
 argument|, target->target_id); END_DEBUG 		callout_stop(&target->scan_callout); 		for (i =
 literal|0
-argument|; i< target->num_lun; i++) { 			sdev =&target->luns[i]; 			if (sdev->status == SBP_DEV_DEAD) 				continue; 			if (sdev->status == SBP_DEV_RESET) 				continue; 			if (sdev->path) { 				xpt_async(AC_LOST_DEVICE, sdev->path, NULL); 				xpt_free_path(sdev->path); 				sdev->path = NULL; 			} 			sbp_abort_all_ocbs(sdev, CAM_DEV_NOT_THERE); 		} 	} }  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev;  	sbp_show_sdev_info(sdev,
+argument|; i< target->num_lun; i++) { 			sdev =&target->luns[i]; 			if (sdev->status == SBP_DEV_DEAD) 				continue; 			if (sdev->status == SBP_DEV_RESET) 				continue; 			if (sdev->path) { 				xpt_release_devq(sdev->path, 						 sdev->freeze, TRUE); 				sdev->freeze =
+literal|0
+argument|; 				xpt_async(AC_LOST_DEVICE, sdev->path, NULL); 				xpt_free_path(sdev->path); 				sdev->path = NULL; 			} 			sbp_abort_all_ocbs(sdev, CAM_DEV_NOT_THERE); 		} 	} }  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev;  	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
 literal|"request timeout ... "
@@ -8240,8 +8274,8 @@ argument|); 			ccb->ccb_h.status = CAM_REQ_INVALID; 			xpt_done(ccb); 			break; 
 literal|1
 argument|) 		printf(
 literal|"%s:%d:%d:%d:XPT_CALC_GEOMETRY: "
-literal|"Volume size = %d\n"
-argument|, 			device_get_nameunit(sbp->fd.dev), cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 			ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
+literal|"Volume size = %lld\n"
+argument|, 			device_get_nameunit(sbp->fd.dev), cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 			(u_int64_t)ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
 literal|1024L
 argument|*
 literal|1024L
