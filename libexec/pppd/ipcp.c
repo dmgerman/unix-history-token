@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipcp.c,v 1.3 1994/02/14 04:45:31 paulus Exp $"
+literal|"$Id: ipcp.c,v 1.2 1994/03/30 09:31:29 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_wantoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -139,7 +139,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_gotoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -152,7 +152,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_allowoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -165,7 +165,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_hisoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -183,7 +183,7 @@ specifier|static
 name|int
 name|cis_received
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -391,7 +391,7 @@ begin_decl_stmt
 name|fsm
 name|ipcp_fsm
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt

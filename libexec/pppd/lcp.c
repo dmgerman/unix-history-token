@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcp.c,v 1.1 1993/11/11 03:54:25 paulus Exp $"
+literal|"$Id: lcp.c,v 1.2 1994/03/30 09:31:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,7 +144,7 @@ begin_decl_stmt
 name|fsm
 name|lcp_fsm
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -157,7 +157,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_wantoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -170,7 +170,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_gotoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -183,7 +183,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_allowoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -196,7 +196,7 @@ begin_decl_stmt
 name|lcp_options
 name|lcp_hisoptions
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt

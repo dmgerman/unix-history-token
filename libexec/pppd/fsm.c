@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fsm.c,v 1.1 1993/11/11 03:54:25 paulus Exp $"
+literal|"$Id: fsm.c,v 1.2 1994/03/30 09:31:25 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +234,7 @@ begin_decl_stmt
 name|int
 name|peer_mru
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt

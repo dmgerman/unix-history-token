@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: upap.c,v 1.1 1993/11/11 03:54:25 paulus Exp $"
+literal|"$Id: upap.c,v 1.2 1994/03/30 09:31:42 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ begin_decl_stmt
 name|upap_state
 name|upap
 index|[
-name|NPPP
+name|_NPPP
 index|]
 decl_stmt|;
 end_decl_stmt
