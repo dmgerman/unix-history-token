@@ -290,28 +290,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * The default filter accepts the maximum number of bytes from each packet.  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|bpf_insn
-name|bpf_default_filter
-index|[]
-init|=
-block|{
-name|BPF_STMT
-argument_list|(
-name|RetOp
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -927,12 +905,6 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|d
-operator|->
-name|bd_filter
-operator|=
-name|bpf_default_filter
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1084,8 +1056,6 @@ condition|(
 name|d
 operator|->
 name|bd_filter
-operator|!=
-name|bpf_default_filter
 condition|)
 name|free
 argument_list|(
@@ -2254,16 +2224,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|d
-operator|->
-name|bd_filter
-operator|=
-name|bpf_default_filter
-expr_stmt|;
 name|s
 operator|=
 name|splimp
 argument_list|()
+expr_stmt|;
+name|d
+operator|->
+name|bd_filter
+operator|=
+literal|0
 expr_stmt|;
 name|reset_d
 argument_list|(
@@ -2279,7 +2249,7 @@ if|if
 condition|(
 name|old
 operator|!=
-name|bpf_default_filter
+literal|0
 condition|)
 name|free
 argument_list|(
@@ -2379,16 +2349,16 @@ name|flen
 argument_list|)
 condition|)
 block|{
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|d
 operator|->
 name|bd_filter
 operator|=
 name|fcode
-expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
 expr_stmt|;
 name|reset_d
 argument_list|(
@@ -2404,7 +2374,7 @@ if|if
 condition|(
 name|old
 operator|!=
-name|bpf_default_filter
+literal|0
 condition|)
 name|free
 argument_list|(
@@ -2991,6 +2961,12 @@ name|d
 operator|->
 name|bd_rcount
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_filter
+condition|)
 name|slen
 operator|=
 name|bpf_filter
@@ -3005,6 +2981,15 @@ name|pktlen
 argument_list|,
 name|pktlen
 argument_list|)
+expr_stmt|;
+else|else
+name|slen
+operator|=
+operator|(
+name|u_int
+operator|)
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -3382,6 +3367,12 @@ name|d
 operator|->
 name|bd_rcount
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|bd_filter
+condition|)
 name|slen
 operator|=
 name|bpf_filter
@@ -3396,6 +3387,15 @@ name|pktlen
 argument_list|,
 name|slen
 argument_list|)
+expr_stmt|;
+else|else
+name|slen
+operator|=
+operator|(
+name|u_int
+operator|)
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -4002,7 +4002,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX This routine goes in net/if.c. */
+comment|/* XXX This routine belongs in net/if.c. */
 end_comment
 
 begin_comment
