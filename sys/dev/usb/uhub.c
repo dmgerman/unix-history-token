@@ -561,7 +561,7 @@ name|dd
 operator|->
 name|bDeviceClass
 operator|==
-name|UCLASS_HUB
+name|UDCLASS_HUB
 condition|)
 return|return
 operator|(

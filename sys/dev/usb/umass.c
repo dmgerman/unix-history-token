@@ -1042,47 +1042,47 @@ name|proto
 decl_stmt|;
 define|#
 directive|define
-name|PROTO_UNKNOWN
+name|UMASS_PROTO_UNKNOWN
 value|0x0000
 comment|/* unknown protocol */
 define|#
 directive|define
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 value|0x0001
 comment|/* USB wire protocol */
 define|#
 directive|define
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 value|0x0002
 define|#
 directive|define
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 value|0x0004
 define|#
 directive|define
-name|PROTO_WIRE
+name|UMASS_PROTO_WIRE
 value|0x00ff
 comment|/* USB wire protocol mask */
 define|#
 directive|define
-name|PROTO_SCSI
+name|UMASS_PROTO_SCSI
 value|0x0100
 comment|/* command protocol */
 define|#
 directive|define
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 value|0x0200
 define|#
 directive|define
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 value|0x0400
 define|#
 directive|define
-name|PROTO_RBC
+name|UMASS_PROTO_RBC
 value|0x0800
 define|#
 directive|define
-name|PROTO_COMMAND
+name|UMASS_PROTO_COMMAND
 value|0xff00
 comment|/* command protocol mask */
 name|usbd_interface_handle
@@ -2319,7 +2319,7 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_UNKNOWN
+name|UMASS_PROTO_UNKNOWN
 expr_stmt|;
 name|sc
 operator|->
@@ -2369,9 +2369,9 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 operator||
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 expr_stmt|;
 else|#
 directive|else
@@ -2379,9 +2379,9 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 operator||
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 expr_stmt|;
 endif|#
 directive|endif
@@ -2430,9 +2430,9 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 operator||
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 expr_stmt|;
 name|sc
 operator|->
@@ -2514,9 +2514,9 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 operator||
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 expr_stmt|;
 block|}
 else|else
@@ -2528,9 +2528,9 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 operator||
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 expr_stmt|;
 else|#
 directive|else
@@ -2538,9 +2538,9 @@ name|sc
 operator|->
 name|proto
 operator|=
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 operator||
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 expr_stmt|;
 endif|#
 directive|endif
@@ -2598,7 +2598,7 @@ name|id
 operator|->
 name|bInterfaceClass
 operator|!=
-name|UCLASS_MASS
+name|UICLASS_MASS
 condition|)
 return|return
 operator|(
@@ -2675,17 +2675,17 @@ name|bInterfaceSubClass
 condition|)
 block|{
 case|case
-name|USUBCLASS_SCSI
+name|UISUBCLASS_SCSI
 case|:
 name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_SCSI
+name|UMASS_PROTO_SCSI
 expr_stmt|;
 break|break;
 case|case
-name|USUBCLASS_UFI
+name|UISUBCLASS_UFI
 case|:
 name|sc
 operator|->
@@ -2697,31 +2697,31 @@ name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 expr_stmt|;
 break|break;
 case|case
-name|USUBCLASS_RBC
+name|UISUBCLASS_RBC
 case|:
 name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_RBC
+name|UMASS_PROTO_RBC
 expr_stmt|;
 break|break;
 case|case
-name|USUBCLASS_SFF8020I
+name|UISUBCLASS_SFF8020I
 case|:
 case|case
-name|USUBCLASS_SFF8070I
+name|UISUBCLASS_SFF8070I
 case|:
 comment|/* XXX ATAPI support is untested. Don't use it for the moment */
 name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 expr_stmt|;
 break|break;
 default|default:
@@ -2759,17 +2759,17 @@ name|bInterfaceProtocol
 condition|)
 block|{
 case|case
-name|UPROTO_MASS_CBI
+name|UIPROTO_MASS_CBI
 case|:
 name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 expr_stmt|;
 break|break;
 case|case
-name|UPROTO_MASS_CBI_I
+name|UIPROTO_MASS_CBI_I
 case|:
 if|#
 directive|if
@@ -2778,7 +2778,7 @@ name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 expr_stmt|;
 else|#
 directive|else
@@ -2786,23 +2786,23 @@ name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 expr_stmt|;
 endif|#
 directive|endif
 break|break;
 case|case
-name|UPROTO_MASS_BBB
+name|UIPROTO_MASS_BBB_OLD
 case|:
 name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 expr_stmt|;
 break|break;
 case|case
-name|UPROTO_MASS_BBB_P
+name|UIPROTO_MASS_BBB
 case|:
 name|sc
 operator|->
@@ -2814,7 +2814,7 @@ name|sc
 operator|->
 name|proto
 operator||=
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 expr_stmt|;
 name|sc
 operator|->
@@ -3046,11 +3046,11 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_COMMAND
+name|UMASS_PROTO_COMMAND
 condition|)
 block|{
 case|case
-name|PROTO_SCSI
+name|UMASS_PROTO_SCSI
 case|:
 name|printf
 argument_list|(
@@ -3059,7 +3059,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 case|:
 name|printf
 argument_list|(
@@ -3068,7 +3068,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 case|:
 name|printf
 argument_list|(
@@ -3077,7 +3077,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PROTO_RBC
+name|UMASS_PROTO_RBC
 case|:
 name|printf
 argument_list|(
@@ -3094,7 +3094,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_COMMAND
+name|UMASS_PROTO_COMMAND
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3110,11 +3110,11 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_WIRE
+name|UMASS_PROTO_WIRE
 condition|)
 block|{
 case|case
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 case|:
 name|printf
 argument_list|(
@@ -3123,7 +3123,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 case|:
 comment|/* uses Comand/Bulk pipes */
 name|printf
@@ -3133,7 +3133,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 case|:
 comment|/* uses Comand/Bulk/Interrupt pipes */
 name|printf
@@ -3151,7 +3151,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_WIRE
+name|UMASS_PROTO_WIRE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3332,7 +3332,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|&&
 name|UE_GET_DIR
 argument_list|(
@@ -3423,7 +3423,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|&&
 operator|!
 name|sc
@@ -3582,7 +3582,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 condition|)
 block|{
 name|err
@@ -3718,7 +3718,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 condition|)
 block|{
 name|sc
@@ -3748,7 +3748,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 operator|)
 operator|||
 operator|(
@@ -3756,7 +3756,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|)
 condition|)
 block|{
@@ -3806,7 +3806,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_SCSI
+name|UMASS_PROTO_SCSI
 condition|)
 name|sc
 operator|->
@@ -3821,7 +3821,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 condition|)
 name|sc
 operator|->
@@ -3836,7 +3836,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 condition|)
 name|sc
 operator|->
@@ -3851,7 +3851,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_RBC
+name|UMASS_PROTO_RBC
 condition|)
 name|sc
 operator|->
@@ -3871,7 +3871,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_COMMAND
+name|UMASS_PROTO_COMMAND
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3898,10 +3898,10 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_WIRE
+name|UMASS_PROTO_WIRE
 operator|)
 operator|==
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 condition|)
 name|sc
 operator|->
@@ -3926,7 +3926,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_SCSI
+name|UMASS_PROTO_SCSI
 operator|)
 operator|||
 operator|(
@@ -3934,7 +3934,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 operator|)
 operator|||
 operator|(
@@ -3942,7 +3942,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 operator|)
 operator|||
 operator|(
@@ -3950,7 +3950,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_RBC
+name|UMASS_PROTO_RBC
 operator|)
 condition|)
 block|{
@@ -4110,7 +4110,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_SCSI
+name|UMASS_PROTO_SCSI
 operator|)
 operator|||
 operator|(
@@ -4118,7 +4118,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_ATAPI
+name|UMASS_PROTO_ATAPI
 operator|)
 operator|||
 operator|(
@@ -4126,7 +4126,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 operator|)
 operator|||
 operator|(
@@ -4134,7 +4134,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_RBC
+name|UMASS_PROTO_RBC
 operator|)
 condition|)
 comment|/* detach the device from the SCSI host controller (SIM) */
@@ -4745,7 +4745,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 argument_list|,
 operator|(
 literal|"sc->proto == 0x%02x wrong for umass_bbb_reset\n"
@@ -4919,7 +4919,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 argument_list|,
 operator|(
 literal|"sc->proto == 0x%02x wrong for umass_bbb_transfer\n"
@@ -5308,7 +5308,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_BBB
+name|UMASS_PROTO_BBB
 argument_list|,
 operator|(
 literal|"sc->proto == 0x%02x wrong for umass_bbb_state\n"
@@ -6742,9 +6742,9 @@ operator|->
 name|proto
 operator|&
 operator|(
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 operator||
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
@@ -6869,9 +6869,9 @@ operator|->
 name|proto
 operator|&
 operator|(
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 operator||
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
@@ -7053,9 +7053,9 @@ operator|->
 name|proto
 operator|&
 operator|(
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 operator||
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
@@ -7226,9 +7226,9 @@ operator|->
 name|proto
 operator|&
 operator|(
-name|PROTO_CBI
+name|UMASS_PROTO_CBI
 operator||
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 operator|)
 argument_list|,
 operator|(
@@ -7471,7 +7471,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 condition|)
 block|{
 name|DPRINTF
@@ -7701,7 +7701,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_CBI_I
+name|UMASS_PROTO_CBI_I
 condition|)
 block|{
 name|sc
@@ -7876,7 +7876,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 condition|)
 block|{
 name|int
@@ -10119,7 +10119,7 @@ name|sc
 operator|->
 name|proto
 operator|&
-name|PROTO_UFI
+name|UMASS_PROTO_UFI
 condition|)
 block|{
 name|ccg
