@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.52 (Berkeley) %G%"
+literal|"@(#)util.c	8.39.1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5874,7 +5874,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|bool
+name|int
 name|logattacks
 decl_stmt|;
 block|{
