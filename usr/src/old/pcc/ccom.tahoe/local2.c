@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.31 (Berkeley) %G%"
+literal|"@(#)local2.c	1.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4189,10 +4189,9 @@ condition|(
 name|forcc
 condition|)
 block|{
-comment|/* inverted test */
 name|putstr
 argument_list|(
-literal|"\n\tcmpl\t$0,"
+literal|"\n\ttstl\t"
 argument_list|)
 expr_stmt|;
 name|adrput
@@ -4378,10 +4377,9 @@ condition|(
 name|forcc
 condition|)
 block|{
-comment|/* inverted test */
 name|putstr
 argument_list|(
-literal|"\n\tcmpl\t$0,"
+literal|"\n\ttstl\t"
 argument_list|)
 expr_stmt|;
 name|adrput
