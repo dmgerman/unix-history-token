@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.90 2001/11/10 17:11:38 augustss Exp	$	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.92 2001/11/16 01:57:47 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1789,6 +1789,26 @@ name|err
 operator|)
 return|;
 block|}
+comment|/* If the device disappeared, just give up. */
+if|if
+condition|(
+operator|!
+operator|(
+name|UGETW
+argument_list|(
+name|ps
+operator|->
+name|wPortStatus
+argument_list|)
+operator|&
+name|UPS_CURRENT_CONNECT_STATUS
+operator|)
+condition|)
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
+operator|)
+return|;
 block|}
 do|while
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.52 2001/10/26 17:53:59 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.54 2001/11/16 01:57:47 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1961,6 +1961,95 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
+comment|/* Get port status again, it might have changed during reset */
+name|err
+operator|=
+name|usbd_get_port_status
+argument_list|(
+name|dev
+argument_list|,
+name|port
+argument_list|,
+operator|&
+name|up
+operator|->
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"uhub_explore: get port status failed, "
+literal|"error=%s\n"
+operator|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|status
+operator|=
+name|UGETW
+argument_list|(
+name|up
+operator|->
+name|status
+operator|.
+name|wPortStatus
+argument_list|)
+expr_stmt|;
+name|change
+operator|=
+name|UGETW
+argument_list|(
+name|up
+operator|->
+name|status
+operator|.
+name|wPortChange
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|status
+operator|&
+name|UPS_CURRENT_CONNECT_STATUS
+operator|)
+condition|)
+block|{
+comment|/* Nothing connected, just ignore it. */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"%s: device disappeared on port %d\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 comment|/* Figure out device speed */
