@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass2.c,v 1.4 1994/09/22 02:49:19 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass2.c,v 1.5 1994/11/26 08:57:41 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -471,7 +471,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  %s: %s doesn't exists.\n"
+literal|"  %s: %s doesn't exist.\n"
 argument_list|,
 name|sp
 operator|->
@@ -480,6 +480,22 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|Key
+index|[
+literal|1
+index|]
+operator|==
+literal|'R'
+condition|)
+name|ret
+operator||=
+name|Exit_Forcible
+expr_stmt|;
+else|else
 name|ret
 operator||=
 name|Exit_NotOK
