@@ -4503,17 +4503,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
-name|char_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* response char count */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|u_char
 name|color
 decl_stmt|;
@@ -5584,10 +5573,6 @@ directive|if
 operator|!
 name|PCVT_NETBSD
 end_if
-
-begin_comment
-comment|/* XXX Crtat is shared with syscons. */
-end_comment
 
 begin_decl_stmt
 name|u_short
