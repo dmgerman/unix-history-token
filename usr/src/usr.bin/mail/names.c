@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)names.c	2.5 %G%"
+literal|"@(#)names.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,6 +1395,9 @@ block|{
 case|case
 literal|0
 case|:
+name|sigchild
+argument_list|()
+expr_stmt|;
 name|sigsys
 argument_list|(
 name|SIGHUP

@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)popen.c	1.3 %G%"
+literal|"@(#)popen.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,9 @@ literal|0
 condition|)
 block|{
 comment|/* myside and hisside reverse roles in child */
+name|sigchild
+argument_list|()
+expr_stmt|;
 name|close
 argument_list|(
 name|myside
