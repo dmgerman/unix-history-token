@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -798,6 +804,26 @@ end_decl_stmt
 begin_comment
 comment|/* If 1, use invd after DMA transfer. */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|ksym_start
+decl_stmt|,
+name|ksym_end
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -9917,16 +9943,33 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DDB
+name|ksym_start
+operator|=
+name|bootinfo
+operator|.
+name|bi_symtab
+expr_stmt|;
+name|ksym_end
+operator|=
+name|bootinfo
+operator|.
+name|bi_esymtab
+expr_stmt|;
+endif|#
+directive|endif
 name|kdb_init
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
 if|if
 condition|(
 name|boothowto
 operator|&
 name|RB_KDB
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"Boot flags requested debugger"
 argument_list|)
@@ -10614,6 +10657,96 @@ end_endif
 begin_comment
 comment|/* defined(I586_CPU)&& !NO_F00F_HACK */
 end_comment
+
+begin_comment
+comment|/*  * Construct a PCB from a trapframe. This is called from kdb_trap() where  * we want to start a backtrace from the function that caused us to enter  * the debugger. We have the context in the trapframe, but base the trace  * on the PCB. The PCB doesn't have to be perfect, as long as it contains  * enough for a backtrace.  */
+end_comment
+
+begin_function
+name|void
+name|makectx
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|tf
+parameter_list|,
+name|struct
+name|pcb
+modifier|*
+name|pcb
+parameter_list|)
+block|{
+name|pcb
+operator|->
+name|pcb_edi
+operator|=
+name|tf
+operator|->
+name|tf_edi
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_esi
+operator|=
+name|tf
+operator|->
+name|tf_esi
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_ebp
+operator|=
+name|tf
+operator|->
+name|tf_ebp
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_ebx
+operator|=
+name|tf
+operator|->
+name|tf_ebx
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_eip
+operator|=
+name|tf
+operator|->
+name|tf_eip
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_esp
+operator|=
+operator|(
+name|ISPL
+argument_list|(
+name|tf
+operator|->
+name|tf_cs
+argument_list|)
+operator|)
+condition|?
+name|tf
+operator|->
+name|tf_esp
+else|:
+call|(
+name|int
+call|)
+argument_list|(
+name|tf
+operator|+
+literal|1
+argument_list|)
+operator|-
+literal|8
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -13230,49 +13363,14 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DDB
-end_ifndef
-
-begin_function
-name|void
-name|Debugger
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Debugger(\"%s\") called.\n"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no DDB */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_comment
-comment|/*  * Provide inb() and outb() as functions.  They are normally only  * available as macros calling inlined functions, thus cannot be  * called inside DDB.  *  * The actual code is stolen from<machine/cpufunc.h>, and de-inlined.  */
+comment|/*  * Provide inb() and outb() as functions.  They are normally only  * available as macros calling inlined functions, thus cannot be  * called from the debugger.  *  * The actual code is stolen from<machine/cpufunc.h>, and de-inlined.  */
 end_comment
 
 begin_undef
@@ -13361,7 +13459,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DDB */
+comment|/* KDB */
 end_comment
 
 end_unit
