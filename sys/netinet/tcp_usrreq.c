@@ -4040,7 +4040,7 @@ ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
 case|case
-name|TCP_SIGNATURE_ENABLE
+name|TCP_MD5SIG
 case|:
 name|error
 operator|=
@@ -4292,7 +4292,7 @@ ifdef|#
 directive|ifdef
 name|TCP_SIGNATURE
 case|case
-name|TCP_SIGNATURE_ENABLE
+name|TCP_MD5SIG
 case|:
 name|optval
 operator|=
