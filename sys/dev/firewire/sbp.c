@@ -7747,7 +7747,12 @@ argument|error;  SBP_DEBUG(
 literal|0
 argument|) 	printf(
 literal|"sbp_attach (cold=%d)\n"
-argument|, cold); END_DEBUG  	if (cold) 		sbp_cold ++; 	sbp = ((struct sbp_softc *)device_get_softc(dev)); 	bzero(sbp, sizeof(struct sbp_softc)); 	sbp->fd.dev = dev; 	sbp->fd.fc = device_get_ivars(dev); 	error = bus_dma_tag_create(
+argument|, cold); END_DEBUG  	if (cold) 		sbp_cold ++; 	sbp = ((struct sbp_softc *)device_get_softc(dev)); 	bzero(sbp, sizeof(struct sbp_softc)); 	sbp->fd.dev = dev; 	sbp->fd.fc = device_get_ivars(dev);
+define|#
+directive|define
+name|SBP_SEG_MAX
+value|0x8000
+argument|error = bus_dma_tag_create(
 comment|/*parent*/
 argument|NULL,
 comment|/*alignment*/
@@ -7770,8 +7775,7 @@ argument|,
 comment|/*nsegments*/
 argument|SBP_IND_MAX,
 comment|/*maxsegsz*/
-literal|0x8000
-argument|,
+argument|SBP_SEG_MAX,
 comment|/*flags*/
 argument|BUS_DMA_ALLOCNOW,&sbp->dmat); 	if (error !=
 literal|0
@@ -8068,15 +8072,15 @@ argument|, error);  	ocb = (struct sbp_ocb *)arg; 	if (seg ==
 literal|1
 argument|) {
 comment|/* direct pointer */
-argument|ocb->orb[
+argument|s =&segments[
+literal|0
+argument|]; 		if (s->ds_len> SBP_SEG_MAX) 			panic(
+literal|"ds_len> SBP_SEG_MAX, fix busdma code"
+argument|); 		ocb->orb[
 literal|3
-argument|] = htonl(segments[
-literal|0
-argument|].ds_addr); 		ocb->orb[
+argument|] = htonl(s->ds_addr); 		ocb->orb[
 literal|4
-argument|] |= htonl(segments[
-literal|0
-argument|].ds_len); 	} else if(seg>
+argument|] |= htonl(s->ds_len); 	} else if(seg>
 literal|1
 argument|) {
 comment|/* page table */
@@ -8128,7 +8132,9 @@ directive|endif
 literal|"(seg=%d/%d)\n"
 argument|, s->ds_len, i+
 literal|1
-argument|, seg); END_DEBUG 			ocb->ind_ptr[i].hi = htonl(s->ds_len<<
+argument|, seg); END_DEBUG 			if (s->ds_len> SBP_SEG_MAX) 				panic(
+literal|"ds_len> SBP_SEG_MAX, fix busdma code"
+argument|); 			ocb->ind_ptr[i].hi = htonl(s->ds_len<<
 literal|16
 argument|); 			ocb->ind_ptr[i].lo = htonl(s->ds_addr); 		} 		ocb->orb[
 literal|4
