@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hayes.c	5.3 (Berkeley) %G%"
+literal|"@(#)hayes.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 function_decl|;
@@ -500,7 +500,7 @@ end_block
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 block|{
@@ -539,13 +539,9 @@ block|{
 name|char
 name|c
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -553,6 +549,8 @@ name|status
 init|=
 literal|0
 decl_stmt|;
+name|f
+operator|=
 name|signal
 argument_list|(
 name|SIGALRM

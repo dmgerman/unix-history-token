@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ventel.c	5.3 (Berkeley) %G%"
+literal|"@(#)ventel.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 function_decl|;
@@ -170,6 +170,19 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|gobble
+argument_list|()
+decl_stmt|,
+name|vensync
+argument_list|()
+decl_stmt|;
+specifier|static
+name|void
+name|echo
+parameter_list|()
+function_decl|;
 comment|/* 	 * Get in synch with a couple of carriage returns 	 */
 if|if
 condition|(
@@ -540,7 +553,7 @@ end_block
 
 begin_function
 specifier|static
-name|int
+name|void
 name|echo
 parameter_list|(
 name|s
@@ -631,7 +644,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|sigALRM
 parameter_list|()
 block|{
@@ -679,16 +692,14 @@ name|cp
 init|=
 name|response
 decl_stmt|;
+name|sig_t
+name|f
+decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
 name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|=
 name|signal
 argument_list|(
 name|SIGALRM

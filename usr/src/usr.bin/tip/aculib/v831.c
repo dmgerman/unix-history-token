@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v831.c	5.4 (Berkeley) %G%"
+literal|"@(#)v831.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,15 +47,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|alarmtr
 parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_extern
-extern|extern	errno;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -108,6 +111,11 @@ specifier|register
 name|int
 name|timelim
 decl_stmt|;
+specifier|static
+name|int
+name|dialit
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|boolean
@@ -418,35 +426,47 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|alarmtr
-argument_list|()
+parameter_list|()
 block|{
 name|alarm
 argument_list|(
 literal|0
 argument_list|)
-block|;
+expr_stmt|;
 name|longjmp
 argument_list|(
 name|jmpbuf
 argument_list|,
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Insurance, for some reason we don't seem to be  *  hanging up...  */
+end_comment
+
+begin_macro
 name|v831_disconnect
 argument_list|()
-block|{         struct
+end_macro
+
+begin_block
+block|{
+name|struct
 name|sgttyb
 name|cntrl
-block|;
+decl_stmt|;
 name|sleep
 argument_list|(
 literal|2
 argument_list|)
-block|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -456,7 +476,7 @@ literal|"[disconnect: FD=%d]\n"
 argument_list|,
 name|FD
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -525,12 +545,15 @@ argument_list|(
 name|FD
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-begin_expr_stmt
-unit|}  v831_abort
-operator|(
-operator|)
+begin_macro
+name|v831_abort
+argument_list|()
+end_macro
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -541,14 +564,14 @@ literal|"[abort: AC=%d]\n"
 argument_list|,
 name|AC
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 name|sleep
 argument_list|(
 literal|2
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|child
@@ -562,9 +585,6 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|AC
@@ -585,17 +605,11 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|close
 argument_list|(
 name|AC
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|FD
@@ -611,27 +625,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|close
 argument_list|(
 name|FD
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Sigh, this probably must be changed at each site.  */
 end_comment
 
-begin_macro
-unit|struct
+begin_struct
+struct|struct
 name|vaconfig
-end_macro
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -644,12 +652,9 @@ name|char
 name|vc_modem
 decl_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|vaconfig
 index|[]
-operator|=
+init|=
 block|{
 block|{
 literal|"/dev/cua0"
@@ -671,8 +676,8 @@ block|{
 literal|0
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -712,29 +717,24 @@ name|ETX
 value|03
 end_define
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|dialit
-argument_list|(
+parameter_list|(
 name|phonenum
-argument_list|,
+parameter_list|,
 name|acu
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|phonenum
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|acu
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -748,10 +748,6 @@ name|cntrl
 decl_stmt|;
 name|char
 name|c
-decl_stmt|,
-modifier|*
-name|sanitize
-argument_list|()
 decl_stmt|;
 name|int
 name|i
@@ -760,6 +756,12 @@ name|two
 init|=
 literal|2
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|sanitize
+parameter_list|()
+function_decl|;
 name|phonenum
 operator|=
 name|sanitize
@@ -1062,7 +1064,7 @@ name|c
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.3 (Berkeley) %G%"
+literal|"@(#)df.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,12 +45,13 @@ name|Sjbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|void
 name|timeout
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_macro
 name|df02_dialer
@@ -485,10 +486,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|timeout
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -496,8 +498,9 @@ name|Sjbuf
 argument_list|,
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

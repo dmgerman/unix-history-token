@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dn11.c	5.3 (Berkeley) %G%"
+literal|"@(#)dn11.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,15 +38,19 @@ directive|include
 file|"tip.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|dn_abort
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|alarmtr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -418,12 +422,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|alarmtr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|alarm
 argument_list|(
@@ -438,7 +440,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Insurance, for some reason we don't seem to be  *  hanging up...  */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v3451.c	5.4 (Berkeley) %G%"
+literal|"@(#)v3451.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,16 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+specifier|static
+name|int
+name|expect
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+name|vawrite
+parameter_list|()
+function_decl|;
 comment|/* 	 * Get in synch 	 */
 name|vawrite
 argument_list|(
@@ -488,28 +498,23 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|vawrite
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|delay
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|delay
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 for|for
 control|(
@@ -535,7 +540,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 specifier|static
@@ -566,9 +571,6 @@ init|=
 name|buf
 decl_stmt|;
 name|int
-name|alarmtr
-argument_list|()
-decl_stmt|,
 name|timeout
 init|=
 literal|30
@@ -577,6 +579,16 @@ name|online
 init|=
 literal|0
 decl_stmt|;
+specifier|static
+name|int
+name|notin
+parameter_list|()
+function_decl|;
+specifier|static
+name|void
+name|alarmtr
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|strcmp
@@ -741,10 +753,11 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|alarmtr
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -752,25 +765,35 @@ name|Sjbuf
 argument_list|,
 literal|1
 argument_list|)
-block|; }
-specifier|static
-name|notin
-argument_list|(
-argument|sh
-argument_list|,
-argument|lg
-argument_list|)
-name|char
-operator|*
-name|sh
-operator|,
-operator|*
-name|lg
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|notin
+parameter_list|(
+name|sh
+parameter_list|,
+name|lg
+parameter_list|)
+name|char
+modifier|*
+name|sh
+decl_stmt|,
+decl|*
+name|lg
+decl_stmt|;
+end_function
 
 begin_block
 block|{
+specifier|static
+name|int
+name|prefix
+parameter_list|()
+function_decl|;
 for|for
 control|(
 init|;

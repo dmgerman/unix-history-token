@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)courier.c	5.6 (Berkeley) %G%"
+literal|"@(#)courier.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,13 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|write
-value|cour_write
-end_define
 
 begin_comment
 comment|/*  * Routines for calling up on a Courier modem.  * Derived from Hayes driver.  */
@@ -96,10 +89,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-function_decl|(
-modifier|*
-name|osigint
-function_decl|)
+name|coursync
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -143,6 +133,14 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+specifier|static
+name|int
+name|cour_connect
+argument_list|()
+decl_stmt|,
+name|cour_swallow
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|boolean
@@ -209,7 +207,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -252,7 +250,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* flush any clutter */
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -277,7 +275,7 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -310,7 +308,7 @@ name|cp
 operator|=
 literal|','
 expr_stmt|;
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -322,7 +320,7 @@ name|num
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -441,7 +439,7 @@ end_macro
 
 begin_block
 block|{
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -1155,7 +1153,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* flush any clutter */
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -1265,7 +1263,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -1304,7 +1302,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|write
+name|cour_write
 argument_list|(
 name|FD
 argument_list|,
@@ -1320,12 +1318,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|write
-end_undef
 
 begin_macro
 name|cour_write
