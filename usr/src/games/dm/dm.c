@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.10 (Berkeley) %G%"
+literal|"@(#)dm.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -260,13 +266,6 @@ begin_comment
 comment|/*  * play --  *	play the game  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GAMEHIDE
-value|"/usr/games/hide/"
-end_define
-
 begin_expr_stmt
 specifier|static
 name|play
@@ -307,7 +306,7 @@ name|strcpy
 argument_list|(
 name|pbuf
 argument_list|,
-name|GAMEHIDE
+name|_PATH_HIDE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -319,7 +318,7 @@ name|pbuf
 operator|+
 sizeof|sizeof
 argument_list|(
-name|GAMEHIDE
+name|_PATH_HIDE
 argument_list|)
 operator|-
 literal|1
@@ -389,13 +388,6 @@ begin_comment
 comment|/*  * read_config --  *	read through config file, looking for key words.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CONTROL
-value|"/usr/games/dm.config"
-end_define
-
 begin_expr_stmt
 specifier|static
 name|read_config
@@ -432,7 +424,7 @@ name|MAXHOSTNAMELEN
 operator|+
 sizeof|sizeof
 argument_list|(
-name|CONTROL
+name|_PATH_CONFIG
 argument_list|)
 index|]
 block|;
@@ -469,7 +461,7 @@ name|path
 index|[
 sizeof|sizeof
 argument_list|(
-name|CONTROL
+name|_PATH_CONFIG
 argument_list|)
 index|]
 block|;
@@ -503,7 +495,7 @@ name|path
 argument_list|,
 name|control
 operator|=
-name|CONTROL
+name|_PATH_CONFIG
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -565,24 +557,7 @@ literal|"r"
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"dm: unable to read %s or %s.\n"
-argument_list|,
-name|path
-argument_list|,
-name|control
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+return|return;
 end_if
 
 begin_while
@@ -1402,20 +1377,8 @@ operator|)
 return|;
 end_return
 
-begin_comment
-unit|}
-comment|/*  * nogamefile --  *	if the file NOGAMING exists, no games allowed.  *	file may also contain a message for the user.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOGAMING
-value|"/usr/games/nogames"
-end_define
-
 begin_macro
-unit|static
+unit|}  static
 name|nogamefile
 argument_list|()
 end_macro
@@ -1441,7 +1404,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|NOGAMING
+name|_PATH_NOGAMES
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -1600,13 +1563,6 @@ begin_comment
 comment|/*  * logfile --  *	log play of game  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOGFILE
-value|"/usr/adm/dm.log"
-end_define
-
 begin_expr_stmt
 specifier|static
 name|logfile
@@ -1641,7 +1597,7 @@ name|lp
 operator|=
 name|fopen
 argument_list|(
-name|LOGFILE
+name|_PATH_LOG
 argument_list|,
 literal|"a"
 argument_list|)
