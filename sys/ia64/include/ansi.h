@@ -212,43 +212,9 @@ begin_comment
 comment|/* internally known to gcc */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|_BSD_VA_LIST_
-name|__gnuc_va_list
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* compatibility w/GNU headers*/
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-error|Must add va_list support for this non-GCC compiler.
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*__GNUC__*/
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-name|__GNUC__
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -283,6 +249,26 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|Must add va_list support for this non-GCC compiler.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*__GNUC__*/
+end_comment
 
 begin_comment
 comment|/*  * The rune type above is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use _BSD_CT_RUNE_T_ instead of int.  By changing it  * here, you lose a bit of ANSI conformance, but your programs will still  * work.  *  * NOTE: rune_t is not covered by ANSI nor other standards, and should not  * be instantiated outside of lib/libc/locale.  Use wchar_t.  wchar_t and  * rune_t must be the same type.  Also wint_t must be no narrower than  * wchar_t, and should also be able to hold all members of the largest  * character set plus one extra value (WEOF). wint_t must be at least 16 bits.  */
