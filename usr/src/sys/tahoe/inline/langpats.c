@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	1.6 (Berkeley) %G%"
+literal|"@(#)langpats.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,14 +228,6 @@ block|,
 literal|"_suiword\n"
 block|,
 literal|"	callf	$12,_suword\n"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|"_setjmp\n"
-block|,
-literal|"	movl	(sp)+,r1\n\ 	clrl	r0\n\ 	movab	(fp),(r1)\n\ 	addl2	$4,r1\n\ 	movab	1(pc),(r1)\n"
 block|}
 block|,
 block|{
