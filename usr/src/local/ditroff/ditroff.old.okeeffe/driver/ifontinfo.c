@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"ifontinfo.c	1.4	(Berkeley)	85/02/04"
+literal|"ifontinfo.c	1.5	(Berkeley)	85/02/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +31,23 @@ directive|include
 file|"rst.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BITDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|FONTDIR
+name|BITDIR
 value|"/usr/src/local/imagen/fonts/raster"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|char
@@ -114,7 +125,7 @@ name|char
 modifier|*
 name|fontdir
 init|=
-name|FONTDIR
+name|BITDIR
 decl_stmt|;
 end_decl_stmt
 

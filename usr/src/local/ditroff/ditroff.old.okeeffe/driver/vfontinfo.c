@@ -42,6 +42,24 @@ directive|include
 file|<vfont.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BITDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BITDIR
+value|"/usr/lib/vfont"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|header
@@ -394,7 +412,9 @@ name|sprintf
 argument_list|(
 name|IName
 argument_list|,
-literal|"/usr/lib/vfont/%s"
+literal|"%s/%s"
+argument_list|,
+name|BITDIR
 argument_list|,
 name|argv
 index|[
