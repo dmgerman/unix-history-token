@@ -798,7 +798,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|fxp
+name|if_ixgb
 argument_list|,
 name|pci
 argument_list|,
@@ -814,7 +814,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|fxp
+name|if_ixgb
 argument_list|,
 name|ether
 argument_list|,
