@@ -3530,9 +3530,9 @@ name|NULLVP
 expr_stmt|;
 name|devvp
 operator|->
-name|v_specflags
-operator||=
-name|SI_MOUNTEDON
+name|v_specmountpoint
+operator|=
+name|mp
 expr_stmt|;
 if|if
 condition|(
@@ -3838,10 +3838,9 @@ name|ump
 operator|->
 name|um_devvp
 operator|->
-name|v_specflags
-operator|&=
-operator|~
-name|SI_MOUNTEDON
+name|v_specmountpoint
+operator|=
+name|NULL
 expr_stmt|;
 name|error
 operator|=
