@@ -8887,9 +8887,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|COMPAT_PCI_DRIVER
+name|DATA_SET
 argument_list|(
-name|al
+name|pcidevice_set
 argument_list|,
 name|al_device
 argument_list|)
