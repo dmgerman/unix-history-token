@@ -6817,8 +6817,12 @@ argument_list|)
 block|{}
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|/**  *  This is an SGI extension.  *  @ingroup SGIextensions  *  @doctodo */
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class

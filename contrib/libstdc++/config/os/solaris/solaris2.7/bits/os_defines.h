@@ -4,7 +4,7 @@ comment|// Specific definitions for Solaris 7,8  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -143,17 +143,6 @@ define|#
 directive|define
 name|__ssize_t
 value|ssize_t
-end_define
-
-begin_comment
-comment|// Without this all the libio vtbls are offset wrongly.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_G_USING_THUNKS
-value|0
 end_define
 
 begin_if

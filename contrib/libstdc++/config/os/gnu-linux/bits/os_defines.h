@@ -260,6 +260,18 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|__hppa__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
+operator|)
+operator|||
 name|defined
 argument_list|(
 name|__powerpc64__
@@ -300,6 +312,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__hppa__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
 name|__sparc__
 argument_list|)
 operator|&&
@@ -308,6 +326,7 @@ name|defined
 argument_list|(
 name|__arch64__
 argument_list|)
+operator|)
 end_if
 
 begin_define

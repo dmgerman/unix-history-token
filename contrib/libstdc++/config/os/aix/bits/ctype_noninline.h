@@ -241,8 +241,12 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|_toupper
+operator|::
+name|toupper
 argument_list|(
+operator|(
+name|int
+operator|)
 name|__c
 argument_list|)
 return|;
@@ -310,8 +314,12 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|_tolower
+operator|::
+name|tolower
 argument_list|(
+operator|(
+name|int
+operator|)
 name|__c
 argument_list|)
 return|;

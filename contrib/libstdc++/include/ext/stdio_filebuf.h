@@ -95,6 +95,29 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
+begin_comment
+comment|/** @file ext/stdio_filebuf.h  *  This file is a GNU extension to the Standard C++ Library.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_EXT_STDIO_FILEBUF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_EXT_STDIO_FILEBUF
+end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|system_header
+end_pragma
+
 begin_include
 include|#
 directive|include
@@ -105,6 +128,7 @@ begin_decl_stmt
 name|namespace
 name|__gnu_cxx
 block|{
+comment|/**    *  @class stdio_filebuf ext/stdio_filebuf.h<ext/stdio_filebuf.h>    *  @brief Provides a layer of compatibility for C/POSIX.    *    *  This GNU extension provides extensions for working with standard C    *  FILE*'s and POSIX file descriptors.  It must be instantiated by the    *  user with the type of character used in the file stream, e.g.,    *  stdio_filebuf<char>.   */
 name|template
 operator|<
 name|typename
@@ -176,6 +200,7 @@ index|]
 decl_stmt|;
 name|public
 label|:
+comment|/**        *  @param  fd  An open file descriptor.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  del  Whether to close the file on destruction.        *  @param  size  Optimal or preferred size of internal buffer, in bytes.        *        *  This constructor associates a file stream buffer with an open        *  POSIX file descriptor.  Iff @a del is true, then the associated        *  file will be closed when the stdio_filebuf is closed/destroyed.       */
 name|stdio_filebuf
 argument_list|(
 argument|int __fd
@@ -187,6 +212,7 @@ argument_list|,
 argument|int_type __size
 argument_list|)
 empty_stmt|;
+comment|/**        *  @param  f  An open @c FILE*.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  size  Optimal or preferred size of internal buffer, in bytes.        *                Defaults to system's @c BUFSIZ.        *        *  This constructor associates a file stream buffer with an open        *  C @c FILE*.  The @c FILE* will not be automatically closed when the        *  stdio_filebuf is closed/destroyed.       */
 name|stdio_filebuf
 argument_list|(
 argument|std::__c_file* __f
@@ -196,11 +222,13 @@ argument_list|,
 argument|int_type __size = static_cast<int_type>(BUFSIZ)
 argument_list|)
 empty_stmt|;
+comment|/**        *  Possibly closes the external data stream, in the case of the file        *  descriptor constructor and @c del @c == @c true.       */
 name|virtual
 operator|~
 name|stdio_filebuf
 argument_list|()
 expr_stmt|;
+comment|/**        *  @return  The underlying file descriptor.        *        *  Once associated with an external data stream, this function can be        *  used to access the underlying POSIX file descriptor.  Note that        *  there is no way for the library to track what you do with the        *  descriptor, so be careful.       */
 name|int
 name|fd
 parameter_list|()
@@ -288,10 +316,6 @@ name|_M_mode
 operator|=
 name|__mode
 expr_stmt|;
-name|_M_buf_size_opt
-operator|=
-name|__size
-expr_stmt|;
 if|if
 condition|(
 name|__size
@@ -303,6 +327,7 @@ operator|<
 literal|4
 condition|)
 block|{
+comment|// Specify unbuffered.
 name|_M_buf
 operator|=
 name|_M_unbuf
@@ -311,14 +336,24 @@ name|_M_buf_size
 operator|=
 name|__size
 expr_stmt|;
+name|_M_buf_size_opt
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_expr_stmt
 
 begin_else
 else|else
+block|{
+name|_M_buf_size_opt
+operator|=
+name|__size
+expr_stmt|;
 name|_M_allocate_internal_buffer
 argument_list|()
 expr_stmt|;
+block|}
 end_else
 
 begin_expr_stmt
@@ -374,10 +409,6 @@ name|_M_mode
 operator|=
 name|__mode
 expr_stmt|;
-name|_M_buf_size_opt
-operator|=
-name|__size
-expr_stmt|;
 if|if
 condition|(
 name|__size
@@ -389,6 +420,7 @@ operator|<
 literal|4
 condition|)
 block|{
+comment|// Specify unbuffered.
 name|_M_buf
 operator|=
 name|_M_unbuf
@@ -397,14 +429,24 @@ name|_M_buf_size
 operator|=
 name|__size
 expr_stmt|;
+name|_M_buf_size_opt
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_expr_stmt
 
 begin_else
 else|else
+block|{
+name|_M_buf_size_opt
+operator|=
+name|__size
+expr_stmt|;
 name|_M_allocate_internal_buffer
 argument_list|()
 expr_stmt|;
+block|}
 end_else
 
 begin_expr_stmt
@@ -416,6 +458,15 @@ end_expr_stmt
 begin_comment
 unit|}     } }
 comment|// namespace __gnu_cxx
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _EXT_STDIO_FILEBUF */
 end_comment
 
 end_unit

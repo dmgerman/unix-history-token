@@ -127,9 +127,26 @@ name|GCC
 name|system_header
 end_pragma
 
+begin_include
+include|#
+directive|include
+file|<bits/c++config.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|_GLIBCPP_HAVE_WCTYPE_H
+end_if
+
 begin_empty
 empty|#include_next<wctype.h>
 end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

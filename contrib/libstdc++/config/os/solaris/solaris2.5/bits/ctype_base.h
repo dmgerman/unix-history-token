@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997-1999, 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997-1999, 2000, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -186,7 +186,7 @@ literal|02
 operator||
 literal|04
 operator||
-literal|0200
+literal|0100
 decl_stmt|;
 specifier|static
 specifier|const

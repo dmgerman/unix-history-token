@@ -129,6 +129,8 @@ argument_list|()
 block|{
 return|return
 name|_ctype_
+operator|+
+literal|1
 return|;
 block|}
 end_expr_stmt

@@ -128,7 +128,7 @@ name|throw
 argument_list|()
 block|{
 return|return
-literal|0
+name|__ctype
 return|;
 block|}
 end_expr_stmt
