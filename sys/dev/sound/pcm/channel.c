@@ -437,56 +437,16 @@ name|b
 operator|->
 name|bufsize
 expr_stmt|;
-if|if
-condition|(
-name|delta
-operator|>=
-operator|(
-operator|(
-name|b
-operator|->
-name|bufsize
-operator|*
-literal|15
-operator|)
-operator|/
-literal|16
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|c
-operator|->
-name|flags
-operator|&
-operator|(
-name|CHN_F_CLOSING
-operator||
-name|CHN_F_ABORTING
-operator|)
-operator|)
-condition|)
-name|device_printf
+name|DEB
 argument_list|(
-name|c
-operator|->
-name|parent
-operator|->
-name|dev
-argument_list|,
+argument|if (delta>= ((b->bufsize *
+literal|15
+argument|) /
+literal|16
+argument|)) { 		if (!(c->flags& (CHN_F_CLOSING | CHN_F_ABORTING))) 			device_printf(c->parent->dev,
 literal|"hwptr went backwards %d -> %d\n"
-argument_list|,
-name|b
-operator|->
-name|hp
-argument_list|,
-name|hwptr
+argument|, b->hp, hwptr); 	}
 argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|c
