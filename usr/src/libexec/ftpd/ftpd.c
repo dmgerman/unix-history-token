@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.11 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -728,7 +728,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-name|signal
+name|sigset
 argument_list|(
 name|SIGCHLD
 argument_list|,
