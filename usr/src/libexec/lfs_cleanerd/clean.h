@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The LFS user-level library will be used when writing cleaners and  * checkers for LFS file systems.  It will have facilities  * for finding and parsing LFS segments.  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * The LFS user-level library will be used when writing cleaners and  * checkers for LFS file systems.  It will have facilities for finding  * and parsing LFS segments.  */
 end_comment
 
 begin_define
@@ -37,31 +41,6 @@ directive|define
 name|IFILE_NAME
 value|"ifile"
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRUE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Cleaner parameters  *	BUSY_LIM: lower bound of the number of segments currently available  *		as a percentage of the total number of free segments possibly  *		available.  *	IDLE_LIM: Same as BUSY_LIM but used when the system is idle.  *	MIN_SEGS: Minimum number of segments you should always have.  *		I have no idea what this should be, but it should probably  *		be a function of lfsp.  *	NUM_TO_CLEAN: Number of segments to clean at once.  Again, this  *		should probably be based on the file system size and how  *		full or empty the segments being cleaned are.  */
