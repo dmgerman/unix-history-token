@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.9 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,8 +202,6 @@ name|sb
 operator|.
 name|st_size
 argument_list|)
-operator|-
-literal|1
 init|;
 name|bn
 operator|>=
@@ -217,9 +215,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+name|dbtob
+argument_list|(
 name|bn
-operator|*
-name|DEV_BSIZE
+argument_list|)
 argument_list|,
 name|L_SET
 argument_list|)
