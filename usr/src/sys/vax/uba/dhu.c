@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	4.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	4.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1909,26 +1909,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-specifier|register
-name|dhu
-operator|=
-name|unit
-operator|>>
-literal|4
-expr_stmt|;
-specifier|register
-name|bit
-operator|=
-operator|(
-literal|1
-operator|<<
-operator|(
-name|unit
-operator|&
-literal|0xf
-operator|)
-operator|)
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3320,8 +3300,6 @@ name|int
 name|unit
 decl_stmt|,
 name|mbits
-decl_stmt|,
-name|lcr
 decl_stmt|;
 name|int
 name|s
@@ -3516,10 +3494,6 @@ name|addr
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-specifier|register
-name|int
-name|s
 decl_stmt|;
 for|for
 control|(

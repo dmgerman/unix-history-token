@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	5.1 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	5.2 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1015,12 +1015,6 @@ modifier|*
 name|tmscpaddr
 decl_stmt|;
 comment|/* ptr to tmscpdevice struct (IP& SA) */
-name|struct
-name|uba_ctlr
-modifier|*
-name|um
-decl_stmt|;
-comment|/* UNUSED ptr to uba_ctlr (controller) struct */
 name|int
 name|count
 decl_stmt|;
@@ -1319,17 +1313,9 @@ comment|/* the tmscp polling */
 ifdef|#
 directive|ifdef
 name|lint
-name|ui
-operator|=
-name|ui
-expr_stmt|;
 name|reg
 operator|=
 name|reg
-expr_stmt|;
-name|i
-operator|=
-name|i
 expr_stmt|;
 endif|#
 directive|endif
@@ -1555,6 +1541,15 @@ name|tmscpaddr
 operator|->
 name|tmscpip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|!
@@ -1652,40 +1647,6 @@ operator|->
 name|ui_mi
 decl_stmt|;
 comment|/* ptr to controller struct */
-name|struct
-name|tmscpdevice
-modifier|*
-name|tmscpaddr
-init|=
-operator|(
-expr|struct
-name|tmscpdevice
-operator|*
-operator|)
-name|um
-operator|->
-name|um_addr
-decl_stmt|;
-comment|/* IP& SA */
-name|struct
-name|mscp
-modifier|*
-name|mp
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-comment|/* Assign to here to start the tmscp-dev polling */
-ifdef|#
-directive|ifdef
-name|lint
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
-endif|lint
 name|ui
 operator|->
 name|ui_flags
@@ -2871,6 +2832,10 @@ begin_comment
 comment|/*  * Open a tmscp device and set the unit online.  If the controller is not   * in the run state, call init to initialize the tmscp controller first.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|tmscpopen
 argument_list|(
@@ -2939,19 +2904,6 @@ decl_stmt|,
 name|i
 decl_stmt|;
 extern|extern quota;
-ifdef|#
-directive|ifdef
-name|lint
-name|flag
-operator|=
-name|flag
-expr_stmt|;
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
 name|unit
 operator|=
 name|TMSUNIT
@@ -3306,6 +3258,15 @@ name|tmscpaddr
 operator|->
 name|tmscpip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*  		 * To make sure we wake up, timeout in 240 seconds. 		 * Wakeup in tmscprsp routine. 		 * 240 seconds (4 minutes) is necessary since a rewind 		 * can take a few minutes. 		 */
 name|timeout
 argument_list|(
@@ -3432,21 +3393,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|tmscp_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|tmscp_softc
-index|[
-name|TMSCPCTLR
-argument_list|(
-name|dev
-argument_list|)
-index|]
-decl_stmt|;
 specifier|register
 name|struct
 name|tms_info
@@ -3681,17 +3627,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NTMS
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 name|ui
 operator|=
 name|tmsdinfo
@@ -5010,6 +4945,9 @@ directive|endif
 comment|/* 		 * The reccnt and tmkcnt fields are set to zero by the getcp 		 * routine (as bytecnt and buffer fields).  Thus reccnt and 		 * tmkcnt are only modified here if they need to be set to 		 * a non-zero value. 		 */
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|bp
 operator|->
 name|b_resid
@@ -5880,8 +5818,6 @@ name|dp
 decl_stmt|,
 modifier|*
 name|bp
-decl_stmt|,
-name|nullbp
 decl_stmt|;
 name|int
 name|st
@@ -6346,6 +6282,8 @@ else|else
 block|{
 if|if
 condition|(
+name|bp
+operator|=
 name|dp
 operator|->
 name|b_actf
@@ -6381,14 +6319,9 @@ name|tms_ttyp
 argument_list|,
 literal|"tms%d: hard error: OFFLINE\n"
 argument_list|,
-name|minor
-argument_list|(
-name|bp
+name|ui
 operator|->
-name|b_dev
-argument_list|)
-operator|&
-literal|03
+name|ui_unit
 argument_list|)
 expr_stmt|;
 while|while
@@ -8525,15 +8458,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
 name|tmscpp
 operator|->
 name|tmscp_Cmd
@@ -8607,6 +8531,15 @@ name|tmscpaddr
 operator|->
 name|tmscpip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -8859,6 +8792,10 @@ begin_comment
 comment|/*  * Catch ioctl commands, and call the "command" routine to do them.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|tmscpioctl
 argument_list|(
@@ -8900,21 +8837,6 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|tmscp_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|tmscp_softc
-index|[
-name|TMSCPCTLR
-argument_list|(
-name|dev
-argument_list|)
-index|]
-decl_stmt|;
-specifier|register
-name|struct
 name|buf
 modifier|*
 name|bp
@@ -8948,12 +8870,14 @@ name|int
 name|fcount
 decl_stmt|;
 comment|/* number of files (or records) to space */
+specifier|register
 name|struct
 name|mtop
 modifier|*
 name|mtop
 decl_stmt|;
 comment|/* mag tape cmd op to perform */
+specifier|register
 name|struct
 name|mtget
 modifier|*

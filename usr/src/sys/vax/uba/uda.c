@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.17 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1198,6 +1198,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|udslave
 argument_list|(
@@ -1265,23 +1269,6 @@ name|i
 decl_stmt|;
 comment|/* Something to write into to start */
 comment|/* the uda polling */
-ifdef|#
-directive|ifdef
-name|lint
-name|ui
-operator|=
-name|ui
-expr_stmt|;
-name|reg
-operator|=
-name|reg
-expr_stmt|;
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
 name|udaddr
 operator|=
 operator|(
@@ -1477,6 +1464,15 @@ name|udaddr
 operator|->
 name|udaip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|!
@@ -1583,15 +1579,6 @@ name|i
 decl_stmt|;
 comment|/* Something to write into to start */
 comment|/* the uda polling */
-ifdef|#
-directive|ifdef
-name|lint
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ui
@@ -1741,6 +1728,15 @@ name|udaddr
 operator|->
 name|udaip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|ui
@@ -1766,6 +1762,10 @@ end_block
 
 begin_comment
 comment|/*  * Open a UDA.  Initialize the device and  * set the unit online.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -1830,19 +1830,6 @@ decl_stmt|,
 name|i
 decl_stmt|;
 extern|extern quota;
-ifdef|#
-directive|ifdef
-name|lint
-name|flag
-operator|=
-name|flag
-expr_stmt|;
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
 name|unit
 operator|=
 name|udunit
@@ -2134,6 +2121,15 @@ name|udaddr
 operator|->
 name|udaip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 name|timeout
 argument_list|(
 name|wakeup
@@ -5147,11 +5143,16 @@ endif|#
 directive|endif
 switch|switch
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|mp
 operator|->
 name|mscp_mediaid
 operator|&
 literal|0x7f
+argument_list|)
 condition|)
 block|{
 case|case
@@ -7761,15 +7762,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|i
-operator|=
-name|i
-expr_stmt|;
-endif|#
-directive|endif
 name|udp
 operator|->
 name|uda_Cmd
@@ -7843,6 +7835,15 @@ name|udaddr
 operator|->
 name|udaip
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|i
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;

@@ -439,9 +439,10 @@ name|ifuba
 name|vs_ifuba
 decl_stmt|;
 comment|/* UNIBUS resources */
-name|int
+name|u_short
 name|vs_host
 decl_stmt|;
+comment|/* this interface address */
 name|short
 name|vs_oactive
 decl_stmt|;
@@ -1314,8 +1315,7 @@ decl_stmt|;
 name|u_short
 name|shost
 init|=
-operator|-
-literal|1
+literal|0xffff
 decl_stmt|;
 name|vs
 operator|=
@@ -1861,8 +1861,7 @@ if|if
 condition|(
 name|shost
 operator|==
-operator|-
-literal|1
+literal|0xffff
 condition|)
 block|{
 name|shost
@@ -1978,8 +1977,7 @@ name|VV_RST
 expr_stmt|;
 name|shost
 operator|=
-operator|-
-literal|1
+literal|0xffff
 expr_stmt|;
 goto|goto
 name|done
