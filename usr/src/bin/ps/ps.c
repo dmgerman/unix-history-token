@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.45 (Berkeley) %G%"
+literal|"@(#)ps.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,6 +459,11 @@ name|errbuf
 index|[
 literal|80
 index|]
+decl_stmt|;
+name|int
+name|wflag
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1004,6 +1009,15 @@ literal|'w'
 case|:
 if|if
 condition|(
+name|wflag
+condition|)
+name|termwidth
+operator|=
+name|UNLIMITED
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|termwidth
 operator|<
 literal|131
@@ -1012,10 +1026,8 @@ name|termwidth
 operator|=
 literal|131
 expr_stmt|;
-else|else
-name|termwidth
-operator|=
-name|UNLIMITED
+name|wflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
