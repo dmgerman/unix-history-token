@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.13 1995/07/30 09:33:26 jkh Exp $"
+literal|"$Id: file.c,v 1.14 1995/07/30 09:41:21 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,7 +1050,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|FtpEof
+name|FtpEOF
 argument_list|(
 name|ftp
 argument_list|)
