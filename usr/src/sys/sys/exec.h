@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -147,6 +147,28 @@ begin_comment
 comment|/* demand load format */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
+
 begin_comment
 comment|/* a_mid */
 end_comment
@@ -227,6 +249,11 @@ end_define
 begin_comment
 comment|/* hp800 HP-UX binary */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
