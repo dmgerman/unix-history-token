@@ -2860,12 +2860,27 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"vinum: stripebase %x, stripeoffset %x, blockoffset %x\n"
+literal|"vinum: stripebase %#llx, stripeoffset %#llxx, blockoffset %#llx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|stripebase
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|stripeoffset
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|blockoffset
 argument_list|)
 expr_stmt|;
