@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_smp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mca.h"
 end_include
 

@@ -183,12 +183,6 @@ directive|include
 file|<nfs/nfsdiskless.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_smp.h"
-end_include
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
