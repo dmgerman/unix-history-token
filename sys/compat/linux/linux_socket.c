@@ -1676,6 +1676,7 @@ operator|*
 operator|)
 name|stackgap_alloc
 argument_list|(
+operator|&
 name|sg
 argument_list|,
 name|linux_ip_copysize
