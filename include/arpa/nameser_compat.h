@@ -756,6 +756,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_OPT
+value|ns_t_opt
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_IXFR
 value|ns_t_ixfr
 end_define
