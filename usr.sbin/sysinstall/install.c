@@ -3269,11 +3269,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|int
-name|kstat
-init|=
-literal|1
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__ia64__
@@ -3320,11 +3315,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|kstat
-operator|||
-operator|!
 name|OnVTY
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -3332,23 +3325,6 @@ argument_list|,
 literal|"# -- sysinstall generated deltas -- #\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|kstat
-condition|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"userconfig_script_load=\"YES\"\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|OnVTY
-condition|)
 name|fprintf
 argument_list|(
 name|fp
@@ -3356,6 +3332,7 @@ argument_list|,
 literal|"console=\"comconsole\"\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|fp
