@@ -39,6 +39,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"thr_private.h"
+end_include
+
 begin_expr_stmt
 name|__strong_reference
 argument_list|(
@@ -215,6 +221,16 @@ argument_list|(
 name|bzero
 argument_list|,
 name|_thr_bzero
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__sys_write
+argument_list|,
+name|_thr__sys_write
 argument_list|)
 expr_stmt|;
 end_expr_stmt
