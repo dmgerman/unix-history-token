@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startslip.c	5.4 (Berkeley) %G%"
+literal|"@(#)startslip.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,6 +192,42 @@ name|hup
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|logged_in
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wait_time
+init|=
+literal|60
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* then back off */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXTRIES
+value|6
+end_define
+
+begin_comment
+comment|/* w/60 sec and doubling, takes an hour */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIDFILE
+value|"/var/run/startslip.pid"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -299,15 +335,19 @@ name|fd
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|sighup
-argument_list|()
 decl_stmt|;
+name|void
+name|sighup
+parameter_list|()
+function_decl|;
 name|FILE
 modifier|*
 name|wfd
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|pfd
 decl_stmt|;
 name|char
 modifier|*
@@ -324,6 +364,18 @@ name|int
 name|first
 init|=
 literal|1
+decl_stmt|,
+name|tries
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|pausefirst
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|pid
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -351,7 +403,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ds:b:"
+literal|"db:s:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -386,6 +438,17 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'p'
+case|:
+name|pausefirst
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:
@@ -486,8 +549,81 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pfd
+operator|=
+name|fopen
+argument_list|(
+name|PIDFILE
+argument_list|,
+literal|"r"
+argument_list|)
+condition|)
+block|{
+name|pid
+operator|=
+literal|0
+expr_stmt|;
+name|fscanf
+argument_list|(
+name|pfd
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|pid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|>
+literal|0
+condition|)
+name|kill
+argument_list|(
+name|pid
+argument_list|,
+name|SIGUSR1
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pfd
+argument_list|)
+expr_stmt|;
+block|}
 name|restart
 label|:
+name|logged_in
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|tries
+operator|>
+name|MAXTRIES
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"exiting after %d tries\n"
+argument_list|,
+name|tries
+argument_list|)
+expr_stmt|;
+comment|/* ??? 		if (first) 		*/
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * We may get a HUP below, when the parent (session leader/ 	 * controlling process) exits; ignore HUP until into new session. 	 */
 name|signal
 argument_list|(
@@ -507,10 +643,34 @@ argument_list|()
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|pausefirst
+condition|)
+name|sleep
+argument_list|(
+name|pausefirst
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|first
+condition|)
+name|printd
+argument_list|(
+literal|"parent exit\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+name|pausefirst
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -530,19 +690,55 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printd
-argument_list|(
-literal|"restart: pid %d: close"
-argument_list|,
+name|pid
+operator|=
 name|getpid
 argument_list|()
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"restart: pid %d: "
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pfd
+operator|=
+name|fopen
+argument_list|(
+name|PIDFILE
+argument_list|,
+literal|"w"
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|pfd
+argument_list|,
+literal|"%d\n"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pfd
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|wfd
 condition|)
 block|{
+name|printd
+argument_list|(
+literal|"fclose, "
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|wfd
@@ -560,6 +756,11 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|printd
+argument_list|(
+literal|"close, "
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -573,7 +774,7 @@ expr_stmt|;
 block|}
 name|printd
 argument_list|(
-literal|", open"
+literal|"open"
 argument_list|)
 expr_stmt|;
 if|if
@@ -607,7 +808,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: open %s: %m\n"
+literal|"open %s: %m\n"
 argument_list|,
 name|argv
 index|[
@@ -628,9 +829,9 @@ else|else
 block|{
 name|sleep
 argument_list|(
-literal|5
+name|wait_time
 operator|*
-literal|60
+name|tries
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -675,19 +876,6 @@ argument_list|,
 name|sighup
 argument_list|)
 expr_stmt|;
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* wait for flakey line to settle */
-if|if
-condition|(
-name|hup
-condition|)
-goto|goto
-name|restart
-goto|;
 if|if
 condition|(
 name|debug
@@ -748,7 +936,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: %s: ioctl (TIOCSETD 0): %m\n"
+literal|"%s: ioctl (TIOCSETD 0): %m\n"
 argument_list|,
 name|argv
 index|[
@@ -787,7 +975,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: %s: tcgetattr: %m\n"
+literal|"%s: tcgetattr: %m\n"
 argument_list|,
 name|argv
 index|[
@@ -809,6 +997,13 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|.
+name|c_iflag
+operator|&=
+operator|~
+name|IMAXBEL
+expr_stmt|;
+name|t
+operator|.
 name|c_cflag
 operator||=
 name|CRTSCTS
@@ -827,7 +1022,7 @@ name|tcsetattr
 argument_list|(
 name|fd
 argument_list|,
-name|TCSANOW
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|t
@@ -845,7 +1040,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: %s: tcsetattr: %m\n"
+literal|"%s: tcsetattr: %m\n"
 argument_list|,
 name|argv
 index|[
@@ -866,9 +1061,9 @@ else|else
 block|{
 name|sleep
 argument_list|(
-literal|5
+name|wait_time
 operator|*
-literal|60
+name|tries
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -902,7 +1097,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: %s: ioctl (TIOCGETP): %m\n"
+literal|"%s: ioctl (TIOCGETP): %m\n"
 argument_list|,
 name|argv
 index|[
@@ -968,7 +1163,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: %s: ioctl (TIOCSETP): %m\n"
+literal|"%s: ioctl (TIOCSETP): %m\n"
 argument_list|,
 name|argv
 index|[
@@ -989,9 +1184,9 @@ else|else
 block|{
 name|sleep
 argument_list|(
-literal|5
+name|wait_time
 operator|*
-literal|60
+name|tries
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1001,50 +1196,19 @@ block|}
 block|}
 endif|#
 directive|endif
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* wait for flakey line to settle */
 if|if
 condition|(
-name|dialerstring
+name|hup
 condition|)
-block|{
-name|printd
-argument_list|(
-literal|", send dialstring"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|fd
-argument_list|,
-name|dialerstring
-argument_list|,
-name|strlen
-argument_list|(
-name|dialerstring
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|fd
-argument_list|,
-literal|"\r"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|printd
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Log in 	 */
+goto|goto
+name|restart
+goto|;
 name|wfd
 operator|=
 name|fdopen
@@ -1065,7 +1229,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: can't fdopen slip line\n"
+literal|"can't fdopen slip line\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1074,11 +1238,38 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-name|printd
+name|setbuf
 argument_list|(
-literal|"look for login: "
+name|wfd
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dialerstring
+condition|)
+block|{
+name|printd
+argument_list|(
+literal|", send dialstring"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|wfd
+argument_list|,
+literal|"%s\r"
+argument_list|,
+name|dialerstring
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|putc
 argument_list|(
 literal|'\r'
@@ -1086,13 +1277,25 @@ argument_list|,
 name|wfd
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|fflush
+name|printd
 argument_list|(
-name|wfd
+literal|"\n"
 argument_list|)
-operator|,
+expr_stmt|;
+comment|/* 	 * Log in 	 */
+name|printd
+argument_list|(
+literal|"look for login: "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
 name|getline
 argument_list|(
 name|buf
@@ -1101,19 +1304,23 @@ name|BUFSIZ
 argument_list|,
 name|fd
 argument_list|)
-operator|!=
-name|NULL
+operator|==
+literal|0
+operator|||
+name|hup
 condition|)
 block|{
-if|if
-condition|(
-name|hup
-operator|!=
-literal|0
-condition|)
+name|sleep
+argument_list|(
+name|wait_time
+operator|*
+name|tries
+argument_list|)
+expr_stmt|;
 goto|goto
 name|restart
 goto|;
+block|}
 if|if
 condition|(
 name|bcmp
@@ -1176,20 +1383,15 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|wfd
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Attach 	 */
 name|printd
 argument_list|(
 literal|"setd"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attach 	 */
 name|disc
 operator|=
 name|SLIPDISC
@@ -1218,52 +1420,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startslip: %s: ioctl (TIOCSETD SLIP): %m\n"
+literal|"%s: ioctl (TIOCSETD SLIP): %m\n"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|disc
-operator|=
-name|SC_COMPRESS
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|SLIOCSFLAGS
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|disc
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"ioctl(SLIOCFLAGS)"
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"ioctl (SLIOCSFLAGS): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1340,9 +1502,31 @@ argument_list|(
 literal|", ready\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"reconnected (%d tries).\n"
+argument_list|,
+name|tries
+argument_list|)
+expr_stmt|;
 name|first
 operator|=
 literal|0
+expr_stmt|;
+name|tries
+operator|=
+literal|0
+expr_stmt|;
+name|logged_in
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -1368,12 +1552,10 @@ goto|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|sighup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|printd
 argument_list|(
@@ -1385,12 +1567,14 @@ condition|(
 name|hup
 operator|==
 literal|0
+operator|&&
+name|logged_in
 condition|)
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"startslip: hangup signal\n"
+literal|"hangup signal\n"
 argument_list|)
 expr_stmt|;
 name|hup
@@ -1398,7 +1582,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|getline
@@ -1492,23 +1676,6 @@ literal|0177
 expr_stmt|;
 if|if
 condition|(
-name|debug
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Got %d: \"%s\"\n"
-argument_list|,
-name|i
-operator|+
-literal|1
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|buf
 index|[
 name|i
@@ -1577,13 +1744,27 @@ block|}
 if|if
 condition|(
 name|ret
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
 name|perror
 argument_list|(
-literal|"getline: read (sleeping)"
+literal|"getline: read"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"read returned 0\n"
 argument_list|)
 expr_stmt|;
 name|buf
@@ -1592,11 +1773,6 @@ name|i
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|60
-argument_list|)
 expr_stmt|;
 name|printd
 argument_list|(
@@ -1633,9 +1809,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: startslip [-d] [-b baudrate] [-s dialstring]%s"
-argument_list|,
-literal|" dev user passwd\n"
+literal|"usage: startslip [-d] [-s string] dev user passwd\n"
 argument_list|)
 expr_stmt|;
 name|exit
