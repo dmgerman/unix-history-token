@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c	4.14 (Berkeley) %G%"
+literal|"@(#)ln.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,18 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -102,6 +114,16 @@ end_decl_stmt
 begin_comment
 comment|/* system link call */
 end_comment
+
+begin_expr_stmt
+specifier|static
+name|linkit
+argument_list|()
+operator|,
+name|usage
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|main
