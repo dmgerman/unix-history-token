@@ -93,11 +93,22 @@ directive|include
 file|<dev/ep/if_epvar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/elink.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -111,6 +122,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -123,6 +140,11 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -532,6 +554,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
 
 begin_function
 specifier|static
@@ -1095,6 +1123,11 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1367,6 +1400,9 @@ index|[]
 init|=
 block|{
 comment|/* Device interface */
+ifdef|#
+directive|ifdef
+name|__i386__
 name|DEVMETHOD
 argument_list|(
 name|device_identify
@@ -1374,6 +1410,8 @@ argument_list|,
 name|ep_isa_identify
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DEVMETHOD
 argument_list|(
 name|device_probe
