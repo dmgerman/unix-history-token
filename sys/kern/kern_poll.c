@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Luigi Rizzo  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001-2002 Luigi Rizzo  *  * Supported by: the Xorp Project (www.xorp.org)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -93,13 +93,53 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|void
-name|ether_poll1
+name|netisr_poll
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* the two netisr handlers      */
+end_comment
+
+begin_function_decl
+name|void
+name|netisr_pollmore
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_device_poll
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* init routine			*/
+end_comment
+
+begin_function_decl
+name|void
+name|hardclock_device_poll
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* hook from hardclock		*/
+end_comment
 
 begin_function_decl
 name|void
@@ -113,24 +153,6 @@ end_function_decl
 begin_comment
 comment|/* polling while in trap	*/
 end_comment
-
-begin_function_decl
-name|void
-name|ether_pollmore
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hardclock_device_poll
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Polling support for [network] device drivers.  *  * Drivers which support this feature try to register with the  * polling code.  *  * If registration is successful, the driver must disable interrupts,  * and further I/O is performed through the handler, which is invoked  * (at least once per clock tick) with 3 arguments: the "arg" passed at  * register time (a struct ifnet pointer), a command, and a "count" limit.  *  * The command can be one of the following:  *  POLL_ONLY: quick move of "count" packets from input/output queues.  *  POLL_AND_CHECK_STATUS: as above, plus check status registers or do  *	other more expensive operations. This command is issued periodically  *	but less frequently than POLL_ONLY.  *  POLL_DEREGISTER: deregister and return to interrupt mode.  *  * The first two commands are only issued if the interface is marked as  * 'IFF_UP and IFF_RUNNING', the last one only if IFF_RUNNING is set.  *  * The count limit specifies how much work the handler can do during the  * call -- typically this is the number of packets to be received, or  * transmitted, etc. (drivers are free to interpret this number, as long  * as the max time spent in the function grows roughly linearly with the  * count).  *  * Deregistration can be requested by the driver itself (typically in the  * *_stop() routine), or by the polling code, by invoking the handler.  *  * Polling can be globally enabled or disabled with the sysctl variable  * kern.polling.enable (default is 0, disabled)  *  * A second variable controls the sharing of CPU between polling/kernel  * network processing, and other activities (typically userlevel tasks):  * kern.polling.user_frac (between 0 and 100, default 50) sets the share  * of CPU allocated to user tasks. CPU is allocated proportionally to the  * shares, by dynamically adjusting the "count" (poll_burst).  *  * Other parameters can should be left to their default values.  * The following constraints hold  *  *	1<= poll_each_burst<= poll_burst<= poll_burst_max  *	0<= poll_in_trap<= poll_each_burst  *	MIN_POLL_BURST_MAX<= poll_burst_max<= MAX_POLL_BURST_MAX  */
@@ -178,7 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -208,7 +230,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -242,7 +264,7 @@ comment|/* good for 100Mbit net and HZ=1000 */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -263,6 +285,40 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|poll_in_idle_loop
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do we poll in idle loop ? */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|idle_poll
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|poll_in_idle_loop
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable device polling in idle loop"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|u_int32_t
 name|poll_in_trap
 decl_stmt|;
@@ -273,7 +329,7 @@ comment|/* used in trap.c */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -303,7 +359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -333,7 +389,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -361,7 +417,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -389,7 +445,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -412,6 +468,64 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_int32_t
+name|pending_polls
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pending_polls
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pending_polls
+argument_list|,
+literal|0
+argument_list|,
+literal|"Do we need to poll again"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|residual_burst
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|residual_burst
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|residual_burst
+argument_list|,
+literal|0
+argument_list|,
+literal|"# of residual cycles in burst"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
 name|poll_handlers
 decl_stmt|;
 end_decl_stmt
@@ -421,7 +535,7 @@ comment|/* next free entry in pr[]. */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -443,72 +557,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
-name|poll_in_idle
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* boolean */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern_polling
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|poll_in_idle
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|poll_in_idle
-argument_list|,
-literal|0
-argument_list|,
-literal|"Poll during idle loop"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int32_t
-name|idlepoll_sleeping
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* idlepoll is sleeping */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern_polling
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|idlepoll_sleeping
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|idlepoll_sleeping
-argument_list|,
-literal|0
-argument_list|,
-literal|"idlepoll is sleeping"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|polling
 init|=
@@ -521,7 +569,7 @@ comment|/* global polling enable */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_polling
 argument_list|,
@@ -543,17 +591,121 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|u_int32_t
-name|poll1_active
+name|phase
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|phase
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|phase
+argument_list|,
+literal|0
+argument_list|,
+literal|"Polling phase"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
 name|u_int32_t
-name|need_poll_again
+name|suspect
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suspect
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|suspect
+argument_list|,
+literal|0
+argument_list|,
+literal|"suspect event"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|u_int32_t
+name|stalled
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|stalled
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|stalled
+argument_list|,
+literal|0
+argument_list|,
+literal|"potential stalls"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|idlepoll_sleeping
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* idlepoll is sleeping */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_polling
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|idlepoll_sleeping
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|idlepoll_sleeping
+argument_list|,
+literal|0
+argument_list|,
+literal|"idlepoll is sleeping"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -591,6 +743,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * register relevant netisr. Called from kern_clock.c:  */
+end_comment
+
+begin_function
+name|void
+name|init_device_poll
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_netisr
+argument_list|(
+name|NETISR_POLL
+argument_list|,
+name|netisr_poll
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Hook from hardclock. Tries to schedule a netisr, but keeps track  * of lost ticks due to the previous handler taking too long.  * The first part of the code is just for debugging purposes, and tries  * to count how often hardclock ticks are shorter than they should,  * meaning either stray interrupts or delayed events.  */
 end_comment
 
@@ -611,6 +784,13 @@ decl_stmt|;
 name|int
 name|delta
 decl_stmt|;
+if|if
+condition|(
+name|poll_handlers
+operator|==
+literal|0
+condition|)
+return|return;
 name|microuptime
 argument_list|(
 operator|&
@@ -659,26 +839,50 @@ name|t
 expr_stmt|;
 if|if
 condition|(
-name|poll_handlers
+name|pending_polls
 operator|>
+literal|100
+condition|)
+block|{
+comment|/* too much, assume it has stalled */
+name|stalled
+operator|++
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"poll stalled [%d] in phase %d\n"
+argument_list|,
+name|stalled
+argument_list|,
+name|phase
+argument_list|)
+expr_stmt|;
+name|pending_polls
+operator|=
 literal|0
+expr_stmt|;
+name|phase
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|phase
+operator|<=
+literal|2
 condition|)
 block|{
 if|if
 condition|(
-name|poll1_active
+name|phase
+operator|!=
+literal|0
 condition|)
-block|{
-name|lost_polls
+name|suspect
 operator|++
 expr_stmt|;
-name|need_poll_again
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-name|poll1_active
+name|phase
 operator|=
 literal|1
 expr_stmt|;
@@ -687,8 +891,21 @@ argument_list|(
 name|NETISR_POLL
 argument_list|)
 expr_stmt|;
+name|phase
+operator|=
+literal|2
+expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|pending_polls
+operator|++
+operator|>
+literal|0
+condition|)
+name|lost_polls
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -706,12 +923,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -800,26 +1011,12 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * ether_pollmore is called after other netisr's, possibly scheduling  * another NETISR_POLL call, or adapting the burst size for the next cycle.  *  * It is very bad to fetch large bursts of packets from a single card at once,  * because the burst could take a long time to be completely processed, or  * could saturate the intermediate queue (ipintrq or similar) leading to  * losses or unfairness. To reduce the problem, and also to account better for  * time spent in network-related processnig, we split the burst in smaller  * chunks of fixed size, giving control to the other netisr's between chunks.  * This helps in improving the fairness, reducing livelock (because we  * emulate more closely the "process to completion" that we have with  * fastforwarding) and accounting for the work performed in low level  * handling and forwarding.  */
+comment|/*  * netisr_pollmore is called after other netisr's, possibly scheduling  * another NETISR_POLL call, or adapting the burst size for the next cycle.  *  * It is very bad to fetch large bursts of packets from a single card at once,  * because the burst could take a long time to be completely processed, or  * could saturate the intermediate queue (ipintrq or similar) leading to  * losses or unfairness. To reduce the problem, and also to account better for  * time spent in network-related processing, we split the burst in smaller  * chunks of fixed size, giving control to the other netisr's between chunks.  * This helps in improving the fairness, reducing livelock (because we  * emulate more closely the "process to completion" that we have with  * fastforwarding) and accounting for the work performed in low level  * handling and forwarding.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|residual_burst
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -831,7 +1028,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|ether_pollmore
+name|netisr_pollmore
 parameter_list|()
 block|{
 name|struct
@@ -841,12 +1038,11 @@ decl_stmt|;
 name|int
 name|kern_load
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
+comment|/* XXX run at splhigh() or equivalent */
+name|phase
+operator|=
+literal|5
+expr_stmt|;
 if|if
 condition|(
 name|residual_burst
@@ -860,11 +1056,6 @@ name|NETISR_POLL
 argument_list|)
 expr_stmt|;
 comment|/* will run immediately on return, followed by netisrs */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return ;
 block|}
 comment|/* here we can account time spent in netisr's in this tick */
@@ -944,15 +1135,23 @@ name|poll_burst
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|need_poll_again
-condition|)
-block|{
-comment|/* 		 * Last cycle was long and caused us to miss one or more 		 * hardclock ticks. Restart processnig again, but slightly 		 * reduce the burst size to prevent that this happens again. 		 */
-name|need_poll_again
+name|pending_polls
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|pending_polls
+operator|==
+literal|0
+condition|)
+comment|/* we are done */
+name|phase
+operator|=
+literal|0
+expr_stmt|;
+else|else
+block|{
+comment|/* 		 * Last cycle was long and caused us to miss one or more 		 * hardclock ticks. Restart processing again, but slightly 		 * reduce the burst size to prevent that this happens again. 		 */
 name|poll_burst
 operator|-=
 operator|(
@@ -976,27 +1175,22 @@ argument_list|(
 name|NETISR_POLL
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|poll1_active
+name|phase
 operator|=
-literal|0
+literal|6
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * ether_poll1 is called by schednetisr when appropriate, typically once  * per tick. It is called at splnet() so first thing to do is to upgrade to  * splimp(), and call all registered handlers.  */
+comment|/*  * netisr_poll is scheduled by schednetisr when appropriate, typically once  * per tick. It is called at splnet() so first thing to do is to upgrade to  * splimp(), and call all registered handlers.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|ether_poll1
+name|netisr_poll
 parameter_list|(
 name|void
 parameter_list|)
@@ -1016,17 +1210,15 @@ name|arg
 init|=
 name|POLL_ONLY
 decl_stmt|;
-name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|phase
+operator|=
+literal|3
 expr_stmt|;
 if|if
 condition|(
@@ -1318,22 +1510,21 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* on -stable, schednetisr(NETISR_POLLMORE); */
+name|phase
+operator|=
+literal|4
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Try to register routine for polling. Returns 1 if successful  * (and polling should be enabled), 0 otherwise.  * A device is not supposed to register itself multiple times.  *  * This is called from within the *_intr() function, so we should  * probably not need further locking. XXX  */
+comment|/*  * Try to register routine for polling. Returns 1 if successful  * (and polling should be enabled), 0 otherwise.  * A device is not supposed to register itself multiple times.  *  * This is called from within the *_intr() functions, so we do not need  * further locking.  */
 end_comment
 
 begin_function
@@ -1500,7 +1691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the interface from the list of polling ones.  * Normally run by *_stop().  * We allow it being called with IFF_POLLING clear, the  * call is sufficiently rare so it is preferable to save the  * space for the extra test in each device in exchange of one  * additional function call.  */
+comment|/*  * Remove interface from the polling list. Normally called by *_stop().  * It is not an error to call it with IFF_POLLING clear, the call is  * sufficiently rare to be preferable to save the space for the extra  * test in each driver in exchange of one additional function call.  */
 end_comment
 
 begin_function
@@ -1729,7 +1920,7 @@ control|)
 block|{
 if|if
 condition|(
-name|poll_in_idle
+name|poll_in_idle_loop
 operator|&&
 name|poll_handlers
 operator|>

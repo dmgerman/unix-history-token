@@ -3171,7 +3171,7 @@ if|if
 condition|(
 name|pollmore
 condition|)
-name|ether_pollmore
+name|netisr_pollmore
 argument_list|()
 expr_stmt|;
 block|}

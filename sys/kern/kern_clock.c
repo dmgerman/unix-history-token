@@ -164,20 +164,10 @@ directive|ifdef
 name|DEVICE_POLLING
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
-end_include
-
-begin_comment
-comment|/* for NETISR_POLL */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|void
-name|ether_poll1
+name|init_device_poll
 parameter_list|(
 name|void
 parameter_list|)
@@ -385,12 +375,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
-name|register_netisr
-argument_list|(
-name|NETISR_POLL
-argument_list|,
-name|ether_poll1
-argument_list|)
+name|init_device_poll
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -659,6 +645,7 @@ name|DEVICE_POLLING
 name|hardclock_device_poll
 argument_list|()
 expr_stmt|;
+comment|/* this is very short and quick */
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
