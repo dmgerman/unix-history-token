@@ -685,6 +685,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|SYSCTL_CHILDREN_SET
+parameter_list|(
+name|oid_ptr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|(oid_ptr)->oid_arg1 = (val);
+end_define
+
+begin_define
+define|#
+directive|define
 name|SYSCTL_STATIC_CHILDREN
 parameter_list|(
 name|oid_name
