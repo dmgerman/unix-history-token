@@ -52,23 +52,11 @@ begin_comment
 comment|/* Static ports to access PnP state machine */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PC98
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_comment
-comment|/* pnp.h is included from pnpinfo.c. */
-end_comment
+end_ifdef
 
 begin_define
 define|#
