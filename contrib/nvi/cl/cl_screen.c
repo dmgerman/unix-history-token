@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993, 1994, 1995, 1996  *	Keith Bostic.  All rights reserved.  *  * See the LICENSE file for redistribution information.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1186,6 +1186,15 @@ name|vi_enter
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+goto|goto
+name|fast
+goto|;
 name|msgq
 argument_list|(
 name|sp
@@ -1629,6 +1638,15 @@ name|ex_enter
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+goto|goto
+name|fast
+goto|;
 name|msgq
 argument_list|(
 name|sp
