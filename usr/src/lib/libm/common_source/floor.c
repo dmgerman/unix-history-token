@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)floor.c	5.7 (Berkeley) %G%"
+literal|"@(#)floor.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,20 +94,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|double
-name|ceil
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|double
-name|floor
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * floor(x) := the largest integer no larger than x;  * ceil(x) := -floor(-x), for all real x.  *  * Note: Inexact will be signaled if x is not an integer, as is  *	customary for IEEE 754.  No other signal can be emitted.  */
 end_comment
@@ -122,6 +108,7 @@ name|double
 name|x
 decl_stmt|;
 block|{
+specifier|volatile
 name|double
 name|y
 decl_stmt|;
@@ -217,6 +204,7 @@ name|double
 name|x
 decl_stmt|;
 block|{
+specifier|volatile
 name|double
 name|y
 decl_stmt|;
@@ -305,7 +293,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|national
+name|ns32000
 end_ifndef
 
 begin_comment
@@ -328,7 +316,9 @@ decl_stmt|;
 block|{
 name|double
 name|s
-decl_stmt|,
+decl_stmt|;
+specifier|volatile
+name|double
 name|t
 decl_stmt|;
 specifier|const
