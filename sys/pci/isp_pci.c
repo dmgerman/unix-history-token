@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.13.2.3 1999/07/03 01:45:17 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.13.2.4 1999/07/05 20:27:41 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -409,11 +409,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ISP_DISABLE_2200_SUPPORT
-end_ifdef
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -444,7 +444,7 @@ name|ISP2200_CODE_LENGTH
 block|,
 name|ISP2100_CODE_ORG
 block|,
-name|ISP2200_RISC_CODE
+name|ISP2200_CODE_VERSION
 block|,
 literal|0
 block|,
