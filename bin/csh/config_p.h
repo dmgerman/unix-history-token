@@ -336,12 +336,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WANT_KANJI
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -353,11 +347,6 @@ define|#
 directive|define
 name|DSPMBYTE
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
