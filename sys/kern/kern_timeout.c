@@ -1348,7 +1348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * New interface; clients allocate their own callout structures.  *  * callout_reset() - establish or change a timeout  * callout_stop() - disestablish a timeout  * callout_init() - initialize a callout structure so that it can  *	safely be passed to callout_reset() and callout_stop()  *  *<sys/callout.h> defines three convenience macros:  *  * callout_active() - returns truth if callout has not been serviced  * callout_pending() - returns truth if callout is still waiting for timeout  * callout_deactivate() - marks the callout as having been serviced  */
+comment|/*  * New interface; clients allocate their own callout structures.  *  * callout_reset() - establish or change a timeout  * callout_stop() - disestablish a timeout  * callout_init() - initialize a callout structure so that it can  *	safely be passed to callout_reset() and callout_stop()  *  *<sys/callout.h> defines three convenience macros:  *  * callout_active() - returns truth if callout has not been stopped,  *	drained, or deactivated since the last time the callout was  *	reset.  * callout_pending() - returns truth if callout is still waiting for timeout  * callout_deactivate() - marks the callout as having been serviced  */
 end_comment
 
 begin_decl_stmt
