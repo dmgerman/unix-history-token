@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|MAX_IOCTL_REPLY
-value|4096
+value|1024
 end_define
 
 begin_else
@@ -402,7 +402,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_REMOVE
-value|_IOWR(L, 83, struct vinum_ioctl_msg)
+value|_IOWR(L, 83, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -413,7 +413,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_READPOL
-value|_IOWR(L, 84, struct vinum_ioctl_msg)
+value|_IOWR(L, 84, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -435,7 +435,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_RESETSTATS
-value|_IOWR(L, 86, struct vinum_ioctl_msg)
+value|_IOWR(L, 86, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -446,7 +446,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_ATTACH
-value|_IOWR(L, 87, struct vinum_ioctl_msg)
+value|_IOWR(L, 87, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -457,7 +457,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_DETACH
-value|_IOWR(L, 88, struct vinum_ioctl_msg)
+value|_IOWR(L, 88, struct _ioctl_reply)
 end_define
 
 begin_comment
@@ -494,7 +494,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_RENAME
-value|_IOWR(L, 89, struct vinum_ioctl_msg)
+value|_IOWR(L, 89, struct vinum_rename_msg)
 end_define
 
 begin_comment
@@ -505,7 +505,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_REPLACE
-value|_IOWR(L, 90, struct vinum_ioctl_msg)
+value|_IOWR(L, 90, struct vinum_rename_msg)
 end_define
 
 begin_comment
@@ -576,6 +576,28 @@ end_define
 
 begin_comment
 comment|/* get daemon flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_CHECKPARITY
+value|_IOWR(L, 96, struct _ioctl_reply)
+end_define
+
+begin_comment
+comment|/* check RAID-5 parity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_REBUILDPARITY
+value|_IOWR(L, 97, struct _ioctl_reply)
+end_define
+
+begin_comment
+comment|/* rebuild RAID-5 parity */
 end_comment
 
 end_unit
