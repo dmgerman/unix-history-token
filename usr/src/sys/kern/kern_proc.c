@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.14	%G%	*/
+comment|/*	kern_proc.c	3.15	%G%	*/
 end_comment
 
 begin_include
@@ -2667,12 +2667,6 @@ name|p_ppid
 operator|=
 literal|1
 expr_stmt|;
-name|q
-operator|->
-name|p_flag
-operator||=
-name|SDETACH
-expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -2685,7 +2679,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Traced processes are killed 			 * since their existence means someone is screwing up. 			 * Traced processes are sent a hangup and a continue. 			 * This is designed to be ``safe'' for setuid 			 * processes since they must be willing to tolerate 			 * hangups anyways. 			 */
+comment|/* 			 * Traced processes are killed 			 * since their existence means someone is screwing up. 			 * Stopped processes are sent a hangup and a continue. 			 * This is designed to be ``safe'' for setuid 			 * processes since they must be willing to tolerate 			 * hangups anyways. 			 */
 if|if
 condition|(
 name|q
@@ -2735,7 +2729,7 @@ name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Protect this process from future 			 * tty signals, and clear TSTP/TTIN/TTOU if pending. 			 */
+comment|/* 			 * Protect this process from future 			 * tty signals, clear TSTP/TTIN/TTOU if pending, 			 * and set SDETACH bit on procs. 			 */
 name|spgrp
 argument_list|(
 name|q
