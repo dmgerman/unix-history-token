@@ -403,6 +403,17 @@ begin_comment
 comment|/* Max size of line in tags file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TABSTOP_MAX
+value|32
+end_define
+
+begin_comment
+comment|/* Max number of custom tab stops */
+end_comment
+
 begin_escape
 end_escape
 
@@ -658,6 +669,17 @@ begin_define
 define|#
 directive|define
 name|HAVE__SETJMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the fsync function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSYNC
 value|1
 end_define
 
