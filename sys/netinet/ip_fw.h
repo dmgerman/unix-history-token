@@ -138,6 +138,9 @@ comment|/* u32 = icmp bitmap		*/
 name|O_TCPOPTS
 block|,
 comment|/* arg1 = 2*u8 bitmap		*/
+name|O_VERREVPATH
+block|,
+comment|/* none				*/
 name|O_PROBE_STATE
 block|,
 comment|/* none				*/
