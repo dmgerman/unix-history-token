@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)options.h	1.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)options.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -158,7 +158,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CEF
+name|CDF
 value|0x00080000
 end_define
 
@@ -169,7 +169,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CGF
+name|CEF
 value|0x00100000
 end_define
 
@@ -180,7 +180,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHF
+name|CGF
 value|0x00200000
 end_define
 
@@ -191,15 +191,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLF
+name|CHF
 value|0x00400000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTF
-value|0x00800000
 end_define
 
 begin_comment
@@ -209,7 +202,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CUF
+name|CLF
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTF
 value|0x01000000
 end_define
 
@@ -220,15 +220,37 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CXF
+name|CUF
 value|0x02000000
+end_define
+
+begin_comment
+comment|/* nonstandard extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CXF
+value|0x04000000
 end_define
 
 begin_define
 define|#
 directive|define
+name|CYF
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* nonstandard extension */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CZF
-value|0x04000000
+value|0x10000000
 end_define
 
 begin_comment
@@ -243,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|FLGCH
-value|"abcdfiklnoprstuvwxBEGHLTUXZ"
+value|"abcdfiklnoprstuvwxBDEGHLTUXYZ"
 end_define
 
 begin_comment
@@ -317,13 +339,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BDLIST
-value|(AF|BF|IF|KF|LF|OF|PF|RF|TF|UF|WF|XF|CBF|CHF|CLF|CXF|CZF)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BDEXTR
 value|(AF|BF|LF|TF|WF|XF|CBF|CHF|CLF|CXF)
 end_define
@@ -332,7 +347,7 @@ begin_define
 define|#
 directive|define
 name|BDARCH
-value|(CF|KF|LF|NF|PF|RF|CEF|CZF)
+value|(CF|KF|LF|NF|PF|RF|CDF|CEF|CYF|CZF)
 end_define
 
 begin_define
@@ -340,6 +355,13 @@ define|#
 directive|define
 name|BDCOPY
 value|(AF|BF|FF|OF|XF|CBF|CEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDLIST
+value|(AF|BF|IF|KF|LF|OF|PF|RF|TF|UF|WF|XF|CBF|CDF|CHF|CLF|CXF|CYF|CZF)
 end_define
 
 end_unit
