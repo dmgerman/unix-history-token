@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.5 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,12 +67,6 @@ directive|include
 file|<ndbm.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|static
-end_define
-
 begin_decl_stmt
 specifier|static
 name|DBM
@@ -100,11 +94,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|_pw_euid
-init|=
-operator|-
-literal|1
-decl_stmt|,
 name|_pw_fd
 decl_stmt|,
 name|_pw_rewind
@@ -219,23 +208,6 @@ operator|!=
 name|_PW_KEYBYNAME
 condition|)
 do|;
-if|if
-condition|(
-name|_pw_euid
-operator|==
-operator|-
-literal|1
-condition|)
-name|_pw_euid
-operator|=
-name|geteuid
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|_pw_euid
-condition|)
 name|getpw
 argument_list|()
 expr_stmt|;
@@ -354,23 +326,6 @@ condition|)
 name|endpwent
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|_pw_euid
-operator|==
-operator|-
-literal|1
-condition|)
-name|_pw_euid
-operator|=
-name|geteuid
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|_pw_euid
-condition|)
 name|getpw
 argument_list|()
 expr_stmt|;
@@ -489,23 +444,6 @@ condition|)
 name|endpwent
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|_pw_euid
-operator|==
-operator|-
-literal|1
-condition|)
-name|_pw_euid
-operator|=
-name|geteuid
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|_pw_euid
-condition|)
 name|getpw
 argument_list|()
 expr_stmt|;
@@ -1411,6 +1349,10 @@ index|[
 literal|50
 index|]
 block|;
+name|off_t
+name|lseek
+argument_list|()
+block|;
 name|long
 name|pos
 block|,
@@ -1424,6 +1366,15 @@ name|char
 operator|*
 name|p
 block|;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+condition|)
+return|return;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -1447,6 +1398,9 @@ condition|)
 goto|goto
 name|bad
 goto|;
+end_if
+
+begin_expr_stmt
 name|pos
 operator|=
 name|atol
@@ -1551,14 +1505,12 @@ break|break;
 block|}
 end_for
 
-begin_if
-if|if
-condition|(
-operator|!
-name|_pw_stayopen
-condition|)
+begin_label
 name|bad
 label|:
+end_label
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1567,7 +1519,7 @@ argument_list|(
 name|_pw_fd
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 unit|}
 end_unit
