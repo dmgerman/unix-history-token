@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.44 2000/04/27 15:26:48 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.47 2000/09/24 02:08:38 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1377,11 +1377,9 @@ begin_function
 name|usbd_status
 name|uhub_explore
 parameter_list|(
-name|dev
-parameter_list|)
 name|usbd_device_handle
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|usb_hub_descriptor_t
 modifier|*
@@ -1616,11 +1614,8 @@ condition|(
 name|up
 operator|->
 name|restartcnt
-operator|++
-operator|<
-name|USBD_RESTART_MAX
 condition|)
-block|{
+comment|/* no message first time */
 name|printf
 argument_list|(
 literal|"%s: port error, restarting "
@@ -1636,12 +1631,19 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|restartcnt
+operator|++
+operator|<
+name|USBD_RESTART_MAX
+condition|)
 goto|goto
 name|disco
 goto|;
-block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"%s: port error, giving up "
@@ -1657,7 +1659,6 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -1834,12 +1835,6 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
-name|restartcnt
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Wait for maximum device power up time. */
 name|usbd_delay_ms
 argument_list|(
@@ -1952,16 +1947,16 @@ argument_list|,
 name|UHF_PORT_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we don't try to restart it infinitely. */
+block|}
+else|else
+block|{
+comment|/* The port set up succeeded, reset error count. */
 name|up
 operator|->
 name|restartcnt
 operator|=
-name|USBD_RESTART_MAX
+literal|0
 expr_stmt|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 name|up
@@ -2011,17 +2006,13 @@ begin_function
 name|int
 name|uhub_activate
 parameter_list|(
-name|self
-parameter_list|,
-name|act
-parameter_list|)
 name|device_ptr_t
 name|self
-decl_stmt|;
+parameter_list|,
 name|enum
 name|devact
 name|act
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|uhub_softc
@@ -2119,6 +2110,12 @@ condition|(
 name|dev
 operator|!=
 name|NULL
+operator|&&
+name|dev
+operator|->
+name|subdevs
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
@@ -2133,6 +2130,8 @@ name|subdevs
 index|[
 name|i
 index|]
+operator|!=
+name|NULL
 condition|;
 name|i
 operator|++
@@ -2357,16 +2356,12 @@ name|Static
 name|void
 name|uhub_child_detached
 parameter_list|(
+name|device_t
 name|self
 parameter_list|,
+name|device_t
 name|child
 parameter_list|)
-name|device_t
-name|self
-decl_stmt|;
-name|device_t
-name|child
-decl_stmt|;
 block|{
 name|struct
 name|uhub_softc
@@ -2515,21 +2510,15 @@ begin_function
 name|void
 name|uhub_intr
 parameter_list|(
-name|xfer
-parameter_list|,
-name|addr
-parameter_list|,
-name|status
-parameter_list|)
 name|usbd_xfer_handle
 name|xfer
-decl_stmt|;
+parameter_list|,
 name|usbd_private_handle
 name|addr
-decl_stmt|;
+parameter_list|,
 name|usbd_status
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|uhub_softc
