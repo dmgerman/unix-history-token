@@ -546,6 +546,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* XXX: mtx == NULL ?? */
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
@@ -2349,6 +2350,7 @@ operator|!=
 name|TDI_SWAPPED
 condition|)
 return|return;
+comment|/* XXX: intentional fall-through ? */
 case|case
 name|TDS_CAN_RUN
 case|:
