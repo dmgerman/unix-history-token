@@ -262,7 +262,7 @@ define|#
 directive|define
 name|CHECKALT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|sgp
 parameter_list|,
@@ -271,7 +271,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_find(p, sgp, path,&path, i);	\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
+value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_find(td, sgp, path,&path, i);	\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
 end_define
 
 begin_define
@@ -279,13 +279,13 @@ define|#
 directive|define
 name|CHECKALTEXIST
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|sgp
 parameter_list|,
 name|path
 parameter_list|)
-value|CHECKALT(p, sgp, path, 0)
+value|CHECKALT(td, sgp, path, 0)
 end_define
 
 begin_define
@@ -293,13 +293,13 @@ define|#
 directive|define
 name|CHECKALTCREAT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|sgp
 parameter_list|,
 name|path
 parameter_list|)
-value|CHECKALT(p, sgp, path, 1)
+value|CHECKALT(td, sgp, path, 1)
 end_define
 
 begin_define
@@ -365,7 +365,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|int									\ linux_ ## s(struct thread *p, struct linux_ ## s ## _args *args)	\ {									\ 	return (unimplemented_syscall(p, #s));				\ }									\ struct __hack
+value|int									\ linux_ ## s(struct thread *td, struct linux_ ## s ## _args *args)	\ {									\ 	return (unimplemented_syscall(td, #s));				\ }									\ struct __hack
 end_define
 
 begin_function_decl
