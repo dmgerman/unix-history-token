@@ -3486,9 +3486,17 @@ name|hwrev
 operator|==
 name|RL_HWREV_8139CPLUS
 operator|||
+operator|(
 name|hwrev
 operator|==
 name|RL_HWREV_8169
+operator|&&
+name|t
+operator|->
+name|rl_did
+operator|==
+name|RT_DEVICEID_8169
+operator|)
 operator|||
 name|hwrev
 operator|==
