@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.1 (Berkeley) %G%"
+literal|"@(#)headers.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,24 +36,6 @@ include|#
 directive|include
 file|"sendmail.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|headers
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
@@ -419,9 +401,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ADDRESS
-name|fromaddr
-decl_stmt|;
 if|if
 condition|(
 name|strcmp
