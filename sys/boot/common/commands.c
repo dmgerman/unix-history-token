@@ -1082,11 +1082,14 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|pager_output
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
 block|}
 name|pager_close
 argument_list|()
