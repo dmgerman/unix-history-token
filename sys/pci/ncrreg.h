@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.1 1994/10/12 02:21:56 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.2 1995/02/02 13:12:16 davidg Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -14,9 +14,6 @@ define|#
 directive|define
 name|__NCR_REG_H__
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------------- ** **	The ncr 53c810 register structure. ** **----------------------------------------------------------------- */
@@ -637,9 +634,6 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------- ** **	Utility macros for the script. ** **----------------------------------------------------------- */
 end_comment
@@ -797,9 +791,6 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------- ** **	Selection ** **----------------------------------------------------------- ** **	SEL_ABS | SCR_ID (0..7)     [ | REL_JMP] **<<alternate_address>> ** **	SEL_TBL |<< dnad_offset>>  [ | REL_JMP] **<<alternate_address>> ** **----------------------------------------------------------- */
 end_comment
@@ -887,9 +878,6 @@ name|SCR_WAIT_RESEL
 value|0x50000000
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------- ** **	Bit Set / Reset ** **----------------------------------------------------------- ** **	SET (flags {|.. }) ** **	CLR (flags {|.. }) ** **----------------------------------------------------------- */
 end_comment
@@ -955,9 +943,6 @@ name|n
 parameter_list|)
 value|(0xc0000000 | (n))
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------- ** **	Register move and binary operations ** **----------------------------------------------------------- ** **	SFBR_REG (reg, op, data)        reg  = SFBR op data **<< 0>> ** **	REG_SFBR (reg, op, data)        SFBR = reg op data **<< 0>> ** **	REG_REG  (reg, op, data)        reg  = reg op data **<< 0>> ** **----------------------------------------------------------- */
@@ -1074,9 +1059,6 @@ name|SCR_ADDC
 value|0x07000000
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*----------------------------------------------------------- ** **	FROM_REG (reg)		  reg  = SFBR **<< 0>> ** **	TO_REG	 (reg)		  SFBR = reg **<< 0>> ** **	LOAD_REG (reg, data)	  reg  =<data> **<< 0>> ** **	LOAD_SFBR(data) 	  SFBR =<data> **<< 0>> ** **----------------------------------------------------------- */
 end_comment
@@ -1126,9 +1108,6 @@ parameter_list|)
 define|\
 value|(SCR_REG_SFBR (gpreg, SCR_LOAD, data))
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------- ** **	Waiting for Disconnect or Reselect ** **----------------------------------------------------------- ** **	JUMP            [ | IFTRUE/IFFALSE ( ... ) ] **<<address>> ** **	JUMPR           [ | IFTRUE/IFFALSE ( ... ) ] **<<distance>> ** **	CALL            [ | IFTRUE/IFFALSE ( ... ) ] **<<address>> ** **	CALLR           [ | IFTRUE/IFFALSE ( ... ) ] **<<distance>> ** **	RETURN          [ | IFTRUE/IFFALSE ( ... ) ] **<<dummy>> ** **	INT             [ | IFTRUE/IFFALSE ( ... ) ] **<<ident>> ** **	INT_FLY         [ | IFTRUE/IFFALSE ( ... ) ] **<<ident>> ** **	Conditions: **	     WHEN (phase) **	     IF   (phase) **	     CARRY **	     DATA (data, mask) ** **----------------------------------------------------------- */
@@ -1251,9 +1230,6 @@ directive|define
 name|CARRYSET
 value|(0x00200000)
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*----------------------------------------------------------- ** **	SCSI  constants. ** **----------------------------------------------------------- */
