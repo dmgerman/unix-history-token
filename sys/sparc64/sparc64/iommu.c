@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, 2000 Matthew R. Green  * Copyright (c) 2001 Thomas Moestl  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999, 2000 Matthew R. Green  * Copyright (c) 2001-2003 Thomas Moestl  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* DVMA memory rman. */
+comment|/* DVMA space rman. */
 end_comment
 
 begin_decl_stmt
@@ -625,7 +625,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|PAGE_SIZE
+name|IOTSB_BASESZ
 operator|<<
 name|is
 operator|->
@@ -1047,26 +1047,21 @@ block|{
 name|int64_t
 name|tte
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|va
-operator|<
+operator|>=
 name|is
 operator|->
 name|is_dvmabase
-condition|)
-name|panic
-argument_list|(
-literal|"iommu_enter: va %#lx not in DVMA space"
 argument_list|,
+operator|(
+literal|"iommu_enter: va %#lx not in DVMA space"
+operator|,
 name|va
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|tte
 operator|=
 name|MAKEIOTTE
@@ -1521,9 +1516,6 @@ operator|&
 name|cur
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 operator|!
@@ -1574,8 +1566,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 operator|*
@@ -1851,7 +1841,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * XXX: This will break for 32 bit transfers on machines with more than 	 * 16G (2<< 34 bytes) of memory. 	 */
+comment|/* 	 * XXX: This will break for 32 bit transfers on machines with more than 	 * 16G (1<< 34 bytes) of memory. 	 */
 if|if
 condition|(
 operator|(
@@ -2828,84 +2818,6 @@ directive|ifdef
 name|IOMMU_DIAG
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|IOMMU_DTAG_VPNBITS
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DTAG_VPNMASK
-value|((1<< IOMMU_DTAG_VPNBITS) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DTAG_VPNSHIFT
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DTAG_ERRBITS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DTAG_ERRSHIFT
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DTAG_ERRMASK
-define|\
-value|(((1<< IOMMU_DTAG_ERRBITS) - 1)<< IOMMU_DTAG_ERRSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DDATA_PGBITS
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DDATA_PGMASK
-value|((1<< IOMMU_DDATA_PGBITS) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DDATA_PGSHIFT
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DDATA_C
-value|(1<< 28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOMMU_DDATA_V
-value|(1<< 30)
-end_define
-
 begin_comment
 comment|/*  * Perform an IOMMU diagnostic access and print the tag belonging to va.  */
 end_comment
@@ -2978,6 +2890,7 @@ block|{
 name|printf
 argument_list|(
 literal|", tag compare register is %#lx\n"
+argument_list|,
 name|IOMMU_READ8
 argument_list|(
 name|is
