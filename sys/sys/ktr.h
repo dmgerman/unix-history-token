@@ -351,8 +351,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_GEOM
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* GEOM I/O events */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x02ffffff
+value|0x04ffffff
 end_define
 
 begin_comment

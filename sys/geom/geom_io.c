@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -1642,6 +1648,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|CTR0
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down going to sleep"
+argument_list|)
+expr_stmt|;
 name|msleep
 argument_list|(
 operator|&
@@ -1665,6 +1678,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|CTR0
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down has work to do"
+argument_list|)
+expr_stmt|;
 name|g_bioq_unlock
 argument_list|(
 operator|&
@@ -1678,6 +1698,15 @@ operator|>
 literal|0
 condition|)
 block|{
+name|CTR1
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down pacing self (pace %d)"
+argument_list|,
+name|pace
+argument_list|)
+expr_stmt|;
 name|msleep
 argument_list|(
 operator|&
@@ -1710,6 +1739,24 @@ condition|(
 name|error
 condition|)
 block|{
+name|CTR3
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down g_io_check on bp %p provider "
+literal|"%s returned %d"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
@@ -1719,6 +1766,21 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|CTR2
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down processing bp %p provider %s"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|bp
@@ -1736,6 +1798,7 @@ case|case
 name|BIO_DELETE
 case|:
 comment|/* Truncate requests to the end of providers media. */
+comment|/* 			 * XXX: What if we truncate because of offset being 			 * bad, not length? 			 */
 name|excess
 operator|=
 name|bp
@@ -1771,6 +1834,30 @@ name|bio_length
 operator|-=
 name|excess
 expr_stmt|;
+if|if
+condition|(
+name|excess
+operator|>
+literal|0
+condition|)
+name|CTR3
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down truncated bio "
+literal|"%p provider %s by %d"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+argument_list|,
+name|excess
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Deliver zero length transfers right here. */
 if|if
@@ -1787,6 +1874,22 @@ argument_list|(
 name|bp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down terminated 0-length "
+literal|"bp %p provider %s"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1806,6 +1909,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CTR4
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_down starting bp %p provider %s off %ld "
+literal|"len %ld"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+argument_list|,
+name|bp
+operator|->
+name|bio_offset
+argument_list|,
+name|bp
+operator|->
+name|bio_length
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|bio_to
@@ -2015,6 +2142,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CTR1
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_up processing task bp %p"
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|bio_task
@@ -2069,6 +2205,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CTR4
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_up biodone bp %p provider %s off "
+literal|"%ld len %ld"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|name
+argument_list|,
+name|bp
+operator|->
+name|bio_offset
+argument_list|,
+name|bp
+operator|->
+name|bio_length
+argument_list|)
+expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
@@ -2087,6 +2247,13 @@ endif|#
 directive|endif
 continue|continue;
 block|}
+name|CTR0
+argument_list|(
+name|KTR_GEOM
+argument_list|,
+literal|"g_up going to sleep"
+argument_list|)
+expr_stmt|;
 name|msleep
 argument_list|(
 operator|&
