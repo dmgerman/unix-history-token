@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|ESS_BUFFSIZE
-value|(16384)
+value|(4096)
 end_define
 
 begin_define

@@ -2018,6 +2018,20 @@ name|ad1816_write
 argument_list|(
 name|ad1816
 argument_list|,
+name|wr
+condition|?
+literal|9
+else|:
+literal|11
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* reset cur cnt */
+name|ad1816_write
+argument_list|(
+name|ad1816
+argument_list|,
 literal|1
 argument_list|,
 name|ad1816_read
