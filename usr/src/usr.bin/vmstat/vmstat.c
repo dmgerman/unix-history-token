@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.12 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,24 +51,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
-end_include
 
 begin_include
 include|#
@@ -128,6 +110,30 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -671,7 +677,7 @@ index|]
 decl_stmt|;
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -692,7 +698,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"no /vmunix namelist\n"
+literal|"vmstat: no %s namelist\n"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|exit
@@ -705,7 +713,7 @@ name|mf
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 literal|0
 argument_list|)
@@ -721,7 +729,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cannot open /dev/kmem\n"
+literal|"vmstat: cannot open %s\n"
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -803,7 +813,7 @@ name|mf
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 literal|2
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lib.c	4.1 %G%"
+literal|"@(#)lib.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"xmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -153,16 +159,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/usr/lib/makekey"
-argument_list|,
-literal|"-"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-literal|"/lib/makekey"
+name|_PATH_MAKEKEY
 argument_list|,
 literal|"-"
 argument_list|,

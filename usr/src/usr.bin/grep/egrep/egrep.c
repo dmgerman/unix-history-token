@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.11 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,18 +24,6 @@ end_endif
 begin_comment
 comment|/*      Hybrid Boyer/Moore/Gosper-assisted 'grep/egrep/fgrep' search, with delta0      table as in original paper (CACM, October, 1977).  No delta1 or delta2.      According to experiment (Horspool, Soft. Prac. Exp., 1982), delta2 is of      minimal practical value.  However, to improve for worst case input,      integrating the improved Galil strategies (Apostolico/Giancarlo, SIAM. J.      Comput., Feb. 1986) deserves consideration.       Method: 	extract longest metacharacter-free string from expression. 		this is done using a side-effect from henry spencer's regcomp(). 		use boyer-moore to match such, then pass submatching lines 		to either regexp() or standard 'egrep', depending on certain 		criteria within execstrategy() below.  [this tradeoff is due 		to the general slowness of the regexp() nondeterministic 		machine on complex expressions, as well as the startup time 		of standard 'egrep' on short files.]  alternatively, one may 		change the vendor-supplied 'egrep' automaton to include 		boyer-moore directly.  see accompanying writeup for discussion 		of kanji expression treatment.  		late addition:  apply trickbag for fast match of simple 		alternations (sublinear, in common low-cardinality cases). 		trap fgrep into this lair.  		gnu additions:  -f, newline as |, \< and \> [in regexec()], more 				comments.  inspire better dfa exec() strategy. 				serious testing and help with special cases.       Algorithm amalgam summary:  		dfa e?grep 		(aho/thompson) 		ndfa regexp() 		(spencer/aho) 		bmg			(boyer/moore/gosper) 		"superimposed" bmg   	(jaw) 		fgrep			(aho/corrasick)  		sorry, but the knuth/morris/pratt machine, horspool's 		"frequentist" code, and the rabin/karp matcher, however cute, 		just don't cut it for this production.       James A. Woods				Copyright (c) 1986      NASA Ames Research Center */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -65,6 +53,24 @@ begin_comment
 comment|/* must be henry spencer's version */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -88,64 +94,6 @@ define|#
 directive|define
 name|read
 value|xread
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * define existing [ef]?grep program locations below for use by execvp().  * [execlp() would be used were it not for the possibility of  * installation-dependent recursion.]   */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EGREPSTD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EGREPSTD
-value|"/usr/bin/egrep"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GREPSTD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GREPSTD
-value|"/bin/grep"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FGREPSTD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FGREPSTD
-value|"/usr/bin/fgrep"
 end_define
 
 begin_endif
@@ -4410,7 +4358,7 @@ name|firstfile
 operator|++
 index|]
 operator|=
-literal|"/dev/null"
+name|_PATH_DEVNULL
 expr_stmt|;
 if|if
 condition|(
@@ -4437,7 +4385,7 @@ name|grepflag
 condition|)
 name|execvp
 argument_list|(
-name|GREPSTD
+name|_PATH_GREPSTD
 argument_list|,
 name|args
 argument_list|)
@@ -4454,7 +4402,7 @@ name|fgrepflag
 condition|)
 name|execvp
 argument_list|(
-name|FGREPSTD
+name|_PATH_FGREPSTD
 argument_list|,
 name|args
 argument_list|)
@@ -4467,7 +4415,7 @@ expr_stmt|;
 else|else
 name|execvp
 argument_list|(
-name|EGREPSTD
+name|_PATH_EGREPSTD
 argument_list|,
 name|args
 argument_list|)

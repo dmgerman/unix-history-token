@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.17 (Berkeley) %G%"
+literal|"@(#)command.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<less.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -2307,13 +2313,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-define|#
-directive|define
-name|EDIT_PGM
-value|"/usr/ucb/vi"
 name|editor
 operator|=
-name|EDIT_PGM
+name|_PATH_VI
 expr_stmt|;
 name|dolinenumber
 operator|=

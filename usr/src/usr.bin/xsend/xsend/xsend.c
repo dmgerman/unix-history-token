@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xsend.c	4.5 %G%"
+literal|"@(#)xsend.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,19 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"xmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -48,6 +36,24 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"xmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -106,7 +112,7 @@ name|char
 modifier|*
 name|maildir
 init|=
-literal|"/usr/spool/secretmail/"
+name|_PATH_SECRETMAIL
 decl_stmt|;
 end_decl_stmt
 
@@ -549,7 +555,7 @@ block|{
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|FILE
@@ -569,7 +575,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/bin/mail %s"
+literal|"%s %s"
+argument_list|,
+name|_PATH_MAIL
 argument_list|,
 name|dest
 argument_list|)
@@ -591,7 +599,9 @@ name|NULL
 condition|)
 name|xfatal
 argument_list|(
-literal|"cannot pipe to /bin/mail"
+literal|"cannot pipe to %s"
+argument_list|,
+name|_PATH_MAIL
 argument_list|)
 expr_stmt|;
 name|passp

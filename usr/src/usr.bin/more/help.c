@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)help.c	5.5 (Berkeley) %G%"
+literal|"@(#)help.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,11 @@ directive|include
 file|<less.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|HELPFILE
-value|"/usr/lib/more.help"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_macro
 name|help
@@ -71,7 +70,7 @@ name|cmd
 argument_list|,
 literal|"-more %s"
 argument_list|,
-name|HELPFILE
+name|_PATH_HELPFILE
 argument_list|)
 expr_stmt|;
 name|lsystem

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.14 (Berkeley) %G%"
+literal|"@(#)sort.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -130,9 +136,9 @@ name|dirtry
 index|[]
 init|=
 block|{
-literal|"/usr/tmp"
+name|_PATH_TMP1
 block|,
-literal|"/tmp"
+name|_PATH_TMP2
 block|,
 name|NULL
 block|}

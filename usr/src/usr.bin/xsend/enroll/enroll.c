@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enroll.c	4.2 %G%"
+literal|"@(#)enroll.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,19 +23,25 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"xmail.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pwd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/types.h"
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -92,9 +98,7 @@ name|char
 name|maildir
 index|[]
 init|=
-block|{
-literal|"/usr/spool/secretmail"
-block|}
+name|_PATH_SECRETMAIL
 decl_stmt|;
 end_decl_stmt
 

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)units.c	4.1 (Berkeley) %G%"
+literal|"@(#)units.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -34,7 +40,7 @@ name|char
 modifier|*
 name|dfile
 init|=
-literal|"/usr/lib/units"
+name|_PATH_UNITS
 decl_stmt|;
 end_decl_stmt
 

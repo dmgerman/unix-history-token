@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xget.c	4.4 %G%"
+literal|"@(#)xget.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"xmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -36,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -53,7 +53,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"xmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -82,7 +88,7 @@ name|char
 modifier|*
 name|maildir
 init|=
-literal|"/usr/spool/secretmail/"
+name|_PATH_SECRETMAIL
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.9 (Berkeley) %G%"
+literal|"@(#)os.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<less.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -206,7 +212,7 @@ if|if
 condition|(
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 name|O_RDONLY
 argument_list|,

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)users.c	5.6 (Berkeley) %G%"
+literal|"@(#)users.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,13 +86,6 @@ define|#
 directive|define
 name|MAXUSERS
 value|200
-end_define
-
-begin_define
-define|#
-directive|define
-name|UTMP_FILE
-value|"/etc/utmp"
 end_define
 
 begin_decl_stmt
@@ -151,16 +144,23 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|UTMP_FILE
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|UTMP_FILE
+name|stderr
+argument_list|,
+literal|"users: can't open %s.\n"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|exit
