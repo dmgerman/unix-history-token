@@ -4249,8 +4249,6 @@ operator||
 name|AHD_NEW_DFCNTRL_OPTS
 operator||
 name|AHD_FAST_CDB_DELIVERY
-operator||
-name|AHD_BUSFREEREV_BUG
 expr_stmt|;
 name|ahd
 operator|->
@@ -4259,6 +4257,8 @@ operator||=
 name|AHD_LQOOVERRUN_BUG
 operator||
 name|AHD_EARLY_REQ_BUG
+operator||
+name|AHD_BUSFREEREV_BUG
 expr_stmt|;
 comment|/* 		 * Some issues have been resolved in the 7901B. 		 */
 if|if
