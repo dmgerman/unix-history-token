@@ -235,6 +235,10 @@ name|off_t
 name|ds_offset_done
 decl_stmt|;
 comment|/* Offset of already synchronized 					   region. */
+name|off_t
+name|ds_resync
+decl_stmt|;
+comment|/* Resynchronize from this offset. */
 name|u_int
 name|ds_syncid
 decl_stmt|;
