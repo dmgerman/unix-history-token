@@ -1076,7 +1076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Store the value of a property of a package into newly allocated memory (using  * the M_OFWPROP malloc pool and M_WAITOK). elsz is the size of a single element,  * the number of elements is return in number.  */
+comment|/*  * Store the value of a property of a package into newly allocated memory  * (using the M_OFWPROP malloc pool and M_WAITOK). elsz is the size of a  * single element, the number of elements is return in number.  */
 end_comment
 
 begin_function
@@ -1351,7 +1351,6 @@ decl_stmt|;
 name|cell_t
 name|buf
 decl_stmt|;
-empty_stmt|;
 name|cell_t
 name|len
 decl_stmt|;
