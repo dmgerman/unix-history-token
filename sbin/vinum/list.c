@@ -4999,7 +4999,7 @@ case|:
 comment|/* this is the bp when strategy is called */
 name|printf
 argument_list|(
-literal|"%s %dVS %s %p\t%d.%-6d 0x%-9x\t%ld\n"
+literal|"%s %dVS %s %p\t%2d.%-6d 0x%9llx\t%d\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5067,7 +5067,7 @@ case|:
 comment|/* and this is the bp at launch time */
 name|printf
 argument_list|(
-literal|"%s %dLR %s %p\t%d.%-6d 0x%-9x\t%ld\n"
+literal|"%s %dLR %s %p\t%2d.%-6d 0x%9llx\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5131,7 +5131,7 @@ case|:
 comment|/* user RQE */
 name|printf
 argument_list|(
-literal|"%s 3RQ %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 3RQ %s %p\t%2d.%-6d 0x%9llx\t%ld\t%d\t%6x\t%6x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5229,7 +5229,7 @@ case|:
 comment|/* iodone called */
 name|printf
 argument_list|(
-literal|"%s 4DN %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 4DN %s %p\t%2d.%-6d 0x%9llx\t%ld\t%d\t%6x\t%6x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5327,7 +5327,7 @@ case|:
 comment|/* RAID-5 write data block */
 name|printf
 argument_list|(
-literal|"%s 5RD %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 5RD %s %p\t%2d.%-6d 0x%9llx\t%ld\t%d\t%6x\t%6x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5425,7 +5425,7 @@ case|:
 comment|/* RAID-5 write parity block */
 name|printf
 argument_list|(
-literal|"%s 6RP %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 6RP %s %p\t%2d.%-6d 0x%9llx\t%ld\t%d\t%6x\t%6x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5523,7 +5523,7 @@ case|:
 comment|/* subdisk I/O */
 name|printf
 argument_list|(
-literal|"%s %dVS %s %p\t\t  0x%-9x\t%ld\t%d\n"
+literal|"%s %dVS %s %p\t\t  0x%9llx\t%ld\t%d\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -5583,7 +5583,7 @@ case|:
 comment|/* subdisk I/O done */
 name|printf
 argument_list|(
-literal|"%s %dSD %s %p\t\t  0x%-9x\t%ld\t%d\n"
+literal|"%s %dSD %s %p\t\t  0x%9llx\t%ld\t%d\n"
 argument_list|,
 name|timetext
 argument_list|(
