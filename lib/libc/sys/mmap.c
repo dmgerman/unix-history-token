@@ -60,7 +60,8 @@ comment|/*  * This function provides 64-bit offset padding that  * is not suppli
 end_comment
 
 begin_function
-name|caddr_t
+name|void
+modifier|*
 name|mmap
 parameter_list|(
 name|addr
@@ -75,7 +76,8 @@ name|fd
 parameter_list|,
 name|offset
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|addr
 decl_stmt|;
 name|size_t
@@ -97,7 +99,8 @@ block|{
 return|return
 operator|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 name|__syscall
 argument_list|(
