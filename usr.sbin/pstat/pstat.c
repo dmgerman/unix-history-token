@@ -133,12 +133,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/swap_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -2505,7 +2499,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-15s %*s %8s %8s %8s  %s\n"
+literal|"%-15s %*s %8s %8s %8s\n"
 argument_list|,
 literal|"Device"
 argument_list|,
@@ -2518,8 +2512,6 @@ argument_list|,
 literal|"Avail"
 argument_list|,
 literal|"Capacity"
-argument_list|,
-literal|"Type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2610,7 +2602,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8d %8d %5.0f%%    %s\n"
+literal|"%8d %8d %5.0f%%\n"
 argument_list|,
 name|CONVERT
 argument_list|(
@@ -2641,18 +2633,6 @@ operator|/
 name|ksw
 operator|->
 name|ksw_total
-argument_list|,
-operator|(
-name|ksw
-operator|->
-name|ksw_flags
-operator|&
-name|SW_SEQUENTIAL
-operator|)
-condition|?
-literal|"Sequential"
-else|:
-literal|"Interleaved"
 argument_list|)
 expr_stmt|;
 block|}
