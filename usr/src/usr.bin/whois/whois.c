@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.9 (Berkeley) %G%"
+literal|"@(#)whois.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,9 +202,8 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|argc
-operator|!=
-literal|1
 condition|)
 name|usage
 argument_list|()
@@ -480,6 +479,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|argc
+operator|--
+operator|>
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|sfo
+argument_list|,
+literal|"%s "
+argument_list|,
+operator|*
+name|argv
+operator|++
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -527,10 +547,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 operator|(
 name|void
@@ -539,15 +561,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-h host] name\n"
+literal|"usage: whois [-h hostname] name ...\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
