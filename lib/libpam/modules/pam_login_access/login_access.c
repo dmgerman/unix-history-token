@@ -3,12 +3,6 @@ begin_comment
 comment|/*   * This module implements a simple but effective form of login access   * control based on login names and on host (or domain) names, internet   * addresses (or network numbers), or on terminal line names in case of   * non-networked logins. Diagnostics are reported through syslog(3).   *   * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOGIN_ACCESS
-end_ifdef
-
 begin_if
 if|#
 directive|if
@@ -100,17 +94,12 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"login.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
+begin_define
+define|#
+directive|define
+name|_PATH_LOGACCESS
+value|"/etc/login.access"
+end_define
 
 begin_comment
 comment|/* Delimiters for fields and for lists of users, ttys or hosts. */
@@ -1281,15 +1270,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOGIN_ACCES */
-end_comment
 
 end_unit
 
