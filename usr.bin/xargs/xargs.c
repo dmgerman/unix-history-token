@@ -2118,8 +2118,11 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|wait3
+name|waitpid
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 operator|&
 name|status
 argument_list|,
@@ -2133,8 +2136,6 @@ condition|?
 name|WNOHANG
 else|:
 literal|0
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 operator|>
