@@ -53,6 +53,18 @@ directive|include
 file|<pci/pcic_p.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -308,7 +320,7 @@ literal|" %08x"
 argument_list|,
 name|pci_conf_read
 argument_list|(
-name|tag
+name|config_id
 argument_list|,
 name|i
 operator|+
@@ -332,7 +344,7 @@ name|pmap_mapdev
 argument_list|(
 name|pci_conf_read
 argument_list|(
-name|tag
+name|config_id
 argument_list|,
 literal|0x10
 argument_list|)
