@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.12 (Berkeley) %G%"
+literal|"@(#)logger.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,8 @@ name|optarg
 decl_stmt|;
 specifier|extern
 name|int
+name|errno
+decl_stmt|,
 name|optind
 decl_stmt|;
 name|int
@@ -122,6 +124,10 @@ index|]
 decl_stmt|,
 modifier|*
 name|getlogin
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
 argument_list|()
 decl_stmt|;
 name|tag
@@ -171,14 +177,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
-literal|"logger: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+name|stderr
+argument_list|,
+literal|"logger: %s: %s.\n"
+argument_list|,
 name|optarg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
