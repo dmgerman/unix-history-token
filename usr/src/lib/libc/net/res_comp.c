@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.12 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,7 +1123,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Routines to insert/extract short/long's. Must account for byte  * order and non-alignment problems. This code at least has the  * advantage of being portable.  */
+comment|/*  * Routines to insert/extract short/long's. Must account for byte  * order and non-alignment problems. This code at least has the  * advantage of being portable.  *  * used by sendmail.  */
 end_comment
 
 begin_function
