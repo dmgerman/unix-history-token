@@ -30,10 +30,10 @@ name|void
 name|atomic_set_8
 parameter_list|(
 specifier|volatile
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -43,10 +43,10 @@ name|void
 name|atomic_clear_8
 parameter_list|(
 specifier|volatile
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -56,10 +56,10 @@ name|void
 name|atomic_add_8
 parameter_list|(
 specifier|volatile
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -69,10 +69,10 @@ name|void
 name|atomic_subtract_8
 parameter_list|(
 specifier|volatile
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -82,10 +82,10 @@ name|void
 name|atomic_set_16
 parameter_list|(
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -95,10 +95,10 @@ name|void
 name|atomic_clear_16
 parameter_list|(
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -108,10 +108,10 @@ name|void
 name|atomic_add_16
 parameter_list|(
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -121,10 +121,10 @@ name|void
 name|atomic_subtract_16
 parameter_list|(
 specifier|volatile
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -136,15 +136,15 @@ name|void
 name|atomic_set_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|v
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|temp
 decl_stmt|;
 ifdef|#
@@ -200,15 +200,15 @@ name|void
 name|atomic_clear_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|v
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|temp
 decl_stmt|;
 ifdef|#
@@ -264,15 +264,15 @@ name|void
 name|atomic_add_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|v
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|temp
 decl_stmt|;
 ifdef|#
@@ -328,15 +328,15 @@ name|void
 name|atomic_subtract_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|v
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|temp
 decl_stmt|;
 ifdef|#
@@ -388,16 +388,16 @@ end_endif
 begin_function
 unit|}  static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|atomic_readandclear_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|result
 decl_stmt|,
 name|temp
@@ -593,14 +593,19 @@ name|p
 parameter_list|,
 name|v
 parameter_list|)
-value|atomic_add_32((u_int32_t *)p, (u_int32_t)v)
+value|atomic_add_32((uint32_t *)p, (uint32_t)v)
 end_define
 
 begin_define
 define|#
 directive|define
 name|atomic_subtract_long
-value|atomic_subtract_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+value|atomic_subtract_32((uint32_t *)p, (uint32_t)v)
 end_define
 
 begin_define
@@ -854,17 +859,17 @@ name|ATOMIC_STORE_LOAD
 comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|atomic_cmpset_32
 argument_list|(
-argument|volatile u_int32_t* p
+argument|volatile uint32_t* p
 argument_list|,
-argument|u_int32_t cmpval
+argument|uint32_t cmpval
 argument_list|,
-argument|u_int32_t newval
+argument|uint32_t newval
 argument_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|ret
 block|;
 ifdef|#
@@ -1021,18 +1026,18 @@ name|atomic_cmpset_32
 argument_list|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|dst
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|exp
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|src
 argument_list|)
@@ -1044,18 +1049,18 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|atomic_cmpset_acq_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cmpval
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|newval
 parameter_list|)
 block|{
@@ -1087,18 +1092,18 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|atomic_cmpset_rel_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cmpval
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|newval
 parameter_list|)
 block|{
@@ -1174,18 +1179,18 @@ name|atomic_cmpset_acq_32
 argument_list|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|dst
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|exp
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|src
 argument_list|)
@@ -1220,18 +1225,18 @@ name|atomic_cmpset_rel_32
 argument_list|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|dst
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|exp
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|src
 argument_list|)
@@ -1262,7 +1267,7 @@ name|atomic_load_acq_32
 argument_list|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|p
@@ -1291,13 +1296,13 @@ name|atomic_store_rel_32
 argument_list|(
 operator|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|p
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|v
 argument_list|)
@@ -1313,7 +1318,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|static __inline void						\ atomic_##NAME##_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_32((volatile u_int32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_acq_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_acq_32((volatile u_int32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_rel_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_rel_32((volatile u_int32_t *)p, v);	\ }
+value|static __inline void						\ atomic_##NAME##_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_32((volatile uint32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_acq_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_acq_32((volatile uint32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_rel_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_rel_32((volatile uint32_t *)p, v);	\ }
 end_define
 
 begin_macro
