@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -1413,11 +1413,6 @@ block|}
 comment|/* now close the connection */
 name|smtpquit
 argument_list|(
-name|pv
-index|[
-literal|0
-index|]
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;

@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -1245,32 +1245,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPQUIT -- close the SMTP connection. ** **	Parameters: **		name -- name of mailer we are quitting. ** **	Returns: **		none. ** **	Side Effects: **		sends the final protocol and closes the connection. */
+comment|/* **  SMTPQUIT -- close the SMTP connection. ** **	Parameters: **		m -- a pointer to the mailer. ** **	Returns: **		none. ** **	Side Effects: **		sends the final protocol and closes the connection. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|smtpquit
 argument_list|(
-argument|name
-argument_list|,
-argument|m
+name|m
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|MAILER
-modifier|*
+operator|*
 name|m
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1354,7 +1342,12 @@ name|endmailer
 argument_list|(
 name|SmtpPid
 argument_list|,
-name|name
+name|m
+operator|->
+name|m_argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -1367,7 +1360,12 @@ name|syserr
 argument_list|(
 literal|"smtpquit %s: stat %d"
 argument_list|,
-name|name
+name|m
+operator|->
+name|m_argv
+index|[
+literal|0
+index|]
 argument_list|,
 name|i
 argument_list|)
@@ -1551,8 +1549,6 @@ name|SMTP_CLOSED
 expr_stmt|;
 name|smtpquit
 argument_list|(
-literal|"reply error"
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -1704,8 +1700,6 @@ name|SMTP_SSD
 expr_stmt|;
 name|smtpquit
 argument_list|(
-literal|"SMTP Shutdown"
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;

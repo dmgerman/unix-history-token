@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -1862,7 +1862,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. ** **	Returns: **		NULL on error (including timeout). **		buf otherwise. ** **	Side Effects: **		none. */
+comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. ** **	Returns: **		NULL on error (including timeout).  This will also leave **			buf containing a null string. **		buf otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -1963,8 +1963,32 @@ begin_comment
 comment|/* try to read */
 end_comment
 
-begin_do
-do|do
+begin_expr_stmt
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
+name|p
+operator|==
+name|NULL
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+operator|&&
+operator|!
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
 block|{
 name|errno
 operator|=
@@ -1981,19 +2005,19 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
-do|while
+if|if
 condition|(
-name|p
-operator|==
-name|NULL
-operator|&&
 name|errno
 operator|==
 name|EINTR
 condition|)
-do|;
-end_do
+name|clearerr
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+end_while
 
 begin_comment
 comment|/* clear the event if it has not sprung */
@@ -2016,6 +2040,22 @@ name|LineNumber
 operator|++
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+end_if
 
 begin_return
 return|return
