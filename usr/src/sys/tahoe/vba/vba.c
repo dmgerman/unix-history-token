@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vba.c	1.7	87/04/06	*/
+comment|/*	vba.c	1.8	87/06/06	*/
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -206,9 +212,16 @@ name|vb
 operator|->
 name|vb_rawbuf
 operator|=
-name|calloc
+operator|(
+name|caddr_t
+operator|)
+name|malloc
 argument_list|(
 name|n
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
