@@ -1684,6 +1684,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|WATCHDOC_HZ
+value|10
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -1699,6 +1706,12 @@ name|firewire_comm
 modifier|*
 name|fc
 decl_stmt|;
+specifier|static
+name|int
+name|watchdoc_clock
+init|=
+literal|0
+decl_stmt|;
 name|fc
 operator|=
 operator|(
@@ -1708,6 +1721,16 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+comment|/* 	 * At boot stage, the device interrupt is disabled and 	 * We encounter a timeout easily. To avoid this, 	 * ignore clock interrupt for a while. 	 */
+if|if
+condition|(
+name|watchdoc_clock
+operator|>
+name|WATCHDOC_HZ
+operator|*
+literal|15
+condition|)
+block|{
 name|firewire_xfer_timeout
 argument_list|(
 name|fc
@@ -1720,6 +1743,11 @@ argument_list|(
 name|fc
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|watchdoc_clock
+operator|++
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -1729,7 +1757,7 @@ name|timeout_callout
 argument_list|,
 name|hz
 operator|/
-literal|10
+name|WATCHDOC_HZ
 argument_list|,
 operator|(
 name|void
