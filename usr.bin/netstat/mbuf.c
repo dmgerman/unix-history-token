@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.13 1998/08/18 13:36:47 jb Exp $"
+literal|"$Id: mbuf.c,v 1.14 1998/08/23 15:23:11 gpalmer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,6 +175,9 @@ block|,
 comment|/* XXX */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MT_RTABLE
 block|{
 name|MT_RTABLE
 block|,
@@ -182,6 +185,8 @@ literal|"routing table entries"
 block|}
 block|,
 comment|/* XXX */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MT_HTABLE
