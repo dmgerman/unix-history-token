@@ -330,7 +330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Check to see if file is a file or symlink pointing to a file and is empty.  * If nonexistent or not a file, say "it's empty", otherwise return TRUE if  * zero sized.  */
+comment|/*  * Check to see if file is a file or symlink pointing to a file and is empty.  * If nonexistent or not a file, say "it's empty", otherwise return TRUE if  * zero sized.  */
 end_comment
 
 begin_function
