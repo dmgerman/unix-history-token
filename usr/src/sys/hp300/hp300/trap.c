@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.14.1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.14.1.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -360,6 +360,9 @@ name|syst
 decl_stmt|;
 name|unsigned
 name|ncode
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 name|cnt
 operator|.
@@ -974,9 +977,11 @@ if|if
 condition|(
 name|type
 operator|!=
+operator|(
 name|T_ASTFLT
 operator||
 name|T_USER
+operator|)
 condition|)
 block|{
 name|cnt
@@ -1404,9 +1409,8 @@ name|want_resched
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
@@ -1426,6 +1430,11 @@ operator|++
 expr_stmt|;
 name|swtch
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1615,6 +1624,8 @@ decl_stmt|,
 name|opc
 decl_stmt|,
 name|numsys
+decl_stmt|,
+name|s
 decl_stmt|;
 struct|struct
 name|args
@@ -2187,9 +2198,8 @@ name|want_resched
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
@@ -2209,6 +2219,11 @@ operator|++
 expr_stmt|;
 name|swtch
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
