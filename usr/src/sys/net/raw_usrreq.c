@@ -69,12 +69,6 @@ directive|include
 file|"raw_cb.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"machine/mtpr.h"
-end_include
-
 begin_comment
 comment|/*  * Initialize raw connection block q.  */
 end_comment
