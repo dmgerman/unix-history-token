@@ -2368,6 +2368,11 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"MBREXT Slice %d on %s:\n"
@@ -2397,6 +2402,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
