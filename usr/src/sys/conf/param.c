@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -206,9 +206,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nfile
+name|maxfiles
 init|=
-literal|16
+literal|3
 operator|*
 operator|(
 name|NPROC
@@ -217,8 +217,6 @@ literal|16
 operator|+
 name|MAXUSERS
 operator|)
-operator|/
-literal|10
 operator|+
 literal|32
 decl_stmt|;
