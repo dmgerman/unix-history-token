@@ -35660,6 +35660,39 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+comment|/* 	 *  Initialyze the CCB free and busy queues. 	 */
+name|sym_que_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|free_ccbq
+argument_list|)
+expr_stmt|;
+name|sym_que_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|busy_ccbq
+argument_list|)
+expr_stmt|;
+name|sym_que_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|comp_ccbq
+argument_list|)
+expr_stmt|;
+name|sym_que_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|cam_ccbq
+argument_list|)
+expr_stmt|;
 comment|/* 	 *  Allocate a tag for the DMA of user data. 	 */
 ifdef|#
 directive|ifdef
@@ -36734,31 +36767,7 @@ condition|)
 goto|goto
 name|attach_failed
 goto|;
-comment|/* 	 *  Initialyze the CCB free and busy queues. 	 *  Allocate some CCB. We need at least ONE. 	 */
-name|sym_que_init
-argument_list|(
-operator|&
-name|np
-operator|->
-name|free_ccbq
-argument_list|)
-expr_stmt|;
-name|sym_que_init
-argument_list|(
-operator|&
-name|np
-operator|->
-name|busy_ccbq
-argument_list|)
-expr_stmt|;
-name|sym_que_init
-argument_list|(
-operator|&
-name|np
-operator|->
-name|comp_ccbq
-argument_list|)
-expr_stmt|;
+comment|/* 	 *  Allocate some CCB. We need at least ONE. 	 */
 if|if
 condition|(
 operator|!
@@ -36770,15 +36779,6 @@ condition|)
 goto|goto
 name|attach_failed
 goto|;
-comment|/* 	 * Initialyze the CAM CCB pending queue. 	 */
-name|sym_que_init
-argument_list|(
-operator|&
-name|np
-operator|->
-name|cam_ccbq
-argument_list|)
-expr_stmt|;
 comment|/* 	 *  Calculate BUS addresses where we are going  	 *  to load the SCRIPTS. 	 */
 name|np
 operator|->
