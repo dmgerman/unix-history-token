@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.4 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2182,6 +2182,14 @@ name|RPCPROG_NFS
 argument_list|,
 name|NFS_VER2
 argument_list|,
+name|nfsargsp
+operator|->
+name|sotype
+operator|==
+name|SOCK_STREAM
+condition|?
+name|IPPROTO_TCP
+else|:
 name|IPPROTO_UDP
 argument_list|)
 operator|)
@@ -2230,6 +2238,30 @@ condition|(
 operator|(
 name|clp
 operator|=
+operator|(
+name|nfsargsp
+operator|->
+name|sotype
+operator|==
+name|SOCK_STREAM
+condition|?
+name|clnttcp_create
+argument_list|(
+operator|&
+name|saddr
+argument_list|,
+name|RPCPROG_MNT
+argument_list|,
+name|RPCMNT_VER1
+argument_list|,
+operator|&
+name|so
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+else|:
 name|clntudp_create
 argument_list|(
 operator|&
@@ -2244,6 +2276,7 @@ argument_list|,
 operator|&
 name|so
 argument_list|)
+operator|)
 operator|)
 operator|==
 name|NULL
