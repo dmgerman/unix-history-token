@@ -1051,7 +1051,10 @@ name|_C
 block|,
 name|_C
 block|,
+comment|/* Populated from ISO 8859-1, attempt to not violate POSIX/ANSI	*/
 comment|/*A0*/
+name|_B
+operator||
 name|_R
 block|,
 name|_P
