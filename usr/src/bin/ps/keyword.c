@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.16 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,7 +1095,7 @@ argument_list|(
 name|p_pid
 argument_list|)
 block|,
-name|SHORT
+name|LONG
 block|,
 name|PIDFMT
 block|}
@@ -1126,7 +1126,7 @@ argument_list|(
 name|e_ppid
 argument_list|)
 block|,
-name|SHORT
+name|LONG
 block|,
 name|PIDFMT
 block|}
@@ -2479,7 +2479,7 @@ argument_list|(
 name|p_pid
 argument_list|)
 block|,
-name|SHORT
+name|LONG
 block|,
 name|PIDFMT
 block|}
@@ -2533,7 +2533,7 @@ argument_list|(
 name|p_ppid
 argument_list|)
 block|,
-name|SHORT
+name|LONG
 block|,
 name|PIDFMT
 block|}
