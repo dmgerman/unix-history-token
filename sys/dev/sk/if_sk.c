@@ -3438,7 +3438,7 @@ block|{
 name|u_int32_t
 name|crc
 decl_stmt|;
-name|uint
+name|u_int
 name|idx
 decl_stmt|,
 name|bit
