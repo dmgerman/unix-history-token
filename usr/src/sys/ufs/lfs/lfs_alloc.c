@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -102,8 +102,7 @@ name|LFS
 modifier|*
 name|fs
 decl_stmt|;
-name|struct
-name|inode
+name|INODE
 modifier|*
 name|pip
 decl_stmt|,
@@ -114,8 +113,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|struct
-name|ucred
+name|UCRED
 modifier|*
 name|cred
 decl_stmt|;
@@ -123,22 +121,19 @@ end_decl_stmt
 
 begin_block
 block|{
+name|BUF
+modifier|*
+name|bp
+decl_stmt|;
 name|IFILE
 modifier|*
 name|ifp
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|struct
-name|inode
+name|INODE
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|vnode
+name|VNODE
 modifier|*
 name|vp
 decl_stmt|;
@@ -231,14 +226,6 @@ literal|"lfs_ialloc: corrupt free list"
 argument_list|)
 expr_stmt|;
 comment|/* Remove from free list, set the access time. */
-name|ifp
-operator|->
-name|if_st_atime
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
 name|fs
 operator|->
 name|lfs_free
@@ -246,6 +233,14 @@ operator|=
 name|ifp
 operator|->
 name|if_nextfree
+expr_stmt|;
+name|ifp
+operator|->
+name|if_st_atime
+operator|=
+name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -341,12 +336,15 @@ name|lfs_ifree
 parameter_list|(
 name|ip
 parameter_list|)
-name|struct
-name|inode
+name|INODE
 modifier|*
 name|ip
 decl_stmt|;
 block|{
+name|BUF
+modifier|*
+name|bp
+decl_stmt|;
 name|IFILE
 modifier|*
 name|ifp
@@ -354,11 +352,6 @@ decl_stmt|;
 name|LFS
 modifier|*
 name|fs
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
 decl_stmt|;
 name|ino_t
 name|ino
@@ -450,8 +443,7 @@ name|ino_t
 name|ino
 decl_stmt|;
 block|{
-name|struct
-name|buf
+name|BUF
 modifier|*
 name|bp
 decl_stmt|;
@@ -493,28 +485,27 @@ argument_list|(
 literal|"itod: unused daddr"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"itod: about to return %lx\n"
-argument_list|,
+name|iaddr
+operator|=
 name|ifp
 operator|->
 name|if_daddr
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ifp
-operator|->
-name|if_daddr
+name|iaddr
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|struct
-name|dinode
+name|DINODE
 modifier|*
 name|lfs_ifind
 parameter_list|(
@@ -537,8 +528,7 @@ name|page
 decl_stmt|;
 block|{
 specifier|register
-name|struct
-name|dinode
+name|DINODE
 modifier|*
 name|dip
 decl_stmt|;
@@ -620,8 +610,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|mount
+name|MOUNT
 modifier|*
 name|mp
 decl_stmt|;
@@ -634,8 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vnode
+name|VNODE
 modifier|*
 modifier|*
 name|vpp
@@ -644,13 +632,11 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|inode
+name|INODE
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|ufsmount
+name|UFSMOUNT
 modifier|*
 name|ump
 decl_stmt|;
@@ -757,6 +743,12 @@ name|ip
 operator|->
 name|i_number
 operator|=
+name|ip
+operator|->
+name|i_din
+operator|.
+name|di_inum
+operator|=
 name|ino
 expr_stmt|;
 name|ip
@@ -800,6 +792,74 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*   * Return the current version number for a specific inode.  */
+end_comment
+
+begin_function
+name|u_long
+name|lfs_getversion
+parameter_list|(
+name|fs
+parameter_list|,
+name|ino
+parameter_list|)
+name|LFS
+modifier|*
+name|fs
+decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
+block|{
+name|IFILE
+modifier|*
+name|ifp
+decl_stmt|;
+name|BUF
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|version
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"lfs_getversion: %d\n"
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
+name|LFS_IENTRY
+argument_list|(
+name|ifp
+argument_list|,
+name|fs
+argument_list|,
+name|ino
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|version
+operator|=
+name|ifp
+operator|->
+name|if_version
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|version
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

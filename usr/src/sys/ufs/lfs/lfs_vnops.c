@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -536,6 +536,7 @@ operator|&
 name|time
 argument_list|)
 expr_stmt|;
+comment|/* LFS */
 comment|/* 	 * Copy from inode table 	 */
 name|vap
 operator|->
@@ -1101,11 +1102,7 @@ operator||=
 name|ICHG
 expr_stmt|;
 comment|/* LFS */
-if|if
-condition|(
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -1118,15 +1115,9 @@ operator|&
 name|vap
 operator|->
 name|va_mtime
-argument_list|,
-literal|1
 argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+expr_stmt|;
+comment|/* LFS */
 block|}
 if|if
 condition|(
@@ -1773,11 +1764,11 @@ name|vp
 argument_list|)
 decl_stmt|;
 specifier|register
-name|struct
-name|fs
+name|LFS
 modifier|*
 name|fs
 decl_stmt|;
+comment|/* LFS */
 name|struct
 name|buf
 modifier|*
@@ -1969,20 +1960,20 @@ name|ip
 operator|->
 name|i_size
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOTLFS
-comment|/* LFS */
 name|fs
 operator|=
 name|ip
 operator|->
-name|i_fs
+name|i_lfs
 expr_stmt|;
+comment|/* LFS */
 name|flags
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTLFS
 if|if
 condition|(
 name|ioflag
@@ -1993,6 +1984,8 @@ name|flags
 operator|=
 name|B_SYNC
 expr_stmt|;
+endif|#
+directive|endif
 do|do
 block|{
 name|lbn
@@ -2017,6 +2010,7 @@ operator|->
 name|uio_offset
 argument_list|)
 expr_stmt|;
+comment|/* LFS */
 name|n
 operator|=
 name|MIN
@@ -2027,7 +2021,7 @@ call|)
 argument_list|(
 name|fs
 operator|->
-name|fs_bsize
+name|lfs_bsize
 operator|-
 name|on
 argument_list|)
@@ -2043,8 +2037,9 @@ name|n
 operator|<
 name|fs
 operator|->
-name|fs_bsize
+name|lfs_bsize
 condition|)
+comment|/* LFS */
 name|flags
 operator||=
 name|B_CLRBUF
@@ -2055,29 +2050,25 @@ operator|&=
 operator|~
 name|B_CLRBUF
 expr_stmt|;
+comment|/* LFS */
 if|if
 condition|(
 name|error
 operator|=
-name|balloc
+name|bread
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 name|lbn
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|on
-operator|+
-name|n
-argument_list|)
+name|fs
+operator|->
+name|lfs_bsize
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|&
 name|bp
-argument_list|,
-name|flags
 argument_list|)
 condition|)
 break|break;
@@ -2125,10 +2116,6 @@ operator|=
 name|blksize
 argument_list|(
 name|fs
-argument_list|,
-name|ip
-argument_list|,
-name|lbn
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2169,6 +2156,10 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTLFS
+comment|/* LFS */
 if|if
 condition|(
 name|ioflag
@@ -2213,6 +2204,16 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* 		 * Update segment usage information; call segment 		 * writer if necessary. 		 */
+name|lfs_bwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|i_flag
@@ -2258,16 +2259,6 @@ operator|!=
 literal|0
 condition|)
 do|;
-else|#
-directive|else
-comment|/* LFS IMPLEMENT -- write call */
-name|panic
-argument_list|(
-literal|"lfs_write not implemented"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|error
@@ -2279,6 +2270,10 @@ name|IO_UNIT
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NOTLFS
+comment|/* This just doesn't work... */
 operator|(
 name|void
 operator|)
@@ -2293,6 +2288,8 @@ operator|&
 name|IO_SYNC
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|uio
 operator|->
 name|uio_offset
@@ -2321,9 +2318,7 @@ operator|&
 name|IO_SYNC
 operator|)
 condition|)
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -2332,10 +2327,9 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
+comment|/* LFS */
 return|return
 operator|(
 name|error
@@ -2436,6 +2430,18 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
+name|ITIMES
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|)
+expr_stmt|;
+comment|/* LFS */
 name|vflushbuf
 argument_list|(
 name|vp
@@ -2452,20 +2458,7 @@ expr_stmt|;
 comment|/* LFS */
 return|return
 operator|(
-name|lfs_iupdat
-argument_list|(
-name|ip
-argument_list|,
-operator|&
-name|time
-argument_list|,
-operator|&
-name|time
-argument_list|,
-name|waitfor
-operator|==
-name|MNT_WAIT
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}
@@ -2729,9 +2722,7 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -2740,16 +2731,9 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* LFS */
-if|if
-condition|(
-operator|!
-name|error
-condition|)
 name|error
 operator|=
 name|lfs_direnter
@@ -3154,9 +3138,7 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -3165,8 +3147,6 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* LFS */
@@ -3426,11 +3406,7 @@ operator||=
 name|ICHG
 expr_stmt|;
 comment|/* LFS */
-if|if
-condition|(
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|dp
 argument_list|,
@@ -3439,13 +3415,9 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
-condition|)
-goto|goto
-name|bad
-goto|;
+expr_stmt|;
+comment|/* LFS */
 block|}
 if|if
 condition|(
@@ -3478,10 +3450,7 @@ operator||=
 name|ICHG
 expr_stmt|;
 comment|/* LFS */
-operator|(
-name|void
-operator|)
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|dp
 argument_list|,
@@ -3490,10 +3459,9 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
+comment|/* LFS */
 block|}
 goto|goto
 name|bad
@@ -4612,9 +4580,7 @@ name|i_nlink
 operator|=
 literal|2
 expr_stmt|;
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -4623,8 +4589,6 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* LFS */
@@ -4640,11 +4604,7 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|dp
 argument_list|,
@@ -4653,14 +4613,9 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
-condition|)
+expr_stmt|;
 comment|/* LFS */
-goto|goto
-name|bad
-goto|;
 comment|/* 	 * Initialize directory with "." 	 * and ".." from static template. 	 */
 name|dirtemplate
 operator|=
@@ -6056,12 +6011,7 @@ operator|&=
 operator|~
 name|ISGID
 expr_stmt|;
-comment|/* 	 * Make sure inode goes to disk before directory entry. 	 * 	 * XXX Wrong... 	 */
-if|if
-condition|(
-name|error
-operator|=
-name|lfs_iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -6070,14 +6020,9 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|1
 argument_list|)
-condition|)
+expr_stmt|;
 comment|/* LFS */
-goto|goto
-name|bad
-goto|;
 if|if
 condition|(
 name|error

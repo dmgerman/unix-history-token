@@ -1,7 +1,63 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.4 (Berkeley) %G%  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|buf
+name|BUF
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|dinode
+name|DINODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|inode
+name|INODE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mount
+name|MOUNT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ucred
+name|UCRED
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ufsmount
+name|UFSMOUNT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|vnode
+name|VNODE
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -42,6 +98,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|struct
+name|segusage
+name|SEGUSE
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
 name|segusage
 block|{
@@ -57,13 +120,127 @@ define|#
 directive|define
 name|SEGUSE_DIRTY
 value|0x1
+comment|/* XXX fill in comment */
 name|u_long
 name|su_flags
 decl_stmt|;
 block|}
-name|SEGUSE
+struct|;
+end_struct
+
+begin_comment
+comment|/* On-disk file information.  One per file with data blocks in the segment. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|finfo
+name|FINFO
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|finfo
+block|{
+name|u_long
+name|fi_nblocks
+decl_stmt|;
+comment|/* number of blocks */
+name|u_long
+name|fi_version
+decl_stmt|;
+comment|/* version number */
+name|ino_t
+name|fi_ino
+decl_stmt|;
+comment|/* inode number */
+name|long
+name|fi_blocks
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* array of logical block numbers */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* In-memory description of a segment about to be written */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|segment
+name|SEGMENT
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|segment
+block|{
+name|SEGMENT
+modifier|*
+name|nextp
+decl_stmt|;
+comment|/* Links segments together */
+name|BUF
+modifier|*
+modifier|*
+name|bpp
+decl_stmt|;
+comment|/* Pointer to buffer array */
+name|BUF
+modifier|*
+modifier|*
+name|cbpp
+decl_stmt|;
+comment|/* Pointer to next available bp */
+name|void
+modifier|*
+name|segsum
+decl_stmt|;
+comment|/* Segment Summary info */
+name|u_long
+name|sum_bytes_left
+decl_stmt|;
+comment|/* Bytes left in summary */
+name|u_long
+name|seg_bytes_left
+decl_stmt|;
+comment|/* Bytes left in segment */
+name|daddr_t
+name|saddr
+decl_stmt|;
+comment|/* Current disk address */
+name|daddr_t
+name|sum_addr
+decl_stmt|;
+comment|/* Address of current summary */
+name|u_long
+name|ninodes
+decl_stmt|;
+comment|/* Number of inodes in this segment */
+name|u_long
+name|sum_num
+decl_stmt|;
+comment|/* Number of current summary block */
+name|u_long
+name|seg_number
+decl_stmt|;
+comment|/* Number of this segment */
+name|FINFO
+modifier|*
+name|fip
+decl_stmt|;
+comment|/* Current fileinfo pointer */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* On-disk and in-memory super block. */
@@ -71,6 +248,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|struct
+name|lfs
+name|LFS
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
 name|lfs
 block|{
@@ -230,8 +414,7 @@ name|LFS_MAXNUMSB
 index|]
 decl_stmt|;
 comment|/* These fields are set at mount time and are meaningless on disk. */
-name|struct
-name|vnode
+name|VNODE
 modifier|*
 name|lfs_ivnode
 decl_stmt|;
@@ -241,6 +424,15 @@ modifier|*
 name|lfs_segtab
 decl_stmt|;
 comment|/* in-memory segment usage table */
+name|SEGMENT
+modifier|*
+name|lfs_seglist
+decl_stmt|;
+comment|/* list of segments being written */
+name|u_long
+name|lfs_iocount
+decl_stmt|;
+comment|/* Number of ios pending */
 name|u_char
 name|lfs_fmod
 decl_stmt|;
@@ -277,9 +469,8 @@ name|lfs_cksum
 decl_stmt|;
 comment|/* checksum for superblock checking */
 block|}
-name|LFS
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * The root inode is the root of the file system.  Inode 0 is the out-of-band  * inode, and inode 1 is the inode number for the ifile.  Thus the root inode  * is 2.  */
@@ -347,8 +538,40 @@ name|di_inum
 value|di_spare[0]
 end_define
 
+begin_comment
+comment|/*  * Logical block numbers of indirect blocks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_INDIR
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_INDIR
+value|-2
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_INDIR
+value|-3
+end_define
+
 begin_typedef
 typedef|typedef
+name|struct
+name|ifile
+name|IFILE
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
 name|ifile
 block|{
@@ -387,9 +610,8 @@ directive|define
 name|if_nextfree
 value|__ifile_u.nextfree
 block|}
-name|IFILE
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* Segment table size, in blocks. */
@@ -434,6 +656,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|struct
+name|segsum
+name|SEGSUM
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
 name|segsum
 block|{
@@ -467,42 +696,8 @@ decl_stmt|;
 comment|/* number of inode blocks */
 comment|/* FINFO's... */
 block|}
-name|SEGSUM
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* On-disk file information.  One per file with data blocks in the segment. */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|finfo
-block|{
-name|u_long
-name|fi_nblocks
-decl_stmt|;
-comment|/* number of blocks */
-name|u_long
-name|fi_version
-decl_stmt|;
-comment|/* version number */
-name|ino_t
-name|fi_ino
-decl_stmt|;
-comment|/* inode number */
-name|u_long
-name|fi_blocks
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* array of logical block numbers */
-block|}
-name|FINFO
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* NINDIR is the number of indirects in a file system block. */
@@ -602,6 +797,46 @@ parameter_list|,
 name|blk
 parameter_list|)
 value|((blk)<< (fs)->lfs_bshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|numfrags
+parameter_list|(
+name|fs
+parameter_list|,
+name|loc
+parameter_list|)
+comment|/* calculates (loc / fs->fs_fsize) */
+define|\
+value|((loc)>> (fs)->lfs_bshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|satosn
+parameter_list|(
+name|fs
+parameter_list|,
+name|saddr
+parameter_list|)
+define|\
+value|((int)((saddr - fs->lfs_sboffs[0]) / fsbtodb(fs, fs->lfs_ssize)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sntosa
+parameter_list|(
+name|fs
+parameter_list|,
+name|sn
+parameter_list|)
+define|\
+value|((daddr_t)(sn * (fs->lfs_ssize<< fs->lfs_fsbtodb) + fs->lfs_sboffs[0]))
 end_define
 
 end_unit
