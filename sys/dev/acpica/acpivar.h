@@ -2027,7 +2027,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_THREADS
-value|3
+value|1
 end_define
 
 begin_endif
