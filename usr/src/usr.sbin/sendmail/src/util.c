@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -1402,37 +1402,35 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		fullsmtp -- if set, obey strictest SMTP conventions. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
+comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		fullsmtp -- if set, obey strictest SMTP conventions. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SMTPLINELIM
-value|120
+value|990
 end_define
 
 begin_comment
 comment|/* maximum line length */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|putline
 argument_list|(
-argument|l
-argument_list|,
-argument|fp
-argument_list|,
-argument|fullsmtp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
 name|l
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|fp
+argument_list|,
+name|fullsmtp
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|l
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|FILE
@@ -1454,21 +1452,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|fullsmtp
-condition|)
+name|char
+name|svchar
+decl_stmt|;
+do|do
 block|{
-name|fputs
-argument_list|(
-name|l
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* find the end of the line */
 name|p
 operator|=
@@ -1499,9 +1487,13 @@ expr_stmt|;
 comment|/* check for line overflow */
 while|while
 condition|(
+name|fullsmtp
+operator|&&
+operator|(
 name|p
 operator|-
 name|l
+operator|)
 operator|>
 name|SMTPLINELIM
 condition|)
@@ -1519,12 +1511,11 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-name|char
 name|svchar
-init|=
+operator|=
 operator|*
 name|q
-decl_stmt|;
+expr_stmt|;
 operator|*
 name|q
 operator|=
@@ -1555,6 +1546,11 @@ name|q
 expr_stmt|;
 block|}
 comment|/* output last part */
+name|svchar
+operator|=
+operator|*
+name|p
+expr_stmt|;
 operator|*
 name|p
 operator|=
@@ -1567,9 +1563,20 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-name|fputs
+if|if
+condition|(
+name|fullsmtp
+condition|)
+name|fputc
 argument_list|(
-literal|"\r\n"
+literal|'\r'
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
 argument_list|,
 name|fp
 argument_list|)
@@ -1577,8 +1584,33 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-literal|'\n'
+name|svchar
 expr_stmt|;
+name|l
+operator|=
+name|p
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|l
+operator|==
+literal|'\n'
+condition|)
+name|l
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|l
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+do|;
 block|}
 end_block
 
