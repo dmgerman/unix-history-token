@@ -6820,11 +6820,11 @@ if|if
 condition|(
 name|l
 operator|>
-literal|1024
+name|DN_MAX_HASH_SIZE
 condition|)
 name|l
 operator|=
-literal|1024
+name|DN_MAX_HASH_SIZE
 expr_stmt|;
 name|x
 operator|->

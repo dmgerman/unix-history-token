@@ -126,6 +126,17 @@ value|((int)&( ((type *)0)->field) )
 end_define
 
 begin_comment
+comment|/*  * The maximum hash table size for queues.  This value must be a power  * of 2.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DN_MAX_HASH_SIZE
+value|65536
+end_define
+
+begin_comment
 comment|/*  * A heap entry is made of a key and a pointer to the actual  * object stored in the heap.  * The heap is an array of dn_heap_entry entries, dynamically allocated.  * Current size is "size", with "elements" actually in use.  * The heap normally supports only ordered insert and extract from the top.  * If we want to extract an object from the middle of the heap, we  * have to know where the object itself is located in the heap (or we  * need to scan the whole array). To this purpose, an object has a  * field (int) which contains the index of the object itself into the  * heap. When the object is moved, the field must also be updated.  * The offset of the index in the object is stored in the 'offset'  * field in the heap descriptor. The assumption is that this offset  * is non-zero if we want to support extract from the middle.  */
 end_comment
 
