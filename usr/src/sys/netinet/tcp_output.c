@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.25	81/12/20	*/
+comment|/*	tcp_output.c	4.26	81/12/21	*/
 end_comment
 
 begin_include
@@ -235,6 +235,14 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|<
+literal|0
+condition|)
+return|return;
+comment|/* past FIN */
+if|if
+condition|(
+name|len
 operator|>
 name|tp
 operator|->
@@ -246,17 +254,6 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
-condition|)
-name|len
-operator|=
-literal|0
-expr_stmt|;
-comment|/* FIN can cause -1 */
 name|flags
 operator|=
 name|tcp_outflags
@@ -292,13 +289,15 @@ operator|(
 name|TH_SYN
 operator||
 name|TH_RST
+operator||
+name|TH_FIN
 operator|)
 operator|)
 condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * See if we owe peer an ACK or have a unacked FIN to send. 	 */
+comment|/* 	 * Send if we owe peer an ACK. 	 */
 if|if
 condition|(
 name|tp
@@ -306,26 +305,6 @@ operator|->
 name|t_flags
 operator|&
 name|TF_ACKNOW
-condition|)
-goto|goto
-name|send
-goto|;
-if|if
-condition|(
-operator|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_CANTSENDMORE
-operator|)
-operator|&&
-name|TCPS_OURFINNOTACKED
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
 condition|)
 goto|goto
 name|send
@@ -1039,11 +1018,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ip_output failed\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a larger window than any other segment, 	 * then remember the size of the advertised window. 	 * Drop send for purpose of ACK requirements. 	 */
 if|if
 condition|(
