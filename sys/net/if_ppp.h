@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Modified by Paul Mackerras (paulus@cs.anu.edu.au)  * Added PPP_MRU, sc_outm, sc_fastq, sc_bpf.  *  *	$Id$  *	From: if_ppp.h,v 1.4 1993/08/29 11:22:37 paulus Exp $  */
+comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Modified by Paul Mackerras (paulus@cs.anu.edu.au)  * Added PPP_MRU, sc_outm, sc_fastq, sc_bpf.  *  *	$Id: if_ppp.h,v 1.2 1993/08/31 05:40:38 rgrimes Exp $  *	From: if_ppp.h,v 1.4 1993/08/29 11:22:37 paulus Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NET_IF_PPP_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NET_IF_PPP_H_
+value|1
+end_define
 
 begin_comment
 comment|/*  * Standard PPP header.  */
@@ -586,6 +599,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _NET_IF_PPP_H_ */
+end_comment
 
 end_unit
 

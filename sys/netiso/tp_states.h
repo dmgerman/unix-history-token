@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from: unknown  *	$Id$  */
+comment|/*  *	from: unknown  *	$Id: tp_states.h,v 1.2 1993/10/16 21:06:01 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NETISO_TP_STATES_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NETISO_TP_STATES_H_
+value|1
+end_define
 
 begin_define
 define|#
@@ -72,6 +85,15 @@ directive|define
 name|tp_NSTATES
 value|0x9
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _NETISO_TP_STATES_H_ */
+end_comment
 
 end_unit
 

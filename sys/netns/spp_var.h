@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)spp_var.h	7.7 (Berkeley) 6/28/90  *	$Id$  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)spp_var.h	7.7 (Berkeley) 6/28/90  *	$Id: spp_var.h,v 1.2 1993/10/16 19:54:41 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NETNS_SPP_VAR_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NETNS_SPP_VAR_H_
+value|1
+end_define
 
 begin_comment
 comment|/*  * Sp control block, one per connection  */
@@ -547,6 +560,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|spp_istat
 name|spp_istat
@@ -576,6 +590,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
 name|u_short
 name|spp_iss
 decl_stmt|;
@@ -592,7 +607,13 @@ decl_stmt|,
 modifier|*
 name|spp_disconnect
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sppcb
 modifier|*
 name|spp_usrclosed
 argument_list|()
@@ -612,6 +633,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* KERNEL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -622,71 +647,6 @@ end_define
 begin_comment
 comment|/*  * SPP sequence numbers are 16 bit integers operated  * on with modular arithmetic.  These macros can be  * used to compare such integers.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_decl_stmt
-name|short
-name|xnsCbug
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|SSEQ_LT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((xnsCbug = (short)((a)-(b)))< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSEQ_LEQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((xnsCbug = (short)((a)-(b)))<= 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSEQ_GT
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((xnsCbug = (short)((a)-(b)))> 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSEQ_GEQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((xnsCbug = (short)((a)-(b)))>= 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -740,6 +700,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _NETNS_SPP_VAR_H_ */
+end_comment
 
 end_unit
 
