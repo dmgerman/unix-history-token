@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.35 (Berkeley) %G%"
+literal|"@(#)print.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,6 +504,37 @@ name|sp
 operator|->
 name|st_rdev
 argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dp
+operator|->
+name|bcfile
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*s%*qd "
+argument_list|,
+literal|8
+operator|-
+name|dp
+operator|->
+name|s_size
+argument_list|,
+literal|""
+argument_list|,
+name|dp
+operator|->
+name|s_size
+argument_list|,
+name|sp
+operator|->
+name|st_size
 argument_list|)
 expr_stmt|;
 else|else

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.66 (Berkeley) %G%"
+literal|"@(#)ls.c	5.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1359,7 +1359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Display() takes a linked list of FTSENT structures passes the list along  * with any other necessary information to the print function (printfcn()).  * P points to the parent directory of the display list.  */
+comment|/*  * Display() takes a linked list of FTSENT structures and passes the list  * along with any other necessary information to the print function.  P  * points to the parent directory of the display list.  */
 end_comment
 
 begin_function
@@ -1413,6 +1413,8 @@ name|u_quad_t
 name|maxsize
 decl_stmt|;
 name|int
+name|bcfile
+decl_stmt|,
 name|flen
 decl_stmt|,
 name|glen
@@ -1475,6 +1477,10 @@ operator|=
 name|maxlen
 operator|=
 name|maxnlink
+operator|=
+literal|0
+expr_stmt|;
+name|bcfile
 operator|=
 literal|0
 expr_stmt|;
@@ -1899,6 +1905,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|S_ISCHR
+argument_list|(
+name|sp
+operator|->
+name|st_mode
+argument_list|)
+operator|||
+name|S_ISBLK
+argument_list|(
+name|sp
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+name|bcfile
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|f_flags
 condition|)
 block|{
@@ -1972,6 +1998,12 @@ condition|(
 name|needstats
 condition|)
 block|{
+name|d
+operator|.
+name|bcfile
+operator|=
+name|bcfile
+expr_stmt|;
 name|d
 operator|.
 name|btotal
