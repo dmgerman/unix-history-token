@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.6 (Berkeley) %G%"
+literal|"@(#)table.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,8 +228,6 @@ operator||
 name|AWD
 block|,
 name|TINT
-operator||
-name|TUNSIGNED
 block|,
 name|SANY
 block|,
@@ -259,13 +257,73 @@ name|SAREG
 operator||
 name|AWD
 block|,
+name|TUNSIGNED
+block|,
+name|SANY
+block|,
+name|TFLOAT
+operator||
+name|TDOUBLE
+block|,
+name|NAREG
+operator||
+name|NASL
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	ZY\n"
+block|,
+name|SCONV
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
 name|TFLOAT
 operator||
 name|TDOUBLE
 block|,
 name|SANY
 block|,
-name|ANYFIXED
+name|ANYUSIGNED
+block|,
+name|NAREG
+operator||
+name|NASL
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	ZW\n"
+block|,
+name|SCONV
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+operator||
+name|TDOUBLE
+block|,
+name|SANY
+block|,
+name|ANYSIGNED
 block|,
 name|NAREG
 operator||
@@ -3449,6 +3507,34 @@ operator||
 name|RESCC
 block|,
 literal|"	ldd	AL\n	OD	AR\n	std	AL\n"
+block|,
+name|ASG
+name|OPFLOAT
+block|,
+name|INAREG
+operator||
+name|FOREFF
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|ANYFIXED
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+name|NAREG
+block|,
+name|RLEFT
+operator||
+name|RESCC
+block|,
+comment|/* usable() knows we need a reg pair */
+literal|"	ZG\n"
 block|,
 name|OPSIMP
 block|,
