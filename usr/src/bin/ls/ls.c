@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.45 (Berkeley) %G%"
+literal|"@(#)ls.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1059,6 +1059,8 @@ operator|(
 name|f_longform
 operator|||
 name|f_listdir
+operator|||
+name|f_type
 operator|)
 operator|&&
 operator|!
