@@ -3725,6 +3725,17 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|sc
 operator|->
 name|fc
