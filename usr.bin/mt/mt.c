@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)mt.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)mt.c	8.2 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.9.2.2 1997/08/21 05:50:33 joerg Exp $"
+literal|"$Id: mt.c,v 1.9.2.3 1997/08/29 05:29:38 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment

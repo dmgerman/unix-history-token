@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nfsstat.c,v 1.6 1996/03/11 03:03:12 hsu Exp $"
+literal|"$Id: nfsstat.c,v 1.6.2.1 1997/08/29 05:29:39 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -559,7 +559,6 @@ operator|!
 name|fflag
 condition|)
 break|break;
-comment|/* Sleep(3) is eight system calls.  Do it fast. */
 name|second
 operator|.
 name|tv_sec
