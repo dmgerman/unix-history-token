@@ -1137,6 +1137,17 @@ parameter_list|)
 value|(IS_FC(isp)? \ 	((isr& BIU2100_ISR_RISC_INT) != 0) : ((isr& BIU_ISR_RISC_INT) != 0))
 end_define
 
+begin_define
+define|#
+directive|define
+name|INT_PENDING_MASK
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_FC(isp)? BIU2100_ISR_RISC_INT: BIU_ISR_RISC_INT)
+end_define
+
 begin_comment
 comment|/* BUS SEMAPHORE REGISTER */
 end_comment
@@ -1847,11 +1858,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|OMBOX_OFFN
+name|MBOX_OFF
 parameter_list|(
 name|n
 parameter_list|)
-value|(MBOX_BLOCK + (n * 2))
+value|(MBOX_BLOCK + ((n)<< 1))
 end_define
 
 begin_define
@@ -1863,6 +1874,24 @@ name|isp
 parameter_list|)
 define|\
 value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 8 : 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NMBOX_BMASK
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(((((isp)->isp_type& ISP_HA_SCSI)>= ISP_HA_SCSI_1040A) || \ 	 ((isp)->isp_type& ISP_HA_FC))? 0xff : 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_MAILBOX
+value|8
 end_define
 
 begin_comment
