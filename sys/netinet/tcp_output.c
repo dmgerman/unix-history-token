@@ -2694,9 +2694,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_mbuf_from_socket
+name|mac_create_mbuf_from_inpcb
 argument_list|(
-name|so
+name|tp
+operator|->
+name|t_inpcb
 argument_list|,
 name|m
 argument_list|)

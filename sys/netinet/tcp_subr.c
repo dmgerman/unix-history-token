@@ -1882,8 +1882,6 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-init|=
-name|NULL
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -1964,6 +1962,19 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|inp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -2457,11 +2468,14 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * Packet is associated with a socket, so allow the 		 * label of the response to reflect the socket label. 		 */
-name|mac_create_mbuf_from_socket
+name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
-operator|->
-name|inp_socket
+argument_list|)
+expr_stmt|;
+name|mac_create_mbuf_from_inpcb
+argument_list|(
+name|inp
 argument_list|,
 name|m
 argument_list|)
