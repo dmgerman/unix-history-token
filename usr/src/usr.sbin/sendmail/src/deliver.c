@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.113
+literal|3.114
 operator|%
 name|G
 operator|%
@@ -112,6 +112,8 @@ name|char
 name|tobuf
 index|[
 name|MAXLINE
+operator|-
+literal|50
 index|]
 decl_stmt|;
 comment|/* text line of to people */
@@ -697,6 +699,31 @@ operator|->
 name|q_mailer
 condition|)
 continue|continue;
+comment|/* avoid overflowing tobuf */
+if|if
+condition|(
+sizeof|sizeof
+name|tobuf
+operator|-
+operator|(
+name|strlen
+argument_list|(
+name|to
+operator|->
+name|q_paddr
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|tobuf
+argument_list|)
+operator|+
+literal|1
+operator|)
+operator|<
+literal|0
+condition|)
+break|break;
 ifdef|#
 directive|ifdef
 name|DEBUG
