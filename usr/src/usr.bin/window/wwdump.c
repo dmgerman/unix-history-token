@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwdump.c	3.3 83/08/15"
+literal|"@(#)wwdump.c	3.4 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,16 +61,6 @@ specifier|register
 name|i
 operator|,
 name|j
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_setinsert
-call|)
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 call|(
 modifier|*
@@ -196,16 +186,6 @@ call|(
 modifier|*
 name|tt
 operator|.
-name|tt_setinsert
-call|)
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
 name|tt_setmodes
 call|)
 argument_list|(
@@ -322,16 +302,6 @@ begin_block
 block|{
 specifier|register
 name|i
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_setinsert
-call|)
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 call|(
 modifier|*
@@ -472,16 +442,6 @@ call|(
 modifier|*
 name|tt
 operator|.
-name|tt_setinsert
-call|)
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
 name|tt_setmodes
 call|)
 argument_list|(
@@ -559,7 +519,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* wwdumpns() { 	register i, j;  	(*tt.tt_setinsert)(0); 	(*tt.tt_clear)(); 	for (i = 0; i< wwnrow; i++) { 		(*tt.tt_move)(i, 0); 		for (j = 0; j< wwncol; j++) { 			(*tt.tt_setmodes)(wwns[i][j].c_m); 			(*tt.tt_putc)(wwns[i][j].c_c); 		} 	} }  wwdumpos() { 	register i, j;  	(*tt.tt_setinsert)(0); 	(*tt.tt_clreos)(); 	for (i = 0; i< wwnrow; i++) { 		(*tt.tt_move)(i, 0); 		for (j = 0; j< wwncol; j++) { 			(*tt.tt_setmodes)(wwns[i][j].c_m); 			(*tt.tt_putc)(wwns[i][j].c_c); 		} 	} } */
+comment|/* wwdumpns() { 	register i, j;  	(*tt.tt_clear)(); 	for (i = 0; i< wwnrow; i++) { 		(*tt.tt_move)(i, 0); 		for (j = 0; j< wwncol; j++) { 			(*tt.tt_setmodes)(wwns[i][j].c_m); 			(*tt.tt_putc)(wwns[i][j].c_c); 		} 	} }  wwdumpos() { 	register i, j;  	(*tt.tt_clear)(); 	for (i = 0; i< wwnrow; i++) { 		(*tt.tt_move)(i, 0); 		for (j = 0; j< wwncol; j++) { 			(*tt.tt_setmodes)(wwns[i][j].c_m); 			(*tt.tt_putc)(wwns[i][j].c_c); 		} 	} } */
 end_comment
 
 end_unit
