@@ -728,6 +728,13 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|fseek
 argument_list|(
 name|p
