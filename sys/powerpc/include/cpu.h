@@ -237,12 +237,12 @@ name|void
 parameter_list|)
 block|{
 name|u_int32_t
-name|upper
+name|_upper
 decl_stmt|,
-name|lower
+name|_lower
 decl_stmt|;
 name|u_int64_t
-name|time
+name|_time
 decl_stmt|;
 asm|__asm __volatile(
 literal|"mftb %0\n"
@@ -250,44 +250,44 @@ literal|"mftbu %1"
 operator|:
 literal|"=r"
 operator|(
-name|lower
+name|_lower
 operator|)
 operator|,
 literal|"=r"
 operator|(
-name|upper
+name|_upper
 operator|)
 block|)
 function|;
 end_function
 
 begin_expr_stmt
-name|time
+name|_time
 operator|=
 operator|(
 name|u_int64_t
 operator|)
-name|upper
+name|_upper
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|time
+name|_time
 operator|=
 operator|(
-name|time
+name|_time
 operator|<<
 literal|32
 operator|)
 operator|+
-name|lower
+name|_lower
 expr_stmt|;
 end_expr_stmt
 
 begin_return
 return|return
 operator|(
-name|time
+name|_time
 operator|)
 return|;
 end_return
