@@ -252,6 +252,18 @@ operator|>
 literal|500000
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_define
 define|#
 directive|define
