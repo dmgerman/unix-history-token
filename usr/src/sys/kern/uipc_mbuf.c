@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_mbuf.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_mbuf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -61,6 +61,24 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"domain.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"protosw.h"
 end_include
 
 begin_macro
@@ -134,6 +152,10 @@ begin_comment
 comment|/*  * Must be called at splimp.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|caddr_t
 name|m_clalloc
@@ -167,6 +189,10 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|static
+name|int
+name|logged
+decl_stmt|;
 name|npg
 operator|=
 name|ncl
@@ -194,15 +220,22 @@ condition|)
 block|{
 if|if
 condition|(
-name|canwait
+name|logged
 operator|==
-name|M_WAIT
+literal|0
 condition|)
-name|panic
+block|{
+name|logged
+operator|++
+expr_stmt|;
+name|log
 argument_list|(
-literal|"out of mbufs: map full"
+name|LOG_ERR
+argument_list|,
+literal|"mbuf map full\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -399,6 +432,15 @@ operator|++
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|MPG_SPACE
+case|:
+name|mbstat
+operator|.
+name|m_space
+operator|++
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -469,6 +511,30 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|domain
+modifier|*
+name|dp
+decl_stmt|;
+specifier|register
+name|struct
+name|protosw
+modifier|*
+name|pr
+decl_stmt|;
+name|int
+name|tries
+decl_stmt|;
+for|for
+control|(
+name|tries
+operator|=
+literal|0
+init|;
+condition|;
+control|)
+block|{
 if|if
 condition|(
 name|m_clalloc
@@ -479,25 +545,78 @@ name|MPG_MBUFS
 argument_list|,
 name|canwait
 argument_list|)
-operator|==
-literal|0
 condition|)
-goto|goto
-name|steal
-goto|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-name|steal
-label|:
-comment|/* should ask protocols to free code */
+if|if
+condition|(
+name|canwait
+operator|==
+literal|0
+operator|||
+name|tries
+operator|++
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+comment|/* ask protocols to free space */
+for|for
+control|(
+name|dp
+operator|=
+name|domains
+init|;
+name|dp
+condition|;
+name|dp
+operator|=
+name|dp
+operator|->
+name|dom_next
+control|)
+for|for
+control|(
+name|pr
+operator|=
+name|dp
+operator|->
+name|dom_protosw
+init|;
+name|pr
+operator|<
+name|dp
+operator|->
+name|dom_protoswNPROTOSW
+condition|;
+name|pr
+operator|++
+control|)
+if|if
+condition|(
+name|pr
+operator|->
+name|pr_drain
+condition|)
+call|(
+modifier|*
+name|pr
+operator|->
+name|pr_drain
+call|)
+argument_list|()
+expr_stmt|;
+name|mbstat
+operator|.
+name|m_drain
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -692,6 +811,11 @@ operator|==
 name|M_WAIT
 condition|)
 block|{
+name|mbstat
+operator|.
+name|m_wait
+operator|++
+expr_stmt|;
 name|m_want
 operator|++
 expr_stmt|;
