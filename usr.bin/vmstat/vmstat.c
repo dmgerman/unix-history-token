@@ -3994,7 +3994,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"interrupt      total      rate\n"
+literal|"interrupt                   total       rate\n"
 argument_list|)
 expr_stmt|;
 name|inttotal
@@ -4026,7 +4026,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-12s %8lu %8lu\n"
+literal|"%-12s %20lu %10lu\n"
 argument_list|,
 name|intrname
 argument_list|,
@@ -4060,7 +4060,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Total        %8llu %8llu\n"
+literal|"Total        %20llu %10llu\n"
 argument_list|,
 name|inttotal
 argument_list|,
