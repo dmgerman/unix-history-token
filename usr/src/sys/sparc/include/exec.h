@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.2 (Berkeley) %G%  *  * from: $Header: exec.h,v 1.7 92/07/01 23:51:32 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	7.3 (Berkeley) %G%  *  * from: $Header: exec.h,v 1.8 92/09/06 01:35:41 torek Exp $  */
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|(N_TXTADDR(ex) + ((ex).a_magic == OMAGIC ? (ex).a_text \ 	: __LDPGSZ + ((ex).a_text - 1& ~(__LDPGSZ - 1))))
+value|(N_TXTADDR(ex) + ((ex).a_magic == OMAGIC ? (ex).a_text : \ 	    (((ex).a_text + __LDPGSZ - 1)& ~(__LDPGSZ - 1))))
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ parameter_list|(
 name|ex
 parameter_list|)
 define|\
-value|(N_TXTOFF(ex) + ((ex).a_magic != ZMAGIC ? (ex).a_text : \ 	__LDPGSZ + ((ex).a_text - 1& ~(__LDPGSZ - 1))))
+value|(N_TXTOFF(ex) + ((ex).a_magic != ZMAGIC ? (ex).a_text : \ 	    (((ex).a_text + __LDPGSZ - 1)& ~(__LDPGSZ - 1))))
 end_define
 
 begin_comment
