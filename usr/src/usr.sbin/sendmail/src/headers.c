@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.14 (Berkeley) %G%"
+literal|"@(#)headers.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,6 +1445,31 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+comment|/* full name of from person */
+name|p
+operator|=
+name|hvalue
+argument_list|(
+literal|"full-name"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+name|define
+argument_list|(
+literal|'x'
+argument_list|,
+name|p
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1881,31 +1906,6 @@ operator|->
 name|e_nrcpts
 operator|*
 name|WkRecipFact
-expr_stmt|;
-comment|/* full name of from person */
-name|p
-operator|=
-name|hvalue
-argument_list|(
-literal|"full-name"
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-name|define
-argument_list|(
-literal|'x'
-argument_list|,
-name|p
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 comment|/* date message originated */
 name|p
