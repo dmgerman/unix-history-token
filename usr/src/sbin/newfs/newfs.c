@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.11 %G%"
+literal|"@(#)newfs.c	4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,16 @@ comment|/* revolutions/minute of drive */
 end_comment
 
 begin_decl_stmt
+name|int
+name|density
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of bytes per inode */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|av
@@ -264,6 +274,15 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|a9
+index|[
+literal|20
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|a10
 index|[
 literal|20
 index|]
@@ -788,6 +807,51 @@ expr_stmt|;
 goto|goto
 name|next
 goto|;
+case|case
+literal|'i'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-i: missing bytes per inode\n"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|density
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|density
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad bytes per inode\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 default|default:
 name|fatal
 argument_list|(
@@ -883,6 +947,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-S sector size\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-i number of bytes per inode\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1304,6 +1375,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|density
+operator|<=
+literal|0
+condition|)
+name|density
+operator|=
+literal|2048
+expr_stmt|;
+if|if
+condition|(
 name|minfree
 operator|<
 literal|0
@@ -1446,6 +1527,21 @@ argument_list|,
 name|rpm
 operator|/
 literal|60
+argument_list|)
+expr_stmt|;
+name|av
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|sprintf
+argument_list|(
+name|a10
+argument_list|,
+literal|"%d"
+argument_list|,
+name|density
 argument_list|)
 expr_stmt|;
 name|av
