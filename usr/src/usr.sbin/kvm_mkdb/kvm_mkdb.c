@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms is permitted  * provided that all copyright information, including this notice,  * is retained in all such forms, and that any documentation,  * advertising or other materials related to such distribution and  * use acknowledge that the software was  * developed by the University of California, Berkeley.  The name  * of the University may not be used to endorse or promote products  * derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,10 +25,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * kvm_mkdb -- Create kernel information database for running kernel.  */
 end_comment
 
 begin_ifndef
@@ -43,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.2 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
