@@ -1073,6 +1073,10 @@ name|chiptype
 condition|)
 block|{
 case|case
+literal|0x24cb8086
+case|:
+comment|/* Intel ICH4 */
+case|case
 literal|0x248a8086
 case|:
 comment|/* Intel ICH3 mobile */
