@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.38 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.39 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.38 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.39 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,7 +842,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ESMTP_CHECK -- check to see if this implementation likes ESMTP protocol ** ** **	Parameters: **		line -- the response line. **		firstline -- set if this is the first line of the reply. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
+comment|/* **  ESMTP_CHECK -- check to see if this implementation likes ESMTP protocol ** **	Parameters: **		line -- the response line. **		firstline -- set if this is the first line of the reply. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
 end_comment
 
 begin_function
@@ -880,28 +880,38 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-while|while
-condition|(
-operator|(
+specifier|register
+name|char
+modifier|*
+name|l
+decl_stmt|;
+for|for
+control|(
+name|l
+operator|=
 name|line
+init|;
+operator|(
+name|l
 operator|=
 name|strchr
 argument_list|(
 operator|++
-name|line
+name|l
 argument_list|,
 literal|'E'
 argument_list|)
 operator|)
 operator|!=
 name|NULL
-condition|)
+condition|;
+control|)
 block|{
 if|if
 condition|(
 name|strncmp
 argument_list|(
-name|line
+name|l
 argument_list|,
 literal|"ESMTP "
 argument_list|,
@@ -916,6 +926,51 @@ operator|->
 name|mci_flags
 operator||=
 name|MCIF_ESMTP
+expr_stmt|;
+break|break;
+block|}
+block|}
+for|for
+control|(
+name|l
+operator|=
+name|line
+init|;
+operator|(
+name|l
+operator|=
+name|strchr
+argument_list|(
+operator|++
+name|l
+argument_list|,
+literal|'8'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|l
+argument_list|,
+literal|"8BIT OK"
+argument_list|,
+literal|7
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_8BITOK
 expr_stmt|;
 break|break;
 block|}
@@ -1096,7 +1151,7 @@ name|strcasecmp
 argument_list|(
 name|line
 argument_list|,
-literal|"x-dsn-1"
+literal|"x-dsn-3"
 argument_list|)
 operator|==
 literal|0
@@ -1447,6 +1502,53 @@ argument_list|,
 name|e
 operator|->
 name|e_envid
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* RET= parameter */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RET_PARAM
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+literal|" RET="
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_NO_BODY_RETN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+literal|"HDRS"
+argument_list|)
+expr_stmt|;
+else|else
+name|strcat
+argument_list|(
+name|optbuf
+argument_list|,
+literal|"FULL"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2005,53 +2107,6 @@ argument_list|,
 literal|"NEVER"
 argument_list|)
 expr_stmt|;
-comment|/* RET= parameter */
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QHAS_RET_PARAM
-argument_list|,
-name|to
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-name|strcat
-argument_list|(
-name|optbuf
-argument_list|,
-literal|" RET="
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QRET_HDRS
-argument_list|,
-name|to
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-name|strcat
-argument_list|(
-name|optbuf
-argument_list|,
-literal|"HDRS"
-argument_list|)
-expr_stmt|;
-else|else
-name|strcat
-argument_list|(
-name|optbuf
-argument_list|,
-literal|"FULL"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* ORCPT= parameter */
 if|if
 condition|(

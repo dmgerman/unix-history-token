@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.58.1.1 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7549,14 +7549,6 @@ block|,
 literal|"QPINGONDELAY"
 block|,
 name|QPINGONDELAY
-block|,
-literal|"QHAS_RET_PARAM"
-block|,
-name|QHAS_RET_PARAM
-block|,
-literal|"QRET_HDRS"
-block|,
-name|QRET_HDRS
 block|,
 literal|"QRELAYED"
 block|,

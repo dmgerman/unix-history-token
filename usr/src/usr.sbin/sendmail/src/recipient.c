@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.72 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|QINHERITEDBITS
-value|(QPINGONSUCCESS|QPINGONFAILURE|QPINGONDELAY|QHAS_RET_PARAM|QRET_HDRS)
+value|(QPINGONSUCCESS|QPINGONFAILURE|QPINGONDELAY)
 end_define
 
 begin_function

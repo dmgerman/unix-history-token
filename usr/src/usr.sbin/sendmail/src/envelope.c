@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.52 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,11 +304,6 @@ name|e
 operator|->
 name|e_id
 decl_stmt|;
-name|bool
-name|return_no
-decl_stmt|,
-name|return_yes
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -452,12 +447,6 @@ name|e_flags
 operator|&=
 operator|~
 name|EF_QUEUERUN
-expr_stmt|;
-name|return_no
-operator|=
-name|return_yes
-operator|=
-name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -623,55 +612,23 @@ name|TRUE
 expr_stmt|;
 block|}
 else|else
-continue|continue;
-comment|/* common code for error returns and return receipts */
-comment|/* test for returning the body */
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QHAS_RET_PARAM
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
-condition|)
 block|{
+continue|continue;
+block|}
+block|}
 if|if
 condition|(
-name|bitset
-argument_list|(
-name|QRET_HDRS
-argument_list|,
-name|q
+name|e
 operator|->
-name|q_flags
-argument_list|)
-condition|)
-name|return_no
-operator|=
-name|TRUE
-expr_stmt|;
-else|else
-name|return_yes
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|return_no
-operator|&&
-operator|!
-name|return_yes
+name|e_class
+operator|<
+literal|0
 condition|)
 name|e
 operator|->
 name|e_flags
 operator||=
-name|EF_NORETURN
+name|EF_NO_BODY_RETN
 expr_stmt|;
 comment|/* 	**  See if the message timed out. 	*/
 if|if
@@ -1290,7 +1247,7 @@ literal|"Return receipt"
 argument_list|,
 name|rlist
 argument_list|,
-name|return_yes
+name|FALSE
 argument_list|,
 name|e
 argument_list|)
@@ -1318,18 +1275,15 @@ name|savemail
 argument_list|(
 name|e
 argument_list|,
-name|return_yes
-operator|||
-operator|(
 operator|!
-name|return_no
-operator|&&
+name|bitset
+argument_list|(
+name|EF_NO_BODY_RETN
+argument_list|,
 name|e
 operator|->
-name|e_class
-operator|>=
-literal|0
-operator|)
+name|e_flags
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Arrange to send warning messages to postmaster as requested. 	*/

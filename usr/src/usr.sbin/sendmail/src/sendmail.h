@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.103 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.104 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.103		%G%"
+literal|"@(#)sendmail.h	8.104		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,28 +673,6 @@ end_define
 
 begin_comment
 comment|/* give return on message delay */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QHAS_RET_PARAM
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* RCPT command had RET argument */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QRET_HDRS
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* don't return message body */
 end_comment
 
 begin_define
@@ -1814,6 +1792,17 @@ begin_comment
 comment|/* DSN extension supported */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCIF_8BITOK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* OK to send 8 bit characters */
+end_comment
+
 begin_comment
 comment|/* states */
 end_comment
@@ -2174,12 +2163,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_NORETURN
+name|EF_NO_BODY_RETN
 value|0x0000004
 end_define
 
 begin_comment
-comment|/* don't return the message on error */
+comment|/* omit message body on error */
 end_comment
 
 begin_define
@@ -2367,6 +2356,17 @@ end_define
 
 begin_comment
 comment|/* don't accept CR-LF as EOLine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_RET_PARAM
+value|0x0100000
+end_define
+
+begin_comment
+comment|/* RCPT command had RET argument */
 end_comment
 
 begin_decl_stmt

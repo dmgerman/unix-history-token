@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.130 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.131 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3100,7 +3100,7 @@ name|e
 operator|->
 name|e_flags
 operator||=
-name|EF_NORETURN
+name|EF_NO_BODY_RETN
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -5929,10 +5929,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|rcode
-operator|==
-name|EX_TEMPFAIL
-operator|&&
 name|curhost
 operator|!=
 name|NULL

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.56 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1391,13 +1391,6 @@ begin_comment
 comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		returnq -- the queue of people to send the message to. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. **		e -- the current envelope. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|bool
-name|SendBody
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1650,13 +1643,6 @@ block|}
 end_if
 
 begin_expr_stmt
-name|SendBody
-operator|=
-name|sendbody
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|define
 argument_list|(
 literal|'g'
@@ -1821,15 +1807,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-operator|!
-name|bitset
-argument_list|(
-name|EF_NORETURN
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
+name|sendbody
 condition|)
 name|ee
 operator|->
@@ -2323,6 +2301,9 @@ name|q
 decl_stmt|;
 name|bool
 name|printheader
+decl_stmt|;
+name|bool
+name|sendbody
 decl_stmt|;
 name|char
 name|buf
@@ -3876,23 +3857,6 @@ block|}
 endif|#
 directive|endif
 comment|/* 	**  Output text of original message 	*/
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|EF_NORETURN
-argument_list|,
-name|e
-operator|->
-name|e_parent
-operator|->
-name|e_flags
-argument_list|)
-condition|)
-name|SendBody
-operator|=
-name|FALSE
-expr_stmt|;
 name|putline
 argument_list|(
 literal|""
@@ -3911,6 +3875,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|sendbody
+operator|=
+operator|!
+name|bitset
+argument_list|(
+name|EF_NO_BODY_RETN
+argument_list|,
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -3922,7 +3900,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SendBody
+name|sendbody
 condition|)
 name|putline
 argument_list|(
@@ -3984,7 +3962,7 @@ literal|"Content-Type: message/rfc822%s"
 argument_list|,
 name|mci
 argument_list|,
-name|SendBody
+name|sendbody
 condition|?
 literal|""
 else|:
@@ -4023,7 +4001,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SendBody
+name|sendbody
 condition|)
 name|putbody
 argument_list|(

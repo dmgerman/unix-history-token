@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.28 (Berkeley) %G%"
+literal|"@(#)collect.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,7 +385,7 @@ name|e
 operator|->
 name|e_flags
 operator||=
-name|EF_NORETURN
+name|EF_NO_BODY_RETN
 expr_stmt|;
 name|finis
 argument_list|()
@@ -2144,7 +2144,7 @@ name|e
 operator|->
 name|e_flags
 operator||=
-name|EF_NORETURN
+name|EF_NO_BODY_RETN
 expr_stmt|;
 if|if
 condition|(
