@@ -3703,6 +3703,10 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|fp
+operator|->
+name|f_cred
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
@@ -12250,11 +12254,13 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|NOCRED
+argument_list|,
 name|vp
 argument_list|)
 operator|)
 condition|)
-block|{}
+block|{ 	}
 endif|#
 directive|endif
 elseif|else
@@ -12589,11 +12595,15 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|fp
+operator|->
+name|f_cred
+argument_list|,
 name|vp
 argument_list|)
 operator|)
 condition|)
-block|{}
+block|{ 	}
 endif|#
 directive|endif
 elseif|else
@@ -17379,10 +17389,15 @@ comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|MAC
+comment|/* 		 * We don't yet have fp->f_cred, so use td->td_ucred, which 		 * should be right. 		 */
 name|error
 operator|=
 name|mac_check_vnode_write
 argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
 name|td
 operator|->
 name|td_ucred

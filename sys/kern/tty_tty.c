@@ -318,6 +318,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* XXX: Shouldn't this cred be td->td_ucred not NOCRED? */
 name|error
 operator|=
 name|VOP_OPEN
@@ -457,7 +458,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-comment|/* XXX: Shouldn't the cred below be td->td_ucred not NOCRED? */
 name|error
 operator|=
 name|mac_check_vnode_read
@@ -465,6 +465,8 @@ argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|NOCRED
 argument_list|,
 name|ttyvp
 argument_list|)
@@ -477,6 +479,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
+comment|/* XXX: Shouldn't this cred be td->td_ucred not NOCRED? */
 name|error
 operator|=
 name|VOP_READ
@@ -655,7 +658,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-comment|/* XXX: shouldn't the cred below be td->td_ucred not NOCRED? */
 name|error
 operator|=
 name|mac_check_vnode_write
@@ -663,6 +665,8 @@ argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|NOCRED
 argument_list|,
 name|ttyvp
 argument_list|)
@@ -675,6 +679,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
+comment|/* XXX: shouldn't this cred be td->td_ucred not NOCRED? */
 name|error
 operator|=
 name|VOP_WRITE
@@ -1030,6 +1035,8 @@ argument_list|(
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|NOCRED
 argument_list|,
 name|ttyvp
 argument_list|)

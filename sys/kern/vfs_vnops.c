@@ -1829,6 +1829,8 @@ name|mac_check_vnode_read
 argument_list|(
 name|active_cred
 argument_list|,
+name|file_cred
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
@@ -1838,6 +1840,8 @@ operator|=
 name|mac_check_vnode_write
 argument_list|(
 name|active_cred
+argument_list|,
+name|file_cred
 argument_list|,
 name|vp
 argument_list|)
@@ -2327,6 +2331,10 @@ name|mac_check_vnode_read
 argument_list|(
 name|active_cred
 argument_list|,
+name|fp
+operator|->
+name|f_cred
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
@@ -2688,6 +2696,10 @@ name|mac_check_vnode_write
 argument_list|(
 name|active_cred
 argument_list|,
+name|fp
+operator|->
+name|f_cred
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
@@ -2937,6 +2949,8 @@ operator|=
 name|mac_check_vnode_stat
 argument_list|(
 name|active_cred
+argument_list|,
+name|file_cred
 argument_list|,
 name|vp
 argument_list|)
@@ -3848,6 +3862,10 @@ operator|=
 name|mac_check_vnode_poll
 argument_list|(
 name|active_cred
+argument_list|,
+name|fp
+operator|->
+name|f_cred
 argument_list|,
 name|vp
 argument_list|)

@@ -3710,6 +3710,8 @@ name|mac_check_vnode_write
 argument_list|(
 name|cred
 argument_list|,
+name|NOCRED
+argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;

@@ -3294,7 +3294,12 @@ parameter_list|(
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|file_cred
 parameter_list|,
 name|struct
 name|vnode
@@ -3333,7 +3338,7 @@ argument_list|,
 operator|&
 name|vap
 argument_list|,
-name|cred
+name|active_cred
 argument_list|,
 name|curthread
 argument_list|)
@@ -3351,7 +3356,7 @@ return|return
 operator|(
 name|mac_bsdextended_check
 argument_list|(
-name|cred
+name|active_cred
 argument_list|,
 name|vap
 operator|.
