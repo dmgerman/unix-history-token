@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -767,7 +771,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 100 + 1 + TYPE_SIGNED(type))
+value|((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 1000 + 1 + TYPE_SIGNED(type))
 end_define
 
 begin_endif
