@@ -127,6 +127,17 @@ comment|/*!   -b: workaround TCP bug */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|c_dirname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    -c: remote directory */
+end_comment
+
+begin_decl_stmt
 name|int
 name|d_flag
 decl_stmt|;
@@ -2152,7 +2163,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"146AaB:bdFf:h:lHMmnPpo:qRrS:sT:tvw:"
+literal|"146AaB:bc:dFf:h:lHMmnPpo:qRrS:sT:tvw:"
 argument_list|)
 operator|)
 operator|!=
@@ -2238,6 +2249,14 @@ expr_stmt|;
 name|b_flag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|c_dirname
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -2481,6 +2500,8 @@ condition|(
 name|h_hostname
 operator|||
 name|f_filename
+operator|||
+name|c_dirname
 condition|)
 block|{
 if|if
@@ -2531,9 +2552,15 @@ name|asprintf
 argument_list|(
 name|argv
 argument_list|,
-literal|"ftp://%s/%s"
+literal|"ftp://%s/%s/%s"
 argument_list|,
 name|h_hostname
+argument_list|,
+name|c_dirname
+condition|?
+name|c_dirname
+else|:
+literal|""
 argument_list|,
 name|f_filename
 argument_list|)
