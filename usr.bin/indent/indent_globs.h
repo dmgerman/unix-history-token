@@ -677,7 +677,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* True if continuation lines from the 					 * expression part of "if(e)", 					 * "while(e)", "for(e;e;e)" should be 					 * indented an extra tab stop so that 					 * they don't conflict with the code 					 * that follows */
+comment|/* true if continuation lines from the 					 * expression part of "if(e)", 					 * "while(e)", "for(e;e;e)" should be 					 * indented an extra tab stop so that 					 * they don't conflict with the code 					 * that follows */
+end_comment
+
+begin_decl_stmt
+name|int
+name|function_brace_split
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* split function declaration and 					 * brace onto separate lines */
+end_comment
+
+begin_decl_stmt
+name|int
+name|use_tabs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set true to use tabs for spacing, 					 * false uses all spaces */
 end_comment
 
 begin_comment

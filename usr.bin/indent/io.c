@@ -2274,6 +2274,11 @@ name|curr
 operator|=
 name|current
 expr_stmt|;
+if|if
+condition|(
+name|use_tabs
+condition|)
+block|{
 while|while
 condition|(
 operator|(
@@ -2308,6 +2313,7 @@ name|curr
 operator|=
 name|tcur
 expr_stmt|;
+block|}
 block|}
 while|while
 condition|(
