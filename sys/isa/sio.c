@@ -3305,6 +3305,13 @@ block|}
 block|,
 comment|/* GWY6290 - Telepath with x2 Technology */
 block|{
+literal|0x21002534
+block|,
+name|NULL
+block|}
+block|,
+comment|/* MAE0021 - Jetstream Int V.90 56k Voice Series 2*/
+block|{
 literal|0x0000f435
 block|,
 name|NULL
