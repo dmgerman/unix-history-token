@@ -265,17 +265,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|priv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|priv
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Link together node and private info */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
