@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.1 (Berkeley) %G%"
+literal|"@(#)field.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,27 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"chpass: empty field"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'-'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: login names may not begin with a hyphen.\n"
 argument_list|)
 expr_stmt|;
 return|return
