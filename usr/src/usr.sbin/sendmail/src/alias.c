@@ -39,7 +39,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.31
+literal|3.31.1.1
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.31
+literal|3.31.1.1
 operator|%
 name|G
 operator|%
@@ -1485,9 +1485,6 @@ operator|->
 name|q_home
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|expand
 argument_list|(
 literal|"$z/.forward"
@@ -1502,6 +1499,8 @@ name|buf
 operator|-
 literal|1
 index|]
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 if|if

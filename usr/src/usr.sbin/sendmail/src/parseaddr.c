@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.41
+literal|3.41.1.1
 operator|%
 name|G
 operator|%
@@ -1097,9 +1097,6 @@ name|firstime
 operator|=
 name|FALSE
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|expand
 argument_list|(
 literal|"$o"
@@ -1114,6 +1111,8 @@ name|buf
 operator|-
 literal|1
 index|]
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|strcat

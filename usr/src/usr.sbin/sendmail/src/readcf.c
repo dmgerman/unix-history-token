@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.23
+literal|3.23.1.1
 operator|%
 name|G
 operator|%
@@ -311,9 +311,6 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|expand
 argument_list|(
 operator|&
@@ -330,6 +327,8 @@ index|[
 sizeof|sizeof
 name|exbuf
 index|]
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|rwp
@@ -374,9 +373,6 @@ operator|==
 literal|'\t'
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
 name|expand
 argument_list|(
 name|p
@@ -389,6 +385,8 @@ index|[
 sizeof|sizeof
 name|exbuf
 index|]
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|rwp

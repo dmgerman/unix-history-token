@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.9
+literal|3.9.1.1
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.9
+literal|3.9.1.1
 operator|%
 name|G
 operator|%
@@ -301,9 +301,6 @@ name|EX_TEMPFAIL
 operator|)
 return|;
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
-operator|(
-name|void
-operator|)
 name|expand
 argument_list|(
 literal|"$g"
@@ -318,6 +315,8 @@ name|buf
 operator|-
 literal|1
 index|]
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|smtpmessage
@@ -454,7 +453,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPFINISH -- finish up sending all the SMTP protocol. ** **	Parameters: **		m -- mailer being sent to. **		editfcn -- a function to call to output the **			text of the message with. ** **	Returns: **		exit status corresponding to DATA command. ** **	Side Effects: **		none. */
+comment|/* **  SMTPFINISH -- finish up sending all the SMTP protocol. ** **	Parameters: **		m -- mailer being sent to. **		e -- the envelope for this message. ** **	Returns: **		exit status corresponding to DATA command. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
@@ -462,7 +461,7 @@ name|smtpfinish
 argument_list|(
 argument|m
 argument_list|,
-argument|editfcn
+argument|e
 argument_list|)
 end_macro
 
@@ -474,15 +473,13 @@ name|m
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-function_decl|(
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
 modifier|*
-name|editfcn
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+name|e
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -539,7 +536,30 @@ operator|)
 return|;
 call|(
 modifier|*
-name|editfcn
+name|e
+operator|->
+name|e_puthdr
+call|)
+argument_list|(
+name|SmtpOut
+argument_list|,
+name|m
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|SmtpOut
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|e
+operator|->
+name|e_putbody
 call|)
 argument_list|(
 name|SmtpOut

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.68		%G%"
+literal|"@(#)sendmail.h	3.68.1.1		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -840,15 +840,15 @@ comment|/* adjusted priority of this message */
 name|bool
 name|e_queueup
 decl_stmt|;
-comment|/* queue this message for future xmission */
+comment|/* queue this message */
 name|bool
 name|e_oldstyle
 decl_stmt|;
-comment|/* spaces (not commas) delimit addresses */
+comment|/* use spaces (not commas) in hdrs */
 name|bool
 name|e_retreceipt
 decl_stmt|;
-comment|/* give a return receipt if delivery occurs */
+comment|/* give a return receipt */
 name|bool
 name|e_sendreceipt
 decl_stmt|;
@@ -857,7 +857,7 @@ name|char
 modifier|*
 name|e_origfrom
 decl_stmt|;
-comment|/* the From: line read from the message */
+comment|/* the From: line first read */
 name|char
 modifier|*
 name|e_to
@@ -876,18 +876,45 @@ name|long
 name|e_msgsize
 decl_stmt|;
 comment|/* size of the message in bytes */
-name|int
-function_decl|(
-modifier|*
-name|e_putfunc
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* function used to put the message */
 name|short
 name|e_class
 decl_stmt|;
-comment|/* message class (priority, junk, etc.) */
+comment|/* msg class (priority, junk, etc.) */
+name|int
+function_decl|(
+modifier|*
+name|e_puthdr
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* function to put header of message */
+name|int
+function_decl|(
+modifier|*
+name|e_putbody
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* function to put body of message */
+name|struct
+name|envelope
+modifier|*
+name|e_parent
+decl_stmt|;
+comment|/* the message this one encloses */
+name|char
+modifier|*
+name|e_df
+decl_stmt|;
+comment|/* location of temp file */
+name|char
+modifier|*
+name|e_macro
+index|[
+literal|128
+index|]
+decl_stmt|;
+comment|/* macro definitions */
 block|}
 struct|;
 end_struct
@@ -2024,15 +2051,6 @@ specifier|extern
 name|char
 modifier|*
 name|xalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|expand
 parameter_list|()
 function_decl|;
 end_function_decl

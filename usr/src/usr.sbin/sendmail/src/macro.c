@@ -21,7 +21,7 @@ operator|)
 name|macro
 operator|.
 name|c
-literal|3.11
+literal|3.11.1.1
 operator|%
 name|G
 operator|%
@@ -29,30 +29,88 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		End of interpolated output. ** **	Side Effects: **		none. */
+end_comment
+
+begin_expr_stmt
+name|expand
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+name|buflim
+argument_list|,
+name|e
+argument_list|)
+specifier|register
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|register
 name|char
 modifier|*
-name|Macro
-index|[
-literal|128
-index|]
+name|buf
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. ** **	Returns: **		End of interpolated output. ** **	Side Effects: **		none. */
-end_comment
+begin_decl_stmt
+name|char
+modifier|*
+name|buflim
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|extern
+name|char
+modifier|*
+name|expand2
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
+name|expand2
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+name|buflim
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_function
 name|char
 modifier|*
-name|expand
+name|expand2
 parameter_list|(
 name|s
 parameter_list|,
 name|buf
 parameter_list|,
 name|buflim
+parameter_list|,
+name|e
 parameter_list|)
 specifier|register
 name|char
@@ -67,6 +125,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|buflim
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -172,7 +235,9 @@ name|s
 expr_stmt|;
 name|skipping
 operator|=
-name|Macro
+name|e
+operator|->
+name|e_macro
 index|[
 name|c
 index|]
@@ -211,7 +276,9 @@ name|s
 expr_stmt|;
 name|q
 operator|=
-name|Macro
+name|e
+operator|->
+name|e_macro
 index|[
 name|c
 operator|&
@@ -327,13 +394,15 @@ name|gotone
 condition|)
 return|return
 operator|(
-name|expand
+name|expand2
 argument_list|(
 name|xbuf
 argument_list|,
 name|buf
 argument_list|,
 name|buflim
+argument_list|,
+name|e
 argument_list|)
 operator|)
 return|;
@@ -384,7 +453,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. ** **	Returns: **		none. ** **	Side Effects: **		Macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   official SMTP hostname, used in messages+ **		$l   UNIX-style from line+ **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$q   the string that becomes an address -- this is **		     normally used to combine $g& $x. **		$r   protocol used to talk to sender **		$s   sender's host name **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
+comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. ** **	Returns: **		none. ** **	Side Effects: **		CurEnv->e_macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   official SMTP hostname, used in messages+ **		$l   UNIX-style from line+ **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$q   the string that becomes an address -- this is **		     normally used to combine $g& $x. **		$r   protocol used to talk to sender **		$s   sender's host name **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
 end_comment
 
 begin_macro
@@ -442,7 +511,9 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-name|Macro
+name|CurEnv
+operator|->
+name|e_macro
 index|[
 name|n
 operator|&
@@ -474,7 +545,9 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|Macro
+name|CurEnv
+operator|->
+name|e_macro
 index|[
 name|n
 operator|&

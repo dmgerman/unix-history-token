@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.38
+literal|3.38.1.1
 operator|%
 name|G
 operator|%
@@ -114,7 +114,7 @@ name|strcat
 argument_list|(
 name|tempfname
 argument_list|,
-literal|"/dfaXXXXXX"
+literal|"/dfXXXXXX"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -207,9 +207,6 @@ else|:
 literal|"$r host "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|expand
 argument_list|(
 name|xbuf
@@ -224,6 +221,8 @@ name|buf
 operator|-
 literal|1
 index|]
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 operator|(
