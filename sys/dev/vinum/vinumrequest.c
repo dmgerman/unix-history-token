@@ -4857,14 +4857,6 @@ operator|<<
 name|DEV_BSHIFT
 expr_stmt|;
 block|}
-name|bp
-operator|->
-name|b_pblkno
-operator|=
-name|bp
-operator|->
-name|b_blkno
-expr_stmt|;
 return|return
 literal|1
 return|;
