@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)net.c	8.1 (Berkeley) %G%"
+literal|"@(#)net.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +503,14 @@ operator|==
 literal|0x0d
 condition|)
 block|{
+if|if
+condition|(
+name|lastc
+operator|==
+literal|'\r'
+condition|)
+comment|/* ^M^M - skip dupes */
+continue|continue;
 name|c
 operator|=
 literal|'\n'
