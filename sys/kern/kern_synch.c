@@ -1290,6 +1290,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|SW_VOL
+operator|)
+operator|&&
+operator|(
 name|td
 operator|->
 name|td_proc
@@ -1297,6 +1304,7 @@ operator|->
 name|p_flag
 operator|&
 name|P_SA
+operator|)
 condition|)
 name|newtd
 operator|=
@@ -1314,6 +1322,8 @@ argument_list|(
 name|td
 argument_list|,
 name|newtd
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|CTR4

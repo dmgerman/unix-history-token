@@ -1048,7 +1048,7 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
 block|{
 comment|/* 		 * Idle the other threads for a second. 		 * Since the user space is copied, it must remain stable. 		 * In addition, all threads (from the user perspective) 		 * need to either be suspended or in the kernel, 		 * where they will try restart in the parent and will 		 * be aborted in the child. 		 */
@@ -2906,7 +2906,7 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
 block|{
 name|PROC_LOCK
@@ -2991,7 +2991,7 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
 block|{
 name|PROC_LOCK

@@ -17,18 +17,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<opt_sched.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|kse
 value|td_sched
 end_define
-
-begin_include
-include|#
-directive|include
-file|<opt_sched.h>
-end_include
 
 begin_include
 include|#
@@ -5474,6 +5474,9 @@ name|struct
 name|thread
 modifier|*
 name|newtd
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -7768,6 +7771,13 @@ name|td
 argument_list|)
 condition|)
 return|return;
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|--
+expr_stmt|;
 name|ke
 operator|->
 name|ke_ksegrp
@@ -7862,6 +7872,13 @@ operator|->
 name|ke_state
 operator|=
 name|KES_THREAD
+expr_stmt|;
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|++
 expr_stmt|;
 name|ke
 operator|->
