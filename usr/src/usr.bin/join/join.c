@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)join.c	8.5 (Berkeley) %G%"
+literal|"@(#)join.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1392,7 +1392,7 @@ name|lastlp
 operator|!=
 name|NULL
 condition|)
-name|lastp
+name|lastlp
 operator|=
 operator|&
 name|F
