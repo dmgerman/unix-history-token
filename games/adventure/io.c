@@ -2661,7 +2661,7 @@ operator|->
 name|seekadr
 argument_list|,
 operator|(
-name|u_int
+name|size_t
 operator|)
 name|msg
 operator|->
