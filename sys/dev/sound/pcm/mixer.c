@@ -988,6 +988,9 @@ name|busy
 operator|=
 name|busy
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
