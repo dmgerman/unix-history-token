@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.12 (Berkeley) %G%"
+literal|"@(#)last.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,39 +146,6 @@ begin_comment
 comment|/* utmp read buffer */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HMAX
-value|sizeof(buf[0].ut_host)
-end_define
-
-begin_comment
-comment|/* size of utmp host field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LMAX
-value|sizeof(buf[0].ut_line)
-end_define
-
-begin_comment
-comment|/* size of utmp tty field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NMAX
-value|sizeof(buf[0].ut_name)
-end_define
-
-begin_comment
-comment|/* size of utmp name field */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -239,7 +206,7 @@ comment|/* log out time */
 name|char
 name|tty
 index|[
-name|LMAX
+name|UT_LINESIZE
 operator|+
 literal|1
 index|]
@@ -863,7 +830,7 @@ name|ut_name
 argument_list|,
 literal|"shutdown"
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|)
 condition|?
 literal|"crash"
@@ -894,25 +861,25 @@ name|printf
 argument_list|(
 literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s \n"
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
 name|bp
 operator|->
 name|ut_name
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
 name|bp
 operator|->
 name|ut_line
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|,
 name|bp
 operator|->
@@ -993,25 +960,25 @@ name|printf
 argument_list|(
 literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s \n"
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
 name|bp
 operator|->
 name|ut_name
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
 name|bp
 operator|->
 name|ut_line
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|,
 name|bp
 operator|->
@@ -1082,7 +1049,7 @@ name|bp
 operator|->
 name|ut_line
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|)
 condition|)
 break|break;
@@ -1118,25 +1085,25 @@ name|printf
 argument_list|(
 literal|"%-*.*s  %-*.*s %-*.*s %10.10s %5.5s "
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|,
 name|bp
 operator|->
 name|ut_name
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|,
 name|bp
 operator|->
 name|ut_line
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|,
 name|bp
 operator|->
@@ -1457,7 +1424,7 @@ name|bp
 operator|->
 name|ut_host
 argument_list|,
-name|HMAX
+name|UT_HOSTSIZE
 argument_list|)
 condition|)
 return|return
@@ -1482,7 +1449,7 @@ name|bp
 operator|->
 name|ut_line
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|)
 condition|)
 return|return
@@ -1507,7 +1474,7 @@ name|bp
 operator|->
 name|ut_name
 argument_list|,
-name|NMAX
+name|UT_NAMESIZE
 argument_list|)
 condition|)
 return|return
@@ -1705,7 +1672,7 @@ name|cur
 operator|->
 name|tty
 argument_list|,
-name|LMAX
+name|UT_LINESIZE
 argument_list|)
 expr_stmt|;
 return|return
