@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.27	81/02/28	*/
+comment|/*	up.c	4.28	81/03/03	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  */
+comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * TODO:  *	Check out handling of spun-down drives and write lock  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check multiple drive handling  *	Check dump code  *	Check unibus reset code  */
 end_comment
 
 begin_define
@@ -3243,22 +3243,31 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%D "
+literal|"SOFT ECC up%d%c bn%d\n"
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+literal|'a'
+operator|+
+operator|(
+name|minor
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+operator|&
+literal|07
+operator|)
 argument_list|,
 name|bp
 operator|->
 name|b_blkno
 operator|+
 name|npf
-argument_list|)
-expr_stmt|;
-name|prdev
-argument_list|(
-literal|"ECC"
-argument_list|,
-name|bp
-operator|->
-name|b_dev
 argument_list|)
 expr_stmt|;
 name|mask
@@ -4012,6 +4021,8 @@ decl_stmt|,
 name|blk
 decl_stmt|,
 name|unit
+decl_stmt|,
+name|i
 decl_stmt|;
 name|struct
 name|size
@@ -4055,19 +4066,11 @@ name|unit
 operator|>=
 name|NUP
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bad unit\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 define|#
 directive|define
 name|phys
@@ -4099,19 +4102,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dna\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 name|uba
 operator|=
 name|phys
@@ -4145,7 +4140,7 @@ endif|#
 directive|endif
 name|DELAY
 argument_list|(
-literal|1000000
+literal|2000000
 argument_list|)
 expr_stmt|;
 name|upaddr
@@ -4159,7 +4154,7 @@ name|ui
 operator|->
 name|ui_physaddr
 expr_stmt|;
-while|while
+if|if
 condition|(
 operator|(
 name|upaddr
@@ -4171,7 +4166,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-empty_stmt|;
+return|return
+operator|(
+name|EFAULT
+operator|)
+return|;
 name|num
 operator|=
 name|maxfree
@@ -4229,32 +4228,16 @@ name|upaddr
 operator|->
 name|upds
 operator|&
-operator|(
-name|UP_DPR
-operator||
-name|UP_MOL
-operator|)
+name|UP_DREADY
 operator|)
 operator|!=
-operator|(
-name|UP_DPR
-operator||
-name|UP_MOL
-operator|)
+name|UP_DREADY
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dna\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EFAULT
 operator|)
 return|;
-block|}
 name|st
 operator|=
 operator|&
@@ -4300,19 +4283,11 @@ index|]
 operator|.
 name|nblocks
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"oor\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
-block|}
 while|while
 condition|(
 name|num
@@ -4541,33 +4516,11 @@ name|upcs1
 operator|&
 name|UP_ERR
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"up dump dsk err: (%d,%d,%d) cs1=%x, er1=%x\n"
-argument_list|,
-name|cn
-argument_list|,
-name|tn
-argument_list|,
-name|sn
-argument_list|,
-name|upaddr
-operator|->
-name|upcs1
-argument_list|,
-name|upaddr
-operator|->
-name|uper1
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
-block|}
 name|start
 operator|+=
 name|blk
