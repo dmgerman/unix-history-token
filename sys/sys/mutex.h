@@ -240,7 +240,7 @@ name|mtx_recurse
 decl_stmt|;
 comment|/* number of recursive holds */
 name|u_int
-name|mtx_saveintr
+name|mtx_savecrit
 decl_stmt|;
 comment|/* saved flags (for spin locks) */
 name|int
@@ -438,8 +438,8 @@ parameter_list|,
 name|int
 name|opts
 parameter_list|,
-name|u_int
-name|mtx_intr
+name|critical_t
+name|mtx_crit
 parameter_list|,
 specifier|const
 name|char
@@ -478,6 +478,98 @@ end_function_decl
 begin_function_decl
 name|int
 name|_mtx_trylock
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_mtx_lock_flags
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_mtx_unlock_flags
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_mtx_lock_spin_flags
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_mtx_unlock_spin_flags
 parameter_list|(
 name|struct
 name|mtx
@@ -638,8 +730,12 @@ parameter_list|,
 name|tid
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|do {				\ 	if (!_obtain_lock((mp), (tid)))					\ 		_mtx_lock_sleep((mp), (opts), __FILE__, __LINE__);	\ } while (0)
+value|do {			\ 	if (!_obtain_lock((mp), (tid)))					\ 		_mtx_lock_sleep((mp), (opts), (file), (line));		\ } while (0)
 end_define
 
 begin_endif
@@ -667,8 +763,12 @@ parameter_list|,
 name|tid
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|do {				\ 	u_int _mtx_intr = save_intr();					\ 	disable_intr();							\ 	if (!_obtain_lock((mp), (tid))) {				\ 		if ((mp)->mtx_lock == (uintptr_t)(tid))			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), (opts), _mtx_intr,		\ 			    __FILE__, __LINE__);			\ 	} else								\ 		(mp)->mtx_saveintr = _mtx_intr;				\ } while (0)
+value|do {			\ 	critical_t _mtx_crit;						\ 	_mtx_crit = critical_enter();					\ 	if (!_obtain_lock((mp), (tid))) {				\ 		if ((mp)->mtx_lock == (uintptr_t)(tid))			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), (opts), _mtx_crit, (file),	\ 			    (line));					\ 	} else								\ 		(mp)->mtx_savecrit = _mtx_crit;				\ } while (0)
 end_define
 
 begin_endif
@@ -696,8 +796,12 @@ parameter_list|,
 name|tid
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|do {				\ 	if (!_release_lock((mp), (tid)))				\ 		_mtx_unlock_sleep((mp), (opts), __FILE__, __LINE__);	\ } while (0)
+value|do {			\ 	if (!_release_lock((mp), (tid)))				\ 		_mtx_unlock_sleep((mp), (opts), (file), (line));	\ } while (0)
 end_define
 
 begin_endif
@@ -722,7 +826,7 @@ name|_rel_spin_lock
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	u_int _mtx_intr = (mp)->mtx_saveintr;				\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		_release_lock_quick((mp));				\ 		restore_intr(_mtx_intr);				\ 	}								\ } while (0)
+value|do {						\ 	critical_t _mtx_crit = (mp)->mtx_savecrit;			\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		_release_lock_quick((mp));				\ 		critical_exit(_mtx_crit);				\ 	}								\ } while (0)
 end_define
 
 begin_endif
@@ -784,6 +888,12 @@ parameter_list|)
 value|mtx_unlock_spin_flags((m), 0)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLD_MODULE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -793,19 +903,8 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {					\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", __FILE__, __LINE__));	\ 	_get_sleep_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mtx_lock_spin_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|)
-value|do {				\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
+define|\
+value|_mtx_lock_flags((m), (opts), __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -817,7 +916,21 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {					\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	_rel_sleep_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
+define|\
+value|_mtx_unlock_flags((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|_mtx_lock_spin_flags((m), (opts), __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -829,7 +942,134 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {				\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	_rel_spin_lock((m));						\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
+define|\
+value|_mtx_unlock_spin_flags((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|__mtx_lock_flags((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_unlock_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|__mtx_unlock_flags((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|__mtx_lock_spin_flags((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_unlock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|__mtx_unlock_spin_flags((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|__mtx_lock_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", (file), (line)));		\ 	_get_sleep_lock((m), curproc, (opts), (file), (line));		\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), (file), (line));	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtx_lock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, (opts), (file), (line));		\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), (file), (line));	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtx_unlock_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), (file), (line));	\ 	_rel_sleep_lock((m), curproc, (opts), (file), (line));		\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtx_unlock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {		\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), (file), (line));	\ 	_rel_spin_lock((m));						\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ } while (0)
 end_define
 
 begin_define

@@ -34,29 +34,7 @@ name|mtx_intr_enable
 parameter_list|(
 name|mutex
 parameter_list|)
-value|(mutex)->mtx_saveintr = ALPHA_PSL_IPL_0
-end_define
-
-begin_comment
-comment|/*  * Assembly macros (for internal use only)  *--------------------------------------------------------------------------  */
-end_comment
-
-begin_comment
-comment|/*  * Get a spin lock, handle recusion inline.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_get_spin_lock
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|,
-name|opts
-parameter_list|)
-value|do {				\ 	u_int _ipl = alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH);		\ 	if (!_obtain_lock((mp), (tid))) {				\ 		if ((mp)->mtx_lock == (uintptr_t)(tid))			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), (opts), _ipl, __FILE__,	\ 			    __LINE__);					\ 	} else {							\ 		alpha_mb();						\ 		(mp)->mtx_saveintr = _ipl;				\ 	}								\ } while (0)
+value|(mutex)->mtx_savecrit = ALPHA_PSL_IPL_0
 end_define
 
 begin_endif
