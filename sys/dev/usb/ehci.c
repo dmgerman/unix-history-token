@@ -3513,8 +3513,6 @@ name|sqtd
 decl_stmt|;
 name|u_int32_t
 name|status
-init|=
-literal|0
 decl_stmt|,
 name|nstatus
 decl_stmt|;
@@ -3655,6 +3653,14 @@ endif|#
 directive|endif
 comment|/* The transfer is done, compute actual length and status. */
 name|actlen
+operator|=
+literal|0
+expr_stmt|;
+name|nstatus
+operator|=
+literal|0
+expr_stmt|;
+name|status
 operator|=
 literal|0
 expr_stmt|;
