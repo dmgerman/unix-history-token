@@ -1248,13 +1248,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|fdopts
-operator|&
-name|FDOPT_AUTOSEL
-condition|)
-block|{
-if|if
-condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -1274,23 +1267,6 @@ argument_list|,
 literal|"ioctl(FD_STYPE)"
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|fmtstring
-operator|||
-name|format
-condition|)
-block|{
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"-f fmt or -s fmtstr is only allowed for autoselecting devices"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
