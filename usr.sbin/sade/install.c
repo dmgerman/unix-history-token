@@ -2125,6 +2125,9 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -2140,7 +2143,7 @@ return|;
 block|}
 else|else
 block|{
-name|dialog_clear_norefresh
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|msgConfirm
@@ -2232,6 +2235,9 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2277,6 +2283,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2310,6 +2319,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2326,6 +2338,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2344,6 +2359,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2375,6 +2393,9 @@ literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2392,6 +2413,9 @@ name|self
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2456,6 +2480,9 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 comment|/* Give user the option of one last configuration spree */
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|installConfigure
 argument_list|()
 expr_stmt|;
