@@ -1477,6 +1477,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not used until after switch */
+name|common_tss
+index|[
+name|cpu
+index|]
+operator|.
+name|tss_iobase
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|amd64tss
+argument_list|)
+expr_stmt|;
 name|gdt_segs
 index|[
 name|GPROC0_SEL
