@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|UPA_MEMSTART
-value|0x1fc00000000UL
+value|0x1c000000000UL
 end_define
 
 begin_define
