@@ -1444,12 +1444,15 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
+operator|(
 name|dev
 operator|->
 name|si_flags
 operator|&
 name|SI_NAMED
+operator|)
+operator|==
+literal|0
 condition|)
 name|make_dev
 argument_list|(
