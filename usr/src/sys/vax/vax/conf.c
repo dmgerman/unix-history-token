@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3252,6 +3252,84 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"vs.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NVS
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|vsopen
+argument_list|()
+decl_stmt|,
+name|vsclose
+argument_list|()
+decl_stmt|,
+name|vsioctl
+argument_list|()
+decl_stmt|,
+name|vsreset
+argument_list|()
+decl_stmt|,
+name|vsselect
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|vsopen
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|vsclose
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|vsioctl
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|vsreset
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|vsselect
+value|nodev
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|ttselect
@@ -3951,7 +4029,7 @@ name|rlread
 block|,
 name|rlwrite
 block|,
-comment|/* 32 */
+comment|/*32*/
 name|nodev
 block|,
 name|nodev
@@ -3972,7 +4050,7 @@ name|logread
 block|,
 name|nodev
 block|,
-comment|/* 33 */
+comment|/*33*/
 name|logioctl
 block|,
 name|nodev
@@ -3993,7 +4071,7 @@ name|dhuread
 block|,
 name|dhuwrite
 block|,
-comment|/* 34 */
+comment|/*34*/
 name|dhuioctl
 block|,
 name|dhustop
@@ -4014,7 +4092,7 @@ name|crlread
 block|,
 name|crlwrite
 block|,
-comment|/* 35 */
+comment|/*35*/
 name|nodev
 block|,
 name|nodev
@@ -4026,7 +4104,28 @@ block|,
 name|seltrue
 block|,
 name|nodev
-block|, }
+block|,
+name|vsopen
+block|,
+name|vsclose
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+comment|/*36*/
+name|vsioctl
+block|,
+name|nodev
+block|,
+name|vsreset
+block|,
+literal|0
+block|,
+name|vsselect
+block|,
+name|nodev
+block|}
 decl_stmt|;
 end_decl_stmt
 
