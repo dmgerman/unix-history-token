@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.2 (Berkeley) %G%"
+literal|"@(#)hash.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,6 +529,8 @@ parameter_list|,
 name|mode
 parameter_list|,
 name|info
+parameter_list|,
+name|dflags
 parameter_list|)
 specifier|const
 name|char
@@ -539,6 +541,8 @@ name|int
 name|flags
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|dflags
 decl_stmt|;
 specifier|const
 name|HASHINFO
@@ -620,16 +624,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Select flags relevant to us. Even if user wants write only, we need 	 * to be able to read the actual file, so we need to open it read/write. 	 * But, the field in the hashp structure needs to be accurate so that 	 * we can check accesses. 	 */
+comment|/* 	 * Even if user wants write only, we need to be able to read 	 * the actual file, so we need to open it read/write. But, the 	 * field in the hashp structure needs to be accurate so that 	 * we can check accesses. 	 */
 name|hashp
 operator|->
 name|flags
 operator|=
 name|flags
-operator|=
-name|flags
-operator|&
-name|__USE_OPEN_FLAGS
 expr_stmt|;
 name|new_table
 operator|=
