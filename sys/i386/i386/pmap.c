@@ -654,6 +654,25 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Crashdump maps.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|pt_entry_t
+modifier|*
+name|pt_crashdumpmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|caddr_t
+name|crashdumpmap
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1341,6 +1360,18 @@ argument|CADDR2
 argument_list|,
 literal|1
 argument_list|)
+comment|/* 	 * Crashdump maps. 	 */
+name|SYSMAP
+argument_list|(
+name|caddr_t
+argument_list|,
+name|pt_crashdumpmap
+argument_list|,
+name|crashdumpmap
+argument_list|,
+name|MAXDUMPPGS
+argument_list|)
+expr_stmt|;
 comment|/* 	 * ptvmmap is used for reading arbitrary physical pages via /dev/mem. 	 * XXX ptmmap is not used. 	 */
 name|SYSMAP
 argument_list|(
@@ -8253,6 +8284,9 @@ name|pmap_kenter_temporary
 parameter_list|(
 name|vm_offset_t
 name|pa
+parameter_list|,
+name|int
+name|i
 parameter_list|)
 block|{
 name|pmap_kenter
@@ -8260,7 +8294,13 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|CADDR1
+name|crashdumpmap
+operator|+
+operator|(
+name|i
+operator|*
+name|PAGE_SIZE
+operator|)
 argument_list|,
 name|pa
 argument_list|)
@@ -8271,7 +8311,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|CADDR1
+name|crashdumpmap
 operator|)
 return|;
 block|}

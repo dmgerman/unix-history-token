@@ -308,6 +308,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXDUMPPGS
+value|(DFLTPHYS/PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOPAGES
 value|2
 end_define
