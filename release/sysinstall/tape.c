@@ -126,6 +126,10 @@ name|dev
 operator|->
 name|name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|dev
 operator|->
 name|private
@@ -153,6 +157,10 @@ argument_list|(
 literal|"Unable to CD to %s before extracting tape!\n"
 literal|"Tape media is not selected and thus cannot be installed from."
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|dev
 operator|->
 name|private
