@@ -2944,6 +2944,8 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
+return|return
+operator|(
 call|(
 modifier|*
 name|ifc
@@ -2953,10 +2955,6 @@ call|)
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}

@@ -105,7 +105,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|ifc_destroy

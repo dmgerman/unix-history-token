@@ -431,7 +431,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|faith_clone_destroy
 name|__P
 argument_list|(
@@ -986,7 +986,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|faith_clone_destroy
 parameter_list|(
 name|ifp
@@ -1055,6 +1055,11 @@ argument_list|,
 name|M_FAITH
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
