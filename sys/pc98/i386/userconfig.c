@@ -575,88 +575,8 @@ block|,
 name|CLS_STORAGE
 block|}
 block|,
-block|{
-literal|"ahc"
-block|,
-literal|"Adaptec 274x/284x/294x SCSI controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"aic"
-block|,
-literal|"Adaptec 152x SCSI and compatible sound cards"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"ncr"
-block|,
-literal|"NCR/Symbios 53C810/15/25/60/75 SCSI controller"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"wdc"
-block|,
-literal|"IDE/ESDI/MFM disk controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"fdc"
-block|,
-literal|"Floppy disk controller"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"mcd"
-block|,
-literal|"Mitsumi CD-ROM"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"scd"
-block|,
-literal|"Sony CD-ROM"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"matcdc"
-block|,
-literal|"Matsushita/Panasonic/Creative CDROM"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-else|#
-directive|else
+endif|#
+directive|endif
 block|{
 literal|"bt"
 block|,
@@ -817,8 +737,6 @@ block|,
 name|CLS_STORAGE
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"amd"
 block|,
@@ -1016,9 +934,6 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|PC98
 block|{
 literal|"cx"
 block|,
@@ -1099,8 +1014,6 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"lpt"
 block|,
@@ -1111,9 +1024,6 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|PC98
 block|{
 literal|"gp"
 block|,
@@ -1124,23 +1034,6 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PC98
-block|{
-literal|"mse"
-block|,
-literal|"Bus Mouse"
-block|,
-literal|0
-block|,
-name|CLS_INPUT
-block|}
-block|,
-else|#
-directive|else
 block|{
 literal|"mse"
 block|,
@@ -1161,8 +1054,6 @@ block|,
 name|CLS_INPUT
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"joy"
 block|,
