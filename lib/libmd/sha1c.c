@@ -480,7 +480,6 @@ name|size_t
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|u_int32_t
 modifier|*
 name|p
@@ -1435,7 +1434,6 @@ name|int
 name|num
 decl_stmt|;
 block|{
-specifier|register
 name|u_int32_t
 name|A
 decl_stmt|,
@@ -3249,17 +3247,14 @@ modifier|*
 name|c
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|u_int32_t
 name|l
 decl_stmt|;
-specifier|register
 name|u_int32_t
 modifier|*
 name|p

@@ -311,11 +311,9 @@ name|base
 parameter_list|,
 name|lenp
 parameter_list|)
-specifier|register
 name|u_long
 name|ul
 decl_stmt|;
-specifier|register
 name|int
 name|base
 decl_stmt|,
@@ -343,7 +341,6 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p

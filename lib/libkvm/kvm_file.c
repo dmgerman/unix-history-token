@@ -230,7 +230,6 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|where

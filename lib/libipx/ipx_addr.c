@@ -357,7 +357,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|bp

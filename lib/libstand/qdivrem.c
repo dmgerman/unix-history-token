@@ -104,21 +104,17 @@ specifier|static
 name|void
 name|shl
 parameter_list|(
-specifier|register
 name|digit
 modifier|*
 name|p
 parameter_list|,
-specifier|register
 name|int
 name|len
 parameter_list|,
-specifier|register
 name|int
 name|sh
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -223,7 +219,6 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
-specifier|register
 name|digit
 name|v1
 decl_stmt|,
@@ -808,7 +803,6 @@ expr_stmt|;
 comment|/* for D3 */
 do|do
 block|{
-specifier|register
 name|digit
 name|uj0
 decl_stmt|,

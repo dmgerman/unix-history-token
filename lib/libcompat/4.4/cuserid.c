@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -73,7 +87,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|passwd
 modifier|*

@@ -58,7 +58,6 @@ name|u_long
 name|random
 parameter_list|()
 block|{
-specifier|register
 name|long
 name|x
 decl_stmt|,

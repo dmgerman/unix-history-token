@@ -121,7 +121,7 @@ name|rbuf
 argument_list|,
 name|rsize
 argument_list|)
-decl|register struct
+decl|struct
 name|iodesc
 modifier|*
 name|d
@@ -129,7 +129,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|register
 name|ssize_t
 function_decl|(
 modifier|*
@@ -149,7 +148,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|register
 name|void
 modifier|*
 name|sbuf
@@ -157,14 +155,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|ssize
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|register
 name|ssize_t
 function_decl|(
 modifier|*
@@ -186,7 +182,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|register
 name|void
 modifier|*
 name|rbuf
@@ -194,7 +189,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|rsize
 decl_stmt|;
@@ -202,11 +196,9 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|ssize_t
 name|cc
 decl_stmt|;
-specifier|register
 name|time_t
 name|t
 decl_stmt|,
@@ -428,15 +420,12 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|u_long
 name|val
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
@@ -446,7 +435,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-specifier|register
 name|u_int
 modifier|*
 name|pp
@@ -733,21 +721,17 @@ name|intoa
 parameter_list|(
 name|addr
 parameter_list|)
-specifier|register
 name|n_long
 name|addr
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|u_int
 name|byte
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;

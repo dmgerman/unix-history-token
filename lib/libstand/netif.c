@@ -1177,7 +1177,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-specifier|register
 name|struct
 name|iodesc
 modifier|*

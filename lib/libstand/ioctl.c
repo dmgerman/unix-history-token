@@ -48,7 +48,6 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|open_file
 modifier|*

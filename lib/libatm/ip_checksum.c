@@ -114,7 +114,6 @@ name|count
 decl_stmt|;
 block|{
 comment|/* Compute Internet Checksum for "count" bytes 	 * beginning at location "addr". 	 */
-specifier|register
 name|long
 name|sum
 init|=

@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * remque -- vax remque instruction  *  * NOTE: this implementation is non-atomic!!  */
 end_comment
@@ -66,7 +80,6 @@ name|remque
 parameter_list|(
 name|e
 parameter_list|)
-specifier|register
 name|struct
 name|vaxque
 modifier|*

@@ -516,7 +516,6 @@ name|path
 parameter_list|,
 name|fhp
 parameter_list|)
-specifier|register
 name|struct
 name|iodesc
 modifier|*
@@ -531,7 +530,6 @@ modifier|*
 name|fhp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -820,7 +818,6 @@ modifier|*
 name|newfd
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|,
@@ -1739,7 +1736,6 @@ name|nfsv2_fattrs
 modifier|*
 name|fa
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1747,7 +1743,6 @@ decl_stmt|,
 modifier|*
 name|ncp
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2037,7 +2032,6 @@ literal|0
 expr_stmt|;
 comment|/* 		 * Get next component of path name. 		 */
 block|{
-specifier|register
 name|int
 name|len
 init|=
@@ -2416,7 +2410,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|nfs_iodesc
 modifier|*
@@ -2516,7 +2509,6 @@ name|resid
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|nfs_iodesc
 modifier|*
@@ -2531,11 +2523,9 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|ssize_t
 name|cc
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|addr
@@ -2758,7 +2748,6 @@ name|int
 name|where
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|nfs_iodesc
 modifier|*
@@ -2902,7 +2891,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|n_long
 name|ftype
 decl_stmt|,
@@ -3021,7 +3009,6 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|nfs_iodesc
 modifier|*

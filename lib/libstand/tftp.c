@@ -358,18 +358,15 @@ name|len
 parameter_list|,
 name|tleft
 parameter_list|)
-specifier|register
 name|struct
 name|iodesc
 modifier|*
 name|d
 decl_stmt|;
-specifier|register
 name|void
 modifier|*
 name|pkt
 decl_stmt|;
-specifier|register
 name|ssize_t
 name|len
 decl_stmt|;
@@ -469,7 +466,6 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * First data packet from new port. 			 */
-specifier|register
 name|struct
 name|udphdr
 modifier|*

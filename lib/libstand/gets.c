@@ -43,11 +43,9 @@ name|int
 name|n
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|lp
@@ -126,7 +124,6 @@ operator|&
 literal|037
 case|:
 block|{
-specifier|register
 name|char
 modifier|*
 name|p

@@ -173,7 +173,6 @@ index|[]
 init|=
 literal|"/dev/ptyXX"
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -182,7 +181,6 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-specifier|register
 name|int
 name|master
 decl_stmt|,

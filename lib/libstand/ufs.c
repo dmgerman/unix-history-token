@@ -447,7 +447,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -462,7 +461,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -569,7 +567,6 @@ name|out
 goto|;
 block|}
 block|{
-specifier|register
 name|struct
 name|dinode
 modifier|*
@@ -601,7 +598,6 @@ expr_stmt|;
 block|}
 comment|/* 	 * Clear out the old buffers 	 */
 block|{
-specifier|register
 name|int
 name|level
 decl_stmt|;
@@ -680,7 +676,6 @@ name|disk_block_p
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -695,7 +690,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -1071,7 +1065,6 @@ name|size_p
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -1086,7 +1079,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -1099,7 +1091,6 @@ decl_stmt|;
 name|long
 name|off
 decl_stmt|;
-specifier|register
 name|daddr_t
 name|file_block
 decl_stmt|;
@@ -1427,7 +1418,6 @@ name|size_p
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -1442,7 +1432,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -1455,7 +1444,6 @@ decl_stmt|;
 name|long
 name|off
 decl_stmt|;
-specifier|register
 name|daddr_t
 name|file_block
 decl_stmt|;
@@ -1721,7 +1709,6 @@ name|inumber_p
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -1736,7 +1723,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|struct
 name|direct
 modifier|*
@@ -1975,7 +1961,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1983,7 +1968,6 @@ decl_stmt|,
 modifier|*
 name|ncp
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -2169,11 +2153,9 @@ endif|#
 directive|endif
 comment|/* 	 * Calculate indirect block levels. 	 */
 block|{
-specifier|register
 name|int
 name|mult
 decl_stmt|;
-specifier|register
 name|int
 name|level
 decl_stmt|;
@@ -2310,7 +2292,6 @@ goto|;
 block|}
 comment|/* 		 * Get next component of path name. 		 */
 block|{
-specifier|register
 name|int
 name|len
 init|=
@@ -2517,7 +2498,6 @@ decl_stmt|;
 name|daddr_t
 name|disk_block
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -2744,7 +2724,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -2890,7 +2869,6 @@ name|resid
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -2905,7 +2883,6 @@ name|f
 operator|->
 name|f_fsdata
 decl_stmt|;
-specifier|register
 name|size_t
 name|csize
 decl_stmt|;
@@ -2921,7 +2898,6 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|addr
@@ -3056,7 +3032,6 @@ name|resid
 decl_stmt|;
 comment|/* out */
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -3079,7 +3054,6 @@ name|rc
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|addr
@@ -3201,7 +3175,6 @@ name|int
 name|where
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*
@@ -3295,7 +3268,6 @@ modifier|*
 name|sb
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|file
 modifier|*

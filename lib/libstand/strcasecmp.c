@@ -89,7 +89,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -180,7 +179,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|size_t
 name|n
 decl_stmt|;
@@ -195,7 +193,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
 specifier|const
 name|u_char
 modifier|*

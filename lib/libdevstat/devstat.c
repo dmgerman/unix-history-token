@@ -1791,7 +1791,6 @@ name|int
 name|perf_select
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3547,7 +3546,6 @@ decl_stmt|;
 name|int
 name|num_args
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,

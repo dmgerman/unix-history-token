@@ -54,7 +54,6 @@ name|size_t
 name|bcount
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|open_file
 modifier|*

@@ -39,17 +39,14 @@ name|p
 parameter_list|,
 name|len
 parameter_list|)
-specifier|register
 name|void
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|sum
 init|=
@@ -63,7 +60,6 @@ name|v
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cp
