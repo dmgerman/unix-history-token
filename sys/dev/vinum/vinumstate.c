@@ -282,7 +282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to set the subdisk state.  Return 1 if state changed to  * what we wanted, -1 if it changed to something else, and 0  * if no change.  *  * This routine is called both from the user (up, down states  * only) and internally.  */
+comment|/*  * Try to set the subdisk state.  Return 1 if state changed to  * what we wanted, -1 if it changed to something else, and 0  * if no change.  *  * This routine is called both from the user (up, down states only)  * and internally.  *  * The setstate_force bit in the flags enables the state change even  * if it could be dangerous to data consistency.  It shouldn't allow  * nonsense.  */
 end_comment
 
 begin_function
@@ -468,6 +468,15 @@ return|return
 literal|0
 return|;
 comment|/* not even by force */
+if|if
+condition|(
+name|flags
+operator|&
+name|setstate_force
+condition|)
+comment|/* forcing it, */
+break|break;
+comment|/* just do it, and damn the consequences */
 switch|switch
 condition|(
 name|sd
@@ -590,7 +599,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|sd_empty
 case|:
-comment|/* 		 * If we're associated with a plex which 		 * is down, or which is the only one in the 		 * volume, and we're not a RAID-5 plex, we 		 * can come up without being inconsistent. 		 * Internally, we use the force flag to bring 		 * up a RAID-5 plex after initialization. 		 */
+comment|/* 		 * If we're associated with a plex which is down, or which is 		 * the only one in the volume, and we're not a RAID-5 plex, we 		 * can come up without being inconsistent.  Internally, we use 		 * the force flag to bring up a RAID-5 plex after 		 * initialization. 		 */
 if|if
 condition|(
 operator|(
@@ -841,6 +850,31 @@ name|state
 operator|=
 name|newstate
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|setstate_force
+condition|)
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"vinum: %s is %s by force\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|sd_state
+argument_list|(
+name|sd
+operator|->
+name|state
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|log
 argument_list|(
 name|LOG_INFO
@@ -2944,7 +2978,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 else|else
 name|ioctl_reply
@@ -3047,7 +3081,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 else|else
 name|ioctl_reply
@@ -3088,7 +3122,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 else|else
 name|ioctl_reply
@@ -3128,7 +3162,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 else|else
 name|ioctl_reply
@@ -3322,7 +3356,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 else|else
 name|ioctl_reply
@@ -3490,7 +3524,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 block|}
 else|else
@@ -3591,7 +3625,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 block|}
 else|else
@@ -3669,7 +3703,7 @@ name|ioctl_reply
 operator|->
 name|error
 operator|=
-name|EINVAL
+name|EBUSY
 expr_stmt|;
 break|break;
 block|}
