@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.55	%G%"
+literal|"@(#)main.c	3.56	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -899,10 +899,24 @@ literal|'s'
 condition|)
 block|{
 comment|/* running smtp */
+ifdef|#
+directive|ifdef
+name|SMTP
 name|Smtp
 operator|=
 name|TRUE
 expr_stmt|;
+else|#
+directive|else
+else|SMTP
+name|syserr
+argument_list|(
+literal|"I don't speak SMTP"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SMTP
 block|}
 break|break;
 case|case
@@ -943,6 +957,9 @@ case|case
 literal|'q'
 case|:
 comment|/* run queue files at intervals */
+ifdef|#
+directive|ifdef
+name|QUEUE
 name|queuemode
 operator|=
 name|TRUE
@@ -958,6 +975,17 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|QUEUE
+name|syserr
+argument_list|(
+literal|"I don't know about queues"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
 break|break;
 default|default:
 comment|/* at Eric Schmidt's suggestion, this will not be an error.... 			syserr("Unknown flag %s", p); 			... seems that upward compatibility will be easier. */
@@ -1163,7 +1191,10 @@ condition|)
 name|getrequests
 argument_list|()
 expr_stmt|;
-comment|/* 	if (Smtp) 	{ 		if (queuemode) 			runqueue(TRUE); 		smtp(); 	}  	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
+ifdef|#
+directive|ifdef
+name|SMTP
+comment|/* 	if (Smtp) 	{ # ifdef QUEUE 		if (queuemode) 			runqueue(TRUE); # endif QUEUE 		smtp(); 	} # endif SMTP  # ifdef QUEUE 	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 if|if
 condition|(
 name|queuemode
@@ -1178,6 +1209,9 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|QUEUE
 comment|/* 	**  Set the sender 	*/
 name|setsender
 argument_list|(
@@ -1737,11 +1771,29 @@ if|if
 condition|(
 name|QueueUp
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|QUEUE
 name|queueup
 argument_list|(
 name|InFileName
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|QUEUE
+name|syserr
+argument_list|(
+literal|"finis: trying to queue %s"
+argument_list|,
+name|InFileName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
+block|}
 else|else
 operator|(
 name|void

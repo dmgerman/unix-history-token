@@ -29,13 +29,35 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|QUEUE
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	3.6	%G%"
+literal|"@(#)queue.c	3.7	%G%	(no queueing)"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|QUEUE
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)queue.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1882,6 +1904,12 @@ name|FALSE
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|QUEUE
+end_endif
 
 end_unit
 

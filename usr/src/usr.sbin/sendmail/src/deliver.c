@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.58	%G%"
+literal|"@(#)deliver.c	3.59	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,6 +690,9 @@ name|NULL
 condition|)
 block|{
 comment|/* running SMTP */
+ifdef|#
+directive|ifdef
+name|SMTP
 name|clever
 operator|=
 name|TRUE
@@ -723,6 +726,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QUEUE
 if|if
 condition|(
 name|i
@@ -739,6 +745,25 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|QUEUE
+else|#
+directive|else
+else|SMTP
+name|syserr
+argument_list|(
+literal|"SMTP style mailer"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EX_SOFTWARE
+operator|)
+return|;
+endif|#
+directive|endif
+endif|SMTP
 block|}
 end_if
 
@@ -1150,6 +1175,9 @@ condition|(
 name|clever
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMTP
 name|i
 operator|=
 name|smtprcpt
@@ -1157,6 +1185,16 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|EX_OK
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|QUEUE
 if|if
 condition|(
 name|i
@@ -1175,13 +1213,10 @@ operator||=
 name|QQUEUEUP
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|i
-operator|!=
-name|EX_OK
-condition|)
+else|else
+endif|#
+directive|endif
+endif|QUEUE
 block|{
 name|to
 operator|->
@@ -1199,6 +1234,18 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|#
+directive|else
+else|SMTP
+name|syserr
+argument_list|(
+literal|"trying to be clever"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SMTP
 block|}
 else|else
 block|{
@@ -1266,6 +1313,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMTP
 if|if
 condition|(
 name|clever
@@ -1278,6 +1328,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|SMTP
 return|return
 operator|(
 literal|0
@@ -1406,6 +1459,12 @@ name|From
 expr_stmt|;
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMTP
+end_ifdef
+
 begin_if
 if|if
 condition|(
@@ -1431,6 +1490,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+endif|SMTP
 name|i
 operator|=
 name|sendoff
@@ -1449,6 +1511,12 @@ end_if
 begin_comment
 comment|/* 	**  If we got a temporary failure, arrange to queue the 	**  addressees. 	*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUEUE
+end_ifdef
 
 begin_if
 if|if
@@ -1486,6 +1554,12 @@ name|QQUEUEUP
 expr_stmt|;
 block|}
 end_if
+
+begin_endif
+endif|#
+directive|endif
+endif|QUEUE
+end_endif
 
 begin_expr_stmt
 name|errno
@@ -2077,6 +2151,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SMTP
 comment|/* if this mailer speaks smtp, create a return pipe */
 if|if
 condition|(
@@ -2124,6 +2201,9 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+endif|SMTP
 name|DOFORK
 argument_list|(
 name|XFORK
@@ -2715,6 +2795,9 @@ name|statmsg
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|QUEUE
 elseif|else
 if|if
 condition|(
@@ -2735,6 +2818,9 @@ literal|"transmission deferred"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|QUEUE
 else|else
 block|{
 name|Errors
@@ -2883,12 +2969,18 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
+ifdef|#
+directive|ifdef
+name|QUEUE
 if|if
 condition|(
 name|stat
 operator|!=
 name|EX_TEMPFAIL
 condition|)
+endif|#
+directive|endif
+endif|QUEUE
 name|setstat
 argument_list|(
 name|stat
@@ -3000,7 +3092,9 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
-specifier|register
+ifdef|#
+directive|ifdef
+name|UGLYUUCP
 name|char
 modifier|*
 name|p
@@ -3060,6 +3154,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
+endif|UGLYUUCP
 operator|(
 name|void
 operator|)

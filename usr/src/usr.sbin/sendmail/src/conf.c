@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.39	%G%"
+literal|"@(#)conf.c	3.40	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,12 @@ begin_comment
 comment|/* help file */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QUEUE
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -263,6 +269,31 @@ end_decl_stmt
 begin_comment
 comment|/* queue of saved mail */
 end_comment
+
+begin_else
+else|#
+directive|else
+else|QUEUE
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|QueueDir
+init|=
+literal|"/tmp"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of temp files */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|QUEUE
+end_endif
 
 begin_decl_stmt
 name|char

@@ -5,13 +5,35 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMTP
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.10	%G%"
+literal|"@(#)srvrsmtp.c	3.11	%G%	(no SMTP)"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|SMTP
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)srvrsmtp.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1494,6 +1516,12 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|SMTP
+end_endif
 
 end_unit
 
