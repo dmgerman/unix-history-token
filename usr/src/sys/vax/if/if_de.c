@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_de.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_de.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1132,6 +1132,31 @@ name|DSF_LOCK
 operator||
 name|DSF_RUNNING
 operator|)
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|dedevice
+operator|*
+operator|)
+name|ui
+operator|->
+name|ui_addr
+operator|)
+operator|->
+name|pcsr0
+operator|=
+name|PCSR0_RSET
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|dewait
+argument_list|(
+name|ui
+argument_list|,
+literal|"reset"
+argument_list|)
 expr_stmt|;
 name|deinit
 argument_list|(
