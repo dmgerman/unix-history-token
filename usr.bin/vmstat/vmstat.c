@@ -4754,7 +4754,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"       Type  In Use   MemUse   HighUse  Limit Requests  TypeLimit KernLimit\n"
+literal|"        Type  In Use   MemUse   HighUse  Limit Requests  TypeLimit KernLimit\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4796,7 +4796,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%11s %7ld %7ldK %8ldK %5ldK %8ld %6u %9u\n"
+literal|"%12s %7ld %7ldK %8ldK %5ldK %8ld %6u %9u\n"
 argument_list|,
 name|kmemnames
 index|[
