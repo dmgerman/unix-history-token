@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2739,6 +2739,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|MMAP
 name|struct
 name|proc
 modifier|*
@@ -2749,9 +2752,6 @@ operator|.
 name|u_procp
 decl_stmt|;
 comment|/* XXX */
-ifdef|#
-directive|ifdef
-name|MMAP
 specifier|register
 name|struct
 name|hilloop
@@ -4375,6 +4375,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|MAPMEM
 name|struct
 name|proc
 modifier|*
@@ -4385,9 +4388,6 @@ operator|.
 name|u_procp
 decl_stmt|;
 comment|/* XXX */
-ifdef|#
-directive|ifdef
-name|MAPMEM
 specifier|register
 name|struct
 name|hilloop
@@ -4413,9 +4413,11 @@ modifier|*
 name|mp
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|hilqmapin
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -4554,11 +4556,7 @@ operator|=
 name|HEVQSIZE
 expr_stmt|;
 comment|/* 	 * Map queue into user address space as instructed 	 */
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|mmalloc
 argument_list|(
@@ -4586,6 +4584,10 @@ argument_list|,
 operator|&
 name|mp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|cifree
@@ -4614,9 +4616,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|)
 return|;
 block|}
@@ -4628,7 +4628,8 @@ name|qnum
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|error
+operator|=
 name|mmmapin
 argument_list|(
 name|p
@@ -4639,6 +4640,9 @@ name|hilqmapin
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|mmfree
 argument_list|(
 name|p
@@ -4672,9 +4676,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|)
 return|;
 block|}
@@ -4730,6 +4732,9 @@ end_expr_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|MAPMEM
 name|struct
 name|proc
 modifier|*
@@ -4740,9 +4745,6 @@ operator|.
 name|u_procp
 decl_stmt|;
 comment|/* XXX */
-ifdef|#
-directive|ifdef
-name|MAPMEM
 specifier|register
 name|struct
 name|hilloop
@@ -4835,6 +4837,9 @@ operator|&
 name|hilqops
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|hilqexit
 argument_list|(
 name|mp
@@ -5428,6 +5433,9 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mmfree
 argument_list|(
 name|p
@@ -5727,13 +5735,16 @@ name|hq_procp
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
 name|mmfree
 argument_list|(
 name|p
 argument_list|,
 name|mp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -7323,13 +7334,7 @@ operator|==
 literal|0
 condition|)
 do|;
-comment|/* 	 * At this point, the loop should have reconfigured. 	 * The reconfiguration interrupt has already called hilconfig() 	 * so the keyboard has been determined.  All that is left is 	 *  	 */
-if|#
-directive|if
-literal|0
-block|hilconfig(hilp);
-endif|#
-directive|endif
+comment|/* 	 * At this point, the loop should have reconfigured. 	 * The reconfiguration interrupt has already called hilconfig() 	 * so the keyboard has been determined. 	 */
 name|send_hil_cmd
 argument_list|(
 name|hildevice
