@@ -1691,7 +1691,7 @@ name|stderr
 argument_list|,
 literal|"%s\n"
 argument_list|,
-literal|"usage: kldxref [-Rdv] [-f hintfile] path [path..]"
+literal|"usage: kldxref [-Rdv] [-f hintsfile] path ..."
 argument_list|)
 expr_stmt|;
 name|exit
