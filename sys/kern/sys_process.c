@@ -1883,6 +1883,12 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|==
+name|initproc
+condition|)
 name|p
 operator|->
 name|p_sigparent
