@@ -1912,26 +1912,6 @@ return|return;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Various callout lists.  */
 end_comment
