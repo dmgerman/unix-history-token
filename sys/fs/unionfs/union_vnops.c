@@ -4852,13 +4852,16 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX */
-block|if (!error) 			union_removed_upper(un);
-endif|#
-directive|endif
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|union_removed_upper
+argument_list|(
+name|un
+argument_list|)
+expr_stmt|;
 name|union_unlock_upper
 argument_list|(
 name|uppervp
@@ -5970,6 +5973,16 @@ argument_list|,
 name|ap
 operator|->
 name|a_cnp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|union_removed_upper
+argument_list|(
+name|un
 argument_list|)
 expr_stmt|;
 name|union_unlock_upper

@@ -4639,31 +4639,82 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/*  *	union_removed_upper:  *  *	called with union_node unlocked. XXX  */
+comment|/*  *	union_removed_upper:  *  *	An upper-only file/directory has been removed; un-cache it so  *	that unionfs vnode gets reclaimed and the last uppervp reference  *	disappears.  *  *	Called with union_node unlocked.  */
 end_comment
 
-begin_comment
-unit|void union_removed_upper(un) 	struct union_node *un; { 	struct thread *td = curthread;
-comment|/* XXX */
-end_comment
-
-begin_comment
-unit|struct vnode **vpp;
-comment|/* 	 * Do not set the uppervp to NULLVP.  If lowervp is NULLVP, 	 * union node will have neither uppervp nor lowervp.  We remove 	 * the union node from cache, so that it will not be referrenced. 	 */
-end_comment
-
-begin_endif
-unit|union_newupper(un, NULLVP); 	if (un->un_dircache != NULL) 		union_dircache_free(un);  	if (un->un_flags& UN_CACHED) { 		un->un_flags&= ~UN_CACHED; 		LIST_REMOVE(un, un_cache); 	} }
-endif|#
-directive|endif
-end_endif
+begin_function
+name|void
+name|union_removed_upper
+parameter_list|(
+name|un
+parameter_list|)
+name|struct
+name|union_node
+modifier|*
+name|un
+decl_stmt|;
+block|{
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+if|if
+condition|(
+name|un
+operator|->
+name|un_flags
+operator|&
+name|UN_CACHED
+condition|)
+block|{
+name|int
+name|hash
+init|=
+name|UNION_HASH
+argument_list|(
+name|un
+operator|->
+name|un_uppervp
+argument_list|,
+name|un
+operator|->
+name|un_lowervp
+argument_list|)
+decl_stmt|;
+while|while
+condition|(
+name|union_list_lock
+argument_list|(
+name|hash
+argument_list|)
+condition|)
+continue|continue;
+name|un
+operator|->
+name|un_flags
+operator|&=
+operator|~
+name|UN_CACHED
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|un
+argument_list|,
+name|un_cache
+argument_list|)
+expr_stmt|;
+name|union_list_unlock
+argument_list|(
+name|hash
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * Determine whether a whiteout is needed  * during a remove/rmdir operation.  */
