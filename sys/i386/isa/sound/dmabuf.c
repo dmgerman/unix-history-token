@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/dmabuf.c  *   * The DMA buffer manager for digitized voice applications  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/dmabuf.c  *  * The DMA buffer manager for digitized voice applications  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -68,30 +68,6 @@ directive|define
 name|DMODE_INPUT
 value|2
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sb_dsp_ok
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|audio_operations
-name|sb_dsp_operations
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|force_reset
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|DEFINE_WAIT_QUEUES
@@ -1049,23 +1025,6 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|force_reset
-operator|&&
-name|sb_dsp_ok
-operator|&&
-name|dsp_devs
-index|[
-name|dev
-index|]
-operator|==
-operator|&
-name|sb_dsp_operations
-condition|)
-return|return;
-comment|/* We don't need this code for SB */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -1150,13 +1109,6 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
-name|unsigned
-name|long
-name|time
-decl_stmt|;
-name|int
-name|timed_out
-decl_stmt|;
 if|if
 condition|(
 name|dma_mode
@@ -1171,15 +1123,6 @@ name|DISABLE_INTR
 argument_list|(
 name|flags
 argument_list|)
-expr_stmt|;
-name|timed_out
-operator|=
-literal|0
-expr_stmt|;
-name|time
-operator|=
-name|GET_TIME
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -1204,9 +1147,6 @@ index|[
 name|dev
 index|]
 operator|)
-operator|&&
-operator|!
-name|timed_out
 operator|)
 operator|&&
 name|dev_qlen
@@ -1234,23 +1174,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|GET_TIME
-argument_list|()
-operator|-
-name|time
-operator|)
-operator|>
-operator|(
-literal|10
-operator|*
-name|HZ
-operator|)
+name|TIMED_OUT
+argument_list|(
+name|dev_sleeper
+index|[
+name|dev
+index|]
+argument_list|,
+name|dev_sleep_flag
+index|[
+name|dev
+index|]
+argument_list|)
 condition|)
-name|timed_out
-operator|=
-literal|1
-expr_stmt|;
+return|return
+name|dev_qlen
+index|[
+name|dev
+index|]
+return|;
 block|}
 name|RESTORE_INTR
 argument_list|(
@@ -2028,18 +1970,10 @@ block|{
 case|case
 name|SNDCTL_DSP_RESET
 case|:
-name|force_reset
-operator|=
-literal|1
-expr_stmt|;
 name|dma_reset
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-name|force_reset
-operator|=
-literal|0
 expr_stmt|;
 return|return
 literal|0
@@ -2227,6 +2161,7 @@ name|local
 argument_list|)
 return|;
 block|}
+comment|/* NOTREACHED */
 return|return
 name|RET_ERROR
 argument_list|(
@@ -2653,6 +2588,22 @@ index|[
 name|dev
 index|]
 operator|)
+operator|&&
+operator|(
+name|sound_dma_automode
+index|[
+name|dev
+index|]
+operator|||
+name|dsp_devs
+index|[
+name|dev
+index|]
+operator|->
+name|flags
+operator|&
+name|NEEDS_RESTART
+operator|)
 expr_stmt|;
 name|dev_qtail
 index|[
@@ -2821,9 +2772,6 @@ name|set_dma_addr
 argument_list|(
 name|chan
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|snd_raw_buf_phys
 index|[
 name|dev
@@ -2837,9 +2785,6 @@ name|set_dma_count
 argument_list|(
 name|chan
 argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|sound_buffsizes
 index|[
 name|dev
@@ -2848,9 +2793,6 @@ argument_list|)
 expr_stmt|;
 name|enable_dma
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|chan
 argument_list|)
 expr_stmt|;
@@ -2861,6 +2803,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* linux */
 ifdef|#
 directive|ifdef
 name|__386BSD__
@@ -2904,6 +2847,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* __386BSD__ */
 if|#
 directive|if
 name|defined
@@ -2914,6 +2858,11 @@ operator|||
 name|defined
 argument_list|(
 name|SCO
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SVR42
 argument_list|)
 ifndef|#
 directive|ifndef
@@ -2927,6 +2876,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DMAMODE_AUTO */
 name|dma_param
 argument_list|(
 name|chan
@@ -2949,6 +2899,7 @@ operator||
 name|DMAMODE_AUTO
 endif|#
 directive|endif
+comment|/* DMAMODE_AUTO */
 argument_list|,
 name|snd_raw_buf_phys
 index|[
@@ -2968,15 +2919,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* SYSV */
 error|#
 directive|error
 error|This routine is not valid for this OS.
 endif|#
 directive|endif
+comment|/* SYSV */
 endif|#
 directive|endif
+comment|/* __386BSD__ */
 endif|#
 directive|endif
+comment|/* linux */
 block|}
 else|else
 block|{
@@ -3031,6 +2986,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* linux */
 ifdef|#
 directive|ifdef
 name|__386BSD__
@@ -3058,6 +3014,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* __386BSD__ */
 if|#
 directive|if
 name|defined
@@ -3068,6 +3025,11 @@ operator|||
 name|defined
 argument_list|(
 name|SCO
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SVR42
 argument_list|)
 name|dma_param
 argument_list|(
@@ -3097,16 +3059,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* SYSV */
 error|#
 directive|error
 error|This routine is not valid for this OS.
 endif|#
 directive|endif
-comment|/* !ISC */
+comment|/* SYSV */
 endif|#
 directive|endif
+comment|/* __386BSD__ */
 endif|#
 directive|endif
+comment|/* linux */
 block|}
 return|return
 name|count
@@ -3319,7 +3284,21 @@ index|[
 name|dev
 index|]
 operator|=
-literal|1
+operator|(
+name|sound_dma_automode
+index|[
+name|dev
+index|]
+operator|||
+name|dsp_devs
+index|[
+name|dev
+index|]
+operator|->
+name|flags
+operator|&
+name|NEEDS_RESTART
+operator|)
 expr_stmt|;
 block|}
 name|DISABLE_INTR
@@ -3448,7 +3427,10 @@ index|[
 name|dev
 index|]
 operator|=
-literal|1
+name|sound_dma_automode
+index|[
+name|dev
+index|]
 expr_stmt|;
 block|}
 else|else
@@ -3673,7 +3655,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * The sound_mem_init() is called by mem_init() immediately after mem_map is  * initialized and before free_page_list is created.  *   * This routine allocates DMA buffers at the end of available physical memory (  *<16M) and marks pages reserved at mem_map.  */
+comment|/*  * The sound_mem_init() is called by mem_init() immediately after mem_map is  * initialized and before free_page_list is created.  *  * This routine allocates DMA buffers at the end of available physical memory (  *<16M) and marks pages reserved at mem_map.  */
 end_comment
 
 begin_else

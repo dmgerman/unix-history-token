@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_mixer.c  *   * The low level mixer driver for the SoundBlaster Pro and SB16 cards.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/sb_mixer.c  *  * The low level mixer driver for the SoundBlaster Pro and SB16 cards.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Modified:  *	Hunyue Yau	Jan 6 1994  *	Added code to support the Sound Galaxy NX Pro mixer.  *  */
 end_comment
 
 begin_include
@@ -285,6 +285,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Returns:  *	0	No mixer detected.  *	1	Only a plain Sound Blaster Pro style mixer detected.  *	2	The Sound Galaxy NX Pro mixer detected.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -293,6 +297,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__SGNXPRO__
+name|int
+name|oldbass
+decl_stmt|,
+name|oldtreble
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|retcode
+init|=
+literal|1
+decl_stmt|;
 comment|/*    * Detect the mixer by changing parameters of two volume channels. If the    * values read back match with the values written, the mixer is there (is    * it?)    */
 name|sb_setmixer
 argument_list|(
@@ -333,8 +352,90 @@ condition|)
 return|return
 literal|0
 return|;
-return|return
+ifdef|#
+directive|ifdef
+name|__SGNXPRO__
+comment|/* Attempt to detect the SG NX Pro by check for valid bass/treble  * registers.  */
+name|oldbass
+operator|=
+name|sb_getmixer
+argument_list|(
+name|BASS_LVL
+argument_list|)
+expr_stmt|;
+name|oldtreble
+operator|=
+name|sb_getmixer
+argument_list|(
+name|TREBLE_LVL
+argument_list|)
+expr_stmt|;
+name|sb_setmixer
+argument_list|(
+name|BASS_LVL
+argument_list|,
+literal|0xaa
+argument_list|)
+expr_stmt|;
+name|sb_setmixer
+argument_list|(
+name|TREBLE_LVL
+argument_list|,
+literal|0x55
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sb_getmixer
+argument_list|(
+name|BASS_LVL
+argument_list|)
+operator|!=
+literal|0xaa
+operator|)
+operator|||
+operator|(
+name|sb_getmixer
+argument_list|(
+name|TREBLE_LVL
+argument_list|)
+operator|!=
+literal|0x55
+operator|)
+condition|)
+block|{
+name|retcode
+operator|=
 literal|1
+expr_stmt|;
+comment|/* 1 == Only SB Pro detected */
+block|}
+else|else
+name|retcode
+operator|=
+literal|2
+expr_stmt|;
+comment|/* 2 == SG NX Pro detected */
+comment|/* Restore register in either case since SG NX Pro has EEPROM with    * 'preferred' values stored.    */
+name|sb_setmixer
+argument_list|(
+name|BASS_LVL
+argument_list|,
+name|oldbass
+argument_list|)
+expr_stmt|;
+name|sb_setmixer
+argument_list|(
+name|TREBLE_LVL
+argument_list|,
+name|oldtreble
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|retcode
 return|;
 block|}
 end_function
@@ -1235,14 +1336,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Returns a code depending on whether a SG NX Pro was detected.  * 0 == Plain SB 16 or SB Pro  * 1 == SG NX Pro detected.  *  * Used to update message.  */
+end_comment
+
 begin_function
-name|void
+name|int
 name|sb_mixer_init
 parameter_list|(
 name|int
 name|major_model
 parameter_list|)
 block|{
+name|int
+name|mixerstat
+decl_stmt|;
 name|sb_setmixer
 argument_list|(
 literal|0x00
@@ -1251,13 +1359,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Reset mixer */
+name|mixerstat
+operator|=
+name|detect_mixer
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|detect_mixer
-argument_list|()
+name|mixerstat
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* No mixer. Why? */
 name|mixer_initialized
 operator|=
@@ -1279,6 +1393,36 @@ name|mixer_caps
 operator|=
 name|SOUND_CAP_EXCL_INPUT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__SGNXPRO__
+if|if
+condition|(
+name|mixerstat
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* A SGNXPRO was detected */
+name|supported_devices
+operator|=
+name|SGNXPRO_MIXER_DEVICES
+expr_stmt|;
+name|supported_rec_devices
+operator|=
+name|SGNXPRO_RECORDING_DEVICES
+expr_stmt|;
+name|iomap
+operator|=
+operator|&
+name|sgnxpro_mix
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+comment|/* Otherwise plain SB Pro */
 name|supported_devices
 operator|=
 name|SBPRO_MIXER_DEVICES
@@ -1292,6 +1436,7 @@ operator|=
 operator|&
 name|sbpro_mix
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|4
@@ -1320,7 +1465,9 @@ argument_list|(
 literal|"SB Warning: Unsupported mixer type\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|mixer_devs
 index|[
@@ -1334,6 +1481,13 @@ expr_stmt|;
 name|sb_mixer_reset
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|mixerstat
+operator|==
+literal|2
+operator|)
+return|;
 block|}
 end_function
 

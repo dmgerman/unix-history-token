@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb16_midi.c  *   * The low level driver for the MPU-401 UART emulation of the SB16.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/sb16_midi.c  *  * The low level driver for the MPU-401 UART emulation of the SB16.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -239,6 +239,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_major
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -247,19 +254,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|count
-decl_stmt|;
-name|count
-operator|=
-literal|10
-expr_stmt|;
 while|while
-condition|(
-name|count
-condition|)
-comment|/* Not timed out */
-if|if
 condition|(
 name|input_avail
 argument_list|()
@@ -272,10 +267,6 @@ init|=
 name|sb16midi_read
 argument_list|()
 decl_stmt|;
-name|count
-operator|=
-literal|100
-expr_stmt|;
 if|if
 condition|(
 name|sb16midi_opened
@@ -290,18 +281,6 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-while|while
-condition|(
-operator|!
-name|input_avail
-argument_list|()
-operator|&&
-name|count
-condition|)
-name|count
-operator|--
-expr_stmt|;
 block|}
 end_function
 
@@ -320,73 +299,6 @@ argument_list|()
 condition|)
 name|sb16midi_input_loop
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * It looks like there is no input interrupts in the UART mode. Let's try  * polling.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|poll_sb16midi
-parameter_list|(
-name|unsigned
-name|long
-name|dummy
-parameter_list|)
-block|{
-name|unsigned
-name|long
-name|flags
-decl_stmt|;
-name|DEFINE_TIMER
-argument_list|(
-name|sb16midi_timer
-argument_list|,
-name|poll_sb16midi
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|sb16midi_opened
-operator|&
-name|OPEN_READ
-operator|)
-condition|)
-return|return;
-comment|/* No longer required */
-name|DISABLE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|input_avail
-argument_list|()
-condition|)
-name|sb16midi_input_loop
-argument_list|()
-expr_stmt|;
-name|ACTIVATE_TIMER
-argument_list|(
-name|sb16midi_timer
-argument_list|,
-name|poll_sb16midi
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Come back later */
-name|RESTORE_INTR
-argument_list|(
-name|flags
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -450,12 +362,6 @@ name|sb16midi_opened
 operator|=
 name|mode
 expr_stmt|;
-name|poll_sb16midi
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Enable input polling */
 return|return
 literal|0
 return|;
@@ -811,11 +717,23 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|printk
 argument_list|(
 literal|"snd7:<SoundBlaster MPU-401>"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printk
+argument_list|(
+literal|"<SoundBlaster MPU-401>"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|my_dev
 operator|=
 name|num_midis
@@ -984,6 +902,16 @@ name|hw_config
 operator|->
 name|io_base
 expr_stmt|;
+if|if
+condition|(
+name|sbc_major
+operator|<
+literal|4
+condition|)
+return|return
+literal|0
+return|;
+comment|/* SB16 not detected */
 if|if
 condition|(
 name|sb_get_irq

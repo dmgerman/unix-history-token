@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb16_dsp.c  *   * The low level driver for the SoundBlaster DSP chip.  *   * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/sb16_dsp.c  *  * The low level driver for the SoundBlaster DSP chip.  *  * (C) 1993 J. Schubert (jsb@sth.ruhr-uni-bochum.de)  *  * based on SB-driver by (C) Hannu Savolainen  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_define
@@ -80,6 +80,10 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sbc_base
+decl_stmt|,
+name|sbc_minor
+decl_stmt|,
+name|sbc_major
 decl_stmt|;
 end_decl_stmt
 
@@ -386,6 +390,8 @@ init|=
 block|{
 literal|"SoundBlaster 16"
 block|,
+name|NOTHING_SPECIAL
+block|,
 name|sb16_dsp_open
 block|,
 name|sb16_dsp_close
@@ -468,7 +474,8 @@ specifier|static
 name|int
 name|wait_data_avail
 parameter_list|(
-name|int
+name|unsigned
+name|long
 name|t
 parameter_list|)
 block|{
@@ -477,14 +484,8 @@ name|loopc
 init|=
 literal|5000000
 decl_stmt|;
-name|unsigned
-name|long
-name|tt
-decl_stmt|;
-name|tt
-operator|=
 name|t
-operator|+
+operator|+=
 name|GET_TIME
 argument_list|()
 expr_stmt|;
@@ -511,7 +512,7 @@ operator|&&
 name|GET_TIME
 argument_list|()
 operator|<
-name|tt
+name|t
 condition|)
 do|;
 name|printk
@@ -541,6 +542,10 @@ condition|(
 operator|!
 name|wait_data_avail
 argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|t
 argument_list|)
 condition|)
@@ -584,7 +589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    static char *dsp_getmessage(unsigned char command,int maxn)    {    static char buff[100];    int n=0;     sb_dsp_command(command);    while(n<maxn&& wait_data_avail(2)) {    buff[++n]=INB(DSP_READ);    if(!buff[n])    break;    }    buff[0]=n;    return buff;    }     static void dsp_showmessage(unsigned char command,int len)    {    int n;    unsigned char *c;    c=dsp_getmessage(command,len);    printk("DSP C=%x l=%d,lr=%d b=",command,len,c[0]);    for(n=1;n<=c[0];n++)    if(c[n]>=' '& c[n]<='z')    printk("%c",c[n]);    else    printk("|%x|",c[n]);    printk("\n");    }  */
+comment|/*    static char *dsp_getmessage(unsigned char command,int maxn)    {    static char buff[100];    int n=0;     sb_dsp_command(command);    while(n<maxn&& wait_data_avail(2L)) {    buff[++n]=INB(DSP_READ);    if(!buff[n])    break;    }    buff[0]=n;    return buff;    }     static void dsp_showmessage(unsigned char command,int len)    {    int n;    unsigned char *c;    c=dsp_getmessage(command,len);    printk("DSP C=%x l=%d,lr=%d b=",command,len,c[0]);    for(n=1;n<=c[0];n++)    if(c[n]>=' '& c[n]<='z')    printk("%c",c[n]);    else    printk("|%x|",c[n]);    printk("\n");    }  */
 end_comment
 
 begin_function
@@ -2018,74 +2023,15 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|major
-decl_stmt|,
-name|minor
-decl_stmt|;
-name|major
-operator|=
-name|minor
-operator|=
-literal|0
-expr_stmt|;
-name|sb_dsp_command
-argument_list|(
-literal|0xe1
-argument_list|)
-expr_stmt|;
-comment|/* Get version */
-for|for
-control|(
-name|i
-operator|=
-literal|1000
-init|;
-name|i
-condition|;
-name|i
-operator|--
-control|)
-block|{
 if|if
 condition|(
-name|INB
-argument_list|(
-name|DSP_DATA_AVAIL
-argument_list|)
-operator|&
-literal|0x80
+name|sbc_major
+operator|<
+literal|4
 condition|)
-block|{
-comment|/* wait for Data Ready */
-if|if
-condition|(
-name|major
-operator|==
-literal|0
-condition|)
-name|major
-operator|=
-name|INB
-argument_list|(
-name|DSP_READ
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|minor
-operator|=
-name|INB
-argument_list|(
-name|DSP_READ
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
+return|return
+name|mem_start
+return|;
 ifndef|#
 directive|ifndef
 name|SCO
@@ -2097,13 +2043,16 @@ name|name
 argument_list|,
 literal|"SoundBlaster 16 %d.%d"
 argument_list|,
-name|major
+name|sbc_major
 argument_list|,
-name|minor
+name|sbc_minor
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|printk
 argument_list|(
 literal|"snd6:<%s>"
@@ -2113,6 +2062,19 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printk
+argument_list|(
+literal|"<%s>"
+argument_list|,
+name|sb16_dsp_operations
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|num_dspdevs
@@ -2145,7 +2107,7 @@ index|[
 name|my_dev
 index|]
 operator|=
-name|DSP_BUFFCOUNT
+literal|1
 expr_stmt|;
 name|sound_buffsizes
 index|[
@@ -2223,19 +2185,6 @@ return|return
 literal|0
 return|;
 block|}
-if|if
-condition|(
-name|sbc_base
-operator|!=
-name|hw_config
-operator|->
-name|io_base
-condition|)
-name|printk
-argument_list|(
-literal|"Warning! SB16 I/O != SB I/O\n"
-argument_list|)
-expr_stmt|;
 comment|/* sb_setmixer(OPSW,0xf);      if(sb_getmixer(OPSW)!=0xf)      return 0; */
 if|if
 condition|(
@@ -2246,34 +2195,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-name|hw_config
-operator|->
-name|irq
-operator|!=
-name|sb_config
-operator|->
-name|irq
-condition|)
-block|{
-name|printk
-argument_list|(
-literal|"SB16 Error: Invalid IRQ number %d/%d\n"
-argument_list|,
-name|sb_config
-operator|->
-name|irq
-argument_list|,
-name|hw_config
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 if|if
 condition|(
 name|hw_config
@@ -2324,7 +2245,7 @@ name|dma
 expr_stmt|;
 name|set_irq_hw
 argument_list|(
-name|hw_config
+name|sb_config
 operator|->
 name|irq
 argument_list|)
@@ -2356,7 +2277,7 @@ name|printk
 argument_list|(
 literal|"SoundBlaster 16: IRQ %d DMA %d OK\n"
 argument_list|,
-name|hw_config
+name|sb_config
 operator|->
 name|irq
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sb_dsp.c  *   * The low level driver for the SoundBlaster DS chips.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/sb_dsp.c  *  * The low level driver for the SoundBlaster DS chips.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -104,17 +104,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|sb_dsp_model
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1=SB, 2=SB Pro */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|sb_duplex_midi
 decl_stmt|;
 end_decl_stmt
@@ -123,6 +112,49 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sb_intr_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sbc_base
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|input_opened
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+function_decl|(
+modifier|*
+name|midi_input_intr
+function_decl|)
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|char
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|my_dev
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -201,7 +233,7 @@ literal|1
 condition|)
 name|printk
 argument_list|(
-literal|"SoundBlaster: Midi input not currently supported\n"
+literal|"SoundBlaster: MIDI input not supported with plain SB\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -275,6 +307,22 @@ condition|(
 operator|!
 name|sb_dsp_command
 argument_list|(
+literal|0xf2
+argument_list|)
+condition|)
+comment|/* This is undodumented, isn't it */
+return|return
+name|RET_ERROR
+argument_list|(
+name|EIO
+argument_list|)
+return|;
+comment|/* be nice to DSP */
+if|if
+condition|(
+operator|!
+name|sb_dsp_command
+argument_list|(
 literal|0x35
 argument_list|)
 condition|)
@@ -309,6 +357,18 @@ literal|0
 return|;
 comment|/* IRQ not free */
 block|}
+name|input_opened
+operator|=
+literal|1
+expr_stmt|;
+name|my_dev
+operator|=
+name|dev
+expr_stmt|;
+name|midi_input_intr
+operator|=
+name|input
+expr_stmt|;
 block|}
 name|sb_midi_busy
 operator|=
@@ -349,6 +409,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|sb_midi_busy
+operator|=
+literal|0
+expr_stmt|;
+name|input_opened
 operator|=
 literal|0
 expr_stmt|;
@@ -511,6 +575,53 @@ argument_list|(
 name|EPERM
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sb_midi_interrupt
+parameter_list|(
+name|int
+name|dummy
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|unsigned
+name|char
+name|data
+decl_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|data
+operator|=
+name|INB
+argument_list|(
+name|DSP_READ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|input_opened
+condition|)
+name|midi_input_intr
+argument_list|(
+name|my_dev
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

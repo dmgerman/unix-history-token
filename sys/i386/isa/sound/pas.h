@@ -1091,7 +1091,7 @@ literal|6
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|7
 block|,
@@ -1133,7 +1133,7 @@ literal|0x04
 block|,
 literal|0x00
 block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x05
 block|,
@@ -1169,7 +1169,7 @@ literal|0x20
 block|,
 literal|0x00
 block|,
-literal|0x00
+literal|0x08
 block|,
 literal|0x28
 block|,
