@@ -24418,9 +24418,6 @@ decl_stmt|;
 name|u_int8_t
 name|periph_qual
 decl_stmt|;
-name|u_int8_t
-name|periph_dtype
-decl_stmt|;
 name|path
 operator|->
 name|device
@@ -24445,20 +24442,6 @@ argument_list|(
 name|inq_buf
 argument_list|)
 expr_stmt|;
-name|periph_dtype
-operator|=
-name|SID_TYPE
-argument_list|(
-name|inq_buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|periph_dtype
-operator|!=
-name|T_NODEVICE
-condition|)
-block|{
 switch|switch
 condition|(
 name|periph_qual
@@ -24471,7 +24454,7 @@ block|{
 name|u_int8_t
 name|alen
 decl_stmt|;
-comment|/* 					 * We conservatively request only 					 * SHORT_INQUIRY_LEN bytes of inquiry 					 * information during our first try 					 * at sending an INQUIRY. If the device 					 * has more information to give, 					 * perform a second request specifying 					 * the amount of information the device 					 * is willing to give. 					 */
+comment|/* 				 * We conservatively request only 				 * SHORT_INQUIRY_LEN bytes of inquiry 				 * information during our first try 				 * at sending an INQUIRY. If the device 				 * has more information to give, 				 * perform a second request specifying 				 * the amount of information the device 				 * is willing to give. 				 */
 name|alen
 operator|=
 name|inq_buf
@@ -24583,7 +24566,6 @@ return|return;
 block|}
 default|default:
 break|break;
-block|}
 block|}
 block|}
 elseif|else
