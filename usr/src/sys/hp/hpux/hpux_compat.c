@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.42 92/01/20$  *  *	@(#)hpux_compat.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.42 92/01/20$  *  *	@(#)hpux_compat.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8493,12 +8493,31 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|timeval
+name|ru
+decl_stmt|,
+name|rs
+decl_stmt|;
+name|struct
 name|tms
 name|atms
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|calcru
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|ru
+argument_list|,
+operator|&
+name|rs
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|atms
 operator|.
 name|tms_utime
@@ -8506,9 +8525,7 @@ operator|=
 name|hpuxscale
 argument_list|(
 operator|&
-name|p
-operator|->
-name|p_utime
+name|ru
 argument_list|)
 expr_stmt|;
 name|atms
@@ -8518,9 +8535,7 @@ operator|=
 name|hpuxscale
 argument_list|(
 operator|&
-name|p
-operator|->
-name|p_stime
+name|rs
 argument_list|)
 expr_stmt|;
 name|atms
