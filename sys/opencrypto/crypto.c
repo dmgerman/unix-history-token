@@ -3425,7 +3425,9 @@ name|uma_zalloc
 argument_list|(
 name|cryptop_zone
 argument_list|,
-literal|0
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3447,7 +3449,9 @@ name|uma_zalloc
 argument_list|(
 name|cryptodesc_zone
 argument_list|,
-literal|0
+name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
