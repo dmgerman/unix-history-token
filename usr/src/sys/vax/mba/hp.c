@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.1	%G%	*/
+comment|/*	hp.c	4.2	%G%	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../conf/hp.h"
+file|"hp.h"
 end_include
 
 begin_if
