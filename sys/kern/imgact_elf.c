@@ -2491,7 +2491,12 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* XXX: lock the vm_mtx when twiddling vmspace? */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vmspace
 operator|->
 name|vm_tsize
@@ -2531,6 +2536,12 @@ operator|(
 name|uintptr_t
 operator|)
 name|data_addr
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
 expr_stmt|;
 name|addr
 operator|=
