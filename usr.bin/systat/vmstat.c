@@ -718,14 +718,14 @@ begin_define
 define|#
 directive|define
 name|PAGECOL
-value|36
+value|46
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTSROW
-value|2
+value|6
 end_define
 
 begin_comment
@@ -1361,7 +1361,7 @@ name|MEMROW
 argument_list|,
 name|MEMCOL
 argument_list|,
-literal|"Mem:KB  REAL        VIRTUAL"
+literal|"Mem:KB    REAL            VIRTUAL"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1372,7 +1372,7 @@ literal|1
 argument_list|,
 name|MEMCOL
 argument_list|,
-literal|"      Tot Share    Tot  Share"
+literal|"        Tot   Share      Tot    Share"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1405,7 +1405,7 @@ literal|1
 argument_list|,
 name|MEMCOL
 operator|+
-literal|31
+literal|41
 argument_list|,
 literal|"Free"
 argument_list|)
@@ -2568,7 +2568,7 @@ name|MEMCOL
 operator|+
 literal|3
 argument_list|,
-literal|6
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2586,9 +2586,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|9
+literal|11
 argument_list|,
-literal|6
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2606,9 +2606,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|15
+literal|19
 argument_list|,
-literal|7
+literal|9
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2626,9 +2626,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|22
+literal|28
 argument_list|,
-literal|7
+literal|9
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2648,7 +2648,7 @@ name|MEMCOL
 operator|+
 literal|3
 argument_list|,
-literal|6
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2666,9 +2666,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|9
+literal|11
 argument_list|,
-literal|6
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2686,9 +2686,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|15
+literal|19
 argument_list|,
-literal|7
+literal|9
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2706,9 +2706,9 @@ literal|3
 argument_list|,
 name|MEMCOL
 operator|+
-literal|22
+literal|28
 argument_list|,
-literal|7
+literal|9
 argument_list|)
 expr_stmt|;
 name|putint
@@ -2726,9 +2726,9 @@ literal|2
 argument_list|,
 name|MEMCOL
 operator|+
-literal|29
+literal|37
 argument_list|,
-literal|6
+literal|8
 argument_list|)
 expr_stmt|;
 name|putint
