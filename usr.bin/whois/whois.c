@@ -176,6 +176,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LNICHOST
+value|"whois.lacnic.net"
+end_define
+
+begin_define
+define|#
+directive|define
 name|RNICHOST
 value|"whois.ripe.net"
 end_define
@@ -261,6 +268,8 @@ name|ip_whois
 index|[]
 init|=
 block|{
+name|LNICHOST
+block|,
 name|RNICHOST
 block|,
 name|PNICHOST
@@ -420,7 +429,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ac:dgh:impQrR6"
+literal|"ac:dgh:ilmpQrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -479,6 +488,14 @@ case|:
 name|host
 operator|=
 name|INICHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|host
+operator|=
+name|LNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -1500,7 +1517,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-adgimpQrR6] [-c country-code | -h hostname] "
+literal|"usage: whois [-adgilmpQrR6] [-c country-code | -h hostname] "
 literal|"name ...\n"
 argument_list|)
 expr_stmt|;
