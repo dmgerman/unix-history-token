@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.4 %G%"
+literal|"@(#)fdec.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4445,15 +4445,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putRV
+name|putleaf
 argument_list|(
-name|labelname
+name|P2NAME
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
 name|fvartype
+argument_list|,
+name|labelname
 argument_list|)
 expr_stmt|;
 name|putLV
@@ -4501,15 +4503,24 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|putLV
+name|putdot
 argument_list|(
-name|labelname
+name|filename
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+name|putleaf
+argument_list|(
+name|P2ICON
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
 name|fvartype
+argument_list|,
+name|labelname
 argument_list|)
 expr_stmt|;
 break|break;
