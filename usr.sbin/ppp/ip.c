@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.34 1997/12/28 02:46:22 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.35 1997/12/29 22:23:11 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -2226,6 +2226,45 @@ name|next
 control|)
 block|{
 comment|/* Copy to contiguous region */
+if|if
+condition|(
+sizeof|sizeof
+name|tun
+operator|.
+name|data
+operator|-
+operator|(
+name|cp
+operator|-
+name|tun
+operator|.
+name|data
+operator|)
+operator|<
+name|wp
+operator|->
+name|cnt
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"IpInput: Packet too large (%d) - dropped\n"
+argument_list|,
+name|plength
+argument_list|(
+name|bp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pfree
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|memcpy
 argument_list|(
 name|cp
