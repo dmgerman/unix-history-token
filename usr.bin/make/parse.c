@@ -4393,6 +4393,26 @@ name|oldVars
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* 	 * make sure that we set the variable the first time to nothing 	 * so that it gets substituted! 	 */
+if|if
+condition|(
+operator|!
+name|Var_Exists
+argument_list|(
+name|line
+argument_list|,
+name|ctxt
+argument_list|)
+condition|)
+name|Var_Set
+argument_list|(
+name|line
+argument_list|,
+literal|""
+argument_list|,
+name|ctxt
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|Var_Subst
