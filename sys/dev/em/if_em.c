@@ -7195,6 +7195,19 @@ operator|->
 name|if_capabilities
 expr_stmt|;
 block|}
+comment|/*          * Tell the upper layer(s) we support long frames.          */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
