@@ -330,7 +330,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|(b)->mdl_next = NULL;						\ 	(b)->mdl_size = (uint16_t)(sizeof(mdl) +			\ 		(sizeof(uint32_t) * SPAN_PAGES((baseva), (len))));	\ 	(b)->mdl_flags = 0;						\ 	(b)->mdl_startva = (void *)PAGE_ALIGN((baseva));		\ 	(b)->mdl_byteoffset = BYTE_OFFSET((baseva));			\ 	(b)->mdl_bytecount = (uint32_t)(len);
+value|(b)->mdl_next = NULL;						\ 	(b)->mdl_size = (uint16_t)(sizeof(mdl) +			\ 		(sizeof(vm_offset_t) * SPAN_PAGES((baseva), (len))));	\ 	(b)->mdl_flags = 0;						\ 	(b)->mdl_startva = (void *)PAGE_ALIGN((baseva));		\ 	(b)->mdl_byteoffset = BYTE_OFFSET((baseva));			\ 	(b)->mdl_bytecount = (uint32_t)(len);
 end_define
 
 begin_define
@@ -933,6 +933,7 @@ end_struct_decl
 
 begin_typedef
 typedef|typedef
+name|__stdcall
 name|void
 function_decl|(
 modifier|*
@@ -3395,6 +3396,34 @@ define|\
 value|do {								\ 		(irp)->irp_currentstackloc++;				\ 		(irp)->irp_tail.irp_overlay.irp_csl++;			\ 	} while(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IoInitializeDpcRequest
+parameter_list|(
+name|dobj
+parameter_list|,
+name|dpcfunc
+parameter_list|)
+define|\
+value|KeInitializeDpc(&(dobj)->do_dpc, dpcfunc, dobj)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoRequestDpc
+parameter_list|(
+name|dobj
+parameter_list|,
+name|irp
+parameter_list|,
+name|ctx
+parameter_list|)
+define|\
+value|KeInsertQueueDpc(&(dobj)->do_dpc, irp, ctx)
+end_define
+
 begin_typedef
 typedef|typedef
 name|__stdcall
@@ -4686,6 +4715,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_decl_stmt
 name|__fastcall
 specifier|extern
@@ -4715,6 +4750,52 @@ argument_list|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|uint8_t
+name|KeAcquireSpinLockRaiseToDpc
+parameter_list|(
+name|kspin_lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|void
+name|KeAcquireSpinLockAtDpcLevel
+parameter_list|(
+name|kspin_lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|__stdcall
+specifier|extern
+name|void
+name|KeReleaseSpinLockFromDpcLevel
+parameter_list|(
+name|kspin_lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|__stdcall
@@ -5069,6 +5150,28 @@ parameter_list|(
 name|a
 parameter_list|)
 value|FASTCALL1(KfLowerIrql, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KeAcquireSpinLockAtDpcLevel
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|FASTCALL1(KefAcquireSpinLockAtDpcLevel, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KeReleaseSpinLockFromDpcLevel
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|FASTCALL1(KefReleaseSpinLockFromDpcLevel, a)
 end_define
 
 begin_endif
