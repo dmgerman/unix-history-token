@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: savemail.c,v 8.212.4.5 2000/08/22 22:46:00 gshapiro Exp $"
+literal|"@(#)$Id: savemail.c,v 8.212.4.11 2000/12/18 18:00:44 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4223,6 +4223,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|time_t
+name|now
+init|=
+name|curtime
+argument_list|()
+decl_stmt|;
 name|putline
 argument_list|(
 literal|""
@@ -4475,10 +4481,35 @@ operator|->
 name|q_state
 argument_list|)
 condition|)
+block|{
+comment|/* RFC 1891, 6.2.6 (b) */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QHASNOTIFY
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QPINGONFAILURE
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+continue|continue;
 name|action
 operator|=
 literal|"failed"
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -5236,8 +5267,7 @@ name|q
 operator|->
 name|q_statdate
 operator|=
-name|curtime
-argument_list|()
+name|now
 expr_stmt|;
 operator|(
 name|void

@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: smrsh.c,v 8.31.4.5 2000/09/17 17:04:27 gshapiro Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.31.4.6 2000/10/09 20:37:16 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,12 +175,55 @@ directive|ifndef
 name|CMDDIR
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HPUX10
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HPUX11
+argument_list|)
+operator|||
+name|SOLARIS
+operator|>=
+literal|20800
+end_if
+
+begin_define
+define|#
+directive|define
+name|CMDDIR
+value|"/var/adm/sm.bin"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HPUX10 || HPUX11 || SOLARIS> 20800 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CMDDIR
 value|"/usr/libexec/sm.bin"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HPUX10 || HPUX11 || SOLARIS> 20800 */
+end_comment
 
 begin_endif
 endif|#

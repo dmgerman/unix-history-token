@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.25 2000/08/08 23:50:40 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 8.496.4.32 2000/12/15 19:20:53 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -553,6 +553,10 @@ end_define
 
 begin_comment
 comment|/* max macro id number */
+end_comment
+
+begin_comment
+comment|/* Must match (BITMAPBITS - 1) */
 end_comment
 
 begin_ifndef
@@ -3447,12 +3451,31 @@ begin_comment
 comment|/* SOLARIS>= 20600 || (SOLARIS< 10000&& SOLARIS>= 206) */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|int32_t
-typedef|;
-end_typedef
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_INT32
+value|int
+end_define
+
+begin_comment
+comment|/* 32bit integer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER */
+end_comment
 
 begin_endif
 endif|#
@@ -3493,6 +3516,46 @@ directive|include
 file|<sys/loadavg.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|20900
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|209
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/pset.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_PSET
+end_define
+
+begin_comment
+comment|/* pset_getloadavg(3c) appears in 2.9 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3502,6 +3565,15 @@ end_define
 
 begin_comment
 comment|/* getloadavg(3c) appears in 2.7 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS>= 20900 || (SOLARIS< 10000&& SOLARIS>= 209) */
 end_comment
 
 begin_endif
@@ -11053,6 +11125,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -11193,6 +11272,16 @@ end_endif
 
 begin_comment
 comment|/* ! _PATH_SENDMAILPID */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|offsetof
+end_undef
+
+begin_comment
+comment|/* avoid stddefs.h, sys/sysmacros.h conflict */
 end_comment
 
 begin_endif
