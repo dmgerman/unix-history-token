@@ -475,7 +475,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ctags [-BFadtuwvx] [-f tagsfile] file ..."
+literal|"usage: ctags [-BFadtuwvx] [-f tagsfile] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
