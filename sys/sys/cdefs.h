@@ -145,13 +145,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|__GNUCLIKE_ATTRIBUTE_PRINTF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|__GNUCLIKE_ATTRIBUTE_MODE_DI
 value|1
 end_define
@@ -367,13 +360,6 @@ begin_define
 define|#
 directive|define
 name|__CC_SUPPORTS_WARNING
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|__CC_SUPPORTS_FORWARD_REFERENCE_CONSTRUCT
 value|1
 end_define
 
