@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.6";  *  * formatted write routines  */
+comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.7";  *  * formatted write routines  */
 end_comment
 
 begin_include
@@ -492,6 +492,19 @@ modifier|*
 name|dotab
 call|)
 argument_list|()
+operator|)
+return|;
+if|if
+condition|(
+name|cursor
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|errno
+operator|=
+name|F_ERSEEK
 operator|)
 return|;
 while|while
