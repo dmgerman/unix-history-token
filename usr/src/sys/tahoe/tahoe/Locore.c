@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	1.3	86/12/15	*/
+comment|/*	Locore.c	1.4	87/06/06	*/
 end_comment
 
 begin_include
@@ -957,18 +957,18 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pte
-name|camap
+name|kmempt
 index|[
-literal|16
+literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cabase
+name|kmembase
 decl_stmt|,
-name|calimit
+name|kmemlimit
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	1.3	86/01/17	*/
+comment|/*	pte.h	1.4	87/06/06	*/
 end_comment
 
 begin_comment
@@ -386,7 +386,10 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|pte
-name|camap
+name|kmempt
+index|[]
+decl_stmt|,
+name|ekmempt
 index|[]
 decl_stmt|;
 end_decl_stmt
