@@ -1361,7 +1361,7 @@ name|sblock
 operator|.
 name|fs_magic
 operator|=
-name|FS_UFS2_MAGIC
+name|FS_BAD2_MAGIC
 expr_stmt|;
 name|sblock
 operator|.
@@ -2713,6 +2713,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|Nflag
+condition|)
+name|sbwrite
+argument_list|(
+operator|&
+name|disk
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_magic
+operator|=
+name|FS_UFS2_MAGIC
+expr_stmt|;
 comment|/* 	 * Now build the cylinders group blocks and 	 * then print out indices of cylinder groups. 	 */
 name|printf
 argument_list|(

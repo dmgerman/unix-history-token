@@ -864,6 +864,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FS_BAD2_MAGIC
+value|0x19960408
+end_define
+
+begin_comment
+comment|/* UFS2 incomplete newfs magic number */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FS_OKAY
 value|0x7c269d38
 end_define
