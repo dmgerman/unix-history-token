@@ -1599,6 +1599,10 @@ decl_stmt|;
 comment|/* find the pcb for the current process */
 if|if
 condition|(
+name|cur_proc
+operator|==
+name|NULL
+operator|||
 name|kvread
 argument_list|(
 operator|&
@@ -1863,6 +1867,10 @@ name|proc
 decl_stmt|;
 if|if
 condition|(
+name|cur_proc
+operator|==
+name|NULL
+operator|||
 name|kvread
 argument_list|(
 name|cur_proc
