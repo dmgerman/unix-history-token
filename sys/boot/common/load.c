@@ -197,7 +197,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|size
+name|result
 operator|==
 operator|-
 literal|1
