@@ -3651,6 +3651,9 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
+name|linker_file_t
+name|lf
+decl_stmt|;
 comment|/* 	 * Be ultra-paranoid about making sure the type and fspath 	 * variables will fit in our mp buffers, including the 	 * terminating NUL. 	 */
 if|if
 condition|(
@@ -4207,9 +4210,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|linker_file_t
-name|lf
-decl_stmt|;
 comment|/* Only load modules for root (very important!) */
 name|error
 operator|=
@@ -4229,7 +4229,9 @@ name|vp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|error
@@ -4246,8 +4248,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 block|{
 name|vput
@@ -4257,7 +4257,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EPERM
+name|error
 operator|)
 return|;
 block|}
@@ -4296,7 +4296,9 @@ operator|=
 name|ENODEV
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|lf
