@@ -3111,7 +3111,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 name|panic
 argument_list|(
 literal|"aac_startio: unexpected error %d from "
@@ -8090,6 +8096,12 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * To avoid a race with its completion interrupt, place this command on 	 * the busy queue prior to advertising it to the controller. 	 */
+name|aac_enqueue_busy
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
 comment|/* populate queue entry */
 operator|(
 name|sc
@@ -8137,12 +8149,6 @@ operator|=
 name|pi
 operator|+
 literal|1
-expr_stmt|;
-comment|/* 	 * To avoid a race with its completion interrupt, place this command on 	 * the busy queue prior to advertising it to the controller. 	 */
-name|aac_enqueue_busy
-argument_list|(
-name|cm
-argument_list|)
 expr_stmt|;
 comment|/* notify the adapter if we know how */
 if|if
