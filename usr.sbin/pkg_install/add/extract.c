@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.7.6.12 1998/09/11 07:27:17 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.6.13 1998/10/28 12:00:32 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, "can not invoke %d byte tar pipeline: %s", \ 			     strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar --unlink -xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, "can not invoke %d byte tar pipeline: %s", \ 			     strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
