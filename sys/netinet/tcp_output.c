@@ -480,11 +480,12 @@ name|idle
 decl_stmt|,
 name|sendalot
 decl_stmt|;
-name|int
-name|maxburst
-init|=
-name|TCP_MAXBURST
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int maxburst = TCP_MAXBURST;
+endif|#
+directive|endif
 name|struct
 name|rmxp_tao
 modifier|*
@@ -1048,7 +1049,7 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sender silly window avoidance.  If connection is idle 	 * and can send all data, a maximum segment, 	 * at least a maximum default-size segment do it, 	 * or are forced, do it; otherwise don't bother. 	 * If peer's buffer is tiny, then send 	 * when window is at least half open. 	 * If retransmitting (possibly after persist timer forced us 	 * to send into a small window), then must resend. 	 */
+comment|/* 	 * Sender silly window avoidance.   We transmit under the following 	 * conditions when len is non-zero: 	 * 	 *      - We have a full segment 	 *      - This is the last buffer in a write()/send() and we are 	 *        either idle or running NODELAY 	 *      - we've timed out (e.g. persist timer) 	 *      - we have more then 1/2 the maximum send window's worth of 	 *        data (receiver may be limited the window size) 	 *      - we need to retransmit 	 */
 if|if
 condition|(
 name|len
@@ -1065,6 +1066,7 @@ condition|)
 goto|goto
 name|send
 goto|;
+comment|/* 		 * NOTE! on localhost connections an 'ack' from the remote 		 * end may occur synchronously with the output and cause 		 * us to flush a buffer queued with moretocome.  XXX 		 * 		 * note: the len + off check is almost certainly unnecessary. 		 */
 if|if
 condition|(
 operator|!
@@ -1076,25 +1078,18 @@ operator|&
 name|TF_MORETOCOME
 operator|)
 operator|&&
+comment|/* normal case */
 operator|(
 name|idle
 operator|||
+operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 name|TF_NODELAY
 operator|)
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_NOPUSH
 operator|)
-operator|==
-literal|0
 operator|&&
 name|len
 operator|+
@@ -1105,16 +1100,29 @@ operator|->
 name|so_snd
 operator|.
 name|sb_cc
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_NOPUSH
+operator|)
+operator|==
+literal|0
 condition|)
+block|{
 goto|goto
 name|send
 goto|;
+block|}
 if|if
 condition|(
 name|tp
 operator|->
 name|t_force
 condition|)
+comment|/* typ. timeout case */
 goto|goto
 name|send
 goto|;
@@ -1150,6 +1158,7 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
+comment|/* retransmit case */
 goto|goto
 name|send
 goto|;
@@ -2855,6 +2864,27 @@ operator|->
 name|rcv_scale
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Adjust the RXWIN0SENT flag - indicate that we have advertised 	 * a 0 window.  This may cause the remote transmitter to stall.  This 	 * flag tells soreceive() to disable delayed acknowledgements when 	 * draining the buffer.  This can occur if the receiver is attempting 	 * to read more data then can be buffered prior to transmitting on 	 * the connection. 	 */
+if|if
+condition|(
+name|win
+operator|==
+literal|0
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_RXWIN0SENT
+expr_stmt|;
+else|else
+name|tp
+operator|->
+name|t_flags
+operator|&=
+operator|~
+name|TF_RXWIN0SENT
 expr_stmt|;
 if|if
 condition|(

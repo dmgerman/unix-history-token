@@ -296,6 +296,11 @@ directive|define
 name|TF_LASTIDLE
 value|0x40000
 comment|/* connection was previously idle */
+define|#
+directive|define
+name|TF_RXWIN0SENT
+value|0x80000
+comment|/* sent a receiver win 0 in response */
 name|int
 name|t_force
 decl_stmt|;

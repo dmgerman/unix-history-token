@@ -2901,7 +2901,11 @@ name|sc_tp
 operator|->
 name|t_flags
 operator|&
+operator|(
 name|TF_NOPUSH
+operator||
+name|TF_NODELAY
+operator|)
 expr_stmt|;
 if|if
 condition|(
