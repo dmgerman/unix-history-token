@@ -2154,7 +2154,7 @@ specifier|extern
 name|u_int64_t
 name|bswap64
 parameter_list|(
-name|u_int32_t
+name|u_int64_t
 name|x
 parameter_list|)
 function_decl|;
