@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: collect.c,v 8.136.4.15 2001/02/21 01:05:59 gshapiro Exp $"
+literal|"@(#)$Id: collect.c,v 8.136.4.21 2001/05/17 18:10:14 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|bool
+specifier|volatile
 name|CollectProgress
 decl_stmt|;
 end_decl_stmt
@@ -111,7 +112,10 @@ begin_decl_stmt
 specifier|static
 name|EVENT
 modifier|*
+specifier|volatile
 name|CollectTimeout
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1322,7 +1326,7 @@ name|obuf
 operator|!=
 name|bufbuf
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|obuf
 argument_list|)
@@ -1906,6 +1910,12 @@ name|TRUE
 expr_stmt|;
 block|}
 comment|/* reset global timer */
+if|if
+condition|(
+name|CollectTimeout
+operator|!=
+name|NULL
+condition|)
 name|clrevent
 argument_list|(
 name|CollectTimeout
@@ -2900,23 +2910,21 @@ name|time_t
 name|timeout
 decl_stmt|;
 block|{
-comment|/* if no progress was made, die now */
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+comment|/* 	**  NOTE: THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD 	**	ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE 	**	DOING. 	*/
 if|if
 condition|(
-operator|!
 name|CollectProgress
 condition|)
-name|longjmp
-argument_list|(
-name|CtxCollectTimeout
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* otherwise reset the timeout */
+block|{
+comment|/* reset the timeout */
 name|CollectTimeout
 operator|=
-name|setevent
+name|sigsafe_setevent
 argument_list|(
 name|timeout
 argument_list|,
@@ -2930,7 +2938,43 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* event is done */
+name|CollectTimeout
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* if no progress was made or problem resetting event, die now */
+if|if
+condition|(
+name|CollectTimeout
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ETIMEDOUT
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|CtxCollectTimeout
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+block|}
 end_function
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* **  DFERROR -- signal error on writing the data file. ** **	Parameters: **		df -- the file pointer for the data file. **		msg -- detailed message. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Gives an error message. **		Arranges for following output to go elsewhere. */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: mailstats.c,v 8.53.16.12 2001/02/15 20:52:36 geir Exp $"
+literal|"@(#)$Id: mailstats.c,v 8.53.16.13 2001/05/07 22:06:38 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.67 2001/01/07 19:31:05 gshapiro Exp $ (with SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.77 2001/05/27 22:20:30 gshapiro Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.67 2001/01/07 19:31:05 gshapiro Exp $ (without SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.77 2001/05/27 22:20:30 gshapiro Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +240,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|bool
-name|tls_ok
+name|tls_ok_srv
 init|=
 name|FALSE
 decl_stmt|;
@@ -4078,7 +4078,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|tls_ok
+name|tls_ok_srv
 condition|)
 block|{
 name|message
@@ -4358,7 +4358,7 @@ name|tlslogerr
 argument_list|()
 expr_stmt|;
 block|}
-name|tls_ok
+name|tls_ok_srv
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4496,7 +4496,7 @@ name|SuprErrs
 operator|=
 name|saveSuprErrs
 expr_stmt|;
-name|tls_ok
+name|tls_ok_srv
 operator|=
 name|FALSE
 expr_stmt|;
@@ -4603,7 +4603,7 @@ name|mechlist
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|mechlist
 argument_list|)
@@ -5251,7 +5251,7 @@ directive|if
 name|STARTTLS
 if|if
 condition|(
-name|tls_ok
+name|tls_ok_srv
 operator|&&
 name|usetls
 condition|)
@@ -6402,7 +6402,7 @@ name|response
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7152,7 +7152,7 @@ name|response
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7535,7 +7535,7 @@ name|response
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|response
 argument_list|)
@@ -7575,7 +7575,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|q
 argument_list|)
@@ -8810,34 +8810,20 @@ name|id
 operator|=
 literal|'@'
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|new
 operator|=
 operator|(
 name|QUEUE_CHAR
 operator|*
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 name|QUEUE_CHAR
 argument_list|)
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"500 5.5.0 ETRN out of memory"
-argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|new
 operator|->
 name|queue_match
@@ -8863,7 +8849,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|free
+name|sm_free
 argument_list|(
 name|QueueLimitRecipient
 argument_list|)
@@ -9506,11 +9492,14 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: %.40s attack?"
+literal|"%.100s: possible SMTP attack: command=%.40s, count=%d"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
 name|cname
+argument_list|,
+operator|*
+name|pcounter
 argument_list|)
 expr_stmt|;
 block|}
@@ -10505,7 +10494,7 @@ name|auth_param
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|sm_free
 argument_list|(
 name|auth_param
 argument_list|)
@@ -11424,6 +11413,19 @@ expr_stmt|;
 name|QuickAbort
 operator|=
 name|FALSE
+expr_stmt|;
+comment|/* Reset global flags */
+name|RestartRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|ShutdownRequest
+operator|=
+name|NULL
+expr_stmt|;
+name|PendingSignal
+operator|=
+literal|0
 expr_stmt|;
 name|clearstats
 argument_list|()
@@ -13112,6 +13114,49 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  INIT_TLS_LIBRARY -- calls functions which setup TLS library for global use ** **	Parameters: **		none. ** **	Returns: **		succeeded? ** **	Side Effects: **		Sets tls_ok_srv static, even when called from main() */
+end_comment
+
+begin_function
+name|bool
+name|init_tls_library
+parameter_list|()
+block|{
+comment|/* 	**  basic TLS initialization 	**  ignore result for now 	*/
+name|SSL_library_init
+argument_list|()
+expr_stmt|;
+name|SSL_load_error_strings
+argument_list|()
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* this is currently a macro for SSL_library_init */
+block|SSLeay_add_ssl_algorithms();
+endif|#
+directive|endif
+comment|/* 0 */
+comment|/* initialize PRNG */
+name|tls_ok_srv
+operator|=
+name|tls_rand_init
+argument_list|(
+name|RandFile
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+return|return
+name|tls_ok_srv
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  INITTLS -- initialize TLS ** **	Parameters: **		ctx -- pointer to context **		req -- requirements for initialization (see sendmail.h) **		srv -- server side? **		certfile -- filename of certificate **		keyfile -- filename of private key **		cacertpath -- path to CAs **		cacertfile -- file with CA **		dhparam -- parameters for DH ** **	Returns: **		succeeded? */
 end_comment
 
@@ -13856,6 +13901,15 @@ argument_list|,
 literal|"TLS: error: SSL_CTX_new(SSLv23_server_method()) failed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|9
+condition|)
+name|tlslogerr
+argument_list|()
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -13893,6 +13947,15 @@ name|NOQID
 argument_list|,
 literal|"TLS: error: SSL_CTX_new(SSLv23_client_method()) failed"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|9
+condition|)
+name|tlslogerr
+argument_list|()
 expr_stmt|;
 return|return
 name|FALSE
@@ -15007,7 +15070,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INITSRVTLS -- initialize server side TLS ** **	Parameters: **		none. ** **	Returns: **		succeeded? */
+comment|/* **  INITSRVTLS -- initialize server side TLS ** **	Parameters: **		none. ** **	Returns: **		succeeded? ** **	Side Effects: **		sets tls_ok_srv static, even when called from main() */
 end_comment
 
 begin_function
@@ -15015,7 +15078,7 @@ name|bool
 name|initsrvtls
 parameter_list|()
 block|{
-name|tls_ok
+name|tls_ok_srv
 operator|=
 name|inittls
 argument_list|(
@@ -15038,7 +15101,7 @@ name|DHParams
 argument_list|)
 expr_stmt|;
 return|return
-name|tls_ok
+name|tls_ok_srv
 return|;
 block|}
 end_function

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: sm_gethost.c,v 8.7.8.6 2001/02/14 04:07:23 gshapiro Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.7.8.10 2001/05/09 20:57:12 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,10 +76,6 @@ directive|if
 name|NETINET6
 operator|&&
 name|NEEDSGETIPNODE
-operator|&&
-name|__RES
-operator|<
-literal|19990909
 end_if
 
 begin_ifndef
@@ -277,7 +273,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NEEDSGETIPNODE&& NETINET6&& __RES< 19990909 */
+comment|/* NEEDSGETIPNODE&& NETINET6 */
 end_comment
 
 begin_function

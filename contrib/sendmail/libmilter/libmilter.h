@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ name|char
 name|MilterlId
 index|[]
 init|=
-literal|"@(#)$Id: libmilter.h,v 8.3.6.10 2000/11/20 21:15:36 ca Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.3.6.14 2001/05/27 14:31:12 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +310,7 @@ begin_define
 define|#
 directive|define
 name|MI_TIMEOUT
-value|1800
+value|7210
 end_define
 
 begin_comment
@@ -392,6 +392,17 @@ end_define
 
 begin_comment
 comment|/* thread creation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_FAILS_A
+value|16
+end_define
+
+begin_comment
+comment|/* accept() */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999, 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: arpadate.c,v 8.23 1999/09/23 19:59:18 ca Exp $"
+literal|"@(#)$Id: arpadate.c,v 8.23.20.2 2001/05/07 22:07:26 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,7 +408,7 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
-comment|/* 	 * should really get the timezone from the time in "ud" (which 	 * is only different if a non-null arg was passed which is different 	 * from the current time), but for all practical purposes, returning 	 * the current local zone will do (its all that is ever needed). 	 */
+comment|/* 	**  should really get the timezone from the time in "ud" (which 	**  is only different if a non-null arg was passed which is different 	**  from the current time), but for all practical purposes, returning 	**  the current local zone will do (its all that is ever needed). 	*/
 name|gmt
 operator|=
 operator|*

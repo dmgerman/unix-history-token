@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: smrsh.c,v 8.31.4.8 2001/01/22 19:00:26 gshapiro Exp $"
+literal|"@(#)$Id: smrsh.c,v 8.31.4.9 2001/04/24 04:11:51 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,13 +644,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|par
-operator|=
-name|argv
-index|[
-literal|2
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -698,6 +691,13 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
+name|par
+operator|=
+name|argv
+index|[
+literal|2
+index|]
+expr_stmt|;
 comment|/* 	**  Disallow special shell syntax.  This is overly restrictive, 	**  but it should shut down all attacks. 	**  Be sure to include 8-bit versions, since many shells strip 	**  the address to 7 bits before checking. 	*/
 if|if
 condition|(

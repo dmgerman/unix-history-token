@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: savemail.c,v 8.212.4.12 2001/01/07 19:31:05 gshapiro Exp $"
+literal|"@(#)$Id: savemail.c,v 8.212.4.13 2001/05/03 17:24:15 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6057,7 +6057,7 @@ name|bp
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)
@@ -6258,7 +6258,7 @@ name|bp
 operator|!=
 name|NULL
 condition|)
-name|free
+name|sm_free
 argument_list|(
 name|bp
 argument_list|)

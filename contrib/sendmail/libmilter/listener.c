@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: listener.c,v 8.38.2.1.2.21 2001/02/14 02:20:40 gshapiro Exp $"
+literal|"@(#)$Id: listener.c,v 8.38.2.1.2.22 2001/05/16 17:15:58 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1720,6 +1720,16 @@ name|tcnt
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|acnt
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|save_errno
+init|=
+literal|0
+decl_stmt|;
 name|sthread_t
 name|thread_id
 decl_stmt|;
@@ -2014,11 +2024,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|int
-name|err
-init|=
+name|save_errno
+operator|=
 name|errno
-decl_stmt|;
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2030,7 +2039,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|save_errno
 operator|==
 name|EINTR
 condition|)
@@ -2098,6 +2107,10 @@ operator|&
 name|clilen
 argument_list|)
 expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2156,7 +2169,7 @@ name|connfd
 operator|=
 name|INVALID_SOCKET
 expr_stmt|;
-name|errno
+name|save_errno
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -2174,13 +2187,46 @@ name|smi_log
 argument_list|(
 name|SMI_LOG_ERR
 argument_list|,
-literal|"%s: accept() returned invalid socket"
+literal|"%s: accept() returned invalid socket (%s)"
 argument_list|,
 name|smfi
 operator|->
 name|xxfi_name
+argument_list|,
+name|strerror
+argument_list|(
+name|save_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|save_errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
+name|acnt
+operator|++
+expr_stmt|;
+name|MI_SLEEP
+argument_list|(
+name|acnt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|acnt
+operator|>=
+name|MAX_FAILS_A
+condition|)
+block|{
+name|ret
+operator|=
+name|MI_FAILURE
+expr_stmt|;
+break|break;
+block|}
 continue|continue;
 block|}
 if|if
@@ -2282,6 +2328,10 @@ block|}
 continue|continue;
 block|}
 name|mcnt
+operator|=
+literal|0
+expr_stmt|;
+name|acnt
 operator|=
 literal|0
 expr_stmt|;
