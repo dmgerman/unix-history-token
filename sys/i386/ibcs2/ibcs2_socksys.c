@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -622,7 +628,12 @@ argument_list|)
 argument_list|,
 literal|"%s"
 argument_list|,
-name|hostname
+name|getcredhostname
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dptr

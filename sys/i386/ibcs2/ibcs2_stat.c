@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1400,7 +1406,12 @@ name|strncpy
 argument_list|(
 name|machine_name
 argument_list|,
-name|hostname
+name|getcredhostname
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
