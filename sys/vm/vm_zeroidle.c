@@ -116,7 +116,7 @@ specifier|static
 name|int
 name|idlezero_enable
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -375,13 +375,23 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-comment|/* maybe drop out of Giant here */
-name|pmap_zero_page
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|pmap_zero_page_idle
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* and return here */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -495,6 +505,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|idlezero_enable
+operator|&&
 name|vm_page_zero_check
 argument_list|()
 condition|)
@@ -531,6 +543,9 @@ name|pages
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|pri
+decl_stmt|;
 name|rtp
 operator|.
 name|prio
@@ -558,6 +573,12 @@ name|td
 operator|->
 name|td_ksegrp
 argument_list|)
+expr_stmt|;
+name|pri
+operator|=
+name|td
+operator|->
+name|td_priority
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -587,6 +608,9 @@ condition|(
 name|pages
 operator|>
 name|idlezero_maxrun
+operator|||
+name|kserunnable
+argument_list|()
 condition|)
 block|{
 name|mtx_lock_spin
@@ -628,7 +652,7 @@ argument_list|(
 operator|&
 name|zero_state
 argument_list|,
-name|PPAUSE
+name|pri
 argument_list|,
 literal|"pgzero"
 argument_list|,

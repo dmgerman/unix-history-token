@@ -4232,6 +4232,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|pmap_zero_page_idle
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+comment|/* XXX this is called outside of Giant, is pmap_zero_page safe? */
+comment|/* XXX maybe have a dedicated mapping for this to avoid the problem? */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|pmap_zero_page
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  */
 end_comment
