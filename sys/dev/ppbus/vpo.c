@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  *  */
+comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpo.c,v 1.1 1997/08/14 13:57:44 msmith Exp $  *  */
 end_comment
 
 begin_include
@@ -175,31 +175,6 @@ end_define
 begin_comment
 comment|/* wait status timeout */
 end_comment
-
-begin_comment
-comment|/* XXX  * This is ALPHA/BETA code, warnings are mandatory.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VP0_WARNING
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VP0_WARNING
-end_define
-
-begin_comment
-comment|/* defined to get warnings about timeouts, 				 * except select timeouts */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * DO NOT MODIFY ANYTHING UNDER THIS LINE  * --------------------------------------------------------------------  */
@@ -599,8 +574,6 @@ name|vpo_detect
 argument_list|(
 name|vpo
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|free
@@ -985,10 +958,10 @@ modifier|*
 name|xs
 parameter_list|)
 block|{
-specifier|register
 name|int
-name|timeout
+name|errno
 decl_stmt|;
+comment|/* error in errno.h */
 if|if
 condition|(
 name|xs
@@ -1019,7 +992,7 @@ operator|->
 name|datalen
 argument_list|)
 expr_stmt|;
-name|timeout
+name|errno
 operator|=
 name|vpoio_do_scsi
 argument_list|(
@@ -1066,26 +1039,12 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VP0_WARNING
-name|vpo_warning
-argument_list|(
-name|vpo
-argument_list|,
-name|xs
-argument_list|,
-name|timeout
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|VP03_DEBUG
+name|VP0_DEBUG
 name|printf
 argument_list|(
-literal|"vpo_do_scsi = %d, status = 0x%x, count = %d\n"
+literal|"vpo_do_scsi = %d, status = 0x%x, count = %d, vpo_error = %d\n"
 argument_list|,
-name|timeout
+name|errno
 argument_list|,
 name|vpo
 operator|->
@@ -1094,10 +1053,82 @@ argument_list|,
 name|vpo
 operator|->
 name|vpo_count
+argument_list|,
+name|vpo
+operator|->
+name|vpo_error
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|errno
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|VP0_WARNING
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vpo%d: errno = %d\n"
+argument_list|,
+name|vpo
+operator|->
+name|vpo_unit
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* connection to ppbus interrupted */
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+comment|/* if a timeout occured, no sense */
+if|if
+condition|(
+name|vpo
+operator|->
+name|vpo_error
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|VP0_WARNING
+name|vpo_warning
+argument_list|(
+name|vpo
+argument_list|,
+name|xs
+argument_list|,
+name|vpo
+operator|->
+name|vpo_error
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_TIMEOUT
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
 define|#
 directive|define
 name|RESERVED_BITS_MASK
@@ -1127,7 +1158,6 @@ break|break;
 case|case
 name|CHECK_CONDITION
 case|:
-default|default:
 name|vpo
 operator|->
 name|vpo_sense
@@ -1163,7 +1193,7 @@ name|control
 operator|=
 literal|0
 expr_stmt|;
-name|timeout
+name|errno
 operator|=
 name|vpoio_do_scsi
 argument_list|(
@@ -1228,6 +1258,18 @@ operator|.
 name|count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
+comment|/* connection to ppbus interrupted */
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+else|else
 name|xs
 operator|->
 name|error
@@ -1237,12 +1279,8 @@ expr_stmt|;
 goto|goto
 name|error
 goto|;
-block|}
-if|if
-condition|(
-name|timeout
-condition|)
-block|{
+default|default:
+comment|/* BUSY or RESERVATION_CONFLICT */
 name|xs
 operator|->
 name|error
@@ -1374,7 +1412,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|VP03_DEBUG
+name|VP0_DEBUG
 name|printf
 argument_list|(
 literal|"vpo_scsi_cmd(): xs->flags = 0x%x, "
@@ -2769,6 +2807,13 @@ specifier|register
 name|char
 name|r
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* broken */
+block|if (ppb_poll_device(&vpo->vpo_dev, 150, nBUSY, nBUSY, PPB_INTR)) 		return (0);  	return (ppb_rstr(&vpo->vpo_dev)& 0xf0);
+endif|#
+directive|endif
 name|k
 operator|=
 literal|0
@@ -2789,7 +2834,7 @@ name|vpo_dev
 argument_list|)
 operator|)
 operator|&
-literal|0x80
+name|nBUSY
 operator|)
 operator|&&
 operator|(
@@ -2889,16 +2934,27 @@ specifier|register
 name|int
 name|k
 decl_stmt|;
-comment|/* enter disk state, allocate the ppbus */
+comment|/* 	 * enter disk state, allocate the ppbus 	 * 	 * XXX 	 * Should we allow this call to be interruptible? 	 * The only way to report the interruption is to return 	 * EIO do upper SCSI code :^( 	 */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|vpoio_connect
 argument_list|(
 name|vpo
 argument_list|,
 name|PPB_WAIT
 operator||
-name|PPB_NOINTR
+name|PPB_INTR
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -2908,7 +2964,9 @@ name|vpo
 argument_list|)
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_ECONNECT
 expr_stmt|;
@@ -2919,7 +2977,9 @@ block|}
 if|if
 condition|(
 operator|(
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|vpoio_select
 argument_list|(
@@ -2953,7 +3013,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|VP03_DEBUG
+name|VP0_DEBUG
 name|printf
 argument_list|(
 literal|"vpo%d: drive selected, now sending the command...\n"
@@ -2994,7 +3054,9 @@ operator|)
 literal|0xe0
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_ECMD_TIMEOUT
 expr_stmt|;
@@ -3018,7 +3080,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_EPPDATA_TIMEOUT
 expr_stmt|;
@@ -3029,7 +3093,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|VP03_DEBUG
+name|VP0_DEBUG
 name|printf
 argument_list|(
 literal|"vpo%d: command sent, now completing the request...\n"
@@ -3108,7 +3172,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_ESTATUS_TIMEOUT
 expr_stmt|;
@@ -3135,7 +3201,9 @@ operator|>=
 name|blen
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_EDATA_OVERFLOW
 expr_stmt|;
@@ -3211,9 +3279,17 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|vpo
+operator|->
+name|vpo_error
+operator|=
+name|error
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 operator|*
 name|count
 operator|+=
@@ -3233,7 +3309,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_EOTHER
 expr_stmt|;
@@ -3269,7 +3347,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|error
+name|vpo
+operator|->
+name|vpo_error
 operator|=
 name|VP0_EOTHER
 operator|+
@@ -3279,18 +3359,6 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|/* return to printer state */
-name|vpoio_disconnect
-argument_list|(
-name|vpo
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (vpoio_in_disk_mode(vpo)) { 		vpoio_reset (vpo); 		error = VP0_EDISCONNECT; goto error; 	}
-endif|#
-directive|endif
 operator|*
 name|result
 operator|=
@@ -3312,13 +3380,9 @@ operator|&
 literal|0xff
 operator|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|error
 label|:
+comment|/* return to printer state, release the ppbus */
 name|vpoio_disconnect
 argument_list|(
 name|vpo
@@ -3326,7 +3390,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}

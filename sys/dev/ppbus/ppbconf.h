@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  *  */
+comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.h,v 1.1 1997/08/14 13:57:42 msmith Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -13,6 +13,17 @@ begin_define
 define|#
 directive|define
 name|__PPBCONF_H
+end_define
+
+begin_comment
+comment|/*  * Parallel Port Bus sleep/wakeup queue.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPBPRI
+value|PZERO+8
 end_define
 
 begin_comment
@@ -601,6 +612,10 @@ name|adapter_unit
 decl_stmt|;
 comment|/* unit of the adapter */
 name|int
+name|base
+decl_stmt|;
+comment|/* base address of the port */
+name|int
 name|id_irq
 decl_stmt|;
 comment|/* != 0 if irq enabled */
@@ -638,6 +653,21 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Maximum size of the PnP info string  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPB_PnP_STRING_SIZE
+value|160
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_comment
 comment|/*  * Parallel Port Bus structure.  */
 end_comment
 
@@ -645,6 +675,54 @@ begin_struct
 struct|struct
 name|ppb_data
 block|{
+define|#
+directive|define
+name|PPB_PnP_PRINTER
+value|0
+define|#
+directive|define
+name|PPB_PnP_MODEM
+value|1
+define|#
+directive|define
+name|PPB_PnP_NET
+value|2
+define|#
+directive|define
+name|PPB_PnP_HDC
+value|3
+define|#
+directive|define
+name|PPB_PnP_PCMCIA
+value|4
+define|#
+directive|define
+name|PPB_PnP_MEDIA
+value|5
+define|#
+directive|define
+name|PPB_PnP_FDC
+value|6
+define|#
+directive|define
+name|PPB_PnP_PORTS
+value|7
+define|#
+directive|define
+name|PPB_PnP_SCANNER
+value|8
+define|#
+directive|define
+name|PPB_PnP_DIGICAM
+value|9
+define|#
+directive|define
+name|PPB_PnP_UNKNOWN
+value|10
+name|int
+name|class_id
+decl_stmt|;
+comment|/* not a PnP device if class_id< 0 */
 name|struct
 name|ppb_link
 modifier|*
@@ -740,6 +818,56 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|ppb_data
+modifier|*
+name|ppb_next_bus
+parameter_list|(
+name|struct
+name|ppb_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|ppb_data
+modifier|*
+name|ppb_lookup_bus
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ppb_attach_device
+parameter_list|(
+name|struct
+name|ppb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ppb_remove_device
+parameter_list|(
+name|struct
+name|ppb_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|ppb_attachdevs
 parameter_list|(
@@ -784,6 +912,26 @@ parameter_list|(
 name|struct
 name|ppb_link
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ppb_poll_device
+parameter_list|(
+name|struct
+name|ppb_device
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+parameter_list|,
+name|char
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
