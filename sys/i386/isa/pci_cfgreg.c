@@ -1808,6 +1808,7 @@ operator|*
 name|childp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Some BIOS writers seem to want to ignore the spec and put 		 * 0 in the intline rather than 255 to indicate none.  Once 		 * we've found one that matches, we break because there can 		 * be no others (which is why test looks a little odd). 		 */
 if|if
 condition|(
 name|irq
