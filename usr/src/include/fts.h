@@ -1,33 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|fts
 block|{
 name|struct
-name|ftsent
+name|_ftsent
 modifier|*
 name|fts_cur
 decl_stmt|;
 comment|/* current node */
 name|struct
-name|ftsent
+name|_ftsent
 modifier|*
 name|fts_child
 decl_stmt|;
 comment|/* linked list of children */
 name|struct
-name|ftsent
+name|_ftsent
 modifier|*
 name|fts_savelink
 decl_stmt|;
 comment|/* saved link if node had a cycle */
 name|struct
-name|ftsent
+name|_ftsent
 modifier|*
 modifier|*
 name|fts_array
@@ -45,7 +44,7 @@ comment|/* path for this descent */
 name|int
 name|fts_sd
 decl_stmt|;
-comment|/* starting directory */
+comment|/* fd for root */
 name|int
 name|fts_pathlen
 decl_stmt|;
@@ -109,20 +108,20 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|ftsent
+name|_ftsent
 block|{
 name|struct
-name|ftsent
+name|_ftsent
 modifier|*
 name|fts_parent
 decl_stmt|;
 comment|/* parent directory */
 name|struct
-name|ftsent
+name|_ftsent
 modifier|*
 name|fts_link
 decl_stmt|;
-comment|/* next/cycle node */
+comment|/* cycle or next file structure */
 union|union
 block|{
 name|long
@@ -137,24 +136,32 @@ comment|/* local address value */
 block|}
 name|fts_local
 union|;
+define|#
+directive|define
+name|fts_number
+value|fts_local.number
+define|#
+directive|define
+name|fts_pointer
+value|fts_local.pointer
 name|char
 modifier|*
 name|fts_accpath
 decl_stmt|;
-comment|/* path from current directory */
+comment|/* access path */
 name|char
 modifier|*
 name|fts_path
 decl_stmt|;
-comment|/* path from starting directory */
+comment|/* root path */
 name|short
 name|fts_pathlen
 decl_stmt|;
-comment|/* strlen(path) */
+comment|/* strlen(fts_path) */
 name|short
 name|fts_namelen
 decl_stmt|;
-comment|/* strlen(name) */
+comment|/* strlen(fts_name) */
 name|short
 name|fts_level
 decl_stmt|;
@@ -217,7 +224,12 @@ comment|/* none of the above */
 name|u_short
 name|fts_info
 decl_stmt|;
-comment|/* file information */
+comment|/* flags for FTSENT structure */
+define|#
+directive|define
+name|FTS__NOINSTR
+value|0
+comment|/* private: no instructions */
 define|#
 directive|define
 name|FTS_AGAIN
@@ -236,7 +248,7 @@ comment|/* user: follow symbolic link */
 name|short
 name|fts_instr
 decl_stmt|;
-comment|/* setfts() instructions */
+comment|/* private: fts_set() instructions */
 name|struct
 name|stat
 name|fts_statb
@@ -266,7 +278,7 @@ begin_function_decl
 specifier|extern
 name|FTS
 modifier|*
-name|ftsopen
+name|fts_open
 parameter_list|(
 specifier|const
 name|char
@@ -296,7 +308,7 @@ begin_function_decl
 specifier|extern
 name|FTSENT
 modifier|*
-name|ftsread
+name|fts_read
 parameter_list|(
 name|FTS
 modifier|*
@@ -308,7 +320,7 @@ begin_function_decl
 specifier|extern
 name|FTSENT
 modifier|*
-name|ftschildren
+name|fts_children
 parameter_list|(
 name|FTS
 modifier|*
@@ -319,7 +331,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ftsset
+name|fts_set
 parameter_list|(
 name|FTS
 modifier|*
@@ -335,7 +347,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ftsclose
+name|fts_close
 parameter_list|(
 name|FTS
 modifier|*
@@ -352,7 +364,7 @@ begin_function_decl
 specifier|extern
 name|FTS
 modifier|*
-name|ftsopen
+name|fts_open
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -361,11 +373,11 @@ begin_decl_stmt
 specifier|extern
 name|FTSENT
 modifier|*
-name|ftschildren
+name|fts_children
 argument_list|()
 decl_stmt|,
 modifier|*
-name|ftsread
+name|fts_read
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -373,10 +385,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ftsclose
+name|fts_close
 argument_list|()
 decl_stmt|,
-name|ftsset
+name|fts_set
 argument_list|()
 decl_stmt|;
 end_decl_stmt
