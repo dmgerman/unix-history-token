@@ -232,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|PHDR_LEN
-value|sizeof(struct timeval)
+value|((int)sizeof(struct timeval))
 end_define
 
 begin_define
@@ -3904,6 +3904,7 @@ name|sig
 parameter_list|)
 name|int
 name|sig
+name|__unused
 decl_stmt|;
 block|{
 name|finish_up
@@ -5733,6 +5734,7 @@ name|sig
 parameter_list|)
 name|int
 name|sig
+name|__unused
 decl_stmt|;
 block|{
 name|siginfo_p
