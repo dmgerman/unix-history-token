@@ -116,13 +116,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|struct
+name|cv
 name|selwait
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* select timeout address */
+comment|/* select conditional variable */
 end_comment
 
 begin_decl_stmt
