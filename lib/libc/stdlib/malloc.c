@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.18.2.3 1997/07/24 08:25:25 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.18.2.4 1998/04/23 08:21:49 tg Exp $  *  */
 end_comment
 
 begin_comment
@@ -110,9 +110,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|THREAD_STATUS
+value|int thread_lock_status;
+end_define
+
+begin_define
+define|#
+directive|define
 name|THREAD_LOCK
 parameter_list|()
-value|pthread_mutex_lock(&malloc_lock)
+value|_thread_kern_sig_block(&thread_lock_status);
 end_define
 
 begin_define
@@ -120,7 +127,7 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-value|pthread_mutex_unlock(&malloc_lock)
+value|_thread_kern_sig_unblock(thread_lock_status);
 end_define
 
 begin_decl_stmt
@@ -589,6 +596,23 @@ name|foo
 parameter_list|)
 value|(((u_long)(foo)>> malloc_pageshift)-malloc_origo)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|THREAD_STATUS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|THREAD_STATUS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -4366,10 +4390,11 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
+name|THREAD_STATUS
 name|malloc_func
-operator|=
+init|=
 literal|" in malloc():"
-expr_stmt|;
+decl_stmt|;
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4464,10 +4489,11 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
+name|THREAD_STATUS
 name|malloc_func
-operator|=
+init|=
 literal|" in free():"
-expr_stmt|;
+decl_stmt|;
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4524,6 +4550,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
+name|THREAD_STATUS
 specifier|register
 name|void
 modifier|*
