@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) 1/7/94"
+literal|"@(#)main.c	8.6 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -217,7 +223,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|clrimap
+name|usedinomap
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,17 +1079,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s%s%s%s%s"
+literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"restore tfhsvy [file ...]\n"
+literal|"restore -i [-chmvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"\trestore xfhmsvy [file ...]\n"
+literal|"restore -r [-cvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"\trestore ifhmsvy\n"
+literal|"restore -R [-cvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"\trestore rfsvy\n"
+literal|"restore -x [-chmvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|,
-literal|"\trestore Rfsvy\n"
+literal|"restore -t [-chvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1269,13 +1275,24 @@ literal|'s'
 case|:
 if|if
 condition|(
-name|argc
-operator|<
-literal|1
+operator|*
+name|argv
+operator|==
+name|NULL
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"option requires an argument -- %c"
+argument_list|,
+operator|*
+name|ap
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1346,13 +1363,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|argv
-operator|!=
-name|NULL
-condition|)
 operator|++
 name|argv
 expr_stmt|;
@@ -1418,6 +1428,17 @@ name|argv
 operator|++
 condition|)
 empty_stmt|;
+comment|/* Update argument count. */
+operator|*
+name|argcp
+operator|=
+name|nargv
+operator|-
+operator|*
+name|argvp
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 

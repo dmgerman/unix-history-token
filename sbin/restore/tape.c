@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.3 (Berkeley) 4/1/94"
+literal|"@(#)tape.c	8.9 (Berkeley) 5/1/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -627,7 +627,7 @@ directive|ifdef
 name|RRESTORE
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|source
 argument_list|,
@@ -641,7 +641,7 @@ name|source
 expr_stmt|;
 name|source
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|host
 argument_list|,
@@ -1350,10 +1350,10 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"no memory for file removal list\n"
+literal|"no memory for active inode map\n"
 argument_list|)
 expr_stmt|;
-name|clrimap
+name|usedinomap
 operator|=
 name|map
 expr_stmt|;
@@ -1442,6 +1442,20 @@ argument_list|(
 name|xtrmap
 argument_list|,
 name|xtrmapskip
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If there may be whiteout entries on the tape, pretend that the 	 * whiteout inode exists, so that the whiteout entries can be 	 * extracted. 	 */
+if|if
+condition|(
+name|oldinofmt
+operator|==
+literal|0
+condition|)
+name|SETINO
+argument_list|(
+name|WINO
+argument_list|,
+name|dumpmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -2589,6 +2603,9 @@ name|name
 decl_stmt|;
 block|{
 name|int
+name|flags
+decl_stmt|;
+name|mode_t
 name|mode
 decl_stmt|;
 name|struct
@@ -2627,8 +2644,6 @@ operator|.
 name|dip
 operator|->
 name|di_atime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|timep
 index|[
@@ -2641,9 +2656,7 @@ name|curfile
 operator|.
 name|dip
 operator|->
-name|di_atime
-operator|.
-name|tv_nsec
+name|di_atimensec
 operator|/
 literal|1000
 expr_stmt|;
@@ -2659,8 +2672,6 @@ operator|.
 name|dip
 operator|->
 name|di_mtime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|timep
 index|[
@@ -2673,9 +2684,7 @@ name|curfile
 operator|.
 name|dip
 operator|->
-name|di_mtime
-operator|.
-name|tv_nsec
+name|di_mtimensec
 operator|/
 literal|1000
 expr_stmt|;
@@ -2686,6 +2695,14 @@ operator|.
 name|dip
 operator|->
 name|di_mode
+expr_stmt|;
+name|flags
+operator|=
+name|curfile
+operator|.
+name|dip
+operator|->
+name|di_flags
 expr_stmt|;
 switch|switch
 condition|(
@@ -2856,6 +2873,29 @@ return|;
 case|case
 name|IFIFO
 case|:
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"extract fifo %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+block|{
+name|skipfile
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|GOOD
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|mkfifo
@@ -2872,7 +2912,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot create FIFO: %s\n"
+literal|"%s: cannot create fifo: %s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -2919,6 +2959,16 @@ argument_list|(
 name|name
 argument_list|,
 name|mode
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chflags
+argument_list|(
+name|name
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|skipfile
@@ -3039,6 +3089,16 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chflags
+argument_list|(
+name|name
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 name|skipfile
 argument_list|()
 expr_stmt|;
@@ -3153,6 +3213,16 @@ argument_list|(
 name|ofile
 argument_list|,
 name|mode
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fchflags
+argument_list|(
+name|ofile
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|getfile
@@ -3303,7 +3373,7 @@ name|curblk
 init|=
 literal|0
 decl_stmt|;
-name|long
+name|quad_t
 name|size
 init|=
 name|spcl
@@ -3439,16 +3509,15 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|size
-operator|>
-name|TP_BSIZE
-condition|?
 call|(
 name|long
 call|)
 argument_list|(
+name|size
+operator|>
+name|TP_BSIZE
+condition|?
 name|fssize
-argument_list|)
 else|:
 operator|(
 name|curblk
@@ -3459,6 +3528,7 @@ operator|*
 name|TP_BSIZE
 operator|+
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|curblk
@@ -3487,18 +3557,17 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|size
-operator|>
-name|TP_BSIZE
-condition|?
 call|(
 name|long
 call|)
 argument_list|(
+name|size
+operator|>
+name|TP_BSIZE
+condition|?
 name|curblk
 operator|*
 name|TP_BSIZE
-argument_list|)
 else|:
 operator|(
 name|curblk
@@ -3509,6 +3578,7 @@ operator|*
 name|TP_BSIZE
 operator|+
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|curblk
@@ -3523,16 +3593,18 @@ call|)
 argument_list|(
 name|clearedbuf
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|size
 operator|>
 name|TP_BSIZE
 condition|?
-operator|(
-name|long
-operator|)
 name|TP_BSIZE
 else|:
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3635,6 +3707,10 @@ operator|*
 operator|)
 name|buf
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 name|curblk
 operator|*
@@ -3642,6 +3718,7 @@ name|TP_BSIZE
 operator|)
 operator|+
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|findinode
@@ -3932,11 +4009,11 @@ name|long
 name|size
 decl_stmt|;
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|buf
-argument_list|,
 name|map
+argument_list|,
+name|buf
 argument_list|,
 name|size
 argument_list|)
@@ -4048,8 +4125,10 @@ operator|<
 name|numtrec
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+name|buf
+argument_list|,
 operator|&
 name|tapebuf
 index|[
@@ -4060,8 +4139,6 @@ operator|*
 name|TP_BSIZE
 operator|)
 index|]
-argument_list|,
-name|buf
 argument_list|,
 operator|(
 name|long
@@ -4381,9 +4458,11 @@ name|ntrec
 operator|*
 name|TP_BSIZE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|tapebuf
+argument_list|,
+literal|0
 argument_list|,
 name|i
 argument_list|)
@@ -4523,20 +4602,16 @@ expr_stmt|;
 name|terminateinput
 argument_list|()
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|endoftapemark
-argument_list|,
 operator|&
 name|tapebuf
 index|[
 name|rd
 index|]
+argument_list|,
+operator|&
+name|endoftapemark
 argument_list|,
 operator|(
 name|long
@@ -4549,8 +4624,10 @@ name|blkcnt
 operator|=
 literal|0
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|buf
+argument_list|,
 operator|&
 name|tapebuf
 index|[
@@ -4561,8 +4638,6 @@ operator|*
 name|TP_BSIZE
 operator|)
 index|]
-argument_list|,
-name|buf
 argument_list|,
 operator|(
 name|long
@@ -5047,13 +5122,11 @@ name|s_ospcl
 operator|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|long
@@ -5230,8 +5303,6 @@ operator|->
 name|c_dinode
 operator|.
 name|di_atime
-operator|.
-name|tv_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5246,8 +5317,6 @@ operator|->
 name|c_dinode
 operator|.
 name|di_mtime
-operator|.
-name|tv_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5262,8 +5331,6 @@ operator|->
 name|c_dinode
 operator|.
 name|di_ctime
-operator|.
-name|tv_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5283,16 +5350,16 @@ name|s_ospcl
 operator|.
 name|c_count
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|buf
+operator|->
+name|c_addr
+argument_list|,
 name|u_ospcl
 operator|.
 name|s_ospcl
 operator|.
-name|c_addr
-argument_list|,
-name|buf
-operator|->
 name|c_addr
 argument_list|,
 operator|(
@@ -5735,7 +5802,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Dump mask header"
+literal|"Dumped inodes map header"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5746,7 +5813,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Remove mask header"
+literal|"Used inodes map header"
 argument_list|)
 expr_stmt|;
 break|break;

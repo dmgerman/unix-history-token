@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)symtab.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,7 +200,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|WINO
 operator|||
 name|inum
 operator|>=
@@ -285,7 +285,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|WINO
 operator|||
 name|inum
 operator|>=
@@ -396,7 +396,7 @@ if|if
 condition|(
 name|inum
 operator|<
-name|ROOTINO
+name|WINO
 operator|||
 name|inum
 operator|>=
@@ -680,7 +680,7 @@ name|tailindex
 decl_stmt|;
 name|tailindex
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,
@@ -809,13 +809,13 @@ name|ep
 operator|->
 name|e_namlen
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|cp
+argument_list|,
 name|ep
 operator|->
 name|e_name
-argument_list|,
-name|cp
 argument_list|,
 operator|(
 name|long
@@ -937,13 +937,11 @@ name|np
 operator|->
 name|e_next
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|np
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|long
@@ -1074,7 +1072,7 @@ name|e_name
 operator|=
 name|savename
 argument_list|(
-name|rindex
+name|strrchr
 argument_list|(
 name|name
 argument_list|,
@@ -1512,7 +1510,7 @@ expr_stmt|;
 block|}
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|newname
 argument_list|,
@@ -2076,10 +2074,10 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|WINO
 init|;
 name|i
-operator|<
+operator|<=
 name|maxino
 condition|;
 name|i
@@ -2156,10 +2154,10 @@ for|for
 control|(
 name|i
 operator|=
-name|ROOTINO
+name|WINO
 init|;
 name|i
-operator|<
+operator|<=
 name|maxino
 condition|;
 name|i
@@ -2186,19 +2184,11 @@ operator|->
 name|e_links
 control|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|ep
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|tep
+argument_list|,
+name|ep
 argument_list|,
 operator|(
 name|long
