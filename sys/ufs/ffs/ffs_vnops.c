@@ -154,7 +154,6 @@ file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ffs_fsync
 name|__P
@@ -615,7 +614,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ffs_fsync
 parameter_list|(

@@ -184,7 +184,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ffs_reload
 name|__P
@@ -215,34 +214,6 @@ argument_list|(
 operator|(
 expr|struct
 name|fs
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ffs_mount
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|caddr_t
-operator|,
-expr|struct
-name|nameidata
-operator|*
-operator|,
-expr|struct
-name|proc
 operator|*
 operator|)
 argument_list|)
@@ -329,7 +300,6 @@ comment|/*  * ffs_mount  *  * Called when mounting local physical media  *  * PA
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ffs_mount
 parameter_list|(
@@ -1429,7 +1399,6 @@ comment|/*  * Reload all incore data for a filesystem (used after running fsck o
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ffs_reload
 parameter_list|(
