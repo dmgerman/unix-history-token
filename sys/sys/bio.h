@@ -180,6 +180,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* bio_cmd */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -207,6 +211,32 @@ directive|define
 name|BIO_FORMAT
 value|8
 end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_CMD1
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Available for local hacks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIO_CMD2
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Available for local hacks */
+end_comment
+
+begin_comment
+comment|/* bio_flags */
+end_comment
 
 begin_define
 define|#
