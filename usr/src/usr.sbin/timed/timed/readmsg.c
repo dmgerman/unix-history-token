@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	2.7 (Berkeley) %G%"
+literal|"@(#)readmsg.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,6 +231,12 @@ index|[
 name|type
 index|]
 argument_list|,
+name|machfrom
+operator|==
+name|NULL
+condition|?
+literal|"ANY"
+else|:
 name|machfrom
 argument_list|)
 expr_stmt|;
