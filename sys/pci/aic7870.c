@@ -1818,7 +1818,7 @@ argument_list|,
 name|SXFRCTL0
 argument_list|)
 operator|&
-name|ULTRAEN
+name|FAST20
 expr_stmt|;
 name|sxfrctl1
 operator|=
