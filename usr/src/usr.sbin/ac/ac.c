@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ac.c	4.2 (Berkeley) %G%"
+literal|"@(#)ac.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -973,12 +973,6 @@ condition|(
 name|t1
 operator|>
 literal|0
-operator|&&
-name|t1
-operator|<
-literal|1.5
-operator|*
-name|day
 condition|)
 name|tp
 operator|->
