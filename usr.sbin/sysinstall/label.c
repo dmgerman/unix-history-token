@@ -3278,11 +3278,6 @@ name|defined
 argument_list|(
 name|__alpha__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
 end_if
 
 begin_comment
@@ -3407,11 +3402,6 @@ name|defined
 argument_list|(
 name|__alpha__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
 name|int
 name|i
 decl_stmt|;
@@ -3481,11 +3471,6 @@ directive|if
 name|defined
 argument_list|(
 name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
 argument_list|)
 for|for
 control|(
@@ -6688,11 +6673,6 @@ directive|if
 name|defined
 argument_list|(
 name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
 argument_list|)
 name|maybe_dedicate
 argument_list|(
