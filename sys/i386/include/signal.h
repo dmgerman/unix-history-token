@@ -79,7 +79,7 @@ comment|/* signal mask to restore */
 name|int
 name|sc_esp
 decl_stmt|;
-comment|/* machine state */
+comment|/* machine state follows: */
 name|int
 name|sc_ebp
 decl_stmt|;
@@ -139,7 +139,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The sequence of the fields/registers in sigcontext should match  * those in mcontext_t.  */
+comment|/*  * The sequence of the fields/registers in struct sigcontext should match  * those in mcontext_t.  */
 end_comment
 
 begin_struct
@@ -157,6 +157,7 @@ comment|/* sigstack state to restore */
 name|int
 name|sc_gs
 decl_stmt|;
+comment|/* machine state (struct trapframe): */
 name|int
 name|sc_fs
 decl_stmt|;
@@ -208,9 +209,22 @@ decl_stmt|;
 name|int
 name|sc_esp
 decl_stmt|;
-comment|/* machine state */
 name|int
 name|sc_ss
+decl_stmt|;
+comment|/* 	 * XXX FPU state is 27 * 4 bytes h/w, 1 * 4 bytes s/w (probably not 	 * needed here), or that + 16 * 4 bytes for emulators (probably all 	 * needed here).  The "spare" bytes are mostly not spare. 	 */
+name|int
+name|sc_fpregs
+index|[
+literal|28
+index|]
+decl_stmt|;
+comment|/* machine state (FPU): */
+name|int
+name|sc_spare
+index|[
+literal|17
+index|]
 decl_stmt|;
 block|}
 struct|;
