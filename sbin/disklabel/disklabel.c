@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Symmetric Computer Systems.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Symmetric Computer Systems.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id$  */
 end_comment
 
 begin_ifndef
@@ -157,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -498,19 +504,6 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|void
-name|Perror
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -1226,8 +1219,12 @@ name|f
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|specname
 argument_list|)
 expr_stmt|;
@@ -1290,8 +1287,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"ioctl DIOCWLABEL"
 argument_list|)
 expr_stmt|;
@@ -1404,8 +1403,12 @@ literal|"r"
 argument_list|)
 operator|)
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|1
@@ -1539,8 +1542,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"ioctl DIOCWLABEL"
 argument_list|)
 expr_stmt|;
@@ -2431,8 +2436,12 @@ argument_list|)
 operator|<
 name|BBSIZE
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|specname
 argument_list|)
 expr_stmt|;
@@ -2574,8 +2583,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"ioctl DIOCGDINFO"
 argument_list|)
 expr_stmt|;
@@ -2755,8 +2766,12 @@ argument_list|)
 operator|<
 name|BBSIZE
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|specname
 argument_list|)
 expr_stmt|;
@@ -3029,8 +3044,12 @@ name|b
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
@@ -3065,8 +3084,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
@@ -3113,8 +3136,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
@@ -3224,8 +3251,12 @@ name|b
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|bootxx
 argument_list|)
 expr_stmt|;
@@ -3259,8 +3290,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|bootxx
 argument_list|)
 expr_stmt|;
@@ -3284,8 +3319,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
@@ -3362,8 +3401,12 @@ name|bootbuf
 operator|==
 literal|0
 condition|)
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
@@ -3386,8 +3429,12 @@ argument_list|(
 name|bootbuf
 argument_list|)
 expr_stmt|;
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|xxboot
 argument_list|)
 expr_stmt|;
@@ -6933,8 +6980,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"open()"
 argument_list|)
 expr_stmt|;
@@ -6959,8 +7008,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|Perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
 literal|"ioctl DIOCGDINFO"
 argument_list|)
 expr_stmt|;
@@ -7236,37 +7287,6 @@ end_function
 
 begin_function
 name|void
-name|Perror
-parameter_list|(
-name|str
-parameter_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-block|{
-name|fputs
-argument_list|(
-literal|"disklabel: "
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|usage
 parameter_list|()
 block|{
@@ -7279,60 +7299,60 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n\t%s\n%s\n\t%s\n%s\n\t%s\n%s\n\t%s\n%s\n\t%s\n%s\n\t%s\n%s\n\t%s\n%s\n\t%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: disklabel [-r] disk"
 argument_list|,
-literal|"(to read label)"
+literal|"\t\t(to read label)"
 argument_list|,
-literal|"or disklabel -w [-r] disk type [ packid ]"
+literal|"       disklabel -w [-r] disk type [ packid ]"
 argument_list|,
-literal|"(to write label with existing boot program)"
+literal|"\t\t(to write label with existing boot program)"
 argument_list|,
-literal|"or disklabel -e [-r] disk"
+literal|"       disklabel -e [-r] disk"
 argument_list|,
-literal|"(to edit label)"
+literal|"\t\t(to edit label)"
 argument_list|,
-literal|"or disklabel -R [-r] disk protofile"
+literal|"       disklabel -R [-r] disk protofile"
 argument_list|,
-literal|"(to restore label with existing boot program)"
+literal|"\t\t(to restore label with existing boot program)"
 argument_list|,
 if|#
 directive|if
 name|NUMBOOT
 operator|>
 literal|1
-literal|"or disklabel -B [ -b boot1 [ -s boot2 ] ] disk [ type ]"
+literal|"       disklabel -B [ -b boot1 [ -s boot2 ] ] disk [ type ]"
 argument_list|,
-literal|"(to install boot program with existing label)"
+literal|"\t\t(to install boot program with existing label)"
 argument_list|,
-literal|"or disklabel -w -B [ -b boot1 [ -s boot2 ] ] disk type [ packid ]"
+literal|"       disklabel -w -B [ -b boot1 [ -s boot2 ] ] disk type [ packid ]"
 argument_list|,
-literal|"(to write label and boot program)"
+literal|"\t\t(to write label and boot program)"
 argument_list|,
-literal|"or disklabel -R -B [ -b boot1 [ -s boot2 ] ] disk protofile [ type ]"
+literal|"       disklabel -R -B [ -b boot1 [ -s boot2 ] ] disk protofile [ type ]"
 argument_list|,
-literal|"(to restore label and boot program)"
+literal|"\t\t(to restore label and boot program)"
 argument_list|,
 else|#
 directive|else
-literal|"or disklabel -B [ -b bootprog ] disk [ type ]"
+literal|"       disklabel -B [ -b bootprog ] disk [ type ]"
 argument_list|,
-literal|"(to install boot program with existing on-disk label)"
+literal|"\t\t(to install boot program with existing on-disk label)"
 argument_list|,
-literal|"or disklabel -w -B [ -b bootprog ] disk type [ packid ]"
+literal|"       disklabel -w -B [ -b bootprog ] disk type [ packid ]"
 argument_list|,
-literal|"(to write label and install boot program)"
+literal|"\t\t(to write label and install boot program)"
 argument_list|,
-literal|"or disklabel -R -B [ -b bootprog ] disk protofile [ type ]"
+literal|"       disklabel -R -B [ -b bootprog ] disk protofile [ type ]"
 argument_list|,
-literal|"(to restore label and install boot program)"
+literal|"\t\t(to restore label and install boot program)"
 argument_list|,
 endif|#
 directive|endif
-literal|"or disklabel [-NW] disk"
+literal|"       disklabel [-NW] disk"
 argument_list|,
-literal|"(to write disable/enable label)"
+literal|"\t\t(to write disable/enable label)"
 argument_list|)
 expr_stmt|;
 else|#
@@ -7341,27 +7361,27 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%-43s%s\n%-43s%s\n%-43s%s\n%-43s%s\n%-43s%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: disklabel [-r] disk"
 argument_list|,
 literal|"(to read label)"
 argument_list|,
-literal|"or disklabel -w [-r] disk type [ packid ]"
+literal|"       disklabel -w [-r] disk type [ packid ]"
 argument_list|,
-literal|"(to write label)"
+literal|"\t\t(to write label)"
 argument_list|,
-literal|"or disklabel -e [-r] disk"
+literal|"       disklabel -e [-r] disk"
 argument_list|,
-literal|"(to edit label)"
+literal|"\t\t(to edit label)"
 argument_list|,
-literal|"or disklabel -R [-r] disk protofile"
+literal|"       disklabel -R [-r] disk protofile"
 argument_list|,
-literal|"(to restore label)"
+literal|"\t\t(to restore label)"
 argument_list|,
-literal|"or disklabel [-NW] disk"
+literal|"       disklabel [-NW] disk"
 argument_list|,
-literal|"(to write disable/enable label)"
+literal|"\t\t(to write disable/enable label)"
 argument_list|)
 expr_stmt|;
 endif|#
