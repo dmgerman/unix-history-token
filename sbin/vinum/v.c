@@ -425,10 +425,6 @@ begin_comment
 comment|/* offset of x in struct confdata */
 end_comment
 
-begin_comment
-comment|/*   create description-file    Create a volume as described in description-file    modify description-file    Modify the objects as described in description-file    list [-r] [volume | plex | subdisk]    List information about specified objects    set [-f] state volume | plex | subdisk | disk    Set the state of the object to state    rm [-f] [-r] volume | plex | subdisk    Remove an object    start [volume | plex | subdisk]    Allow the system to access the objects    stop [-f] [volume | plex | subdisk]    Terminate access the objects  */
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
