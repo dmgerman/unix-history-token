@@ -94,8 +94,6 @@ name|char
 name|logname
 index|[
 name|MAXLOGNAME
-operator|+
-literal|1
 index|]
 decl_stmt|;
 if|if
@@ -115,8 +113,6 @@ sizeof|sizeof
 argument_list|(
 name|logname
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 operator|<
 literal|0

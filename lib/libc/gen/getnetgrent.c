@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetgrent.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)getnetgrent.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,7 +1461,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * Couldn't match using NIS-exclusive mode. If the error 		 * was YPERR_MAP, then the failure happened because there 		 * was no netgroup.byhost or netgroup.byuser map. The odds 		 * are we are talking to an Sun NIS+ server in YP emulation 		 * mode; if this is the case, then we have to do the check 		 * the 'old-fashioned' way by grovelling through the netgroup 		 * map and resolving memberships on the fly. 		 */
+comment|/* 		 * Couldn't match using NIS-exclusive mode. If the error 	 	 * was YPERR_MAP, then the failure happened because there 	 	 * was no netgroup.byhost or netgroup.byuser map. The odds 		 * are we are talking to an Sun NIS+ server in YP emulation 		 * mode; if this is the case, then we have to do the check 		 * the 'old-fashioned' way by grovelling through the netgroup 		 * map and resolving memberships on the fly. 		 */
 if|if
 condition|(
 name|y
@@ -2082,13 +2082,13 @@ argument_list|)
 condition|)
 continue|continue;
 block|}
-comment|/* Watch for null pointer dereferences, dammit! */
 if|if
 condition|(
 name|pos
-operator|!=
+operator|==
 name|NULL
 condition|)
+break|break;
 while|while
 condition|(
 operator|*
