@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ifconfig.c,v 1.34 1997/04/21 01:17:58 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: ifmedia.c,v 1.1 1997/05/04 06:22:27 peter Exp $ */
 end_comment
 
 begin_comment
@@ -564,6 +564,8 @@ parameter_list|,
 name|d
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -575,6 +577,12 @@ name|d
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|struct
@@ -773,6 +781,8 @@ parameter_list|,
 name|d
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -784,6 +794,12 @@ name|d
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|domediaopt
@@ -807,6 +823,8 @@ parameter_list|,
 name|d
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -818,6 +836,12 @@ name|d
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|domediaopt

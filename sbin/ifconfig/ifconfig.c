@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.27 1997/05/04 06:27:45 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.28 1997/05/07 04:28:26 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,6 +565,12 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+specifier|const
+expr|struct
+name|afswtch
+operator|*
+name|rafp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -617,7 +623,11 @@ name|status
 name|__P
 argument_list|(
 operator|(
-name|void
+specifier|const
+expr|struct
+name|afswtch
+operator|*
+name|afp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -650,6 +660,10 @@ name|arg
 typedef|,
 name|int
 name|s
+typedef|, const struct
+name|afswtch
+modifier|*
+name|rafp
 typedef|));
 end_typedef
 
@@ -743,6 +757,12 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+specifier|const
+expr|struct
+name|afswtch
+operator|*
+name|rafp
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1353,19 +1373,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|const
-name|struct
-name|afswtch
-modifier|*
-name|afp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*the address family being set or asked about*/
-end_comment
-
 begin_comment
 comment|/*  * Expand the compacted form of addresses as returned via the  * configuration read via sysctl().  */
 end_comment
@@ -1652,6 +1659,15 @@ name|need_nl
 init|=
 literal|0
 decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
+init|=
+literal|0
+decl_stmt|;
+comment|/*the address family being set or asked about*/
 name|size_t
 name|needed
 decl_stmt|;
@@ -2531,9 +2547,10 @@ literal|0
 condition|)
 block|{
 name|status
-argument_list|()
+argument_list|(
+name|rafp
+argument_list|)
 expr_stmt|;
-comment|/* uses global afp */
 ifdef|#
 directive|ifdef
 name|USE_IF_MEDIA
@@ -2662,6 +2679,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|s
+argument_list|,
+name|rafp
 argument_list|)
 expr_stmt|;
 name|argc
@@ -2687,6 +2706,8 @@ operator|->
 name|c_parameter
 argument_list|,
 name|s
+argument_list|,
+name|rafp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3106,6 +3127,8 @@ parameter_list|,
 name|param
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3117,6 +3140,12 @@ name|param
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 comment|/* 	 * Delay the ioctl to set the interface addr until flags are all set. 	 * The address interpretation may depend on the flags, 	 * and the flags may change when the address is set. 	 */
@@ -3165,6 +3194,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3177,6 +3208,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 call|(
@@ -3203,6 +3240,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3215,6 +3254,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 call|(
@@ -3241,6 +3286,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3253,6 +3300,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|in_getaddr
@@ -3295,6 +3348,8 @@ parameter_list|,
 name|param
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3306,6 +3361,12 @@ name|param
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 if|if
@@ -3387,6 +3448,8 @@ parameter_list|,
 name|param
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3399,6 +3462,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 call|(
@@ -3425,6 +3494,8 @@ parameter_list|,
 name|value
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3436,6 +3507,12 @@ name|value
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 if|if
@@ -3552,6 +3629,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3564,6 +3643,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|strncpy
@@ -3625,6 +3710,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -3637,6 +3724,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|strncpy
@@ -3744,7 +3837,15 @@ end_comment
 begin_function
 name|void
 name|status
-parameter_list|()
+parameter_list|(
+name|afp
+parameter_list|)
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
+decl_stmt|;
 block|{
 specifier|const
 name|struct
@@ -5873,6 +5974,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -5885,6 +5988,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 name|u_short
@@ -5976,6 +6085,8 @@ parameter_list|,
 name|dummy
 parameter_list|,
 name|s
+parameter_list|,
+name|afp
 parameter_list|)
 specifier|const
 name|char
@@ -5988,6 +6099,12 @@ name|__unused
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+specifier|const
+name|struct
+name|afswtch
+modifier|*
+name|afp
 decl_stmt|;
 block|{
 if|if
