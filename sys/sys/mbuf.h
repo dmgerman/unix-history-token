@@ -988,6 +988,18 @@ name|u_long
 name|m_mhlen
 decl_stmt|;
 comment|/* length of data in a header mbuf */
+name|u_long
+name|sf_iocnt
+decl_stmt|;
+comment|/* times sendfile had to do disk I/O */
+name|u_long
+name|sf_allocfail
+decl_stmt|;
+comment|/* times sfbuf allocation failed */
+name|u_long
+name|sf_allocwait
+decl_stmt|;
+comment|/* times sfbuf allocation had to wait */
 block|}
 struct|;
 end_struct
@@ -1540,6 +1552,32 @@ name|int
 name|nsfbufs
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Number of sendfile(2) bufs alloced */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsfbufspeak
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Peak of nsfbufsused */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsfbufsused
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of sendfile(2) bufs in use */
+end_comment
 
 begin_function_decl
 name|void

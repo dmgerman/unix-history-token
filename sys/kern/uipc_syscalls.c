@@ -7579,6 +7579,11 @@ name|sf_buf_alloc_want
 operator|=
 literal|1
 expr_stmt|;
+name|mbstat
+operator|.
+name|sf_allocwait
+operator|++
+expr_stmt|;
 name|error
 operator|=
 name|tsleep
@@ -7621,6 +7626,18 @@ operator|->
 name|refcnt
 operator|=
 literal|1
+expr_stmt|;
+name|nsfbufsused
+operator|++
+expr_stmt|;
+name|nsfbufspeak
+operator|=
+name|imax
+argument_list|(
+name|nsfbufspeak
+argument_list|,
+name|nsfbufsused
+argument_list|)
 expr_stmt|;
 block|}
 name|splx
@@ -7752,6 +7769,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|nsfbufsused
+operator|--
+expr_stmt|;
 name|pmap_qremove
 argument_list|(
 operator|(
@@ -8853,6 +8873,11 @@ goto|goto
 name|done
 goto|;
 block|}
+name|mbstat
+operator|.
+name|sf_iocnt
+operator|++
+expr_stmt|;
 block|}
 comment|/* 		 * Get a sendfile buf. We usually wait as long as necessary, 		 * but this wait can be interrupted. 		 */
 if|if
@@ -8867,6 +8892,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|mbstat
+operator|.
+name|sf_allocfail
+operator|++
+expr_stmt|;
 name|s
 operator|=
 name|splvm
