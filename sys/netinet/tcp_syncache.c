@@ -2358,9 +2358,9 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NET_ASSERT_GIANT
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking */
 name|INP_INFO_WLOCK_ASSERT
 argument_list|(
 operator|&
