@@ -590,47 +590,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TCP_RESTRICT_RST
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|restrict_rst
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|restrict_rst
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|restrict_rst
-argument_list|,
-literal|0
-argument_list|,
-literal|"Restrict RST emission"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|inpcbhead
@@ -8822,19 +8781,7 @@ goto|goto
 name|drop
 goto|;
 comment|/* IPv6 anycast check is done at tcp6_input() */
-comment|/* 	 * Perform bandwidth limiting (and RST blocking 	 * if kernel is so configured.)  	 */
-ifdef|#
-directive|ifdef
-name|TCP_RESTRICT_RST
-if|if
-condition|(
-name|restrict_rst
-condition|)
-goto|goto
-name|drop
-goto|;
-endif|#
-directive|endif
+comment|/* 	 * Perform bandwidth limiting. 	 */
 if|if
 condition|(
 name|badport_bandlim
