@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tablet.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tablet.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -19,33 +19,11 @@ begin_comment
 comment|/*  * Tablet line discipline.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../h/ioctl.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Reads on the tablet return one of the following structures, depending on  * the underlying tablet type.  The first two are defined such that a read of  * sizeof (gtcopos) on a non-gtco tablet will return meaningful info.  The  * in-proximity bit is simulated where the tablet does not directly provide  * the information.  */
@@ -349,11 +327,6 @@ end_define
 begin_comment
 comment|/* get tablet type*/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
