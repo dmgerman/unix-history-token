@@ -466,6 +466,42 @@ index|[]
 init|=
 block|{
 block|{
+comment|/* 		 * Fujitsu M2513A MO drives. 		 * Tested devices: M2513A2 firmware versions 1200& 1300. 		 * (dip switch selects whether T_DIRECT or T_OPTICAL device) 		 * Reported by: W.Scholten<whs@xs4all.nl> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FUJITSU"
+block|,
+literal|"M2513A"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* See above. */
+block|{
+name|T_OPTICAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FUJITSU"
+block|,
+literal|"M2513A"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * This particular Fujitsu drive doesn't like the 		 * synchronize cache command. 		 * Reported by: Tom Jackson<toj@gorilla.net> 		 */
 block|{
 name|T_DIRECT
@@ -609,6 +645,24 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
+block|{
+comment|/* 		 * Infortrend IFT-3102 SCSI to SCSI controller 		 * (firmware version 2.23). 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"IFT"
+block|,
+literal|"3102"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/* quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
 comment|/* Below a list of quirks for USB devices supported by umass. */
 block|{
 comment|/* 		 * This USB floppy drive uses the UFI command set. This 		 * command set is a derivative of the ATAPI command set and 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
@@ -651,7 +705,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Sony Memory Stick adapter MSAC-US1, 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 * Sony PCG-C1VJ Internal Memory Stick Slot (MSC-U01) also 		 * has this quirk.  Make all sony MS* products use this 		 * quirk.  Reported by: TERAMOTO Masahiro 		 *<teramoto@comm.eng.osaka-u.ac.jp> (PR 23378). 		 */
+comment|/* 		 * Sony Memory Stick adapter MSAC-US1 and 		 * Sony PCG-C1VJ Internal Memory Stick Slot (MSC-U01). 		 * Make all sony MS* products use this quirk. 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -671,7 +725,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 * do not support READ_6 commands, only READ_10.  		 */
+comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -691,6 +745,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Maxtor 3000LE USB Drive 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"MAXTOR*"
+block|,
+literal|"K040H2*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
 block|{
 name|T_OPTICAL
 block|,
@@ -699,6 +771,162 @@ block|,
 literal|"FUJITSU"
 block|,
 literal|"MCF3064AP"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * Microtech USB CameraMate 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"eUSB    Compact*"
+block|,
+literal|"Compact Flash*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * The vendor, product and version strings coming from the 		 * controller are null terminated instead of being padded with 		 * spaces. The trailing wildcard character '*' is required. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"SMSC*"
+block|,
+literal|"USB FDC*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Olympus digital cameras (C-3040ZOOM, C-2040ZOOM, C-1) 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"OLYMPUS"
+block|,
+literal|"C-*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Olympus E-100RS digital camera. 		 * Reported by:	Bernd Walter<ticso@cicely8.cicely.de> 		 * XXX See above; its likely all Olympus digital cameras 		 *     have the same quirk, but I cannot confirm. - kbyanc 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"OLYMPUS"
+block|,
+literal|"E-100RS"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * KingByte Pen Drives 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"NO BRAND"
+block|,
+literal|"PEN DRIVE"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * FujiFilm Camera 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FUJIFILMUSB-DRIVEUNIT"
+block|,
+literal|"USB-DRIVEUNIT"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Nikon Coolpix 995 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"NIKON"
+block|,
+literal|"NIKON DSC E995"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * Minolta Dimage 2330 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"MINOLTA"
+block|,
+literal|"DIMAGE 2330*"
 block|,
 literal|"*"
 block|}
