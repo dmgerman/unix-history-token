@@ -5327,6 +5327,8 @@ name|lc
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|err
 decl_stmt|;
 name|linker_file_list_t
 name|loaded_files
@@ -5720,7 +5722,7 @@ operator|->
 name|md_cval
 argument_list|)
 expr_stmt|;
-name|error
+name|err
 operator|=
 name|strcmp
 argument_list|(
@@ -5731,7 +5733,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|err
 operator|==
 literal|0
 condition|)
@@ -8038,6 +8040,8 @@ name|error
 init|=
 literal|0
 decl_stmt|,
+name|err
+decl_stmt|,
 name|count
 decl_stmt|;
 comment|/* 	 * All files are dependant on /kernel. 	 */
@@ -8274,7 +8278,7 @@ operator|->
 name|md_cval
 argument_list|)
 expr_stmt|;
-name|error
+name|err
 operator|=
 name|strcmp
 argument_list|(
@@ -8285,7 +8289,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|err
 operator|==
 literal|0
 condition|)
