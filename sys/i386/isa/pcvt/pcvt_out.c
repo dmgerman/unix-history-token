@@ -549,9 +549,17 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|ch
 operator|<=
 literal|0x1f
+operator|)
+operator|||
+operator|(
+name|ch
+operator|==
+literal|0x7f
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -563,7 +571,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* always process control-chars in the range 0x00..0x1f !!! */
+comment|/* always process control-chars in the range 0x00..0x1f, 0x7f !!! */
 if|if
 condition|(
 name|svsp
@@ -1125,13 +1133,18 @@ case|case
 literal|0x1f
 case|:
 comment|/* US */
+case|case
+literal|0x7f
+case|:
+comment|/* DEL */
 break|break;
 block|}
 block|}
 block|}
 else|else
 block|{
-comment|/* char range 0x20...0xff processing depends on current state */
+comment|/* char range 0x20...0x73, 0x80...0xff processing */
+comment|/* depends on current state */
 switch|switch
 condition|(
 name|svsp
@@ -7241,7 +7254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	partial HP 2392 ANSI mode Emulator  *	==================================  *  *	this part tooks over the emulation of some escape sequences  *	needed to handle the function key labels  *  *	They are modeled after the corresponding escape sequences  *	introduced with the HP2392 terminals from Hewlett-Packard.  *  *	see:  *	"HP2392A, Display Terminal Reference Manual",  *	HP Manual Part Number 02390-90001  *	and:  *	Reference Manual Supplement  *	"2392A Display Terminal Option 049, ANSI Operation"  *	HP Manual Part Number 02390-90023EN  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	partial HP 2392 ANSI mode Emulator  *	==================================  *  *	this part takes over the emulation of some escape sequences  *	needed to handle the function key labels  *  *	They are modeled after the corresponding escape sequences  *	introduced with the HP2392 terminals from Hewlett-Packard.  *  *	see:  *	"HP2392A, Display Terminal Reference Manual",  *	HP Manual Part Number 02390-90001  *	and:  *	Reference Manual Supplement  *	"2392A Display Terminal Option 049, ANSI Operation"  *	HP Manual Part Number 02390-90023EN  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
