@@ -1007,11 +1007,6 @@ name|cn_pri
 operator|=
 name|CN_NORMAL
 expr_stmt|;
-name|cn_tab
-operator|=
-operator|&
-name|zs_consdev
-expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
@@ -1026,6 +1021,12 @@ argument_list|,
 literal|0600
 argument_list|,
 literal|"zs0"
+argument_list|)
+expr_stmt|;
+name|cnadd
+argument_list|(
+operator|&
+name|zs_consdev
 argument_list|)
 expr_stmt|;
 return|return

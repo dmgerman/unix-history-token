@@ -13469,10 +13469,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|cn_tab
-operator|=
+name|cnadd
+argument_list|(
 operator|&
 name|sio_consdev
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

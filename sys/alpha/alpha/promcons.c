@@ -1120,11 +1120,6 @@ name|int
 name|alpha_console
 parameter_list|)
 block|{
-name|cn_tab
-operator|=
-operator|&
-name|prom_consdev
-expr_stmt|;
 name|prom_consdev
 operator|.
 name|cn_pri
@@ -1156,6 +1151,12 @@ argument_list|,
 literal|0600
 argument_list|,
 literal|"promcons"
+argument_list|)
+expr_stmt|;
+name|cnadd
+argument_list|(
+operator|&
+name|prom_consdev
 argument_list|)
 expr_stmt|;
 block|}

@@ -7796,10 +7796,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|cn_tab
-operator|=
+name|cnadd
+argument_list|(
 operator|&
 name|consdev
+argument_list|)
 expr_stmt|;
 block|}
 end_function
