@@ -267,6 +267,13 @@ name|toplevel
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|volatile
+name|int
+name|txrx_error
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|get
@@ -879,7 +886,7 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-literal|0
+name|txrx_error
 argument_list|)
 expr_stmt|;
 name|setpeer
@@ -3314,7 +3321,7 @@ condition|)
 block|{
 name|exit
 argument_list|(
-literal|0
+name|txrx_error
 argument_list|)
 expr_stmt|;
 block|}
@@ -3733,7 +3740,7 @@ decl_stmt|;
 block|{
 name|exit
 argument_list|(
-literal|0
+name|txrx_error
 argument_list|)
 expr_stmt|;
 block|}
