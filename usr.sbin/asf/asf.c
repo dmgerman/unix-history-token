@@ -399,7 +399,6 @@ literal|"Usage:\n"
 literal|"%s [-a] [-k] [-t] [modules-path [outfile]]\n\n"
 literal|"\t-a\tappend to outfile)\n"
 literal|"\t-k\ttake input from kldstat(8)\n"
-argument_list|,
 literal|"\t-x\tdon't append \".debug\" to module name\n"
 argument_list|,
 name|myname
