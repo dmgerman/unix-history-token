@@ -135,6 +135,8 @@ operator|(
 expr|struct
 name|passwd
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1271,6 +1273,8 @@ operator|=
 name|getnewpasswd
 argument_list|(
 name|pw
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|==

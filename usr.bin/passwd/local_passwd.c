@@ -192,11 +192,16 @@ modifier|*
 name|getnewpasswd
 parameter_list|(
 name|pw
+parameter_list|,
+name|nis
 parameter_list|)
 name|struct
 name|passwd
 modifier|*
 name|pw
+decl_stmt|;
+name|int
+name|nis
 decl_stmt|;
 block|{
 name|int
@@ -231,11 +236,17 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Changing local password for %s.\n"
+literal|"Changing %s password for %s.\n"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|nis
+condition|?
+literal|"YP"
+else|:
+literal|"local"
 argument_list|)
 expr_stmt|;
 if|if
@@ -672,6 +683,8 @@ operator|=
 name|getnewpasswd
 argument_list|(
 name|pw
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pw
