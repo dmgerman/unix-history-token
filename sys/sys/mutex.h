@@ -357,6 +357,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_function_decl
 name|void
 name|_mtx_lock_spin
@@ -384,6 +390,11 @@ name|line
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -686,6 +697,12 @@ directive|ifndef
 name|_get_spin_lock
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -703,6 +720,42 @@ name|line
 parameter_list|)
 value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	critical_enter();						\ 	if (!_obtain_lock((mp), _tid)) {				\ 		if ((mp)->mtx_lock == (uintptr_t)_tid)			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), _tid, (opts), (file), (line)); \ 	}								\ } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_get_spin_lock
+parameter_list|(
+name|mp
+parameter_list|,
+name|tid
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {			\ 	struct thread *_tid = (tid);					\ 									\ 	critical_enter();						\ 	if ((mp)->mtx_lock == (uintptr_t)_tid)				\ 		(mp)->mtx_recurse++;					\ 	else {								\ 		KASSERT((mp)->mtx_lock == MTX_UNOWNED, ("corrupt spinlock")); \ 		(mp)->mtx_lock = (uintptr_t)_tid;			\ 	}								\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_endif
 endif|#
@@ -752,6 +805,12 @@ directive|ifndef
 name|_rel_spin_lock
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -761,6 +820,34 @@ name|mp
 parameter_list|)
 value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		_release_lock_quick((mp));				\ 	critical_exit();						\ } while (0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_rel_spin_lock
+parameter_list|(
+name|mp
+parameter_list|)
+value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	critical_exit();						\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_endif
 endif|#
@@ -1083,12 +1170,6 @@ define|\
 value|_rel_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMPnotyet
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -1114,48 +1195,6 @@ parameter_list|)
 define|\
 value|_rel_spin_lock((m))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SMP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mtx_lock_spin_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|)
-value|critical_enter()
-end_define
-
-begin_define
-define|#
-directive|define
-name|mtx_unlock_spin_flags
-parameter_list|(
-name|m
-parameter_list|,
-name|opts
-parameter_list|)
-value|critical_exit()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_endif
 endif|#

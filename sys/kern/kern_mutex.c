@@ -1914,18 +1914,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|||
-name|LOCK_DEBUG
-operator|>
-literal|0
-operator|||
-literal|1
 name|_get_spin_lock
 argument_list|(
 name|m
@@ -1939,13 +1927,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|critical_enter
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|LOCK_LOG_LOCK
 argument_list|(
 literal|"LOCK"
@@ -2082,30 +2063,11 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|||
-name|LOCK_DEBUG
-operator|>
-literal|0
-operator|||
-literal|1
 name|_rel_spin_lock
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|critical_exit
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2803,6 +2765,9 @@ endif|#
 directive|endif
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|SMP
 comment|/*  * _mtx_lock_spin: the tougher part of acquiring an MTX_SPIN lock.  *  * This is only called if we need to actually spin for the lock. Recursion  * is handled inline.  */
 name|void
 name|_mtx_lock_spin
@@ -2989,6 +2954,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
+comment|/* SMP */
 comment|/*  * _mtx_unlock_sleep: the tougher part of releasing an MTX_DEF lock.  *  * We are only called here if the lock is recursed or contested (i.e. we  * need to wake up a blocked thread).  */
 name|void
 name|_mtx_unlock_sleep
