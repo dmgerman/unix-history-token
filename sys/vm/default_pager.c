@@ -343,7 +343,9 @@ modifier|*
 name|rtvals
 decl_stmt|;
 block|{
-name|swap_pager_putpages
+name|swappagerops
+operator|.
+name|pgo_putpages
 argument_list|(
 name|object
 argument_list|,
