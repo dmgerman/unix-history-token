@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_ufs.c,v 1.11 1998/03/08 14:50:04 msmith Exp $"
+literal|"$Id: mount_ufs.c,v 1.12 1998/03/08 19:03:05 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,13 +226,13 @@ name|ROOTSLICE_HUNT
 name|int
 name|slice
 decl_stmt|,
-name|part
-decl_stmt|,
 name|result
 decl_stmt|,
 name|unit
 decl_stmt|;
 name|char
+name|part
+decl_stmt|,
 name|devbuf
 index|[
 name|MAXPATHLEN
