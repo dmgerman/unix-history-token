@@ -27,6 +27,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  *      The default toupper() macro is stupid, will toupper anything  */
 end_comment
@@ -200,18 +206,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-comment|/* these are defined in the getopt routine                       */
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-comment|/* argument give to an option            */
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-comment|/* argv index after option processing    */
 name|int
 name|option
 decl_stmt|;
