@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab_bsd.c	8.1 (Berkeley) %G%  *  * $Id: mtab_bsd.c,v 5.2.2.1 1992/02/09 15:10:13 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab_bsd.c	8.2 (Berkeley) %G%  *  * $Id: mtab_bsd.c,v 5.2.2.1 1992/02/09 15:10:13 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -72,6 +72,19 @@ operator|->
 name|f_mntonname
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199506
+name|ty
+operator|=
+name|mp
+operator|->
+name|f_fstypename
+expr_stmt|;
+else|#
+directive|else
 switch|switch
 condition|(
 name|mp
@@ -110,6 +123,8 @@ literal|"unknown"
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 name|new_mp
 operator|->
 name|mnt_type
