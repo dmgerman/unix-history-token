@@ -7156,8 +7156,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Syncer syncing disks, "
-literal|"buffers remaining... "
+literal|"Syncer syncing, vnodes remaining... "
 argument_list|)
 expr_stmt|;
 name|first_printf

@@ -1000,13 +1000,12 @@ name|int
 name|howto
 parameter_list|)
 block|{
+specifier|static
 name|int
 name|first_buf_printf
-decl_stmt|;
-name|first_buf_printf
-operator|=
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 comment|/* collect extra flags that shutdown_nice might have set */
 name|howto
 operator||=
@@ -2285,7 +2284,7 @@ name|EWOULDBLOCK
 condition|)
 name|printf
 argument_list|(
-literal|"Stop of '%s' timed out\n"
+literal|"Stop of '%s' timed out.\n"
 argument_list|,
 name|procname
 argument_list|)
@@ -2293,7 +2292,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Process '%s' stopped\n"
+literal|"Process '%s' stopped.\n"
 argument_list|,
 name|procname
 argument_list|)
