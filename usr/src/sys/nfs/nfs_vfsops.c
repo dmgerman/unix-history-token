@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -133,6 +133,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|nfs_quotactl
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|nfs_statfs
 parameter_list|()
 function_decl|;
@@ -179,6 +186,8 @@ block|,
 name|nfs_unmount
 block|,
 name|nfs_root
+block|,
+name|nfs_quotactl
 block|,
 name|nfs_statfs
 block|,
@@ -1202,7 +1211,7 @@ name|nfs_unmount
 argument_list|(
 argument|mp
 argument_list|,
-argument|flags
+argument|mntflags
 argument_list|)
 end_macro
 
@@ -1216,7 +1225,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|flags
+name|mntflags
 decl_stmt|;
 end_decl_stmt
 
@@ -1250,6 +1259,11 @@ modifier|*
 name|vp
 decl_stmt|;
 name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|int
@@ -1257,7 +1271,7 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|flags
+name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
@@ -1266,6 +1280,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|mntflags
+operator|&
+name|MNT_FORCE
+condition|)
+name|flags
+operator||=
+name|FORCECLOSE
+expr_stmt|;
 name|nmp
 operator|=
 name|vfs_to_nfs
@@ -1728,6 +1752,63 @@ block|{
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Do operations associated with quotas, not supported  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_macro
+name|nfs_quotactl
+argument_list|(
+argument|mp
+argument_list|,
+argument|cmd
+argument_list|,
+argument|uid
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uid_t
+name|uid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
