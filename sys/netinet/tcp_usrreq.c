@@ -832,10 +832,6 @@ name|inirw
 init|=
 name|INI_WRITE
 decl_stmt|;
-name|COMMON_START
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Must check for multicast addresses and disallow binding 	 * to them. 	 */
 name|sinp
 operator|=
 operator|(
@@ -862,6 +858,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Must check for multicast addresses and disallow binding 	 * to them. 	 */
 if|if
 condition|(
 name|sinp
@@ -882,15 +879,14 @@ name|s_addr
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
+return|;
+name|COMMON_START
+argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|error
 operator|=
 name|in_pcbbind
@@ -978,10 +974,6 @@ name|inirw
 init|=
 name|INI_WRITE
 decl_stmt|;
-name|COMMON_START
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Must check for multicast addresses and disallow binding 	 * to them. 	 */
 name|sin6p
 operator|=
 operator|(
@@ -1008,6 +1000,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Must check for multicast addresses and disallow binding 	 * to them. 	 */
 if|if
 condition|(
 name|sin6p
@@ -1024,15 +1017,14 @@ operator|->
 name|sin6_addr
 argument_list|)
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
+return|;
+name|COMMON_START
+argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|inp
 operator|->
 name|inp_vflag
@@ -1460,10 +1452,6 @@ name|inirw
 init|=
 name|INI_WRITE
 decl_stmt|;
-name|COMMON_START
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Must disallow TCP ``connections'' to multicast addresses. 	 */
 name|sinp
 operator|=
 operator|(
@@ -1490,6 +1478,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Must disallow TCP ``connections'' to multicast addresses. 	 */
 if|if
 condition|(
 name|sinp
@@ -1510,15 +1499,11 @@ name|s_addr
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EAFNOSUPPORT
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 name|td
@@ -1545,6 +1530,9 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|)
+expr_stmt|;
+name|COMMON_START
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1640,10 +1628,6 @@ name|inirw
 init|=
 name|INI_WRITE
 decl_stmt|;
-name|COMMON_START
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Must disallow TCP ``connections'' to multicast addresses. 	 */
 name|sin6p
 operator|=
 operator|(
@@ -1670,6 +1654,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Must disallow TCP ``connections'' to multicast addresses. 	 */
 if|if
 condition|(
 name|sin6p
@@ -1686,15 +1671,14 @@ operator|->
 name|sin6_addr
 argument_list|)
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|EAFNOSUPPORT
+operator|)
+return|;
+name|COMMON_START
+argument_list|()
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
