@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)DEFNAME.c 1.1 %G%"
+literal|"@(#)DEFNAME.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|maxnamlen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|datasize
 decl_stmt|;
 end_decl_stmt

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)UNPACK.c 1.1 %G%"
+literal|"@(#)UNPACK.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|long
 name|i
 decl_stmt|;
 end_decl_stmt
@@ -75,7 +75,7 @@ comment|/* pointer to structure z */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|size_a
 decl_stmt|;
 end_decl_stmt
@@ -85,7 +85,7 @@ comment|/* sizeof(a_type) */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|lb_a
 decl_stmt|;
 end_decl_stmt
@@ -95,7 +95,7 @@ comment|/* lower bound of structure a */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|ub_a
 decl_stmt|;
 end_decl_stmt
@@ -105,7 +105,7 @@ comment|/* (upper bound of a) - (lb_a + sizeof(z_type)) */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|size_z
 decl_stmt|;
 end_decl_stmt

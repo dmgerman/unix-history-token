@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CHR.c 1.1 %G%"
+literal|"@(#)CHR.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,20 +19,15 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_macro
+begin_function
+name|char
 name|CHR
-argument_list|(
-argument|value
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|value
+parameter_list|)
 name|long
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -55,10 +50,13 @@ expr_stmt|;
 return|return;
 block|}
 return|return
+operator|(
+name|char
+operator|)
 name|value
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

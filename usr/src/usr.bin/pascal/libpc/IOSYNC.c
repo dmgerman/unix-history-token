@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)IOSYNC.c 1.3 %G%"
+literal|"@(#)IOSYNC.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,9 @@ name|curfile
 operator|->
 name|fileptr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|curfile
 operator|->
 name|fsize

@@ -9,24 +9,19 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)TRUNC.c 1.1 %G%"
+literal|"@(#)TRUNC.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|long
 name|TRUNC
-argument_list|(
-argument|value
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|value
+parameter_list|)
 name|double
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 call|(
@@ -37,7 +32,7 @@ name|value
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

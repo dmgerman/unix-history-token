@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ARGV.c 1.1 %G%"
+literal|"@(#)ARGV.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,12 @@ argument|subscript
 argument_list|,
 argument|var
 argument_list|,
-argument|size
+argument|siz
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|long
 name|subscript
 decl_stmt|;
 end_decl_stmt
@@ -59,9 +59,8 @@ comment|/* pointer to pascal char array */
 end_comment
 
 begin_decl_stmt
-specifier|register
-name|int
-name|size
+name|long
+name|siz
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +74,12 @@ specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+specifier|register
+name|int
+name|size
+init|=
+name|siz
 decl_stmt|;
 if|if
 condition|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)WRITES.c 1.1 %G%"
+literal|"@(#)WRITES.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,13 +47,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|FILE
+modifier|*
 name|d1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|d2
 decl_stmt|,
 name|d3
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
 name|d4
 decl_stmt|;
 end_decl_stmt
@@ -84,8 +94,14 @@ name|fwrite
 argument_list|(
 name|d1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|d2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|d3
 argument_list|,
 name|d4

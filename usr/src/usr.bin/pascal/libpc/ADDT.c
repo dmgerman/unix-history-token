@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ADDT.c 1.1 %G%"
+literal|"@(#)ADDT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,7 @@ name|left
 parameter_list|,
 name|right
 parameter_list|,
-name|size
+name|siz
 parameter_list|)
 name|long
 modifier|*
@@ -40,9 +40,8 @@ name|long
 modifier|*
 name|right
 decl_stmt|;
-specifier|register
-name|int
-name|size
+name|long
+name|siz
 decl_stmt|;
 block|{
 specifier|register
@@ -51,6 +50,12 @@ modifier|*
 name|result
 init|=
 name|result0
+decl_stmt|;
+specifier|register
+name|int
+name|size
+init|=
+name|siz
 decl_stmt|;
 do|do
 block|{

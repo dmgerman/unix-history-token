@@ -4,13 +4,19 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.4 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.5 %G%"; */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"whoami.h"
 end_include
 
 begin_define
@@ -37,22 +43,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|LG2BITSBYTE
+value|03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSKBITSBYTE
+value|07
+end_define
+
+begin_define
+define|#
+directive|define
+name|LG2BITSLONG
+value|05
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSKBITSLONG
+value|037
+end_define
+
+begin_define
+define|#
+directive|define
 name|HZ
 value|60
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
 end_define
 
 begin_define
@@ -90,6 +110,12 @@ name|PREDEF
 value|2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -103,6 +129,31 @@ directive|define
 name|GLVL
 value|((struct iorec *)(0x7ffffff0))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STDLVL
+value|((struct iorec *)(0xfff1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GLVL
+value|((struct iorec *)(0xfff0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX
+end_endif
 
 begin_define
 define|#
@@ -131,6 +182,18 @@ directive|define
 name|ERR
 value|((struct iorec *)(&_err))
 end_define
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|FALSE
+block|,
+name|TRUE
+block|}
+name|bool
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * runtime display structure  */

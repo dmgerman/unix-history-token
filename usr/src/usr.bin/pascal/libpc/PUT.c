@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PUT.c 1.1 %G%"
+literal|"@(#)PUT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,9 @@ name|curfile
 operator|->
 name|fileptr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|curfile
 operator|->
 name|fsize

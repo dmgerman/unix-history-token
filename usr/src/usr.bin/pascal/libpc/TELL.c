@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)TELL.c 1.1 %G%"
+literal|"@(#)TELL.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,20 +23,18 @@ begin_comment
 comment|/*  * Find current location  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|long
 name|TELL
-argument_list|(
+parameter_list|(
 name|curfile
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iorec
-operator|*
+modifier|*
 name|curfile
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|long
 name|loc
@@ -68,7 +66,7 @@ return|return
 name|loc
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

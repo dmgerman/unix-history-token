@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READE.c 1.3 %G%"
+literal|"@(#)READE.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,33 +25,25 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|long
 name|READE
-argument_list|(
+parameter_list|(
 name|curfile
-argument_list|,
+parameter_list|,
 name|name
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iorec
-operator|*
+modifier|*
 name|curfile
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|long
-name|data
-decl_stmt|;
 specifier|register
 name|short
 modifier|*
@@ -262,6 +254,9 @@ return|;
 block|}
 name|cp
 operator|+=
+operator|(
+name|int
+operator|)
 name|nextlen
 expr_stmt|;
 block|}
@@ -279,7 +274,7 @@ name|namebuf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

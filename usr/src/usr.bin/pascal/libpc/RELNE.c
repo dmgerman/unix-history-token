@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RELNE.c 1.1 %G%"
+literal|"@(#)RELNE.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,39 +19,36 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|bool
 name|RELNE
-argument_list|(
-name|size
-argument_list|,
+parameter_list|(
+name|siz
+parameter_list|,
 name|str1
-argument_list|,
+parameter_list|,
 name|str2
-argument_list|)
+parameter_list|)
+name|long
+name|siz
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|str1
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|str2
+decl_stmt|;
+block|{
 specifier|register
 name|int
 name|size
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|char
-modifier|*
-name|str1
+init|=
+name|siz
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
-name|char
-modifier|*
-name|str2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 while|while
 condition|(
 operator|*
@@ -80,7 +77,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SUBSCZ.c 1.1 %G%"
+literal|"@(#)SUBSCZ.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,24 +19,19 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_macro
+begin_function
+name|long
 name|SUBSCZ
-argument_list|(
-argument|i
-argument_list|,
-argument|upper
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|i
+parameter_list|,
+name|upper
+parameter_list|)
 name|long
 name|i
 decl_stmt|,
 name|upper
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -61,7 +56,7 @@ return|return
 name|i
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

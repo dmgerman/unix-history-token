@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)MAX.c 1.1 %G%"
+literal|"@(#)MAX.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,46 +25,29 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|long
 name|MAX
-argument_list|(
+parameter_list|(
 name|width
-argument_list|,
+parameter_list|,
 name|reduce
-argument_list|,
+parameter_list|,
 name|min
-argument_list|)
+parameter_list|)
 specifier|register
-name|int
+name|long
 name|width
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl_stmt|;
 comment|/* requested width */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|reduce
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* amount of extra space required */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|min
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* minimum amount of space needed */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -99,7 +82,7 @@ return|return
 name|min
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)INCT.c 1.1 %G%"
+literal|"@(#)INCT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,73 +19,48 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|bool
 name|INCT
-argument_list|(
+parameter_list|(
 name|element
-argument_list|,
+parameter_list|,
 name|paircnt
-argument_list|,
+parameter_list|,
 name|singcnt
-argument_list|,
+parameter_list|,
 name|data
-argument_list|)
+parameter_list|)
 specifier|register
-name|int
+name|long
 name|element
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl_stmt|;
 comment|/* element to find */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|paircnt
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of pairs to check */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|singcnt
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of singles to check */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* paircnt plus singcnt bounds */
-end_comment
-
-begin_block
 block|{
 specifier|register
-name|int
+name|long
 modifier|*
 name|dataptr
+init|=
+operator|&
+name|data
 decl_stmt|;
 specifier|register
 name|int
 name|cnt
 decl_stmt|;
-name|dataptr
-operator|=
-operator|&
-name|data
-expr_stmt|;
 for|for
 control|(
 name|cnt
@@ -160,7 +135,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

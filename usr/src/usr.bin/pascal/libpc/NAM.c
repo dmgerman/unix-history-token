@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)NAM.c 1.1 %G%"
+literal|"@(#)NAM.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,13 +30,12 @@ name|char
 modifier|*
 name|NAM
 parameter_list|(
-name|value
+name|val
 parameter_list|,
 name|name
 parameter_list|)
-specifier|register
-name|int
-name|value
+name|long
+name|val
 decl_stmt|;
 comment|/* internal enumerated type value */
 name|char
@@ -45,6 +44,12 @@ name|name
 decl_stmt|;
 comment|/* ptr to enumerated type name descriptor */
 block|{
+specifier|register
+name|int
+name|value
+init|=
+name|val
+decl_stmt|;
 specifier|register
 name|short
 modifier|*
@@ -74,7 +79,7 @@ name|ERROR
 argument_list|(
 name|ENAMRNG
 argument_list|,
-name|value
+name|val
 argument_list|)
 expr_stmt|;
 return|return;

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SEED.c 1.4 %G%"
+literal|"@(#)SEED.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,20 +19,15 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_macro
+begin_function
+name|long
 name|SEED
-argument_list|(
-argument|value
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|value
+parameter_list|)
 name|long
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|long
 name|tmp
@@ -49,7 +44,7 @@ return|return
 name|tmp
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

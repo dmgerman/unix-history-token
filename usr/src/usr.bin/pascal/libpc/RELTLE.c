@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RELTLE.c 1.1 %G%"
+literal|"@(#)RELTLE.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,40 +19,29 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_macro
+begin_function
+name|bool
 name|RELTLE
-argument_list|(
-argument|bytecnt
-argument_list|,
-argument|left
-argument_list|,
-argument|right
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
+parameter_list|(
+name|bytecnt
+parameter_list|,
+name|left
+parameter_list|,
+name|right
+parameter_list|)
+name|long
 name|bytecnt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|long
 modifier|*
 name|left
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|long
 modifier|*
 name|right
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -95,7 +84,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

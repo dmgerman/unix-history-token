@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RANDOM.c 1.2 %G%"
+literal|"@(#)RANDOM.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,6 +18,14 @@ include|#
 directive|include
 file|"h00vars.h"
 end_include
+
+begin_function_decl
+specifier|extern
+name|long
+name|RAND
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|double

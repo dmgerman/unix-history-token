@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)REMOVE.c 1.1 %G%"
+literal|"@(#)REMOVE.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ name|REMOVE
 argument_list|(
 argument|name
 argument_list|,
-argument|maxnamlen
+argument|namlim
 argument_list|)
 end_macro
 
@@ -42,8 +42,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|maxnamlen
+name|long
+name|namlim
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,12 @@ block|{
 specifier|register
 name|int
 name|cnt
+decl_stmt|;
+specifier|register
+name|int
+name|maxnamlen
+init|=
+name|namlim
 decl_stmt|;
 name|char
 name|namebuf

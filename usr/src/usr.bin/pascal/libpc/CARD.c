@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CARD.c 1.1 %G%"
+literal|"@(#)CARD.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -534,33 +534,33 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
+name|long
 name|CARD
-argument_list|(
+parameter_list|(
 name|setptr
-argument_list|,
-name|size
-argument_list|)
+parameter_list|,
+name|siz
+parameter_list|)
 specifier|register
 name|unsigned
 name|char
-operator|*
+modifier|*
 name|setptr
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|int
-name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|long
+name|siz
+decl_stmt|;
 block|{
 specifier|register
 name|int
 name|cnt
+decl_stmt|;
+specifier|register
+name|int
+name|size
+init|=
+name|siz
 decl_stmt|;
 name|cnt
 operator|=
@@ -588,7 +588,7 @@ return|return
 name|cnt
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

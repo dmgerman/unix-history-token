@@ -9,16 +9,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SCLCK.c 1.1 %G%"
+literal|"@(#)SCLCK.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|long
 name|SCLCK
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|long
 name|tim
@@ -44,7 +42,7 @@ operator|/
 literal|3
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

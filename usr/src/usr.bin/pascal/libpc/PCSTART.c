@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCSTART.c 1.3 %G%"
+literal|"@(#)PCSTART.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -83,6 +89,30 @@ operator|)
 literal|0x7fffffff
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_minptr
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0xffff
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX
+end_endif
 
 begin_decl_stmt
 name|char

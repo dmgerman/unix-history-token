@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)WRITEC.c 1.1 %G%"
+literal|"@(#)WRITEC.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,9 +43,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|d1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
 name|d2
 decl_stmt|;
 end_decl_stmt
@@ -74,6 +79,9 @@ return|return;
 block|}
 name|fputc
 argument_list|(
+operator|(
+name|char
+operator|)
 name|d1
 argument_list|,
 name|d2

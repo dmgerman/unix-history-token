@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PMFLUSH.c 1.2 %G%"
+literal|"@(#)PMFLUSH.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,13 +75,14 @@ index|]
 operator|=
 literal|0426
 expr_stmt|;
+name|time
+argument_list|(
+operator|&
 name|bufaddr
 index|[
 literal|1
 index|]
-operator|=
-name|time
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|bufaddr
 index|[
@@ -119,9 +120,14 @@ name|fwrite
 argument_list|(
 name|bufaddr
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|cntrs
 operator|+
 literal|1
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)BUFF.c 1.1 %G%"
+literal|"@(#)BUFF.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|long
 name|amount
 decl_stmt|;
 end_decl_stmt

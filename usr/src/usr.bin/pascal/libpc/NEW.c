@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)NEW.c 1.1 %G%"
+literal|"@(#)NEW.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ comment|/* pointer to item being deallocated */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|size
 decl_stmt|;
 end_decl_stmt
@@ -72,6 +72,9 @@ name|memblk
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|int
+operator|)
 name|size
 argument_list|)
 expr_stmt|;

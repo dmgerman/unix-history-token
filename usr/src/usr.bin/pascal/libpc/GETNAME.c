@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.2 %G%"
+literal|"@(#)GETNAME.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|filep
 parameter_list|,
 name|name
 parameter_list|,
-name|maxnamlen
+name|namlim
 parameter_list|,
 name|datasize
 parameter_list|)
@@ -53,13 +53,18 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
-name|maxnamlen
+name|long
+name|namlim
 decl_stmt|;
-name|int
+name|long
 name|datasize
 decl_stmt|;
 block|{
+name|int
+name|maxnamlen
+init|=
+name|namlim
+decl_stmt|;
 name|struct
 name|iorec
 modifier|*
@@ -279,25 +284,16 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|filep
 operator|->
 name|funit
 operator|&
 name|FDEF
-condition|)
-block|{
-name|filep
-operator|->
-name|funit
-operator|&=
-operator|(
-name|TEMP
-operator||
-name|FTEXT
 operator|)
-expr_stmt|;
-block|}
-else|else
+operator|==
+literal|0
+condition|)
 block|{
 comment|/* 			 * have a previous buffer, close associated file 			 */
 if|if
@@ -392,6 +388,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
 name|filep
 operator|->
 name|funit
@@ -402,7 +399,6 @@ operator||
 name|FTEXT
 operator|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * get the filename associated with the buffer 	 */
 if|if

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ4.c 1.3 %G%"
+literal|"@(#)READ4.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,24 +25,23 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|long
 name|READ4
-argument_list|(
+parameter_list|(
 name|curfile
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iorec
-operator|*
+modifier|*
 name|curfile
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
-name|int
+name|long
 name|data
-decl_stmt|,
+decl_stmt|;
+name|int
 name|retval
 decl_stmt|;
 if|if
@@ -137,7 +136,7 @@ return|return
 name|data
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

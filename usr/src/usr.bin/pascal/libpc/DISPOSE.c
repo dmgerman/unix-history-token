@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)DISPOSE.c 1.1 %G%"
+literal|"@(#)DISPOSE.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ name|DISPOSE
 argument_list|(
 name|var
 argument_list|,
-name|size
+name|siz
 argument_list|)
 specifier|register
 name|char
@@ -45,8 +45,8 @@ comment|/* pointer to pointer being deallocated */
 end_comment
 
 begin_decl_stmt
-name|int
-name|size
+name|long
+name|siz
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ end_comment
 
 begin_block
 block|{
+specifier|register
+name|int
+name|size
+init|=
+name|siz
+decl_stmt|;
 if|if
 condition|(
 operator|*

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SUCC.c 1.1 %G%"
+literal|"@(#)SUCC.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,36 +19,25 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_macro
+begin_function
+name|long
 name|SUCC
-argument_list|(
-argument|value
-argument_list|,
-argument|lower
-argument_list|,
-argument|upper
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
+parameter_list|(
+name|value
+parameter_list|,
+name|lower
+parameter_list|,
+name|upper
+parameter_list|)
+name|long
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+name|long
 name|lower
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+name|long
 name|upper
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|value
 operator|++
@@ -77,7 +66,7 @@ return|return
 name|value
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ERROR.c 1.2 %G%"
+literal|"@(#)ERROR.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,22 +41,21 @@ begin_comment
 comment|/*  * Routine ERROR is called from the runtime library when a runtime error  * occurs. Its arguments are the internal number of the error which occurred,  * and an error specific piece of error data. The error file is constructed  * from errdata by the makefile using the editor script make.ed1.  */
 end_comment
 
-begin_macro
-name|ERROR
-argument_list|(
-argument|errnum
-argument_list|,
-argument|errdata
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
 name|long
+name|ERROR
+parameter_list|(
+name|errnum
+parameter_list|,
+name|errordata
+parameter_list|)
+name|short
 name|errnum
 decl_stmt|;
-end_decl_stmt
-
-begin_union
+name|double
+name|errordata
+decl_stmt|;
+block|{
 union|union
 name|cvt
 block|{
@@ -73,10 +72,12 @@ decl_stmt|;
 block|}
 name|errdata
 union|;
-end_union
-
-begin_block
-block|{
+name|errdata
+operator|.
+name|dbldat
+operator|=
+name|errordata
+expr_stmt|;
 name|PFLUSH
 argument_list|()
 expr_stmt|;
@@ -129,7 +130,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Argument to chr of %d is out of range\n"
+literal|"Argument to chr of %D is out of range\n"
 argument_list|,
 name|errdata
 operator|.
@@ -275,7 +276,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Negative argument of %E to sqrt\n"
+literal|"Negative argument of %e to sqrt\n"
 argument_list|,
 name|errdata
 operator|.
@@ -454,7 +455,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Non-positive argument of %E to ln\n"
+literal|"Non-positive argument of %e to ln\n"
 argument_list|,
 name|errdata
 operator|.
@@ -532,7 +533,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Enumerated type value of %d is out of range on output\n"
+literal|"Enumerated type value of %D is out of range on output\n"
 argument_list|,
 name|errdata
 operator|.
@@ -553,7 +554,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Negative format width: %d\n"
+literal|"Negative format width: %D\n"
 argument_list|,
 name|errdata
 operator|.
@@ -587,7 +588,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Label of %d not found in case\n"
+literal|"Label of %D not found in case\n"
 argument_list|,
 name|errdata
 operator|.
@@ -623,7 +624,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Range lower bound of %d out of set bounds\n"
+literal|"Range lower bound of %D out of set bounds\n"
 argument_list|,
 name|errdata
 operator|.
@@ -642,7 +643,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Range upper bound of %d out of set bounds\n"
+literal|"Range upper bound of %D out of set bounds\n"
 argument_list|,
 name|errdata
 operator|.
@@ -661,7 +662,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Value of %d out of set bounds\n"
+literal|"Value of %D out of set bounds\n"
 argument_list|,
 name|errdata
 operator|.
@@ -688,7 +689,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"There were %d too few arguments to formal routine\n"
+literal|"There were %D too few arguments to formal routine\n"
 argument_list|,
 operator|-
 name|errdata
@@ -701,7 +702,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"There were %d too many arguments to formal routine\n"
+literal|"There were %D too many arguments to formal routine\n"
 argument_list|,
 name|errdata
 operator|.
@@ -720,7 +721,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Argument to argv of %d is out of range\n"
+literal|"Argument to argv of %D is out of range\n"
 argument_list|,
 name|errdata
 operator|.
@@ -741,7 +742,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"i = %d: Bad i to pack(a,i,z)\n"
+literal|"i = %D: Bad i to pack(a,i,z)\n"
 argument_list|,
 name|errdata
 operator|.
@@ -762,7 +763,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"i = %d: Bad i to unpack(z,a,i)\n"
+literal|"i = %D: Bad i to unpack(z,a,i)\n"
 argument_list|,
 name|errdata
 operator|.
@@ -783,7 +784,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Value of %d is out of range\n"
+literal|"Value of %D is out of range\n"
 argument_list|,
 name|errdata
 operator|.
@@ -804,7 +805,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Subscript value of %d is out of range\n"
+literal|"Subscript value of %D is out of range\n"
 argument_list|,
 name|errdata
 operator|.
@@ -844,7 +845,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Statement count limit exceeded, %d statements executed\n"
+literal|"Statement count limit exceeded, %D statements executed\n"
 argument_list|,
 name|errdata
 operator|.
@@ -873,7 +874,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

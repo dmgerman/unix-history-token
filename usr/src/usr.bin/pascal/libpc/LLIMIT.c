@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)LLIMIT.c 1.1 %G%"
+literal|"@(#)LLIMIT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|limit
 decl_stmt|;
 end_decl_stmt

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)TEOF.c 1.1 %G%"
+literal|"@(#)TEOF.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,20 +25,18 @@ directive|include
 file|"h01errs.h"
 end_include
 
-begin_expr_stmt
+begin_function
+name|bool
 name|TEOF
-argument_list|(
+parameter_list|(
 name|filep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iorec
-operator|*
+modifier|*
 name|filep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -98,7 +96,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

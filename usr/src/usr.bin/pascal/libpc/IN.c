@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)IN.c 1.1 %G%"
+literal|"@(#)IN.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,62 +19,37 @@ directive|include
 file|"h00vars.h"
 end_include
 
-begin_macro
+begin_function
+name|bool
 name|IN
-argument_list|(
-argument|element
-argument_list|,
-argument|lower
-argument_list|,
-argument|upper
-argument_list|,
-argument|setptr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
+parameter_list|(
+name|element
+parameter_list|,
+name|lower
+parameter_list|,
+name|upper
+parameter_list|,
+name|setptr
+parameter_list|)
+name|long
 name|element
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* element to check */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|lower
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* lowest element of set */
-end_comment
-
-begin_decl_stmt
-name|int
+name|long
 name|upper
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* upper - lower of set */
-end_comment
-
-begin_decl_stmt
 name|char
 name|setptr
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* pointer to set */
-end_comment
-
-begin_block
 block|{
+specifier|register
 name|int
 name|indx
 decl_stmt|;
@@ -102,8 +77,8 @@ condition|(
 name|setptr
 index|[
 name|indx
-operator|/
-name|BITSPERBYTE
+operator|>>
+name|LG2BITSBYTE
 index|]
 operator|&
 operator|(
@@ -111,8 +86,8 @@ literal|1
 operator|<<
 operator|(
 name|indx
-operator|%
-name|BITSPERBYTE
+operator|&
+name|MSKBITSBYTE
 operator|)
 operator|)
 condition|)
@@ -123,7 +98,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
