@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.71 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,6 +759,8 @@ name|char
 name|buf0
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* unquoted image of the user name */
@@ -891,7 +893,7 @@ condition|(
 name|i
 operator|>=
 sizeof|sizeof
-name|buf
+name|buf0
 condition|)
 name|buf
 operator|=
@@ -1943,6 +1945,8 @@ name|char
 name|nbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if

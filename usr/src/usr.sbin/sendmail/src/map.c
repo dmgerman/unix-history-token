@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.49 (Berkeley) %G%"
+literal|"@(#)map.c	8.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2940,6 +2940,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -3371,6 +3373,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -6508,6 +6512,8 @@ name|char
 name|default_domain
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 init|=
 literal|""

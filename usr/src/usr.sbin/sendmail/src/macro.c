@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.8 (Berkeley) %G%"
+literal|"@(#)macro.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ comment|/* codes for long named macros */
 end_comment
 
 begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the first byte after buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function

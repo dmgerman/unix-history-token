@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.128 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.129 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2261,12 +2261,16 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
 name|rpathbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* translated return path */
@@ -2747,8 +2751,6 @@ name|buf
 index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
 index|]
 argument_list|,
 name|e
@@ -3452,8 +3454,6 @@ name|buf
 index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
 index|]
 argument_list|,
 name|e
@@ -3550,8 +3550,6 @@ name|buf
 index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
 index|]
 argument_list|,
 name|e
@@ -4038,6 +4036,8 @@ name|char
 name|hostbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* pull the next host from the signature */
@@ -5038,6 +5038,8 @@ name|char
 name|buf
 index|[
 name|MAXLINE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 for|for
@@ -5089,8 +5091,6 @@ index|[
 sizeof|sizeof
 name|buf
 index|]
-operator|-
-literal|1
 argument_list|,
 name|e
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.54 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,6 +1479,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 extern|extern putheader(

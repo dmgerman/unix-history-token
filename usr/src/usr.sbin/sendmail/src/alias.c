@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.37 (Berkeley) %G%"
+literal|"@(#)alias.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1097,6 +1097,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if

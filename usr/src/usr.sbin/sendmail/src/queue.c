@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.66 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.67 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.66 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.67 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3125,6 +3125,8 @@ name|char
 name|lbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|extern
@@ -3330,7 +3332,7 @@ name|d
 operator|->
 name|d_name
 argument_list|)
-operator|>=
+operator|>
 name|MAXNAME
 condition|)
 name|d
@@ -3338,8 +3340,6 @@ operator|->
 name|d_name
 index|[
 name|MAXNAME
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'
@@ -6274,6 +6274,8 @@ name|char
 name|bodytype
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|printf
@@ -6893,6 +6895,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.48 (Berkeley) %G%"
+literal|"@(#)headers.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|extern
@@ -2309,18 +2311,24 @@ name|char
 name|hbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
 name|sbuf
 index|[
 name|MAXLINE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
 name|mbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* don't allow newlines in the message-id */
@@ -3005,6 +3013,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if

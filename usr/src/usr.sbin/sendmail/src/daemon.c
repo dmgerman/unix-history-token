@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.72 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.73 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.72 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.73 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2882,6 +2882,8 @@ name|char
 name|hbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|extern
@@ -3063,6 +3065,16 @@ operator||=
 name|NCF_VALID
 expr_stmt|;
 comment|/* will be soon */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|<
+sizeof|sizeof
+name|hbuf
+condition|)
 operator|(
 name|void
 operator|)
@@ -3073,6 +3085,31 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|bcopy
+argument_list|(
+name|name
+argument_list|,
+name|hbuf
+argument_list|,
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|hbuf
+index|[
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|getcanonname

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.56 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5909,6 +5909,8 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -7678,12 +7680,16 @@ name|char
 name|buf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
 name|lbuf
 index|[
 name|MAXNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|char
@@ -8015,8 +8021,6 @@ name|buf
 index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
 index|]
 argument_list|,
 name|e
@@ -8034,8 +8038,6 @@ name|buf
 index|[
 sizeof|sizeof
 name|buf
-operator|-
-literal|1
 index|]
 argument_list|,
 name|e
