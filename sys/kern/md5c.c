@@ -250,8 +250,9 @@ index|[
 name|i
 index|]
 operator|=
-name|le32toh
+name|le32dec
 argument_list|(
+operator|&
 name|ip
 index|[
 name|i
