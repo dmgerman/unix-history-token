@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.12 (Berkeley) %G%"
+literal|"@(#)cron.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -84,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_define
@@ -192,6 +204,9 @@ end_decl_stmt
 begin_decl_stmt
 name|time_t
 name|itime
+decl_stmt|,
+name|time
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -319,16 +334,54 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-if|if
+name|openlog
+argument_list|(
+literal|"cron"
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_CONS
+operator||
+name|LOG_NOWAIT
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
+switch|switch
 condition|(
 name|fork
 argument_list|()
 condition|)
+block|{
+case|case
+operator|-
+literal|1
+case|:
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"fork: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+case|case
+literal|0
+case|:
+break|break;
+default|default:
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|c
 operator|=
 name|getopt
@@ -367,6 +420,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fcntl
 argument_list|(
 name|fileno
@@ -380,11 +436,17 @@ name|FAPPEND
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|chdir
 argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|freopen
 argument_list|(
 literal|"/"
@@ -394,6 +456,9 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|freopen
 argument_list|(
 literal|"/"
@@ -406,6 +471,9 @@ expr_stmt|;
 name|untty
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -413,6 +481,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -420,6 +491,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -427,6 +501,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGCHLD
@@ -434,6 +511,9 @@ argument_list|,
 name|reapchild
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -877,6 +957,9 @@ expr_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -934,6 +1017,9 @@ literal|0
 condition|)
 name|sleep
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -956,9 +1042,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|st
-decl_stmt|;
 specifier|register
 name|struct
 name|passwd
@@ -980,12 +1063,42 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
-if|if
+switch|switch
 condition|(
 name|fork
 argument_list|()
 condition|)
 block|{
+case|case
+literal|0
+case|:
+break|break;
+case|case
+operator|-
+literal|1
+case|:
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot fork: %m (running %.40s%s)"
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+operator|>
+literal|40
+condition|?
+literal|"..."
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+default|default:
 return|return;
 block|}
 name|pid
@@ -1035,6 +1148,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"invalid user name \"%s\""
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 name|dprintf
 argument_list|(
 name|debug
@@ -1067,6 +1189,9 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|initgroups
 argument_list|(
 name|pwd
@@ -1088,6 +1213,9 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|freopen
 argument_list|(
 literal|"/"
@@ -1096,6 +1224,9 @@ literal|"r"
 argument_list|,
 name|stdin
 argument_list|)
+expr_stmt|;
+name|closelog
+argument_list|()
 expr_stmt|;
 name|dprintf
 argument_list|(
@@ -1124,6 +1255,13 @@ argument_list|,
 name|s
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot exec /bin/sh: %m"
 argument_list|)
 expr_stmt|;
 name|dprintf
@@ -1608,6 +1746,9 @@ operator|==
 name|EOF
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|stdin
@@ -1672,6 +1813,9 @@ name|getchar
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|c
@@ -1725,6 +1869,11 @@ name|status
 argument_list|,
 name|WNOHANG
 argument_list|,
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)
@@ -1782,6 +1931,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|i
