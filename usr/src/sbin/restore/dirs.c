@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.24 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,7 +504,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ino_t
+name|struct
+name|direct
+modifier|*
 name|searchdir
 name|__P
 argument_list|(
@@ -1284,7 +1286,9 @@ comment|/*  * Lookup a pathname which is always assumed to start from the ROOTIN
 end_comment
 
 begin_function
-name|ino_t
+name|struct
+name|direct
+modifier|*
 name|pathsearch
 parameter_list|(
 name|pathname
@@ -1296,6 +1300,11 @@ decl_stmt|;
 block|{
 name|ino_t
 name|ino
+decl_stmt|;
+name|struct
+name|direct
+modifier|*
+name|dp
 decl_stmt|;
 name|char
 modifier|*
@@ -1346,11 +1355,17 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|name
+operator|!=
+name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|(
-name|ino
+name|dp
 operator|=
 name|searchdir
 argument_list|(
@@ -1364,15 +1379,19 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|(
-name|ino_t
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
+name|ino
+operator|=
+name|dp
+operator|->
+name|d_ino
+expr_stmt|;
+block|}
 return|return
 operator|(
-name|ino
+name|dp
 operator|)
 return|;
 block|}
@@ -1384,7 +1403,9 @@ end_comment
 
 begin_function
 specifier|static
-name|ino_t
+name|struct
+name|direct
+modifier|*
 name|searchdir
 parameter_list|(
 name|inum
@@ -1475,7 +1496,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1504,8 +1525,6 @@ do|;
 return|return
 operator|(
 name|dp
-operator|->
-name|d_ino
 operator|)
 return|;
 block|}
@@ -2511,6 +2530,10 @@ name|inotab
 modifier|*
 name|itp
 decl_stmt|;
+name|RST_DIR
+modifier|*
+name|dirp
+decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
@@ -2539,6 +2562,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|dirp
+operator|=
+name|opendirfile
+argument_list|(
+name|dirfile
+argument_list|)
+expr_stmt|;
 name|rst_seekdir
 argument_list|(
 name|dirp
@@ -2563,6 +2593,37 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * In our case, there is nothing to do when closing a directory.  */
+end_comment
+
+begin_function
+name|void
+name|rst_closedir
+parameter_list|(
+name|dirp
+parameter_list|)
+name|RST_DIR
+modifier|*
+name|dirp
+decl_stmt|;
+block|{
+name|close
+argument_list|(
+name|dirp
+operator|->
+name|dd_fd
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
