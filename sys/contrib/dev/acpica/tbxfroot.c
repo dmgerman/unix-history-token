@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -98,11 +98,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"RSDP structure not found\n"
 operator|)
 argument_list|)
@@ -215,11 +215,11 @@ literal|0
 condition|)
 block|{
 comment|/* If so, we have found the RSDP */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"RSDP located at physical address %p\n"
 operator|,
 name|MemRover
@@ -234,11 +234,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Searched entire block, no RSDP was found */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Searched entire block, no RSDP was found.\n"
 operator|)
 argument_list|)
@@ -643,11 +643,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"RSDP  not found\n"
 operator|)
 argument_list|)
@@ -669,11 +669,11 @@ name|ACPI_TBLPTR
 operator|)
 name|PhysicalAddress
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"RSDP located at %p, RSDT physical=%8.8lX%8.8lX \n"
 operator|,
 name|AcpiGbl_RSDP

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 39 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 41 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiDbgLevel
 operator||=
-name|TRACE_TABLES
+name|ACPI_LV_TABLES
 expr_stmt|;
 name|AcpiUtDumpBuffer
 argument_list|(
@@ -233,7 +233,7 @@ name|ACPI_TYPE_ANY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference]  Value: %p\n"
+literal|"[Object Reference] = %p\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -248,19 +248,25 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Number]  Value: %ld (%lX)\n"
+literal|"[Integer] = %X%8.8X\n"
 argument_list|,
+name|HIDWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
 argument_list|,
+name|LODWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -316,7 +322,7 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Buffer]  Value: "
+literal|"[Buffer] = "
 argument_list|)
 expr_stmt|;
 name|AcpiUtDumpBuffer
@@ -399,7 +405,7 @@ name|INTERNAL_TYPE_REFERENCE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Object Reference]  Value: %p\n"
+literal|"[Object Reference] = %p\n"
 argument_list|,
 name|ObjDesc
 operator|->

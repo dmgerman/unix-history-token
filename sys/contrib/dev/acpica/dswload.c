@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -113,11 +113,11 @@ argument_list|(
 literal|"DsLoad1BeginOp"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Op=%p State=%p\n"
 operator|,
 name|Op
@@ -185,11 +185,11 @@ argument_list|(
 name|Opcode
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"State=%p Op=%p Type=%x\n"
 operator|,
 name|WalkState
@@ -207,11 +207,11 @@ operator|==
 name|AML_SCOPE_OP
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"State=%p Op=%p Type=%x\n"
 operator|,
 name|WalkState
@@ -361,11 +361,11 @@ argument_list|(
 literal|"DsLoad1EndOp"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Op=%p State=%p\n"
 operator|,
 name|Op
@@ -466,11 +466,11 @@ name|DataType
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"(%s): Popping scope for Op %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -546,11 +546,11 @@ argument_list|(
 literal|"DsLoad2BeginOp"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Op=%p State=%p\n"
 operator|,
 name|Op
@@ -673,11 +673,11 @@ argument_list|(
 name|Opcode
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"State=%p Op=%p Type=%x\n"
 operator|,
 name|WalkState
@@ -902,11 +902,11 @@ condition|(
 name|Original
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"old %p new %p\n"
 operator|,
 name|Original
@@ -922,11 +922,11 @@ operator|!=
 name|Node
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Lookup match error: old %p new %p\n"
 operator|,
 name|Original
@@ -988,11 +988,11 @@ argument_list|(
 literal|"DsLoad2EndOp"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1027,11 +1027,11 @@ operator|==
 name|AML_SCOPE_OP
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Ending scope Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1056,11 +1056,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unnamed scope! Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1121,11 +1121,11 @@ name|DataType
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"(%s) Popping scope for Op %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1179,11 +1179,11 @@ case|case
 name|AML_CREATE_QWORD_FIELD_OP
 case|:
 comment|/*          * Create the field object, but the field buffer and index must          * be evaluated later during the execution phase          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"CreateXxxField: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1335,11 +1335,11 @@ break|break;
 case|case
 name|AML_INT_METHODCALL_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"RESOLVING-MethodCall: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1405,11 +1405,11 @@ case|case
 name|AML_PROCESSOR_OP
 case|:
 comment|/* Nothing to do other than enter object into namespace */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Processor: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1441,11 +1441,11 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Completed Processor Init, Op=%p State=%p entry=%p\n"
 operator|,
 name|Op
@@ -1461,11 +1461,11 @@ case|case
 name|AML_POWER_RES_OP
 case|:
 comment|/* Nothing to do other than enter object into namespace */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-PowerResource: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1497,11 +1497,11 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Completed PowerResource Init, Op=%p State=%p entry=%p\n"
 operator|,
 name|Op
@@ -1517,11 +1517,11 @@ case|case
 name|AML_THERMAL_ZONE_OP
 case|:
 comment|/* Nothing to do other than enter object into namespace */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-ThermalZone: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1536,11 +1536,11 @@ break|break;
 case|case
 name|AML_FIELD_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Field: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1576,11 +1576,11 @@ break|break;
 case|case
 name|AML_INDEX_FIELD_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-IndexField: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1619,11 +1619,11 @@ break|break;
 case|case
 name|AML_BANK_FIELD_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-BankField: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1660,11 +1660,11 @@ comment|/*      * MethodOp PkgLength NamesString MethodFlags TermList      */
 case|case
 name|AML_METHOD_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Method: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState
@@ -1711,7 +1711,7 @@ name|Arg
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|,
 name|Node
 argument_list|)
@@ -1721,11 +1721,11 @@ break|break;
 case|case
 name|AML_MUTEX_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Mutex: Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1766,11 +1766,11 @@ break|break;
 case|case
 name|AML_EVENT_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Event: Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1820,11 +1820,11 @@ condition|)
 block|{
 break|break;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Opregion: Op=%p State=%p NamedObj=%p\n"
 operator|,
 name|Op
@@ -1872,11 +1872,11 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Completed OpRegion Init, Op=%p State=%p entry=%p\n"
 operator|,
 name|Op
@@ -1892,11 +1892,11 @@ comment|/* Namespace Modifier Opcodes */
 case|case
 name|AML_ALIAS_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Alias: Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1937,11 +1937,11 @@ break|break;
 case|case
 name|AML_NAME_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-Name: Op=%p State=%p\n"
 operator|,
 name|Op
@@ -1975,11 +1975,11 @@ break|break;
 case|case
 name|AML_INT_NAMEPATH_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"LOADING-NamePath object: State=%p Op=%p NamedObj=%p\n"
 operator|,
 name|WalkState

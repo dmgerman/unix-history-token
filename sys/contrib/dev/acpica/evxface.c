@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 110 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 111 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -187,11 +187,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Could not enable fixed event.\n"
 operator|)
 argument_list|)
@@ -218,11 +218,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Enabled fixed event %X, Handler=%p\n"
 operator|,
 name|Event
@@ -349,11 +349,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Could not write to fixed event enable register.\n"
 operator|)
 argument_list|)
@@ -361,11 +361,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Disabled fixed event %X.\n"
 operator|,
 name|Event
@@ -955,11 +955,11 @@ operator|==
 name|ACPI_ROOT_OBJECT
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Removing notify handler for ROOT object.\n"
 operator|)
 argument_list|)

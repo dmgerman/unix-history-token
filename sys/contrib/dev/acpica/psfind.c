@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -427,11 +427,11 @@ operator|!
 name|Path
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Null path (%p) or scope (%p)!\n"
 operator|,
 name|Path
@@ -555,11 +555,11 @@ operator|=
 name|Scope
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Null path, returning current root scope Op=%p\n"
 operator|,
 name|Op
@@ -607,11 +607,11 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Search scope %p Segs=%d Opcode=%4.4X Create=%d\n"
 operator|,
 name|Scope
@@ -680,11 +680,11 @@ condition|(
 name|Op
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"[%4.4s] Found! Op=%p Opcode=%4.4X\n"
 operator|,
 operator|&
@@ -753,11 +753,11 @@ argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"[%4.4s] Not found, created Op=%p Opcode=%4.4X\n"
 operator|,
 operator|&
@@ -810,11 +810,11 @@ condition|(
 name|Op
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"[%4.4s] Found in parent tree! Op=%p Opcode=%4.4X\n"
 operator|,
 operator|&
@@ -831,11 +831,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"[%4.4s] Not found in parent=%p\n"
 operator|,
 operator|&
@@ -850,11 +850,11 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Segment [%4.4s] Not Found in scope %p!\n"
 operator|,
 operator|&

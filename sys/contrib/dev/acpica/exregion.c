@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -149,11 +149,11 @@ literal|4
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Invalid SystemMemory width %d\n"
 operator|,
 name|BitWidth
@@ -301,15 +301,11 @@ operator|->
 name|MappedPhysicalAddress
 operator|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|TRACE_OPREGION
-operator||
-name|VERBOSE_INFO
-operator|)
-argument_list|,
-operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"IO %d (%d width) Address=%8.8lX%8.8lX\n"
 operator|,
 name|Function
@@ -487,15 +483,11 @@ argument_list|(
 literal|"ExSystemIoSpaceHandler"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|TRACE_OPREGION
-operator||
-name|VERBOSE_INFO
-operator|)
-argument_list|,
-operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"IO %d (%d width) Address=%8.8lX%8.8lX\n"
 operator|,
 name|Function
@@ -640,15 +632,11 @@ name|UINT16
 operator|)
 name|Address
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|TRACE_OPREGION
-operator||
-name|VERBOSE_INFO
-operator|)
-argument_list|,
-operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"IO %d (%d) Seg(%04x) Bus(%04x) Dev(%04x) Func(%04x) Reg(%04x)\n"
 operator|,
 name|Function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 62 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 64 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ name|AcpiGbl_DbConsoleDebugLevel
 init|=
 name|NORMAL_DEFAULT
 operator||
-name|TRACE_TABLES
+name|ACPI_LV_TABLES
 decl_stmt|;
 end_decl_stmt
 
@@ -610,7 +610,7 @@ block|,
 block|{
 literal|"UNLOAD"
 block|,
-literal|0
+literal|1
 block|}
 block|,
 block|{
@@ -758,7 +758,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unload                              Unload an ACPI table\n"
+literal|"Unload<TableSig> [Instance]        Unload an ACPI table\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf

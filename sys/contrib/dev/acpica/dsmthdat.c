@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 47 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 48 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -281,11 +281,11 @@ literal|"DsMethodDataDeleteAll"
 argument_list|)
 expr_stmt|;
 comment|/* Delete the locals */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Deleting local variables in %p\n"
 operator|,
 name|WalkState
@@ -322,11 +322,11 @@ condition|(
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Deleting Local%d=%p\n"
 operator|,
 name|Index
@@ -356,11 +356,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Delete the arguments */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Deleting arguments in %p\n"
 operator|,
 name|WalkState
@@ -397,11 +397,11 @@ condition|(
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Deleting Arg%d=%p\n"
 operator|,
 name|Index
@@ -481,11 +481,11 @@ operator|!
 name|Params
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"No param list passed to method\n"
 operator|)
 argument_list|)
@@ -565,11 +565,11 @@ block|{
 break|break;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"%d args passed to method\n"
 operator|,
 name|Pindex
@@ -632,11 +632,11 @@ operator|>
 name|MTH_MAX_LOCAL
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"LocalVar index %d is invalid (max %d)\n"
 operator|,
 name|Index
@@ -680,11 +680,11 @@ operator|>
 name|MTH_MAX_ARG
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Arg index %d is invalid (max %d)\n"
 operator|,
 name|Index
@@ -719,11 +719,11 @@ name|Object
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Opcode %d is invalid\n"
 operator|,
 name|Opcode
@@ -974,11 +974,11 @@ operator|>
 name|MTH_MAX_LOCAL
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Local index %d is invalid (max %d)\n"
 operator|,
 name|Index
@@ -1014,11 +1014,11 @@ operator|>
 name|MTH_MAX_ARG
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Arg index %d is invalid (max %d)\n"
 operator|,
 name|Index
@@ -1045,11 +1045,11 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Opcode %d is invalid\n"
 operator|,
 name|Opcode
@@ -1114,11 +1114,11 @@ operator|!
 name|DestDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null object descriptor pointer\n"
 operator|)
 argument_list|)
@@ -1180,11 +1180,11 @@ block|{
 case|case
 name|AML_ARG_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Uninitialized Arg[%d] at entry %p\n"
 operator|,
 name|Index
@@ -1202,11 +1202,11 @@ break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Uninitialized Local[%d] at entry %p\n"
 operator|,
 name|Index
@@ -1386,11 +1386,11 @@ argument_list|(
 literal|"DsMethodDataSetValue"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Opcode=%d Idx=%d Obj=%p\n"
 operator|,
 name|Opcode
@@ -1449,11 +1449,11 @@ operator|==
 name|SrcDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p already installed!\n"
 operator|,
 name|SrcDesc
@@ -1491,11 +1491,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Arg (%p) is an ObjRef(Node), storing in %p\n"
 operator|,
 name|SrcDesc

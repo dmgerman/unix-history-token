@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -290,11 +290,11 @@ name|HandlerObj
 condition|)
 block|{
 comment|/*          *  No installed handler. This shouldn't happen because the dispatch          *  routine checks before we get here, but we check again just in case.          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Attempting to init a region %X, with no handler\n"
 operator|,
 name|RegionObj
@@ -881,11 +881,11 @@ operator|==
 name|SpaceId
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Found handler %p for region %p in obj %p\n"
 operator|,
 name|HandlerObj
@@ -934,11 +934,11 @@ expr_stmt|;
 block|}
 comment|/* while Node != ROOT */
 comment|/*      *  If we get here, there is no handler for this region      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"No handler for RegionType %s(%X) (RegionObj %p)\n"
 operator|,
 name|AcpiUtGetRegionName

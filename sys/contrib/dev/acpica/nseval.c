@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 93 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 94 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -224,11 +224,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Object [%s] not found [%s]\n"
 operator|,
 name|Pathname
@@ -245,11 +245,11 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Now that we have a handle to the object, we can attempt      * to evaluate it.      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%s [%p] Value %p\n"
 operator|,
 name|Pathname
@@ -273,11 +273,11 @@ argument_list|,
 name|ReturnObject
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"*** Completed eval of object %s ***\n"
 operator|,
 name|Pathname
@@ -406,11 +406,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Object at [%s] was not found, status=%.4X\n"
 operator|,
 name|Pathname
@@ -424,11 +424,11 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Now that we have a handle to the object, we can attempt      * to evaluate it.      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%s [%p] Value %p\n"
 operator|,
 name|Pathname
@@ -452,11 +452,11 @@ argument_list|,
 name|ReturnObject
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"*** Completed eval of object %s ***\n"
 operator|,
 name|Pathname
@@ -724,11 +724,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No attached method object\n"
 operator|)
 argument_list|)
@@ -744,11 +744,11 @@ name|AE_ERROR
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Control method at Offset %x Length %lx]\n"
 operator|,
 name|ObjDesc
@@ -775,16 +775,16 @@ name|MethodNode
 argument_list|,
 literal|"NsExecuteControlMethod: Executing"
 argument_list|,
-name|TRACE_NAMES
+name|ACPI_LV_NAMES
 argument_list|,
 name|_COMPONENT
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"At offset %8XH\n"
 operator|,
 name|ObjDesc
@@ -1053,11 +1053,11 @@ name|ReturnObjDesc
 operator|=
 name|ObjDesc
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Returning obj %p\n"
 operator|,
 operator|*

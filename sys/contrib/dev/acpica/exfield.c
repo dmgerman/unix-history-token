@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1041,11 +1041,11 @@ argument_list|,
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
 operator|,
 name|ObjDesc
@@ -1062,11 +1062,11 @@ name|BufferLength
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Mode=%d BitLen=%X BitOff=%X ByteOff=%X\n"
 operator|,
 name|Mode
@@ -1128,11 +1128,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown I/O Mode: %X\n"
 operator|,
 name|Mode

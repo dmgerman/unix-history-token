@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -93,6 +93,11 @@ name|UINT8
 modifier|*
 name|Buffer
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"AcpiExCopyBufferToBuffer"
+argument_list|)
+expr_stmt|;
 comment|/*      * We know that SourceDesc is a buffer by now      */
 name|Buffer
 operator|=
@@ -226,12 +231,12 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
-literal|"ExCopyBufferToBuffer: Truncating src buffer from %X to %X\n"
+name|ACPI_DB_INFO
+operator|,
+literal|"Truncating src buffer from %X to %X\n"
 operator|,
 name|Length
 operator|,
@@ -352,15 +357,18 @@ name|String
 operator|.
 name|Pointer
 operator|&&
+operator|(
 operator|!
-name|AcpiTbSystemTablePointer
-argument_list|(
+operator|(
 name|TargetDesc
 operator|->
-name|String
+name|Common
 operator|.
-name|Pointer
-argument_list|)
+name|Flags
+operator|&
+name|AOPOBJ_STATIC_POINTER
+operator|)
+operator|)
 condition|)
 block|{
 comment|/*              * Only free if not a pointer into the DSDT              */

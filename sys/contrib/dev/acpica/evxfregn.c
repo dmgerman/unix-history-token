@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 34 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -377,11 +377,11 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Creating object on Device %p while installing handler\n"
 operator|,
 name|Node
@@ -478,11 +478,11 @@ name|UnlockAndExit
 goto|;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Installing address handler for region %s(%X) on Device %p(%p)\n"
 operator|,
 name|AcpiUtGetRegionName
@@ -849,11 +849,11 @@ name|SpaceId
 condition|)
 block|{
 comment|/*              *  Got it, first dereference this in the Regions              */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Removing address handler %p(%p) for region %s on Device %p(%p)\n"
 operator|,
 name|HandlerObj
@@ -948,11 +948,11 @@ name|Next
 expr_stmt|;
 block|}
 comment|/*      *  The handler does not exist      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Unable to remove address handler %p for %s(%X), DevNode %p, obj %p\n"
 operator|,
 name|Handler

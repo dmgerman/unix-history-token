@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 140 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 142 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -118,11 +118,11 @@ operator|!
 name|DestDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - null pointer\n"
 operator|)
 argument_list|)
@@ -180,11 +180,11 @@ name|INTERNAL_TYPE_REFERENCE
 condition|)
 block|{
 comment|/* Destination is not an Reference */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Destination is not a ReferenceObj [%p]\n"
 operator|,
 name|DestDesc
@@ -300,20 +300,20 @@ case|case
 name|AML_DEBUG_OP
 case|:
 comment|/*          * Storing to the Debug object causes the value stored to be          * displayed and otherwise has no effect -- see ACPI Specification          */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Write to Debug Object: ****: \n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_DEBUG_OBJECT
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"[ACPI Debug] %s: "
 operator|,
 name|AcpiUtGetTypeName
@@ -339,11 +339,11 @@ block|{
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_DEBUG_OBJECT
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"0x%X (%d)\n"
 operator|,
 operator|(
@@ -370,11 +370,11 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_DEBUG_OBJECT
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"Length 0x%X\n"
 operator|,
 operator|(
@@ -392,11 +392,11 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_DEBUG_OBJECT
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"%s\n"
 operator|,
 name|ValDesc
@@ -411,11 +411,11 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_DEBUG_OBJECT
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"Elements - 0x%X\n"
 operator|,
 operator|(
@@ -431,11 +431,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_DEBUG_OBJECT
-argument_list|,
 operator|(
+name|ACPI_DB_OBJECTS
+operator|,
 literal|"@0x%p\n"
 operator|,
 name|ValDesc
@@ -454,14 +454,17 @@ case|:
 case|case
 name|AML_ONES_OP
 case|:
+case|case
+name|AML_REVISION_OP
+case|:
 comment|/*          * Storing to a constant is a no-op -- see ACPI Specification          * Delete the reference descriptor, however          */
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - Unknown Reference subtype %02x\n"
 operator|,
 name|RefDesc
@@ -750,11 +753,11 @@ argument_list|)
 condition|)
 block|{
 comment|/*                      * An error occurrered when copying the internal object                      * so delete the reference.                      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unable to copy the internal object\n"
 operator|)
 argument_list|)
@@ -901,16 +904,14 @@ control|)
 block|{
 name|Value
 operator|=
-operator|*
-operator|(
 name|ValDesc
 operator|->
 name|Buffer
 operator|.
 name|Pointer
-operator|+
+index|[
 name|i
-operator|)
+index|]
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -957,16 +958,14 @@ control|)
 block|{
 name|Value
 operator|=
-operator|*
-operator|(
 name|ValDesc
 operator|->
 name|String
 operator|.
 name|Pointer
-operator|+
+index|[
 name|i
-operator|)
+index|]
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -987,11 +986,11 @@ block|}
 break|break;
 default|default:
 comment|/* Other types are invalid */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Source must be Number/Buffer/String type, not %X\n"
 operator|,
 name|ValDesc
@@ -1010,11 +1009,11 @@ break|break;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Target is not a Package or BufferField\n"
 operator|)
 argument_list|)
@@ -1089,11 +1088,11 @@ argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Storing %p(%s) into node %p(%s)\n"
 operator|,
 name|Node
@@ -1222,11 +1221,11 @@ argument_list|,
 name|TargetType
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Store %s into %s via Convert/Attach\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1263,11 +1262,11 @@ operator|.
 name|Type
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Store %s into %s via Attach only\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1341,11 +1340,11 @@ literal|"ExStoreObjectToObject"
 argument_list|)
 expr_stmt|;
 comment|/*      *  Assuming the parameters are valid!      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Storing %p(%s) to %p(%s)\n"
 operator|,
 name|SourceDesc
@@ -1389,11 +1388,11 @@ name|ACPI_TYPE_BUFFER
 case|:
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Store into %s not implemented\n"
 operator|,
 name|AcpiUtGetTypeName

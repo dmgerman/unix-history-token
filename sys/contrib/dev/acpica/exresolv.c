@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -114,11 +114,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - null field pointer\n"
 operator|)
 argument_list|)
@@ -175,11 +175,11 @@ operator|.
 name|BufferObj
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - null container pointer\n"
 operator|)
 argument_list|)
@@ -205,11 +205,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - container is not a Buffer\n"
 operator|)
 argument_list|)
@@ -226,11 +226,11 @@ operator|!
 name|ResultDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - null result pointer\n"
 operator|)
 argument_list|)
@@ -347,11 +347,11 @@ operator|)
 operator|&
 name|Mask
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"** Read from buffer %p byte %ld bit %d width %d addr %p mask %08lx val %08lx\n"
 operator|,
 name|ObjDesc
@@ -440,11 +440,11 @@ operator|*
 name|StackPtr
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - null pointer\n"
 operator|)
 argument_list|)
@@ -532,11 +532,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Resolved object %p\n"
 operator|,
 operator|*
@@ -703,11 +703,11 @@ name|StackPtr
 operator|=
 name|ObjDesc
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"[Arg/Local %d] ValueObj is %p\n"
 operator|,
 name|StackDesc
@@ -853,11 +853,11 @@ block|}
 else|else
 block|{
 comment|/*                      * A NULL object descriptor means an unitialized element of                      * the package, can't dereference it                      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Attempt to deref an Index to NULL pkg element Idx=%p\n"
 operator|,
 name|StackDesc
@@ -872,11 +872,11 @@ block|}
 break|break;
 default|default:
 comment|/* Invalid reference object */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown TargetType %X in Index/Reference obj %p\n"
 operator|,
 name|StackDesc
@@ -902,11 +902,11 @@ case|:
 comment|/* Just leave the object as-is */
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown Reference object subtype %02X in %p\n"
 operator|,
 name|Opcode

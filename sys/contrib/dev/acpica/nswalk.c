@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the APCI namespace  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 23 $  *  *****************************************************************************/
 end_comment
 
 begin_comment

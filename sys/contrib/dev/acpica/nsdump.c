@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -256,6 +256,11 @@ decl_stmt|;
 name|UINT32
 name|WhichBit
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"AcpiNsDumpOneObject"
+argument_list|)
+expr_stmt|;
 name|ThisNode
 operator|=
 name|AcpiNsConvertHandleToEntry
@@ -301,12 +306,12 @@ operator|!
 name|ObjHandle
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
-literal|"NsDumpOneObject: Null object handle\n"
+name|ACPI_DB_INFO
+operator|,
+literal|"Null object handle\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -364,11 +369,11 @@ operator|&
 name|WhichBit
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"|"
 operator|)
 argument_list|)
@@ -376,11 +381,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" "
 operator|)
 argument_list|)
@@ -415,11 +420,11 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"+"
 operator|)
 argument_list|)
@@ -441,11 +446,11 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"+"
 operator|)
 argument_list|)
@@ -460,11 +465,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"-"
 operator|)
 argument_list|)
@@ -481,11 +486,11 @@ name|Child
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"+"
 operator|)
 argument_list|)
@@ -493,11 +498,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"-"
 operator|)
 argument_list|)
@@ -543,11 +548,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Now we can print out the pertinent information      */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" %4.4s %-9s "
 operator|,
 operator|&
@@ -562,11 +567,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"%p S:%p O:%p"
 operator|,
 name|ThisNode
@@ -590,11 +595,11 @@ name|Object
 condition|)
 block|{
 comment|/* No attached object, we are done */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -614,11 +619,11 @@ case|case
 name|ACPI_TYPE_METHOD
 case|:
 comment|/* Name is a Method and its AML offset/length are set */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" M:%p-%X\n"
 operator|,
 operator|(
@@ -655,11 +660,11 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" N:%X\n"
 operator|,
 operator|(
@@ -682,11 +687,11 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" S:%p-%X\n"
 operator|,
 operator|(
@@ -723,11 +728,11 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" B:%p-%X\n"
 operator|,
 operator|(
@@ -762,11 +767,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -780,7 +785,7 @@ operator|!
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_VALUES
+name|ACPI_LV_VALUES
 operator|)
 condition|)
 block|{
@@ -808,11 +813,11 @@ operator|=
 name|INTERNAL_TYPE_INVALID
 expr_stmt|;
 comment|/* Decode the type of attached object and dump the contents */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"        Attached Object %p: "
 operator|,
 name|Value
@@ -827,11 +832,11 @@ name|Value
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"(Ptr to AML Code)\n"
 operator|)
 argument_list|)
@@ -852,11 +857,11 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"(Ptr to Node)\n"
 operator|)
 argument_list|)
@@ -903,11 +908,11 @@ operator|>
 name|INTERNAL_TYPE_MAX
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"(Ptr to ACPI Object type %X [UNKNOWN])\n"
 operator|,
 name|ObjType
@@ -921,11 +926,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"(Ptr to ACPI Object type %X [%s])\n"
 operator|,
 name|ObjType
@@ -948,11 +953,11 @@ block|}
 block|}
 else|else
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"(String or Buffer - not descriptor)\n"
 operator|,
 name|Value
@@ -1142,11 +1147,11 @@ comment|/* Terminate loop after next pass */
 block|}
 name|Cleanup
 label|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -1187,7 +1192,7 @@ name|Info
 operator|.
 name|DebugLevel
 operator|=
-name|TRACE_TABLES
+name|ACPI_LV_TABLES
 expr_stmt|;
 name|Info
 operator|.
@@ -1259,6 +1264,11 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"AcpiNsDumpOneDevice"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsDumpOneObject
@@ -1304,21 +1314,21 @@ name|i
 operator|++
 control|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|" "
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"    HID: %.8X, ADR: %.8X, Status: %x\n"
 operator|,
 name|Info
@@ -1358,12 +1368,17 @@ block|{
 name|ACPI_HANDLE
 name|SysBusHandle
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"AcpiNsDumpRootDevices"
+argument_list|)
+expr_stmt|;
 comment|/* Only dump the table if tracing is enabled */
 if|if
 condition|(
 operator|!
 operator|(
-name|TRACE_TABLES
+name|ACPI_DB_TABLES
 operator|&
 name|AcpiDbgLevel
 operator|)
@@ -1381,11 +1396,11 @@ operator|&
 name|SysBusHandle
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"Display of all devices in the namespace:\n"
 operator|)
 argument_list|)
@@ -1447,11 +1462,11 @@ name|AcpiGbl_RootNode
 condition|)
 block|{
 comment|/*          * If the name space has not been initialized,          * there is nothing to dump.          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"name space not initialized!\n"
 operator|)
 argument_list|)
@@ -1471,11 +1486,11 @@ name|SearchHandle
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"\\\n"
 operator|)
 argument_list|)

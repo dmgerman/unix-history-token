@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 40 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 43 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -493,6 +493,8 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|INDENT_STRING
 argument_list|)
 expr_stmt|;
@@ -582,6 +584,8 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|INDENT_STRING
 argument_list|)
 expr_stmt|;
@@ -650,6 +654,8 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|INDENT_STRING
 argument_list|)
 expr_stmt|;
@@ -778,6 +784,8 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|INDENT_STRING
 argument_list|)
 expr_stmt|;
@@ -1318,9 +1326,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
-operator|&
-name|ACPI_UINT8_MAX
+name|Integer8
 argument_list|)
 expr_stmt|;
 block|}
@@ -1334,9 +1340,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
-operator|&
-name|ACPI_UINT8_MAX
+name|Integer8
 argument_list|)
 expr_stmt|;
 block|}
@@ -1357,9 +1361,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
-operator|&
-name|ACPI_UINT16_MAX
+name|Integer16
 argument_list|)
 expr_stmt|;
 block|}
@@ -1373,9 +1375,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
-operator|&
-name|ACPI_UINT16_MAX
+name|Integer16
 argument_list|)
 expr_stmt|;
 block|}
@@ -1396,7 +1396,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 block|}
@@ -1410,7 +1410,62 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|AML_QWORD_OP
+case|:
+if|if
+condition|(
+name|opt_verbose
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"(UINT64) 0x%8.8X%8.8X"
+argument_list|,
+name|Op
+operator|->
+name|Value
+operator|.
+name|Integer64
+operator|.
+name|Hi
+argument_list|,
+name|Op
+operator|->
+name|Value
+operator|.
+name|Integer64
+operator|.
+name|Lo
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"0x%8.8X%8.8X"
+argument_list|,
+name|Op
+operator|->
+name|Value
+operator|.
+name|Integer64
+operator|.
+name|Hi
+argument_list|,
+name|Op
+operator|->
+name|Value
+operator|.
+name|Integer64
+operator|.
+name|Lo
 argument_list|)
 expr_stmt|;
 block|}
@@ -1505,7 +1560,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1520,7 +1575,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1535,7 +1590,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1555,7 +1610,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 block|}
@@ -1569,7 +1624,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 name|ByteCount
@@ -1578,7 +1633,7 @@ name|Op
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 name|ByteData
 operator|=

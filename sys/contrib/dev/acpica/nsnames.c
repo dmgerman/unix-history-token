@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 61 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -242,11 +242,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad pointer returned; size=%X\n"
 operator|,
 name|Size
@@ -547,11 +547,11 @@ index|]
 operator|=
 literal|'\\'
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Len=%X, %s \n"
 operator|,
 name|PathLength

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 71 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ directive|ifdef
 name|ACPI_DEBUG
 if|if
 condition|(
-name|TRACE_NAMES
+name|ACPI_LV_NAMES
 operator|&
 name|AcpiDbgLevel
 condition|)
@@ -110,11 +110,11 @@ condition|(
 name|ScopeName
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Searching %s [%p] For %4.4s (type %X)\n"
 operator|,
 name|ScopeName
@@ -212,11 +212,11 @@ operator|)
 name|Type
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Name %4.4s (actual type %X) found at %p\n"
 operator|,
 operator|&
@@ -263,11 +263,11 @@ name|Peer
 expr_stmt|;
 block|}
 comment|/* Searched entire table, not found */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Name %4.4s (type %X) not found at %p\n"
 operator|,
 operator|&
@@ -353,11 +353,11 @@ operator|!
 name|ParentNode
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"[%4.4s] has no parent\n"
 operator|,
 operator|&
@@ -374,11 +374,11 @@ name|Type
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"[%4.4s] type %X is local(no search)\n"
 operator|,
 operator|&
@@ -396,11 +396,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Search the parent tree */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Searching parent for %4.4s\n"
 operator|,
 operator|&
@@ -520,11 +520,11 @@ operator|!
 name|ReturnNode
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null param-  Table %p Name %p Return %p\n"
 operator|,
 name|Node
@@ -558,11 +558,11 @@ name|TargetName
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"*** Bad character in name: %08lx *** \n"
 operator|,
 name|TargetName
@@ -689,11 +689,11 @@ operator|==
 name|IMODE_EXECUTE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"%4.4s Not found in %p [Not adding]\n"
 operator|,
 operator|&

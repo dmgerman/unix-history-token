@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 29 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -73,20 +73,20 @@ argument_list|(
 literal|"NsInitializeObjects"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"**** Starting initialization of namespace objects ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"Completing Region and Field initialization:"
 operator|)
 argument_list|)
@@ -148,11 +148,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"WalkNamespace failed! %x\n"
 operator|,
 name|Status
@@ -160,11 +160,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"\n%d/%d Regions, %d/%d Fields initialized (%d nodes total)\n"
 operator|,
 name|Info
@@ -189,11 +189,11 @@ name|ObjectCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"%d Control Methods found\n"
 operator|,
 name|Info
@@ -202,11 +202,11 @@ name|MethodCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"%d Op Regions found\n"
 operator|,
 name|Info
@@ -263,11 +263,11 @@ name|Num_INI
 operator|=
 literal|0
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"Executing device _INI methods:"
 operator|)
 argument_list|)
@@ -300,11 +300,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"WalkNamespace failed! %x\n"
 operator|,
 name|Status
@@ -312,11 +312,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"\n%d Devices found: %d _STA, %d _INI\n"
 operator|,
 name|Info
@@ -395,6 +395,11 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"AcpiNsInitOneObject"
+argument_list|)
+expr_stmt|;
 name|Info
 operator|->
 name|ObjectCount
@@ -513,20 +518,20 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%s while getting region arguments [%4.4s]\n"
 operator|,
 name|AcpiFormatException
@@ -548,15 +553,15 @@ operator|!
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_INIT
+name|ACPI_LV_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"."
 operator|)
 argument_list|)
@@ -604,20 +609,20 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%s while getting buffer field arguments [%4.4s]\n"
 operator|,
 name|AcpiFormatException
@@ -639,15 +644,15 @@ operator|!
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_INIT
+name|ACPI_LV_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"."
 operator|)
 argument_list|)
@@ -724,15 +729,15 @@ operator|!
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_INIT
+name|ACPI_LV_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"."
 operator|)
 argument_list|)
@@ -894,11 +899,11 @@ argument_list|(
 name|ObjHandle
 argument_list|)
 decl_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"%s._INI failed: %s\n"
 operator|,
 name|ScopeName

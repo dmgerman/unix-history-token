@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -221,11 +221,11 @@ operator|)
 condition|)
 block|{
 comment|/*                  * Conversion successful but still not a valid type                  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Cannot assign type %s to %s (must be type Int/Str/Buf)\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -258,11 +258,11 @@ case|case
 name|INTERNAL_TYPE_ALIAS
 case|:
 comment|/*          * Aliases are resolved by AcpiExPrepOperands          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Store into Alias - should never happen\n"
 operator|)
 argument_list|)
@@ -436,11 +436,11 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/*          * All other types come here.          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Store into type %s not implemented\n"
 operator|,
 name|AcpiUtGetTypeName

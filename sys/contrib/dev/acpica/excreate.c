@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -238,7 +238,7 @@ name|Node
 argument_list|,
 literal|"ExCreateBufferField: Removing Current Reference"
 argument_list|,
-name|TRACE_BFIELD
+name|ACPI_LV_BFIELD
 argument_list|,
 name|_COMPONENT
 argument_list|)
@@ -247,7 +247,7 @@ name|DUMP_ENTRY
 argument_list|(
 name|Node
 argument_list|,
-name|TRACE_BFIELD
+name|ACPI_LV_BFIELD
 argument_list|)
 expr_stmt|;
 name|DUMP_STACK_ENTRY
@@ -860,11 +860,11 @@ name|AE_AML_INVALID_SPACE_ID
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"Region Type - %s (%X)\n"
 operator|,
 name|AcpiUtGetRegionName

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 43 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -74,11 +74,11 @@ name|AcpiGbl_RestoreAcpiChipset
 operator|=
 name|FALSE
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No FADT!\n"
 operator|)
 argument_list|)
@@ -90,7 +90,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Must support *some* mode! */
-comment|/*     if (!(SystemFlags& SYS_MODES_MASK))     {         RestoreAcpiChipset = FALSE;          DEBUG_PRINTP (ACPI_ERROR,             ("Supported modes uninitialized!\n"));         return_ACPI_STATUS (AE_ERROR);     }  */
+comment|/*     if (!(SystemFlags& SYS_MODES_MASK))     {         RestoreAcpiChipset = FALSE;          ACPI_DEBUG_PRINT ((ACPI_DB_ERROR,             "Supported modes uninitialized!\n"));         return_ACPI_STATUS (AE_ERROR);     }  */
 switch|switch
 condition|(
 name|AcpiGbl_SystemFlags
@@ -108,11 +108,11 @@ name|AcpiGbl_OriginalMode
 operator|=
 name|SYS_MODE_ACPI
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"System supports ACPI mode only.\n"
 operator|)
 argument_list|)
@@ -127,11 +127,11 @@ name|AcpiGbl_OriginalMode
 operator|=
 name|SYS_MODE_LEGACY
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Tables loaded from buffer, hardware assumed to support LEGACY mode only.\n"
 operator|)
 argument_list|)
@@ -164,20 +164,20 @@ operator|=
 name|SYS_MODE_LEGACY
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"System supports both ACPI and LEGACY modes.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"System is currently in %s mode.\n"
 operator|,
 operator|(
@@ -442,11 +442,11 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Attempting to enable ACPI mode\n"
 operator|)
 argument_list|)
@@ -474,11 +474,11 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Attempting to enable Legacy (non-ACPI) mode\n"
 operator|)
 argument_list|)
@@ -492,11 +492,11 @@ operator|==
 name|Mode
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Mode %X successfully enabled\n"
 operator|,
 name|Mode

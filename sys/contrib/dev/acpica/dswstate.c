@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -104,11 +104,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No result object pushed! State=%p\n"
 operator|,
 name|WalkState
@@ -128,11 +128,11 @@ operator|>=
 name|OBJ_NUM_OPERANDS
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Index out of range: %X Obj=%p State=%p Num=%X\n"
 operator|,
 name|Index
@@ -161,11 +161,11 @@ operator|!
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null Object! Index=%X Obj=%p State=%p Num=%X\n"
 operator|,
 name|Index
@@ -206,11 +206,11 @@ operator|.
 name|NumResults
 operator|++
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p [%s] State=%p Num=%X Cur=%X\n"
 operator|,
 name|Object
@@ -298,11 +298,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No result object pushed! State=%p\n"
 operator|,
 name|WalkState
@@ -322,11 +322,11 @@ operator|>=
 name|OBJ_NUM_OPERANDS
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Index out of range: %X State=%p Num=%X\n"
 operator|,
 name|Index
@@ -356,11 +356,11 @@ name|Index
 index|]
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null operand! State=%p #Ops=%X, Index=%X\n"
 operator|,
 name|WalkState
@@ -412,11 +412,11 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p [%s] Index=%X State=%p Num=%X\n"
 operator|,
 operator|*
@@ -519,11 +519,11 @@ operator|.
 name|NumResults
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Result stack is empty! State=%p\n"
 operator|,
 name|WalkState
@@ -598,11 +598,11 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p [%s] Index=%X State=%p Num=%X\n"
 operator|,
 operator|*
@@ -648,11 +648,11 @@ operator|)
 return|;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No result objects! State=%p\n"
 operator|,
 name|WalkState
@@ -709,11 +709,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Warning: No result object pushed! State=%p\n"
 operator|,
 name|WalkState
@@ -736,11 +736,11 @@ operator|.
 name|NumResults
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No result objects! State=%p\n"
 operator|,
 name|WalkState
@@ -821,11 +821,11 @@ operator|*
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null operand! State=%p #Ops=%X, Index=%X\n"
 operator|,
 name|WalkState
@@ -846,11 +846,11 @@ name|AE_AML_NO_RETURN_VALUE
 operator|)
 return|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p [%s], Results=%p State=%p\n"
 operator|,
 operator|*
@@ -927,11 +927,11 @@ operator|!
 name|State
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No result stack frame\n"
 operator|)
 argument_list|)
@@ -953,11 +953,11 @@ operator|==
 name|OBJ_NUM_OPERANDS
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Result stack overflow: Obj=%p State=%p Num=%X\n"
 operator|,
 name|Object
@@ -984,11 +984,11 @@ operator|!
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null Object! Obj=%p State=%p Num=%X\n"
 operator|,
 name|Object
@@ -1031,11 +1031,11 @@ operator|.
 name|NumResults
 operator|++
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p [%s] State=%p Num=%X Cur=%X\n"
 operator|,
 name|Object
@@ -1098,6 +1098,11 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsResultStackPush"
+argument_list|)
+expr_stmt|;
 name|State
 operator|=
 name|AcpiUtCreateGenericState
@@ -1125,12 +1130,12 @@ argument_list|,
 name|State
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsResultStackPush: Results=%p State=%p\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Results=%p State=%p\n"
 operator|,
 name|State
 operator|,
@@ -1163,6 +1168,11 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsResultStackPop"
+argument_list|)
+expr_stmt|;
 comment|/* Check for stack underflow */
 if|if
 condition|(
@@ -1173,12 +1183,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsResultStackPop: Underflow - State=%p\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Underflow - State=%p\n"
 operator|,
 name|WalkState
 operator|)
@@ -1200,12 +1210,12 @@ operator|->
 name|Results
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsResultStackPop: Result=%p RemainingResults=%X State=%p\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Result=%p RemainingResults=%X State=%p\n"
 operator|,
 name|State
 operator|,
@@ -1326,6 +1336,11 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+name|PROC_NAME
+argument_list|(
+literal|"DsObjStackPush"
+argument_list|)
+expr_stmt|;
 comment|/* Check for stack overflow */
 if|if
 condition|(
@@ -1336,12 +1351,12 @@ operator|>=
 name|OBJ_NUM_OPERANDS
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
-literal|"DsObjStackPush: overflow! Obj=%p State=%p #Ops=%X\n"
+name|ACPI_DB_ERROR
+operator|,
+literal|"overflow! Obj=%p State=%p #Ops=%X\n"
 operator|,
 name|Object
 operator|,
@@ -1376,12 +1391,12 @@ operator|->
 name|NumOperands
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsObjStackPush: Obj=%p [%s] State=%p #Ops=%X\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Obj=%p [%s] State=%p #Ops=%X\n"
 operator|,
 name|Object
 operator|,
@@ -1434,6 +1449,11 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+name|PROC_NAME
+argument_list|(
+literal|"DsObjStackPopObject"
+argument_list|)
+expr_stmt|;
 comment|/* Check for stack underflow */
 if|if
 condition|(
@@ -1444,12 +1464,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
-literal|"DsObjStackPop: Missing operand/stack empty! State=%p #Ops=%X\n"
+name|ACPI_DB_ERROR
+operator|,
+literal|"Missing operand/stack empty! State=%p #Ops=%X\n"
 operator|,
 name|WalkState
 operator|,
@@ -1490,12 +1510,12 @@ name|NumOperands
 index|]
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
-literal|"DsObjStackPop: Null operand! State=%p #Ops=%X\n"
+name|ACPI_DB_ERROR
+operator|,
+literal|"Null operand! State=%p #Ops=%X\n"
 operator|,
 name|WalkState
 operator|,
@@ -1540,12 +1560,12 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsObjStackPopObject: Obj=%p [%s] State=%p #Ops=%X\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Obj=%p [%s] State=%p #Ops=%X\n"
 operator|,
 operator|*
 name|Object
@@ -1597,6 +1617,11 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsObjStackPop"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1621,12 +1646,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
-literal|"DsObjStackPop: Underflow! Count=%X State=%p #Ops=%X\n"
+name|ACPI_DB_ERROR
+operator|,
+literal|"Underflow! Count=%X State=%p #Ops=%X\n"
 operator|,
 name|PopCount
 operator|,
@@ -1662,12 +1687,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsObjStackPop: Count=%X State=%p #Ops=%X\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Count=%X State=%p #Ops=%X\n"
 operator|,
 name|PopCount
 operator|,
@@ -1710,6 +1735,11 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"DsObjStackPopAndDelete"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1734,12 +1764,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
-literal|"DsObjStackPop: Underflow! Count=%X State=%p #Ops=%X\n"
+name|ACPI_DB_ERROR
+operator|,
+literal|"Underflow! Count=%X State=%p #Ops=%X\n"
 operator|,
 name|PopCount
 operator|,
@@ -1804,12 +1834,12 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"DsObjStackPop: Count=%X State=%p #Ops=%X\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Count=%X State=%p #Ops=%X\n"
 operator|,
 name|PopCount
 operator|,
@@ -1930,11 +1960,16 @@ modifier|*
 name|WalkList
 parameter_list|)
 block|{
-name|DEBUG_PRINT
+name|PROC_NAME
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
+literal|"DsGetCurrentWalkState"
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"DsGetCurrentWalkState, =%p\n"
 operator|,
 name|WalkList
@@ -2097,71 +2132,11 @@ argument_list|(
 literal|"DsCreateWalkState"
 argument_list|)
 expr_stmt|;
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-name|AcpiGbl_WalkStateCacheRequests
-operator|++
-expr_stmt|;
-comment|/* Check the cache first */
-if|if
-condition|(
-name|AcpiGbl_WalkStateCache
-condition|)
-block|{
-comment|/* There is an object available, use it */
 name|WalkState
 operator|=
-name|AcpiGbl_WalkStateCache
-expr_stmt|;
-name|AcpiGbl_WalkStateCache
-operator|=
-name|WalkState
-operator|->
-name|Next
-expr_stmt|;
-name|AcpiGbl_WalkStateCacheHits
-operator|++
-expr_stmt|;
-name|AcpiGbl_WalkStateCacheDepth
-operator|--
-expr_stmt|;
-name|DEBUG_PRINTP
+name|AcpiUtAcquireFromCache
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
-operator|(
-literal|"State %p from cache\n"
-operator|,
-name|WalkState
-operator|)
-argument_list|)
-expr_stmt|;
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* The cache is empty, create a new object */
-comment|/* Avoid deadlock with ACPI_MEM_CALLOCATE */
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-name|WalkState
-operator|=
-name|ACPI_MEM_CALLOCATE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_WALK_STATE
-argument_list|)
+name|ACPI_MEM_LIST_WALK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2175,7 +2150,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|WalkState
 operator|->
@@ -2297,11 +2271,11 @@ operator|!=
 name|ACPI_DESC_TYPE_WALK
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%p is not a valid walk state\n"
 operator|,
 name|WalkState
@@ -2400,67 +2374,13 @@ name|State
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If walk cache is full, just free this wallkstate object */
-if|if
-condition|(
-name|AcpiGbl_WalkStateCacheDepth
-operator|>=
-name|MAX_WALK_CACHE_DEPTH
-condition|)
-block|{
-name|ACPI_MEM_FREE
+name|AcpiUtReleaseToCache
 argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Otherwise put this object back into the cache */
-else|else
-block|{
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-comment|/* Clear the state */
-name|MEMSET
-argument_list|(
-name|WalkState
+name|ACPI_MEM_LIST_WALK
 argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_WALK_STATE
-argument_list|)
+name|WalkState
 argument_list|)
 expr_stmt|;
-name|WalkState
-operator|->
-name|DataType
-operator|=
-name|ACPI_DESC_TYPE_WALK
-expr_stmt|;
-comment|/* Put the object at the head of the global cache list */
-name|WalkState
-operator|->
-name|Next
-operator|=
-name|AcpiGbl_WalkStateCache
-expr_stmt|;
-name|AcpiGbl_WalkStateCache
-operator|=
-name|WalkState
-expr_stmt|;
-name|AcpiGbl_WalkStateCacheDepth
-operator|++
-expr_stmt|;
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}
@@ -2477,41 +2397,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_WALK_STATE
-modifier|*
-name|Next
-decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"DsDeleteWalkStateCache"
 argument_list|)
 expr_stmt|;
-comment|/* Traverse the global cache list */
-while|while
-condition|(
-name|AcpiGbl_WalkStateCache
-condition|)
-block|{
-comment|/* Delete one cached state object */
-name|Next
-operator|=
-name|AcpiGbl_WalkStateCache
-operator|->
-name|Next
-expr_stmt|;
-name|ACPI_MEM_FREE
+name|AcpiUtDeleteGenericCache
 argument_list|(
-name|AcpiGbl_WalkStateCache
+name|ACPI_MEM_LIST_WALK
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_WalkStateCache
-operator|=
-name|Next
-expr_stmt|;
-name|AcpiGbl_WalkStateCacheDepth
-operator|--
-expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -94,6 +94,11 @@ modifier|*
 name|Object
 parameter_list|)
 block|{
+name|PROC_NAME
+argument_list|(
+literal|"AcpiExCheckObjectType"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TypeNeeded
@@ -115,12 +120,12 @@ operator|!=
 name|ThisType
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
-literal|"ExCheckObjectType: Needed [%s], found [%s] %p\n"
+name|ACPI_DB_INFO
+operator|,
+literal|"Needed [%s], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -243,11 +248,11 @@ operator|==
 name|ARGI_INVALID_OPCODE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - %X is not a valid AML opcode\n"
 operator|,
 name|Opcode
@@ -260,11 +265,11 @@ name|AE_AML_INTERNAL
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Opcode %X OperandTypes=%X \n"
 operator|,
 name|Opcode
@@ -292,11 +297,11 @@ operator|*
 name|StackPtr
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - null stack entry at %X\n"
 operator|,
 name|StackPtr
@@ -370,11 +375,11 @@ name|ObjectType
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad operand object type [%X]\n"
 operator|,
 name|ObjectType
@@ -456,11 +461,11 @@ name|AML_LOCAL_OP
 case|:
 name|DEBUG_ONLY_MEMBERS
 argument_list|(
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference Opcode: %s\n"
 operator|,
 name|OpInfo
@@ -472,11 +477,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference Opcode: Unknown [%02x]\n"
 operator|,
 name|ObjDesc
@@ -499,11 +504,11 @@ block|}
 else|else
 block|{
 comment|/* Invalid descriptor */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad descriptor type %X in Obj %p\n"
 operator|,
 name|ObjDesc
@@ -809,11 +814,11 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -880,11 +885,11 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -933,6 +938,8 @@ name|StackPtr
 argument_list|,
 name|StackPtr
 argument_list|,
+literal|16
+argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
 name|WalkState
@@ -953,11 +960,11 @@ operator|==
 name|AE_TYPE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1039,11 +1046,11 @@ name|Type
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1133,11 +1140,11 @@ name|INTERNAL_TYPE_REFERENCE
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Buf/Str/Pkg/Ref], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1191,11 +1198,11 @@ operator|.
 name|Node
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Node Reference], found [%p]\n"
 operator|,
 operator|*
@@ -1260,11 +1267,11 @@ name|ACPI_TYPE_PACKAGE
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed [Buf/Pkg], found [%s] %p\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1296,11 +1303,11 @@ goto|;
 break|break;
 default|default:
 comment|/* Unknown type */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal - Unknown ARGI type %X\n"
 operator|,
 name|ThisArgType

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 51 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 53 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -89,12 +89,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|INCREMENT_NAME_TABLE_METRICS
+name|ACPI_MEM_TRACKING
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_NAMESPACE_NODE
-argument_list|)
+name|AcpiGbl_MemoryLists
+index|[
+name|ACPI_MEM_LIST_NSNODE
+index|]
+operator|.
+name|TotalAllocated
+operator|++
 argument_list|)
 expr_stmt|;
 name|Node
@@ -231,12 +234,15 @@ operator|->
 name|Peer
 expr_stmt|;
 block|}
-name|DECREMENT_NAME_TABLE_METRICS
+name|ACPI_MEM_TRACKING
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_NAMESPACE_NODE
-argument_list|)
+name|AcpiGbl_MemoryLists
+index|[
+name|ACPI_MEM_LIST_NSNODE
+index|]
+operator|.
+name|TotalFreed
+operator|++
 argument_list|)
 expr_stmt|;
 comment|/*      * Detach an object if there is one      */
@@ -415,11 +421,11 @@ operator|)
 condition|)
 block|{
 comment|/*          * We don't want to abort here, however!          * We will fill in the actual type when the          * real definition is found later.          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"[%4.4s] is a forward reference\n"
 operator|,
 operator|&
@@ -483,11 +489,11 @@ operator|)
 name|Type
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"%4.4s added to %p at %p\n"
 operator|,
 operator|&
@@ -607,11 +613,11 @@ operator|->
 name|Child
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Found a grandchild! P=%X C=%X\n"
 operator|,
 name|ParentNode
@@ -622,19 +628,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now we can free this child object */
-name|DECREMENT_NAME_TABLE_METRICS
+name|ACPI_MEM_TRACKING
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_NAMESPACE_NODE
-argument_list|)
+name|AcpiGbl_MemoryLists
+index|[
+name|ACPI_MEM_LIST_NSNODE
+index|]
+operator|.
+name|TotalFreed
+operator|++
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Object %p, Remaining %X\n"
 operator|,
 name|ChildNode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -3830,7 +3830,7 @@ name|OPTYPE_MONADIC2R
 operator||
 name|AML_HAS_ARGS
 argument_list|,
-literal|"ToDecString"
+literal|"ToDecimalString"
 argument_list|,
 name|ARGP_TO_DEC_STR_OP
 argument_list|,
@@ -4951,11 +4951,11 @@ name|AML_LNOT_OP
 case|:
 comment|/* This case is for the bogus opcodes LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL */
 comment|/* TBD: [Investigate] remove this case? */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad multi-byte opcode=%X\n"
 operator|,
 name|Opcode
@@ -4964,11 +4964,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown extended opcode=%X\n"
 operator|,
 name|Opcode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 29 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -108,11 +108,11 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%s on %4.4s was not found\n"
 operator|,
 name|ObjectName
@@ -127,11 +127,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%s on %4.4s failed with status %s\n"
 operator|,
 name|ObjectName
@@ -162,11 +162,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from %s\n"
 operator|,
 name|ObjectName
@@ -195,11 +195,11 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Type returned from %s was not a number: %X \n"
 operator|,
 name|ObjectName
@@ -299,11 +299,11 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"_HID on %4.4s was not found\n"
 operator|,
 operator|&
@@ -316,11 +316,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"_HID on %4.4s failed %s\n"
 operator|,
 operator|&
@@ -349,11 +349,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from _HID\n"
 operator|)
 argument_list|)
@@ -392,11 +392,11 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Type returned from _HID not a number or string: %s(%X) \n"
 operator|,
 name|AcpiUtGetTypeName
@@ -546,11 +546,11 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"_UID on %4.4s was not found\n"
 operator|,
 operator|&
@@ -563,11 +563,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"_UID on %4.4s failed %s\n"
 operator|,
 operator|&
@@ -596,11 +596,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from _UID\n"
 operator|)
 argument_list|)
@@ -639,11 +639,11 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Type returned from _UID was not a number or string: %X \n"
 operator|,
 name|ObjDesc
@@ -773,11 +773,11 @@ operator|==
 name|Status
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"_STA on %4.4s was not found, assuming present.\n"
 operator|,
 operator|&
@@ -806,11 +806,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"_STA on %4.4s failed %s\n"
 operator|,
 operator|&
@@ -836,11 +836,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from _STA\n"
 operator|)
 argument_list|)
@@ -867,11 +867,11 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Type returned from _STA was not a number: %X \n"
 operator|,
 name|ObjDesc

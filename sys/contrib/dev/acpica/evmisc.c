@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -92,11 +92,11 @@ literal|"EvQueueNotifyRequest"
 argument_list|)
 expr_stmt|;
 comment|/*      * For value 1 (Ejection Request), some device method may need to be run.      * For value 2 (Device Wake) if _PRW exists, the _PS0 method may need to be run.      * For value 0x80 (Status Change) on the power button or sleep button,      * initiate soft-off or sleep operation?      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Dispatching Notify(%X) on node %p\n"
 operator|,
 name|NotifyValue
@@ -113,11 +113,11 @@ block|{
 case|case
 literal|0
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Notify value: Re-enumerate Devices\n"
 operator|)
 argument_list|)
@@ -126,11 +126,11 @@ break|break;
 case|case
 literal|1
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Notify value: Ejection Request\n"
 operator|)
 argument_list|)
@@ -139,11 +139,11 @@ break|break;
 case|case
 literal|2
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Notify value: Device Wake\n"
 operator|)
 argument_list|)
@@ -152,22 +152,22 @@ break|break;
 case|case
 literal|0x80
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Notify value: Status Change\n"
 operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Unknown Notify Value: %lx \n"
 operator|,
 name|NotifyValue
@@ -368,11 +368,11 @@ name|HandlerObj
 condition|)
 block|{
 comment|/* There is no per-device notify handler for this device */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"No notify handler for node %p \n"
 operator|,
 name|Node
@@ -806,11 +806,11 @@ name|Acquired
 condition|)
 block|{
 comment|/* We got the lock */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Acquired the Global Lock\n"
 operator|)
 argument_list|)
@@ -826,11 +826,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Did not get the lock.  The pending bit was set above, and we must now      * wait until we get the global lock released interrupt.      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Waiting for the HW Global Lock\n"
 operator|)
 argument_list|)

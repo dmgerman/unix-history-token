@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 49 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -171,11 +171,11 @@ operator|!
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Null Object Ptr\n"
 operator|)
 argument_list|)
@@ -195,11 +195,11 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Object %p is a Pcode Ptr\n"
 operator|,
 name|Object
@@ -235,11 +235,11 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Obj %p is a named obj, not ACPI obj\n"
 operator|,
 name|Object
@@ -258,11 +258,11 @@ name|ACPI_DESC_TYPE_PARSER
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Obj %p is a parser obj, not ACPI obj\n"
 operator|,
 name|Object
@@ -272,11 +272,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Obj %p is of unknown type\n"
 operator|,
 name|Object
@@ -328,70 +328,11 @@ argument_list|(
 literal|"_AllocateObjectDesc"
 argument_list|)
 expr_stmt|;
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-name|AcpiGbl_ObjectCacheRequests
-operator|++
-expr_stmt|;
-comment|/* Check the cache first */
-if|if
-condition|(
-name|AcpiGbl_ObjectCache
-condition|)
-block|{
-comment|/* There is an object available, use it */
 name|Object
 operator|=
-name|AcpiGbl_ObjectCache
-expr_stmt|;
-name|AcpiGbl_ObjectCache
-operator|=
-name|Object
-operator|->
-name|Cache
-operator|.
-name|Next
-expr_stmt|;
-name|Object
-operator|->
-name|Cache
-operator|.
-name|Next
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_ObjectCacheHits
-operator|++
-expr_stmt|;
-name|AcpiGbl_ObjectCacheDepth
-operator|--
-expr_stmt|;
-name|AcpiUtReleaseMutex
+name|AcpiUtAcquireFromCache
 argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* The cache is empty, create a new object */
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-comment|/* Attempt to allocate new descriptor */
-name|Object
-operator|=
-name|ACPI_MEM_CALLOCATE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
+name|ACPI_MEM_LIST_OPERAND
 argument_list|)
 expr_stmt|;
 if|if
@@ -400,7 +341,6 @@ operator|!
 name|Object
 condition|)
 block|{
-comment|/* Allocation failed */
 name|_REPORT_ERROR
 argument_list|(
 name|ModuleName
@@ -420,16 +360,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Memory allocation metrics - compiled out in non debug mode. */
-name|INCREMENT_OBJECT_METRICS
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Mark the descriptor type */
 name|Object
 operator|->
@@ -439,11 +369,11 @@ name|DataType
 operator|=
 name|ACPI_DESC_TYPE_INTERNAL
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_ALLOCATIONS
-argument_list|,
 operator|(
+name|ACPI_DB_ALLOCATIONS
+operator|,
 literal|"%p Size %X\n"
 operator|,
 name|Object
@@ -483,36 +413,6 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
-comment|/* Make sure that the object isn't already in the cache */
-if|if
-condition|(
-name|Object
-operator|->
-name|Common
-operator|.
-name|DataType
-operator|==
-operator|(
-name|ACPI_DESC_TYPE_INTERNAL
-operator||
-name|ACPI_CACHED_OBJECT
-operator|)
-condition|)
-block|{
-name|DEBUG_PRINTP
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"Obj %p is already in the object cache\n"
-operator|,
-name|Object
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
 comment|/* Object must be an ACPI_OPERAND_OBJECT  */
 if|if
 condition|(
@@ -525,11 +425,11 @@ operator|!=
 name|ACPI_DESC_TYPE_INTERNAL
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Obj %p is not an ACPI object\n"
 operator|,
 name|Object
@@ -539,78 +439,11 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/* If cache is full, just free this object */
-if|if
-condition|(
-name|AcpiGbl_ObjectCacheDepth
-operator|>=
-name|MAX_OBJECT_CACHE_DEPTH
-condition|)
-block|{
-comment|/*          * Memory allocation metrics.  Call the macro here since we only          * care about dynamically allocated objects.          */
-name|DECREMENT_OBJECT_METRICS
+name|AcpiUtReleaseToCache
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|Object
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-name|AcpiUtAcquireMutex
-argument_list|(
-name|ACPI_MTX_CACHES
-argument_list|)
-expr_stmt|;
-comment|/* Clear the entire object.  This is important! */
-name|MEMSET
-argument_list|(
-name|Object
+name|ACPI_MEM_LIST_OPERAND
 argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|Object
-operator|->
-name|Common
-operator|.
-name|DataType
-operator|=
-name|ACPI_DESC_TYPE_INTERNAL
-operator||
-name|ACPI_CACHED_OBJECT
-expr_stmt|;
-comment|/* Put the object at the head of the global cache list */
-name|Object
-operator|->
-name|Cache
-operator|.
-name|Next
-operator|=
-name|AcpiGbl_ObjectCache
-expr_stmt|;
-name|AcpiGbl_ObjectCache
-operator|=
-name|Object
-expr_stmt|;
-name|AcpiGbl_ObjectCacheDepth
-operator|++
-expr_stmt|;
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_CACHES
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -629,60 +462,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|Next
-decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"UtDeleteObjectCache"
 argument_list|)
 expr_stmt|;
-comment|/* Traverse the global cache list */
-while|while
-condition|(
-name|AcpiGbl_ObjectCache
-condition|)
-block|{
-comment|/* Delete one cached state object */
-name|Next
-operator|=
-name|AcpiGbl_ObjectCache
-operator|->
-name|Cache
-operator|.
-name|Next
-expr_stmt|;
-name|AcpiGbl_ObjectCache
-operator|->
-name|Cache
-operator|.
-name|Next
-operator|=
-name|NULL
-expr_stmt|;
-comment|/*          * Memory allocation metrics.  Call the macro here since we only          * care about dynamically allocated objects.          */
-name|DECREMENT_OBJECT_METRICS
+name|AcpiUtDeleteGenericCache
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
+name|ACPI_MEM_LIST_OPERAND
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|AcpiGbl_ObjectCache
-argument_list|)
-expr_stmt|;
-name|AcpiGbl_ObjectCache
-operator|=
-name|Next
-expr_stmt|;
-name|AcpiGbl_ObjectCacheDepth
-operator|--
-expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}
@@ -912,11 +701,11 @@ operator|!=
 name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unsupported Reference opcode=%X in object %p\n"
 operator|,
 name|InternalObject
@@ -954,11 +743,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unsupported type=%X in object %p\n"
 operator|,
 name|InternalObject

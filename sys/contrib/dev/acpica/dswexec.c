@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -138,11 +138,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Could not get result from predicate evaluation, %s\n"
 operator|,
 name|AcpiFormatException
@@ -231,11 +231,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No predicate ObjDesc=%X State=%X\n"
 operator|,
 name|ObjDesc
@@ -262,11 +262,11 @@ operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad predicate (not a number) ObjDesc=%X State=%X Type=%X\n"
 operator|,
 name|ObjDesc
@@ -338,11 +338,11 @@ expr_stmt|;
 block|}
 name|Cleanup
 label|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Completed a predicate eval=%X Op=%X\n"
 operator|,
 name|WalkState
@@ -520,11 +520,11 @@ name|CONTROL_CONDITIONAL_EXECUTING
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Exec predicate Op=%X State=%X\n"
 operator|,
 name|Op
@@ -810,11 +810,11 @@ operator|!=
 name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown opcode %X\n"
 operator|,
 name|Op
@@ -901,11 +901,11 @@ block|{
 case|case
 name|OPTYPE_UNDEFINED
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Undefined opcode type Op=%X\n"
 operator|,
 name|Op
@@ -921,11 +921,11 @@ break|break;
 case|case
 name|OPTYPE_BOGUS
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Internal opcode=%X type Op=%X\n"
 operator|,
 name|Opcode
@@ -1252,11 +1252,11 @@ break|break;
 case|case
 name|OPTYPE_METHOD_CALL
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Method invocation, Op=%X\n"
 operator|,
 name|Op
@@ -1329,11 +1329,11 @@ break|break;
 case|case
 name|OPTYPE_CREATE_FIELD
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Executing CreateField Buffer/Index Op=%X\n"
 operator|,
 name|Op
@@ -1401,11 +1401,11 @@ block|{
 case|case
 name|AML_REGION_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Executing OpRegion Address/Length Op=%X\n"
 operator|,
 name|Op
@@ -1458,11 +1458,11 @@ break|break;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unimplemented opcode, type=%X Opcode=%X Op=%X\n"
 operator|,
 name|Optype

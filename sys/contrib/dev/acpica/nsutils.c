@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 86 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -745,11 +745,11 @@ operator|->
 name|FullyQualified
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"returning [%p] (abs) \"\\%s\"\n"
 operator|,
 name|InternalName
@@ -765,11 +765,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"returning [%p] (rel) \"%s\"\n"
 operator|,
 name|InternalName
@@ -1534,11 +1534,11 @@ argument_list|(
 name|ThisNode
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Namespace freed\n"
 operator|)
 argument_list|)
@@ -1547,11 +1547,11 @@ comment|/*      * 2) Now we can delete the ACPI tables      */
 name|AcpiTbDeleteAcpiTables
 argument_list|()
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"ACPI Tables freed\n"
 operator|)
 argument_list|)
@@ -1757,11 +1757,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%s, %s\n"
 operator|,
 name|InternalPath
@@ -1833,11 +1833,11 @@ condition|(
 name|ParentNode
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Parent of %p [%4.4s] is %p [%4.4s]\n"
 operator|,
 name|ChildNode
@@ -1872,11 +1872,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"unable to find parent of %p (%4.4s)\n"
 operator|,
 name|ChildNode
