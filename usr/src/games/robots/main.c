@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,6 +536,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|__cputchar
+parameter_list|(
+name|ch
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
+block|{
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * quit:  *	Leave the program elegantly.  */
 end_comment
@@ -545,11 +566,6 @@ name|void
 name|quit
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|_putchar
-parameter_list|()
-function_decl|;
 name|mvcur
 argument_list|(
 literal|0
@@ -576,7 +592,7 @@ name|CE
 argument_list|,
 literal|1
 argument_list|,
-name|_putchar
+name|__cputchar
 argument_list|)
 expr_stmt|;
 name|endwin
