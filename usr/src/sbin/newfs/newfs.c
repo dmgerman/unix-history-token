@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.15 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/*  * Cylinder groups may have up to MAXCPG cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to used 16 cylinders  * per group.  */
+comment|/*  * Cylinder groups may have up to many cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to use 16 cylinders  * per group.  */
 end_comment
 
 begin_define
@@ -211,6 +211,21 @@ directive|define
 name|NBPI
 value|2048
 end_define
+
+begin_comment
+comment|/*  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the default number of  * rotational positions that we distinguish.  With NRPOS of 8 the resolution  * of our summary information is 2ms for a typical 3600 rpm drive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NRPOS
+value|8
+end_define
+
+begin_comment
+comment|/* number distinct rotational positions */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -496,6 +511,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* maximum blocks per file in a cyl group */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nrpos
+init|=
+name|NRPOS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of distinguished rotational positions */
 end_comment
 
 begin_decl_stmt
@@ -1190,6 +1217,51 @@ goto|goto
 name|next
 goto|;
 case|case
+literal|'n'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-n: missing rotational layout count\n"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|nrpos
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nrpos
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad rotational layout count\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
 literal|'o'
 case|:
 if|if
@@ -1656,6 +1728,15 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-c cylinders/group\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-n number of distinguished %s\n"
+argument_list|,
+literal|"rotational positions"
 argument_list|)
 expr_stmt|;
 name|fprintf
