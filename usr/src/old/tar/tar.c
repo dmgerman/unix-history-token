@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.3 (Berkeley) %G%"
+literal|"@(#)tar.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3371,6 +3371,27 @@ literal|'2'
 condition|)
 block|{
 comment|/* symlink */
+comment|/* 			 * only unlink non directories or empty 			 * directories 			 */
+if|if
+condition|(
+name|rmdir
+argument_list|(
+name|dblock
+operator|.
+name|dbuf
+operator|.
+name|name
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTDIR
+condition|)
 name|unlink
 argument_list|(
 name|dblock
@@ -3380,6 +3401,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|symlink
@@ -3513,6 +3535,27 @@ literal|'1'
 condition|)
 block|{
 comment|/* regular link */
+comment|/* 			 * only unlink non directories or empty 			 * directories 			 */
+if|if
+condition|(
+name|rmdir
+argument_list|(
+name|dblock
+operator|.
+name|dbuf
+operator|.
+name|name
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTDIR
+condition|)
 name|unlink
 argument_list|(
 name|dblock
@@ -3522,6 +3565,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|link
