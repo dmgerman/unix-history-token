@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.28 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -796,6 +796,12 @@ directive|if
 name|BSD
 operator|>=
 literal|43
+operator|||
+name|defined
+argument_list|(
+name|h_addr
+argument_list|)
+comment|/* new-style hostent structure */
 name|host
 operator|.
 name|h_addr_list
@@ -1219,6 +1225,12 @@ directive|if
 name|BSD
 operator|>=
 literal|43
+operator|||
+name|defined
+argument_list|(
+name|h_addr
+argument_list|)
+comment|/* new-style hostent structure */
 operator|*
 name|hap
 operator|=
@@ -2563,6 +2575,12 @@ directive|if
 name|BSD
 operator|>=
 literal|43
+operator|||
+name|defined
+argument_list|(
+name|h_addr
+argument_list|)
+comment|/* new-style hostent structure */
 name|host
 operator|.
 name|h_addr_list
