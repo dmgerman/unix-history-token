@@ -2501,14 +2501,8 @@ name|dz
 operator|+=
 name|dz
 expr_stmt|;
-name|sc
-operator|->
-name|status
-operator|.
-name|dt
-operator|+=
-name|dt
-expr_stmt|;
+comment|/* sc->status.dt += dt;*/
+comment|/* no way to export this yet */
 comment|/* Discard data in case of full buffer */
 if|if
 condition|(
@@ -3168,11 +3162,7 @@ name|status
 operator|.
 name|dz
 operator|=
-name|sc
-operator|->
-name|status
-operator|.
-name|dt
+comment|/* sc->status.dt */
 operator|=
 literal|0
 expr_stmt|;
@@ -4582,12 +4572,7 @@ name|status
 operator|.
 name|dz
 operator|=
-name|sc
-operator|->
-name|status
-operator|.
-name|dt
-operator|=
+comment|/* sc->status.dt = */
 literal|0
 expr_stmt|;
 name|splx
@@ -4608,10 +4593,7 @@ operator|||
 name|status
 operator|->
 name|dz
-operator|||
-name|status
-operator|->
-name|dt
+comment|/* || status->dt */
 condition|)
 name|status
 operator|->

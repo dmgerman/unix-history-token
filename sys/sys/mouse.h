@@ -180,10 +180,6 @@ name|int
 name|dz
 decl_stmt|;
 comment|/* z movement */
-name|int
-name|dt
-decl_stmt|;
-comment|/* left right tilt axis */
 block|}
 name|mousestatus_t
 typedef|;
