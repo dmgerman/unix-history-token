@@ -3933,6 +3933,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Write the DSDT to a file, concatenating any SSDTs (if present). */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3964,6 +3968,7 @@ decl_stmt|;
 name|uint8_t
 name|sum
 decl_stmt|;
+comment|/* Create a new checksum to account for the DSDT and any SSDTs. */
 name|sdt
 operator|=
 operator|*
@@ -4069,6 +4074,7 @@ operator|-=
 name|sum
 expr_stmt|;
 block|}
+comment|/* Write out the DSDT header and body. */
 name|write
 argument_list|(
 name|fd
@@ -4094,6 +4100,7 @@ operator|-
 name|SIZEOF_SDT_HDR
 argument_list|)
 expr_stmt|;
+comment|/* Write out any SSDTs (if present.) */
 if|if
 condition|(
 name|rsdt

@@ -403,7 +403,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Dump the DSDT to a file */
+comment|/* Dump the DSDT and SSDTs to a file */
 if|if
 condition|(
 name|dsdt_output_file
