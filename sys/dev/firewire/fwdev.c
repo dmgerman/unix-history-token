@@ -4504,8 +4504,8 @@ argument_list|,
 operator|&
 name|unit
 argument_list|)
-operator|!=
-literal|1
+operator|==
+literal|2
 condition|)
 goto|goto
 name|found
