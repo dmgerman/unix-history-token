@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.94
+literal|3.95
 operator|%
 name|G
 operator|%
@@ -947,6 +947,26 @@ operator|=
 literal|"mqueue"
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+operator|&
+name|p
+index|[
+literal|2
+index|]
+argument_list|)
+operator|>
+literal|50
+condition|)
+name|syserr
+argument_list|(
+literal|"Absurd length Queue path"
+argument_list|)
+expr_stmt|;
+else|else
 name|QueueDir
 operator|=
 operator|&
@@ -955,6 +975,7 @@ index|[
 literal|2
 index|]
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'T'
@@ -1836,6 +1857,10 @@ condition|(
 name|ExitStat
 operator|!=
 name|EX_OK
+operator|&&
+name|Mode
+operator|!=
+name|MD_VERIFY
 condition|)
 name|finis
 argument_list|()
