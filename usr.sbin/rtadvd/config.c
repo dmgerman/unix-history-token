@@ -3019,7 +3019,7 @@ expr_stmt|;
 name|pp
 operator|->
 name|rainfo
-operator|==
+operator|=
 name|rai
 expr_stmt|;
 comment|/* counter increment */
