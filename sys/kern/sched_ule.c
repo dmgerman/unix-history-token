@@ -4713,6 +4713,20 @@ operator|&=
 operator|~
 name|TDF_NEEDRESCHED
 expr_stmt|;
+comment|/* 	 * If the KSE has been assigned it may be in the process of switching 	 * to the new cpu.  This is the case in sched_bind(). 	 */
+if|if
+condition|(
+operator|(
+name|ke
+operator|->
+name|ke_flags
+operator|&
+name|KEF_ASSIGNED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|TD_IS_RUNNING
@@ -4780,7 +4794,7 @@ argument_list|,
 name|ke
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We will not be on the run queue. So we must be 		 * sleeping or similar. 		 */
+comment|/* 			 * We will not be on the run queue. So we must be 			 * sleeping or similar. 			 */
 if|if
 condition|(
 name|td
@@ -4796,6 +4810,7 @@ argument_list|(
 name|ke
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|newtd
 operator|=
