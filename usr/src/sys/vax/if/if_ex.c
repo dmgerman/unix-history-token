@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ex.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ex.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -634,20 +634,6 @@ operator|-=
 literal|4
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"exprobe%d: cvec = %o\n"
-argument_list|,
-name|ex_ncall
-argument_list|,
-name|cvec
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ex_cvecs
 index|[
 name|ex_ncall
@@ -660,7 +646,6 @@ expr_stmt|;
 name|ex_cvecs
 index|[
 name|ex_ncall
-operator|++
 index|]
 operator|.
 name|xc_cvec
@@ -676,7 +661,7 @@ name|EX_RESET
 expr_stmt|;
 name|i
 operator|=
-literal|1000000
+literal|2000
 expr_stmt|;
 while|while
 condition|(
@@ -695,7 +680,11 @@ operator|&&
 operator|--
 name|i
 condition|)
-empty_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -727,6 +716,9 @@ name|br
 expr_stmt|;
 endif|#
 directive|endif
+name|ex_ncall
+operator|++
+expr_stmt|;
 return|return
 operator|(
 sizeof|sizeof
@@ -945,15 +937,6 @@ name|ui
 operator|->
 name|ui_unit
 argument_list|,
-name|ether_sprintf
-argument_list|(
-name|bp
-operator|->
-name|mb_na
-operator|.
-name|na_addrs
-argument_list|)
-argument_list|,
 name|xs
 operator|->
 name|xs_cm
@@ -989,6 +972,15 @@ name|cm_vc
 index|[
 literal|1
 index|]
+argument_list|,
+name|ether_sprintf
+argument_list|(
+name|bp
+operator|->
+name|mb_na
+operator|.
+name|na_addrs
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bcopy
