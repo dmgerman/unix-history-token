@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.246 1998/01/20 03:37:27 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.247 1998/01/24 02:54:26 eivind Exp $  */
 end_comment
 
 begin_include
@@ -5084,13 +5084,6 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* make screensaver happy */
-name|scrn_time_stamp
-operator|=
-name|mono_time
-operator|.
-name|tv_sec
-expr_stmt|;
 comment|/*       * Loop while there is still input to get from the keyboard.      * I don't think this is nessesary, and it doesn't fix      * the Xaccel-2.1 keyboard hang, but it can't hurt.		XXX      */
 while|while
 condition|(
@@ -12002,6 +11995,16 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* should we stop the screen saver? */
+if|if
+condition|(
+name|panicstr
+condition|)
+name|scrn_time_stamp
+operator|=
+name|mono_time
+operator|.
+name|tv_sec
+expr_stmt|;
 if|if
 condition|(
 name|mono_time
@@ -19662,7 +19665,22 @@ name|u_char
 operator|)
 name|c
 expr_stmt|;
-comment|/* do the /dev/random device a favour */
+comment|/* make screensaver happy */
+if|if
+condition|(
+operator|!
+operator|(
+name|scancode
+operator|&
+literal|0x80
+operator|)
+condition|)
+name|scrn_time_stamp
+operator|=
+name|mono_time
+operator|.
+name|tv_sec
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -19672,6 +19690,8 @@ operator|&
 name|SCGETC_CN
 operator|)
 condition|)
+block|{
+comment|/* do the /dev/random device a favour */
 name|add_keyboard_randomness
 argument_list|(
 name|scancode
@@ -19688,6 +19708,7 @@ condition|)
 return|return
 name|scancode
 return|;
+block|}
 name|keycode
 operator|=
 name|scancode
@@ -20008,11 +20029,20 @@ break|break;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
+operator|&&
+operator|(
 name|cur_console
 operator|->
 name|status
 operator|&
 name|KBD_CODE_MODE
+operator|)
 condition|)
 return|return
 operator|(
@@ -21166,6 +21196,9 @@ break|break;
 case|case
 name|RBT
 case|:
+ifndef|#
+directive|ifndef
+name|SC_DISABLE_REBOOT
 name|accents
 operator|=
 literal|0
@@ -21173,6 +21206,8 @@ expr_stmt|;
 name|shutdown_nice
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|SUSP
@@ -27649,6 +27684,11 @@ name|int
 name|duration
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cold
+condition|)
+return|return;
 if|if
 condition|(
 name|flags
