@@ -243,6 +243,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Compile the method table, with the caller providing the space for  * the ops table.(for use before malloc is initialised).  */
+end_comment
+
+begin_function_decl
+name|void
+name|kobj_class_compile_static
+parameter_list|(
+name|kobj_class_t
+name|cls
+parameter_list|,
+name|kobj_ops_t
+name|ops
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Free the compiled method table in a class.  */
 end_comment
 
