@@ -1630,6 +1630,19 @@ block|,
 comment|/* NetBSD */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_MAC
+block|{
+literal|"mac"
+block|,
+name|NEXTARG
+block|,
+name|setifmac
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"rxcsum"
 block|,
@@ -2169,6 +2182,12 @@ directive|ifdef
 name|USE_IEEE80211
 block|{ "ieee80211", AF_UNSPEC, ieee80211_status, NULL, NULL, },
 comment|/* XXX not real!! */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_MAC
+block|{ "mac", AF_UNSPEC, mac_status, NULL, NULL, },
 endif|#
 directive|endif
 endif|#
@@ -6453,6 +6472,28 @@ operator|==
 name|ieee80211_status
 condition|)
 name|ieee80211_status
+argument_list|(
+name|s
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_MAC
+if|if
+condition|(
+name|allfamilies
+operator|||
+name|afp
+operator|->
+name|af_status
+operator|==
+name|mac_status
+condition|)
+name|mac_status
 argument_list|(
 name|s
 argument_list|,
