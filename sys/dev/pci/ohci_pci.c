@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci_pci.c,v 1.5 1998/11/25 22:32:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ohci_pci.c,v 1.5 1998/12/14 09:40:14 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1055,6 +1055,9 @@ decl_stmt|;
 name|int
 name|rev
 decl_stmt|;
+name|vm_offset_t
+name|pbase
+decl_stmt|;
 name|sc
 operator|=
 name|malloc
@@ -1098,19 +1101,38 @@ name|ohci_softc_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_iobase
-operator|=
-name|pci_conf_read
+if|if
+condition|(
+operator|!
+name|pci_map_mem
 argument_list|(
 name|config_id
 argument_list|,
-name|PCI_OHCI_BASE_REG
-argument_list|)
+name|PCI_CBMEM
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
 operator|&
-literal|0xfffff000
+name|sc
+operator|->
+name|sc_iobase
+argument_list|,
+operator|&
+name|pbase
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"usb%d: couldn't map memory\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|sc
 operator|->
 name|unit
@@ -1163,14 +1185,21 @@ block|{
 comment|/* XXX is this correct? Does the correct version show up? */
 name|rev
 operator|=
-name|inw
-argument_list|(
+operator|*
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|*
+operator|)
+operator|(
 name|sc
 operator|->
 name|sc_iobase
 operator|+
 name|OHCI_REVISION
-argument_list|)
+operator|)
+operator|)
 expr_stmt|;
 name|printf
 argument_list|(

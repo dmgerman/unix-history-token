@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.12 1998/11/30 21:39:20 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ohci.c,v 1.4 1998/12/14 09:32:23 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -848,7 +848,7 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|outl((sc)->sc_iobase + (r), (x))
+value|*(unsigned int *) ((sc)->sc_iobase + (r)) = x
 end_define
 
 begin_define
@@ -860,7 +860,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|inl((sc)->sc_iobase + (r))
+value|(*(unsigned int *) ((sc)->sc_iobase + (r)))
 end_define
 
 begin_define
@@ -872,7 +872,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|inw((sc)->sc_iobase + (r))
+value|(*(unsigned short *) ((sc)->sc_iobase + (r)))
 end_define
 
 begin_endif
