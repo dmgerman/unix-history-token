@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.23	81/03/07	*/
+comment|/*	autoconf.c	4.24	81/03/08	*/
 end_comment
 
 begin_comment
-comment|/*  * Initialize the devices for the current machine.  */
+comment|/*  * Setup the system to run on the current machine.  *  * Configure() is called at boot time and initializes the uba and mba  * device tables and the memory controller monitoring.  Available  * devices are determined (from possibilities mentioned in ioconf.c),  * and the drivers are initialized.  *  * N.B.: A lot of the conditionals based on processor type say  *	#if VAX780  * and  *	#if VAX750  * which may be incorrect after more processors are introduced if they  * are like either of these machines.  Thus the exact form of these  * lines may change.  Will future machines have configuration registers  * in the adapters and probable nexus space (like the 780), or wired  * addresses (like the 750)?  It remains to be seen.  */
 end_comment
 
 begin_include
@@ -109,11 +109,19 @@ directive|include
 file|"../h/mem.h"
 end_include
 
+begin_comment
+comment|/*  * The following several variables are related to  * the configuration process, and are used in initializing  * the machine.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|cold
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* if 1, still working on cold-start */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -132,7 +140,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of dk numbers assigned so far */
+comment|/* number of iostat dk numbers assigned so far */
+end_comment
+
+begin_comment
+comment|/*  * Addresses of the (locore) routines which bootstrap us from  * hardware traps to C code.  Filled into the system control block  * as necessary.  */
 end_comment
 
 begin_if
@@ -197,8 +209,12 @@ operator|,
 function_decl|Xua3int
 end_function_decl
 
-begin_decl_stmt
+begin_comment
 unit|};
+comment|/*  * These are the (fixed) addresses of the (last 8k bytes of) unibus memory for  * each of the 4 possible unibus adapters.  Note that the unibus memory  * addresses are actually indexed by the unibus adapter type code,  * and are unrelated to tr (nexus) number.  */
+end_comment
+
+begin_decl_stmt
 name|caddr_t
 name|umaddr780
 index|[
@@ -234,6 +250,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * This allocates the space for the per-uba information,  * such as buffered data path usage.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|uba_hd
@@ -243,6 +263,10 @@ name|MAXNUBA
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * The bits which decode the fault bits in the configuration register  * of nexus's are reusable per nexus-type, so we declare them once here  * to avoid replication.  */
+end_comment
 
 begin_if
 if|#
@@ -263,6 +287,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Per-processor type initialization routines and data.  * It would be nice to parameterize initialization more,  * but the 780 and 750 are really quite different at this  * level.  We await future machines before attempting   * any significant parameterization.  */
+end_comment
 
 begin_if
 if|#
@@ -418,14 +446,7 @@ argument_list|(
 name|ocp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|VAXANY
-name|setconf
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* 			 * Write protect the scb.  It is strange 			 * that this code is here, but this is as soon 			 * as we are done mucking with it, and the 			 * write-enable was done in assembly language 			 * to which we will never return. 			 */
 name|ip
 operator|=
 operator|(
@@ -452,6 +473,14 @@ argument_list|,
 name|Sysbase
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|GENERIC
+name|setconf
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|cold
 operator|=
 literal|0
@@ -463,7 +492,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"cpu type %d unsupported\n"
+literal|"cpu type %d not configured\n"
 argument_list|,
 name|cpusid
 operator|.
@@ -605,11 +634,6 @@ block|{
 case|case
 name|NEX_MBA
 case|:
-if|#
-directive|if
-name|NMBA
-operator|>
-literal|0
 name|printf
 argument_list|(
 literal|"mba%d at tr%d\n"
@@ -628,15 +652,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d mba's not configured\n"
+literal|"%d mba's"
 argument_list|,
 name|nummba
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|notconfig
+goto|;
 block|}
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
 name|mbafind
 argument_list|(
 name|nxv
@@ -647,19 +676,9 @@ expr_stmt|;
 name|nummba
 operator|++
 expr_stmt|;
-break|break;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"mba's"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|unsupp
-goto|;
 endif|#
 directive|endif
+break|break;
 case|case
 name|NEX_UBA0
 case|:
@@ -672,6 +691,15 @@ case|:
 case|case
 name|NEX_UBA3
 case|:
+name|printf
+argument_list|(
+literal|"uba%d at tr%d\n"
+argument_list|,
+name|numuba
+argument_list|,
+name|nexnum
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|numuba
@@ -688,15 +716,6 @@ goto|goto
 name|unsupp
 goto|;
 block|}
-name|printf
-argument_list|(
-literal|"uba%d at tr%d\n"
-argument_list|,
-name|numuba
-argument_list|,
-name|nexnum
-argument_list|)
-expr_stmt|;
 name|setscbnex
 argument_list|(
 name|nexnum
@@ -789,24 +808,6 @@ case|:
 case|case
 name|NEX_MEM16I
 case|:
-if|if
-condition|(
-name|nmcr
-operator|>=
-literal|4
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%d mcr's"
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-goto|goto
-name|unsupp
-goto|;
-block|}
 name|printf
 argument_list|(
 literal|"mcr%d at tr%d\n"
@@ -816,6 +817,22 @@ argument_list|,
 name|nexnum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nmcr
+operator|>=
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"5 mcr's"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|unsupp
+goto|;
+block|}
 name|mcraddr
 index|[
 name|nmcr
@@ -867,6 +884,14 @@ argument_list|(
 literal|" unsupported (at tr %d)\n"
 argument_list|,
 name|nexnum
+argument_list|)
+expr_stmt|;
+continue|continue;
+name|unconfig
+label|:
+name|printf
+argument_list|(
+literal|" not configured\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -964,11 +989,6 @@ operator|*
 operator|)
 name|nxv
 expr_stmt|;
-if|#
-directive|if
-name|NMBA
-operator|>
-literal|0
 for|for
 control|(
 name|nexnum
@@ -1030,17 +1050,23 @@ name|nummba
 operator|>=
 name|NMBA
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%d mba's not configured\n"
+literal|"%d mba(s) not configured\n"
 argument_list|,
 name|nummba
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+continue|continue;
+block|}
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
 name|mbafind
 argument_list|(
 name|nxv
@@ -1051,10 +1077,9 @@ expr_stmt|;
 name|nummba
 operator|++
 expr_stmt|;
-block|}
-block|}
 endif|#
 directive|endif
+block|}
 name|printf
 argument_list|(
 literal|"uba at %x\n"
@@ -1084,7 +1109,6 @@ name|uba_regs
 operator|*
 operator|)
 name|nxv
-operator|++
 argument_list|,
 operator|(
 expr|struct
@@ -1403,20 +1427,6 @@ name|mbd
 operator|->
 name|mbd_dt
 expr_stmt|;
-name|ms
-operator|->
-name|ms_alive
-operator|=
-literal|1
-expr_stmt|;
-name|ms
-operator|->
-name|ms_ctlr
-operator|=
-name|mi
-operator|->
-name|mi_unit
-expr_stmt|;
 if|if
 condition|(
 name|dt
@@ -1452,6 +1462,20 @@ name|ms
 operator|->
 name|ms_slave
 argument_list|)
+expr_stmt|;
+name|ms
+operator|->
+name|ms_alive
+operator|=
+literal|1
+expr_stmt|;
+name|ms
+operator|->
+name|ms_ctlr
+operator|=
+name|mi
+operator|->
+name|mi_unit
 expr_stmt|;
 call|(
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.23	%G%	*/
+comment|/*	tm.c	4.24	%G%	*/
 end_comment
 
 begin_include
@@ -28,18 +28,8 @@ comment|/* DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * TM11/TE10 tape driver  *  * Todo:  *	Test driver with more than one slave  *	Test reset code  *	Do rewinds without hanging in driver  */
+comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one slave  *	test driver with more than one controller  *	test reset code  *	test rewinds without hanging in driver  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|N
-parameter_list|)
-value|{ register int d = N; while (--d> 0); }
-end_define
 
 begin_include
 include|#
@@ -137,25 +127,37 @@ directive|include
 file|"../h/tmreg.h"
 end_include
 
+begin_comment
+comment|/*  * There is a ctmbuf per tape controller.  * It is used as the token to pass to the internal routines  * to execute tape ioctls, and also acts as a lock on the slaves  * on the controller, since there is only one per controller.  * In particular, when the tape is rewinding on close we release  * the user process but any further attempts to use the tape drive  * before the rewind completes will hang waiting for ctmbuf.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|buf
 name|ctmbuf
 index|[
-name|NTE
+name|NTM
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Raw tape operations use rtmbuf.  The driver  * notices when rtmbuf is being used and allows the user  * program to continue after errors and read records  * not of the standard length (BSIZE).  */
+end_comment
 
 begin_decl_stmt
 name|struct
 name|buf
 name|rtmbuf
 index|[
-name|NTE
+name|NTM
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Driver unibus interface routines and variables.  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -191,7 +193,7 @@ begin_decl_stmt
 name|struct
 name|uba_device
 modifier|*
-name|tmdinfo
+name|tedinfo
 index|[
 name|NTE
 index|]
@@ -201,37 +203,21 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|buf
-name|tmutab
+name|teutab
 index|[
 name|NTE
 index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_decl_stmt
-name|struct
-name|uba_device
-modifier|*
-name|tmip
+name|short
+name|tetotm
 index|[
-name|NTM
-index|]
-index|[
-literal|4
+name|NTE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|u_short
@@ -264,7 +250,7 @@ name|tmstd
 block|,
 literal|"te"
 block|,
-name|tmdinfo
+name|tedinfo
 block|,
 literal|"tm"
 block|,
@@ -282,11 +268,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TMUNIT
+name|TEUNIT
 parameter_list|(
 name|dev
 parameter_list|)
 value|(minor(dev)&03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMUNIT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(tetotm[TEUNIT(dev)])
 end_define
 
 begin_define
@@ -311,12 +307,12 @@ value|(daddr_t)1000000L
 end_define
 
 begin_comment
-comment|/*  * Software state per tape transport.  */
+comment|/*  * Software state per tape transport.  *  * 1. A tape drive is a unique-open device; we refuse opens when it is already.  * 2. We keep track of the current position on a block tape and seek  *    before operations by forward/back spacing if necessary.  * 3. We remember if the last operation was a write on a tape, so if a tape  *    is open read write and the last thing done is a write we can  *    write a standard end of tape mark (two eofs).  * 4. We remember the status registers after the last command, using  *    then internally and returning them to the SENSE ioctl.  * 5. We remember the last density the tape was used at.  If it is  *    not a BOT when we start using it and we are writing, we don't  *    let the density be changed.  */
 end_comment
 
 begin_struct
 struct|struct
-name|tm_softc
+name|te_softc
 block|{
 name|char
 name|sc_openf
@@ -333,7 +329,7 @@ comment|/* block number, for block device tape */
 name|daddr_t
 name|sc_nxrec
 decl_stmt|;
-comment|/* desired block position */
+comment|/* position of end of tape, if known */
 name|u_short
 name|sc_erreg
 decl_stmt|;
@@ -355,8 +351,12 @@ decl_stmt|;
 comment|/* last command to handle direction changes */
 endif|#
 directive|endif
+name|u_short
+name|sc_dens
+decl_stmt|;
+comment|/* prototype command with density info */
 block|}
-name|tm_softc
+name|te_softc
 index|[
 name|NTM
 index|]
@@ -364,7 +364,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * States for um->um_tab.b_active, the  * per controller state flag.  */
+comment|/*  * States for um->um_tab.b_active, the per controller state flag.  * This is used to sequence control in the driver.  */
 end_comment
 
 begin_define
@@ -412,18 +412,6 @@ comment|/* sending a drive rewind */
 end_comment
 
 begin_comment
-comment|/* WE CURRENTLY HANDLE REWINDS PRIMITIVELY, BUSYING OUT THE CONTROLLER */
-end_comment
-
-begin_comment
-comment|/* DURING THE REWIND... IF WE EVER GET TWO TRANSPORTS, WE CAN DEBUG MORE */
-end_comment
-
-begin_comment
-comment|/* SOPHISTICATED LOGIC... THIS SIMPLE CODE AT LEAST MAY WORK. */
-end_comment
-
-begin_comment
 comment|/*  * Determine if there is a controller for  * a tm at address reg.  Our goal is to make the  * device interrupt.  */
 end_comment
 
@@ -448,6 +436,7 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
+comment|/* must be r11,r10; value-result */
 ifdef|#
 directive|ifdef
 name|lint
@@ -553,7 +542,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Record attachment of the unit to the controller port.  */
+comment|/*  * Record attachment of the unit to the controller.  */
 end_comment
 
 begin_comment
@@ -577,30 +566,25 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|notyet
-name|tmip
+comment|/* 	 * Tetotm is used in TMUNIT to index the ctmbuf and rtmbuf 	 * arrays given a te unit number. 	 */
+name|tetotm
 index|[
 name|ui
 operator|->
-name|ui_ctlr
-index|]
-index|[
-name|ui
-operator|->
-name|ui_slave
+name|ui_unit
 index|]
 operator|=
 name|ui
+operator|->
+name|ui_mi
+operator|->
+name|um_ctlr
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
 begin_comment
-comment|/*  * Open the device.  Tapes are unique open  * devices, so we refuse if it is already open.  * We also check that a tape is available, and  * don't block waiting here.  */
+comment|/*  * Open the device.  Tapes are unique open  * devices, so we refuse if it is already open.  * We also check that a tape is available, and  * don't block waiting here; if you want to wait  * for a tape you should timeout in user code.  */
 end_comment
 
 begin_macro
@@ -628,7 +612,7 @@ begin_block
 block|{
 specifier|register
 name|int
-name|unit
+name|teunit
 decl_stmt|;
 specifier|register
 name|struct
@@ -638,20 +622,23 @@ name|ui
 decl_stmt|;
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|unit
+name|int
+name|dens
+decl_stmt|;
+name|teunit
 operator|=
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unit
+name|teunit
 operator|>=
 name|NTE
 operator|||
@@ -659,9 +646,9 @@ operator|(
 name|sc
 operator|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 operator|)
 operator|->
@@ -670,9 +657,9 @@ operator|||
 operator|(
 name|ui
 operator|=
-name|tmdinfo
+name|tedinfo
 index|[
-name|unit
+name|teunit
 index|]
 operator|)
 operator|==
@@ -702,6 +689,37 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dens
+operator|=
+name|TM_IE
+operator||
+name|TM_GO
+operator||
+operator|(
+name|ui
+operator|->
+name|ui_slave
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+name|T_1600BPI
+operator|)
+operator|==
+literal|0
+condition|)
+name|dens
+operator||=
+name|TM_D800
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -710,17 +728,39 @@ operator|->
 name|sc_erreg
 operator|&
 operator|(
-name|TM_SELR
+name|TMER_SELR
 operator||
-name|TM_TUR
+name|TMER_TUR
 operator|)
 operator|)
 operator|!=
 operator|(
-name|TM_SELR
+name|TMER_SELR
 operator||
-name|TM_TUR
+name|TMER_TUR
 operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|sc_erreg
+operator|&
+name|TMER_BOT
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|flag
+operator|&
+name|FWRITE
+operator|)
+operator|&&
+name|dens
+operator|!=
+name|sc
+operator|->
+name|sc_dens
 operator|||
 operator|(
 name|flag
@@ -738,9 +778,10 @@ name|sc
 operator|->
 name|sc_erreg
 operator|&
-name|TM_WRL
+name|TMER_WRL
 condition|)
 block|{
+comment|/* 		 * Not online or density switch in mid-tape or write locked. 		 */
 name|u
 operator|.
 name|u_error
@@ -776,6 +817,12 @@ name|sc_lastiow
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_dens
+operator|=
+name|dens
+expr_stmt|;
 block|}
 end_block
 
@@ -806,14 +853,14 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 init|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -877,13 +924,14 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* 		 * 0 count means don't hang waiting for rewind complete 		 * rather ctmbuf stays busy until the operation completes 		 * preventing further opens from completing by 		 * preventing a TM_SENSE from completing. 		 */
 name|tmcommand
 argument_list|(
 name|dev
 argument_list|,
 name|TM_REW
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|sc
@@ -958,6 +1006,30 @@ operator|&
 name|B_BUSY
 condition|)
 block|{
+comment|/* 		 * This special check is because B_BUSY never 		 * gets cleared in the non-waiting rewind case. 		 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_command
+operator|==
+name|TM_REW
+operator|&&
+name|bp
+operator|->
+name|b_repcnt
+operator|==
+literal|0
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DONE
+operator|)
+condition|)
+break|break;
 name|bp
 operator|->
 name|b_flags
@@ -1019,6 +1091,14 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * In case of rewind from close, don't wait. 	 * This is the only case where count can be 0. 	 */
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+return|return;
 name|iowait
 argument_list|(
 name|bp
@@ -1050,7 +1130,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Decipher a tape operation and do what is needed  * to see that it happens.  */
+comment|/*  * Queue a tape operation.  */
 end_comment
 
 begin_expr_stmt
@@ -1069,9 +1149,9 @@ end_expr_stmt
 begin_block
 block|{
 name|int
-name|unit
+name|teunit
 init|=
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1092,23 +1172,23 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 init|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 decl_stmt|;
 comment|/* 	 * Put transfer at end of unit queue 	 */
 name|dp
 operator|=
 operator|&
-name|tmutab
+name|teutab
 index|[
-name|unit
+name|teunit
 index|]
 expr_stmt|;
 name|bp
@@ -1147,9 +1227,9 @@ name|NULL
 expr_stmt|;
 name|um
 operator|=
-name|tmdinfo
+name|tedinfo
 index|[
-name|unit
+name|teunit
 index|]
 operator|->
 name|ui_mi
@@ -1277,7 +1357,7 @@ name|um_addr
 decl_stmt|;
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -1288,7 +1368,7 @@ modifier|*
 name|ui
 decl_stmt|;
 name|int
-name|unit
+name|teunit
 decl_stmt|,
 name|cmd
 decl_stmt|;
@@ -1340,9 +1420,9 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|unit
+name|teunit
 operator|=
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1351,18 +1431,18 @@ argument_list|)
 expr_stmt|;
 name|ui
 operator|=
-name|tmdinfo
+name|tedinfo
 index|[
-name|unit
+name|teunit
 index|]
 expr_stmt|;
 comment|/* 	 * Record pre-transfer status (e.g. for TM_SENSE) 	 */
 name|sc
 operator|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 expr_stmt|;
 name|addr
@@ -1438,7 +1518,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Have had a hard error on this (non-raw) tape, 		 * or the tape unit is now unavailable (e.g. taken off 		 * line). 		 */
+comment|/* 		 * Have had a hard error on a non-raw tape 		 * or the tape unit is now unavailable 		 * (e.g. taken off line). 		 */
 name|bp
 operator|->
 name|b_flags
@@ -1449,159 +1529,23 @@ goto|goto
 name|next
 goto|;
 block|}
-comment|/* 	 * If operation is not a control operation, 	 * check for boundary conditions. 	 */
 if|if
 condition|(
 name|bp
-operator|!=
+operator|==
 operator|&
 name|ctmbuf
 index|[
-name|unit
-index|]
-condition|)
-block|{
-if|if
-condition|(
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-operator|>
-name|sc
-operator|->
-name|sc_nxrec
-condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|ENXIO
-expr_stmt|;
-comment|/* past EOF */
-goto|goto
-name|next
-goto|;
-block|}
-if|if
-condition|(
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-operator|==
-name|sc
-operator|->
-name|sc_nxrec
-operator|&&
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-condition|)
-block|{
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
-name|clrbuf
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* at EOF */
-goto|goto
-name|next
-goto|;
-block|}
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* write sets EOF */
-name|sc
-operator|->
-name|sc_nxrec
-operator|=
-name|dbtofsb
-argument_list|(
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
-block|}
-comment|/* 	 * Set up the command, and then if this is a mt ioctl, 	 * do the operation using, for TM_SFORW and TM_SREV, the specified 	 * operation count. 	 */
-name|cmd
-operator|=
-name|TM_IE
-operator||
-name|TM_GO
-operator||
-operator|(
-name|ui
-operator|->
-name|ui_slave
-operator|<<
-literal|8
-operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|minor
+name|TMUNIT
 argument_list|(
 name|bp
 operator|->
 name|b_dev
 argument_list|)
-operator|&
-name|T_1600BPI
-operator|)
-operator|==
-literal|0
-condition|)
-name|cmd
-operator||=
-name|TM_D800
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|==
-operator|&
-name|ctmbuf
-index|[
-name|unit
 index|]
 condition|)
 block|{
+comment|/* 		 * Execute control operation with the specified count. 		 */
 if|if
 condition|(
 name|bp
@@ -1655,6 +1599,102 @@ goto|goto
 name|dobpcmd
 goto|;
 block|}
+comment|/* 	 * The following checks handle boundary cases for operation 	 * on non-raw tapes.  On raw tapes the initialization of 	 * sc->sc_nxrec by tmphys causes them to be skipped normally 	 * (except in the case of retries). 	 */
+if|if
+condition|(
+name|dbtofsb
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+operator|>
+name|sc
+operator|->
+name|sc_nxrec
+condition|)
+block|{
+comment|/* 		 * Can't read past known end-of-file. 		 */
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
+name|dbtofsb
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+operator|==
+name|sc
+operator|->
+name|sc_nxrec
+operator|&&
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|)
+block|{
+comment|/* 		 * Reading at end of file returns 0 bytes. 		 */
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+name|clrbuf
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* 		 * Writing sets EOF 		 */
+name|sc
+operator|->
+name|sc_nxrec
+operator|=
+name|dbtofsb
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
 comment|/* 	 * If the data transfer command is in the correct place, 	 * set up all the registers except the csr, and give 	 * control over to the UNIBUS adapter routines, to 	 * wait for resources to start the i/o. 	 */
 if|if
 condition|(
@@ -1705,18 +1745,18 @@ operator|.
 name|b_errcnt
 condition|)
 name|cmd
-operator||=
+operator|=
 name|TM_WIRG
 expr_stmt|;
 else|else
 name|cmd
-operator||=
+operator|=
 name|TM_WCOM
 expr_stmt|;
 block|}
 else|else
 name|cmd
-operator||=
+operator|=
 name|TM_RCOM
 expr_stmt|;
 name|um
@@ -1731,6 +1771,10 @@ name|um
 operator|->
 name|um_cmd
 operator|=
+name|sc
+operator|->
+name|sc_dens
+operator||
 name|cmd
 expr_stmt|;
 ifdef|#
@@ -1751,7 +1795,7 @@ name|addr
 operator|->
 name|tmer
 operator|&
-name|TM_SDWN
+name|TMER_SDWN
 condition|)
 name|tmgapsdcnt
 operator|++
@@ -1772,7 +1816,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Block tape positioned incorrectly; 	 * seek forwards or backwards to the correct spot. 	 */
+comment|/* 	 * Tape positioned incorrectly; 	 * set to seek forwards or backwards to the correct spot. 	 * This happens for raw tapes only on error retries. 	 */
 name|um
 operator|->
 name|um_tab
@@ -1840,6 +1884,7 @@ label|:
 ifdef|#
 directive|ifdef
 name|notdef
+comment|/* 	 * It is strictly necessary to wait for the tape 	 * to stop before changing directions, but the TC11 	 * handles this for us. 	 */
 if|if
 condition|(
 name|tmreverseop
@@ -1877,12 +1922,15 @@ name|b_command
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Do the command in bp. 	 */
 name|addr
 operator|->
 name|tmcs
 operator|=
 operator|(
-name|cmd
+name|sc
+operator|->
+name|sc_dens
 operator||
 name|bp
 operator|->
@@ -2046,30 +2094,62 @@ name|struct
 name|device
 modifier|*
 name|addr
-init|=
+decl_stmt|;
+specifier|register
+name|struct
+name|te_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|teunit
+decl_stmt|;
+specifier|register
+name|state
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dp
+operator|=
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
+name|bp
+operator|=
+name|dp
+operator|->
+name|b_actf
+expr_stmt|;
+name|teunit
+operator|=
+name|TEUNIT
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+expr_stmt|;
+name|addr
+operator|=
 operator|(
 expr|struct
 name|device
 operator|*
 operator|)
-name|tmdinfo
+name|tedinfo
 index|[
-name|tm11
+name|teunit
 index|]
 operator|->
 name|ui_addr
-decl_stmt|;
-specifier|register
-name|struct
-name|tm_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
-specifier|register
-name|state
 expr_stmt|;
 comment|/* 	 * If last command was a rewind, and tape is still 	 * rewinding, wait for the rewind complete interrupt. 	 */
 if|if
@@ -2097,47 +2177,17 @@ name|addr
 operator|->
 name|tmer
 operator|&
-name|TM_RWS
+name|TMER_RWS
 condition|)
 return|return;
 block|}
 comment|/* 	 * An operation completed... record status 	 */
-if|if
-condition|(
-operator|(
-name|dp
-operator|=
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return;
-name|bp
-operator|=
-name|dp
-operator|->
-name|b_actf
-expr_stmt|;
-name|unit
-operator|=
-name|TMUNIT
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 expr_stmt|;
 name|sc
@@ -2214,18 +2264,18 @@ name|addr
 operator|->
 name|tmer
 operator|&
-name|TM_SDWN
+name|TMER_SDWN
 condition|)
 empty_stmt|;
 comment|/* await settle down */
-comment|/* 		 * If we hit the end of the tape update our position. 		 */
+comment|/* 		 * If we hit the end of the tape file, update our position. 		 */
 if|if
 condition|(
 name|addr
 operator|->
 name|tmer
 operator|&
-name|TM_EOF
+name|TMER_EOF
 condition|)
 block|{
 name|tmseteof
@@ -2253,9 +2303,22 @@ goto|goto
 name|opdone
 goto|;
 block|}
-comment|/* 		 * If we were reading and the only error was that the 		 * record was to long, then we don't consider this an error. 		 */
+comment|/* 		 * If we were reading raw tape and the only error was that the 		 * record was too long, then we don't consider this an error. 		 */
 if|if
 condition|(
+name|bp
+operator|==
+operator|&
+name|rtmbuf
+index|[
+name|TMUNIT
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+index|]
+operator|&&
 operator|(
 name|bp
 operator|->
@@ -2270,13 +2333,13 @@ operator|->
 name|tmer
 operator|&
 operator|(
-name|TM_HARD
+name|TMER_HARD
 operator||
-name|TM_SOFT
+name|TMER_SOFT
 operator|)
 operator|)
 operator|==
-name|TM_RLE
+name|TMER_RLE
 condition|)
 goto|goto
 name|ignoreerr
@@ -2289,7 +2352,7 @@ name|addr
 operator|->
 name|tmer
 operator|&
-name|TM_HARD
+name|TMER_HARD
 operator|)
 operator|==
 literal|0
@@ -2341,7 +2404,12 @@ operator|!=
 operator|&
 name|rtmbuf
 index|[
-name|unit
+name|TMUNIT
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 index|]
 condition|)
 name|sc
@@ -2373,7 +2441,7 @@ name|sc
 operator|->
 name|sc_erreg
 argument_list|,
-name|TMEREG_BITS
+name|TMER_BITS
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2409,21 +2477,22 @@ goto|;
 case|case
 name|SCOM
 case|:
-comment|/* 		 * Unless special operation, op completed. 		 */
+comment|/* 		 * For forward/backward space record update current position. 		 */
 if|if
 condition|(
 name|bp
-operator|!=
+operator|==
 operator|&
 name|ctmbuf
 index|[
-name|unit
+name|TMUNIT
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 index|]
 condition|)
-goto|goto
-name|opdone
-goto|;
-comment|/* 		 * Operation on block device... 		 * iterate operations which don't repeat 		 * for themselves in the hardware; for forward/ 		 * backward space record update the current position. 		 */
 switch|switch
 condition|(
 name|bp
@@ -2442,9 +2511,7 @@ name|bp
 operator|->
 name|b_repcnt
 expr_stmt|;
-goto|goto
-name|opdone
-goto|;
+break|break;
 case|case
 name|TM_SREV
 case|:
@@ -2456,26 +2523,11 @@ name|bp
 operator|->
 name|b_repcnt
 expr_stmt|;
-goto|goto
-name|opdone
-goto|;
-default|default:
-if|if
-condition|(
-operator|++
-name|bp
-operator|->
-name|b_repcnt
-operator|<
-literal|0
-condition|)
-goto|goto
-name|opcont
-goto|;
-goto|goto
-name|opdone
-goto|;
+break|break;
 block|}
+goto|goto
+name|opdone
+goto|;
 case|case
 name|SSEEK
 case|:
@@ -2638,9 +2690,9 @@ begin_block
 block|{
 specifier|register
 name|int
-name|unit
+name|teunit
 init|=
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|bp
 operator|->
@@ -2658,23 +2710,23 @@ expr|struct
 name|device
 operator|*
 operator|)
-name|tmdinfo
+name|tedinfo
 index|[
-name|unit
+name|teunit
 index|]
 operator|->
 name|ui_addr
 decl_stmt|;
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 init|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 decl_stmt|;
 if|if
@@ -2684,7 +2736,12 @@ operator|==
 operator|&
 name|ctmbuf
 index|[
-name|unit
+name|TMUNIT
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 index|]
 condition|)
 block|{
@@ -2873,6 +2930,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Check that a raw device exists.  * If it does, set up sc_blkno and sc_nxrec  * so that the tape will appear positioned correctly.  */
+end_comment
+
 begin_macro
 name|tmphys
 argument_list|(
@@ -2890,9 +2951,9 @@ begin_block
 block|{
 specifier|register
 name|int
-name|unit
+name|teunit
 init|=
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -2903,15 +2964,38 @@ name|a
 decl_stmt|;
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|register
+name|struct
+name|uba_device
+modifier|*
+name|ui
+decl_stmt|;
 if|if
 condition|(
-name|unit
+name|teunit
 operator|>=
-name|NTM
+name|NTE
+operator|||
+operator|(
+name|ui
+operator|=
+name|tedinfo
+index|[
+name|teunit
+index|]
+operator|)
+operator|==
+literal|0
+operator|||
+name|ui
+operator|->
+name|ui_alive
+operator|==
+literal|0
 condition|)
 block|{
 name|u
@@ -2925,12 +3009,9 @@ block|}
 name|sc
 operator|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|TMUNIT
-argument_list|(
-name|dev
-argument_list|)
+name|teunit
 index|]
 expr_stmt|;
 name|a
@@ -2985,7 +3066,7 @@ decl_stmt|;
 specifier|register
 name|tm11
 operator|,
-name|unit
+name|teunit
 expr_stmt|;
 specifier|register
 name|struct
@@ -3115,15 +3196,15 @@ name|TM_DCLR
 expr_stmt|;
 for|for
 control|(
-name|unit
+name|teunit
 operator|=
 literal|0
 init|;
-name|unit
+name|teunit
 operator|<
 name|NTE
 condition|;
-name|unit
+name|teunit
 operator|++
 control|)
 block|{
@@ -3132,17 +3213,20 @@ condition|(
 operator|(
 name|ui
 operator|=
-name|tmdinfo
+name|tedinfo
 index|[
-name|unit
+name|teunit
 index|]
 operator|)
 operator|==
 literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
+operator|||
+name|ui
+operator|->
+name|ui_mi
+operator|!=
+name|um
+operator|||
 name|ui
 operator|->
 name|ui_alive
@@ -3153,9 +3237,9 @@ continue|continue;
 name|dp
 operator|=
 operator|&
-name|tmutab
+name|teutab
 index|[
-name|unit
+name|teunit
 index|]
 expr_stmt|;
 name|dp
@@ -3207,9 +3291,9 @@ name|b_actl
 operator|=
 name|dp
 expr_stmt|;
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 operator|.
 name|sc_openf
@@ -3259,23 +3343,23 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|unit
+name|teunit
 init|=
-name|TMUNIT
+name|TEUNIT
 argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|tm_softc
+name|te_softc
 modifier|*
 name|sc
 init|=
 operator|&
-name|tm_softc
+name|te_softc
 index|[
-name|unit
+name|teunit
 index|]
 decl_stmt|;
 specifier|register
@@ -3287,7 +3371,10 @@ init|=
 operator|&
 name|ctmbuf
 index|[
-name|unit
+name|TMUNIT
+argument_list|(
+name|dev
+argument_list|)
 index|]
 decl_stmt|;
 specifier|register
@@ -3532,7 +3619,7 @@ name|sc
 operator|->
 name|sc_erreg
 operator|&
-name|TM_BOT
+name|TMER_BOT
 condition|)
 break|break;
 block|}
@@ -3664,7 +3751,7 @@ parameter_list|)
 value|((b)((int)(a)&0x7fffffff))
 if|if
 condition|(
-name|tmdinfo
+name|tedinfo
 index|[
 literal|0
 index|]
@@ -3680,7 +3767,7 @@ name|ui
 operator|=
 name|phys
 argument_list|(
-name|tmdinfo
+name|tedinfo
 index|[
 literal|0
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.16	81/03/07	*/
+comment|/*	mba.c	4.17	81/03/08	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Massbus driver; arbitrates massbus using device  * driver routines.  This module provides common functions.  */
+comment|/*  * Massbus driver, arbitrates a massbus among attached devices.  */
 end_comment
 
 begin_include
@@ -107,10 +107,10 @@ end_include
 
 begin_decl_stmt
 name|char
-name|mbasr_bits
+name|mbsr_bits
 index|[]
 init|=
-name|MBASR_BITS
+name|MBSR_BITS
 decl_stmt|;
 end_decl_stmt
 
@@ -433,18 +433,10 @@ name|mi_drv
 operator|->
 name|mbd_ds
 operator|&
-operator|(
-name|MBD_DPR
-operator||
-name|MBD_MOL
-operator|)
+name|MBDS_DREADY
 operator|)
 operator|!=
-operator|(
-name|MBD_DPR
-operator||
-name|MBD_MOL
-operator|)
+name|MBDS_DREADY
 condition|)
 block|{
 name|printf
@@ -578,13 +570,13 @@ operator|&
 name|B_READ
 operator|)
 condition|?
-name|MBD_RCOM
+name|MB_RCOM
 operator||
-name|MBD_GO
+name|MB_GO
 else|:
-name|MBD_WCOM
+name|MB_WCOM
 operator||
-name|MBD_GO
+name|MB_GO
 expr_stmt|;
 if|if
 condition|(
@@ -710,7 +702,7 @@ if|if
 condition|(
 name|mbasr
 operator|&
-name|MBS_CBHUNG
+name|MBSR_CBHUNG
 condition|)
 block|{
 name|printf
@@ -753,14 +745,6 @@ name|mbd_as
 operator|=
 name|as
 expr_stmt|;
-comment|/* 	 * Disable interrupts from the massbus adapter 	 * for the duration of the operation of the massbus 	 * driver, so that spurious interrupts won't be generated. 	 */
-name|mbp
-operator|->
-name|mba_cr
-operator|&=
-operator|~
-name|MBAIE
-expr_stmt|;
 comment|/* 	 * If the mba was active, process the data transfer 	 * complete interrupt; otherwise just process units which 	 * are now finished. 	 */
 if|if
 condition|(
@@ -769,7 +753,7 @@ operator|->
 name|mh_active
 condition|)
 block|{
-comment|/* 		 * Clear attention status for drive whose data 		 * transfer completed, and give the dtint driver 		 * routine a chance to say what is next. 		 */
+comment|/* 		 * Clear attention status for drive whose data 		 * transfer related operation completed, 		 * and give the dtint driver 		 * routine a chance to say what is next. 		 */
 name|mi
 operator|=
 name|mhp
@@ -946,7 +930,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* 		 * If driver has a handler for non-data transfer 		 * interrupts, give it a chance to tell us that 		 * the operation needs to be redone 		 */
+comment|/* 		 * If driver has a handler for non-data transfer 		 * interrupts, give it a chance to tell us what to do. 		 */
 if|if
 condition|(
 name|mi
@@ -982,7 +966,7 @@ block|{
 case|case
 name|MBN_DONE
 case|:
-comment|/* 				 * Non-data transfer interrupt 				 * completed i/o request's processing. 				 */
+comment|/* operation completed */
 name|mi
 operator|->
 name|mi_tab
@@ -1014,10 +998,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* fall into... */
+comment|/* fall into common code */
 case|case
 name|MBN_RETRY
 case|:
+comment|/* operation continues */
 if|if
 condition|(
 name|mi
@@ -1035,20 +1020,7 @@ break|break;
 case|case
 name|MBN_SKIP
 case|:
-comment|/* 				 * Ignore (unsolicited interrupt, e.g.) 				 */
-break|break;
-case|case
-name|MBN_CONT
-case|:
-comment|/* 				 * Continue with unit active, e.g. 				 * between first and second rewind 				 * interrupts. 				 */
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_active
-operator|=
-literal|1
-expr_stmt|;
+comment|/* ignore unsol. interrupt */
 break|break;
 default|default:
 name|panic
@@ -1059,6 +1031,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
+comment|/* 			 * If there is no non-data transfer interrupt 			 * routine, then we should just 			 * restart the unit, leading to a mbstart() soon. 			 */
 name|mbustart
 argument_list|(
 name|mi
@@ -1082,12 +1055,7 @@ argument_list|(
 name|mhp
 argument_list|)
 expr_stmt|;
-name|mbp
-operator|->
-name|mba_cr
-operator||=
-name|MBAIE
-expr_stmt|;
+comment|/* THHHHATS all folks... */
 block|}
 end_block
 
@@ -1454,8 +1422,13 @@ operator|)
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/*  * Init and interrupt enable a massbus adapter.  */
+end_comment
+
 begin_expr_stmt
-unit|}  mbainit
+unit|mbainit
 operator|(
 name|mp
 operator|)
@@ -1472,13 +1445,13 @@ name|mp
 operator|->
 name|mba_cr
 operator|=
-name|MBAINIT
+name|MBCR_INIT
 expr_stmt|;
 name|mp
 operator|->
 name|mba_cr
 operator|=
-name|MBAIE
+name|MBCR_IE
 expr_stmt|;
 block|}
 end_block
