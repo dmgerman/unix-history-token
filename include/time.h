@@ -22,23 +22,27 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_posix.h>
+file|<machine/ansi.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|<
+literal|200112
+operator|||
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
-comment|/*  * Frequency of the clock ticks reported by times().  Deprecated - use  * sysconf(_SC_CLK_TCK) instead.  */
+comment|/*  * Frequency of the clock ticks reported by times().  Deprecated - use  * sysconf(_SC_CLK_TCK) instead.  (Removed in 1003.1-2001.)  */
 end_comment
 
 begin_define
@@ -154,23 +158,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* XXX I'm not sure if _ANSI_SOURCE is playing properly  *     with the setups in _posix.h:  */
-end_comment
-
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_P1003_1B_VISIBLE_HISTORICALLY
-argument_list|)
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
 end_if
 
 begin_comment
@@ -225,38 +218,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_TIMESPEC_DECLARED
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_TIMESPEC_DECLARED
-end_define
-
-begin_struct
-struct|struct
-name|timespec
-block|{
-name|time_t
-name|tv_sec
-decl_stmt|;
-comment|/* seconds */
-name|long
-name|tv_nsec
-decl_stmt|;
-comment|/* and nanoseconds */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/timespec.h>
+end_include
 
 begin_endif
 endif|#
@@ -264,7 +230,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Neither ANSI nor POSIX */
+comment|/* __POSIX_VISIBLE>= 199309 */
 end_comment
 
 begin_struct
@@ -320,17 +286,11 @@ block|}
 struct|;
 end_struct
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -460,11 +420,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_comment
+comment|/* XXX what are these? */
+end_comment
 
 begin_function_decl
 name|time_t
@@ -555,11 +519,11 @@ begin_comment
 comment|/* not ANSI */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+end_if
 
 begin_function_decl
 name|void
@@ -570,30 +534,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* not ANSI */
+comment|/* XXX - figure out which standard introduced these */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
 
 begin_function_decl
 name|char
@@ -660,6 +603,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_function_decl
 name|char
 modifier|*
@@ -679,6 +633,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_function_decl
 name|char
@@ -731,22 +696,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* neither ANSI nor POSIX */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_P1003_1B_VISIBLE_HISTORICALLY
-argument_list|)
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
 end_if
 
 begin_comment
@@ -815,7 +773,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* neither ANSI nor POSIX */
+comment|/* __POSIX_VISIBLE>= 199309 */
 end_comment
 
 begin_macro
