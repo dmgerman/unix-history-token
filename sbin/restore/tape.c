@@ -155,10 +155,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|magtape
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -771,16 +769,33 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* no longer need or want root privileges */
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
 name|magtape
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|source
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|magtape
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot allocate space for magtape buffer\n"
+argument_list|)
+expr_stmt|;
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
