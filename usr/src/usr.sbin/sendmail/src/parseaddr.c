@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.11
+literal|4.12
 operator|%
 name|G
 operator|%
@@ -2700,9 +2700,6 @@ control|(
 name|xpvp
 operator|=
 name|pvpb1
-operator|,
-name|avp
-operator|--
 init|;
 operator|(
 operator|*
