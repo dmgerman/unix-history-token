@@ -4588,6 +4588,8 @@ condition|(
 name|ic
 operator|->
 name|ic_newassoc
+operator|!=
+name|NULL
 condition|)
 name|ic
 operator|->
@@ -7118,6 +7120,8 @@ condition|(
 name|ic
 operator|->
 name|ic_newassoc
+operator|!=
+name|NULL
 condition|)
 name|ic
 operator|->
