@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -2128,8 +2128,16 @@ condition|(
 name|uap
 operator|->
 name|nss
-operator|&&
+operator|==
+literal|0
+condition|)
+return|return
 operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
 name|error
 operator|=
 name|copyin
@@ -2152,7 +2160,6 @@ argument_list|(
 name|ss
 argument_list|)
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(
