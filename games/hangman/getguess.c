@@ -329,11 +329,11 @@ literal|0
 argument_list|,
 name|curscr
 operator|->
-name|cury
+name|_cury
 argument_list|,
 name|curscr
 operator|->
-name|curx
+name|_curx
 argument_list|)
 expr_stmt|;
 block|}
