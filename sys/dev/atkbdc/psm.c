@@ -14330,6 +14330,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Identify the Touchpad version */
 if|if
 condition|(
 name|mouse_ext_command
@@ -14366,7 +14367,6 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* If it is a Synaptics, byte 2 is 0x47. */
 if|if
 condition|(
 name|status
@@ -14381,7 +14381,6 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/*      * Identify the Touchpad version.  The first byte contains the minor      * version number, the lower 4 bits of the third byte contain infoMajor,      * and the upper 4 bits contain the (obsolete) infoModelCode.      */
 name|sc
 operator|->
 name|synhw
@@ -14412,15 +14411,9 @@ name|verbose
 operator|>=
 literal|2
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"Synaptics Touchpad:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  Version: %d.%d\n"
+literal|"Synaptics Touchpad v%d.%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14435,7 +14428,6 @@ operator|.
 name|infoMinor
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -14449,7 +14441,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Synaptics Version less than 4 detected, not yet supported\n"
+literal|"  Unsupported (pre-v4) Touchpad detected\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -14458,6 +14450,7 @@ name|FALSE
 operator|)
 return|;
 block|}
+comment|/* Get the Touchpad model information */
 if|if
 condition|(
 name|mouse_ext_command
@@ -14510,7 +14503,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Could not read model id bytes from the Touchpad\n"
+literal|"  Failed to read model information\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -14656,27 +14649,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Model id: %02x %02x %02x\n"
-argument_list|,
-name|status
-index|[
-literal|0
-index|]
-argument_list|,
-name|status
-index|[
-literal|1
-index|]
-argument_list|,
-name|status
-index|[
-literal|2
-index|]
+literal|"  Model information:\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoRot180: %d\n"
+literal|"   infoRot180: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14687,7 +14665,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoPortrait: %d\n"
+literal|"   infoPortrait: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14698,7 +14676,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoSensor: %d\n"
+literal|"   infoSensor: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14709,7 +14687,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoHardware: %d\n"
+literal|"   infoHardware: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14720,7 +14698,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoNewAbs: %d\n"
+literal|"   infoNewAbs: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14731,7 +14709,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" capPen: %d\n"
+literal|"   capPen: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14742,7 +14720,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoSimplC: %d\n"
+literal|"   infoSimplC: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14753,7 +14731,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" infoGeometry: %d\n"
+literal|"   infoGeometry: %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -14763,6 +14741,7 @@ name|infoGeometry
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Read the extended capability bits */
 if|if
 condition|(
 name|mouse_ext_command
@@ -14811,7 +14790,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Could not read capabilities from the Touchpad\n"
+literal|"  Failed to read extended capability bits\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -14820,6 +14799,21 @@ name|FALSE
 operator|)
 return|;
 block|}
+comment|/* Set the different capabilities when they exist */
+if|if
+condition|(
+operator|(
+name|status
+index|[
+literal|0
+index|]
+operator|&
+literal|0x80
+operator|)
+operator|>>
+literal|7
+condition|)
+block|{
 name|sc
 operator|->
 name|synhw
@@ -14926,26 +14920,103 @@ name|verbose
 operator|>=
 literal|2
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"  Capability Bytes: %02x %02x %02x\n"
-argument_list|,
-name|status
-index|[
-literal|0
-index|]
-argument_list|,
-name|status
-index|[
-literal|1
-index|]
-argument_list|,
-name|status
-index|[
-literal|2
-index|]
+literal|"  Extended capabilities:\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"   capExtended: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capExtended
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   capPassthrough: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capPassthrough
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   capSleep: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capSleep
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   capFourButtons: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capFourButtons
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   capMultiFinger: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capMultiFinger
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   capPalmDetect: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capPalmDetect
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capExtended
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+operator|>=
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"  No extended capabilities\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Read the mode byte      *      * XXX: Note the Synaptics documentation also defines the first      * byte of the response to this query to be a constant 0x3b, this      * does not appear to be true for Touchpads with guest devices.      */
 if|if
 condition|(
 name|mouse_ext_command
@@ -14986,13 +15057,6 @@ if|if
 condition|(
 name|status
 index|[
-literal|0
-index|]
-operator|!=
-literal|0x3b
-operator|||
-name|status
-index|[
 literal|1
 index|]
 operator|!=
@@ -15001,7 +15065,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  Could not read mode byte from the Touchpad\n"
+literal|"  Failed to read mode byte\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -15010,32 +15074,15 @@ name|FALSE
 operator|)
 return|;
 block|}
+comment|/* Set the mode byte -- request wmode where available */
 if|if
 condition|(
-name|verbose
-operator|>=
-literal|2
-condition|)
-name|printf
-argument_list|(
-literal|"  Mode byte set by BIOS: %02x\n"
-argument_list|,
-name|status
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-comment|/*      * Mode byte values:      * 1 (absolute)      * 1 rate (0 = 40/1 = 80)      * 0      * 0 (reserved)      * 0 (Sleep (Only buttons))      * 0 DisGest (not for absolute Mode)      * 0 pktsize (0 for ps2)      * 1 wmode      */
 name|sc
 operator|->
-name|hw
+name|synhw
 operator|.
-name|buttons
-operator|=
-literal|3
-expr_stmt|;
-comment|/* Set encode mode byte and sampling rate. */
+name|capExtended
+condition|)
 name|mouse_ext_command
 argument_list|(
 name|kbdc
@@ -15043,6 +15090,15 @@ argument_list|,
 literal|0xc1
 argument_list|)
 expr_stmt|;
+else|else
+name|mouse_ext_command
+argument_list|(
+name|kbdc
+argument_list|,
+literal|0xc0
+argument_list|)
+expr_stmt|;
+comment|/* Reset the sampling rate */
 name|set_mouse_sampling_rate
 argument_list|(
 name|kbdc
