@@ -639,14 +639,47 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|int
+name|sign
+init|=
+literal|1
+decl_stmt|;
+comment|/* -1 if negative */
 name|size
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|spec
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* we have a parameter */
 name|s
 operator|=
 name|spec
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'-'
+condition|)
+block|{
+comment|/* negative, */
+name|sign
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+comment|/* skip */
+block|}
 if|if
 condition|(
 operator|(
@@ -706,6 +739,8 @@ literal|'\0'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 return|;
 case|case
 literal|'B'
@@ -715,6 +750,8 @@ literal|'b'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 operator|*
 literal|512
 return|;
@@ -727,6 +764,8 @@ case|:
 return|return
 name|size
 operator|*
+name|sign
+operator|*
 literal|1024
 return|;
 case|case
@@ -737,6 +776,8 @@ literal|'m'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 operator|*
 literal|1024
 operator|*
@@ -750,6 +791,8 @@ literal|'g'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 operator|*
 literal|1024
 operator|*
@@ -780,6 +823,36 @@ argument_list|,
 literal|"Invalid length specification: %s"
 argument_list|,
 name|spec
+argument_list|)
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|command_fail
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+ifdef|#
+directive|ifdef
+name|REALLYKERNEL
+name|throw_rude_remark
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"Missing length specification"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Missing length specification"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -872,6 +945,7 @@ case|:
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
+comment|/* ordinary super device */
 case|case
 name|VINUM_RAWSD_TYPE
 case|:
@@ -995,6 +1069,7 @@ case|:
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
+comment|/* ordinary super device */
 case|case
 name|VINUM_PLEX_TYPE
 case|:
