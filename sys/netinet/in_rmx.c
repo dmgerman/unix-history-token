@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.4 1994/12/02 03:32:24 wollman Exp $  */
+comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.5 1994/12/02 23:10:32 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|RTPRF_OURS
-value|0x10000
+value|RTF_PROTO3
 end_define
 
 begin_comment
@@ -156,14 +156,18 @@ name|rt
 operator|->
 name|rt_flags
 operator|&
+operator|(
 name|RTF_HOST
+operator||
+name|RTF_CLONING
+operator|)
 operator|)
 condition|)
 name|rt
 operator|->
 name|rt_flags
 operator||=
-name|RTF_CLONING
+name|RTF_PRCLONING
 expr_stmt|;
 return|return
 name|rn_addroute
@@ -241,14 +245,14 @@ if|if
 condition|(
 name|rt
 operator|->
-name|rt_prflags
+name|rt_flags
 operator|&
 name|RTPRF_OURS
 condition|)
 block|{
 name|rt
 operator|->
-name|rt_prflags
+name|rt_flags
 operator|&=
 operator|~
 name|RTPRF_OURS
@@ -347,21 +351,21 @@ condition|(
 operator|(
 name|rt
 operator|->
-name|rt_prflags
+name|rt_flags
 operator|&
 operator|(
-name|RTPRF_WASCLONED
+name|RTF_WASCLONED
 operator||
 name|RTPRF_OURS
 operator|)
 operator|)
 operator|!=
-name|RTPRF_WASCLONED
+name|RTF_WASCLONED
 condition|)
 return|return;
 name|rt
 operator|->
-name|rt_prflags
+name|rt_flags
 operator||=
 name|RTPRF_OURS
 expr_stmt|;
@@ -409,6 +413,9 @@ modifier|*
 name|rnh
 decl_stmt|;
 name|int
+name|draining
+decl_stmt|;
+name|int
 name|killed
 decl_stmt|;
 name|int
@@ -422,7 +429,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Get rid of old routes.  */
+comment|/*  * Get rid of old routes.  When draining, this deletes everything, even when  * the timeout is not expired yet.  */
 end_comment
 
 begin_function
@@ -475,7 +482,7 @@ if|if
 condition|(
 name|rt
 operator|->
-name|rt_prflags
+name|rt_flags
 operator|&
 name|RTPRF_OURS
 condition|)
@@ -487,6 +494,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|ap
+operator|->
+name|draining
+operator|||
 name|rt
 operator|->
 name|rt_rmx
@@ -647,6 +658,12 @@ literal|10
 operator|*
 name|rtq_timeout
 expr_stmt|;
+name|arg
+operator|.
+name|draining
+operator|=
+literal|0
+expr_stmt|;
 name|rnh
 operator|->
 name|rnh_walktree
@@ -696,7 +713,71 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-empty_stmt|;
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh
+init|=
+name|rt_tables
+index|[
+name|AF_INET
+index|]
+decl_stmt|;
+name|struct
+name|rtqk_arg
+name|arg
+decl_stmt|;
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
+name|arg
+operator|.
+name|found
+operator|=
+name|arg
+operator|.
+name|killed
+operator|=
+literal|0
+expr_stmt|;
+name|arg
+operator|.
+name|rnh
+operator|=
+name|rnh
+expr_stmt|;
+name|arg
+operator|.
+name|nextstop
+operator|=
+literal|0
+expr_stmt|;
+name|arg
+operator|.
+name|draining
+operator|=
+literal|1
+expr_stmt|;
+name|rnh
+operator|->
+name|rnh_walktree
+argument_list|(
+name|rnh
+argument_list|,
+name|in_rtqkill
+argument_list|,
+operator|&
+name|arg
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
