@@ -894,6 +894,16 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|COMPAT_ISA_DRIVER
+argument_list|(
+name|ie
+argument_list|,
+name|iedriver
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_enum
 enum|enum
 name|ie_hardware
@@ -3695,6 +3705,14 @@ operator|->
 name|if_hdrlen
 operator|=
 literal|14
+expr_stmt|;
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
 expr_stmt|;
 if|if
 condition|(
