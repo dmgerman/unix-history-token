@@ -7718,10 +7718,9 @@ name|vp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|VTOC
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_data
 operator|=
 name|NULL
 expr_stmt|;
