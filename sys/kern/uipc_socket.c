@@ -8181,6 +8181,12 @@ directive|endif
 case|case
 name|SO_LINGER
 case|:
+comment|/* 			 * XXXRW: We grab the lock here to get a consistent 			 * snapshot of both fields.  This may not really 			 * be necessary. 			 */
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|l
 operator|.
 name|l_onoff
@@ -8198,6 +8204,11 @@ operator|=
 name|so
 operator|->
 name|so_linger
+expr_stmt|;
+name|SOCK_UNLOCK
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
