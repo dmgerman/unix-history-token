@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ethersubr.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -287,50 +287,39 @@ begin_comment
 comment|/*  * Ethernet output routine.  * Encapsulate a packet of type family for the local net.  * Use trailer local net encapsulation if enough data in first  * packet leaves a multiple of 512 bytes of data in remainder.  * Assumes that ifp is actually pointer to arpcom structure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ether_output
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|m0
-argument_list|,
+parameter_list|,
 name|dst
-argument_list|,
+parameter_list|,
 name|rt0
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|rtentry
 modifier|*
 name|rt0
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|short
 name|type
@@ -625,11 +614,6 @@ name|rt
 argument_list|,
 name|m
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 name|dst
 argument_list|,
 name|edst
@@ -1725,49 +1709,38 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process a received Ethernet packet;  * the packet is in the mbuf chain m without  * the ether header, which is provided separately.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ether_input
-argument_list|(
-argument|ifp
-argument_list|,
-argument|eh
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|,
+name|eh
+parameter_list|,
+name|m
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2132,10 +2105,10 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|schednetisr
-parameter_list|(
+argument_list|(
 name|NETISR_ISO
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|inq
 operator|=
 operator|&
@@ -2571,7 +2544,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Convert Ethernet address to printable (loggable) representation.  */
@@ -2681,20 +2654,18 @@ begin_comment
 comment|/*  * Perform common duties while attaching to interface list  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ether_ifattach
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2813,7 +2784,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|u_char
