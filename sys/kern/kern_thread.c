@@ -3281,8 +3281,6 @@ operator|(
 name|P_STOPPED_SINGLE
 operator||
 name|P_SINGLE_EXIT
-operator||
-name|P_SINGLE_BOUNDARY
 operator|)
 expr_stmt|;
 name|thread_unthread
