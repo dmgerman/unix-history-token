@@ -241,15 +241,15 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bn] variable ..."
+literal|"usage: sysctl [-bNn] variable ..."
 argument_list|,
-literal|"       sysctl [-bn] -w variable=value ..."
+literal|"       sysctl [-bNn] -w variable=value ..."
 argument_list|,
-literal|"       sysctl [-bn] -a"
+literal|"       sysctl [-bNn] -a"
 argument_list|,
-literal|"       sysctl [-bn] -A"
+literal|"       sysctl [-bNn] -A"
 argument_list|,
-literal|"       sysctl [-bn] -X"
+literal|"       sysctl [-bNn] -X"
 argument_list|)
 expr_stmt|;
 name|exit
