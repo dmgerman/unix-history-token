@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_vfsops.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_vfsops.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -975,12 +975,6 @@ name|fs
 operator|->
 name|fs_cpg
 expr_stmt|;
-name|fs
-operator|->
-name|fs_dbsize
-operator|=
-name|size
-expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1354,6 +1348,22 @@ name|fs_interleave
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_postblformat
+operator|==
+name|FS_42POSTBLFMT
+condition|)
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_nrpos
+operator|=
+literal|8
 expr_stmt|;
 comment|/* XXX */
 return|return
@@ -1920,6 +1930,28 @@ operator|->
 name|fs_sbsize
 argument_list|)
 expr_stmt|;
+comment|/* Restore compatibility to old file systems.		   XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_postblformat
+operator|==
+name|FS_42POSTBLFMT
+condition|)
+comment|/* XXX */
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_fs
+operator|->
+name|fs_nrpos
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|SECSIZE
