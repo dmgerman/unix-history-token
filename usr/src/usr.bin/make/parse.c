@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	8.3 (Berkeley) %G%"
+literal|"@(#)parse.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6448,7 +6448,7 @@ block|{
 if|if
 condition|(
 name|compatMake
-operator|||
+operator|&&
 operator|(
 name|lastc
 operator|!=
