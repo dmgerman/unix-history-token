@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.55 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.56 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.55		%G%"
+literal|"@(#)sendmail.h	8.56		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1932,6 +1932,10 @@ name|int
 name|e_ntries
 decl_stmt|;
 comment|/* number of delivery attempts */
+name|dev_t
+name|e_dfdev
+decl_stmt|;
+comment|/* df file's device, for crash recov */
 name|ino_t
 name|e_dfino
 decl_stmt|;
