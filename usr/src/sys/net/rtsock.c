@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1919,6 +1919,19 @@ operator|->
 name|rt_rmx
 operator|.
 name|rmx_locks
+operator|&=
+operator|~
+operator|(
+name|rtm
+operator|->
+name|rtm_inits
+operator|)
+expr_stmt|;
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_locks
 operator||=
 operator|(
 name|rtm
@@ -1930,19 +1943,6 @@ operator|->
 name|rtm_rmx
 operator|.
 name|rmx_locks
-operator|)
-expr_stmt|;
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_locks
-operator|&=
-operator|~
-operator|(
-name|rtm
-operator|->
-name|rtm_inits
 operator|)
 expr_stmt|;
 break|break;
