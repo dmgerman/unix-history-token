@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.6 (Berkeley) %G%"
+literal|"@(#)main.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,7 +600,7 @@ argument_list|(
 name|sendmsg
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -731,6 +731,8 @@ name|from
 argument_list|)
 decl_stmt|,
 name|cc
+decl_stmt|,
+name|omask
 decl_stmt|;
 name|cc
 operator|=
@@ -789,9 +791,21 @@ name|sockaddr_in
 argument_list|)
 condition|)
 return|return;
-name|sighold
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<<((s)-1))
+name|omask
+operator|=
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGALRM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rip_input
@@ -802,9 +816,9 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-name|sigrelse
+name|sigsetmask
 argument_list|(
-name|SIGALRM
+name|omask
 argument_list|)
 expr_stmt|;
 block|}

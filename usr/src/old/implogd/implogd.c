@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implogd.c	4.6 (Berkeley) %G%"
+literal|"@(#)implogd.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,11 +288,11 @@ name|open
 argument_list|(
 name|LOGFILE
 argument_list|,
-name|FCREATE
+name|O_CREAT
 operator||
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FAPPEND
+name|O_APPEND
 argument_list|,
 literal|0644
 argument_list|)
