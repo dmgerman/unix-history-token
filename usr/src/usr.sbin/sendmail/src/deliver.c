@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.101 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.102 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4179,6 +4179,16 @@ comment|/* DAEMON */
 block|}
 else|else
 block|{
+comment|/* flush any expired connections */
+operator|(
+name|void
+operator|)
+name|mci_scan
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* announce the connection to verbose listeners */
 if|if
 condition|(
 name|host
