@@ -1041,6 +1041,13 @@ block|}
 block|,
 comment|/* 	 * leaf locks 	 */
 block|{
+literal|"allpmaps"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"icu"
 block|,
 operator|&

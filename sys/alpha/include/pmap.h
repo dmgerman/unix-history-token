@@ -483,6 +483,27 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|ASN_BITS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASNGEN_BITS
+value|(32 - ASN_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASNGEN_MASK
+value|((1<< ASNGEN_BITS) - 1)
+end_define
+
 begin_struct
 struct|struct
 name|pmap
@@ -517,13 +538,13 @@ block|{
 name|u_int32_t
 name|asn
 range|:
-literal|8
+name|ASN_BITS
 decl_stmt|;
 comment|/* address space number */
 name|u_int32_t
 name|gen
 range|:
-literal|24
+name|ASNGEN_BITS
 decl_stmt|;
 comment|/* generation number */
 block|}
@@ -543,6 +564,13 @@ modifier|*
 name|pm_ptphint
 decl_stmt|;
 comment|/* pmap ptp hint */
+name|LIST_ENTRY
+argument_list|(
+argument|pmap
+argument_list|)
+name|pm_list
+expr_stmt|;
+comment|/* list of all pmaps. */
 block|}
 struct|;
 end_struct
