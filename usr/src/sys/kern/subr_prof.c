@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -268,7 +268,7 @@ name|fromssize
 argument_list|,
 name|M_GPROF
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -480,44 +480,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Special, non-profiled versions  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|splhigh
-value|_splhigh
-end_define
-
-begin_define
-define|#
-directive|define
-name|splx
-value|_splx
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * This routine is massaged so that it may be jsb'ed to on vax.  */
 end_comment
 
@@ -676,12 +638,10 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
-asm|asm("	.text");
-comment|/* make sure we're in text space */
-asm|asm("	movl a6@(4),a5");
-comment|/* selfpc = pc pushed by mcount jsr */
-asm|asm("	movl a6@(8),a4");
-comment|/* frompcindex = pc pushed by jsr into 					   self, stack frame not yet built */
+name|Fix
+name|Me
+operator|!
+operator|!
 endif|#
 directive|endif
 endif|#
@@ -696,11 +656,6 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__GNUC__
 argument_list|)
 asm|asm("movw	sr,%0" : "=g" (s));
 asm|asm("movw	#0x2700,sr");
@@ -1002,11 +957,6 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__GNUC__
 argument_list|)
 asm|asm("movw	%0,sr" : : "g" (s));
 else|#
