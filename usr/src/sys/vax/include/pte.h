@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	6.1	83/07/29	*/
+comment|/*	pte.h	6.2	84/08/12	*/
 end_comment
 
 begin_comment
@@ -254,15 +254,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_function_decl
-name|struct
-name|pte
-modifier|*
-name|vtopte
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* utilities defined in locore.s */
