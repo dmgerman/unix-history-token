@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nameser.h	5.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nameser.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -636,18 +636,44 @@ name|CONV_BADBUFLEN
 value|-4
 end_define
 
-begin_comment
-comment|/*  * Structure for query header, the order of the fields is machine and  * compiler dependent, in our case, the bits within a byte are assignd   * least significant first, while the order of transmition is most   * significant first.  This requires a somewhat confusing rearrangement.  */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BYTE_ORDER
+end_ifndef
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_short
-name|id
-decl_stmt|;
-comment|/* query identification number */
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ns32000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BIT_ZERO_ON_RIGHT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|LITTLE_ENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -667,9 +693,14 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|mc68000
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
 name|is68k
 argument_list|)
-expr|\
 operator|||
 name|defined
 argument_list|(
@@ -680,145 +711,185 @@ name|defined
 argument_list|(
 name|BIT_ZERO_ON_LEFT
 argument_list|)
-comment|/* Bit zero on left:  Gould and similar architectures */
-comment|/* fields in third byte */
-name|u_char
-name|qr
-range|:
-literal|1
-decl_stmt|;
-comment|/* response flag */
-name|u_char
-name|opcode
-range|:
-literal|4
-decl_stmt|;
-comment|/* purpose of message */
-name|u_char
-name|aa
-range|:
-literal|1
-decl_stmt|;
-comment|/* authoritive answer */
-name|u_char
-name|tc
-range|:
-literal|1
-decl_stmt|;
-comment|/* truncated message */
-name|u_char
-name|rd
-range|:
-literal|1
-decl_stmt|;
-comment|/* recursion desired */
-comment|/* fields in fourth byte */
-name|u_char
-name|ra
-range|:
-literal|1
-decl_stmt|;
-comment|/* recursion available */
-name|u_char
-name|pr
-range|:
-literal|1
-decl_stmt|;
-comment|/* primary server required (non standard) */
-name|u_char
-name|unused
-range|:
-literal|2
-decl_stmt|;
-comment|/* unused bits */
-name|u_char
-name|rcode
-range|:
-literal|4
-decl_stmt|;
-comment|/* response code */
-else|#
-directive|else
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ns32000
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BIT_ZERO_ON_RIGHT
-argument_list|)
-comment|/* Bit zero on right:  VAX */
-comment|/* fields in third byte */
-name|u_char
-name|rd
-range|:
-literal|1
-decl_stmt|;
-comment|/* recursion desired */
-name|u_char
-name|tc
-range|:
-literal|1
-decl_stmt|;
-comment|/* truncated message */
-name|u_char
-name|aa
-range|:
-literal|1
-decl_stmt|;
-comment|/* authoritive answer */
-name|u_char
-name|opcode
-range|:
-literal|4
-decl_stmt|;
-comment|/* purpose of message */
-name|u_char
-name|qr
-range|:
-literal|1
-decl_stmt|;
-comment|/* response flag */
-comment|/* fields in fourth byte */
-name|u_char
-name|rcode
-range|:
-literal|4
-decl_stmt|;
-comment|/* response code */
-name|u_char
-name|unused
-range|:
-literal|2
-decl_stmt|;
-comment|/* unused bits */
-name|u_char
-name|pr
-range|:
-literal|1
-decl_stmt|;
-comment|/* primary server required (non standard) */
-name|u_char
-name|ra
-range|:
-literal|1
-decl_stmt|;
-comment|/* recursion available */
-else|#
-directive|else
-comment|/* you must determine what the correct bit order is for your compiler */
-name|UNDEFINED_BIT_ORDER
-expr_stmt|;
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|BIG_ENDIAN
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BYTE_ORDER */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BYTE_ORDER
+end_ifndef
+
+begin_comment
+comment|/* you must determine what the correct bit order is for your compiler */
+end_comment
+
+begin_expr_stmt
+name|UNDEFINED_BIT_ORDER
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Structure for query header, the order of the fields is machine and  * compiler dependent, in our case, the bits within a byte are assignd   * least significant first, while the order of transmition is most   * significant first.  This requires a somewhat confusing rearrangement.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_short
+name|id
+decl_stmt|;
+comment|/* query identification number */
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+comment|/* fields in third byte */
+name|u_char
+name|qr
+range|:
+literal|1
+decl_stmt|;
+comment|/* response flag */
+name|u_char
+name|opcode
+range|:
+literal|4
+decl_stmt|;
+comment|/* purpose of message */
+name|u_char
+name|aa
+range|:
+literal|1
+decl_stmt|;
+comment|/* authoritive answer */
+name|u_char
+name|tc
+range|:
+literal|1
+decl_stmt|;
+comment|/* truncated message */
+name|u_char
+name|rd
+range|:
+literal|1
+decl_stmt|;
+comment|/* recursion desired */
+comment|/* fields in fourth byte */
+name|u_char
+name|ra
+range|:
+literal|1
+decl_stmt|;
+comment|/* recursion available */
+name|u_char
+name|pr
+range|:
+literal|1
+decl_stmt|;
+comment|/* primary server required (non standard) */
+name|u_char
+name|unused
+range|:
+literal|2
+decl_stmt|;
+comment|/* unused bits */
+name|u_char
+name|rcode
+range|:
+literal|4
+decl_stmt|;
+comment|/* response code */
+endif|#
+directive|endif
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+comment|/* fields in third byte */
+name|u_char
+name|rd
+range|:
+literal|1
+decl_stmt|;
+comment|/* recursion desired */
+name|u_char
+name|tc
+range|:
+literal|1
+decl_stmt|;
+comment|/* truncated message */
+name|u_char
+name|aa
+range|:
+literal|1
+decl_stmt|;
+comment|/* authoritive answer */
+name|u_char
+name|opcode
+range|:
+literal|4
+decl_stmt|;
+comment|/* purpose of message */
+name|u_char
+name|qr
+range|:
+literal|1
+decl_stmt|;
+comment|/* response flag */
+comment|/* fields in fourth byte */
+name|u_char
+name|rcode
+range|:
+literal|4
+decl_stmt|;
+comment|/* response code */
+name|u_char
+name|unused
+range|:
+literal|2
+decl_stmt|;
+comment|/* unused bits */
+name|u_char
+name|pr
+range|:
+literal|1
+decl_stmt|;
+comment|/* primary server required (non standard) */
+name|u_char
+name|ra
+range|:
+literal|1
+decl_stmt|;
+comment|/* recursion available */
 endif|#
 directive|endif
 comment|/* remaining bytes */
