@@ -1,31 +1,60 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			P I N G . C  *  * Using the InterNet Control Message Protocol (ICMP) "ECHO" facility,  * measure round-trip-delays and packet loss across network paths.  *  * Author -  *	Mike Muuss  *	U. S. Army Ballistic Research Laboratory  *	December, 1983  * Modified at Uc Berkeley  * Record Route and verbose headers - Phil Dykstra, BRL, March 1988.  * ttl, duplicate detection - Cliff Frost, UCB, April 1989  * Pad pattern - Cliff Frost (from Tom Ferrin, UCSF), April 1989  * Wait for dribbles, option decoding, pkt compare - vjs@sgi.com, May 1989  *  * Status -  *	Public Domain.  Distribution Unlimited.  *  * Bugs -  *	More statistics could always be gathered.  *	This program has to run SUID to ROOT to access the ICMP socket.  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Muuss.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1989 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ping.c	5.1 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  *			P I N G . C  *  * Using the InterNet Control Message Protocol (ICMP) "ECHO" facility,  * measure round-trip-delays and packet loss across network paths.  *  * Author -  *	Mike Muuss  *	U. S. Army Ballistic Research Laboratory  *	December, 1983  *  * Status -  *	Public Domain.  Distribution Unlimited.  * Bugs -  *	More statistics could always be gathered.  *	This program has to run SUID to ROOT to access the ICMP socket.  */
+end_comment
 
 begin_include
 include|#
@@ -43,6 +72,18 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -78,31 +119,69 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
 end_include
 
 begin_define
 define|#
 directive|define
-name|MAXWAIT
-value|10
+name|DEFDATALEN
+value|(64 - 8)
 end_define
 
 begin_comment
-comment|/* max time to wait for response, sec. */
+comment|/* default data length */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|MAXIPLEN
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXICMPLEN
+value|76
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXPACKET
-value|(65536-60-8)
+value|(65536 - 60 - 8)
 end_define
 
 begin_comment
@@ -112,78 +191,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VERBOSE
-value|1
+name|MAXWAIT
+value|10
 end_define
 
 begin_comment
-comment|/* verbose flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUIET
-value|2
-end_define
-
-begin_comment
-comment|/* quiet flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FLOOD
-value|4
-end_define
-
-begin_comment
-comment|/* floodping flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RROUTE
-value|8
-end_define
-
-begin_comment
-comment|/* record route flag */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PING_FILLED
-value|16
-end_define
-
-begin_comment
-comment|/* is buffer filled? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NUMERIC
-value|32
-end_define
-
-begin_comment
-comment|/* don't do gethostbyaddr() calls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERVAL
-value|64
-end_define
-
-begin_comment
-comment|/* did user specify interval? */
+comment|/* max seconds to wait for response */
 end_comment
 
 begin_define
@@ -197,41 +210,146 @@ begin_comment
 comment|/* number of record route slots */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXHOSTNAMELEN
-end_ifndef
+begin_define
+define|#
+directive|define
+name|A
+parameter_list|(
+name|bit
+parameter_list|)
+value|rcvd_tbl[(bit)>>3]
+end_define
+
+begin_comment
+comment|/* identify byte in array */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXHOSTNAMELEN
-value|64
+name|B
+parameter_list|(
+name|bit
+parameter_list|)
+value|(1<< ((bit)& 0x07))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* MAX_DUP_CHK is the number of bits in received table, ie the */
+comment|/* identify bit in byte */
 end_comment
 
-begin_comment
-comment|/*      maximum number of received sequence numbers we can keep track of. */
-end_comment
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|bit
+parameter_list|)
+value|(A(bit) |= B(bit))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLR
+parameter_list|(
+name|bit
+parameter_list|)
+value|(A(bit)&= (~B(bit)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TST
+parameter_list|(
+name|bit
+parameter_list|)
+value|(A(bit)& B(bit))
+end_define
 
 begin_comment
-comment|/*      Change 128 to 8192 for complete accuracy... */
+comment|/* various options */
+end_comment
+
+begin_decl_stmt
+name|int
+name|options
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|F_FLOOD
+value|0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_INTERVAL
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_NUMERIC
+value|0x004
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_PINGFILLED
+value|0x008
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_QUIET
+value|0x010
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_RROUTE
+value|0x020
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_SO_DEBUG
+value|0x040
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_SO_DONTROUTE
+value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_VERBOSE
+value|0x100
+end_define
+
+begin_comment
+comment|/*  * MAX_DUP_CHK is the number of bits in received table, i.e. the maximum  * number of received sequence numbers we can keep track of.  Change 128  * to 8192 for complete accuracy...  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAX_DUP_CHK
-value|8 * 128
+value|(8 * 128)
 end_define
 
 begin_decl_stmt
@@ -254,108 +372,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|nrepeats
-init|=
-literal|0
+name|struct
+name|sockaddr
+name|whereto
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|A
-parameter_list|(
-name|bit
-parameter_list|)
-value|rcvd_tbl[ (bit>>3) ]
-end_define
 
 begin_comment
-comment|/* identify byte in array */
+comment|/* who to ping */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|B
-parameter_list|(
-name|bit
-parameter_list|)
-value|( 1<< (bit& 0x07) )
-end_define
-
-begin_comment
-comment|/* identify bit in byte */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET
-parameter_list|(
-name|bit
-parameter_list|)
-value|A(bit) |= B(bit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLR
-parameter_list|(
-name|bit
-parameter_list|)
-value|A(bit)&= (~B(bit))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TST
-parameter_list|(
-name|bit
-parameter_list|)
-value|(A(bit)& B(bit))
-end_define
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|u_char
-modifier|*
-name|packet
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|packlen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|i
-decl_stmt|,
-name|pingflags
+name|datalen
 init|=
-literal|0
-decl_stmt|,
-name|options
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
+name|DEFDATALEN
 decl_stmt|;
 end_decl_stmt
 
@@ -366,63 +397,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Socket file descriptor */
+comment|/* socket file descriptor */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|hostent
-modifier|*
-name|hp
+name|u_char
+name|outpack
+index|[
+name|MAXPACKET
+index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Pointer to host info */
-end_comment
-
 begin_decl_stmt
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* leftover */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|sockaddr
-name|whereto
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Who to ping */
-end_comment
-
-begin_decl_stmt
-name|int
-name|datalen
+name|char
+name|BSPACE
 init|=
-literal|64
-operator|-
-literal|8
+literal|'\b'
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* How much data */
+comment|/* characters written for flood */
 end_comment
 
 begin_decl_stmt
 name|char
-name|usage
-index|[]
+name|DOT
 init|=
-literal|"Usage:  ping [-dfnqrvR][-c count][-i wait][-l preload][-p pattern][-s packetsize][-h] host \n"
+literal|'.'
 decl_stmt|;
 end_decl_stmt
 
@@ -434,49 +437,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|hnamebuf
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_char
-name|outpack
-index|[
-name|MAXPACKET
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
-name|npackets
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|preload
-init|=
-literal|0
+name|ident
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of packets to "preload" */
+comment|/* process id to identify our packets */
+end_comment
+
+begin_comment
+comment|/* counters */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
+name|npackets
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max packets to transmit */
+end_comment
+
+begin_decl_stmt
+name|long
+name|nreceived
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of packets we got back */
+end_comment
+
+begin_decl_stmt
+name|long
+name|nrepeats
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of duplicates */
+end_comment
+
+begin_decl_stmt
+name|long
 name|ntransmitted
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -486,12 +492,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|ident
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
 name|interval
 init|=
 literal|1
@@ -502,47 +502,45 @@ begin_comment
 comment|/* interval between packets */
 end_comment
 
-begin_decl_stmt
-name|int
-name|nreceived
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* # of packets we got back */
+comment|/* timing */
 end_comment
 
 begin_decl_stmt
 name|int
 name|timing
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* flag to do timing */
+end_comment
+
 begin_decl_stmt
-name|int
+name|long
 name|tmin
 init|=
-literal|999999999
+name|LONG_MAX
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* minimum round trip time */
+end_comment
+
 begin_decl_stmt
-name|int
+name|long
 name|tmax
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* maximum round trip time */
+end_comment
+
 begin_decl_stmt
-name|int
+name|u_long
 name|tsum
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -550,29 +548,9 @@ begin_comment
 comment|/* sum of all times, for doing average */
 end_comment
 
-begin_decl_stmt
-name|int
-name|finish
-argument_list|()
-decl_stmt|,
-name|catcher
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|bufspace
-init|=
-literal|48
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
-name|int
-name|prefinish
+name|u_long
+name|inet_addr
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -584,35 +562,108 @@ name|inet_ntoa
 argument_list|()
 decl_stmt|,
 modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strncpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
+name|pr_addr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|catcher
+argument_list|()
+decl_stmt|,
+name|finish
+argument_list|()
+decl_stmt|,
+name|prefinish
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|main
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
-name|pr_addr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_long
-name|inet_addr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|,
+name|optind
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+name|struct
+name|timeval
+name|timeout
+decl_stmt|;
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|to
+decl_stmt|;
+name|struct
+name|protoent
+modifier|*
+name|proto
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|,
+name|fdmask
+decl_stmt|,
+name|hold
+decl_stmt|,
+name|packlen
+decl_stmt|,
+name|preload
+decl_stmt|;
+name|u_char
+modifier|*
+name|datap
+decl_stmt|,
+modifier|*
+name|packet
+decl_stmt|;
+name|char
+modifier|*
+name|target
+decl_stmt|,
+name|hnamebuf
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IP_OPTIONS
 name|char
 name|rspace
 index|[
@@ -625,70 +676,15 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* record route space */
-end_comment
-
-begin_comment
-comment|/*  * 			M A I N  */
-end_comment
-
-begin_function
-name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|char
-modifier|*
-name|argv
-index|[]
-decl_stmt|;
-block|{
-name|struct
-name|sockaddr_in
-name|from
-decl_stmt|;
-comment|/*	char **av = argv; */
-name|struct
-name|sockaddr_in
-modifier|*
-name|to
-init|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|whereto
-decl_stmt|;
-name|int
-name|c
-decl_stmt|,
-name|k
-decl_stmt|,
-name|on
-init|=
-literal|1
-decl_stmt|,
-name|hostind
-init|=
+endif|#
+directive|endif
+name|preload
+operator|=
 literal|0
-decl_stmt|;
-name|struct
-name|protoent
-modifier|*
-name|proto
-decl_stmt|;
-specifier|static
-name|u_char
-modifier|*
+expr_stmt|;
 name|datap
-init|=
+operator|=
 operator|&
 name|outpack
 index|[
@@ -700,20 +696,11 @@ expr|struct
 name|timeval
 argument_list|)
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
+expr_stmt|;
 while|while
 condition|(
 operator|(
-name|c
+name|ch
 operator|=
 name|getopt
 argument_list|(
@@ -721,7 +708,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:dfh:i:l:np:qrs:vR"
+literal|"Rc:dfh:i:l:np:qrs:v"
 argument_list|)
 operator|)
 operator|!=
@@ -729,7 +716,7 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-name|c
+name|ch
 condition|)
 block|{
 case|case
@@ -742,31 +729,77 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|npackets
+operator|<=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: bad number of packets to transmit.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'d'
 case|:
 name|options
 operator||=
-name|SO_DEBUG
+name|F_SO_DEBUG
 expr_stmt|;
 break|break;
 case|case
 literal|'f'
 case|:
-name|pingflags
-operator||=
-name|FLOOD
+if|if
+condition|(
+name|getuid
+argument_list|()
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: you must be root to use the -f option.\n"
+argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|'h'
-case|:
-name|hostind
-operator|=
-name|optind
-operator|-
+name|exit
+argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|options
+operator||=
+name|F_FLOOD
+expr_stmt|;
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -783,16 +816,29 @@ expr_stmt|;
 if|if
 condition|(
 name|interval
-operator|==
+operator|<=
 literal|0
 condition|)
-name|interval
-operator|=
-literal|1
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: bad timing interval.\n"
+argument_list|)
 expr_stmt|;
-name|pingflags
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|options
 operator||=
-name|INTERVAL
+name|F_INTERVAL
 expr_stmt|;
 break|break;
 case|case
@@ -805,22 +851,45 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preload
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: bad preload value.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'n'
 case|:
-name|pingflags
+name|options
 operator||=
-name|NUMERIC
+name|F_NUMERIC
 expr_stmt|;
 break|break;
 case|case
 literal|'p'
 case|:
 comment|/* fill buffer with user pattern */
-name|pingflags
+name|options
 operator||=
-name|PING_FILLED
+name|F_PINGFILLED
 expr_stmt|;
 name|fill
 argument_list|(
@@ -837,9 +906,17 @@ break|break;
 case|case
 literal|'q'
 case|:
-name|pingflags
+name|options
 operator||=
-name|QUIET
+name|F_QUIET
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|options
+operator||=
+name|F_RROUTE
 expr_stmt|;
 break|break;
 case|case
@@ -847,7 +924,7 @@ literal|'r'
 case|:
 name|options
 operator||=
-name|SO_DONTROUTE
+name|F_SO_DONTROUTE
 expr_stmt|;
 break|break;
 case|case
@@ -861,56 +938,21 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|'v'
-case|:
-name|pingflags
-operator||=
-name|VERBOSE
-expr_stmt|;
-break|break;
-case|case
-literal|'R'
-case|:
-name|pingflags
-operator||=
-name|RROUTE
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-name|usage
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|hostind
-operator|==
-literal|0
+name|datalen
+operator|>
+name|MAXPACKET
 condition|)
 block|{
-if|if
-condition|(
-name|optind
-operator|!=
-name|argc
-operator|-
-literal|1
-condition|)
-block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|usage
+literal|"ping: packet size too large.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -919,12 +961,65 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|hostind
-operator|=
-name|optind
+if|if
+condition|(
+name|datalen
+operator|<=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: illegal packet size.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'v'
+case|:
+name|options
+operator||=
+name|F_VERBOSE
+expr_stmt|;
+break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|!=
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|target
+operator|=
+operator|*
+name|argv
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -942,6 +1037,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|to
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|whereto
+expr_stmt|;
+name|to
 operator|->
 name|sin_family
 operator|=
@@ -955,10 +1060,7 @@ name|s_addr
 operator|=
 name|inet_addr
 argument_list|(
-name|argv
-index|[
-name|hostind
-index|]
+name|target
 argument_list|)
 expr_stmt|;
 if|if
@@ -970,44 +1072,48 @@ operator|.
 name|s_addr
 operator|!=
 operator|(
-name|unsigned
+name|u_int
 operator|)
 operator|-
 literal|1
 condition|)
-block|{
-name|strcpy
-argument_list|(
-name|hnamebuf
-argument_list|,
-name|argv
-index|[
-name|hostind
-index|]
-argument_list|)
-expr_stmt|;
 name|hostname
 operator|=
-name|hnamebuf
+name|target
 expr_stmt|;
-block|}
 else|else
 block|{
 name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|argv
-index|[
-name|hostind
-index|]
+name|target
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|hp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: unknown host %s\n"
+argument_list|,
+name|target
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|to
 operator|->
 name|sin_family
@@ -1035,6 +1141,9 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|hnamebuf
@@ -1056,70 +1165,25 @@ operator|=
 name|hnamebuf
 expr_stmt|;
 block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"%s: unknown host %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|argv
-index|[
-name|hostind
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
-operator|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
-operator|)
+name|F_FLOOD
 operator|&&
-operator|(
-name|pingflags
+name|options
 operator|&
-name|INTERVAL
+name|F_INTERVAL
+condition|)
+block|{
+operator|(
+name|void
 operator|)
-condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ping: -f and -i incompatible options\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|datalen
-operator|>
-name|MAXPACKET
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ping: packet size too large\n"
+literal|"ping: -f and -i incompatible options.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1138,7 +1202,7 @@ expr|struct
 name|timeval
 argument_list|)
 condition|)
-comment|/* can we time 'em? */
+comment|/* can we time transfer */
 name|timing
 operator|=
 literal|1
@@ -1147,13 +1211,13 @@ name|packlen
 operator|=
 name|datalen
 operator|+
-literal|60
+name|MAXIPLEN
 operator|+
-literal|76
+name|MAXICMPLEN
 expr_stmt|;
-comment|/* MAXIP + MAXICMP */
 if|if
 condition|(
+operator|!
 operator|(
 name|packet
 operator|=
@@ -1164,20 +1228,21 @@ operator|)
 name|malloc
 argument_list|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|packlen
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ping: malloc failed\n"
+literal|"ping: out of memory.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1190,32 +1255,30 @@ if|if
 condition|(
 operator|!
 operator|(
-name|pingflags
+name|options
 operator|&
-name|PING_FILLED
+name|F_PINGFILLED
 operator|)
 condition|)
-block|{
 for|for
 control|(
-name|k
+name|i
 operator|=
 literal|8
 init|;
-name|k
+name|i
 operator|<
 name|datalen
 condition|;
-name|k
 operator|++
+name|i
 control|)
 operator|*
 name|datap
 operator|++
 operator|=
-name|k
+name|i
 expr_stmt|;
-block|}
 name|ident
 operator|=
 name|getpid
@@ -1225,6 +1288,7 @@ literal|0xFFFF
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|proto
 operator|=
@@ -1233,20 +1297,21 @@ argument_list|(
 literal|"icmp"
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"icmp: unknown protocol\n"
+literal|"ping: unknown protocol icmp.\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|10
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1277,17 +1342,20 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|5
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|hold
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|options
 operator|&
-name|SO_DEBUG
+name|F_SO_DEBUG
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1299,23 +1367,25 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
-name|on
+name|hold
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|on
+name|hold
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|options
 operator|&
-name|SO_DONTROUTE
+name|F_SO_DONTROUTE
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1327,22 +1397,25 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DONTROUTE
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
-name|on
+name|hold
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|on
+name|hold
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Record Route option */
+comment|/* record route option */
 if|if
 condition|(
-name|pingflags
+name|options
 operator|&
-name|RROUTE
+name|F_RROUTE
 condition|)
 block|{
 ifdef|#
@@ -1397,33 +1470,67 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"Record route"
+literal|"ping: record route"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|42
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 else|#
 directive|else
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ping: record route not available on this machine.\n"
+literal|"ping: record route not available in this implementation.\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|42
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|IP_OPTIONS
+comment|/* IP_OPTIONS */
 block|}
+comment|/* 	 * When pinging the broadcast address, you can get a lot of answers. 	 * Doing something so evil is useful if you are trying to stress the 	 * ethernet, or just want to fill the arp cache to get some stuff for 	 * /etc/ethers. 	 */
+name|hold
+operator|=
+literal|48
+operator|*
+literal|1024
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|hold
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hold
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|to
@@ -1432,7 +1539,9 @@ name|sin_family
 operator|==
 name|AF_INET
 condition|)
-block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"PING %s (%s): %d data bytes\n"
@@ -1458,9 +1567,10 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"PING %s: %d data bytes\n"
@@ -1470,32 +1580,9 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* When pinging the broadcast address, you can get a lot 	 * of answers.  Doing something so evil is useful if you 	 * are trying to stress the ethernet, or just want to 	 * fill the arp cache to get some stuff for /etc/ethers. 	 */
 operator|(
 name|void
 operator|)
-name|setsockopt
-argument_list|(
-name|s
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_RCVBUF
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|bufspace
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bufspace
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -1503,6 +1590,9 @@ argument_list|,
 name|prefinish
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1510,64 +1600,22 @@ argument_list|,
 name|catcher
 argument_list|)
 expr_stmt|;
-comment|/* fire off them quickies */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
+while|while
+condition|(
 name|preload
-condition|;
-name|i
-operator|++
-control|)
+operator|--
+condition|)
+comment|/* fire off them quickies */
 name|pinger
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
-operator|)
+name|F_FLOOD
 condition|)
-name|catcher
-argument_list|()
-expr_stmt|;
-comment|/* start things going */
-for|for
-control|(
-init|;
-condition|;
-control|)
 block|{
-name|int
-name|fromlen
-init|=
-sizeof|sizeof
-argument_list|(
-name|from
-argument_list|)
-decl_stmt|;
-name|int
-name|cc
-decl_stmt|;
-name|struct
-name|timeval
-name|timeout
-decl_stmt|;
-name|int
-name|fdmask
-init|=
-literal|1
-operator|<<
-name|s
-decl_stmt|;
 name|timeout
 operator|.
 name|tv_sec
@@ -1580,11 +1628,40 @@ name|tv_usec
 operator|=
 literal|10000
 expr_stmt|;
+name|fdmask
+operator|=
+literal|1
+operator|<<
+name|s
+expr_stmt|;
+block|}
+else|else
+name|catcher
+argument_list|()
+expr_stmt|;
+comment|/* start things going */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|struct
+name|sockaddr_in
+name|from
+decl_stmt|;
+specifier|register
+name|int
+name|cc
+decl_stmt|;
+name|int
+name|fromlen
+decl_stmt|;
 if|if
 condition|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
+name|F_FLOOD
 condition|)
 block|{
 name|pinger
@@ -1592,6 +1669,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|select
 argument_list|(
 literal|32
@@ -1607,22 +1685,27 @@ operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 name|fd_set
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|timeout
 argument_list|)
-operator|==
-literal|0
 condition|)
 continue|continue;
 block|}
+name|fromlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|from
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1694,16 +1777,17 @@ name|nreceived
 operator|>=
 name|npackets
 condition|)
+break|break;
+block|}
 name|finish
 argument_list|()
 expr_stmt|;
-block|}
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 end_function
 
 begin_comment
-comment|/*  * 			C A T C H E R  *   * This routine causes another PING to be transmitted, and then  * schedules another SIGALRM for 1 second from now.  *   * Bug -  * 	Our sense of time will slowly skew (ie, packets will not be launched  * 	exactly at 1-second intervals).  This does not affect the quality  *	of the delay and loss statistics.  */
+comment|/*  * catcher --  *	This routine causes another PING to be transmitted, and then  * schedules another SIGALRM for 1 second from now.  *   * bug --  *	Our sense of time will slowly skew (i.e., packets will not be  * launched exactly at 1-second intervals).  This does not affect the  * quality of the delay and loss statistics.  */
 end_comment
 
 begin_macro
@@ -1719,6 +1803,9 @@ decl_stmt|;
 name|pinger
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1728,9 +1815,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|npackets
-operator|==
-literal|0
 operator|||
 name|ntransmitted
 operator|<
@@ -1738,6 +1824,9 @@ name|npackets
 condition|)
 name|alarm
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|interval
 argument_list|)
 expr_stmt|;
@@ -1758,9 +1847,8 @@ literal|1000
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|waittime
-operator|==
-literal|0
 condition|)
 name|waittime
 operator|=
@@ -1772,6 +1860,9 @@ name|waittime
 operator|=
 name|MAXWAIT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1779,10 +1870,13 @@ argument_list|,
 name|finish
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|alarm
 argument_list|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|waittime
 argument_list|)
@@ -1792,7 +1886,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * 			P I N G E R  *   * Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
+comment|/*  * pinger --  * 	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
 end_comment
 
 begin_macro
@@ -1807,36 +1901,23 @@ name|struct
 name|icmp
 modifier|*
 name|icp
-init|=
+decl_stmt|;
+specifier|register
+name|int
+name|cc
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|icp
+operator|=
 operator|(
 expr|struct
 name|icmp
 operator|*
 operator|)
 name|outpack
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|cc
-decl_stmt|;
-specifier|register
-name|struct
-name|timeval
-modifier|*
-name|tp
-init|=
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
-operator|&
-name|outpack
-index|[
-literal|8
-index|]
-decl_stmt|;
+expr_stmt|;
 name|icp
 operator|->
 name|icmp_type
@@ -1859,8 +1940,8 @@ name|icp
 operator|->
 name|icmp_seq
 operator|=
-name|ntransmitted
 operator|++
+name|ntransmitted
 expr_stmt|;
 name|icp
 operator|->
@@ -1878,6 +1959,34 @@ operator|%
 name|mx_dup_ck
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|timing
+condition|)
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
+operator|&
+name|outpack
+index|[
+literal|8
+index|]
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 name|cc
 operator|=
 name|datalen
@@ -1885,19 +1994,7 @@ operator|+
 literal|8
 expr_stmt|;
 comment|/* skips ICMP portion */
-if|if
-condition|(
-name|timing
-condition|)
-name|gettimeofday
-argument_list|(
-name|tp
-argument_list|,
-operator|&
-name|tz
-argument_list|)
-expr_stmt|;
-comment|/* Compute ICMP checksum here */
+comment|/* compute ICMP checksum here */
 name|icp
 operator|->
 name|icmp_cksum
@@ -1913,7 +2010,6 @@ argument_list|,
 name|cc
 argument_list|)
 expr_stmt|;
-comment|/* cc = sendto(s, msg, len, flags, to, tolen) */
 name|i
 operator|=
 name|sendto
@@ -1959,9 +2055,12 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"sendto"
+literal|"ping: sendto"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"ping: wrote %s %d chars, ret=%d\n"
@@ -1973,35 +2072,31 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
+name|F_FLOOD
 condition|)
-block|{
-name|putchar
+operator|(
+name|void
+operator|)
+name|write
 argument_list|(
-literal|'.'
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|DOT
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
 begin_comment
-comment|/*  *			P R _ P A C K  *  * Print out the packet, if it came from us.  This logic is necessary  * because ALL readers of the ICMP socket get a copy of ALL ICMP packets  * which arrive ('tis only fair).  This permits multiple copies of this  * program to be run without having intermingled output (or statistics!).  */
+comment|/*  * pr_pack --  *	Print out the packet, if it came from us.  This logic is necessary  * because ALL readers of the ICMP socket get a copy of ALL ICMP packets  * which arrive ('tis only fair).  This permits multiple copies of this  * program to be run without having intermingled output (or statistics!).  */
 end_comment
 
 begin_macro
@@ -2038,16 +2133,15 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 specifier|register
 name|struct
 name|icmp
 modifier|*
 name|icp
+decl_stmt|;
+specifier|register
+name|u_long
+name|l
 decl_stmt|;
 specifier|register
 name|int
@@ -2075,28 +2169,39 @@ name|MAX_IPOPTLEN
 index|]
 decl_stmt|;
 name|struct
-name|timeval
-name|tv
+name|ip
+modifier|*
+name|ip
 decl_stmt|;
 name|struct
 name|timeval
+name|tv
+decl_stmt|,
 modifier|*
 name|tp
+decl_stmt|;
+name|long
+name|triptime
 decl_stmt|;
 name|int
 name|hlen
 decl_stmt|,
-name|triptime
-decl_stmt|,
 name|dupflag
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|&
-name|tz
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Check the IP header */
@@ -2128,13 +2233,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|pingflags
+name|options
 operator|&
-name|VERBOSE
+name|F_VERBOSE
 condition|)
-name|printf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"packet too short (%d bytes) from %s\n"
+name|stderr
+argument_list|,
+literal|"ping: packet too short (%d bytes) from %s\n"
 argument_list|,
 name|cc
 argument_list|,
@@ -2153,11 +2263,6 @@ name|sin_addr
 operator|.
 name|s_addr
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2199,8 +2304,8 @@ name|ident
 condition|)
 return|return;
 comment|/* 'Twas not our ECHO */
-name|nreceived
 operator|++
+name|nreceived
 expr_stmt|;
 if|if
 condition|(
@@ -2231,13 +2336,9 @@ expr|struct
 name|timeval
 operator|*
 operator|)
-operator|&
 name|icp
 operator|->
 name|icmp_data
-index|[
-literal|0
-index|]
 expr_stmt|;
 endif|#
 directive|endif
@@ -2302,11 +2403,11 @@ name|mx_dup_ck
 argument_list|)
 condition|)
 block|{
-name|nrepeats
 operator|++
-operator|,
-name|nreceived
+name|nrepeats
+expr_stmt|;
 operator|--
+name|nreceived
 expr_stmt|;
 name|dupflag
 operator|=
@@ -2331,34 +2432,38 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pingflags
+name|options
 operator|&
-name|QUIET
+name|F_QUIET
 condition|)
 return|return;
 if|if
 condition|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
+name|F_FLOOD
 condition|)
-block|{
-name|putchar
+operator|(
+name|void
+operator|)
+name|write
 argument_list|(
-literal|'\b'
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|BSPACE
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%d bytes from %s: icmp_seq=%d"
+literal|"%d bytes from %s: icmp_seq=%u"
 argument_list|,
 name|cc
 argument_list|,
@@ -2383,15 +2488,9 @@ operator|->
 name|icmp_seq
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dupflag
-condition|)
-name|printf
-argument_list|(
-literal|" DUP!"
-argument_list|)
-expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" ttl=%d"
@@ -2405,11 +2504,26 @@ if|if
 condition|(
 name|timing
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|" time=%d ms"
+literal|" time=%ld ms"
 argument_list|,
 name|triptime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dupflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" (DUP!)"
 argument_list|)
 expr_stmt|;
 comment|/* check the data */
@@ -2451,14 +2565,14 @@ name|i
 operator|<
 name|datalen
 condition|;
+operator|++
 name|i
-operator|++
 operator|,
+operator|++
 name|cp
-operator|++
 operator|,
-name|dp
 operator|++
+name|dp
 control|)
 block|{
 if|if
@@ -2470,6 +2584,9 @@ operator|*
 name|dp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nwrong data byte #%d should be 0x%x but was 0x%x"
@@ -2507,11 +2624,11 @@ name|i
 operator|<
 name|datalen
 condition|;
+operator|++
 name|i
-operator|++
 operator|,
-name|cp
 operator|++
+name|cp
 control|)
 block|{
 if|if
@@ -2524,11 +2641,17 @@ operator|)
 operator|==
 literal|8
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n\t"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%x "
@@ -2550,12 +2673,15 @@ if|if
 condition|(
 operator|!
 operator|(
-name|pingflags
+name|options
 operator|&
-name|VERBOSE
+name|F_VERBOSE
 operator|)
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%d bytes from %s: "
@@ -2593,8 +2719,10 @@ expr|struct
 name|ip
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+comment|/* ANSI C will force hlen to unsigned! */
+for|for
+control|(
+init|;
 name|hlen
 operator|>
 sizeof|sizeof
@@ -2602,28 +2730,19 @@ argument_list|(
 expr|struct
 name|ip
 argument_list|)
-operator|&
-operator|(
+condition|;
+operator|--
 name|hlen
-operator|>=
-literal|0
-operator|)
-condition|)
-block|{
-comment|/* !ANSI C will  */
-specifier|register
-name|unsigned
-name|long
-name|l
-decl_stmt|;
-comment|/* force hlen to */
+operator|,
+operator|++
+name|cp
+control|)
 switch|switch
 condition|(
 operator|*
 name|cp
 condition|)
 block|{
-comment|/* unsigned!     */
 case|case
 name|IPOPT_EOL
 case|:
@@ -2635,6 +2754,9 @@ break|break;
 case|case
 name|IPOPT_LSRR
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nLSRR: "
@@ -2713,12 +2835,18 @@ name|l
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t0.0.0.0"
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t%s"
@@ -2747,6 +2875,9 @@ operator|<=
 name|IPOPT_MINOFF
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -2834,12 +2965,15 @@ argument_list|)
 operator|&&
 operator|!
 operator|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
+name|F_FLOOD
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t(same route)"
@@ -2886,6 +3020,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nRR: "
@@ -2945,12 +3082,18 @@ name|l
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t0.0.0.0"
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t%s"
@@ -2979,6 +3122,9 @@ operator|<=
 literal|0
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -2989,6 +3135,9 @@ break|break;
 case|case
 name|IPOPT_NOP
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nNOP"
@@ -2996,6 +3145,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nunknown option %x"
@@ -3006,37 +3158,38 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|hlen
-operator|--
-expr_stmt|;
-name|cp
-operator|++
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 operator|(
-name|pingflags
+name|options
 operator|&
-name|FLOOD
+name|F_FLOOD
 operator|)
 condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_block
 
 begin_comment
-comment|/*  *			I N _ C K S U M  *  * Checksum routine for Internet Protocol family headers (C Version)  *  */
+comment|/*  * in_cksum --  *	Checksum routine for Internet Protocol family headers (C Version)  */
 end_comment
 
 begin_macro
@@ -3087,7 +3240,7 @@ name|answer
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 *  Our algorithm is simple, using a 32 bit accumulator (sum), 	 *  we add sequential 16 bit words to it, and at the end, fold 	 *  back all the carry bits from the top 16 bits into the lower 	 *  16 bits. 	 */
+comment|/* 	 * Our algorithm is simple, using a 32 bit accumulator (sum), we add 	 * sequential 16 bit words to it, and at the end, fold back all the 	 * carry bits from the top 16 bits into the lower 16 bits. 	 */
 while|while
 condition|(
 name|nleft
@@ -3136,7 +3289,7 @@ operator|+=
 name|answer
 expr_stmt|;
 block|}
-comment|/* 	 * add back carry outs from top 16 bits to low 16 bits 	 */
+comment|/* add back carry outs from top 16 bits to low 16 bits */
 name|sum
 operator|=
 operator|(
@@ -3176,7 +3329,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * 			T V S U B  *   * Subtract 2 timeval structs:  out = out - in.  *   * Out is assumed to be>= in.  */
+comment|/*  * tvsub --  *	Subtract 2 timeval structs:  out = out - in.  Out is assumed to  * be>= in.  */
 end_comment
 
 begin_expr_stmt
@@ -3214,10 +3367,10 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|--
 name|out
 operator|->
 name|tv_sec
-operator|--
 expr_stmt|;
 name|out
 operator|->
@@ -3238,7 +3391,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* On the first SIGINT, allow any outstanding packets to dribble in */
+comment|/*  * prefinish --  *	On the first SIGINT, allow any outstanding packets to dribble in.  */
 end_comment
 
 begin_macro
@@ -3248,21 +3401,23 @@ end_macro
 
 begin_block
 block|{
+comment|/* quit now if caught up or if remote is dead */
 if|if
 condition|(
+operator|!
+name|nreceived
+operator|||
 name|nreceived
 operator|>=
 name|ntransmitted
-comment|/* quit now if caught up */
-operator|||
-name|nreceived
-operator|==
-literal|0
 condition|)
-comment|/* or if remote is dead */
 name|finish
 argument_list|()
 expr_stmt|;
+comment|/* do this only the 1st time, let the normal limit work */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -3270,19 +3425,17 @@ argument_list|,
 name|finish
 argument_list|)
 expr_stmt|;
-comment|/* do this only the 1st time */
 name|npackets
 operator|=
 name|ntransmitted
 operator|+
 literal|1
 expr_stmt|;
-comment|/* let the normal limit work */
 block|}
 end_block
 
 begin_comment
-comment|/*  *			F I N I S H  *  * Print out statistics, and give up.  * Heavily buffered STDIO is used here, so that all the statistics  * will be written with 1 sys-write call.  This is nice when more  * than one copy of the program is running on a terminal;  it prevents  * the statistics output from becomming intermingled.  */
+comment|/*  * finish --  *	Print out statistics, and give up.  */
 end_comment
 
 begin_macro
@@ -3292,33 +3445,48 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"\n----%s PING Statistics----\n"
+literal|"--- %s ping statistics ---\n"
 argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%d packets transmitted, "
+literal|"%ld packets transmitted, "
 argument_list|,
 name|ntransmitted
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%d packets received, "
+literal|"%ld packets received, "
 argument_list|,
 name|nreceived
 argument_list|)
@@ -3327,9 +3495,12 @@ if|if
 condition|(
 name|nrepeats
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"+%d duplicates, "
+literal|"+%ld duplicates, "
 argument_list|,
 name|nrepeats
 argument_list|)
@@ -3344,12 +3515,18 @@ name|nreceived
 operator|>
 name|ntransmitted
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"-- somebody's printing up packets!"
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%d%% packet loss"
@@ -3372,9 +3549,12 @@ name|ntransmitted
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+operator|(
+name|void
+operator|)
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 if|if
@@ -3383,9 +3563,12 @@ name|nreceived
 operator|&&
 name|timing
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"round-trip (ms)  min/avg/max = %d/%d/%d\n"
+literal|"round-trip min/avg/max = %ld/%lu/%ld ms\n"
 argument_list|,
 name|tmin
 argument_list|,
@@ -3400,11 +3583,6 @@ argument_list|,
 name|tmax
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -3413,74 +3591,62 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
-begin_comment
-unit|static char *ttab[] = { 	"Echo Reply",
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|ttab
+index|[]
+init|=
+block|{
+literal|"Echo Reply"
+block|,
 comment|/* ip + seq + udata */
-end_comment
-
-begin_comment
-unit|"Dest Unreachable",
+literal|"Dest Unreachable"
+block|,
 comment|/* net, host, proto, port, frag, sr + IP */
-end_comment
-
-begin_comment
-unit|"Source Quench",
+literal|"Source Quench"
+block|,
 comment|/* IP */
-end_comment
-
-begin_comment
-unit|"Redirect",
+literal|"Redirect"
+block|,
 comment|/* redirect type, gateway, + IP  */
-end_comment
-
-begin_comment
-unit|"Echo", 	"Time Exceeded",
+literal|"Echo"
+block|,
+literal|"Time Exceeded"
+block|,
 comment|/* transit, frag reassem + IP */
-end_comment
-
-begin_comment
-unit|"Parameter Problem",
+literal|"Parameter Problem"
+block|,
 comment|/* pointer + IP */
-end_comment
-
-begin_comment
-unit|"Timestamp",
+literal|"Timestamp"
+block|,
 comment|/* id + seq + three timestamps */
-end_comment
-
-begin_comment
-unit|"Timestamp Reply",
+literal|"Timestamp Reply"
+block|,
 comment|/* " */
-end_comment
-
-begin_comment
-unit|"Info Request",
+literal|"Info Request"
+block|,
 comment|/* id + sq */
-end_comment
-
-begin_comment
-unit|"Info Reply"
+literal|"Info Reply"
 comment|/* " */
-end_comment
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
-unit|};
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* 0 */
-end_comment
-
-begin_comment
-comment|/*  *  Print a descriptive string about an ICMP header.  */
+comment|/*  * pr_icmph --  *	Print a descriptive string about an ICMP header.  */
 end_comment
 
 begin_macro
@@ -3510,6 +3676,9 @@ block|{
 case|case
 name|ICMP_ECHOREPLY
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Echo Reply\n"
@@ -3530,6 +3699,9 @@ block|{
 case|case
 name|ICMP_UNREACH_NET
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Destination Net Unreachable\n"
@@ -3539,6 +3711,9 @@ break|break;
 case|case
 name|ICMP_UNREACH_HOST
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Destination Host Unreachable\n"
@@ -3548,6 +3723,9 @@ break|break;
 case|case
 name|ICMP_UNREACH_PROTOCOL
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Destination Protocol Unreachable\n"
@@ -3557,6 +3735,9 @@ break|break;
 case|case
 name|ICMP_UNREACH_PORT
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Destination Port Unreachable\n"
@@ -3566,6 +3747,9 @@ break|break;
 case|case
 name|ICMP_UNREACH_NEEDFRAG
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"frag needed and DF set\n"
@@ -3575,6 +3759,9 @@ break|break;
 case|case
 name|ICMP_UNREACH_SRCFAIL
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Source Route Failed\n"
@@ -3582,6 +3769,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Dest Unreachable, Bad Code: %d\n"
@@ -3625,6 +3815,9 @@ break|break;
 case|case
 name|ICMP_SOURCEQUENCH
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Source Quench\n"
@@ -3671,6 +3864,9 @@ block|{
 case|case
 name|ICMP_REDIRECT_NET
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Redirect Network"
@@ -3680,6 +3876,9 @@ break|break;
 case|case
 name|ICMP_REDIRECT_HOST
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Redirect Host"
@@ -3689,6 +3888,9 @@ break|break;
 case|case
 name|ICMP_REDIRECT_TOSNET
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Redirect Type of Service and Network"
@@ -3698,6 +3900,9 @@ break|break;
 case|case
 name|ICMP_REDIRECT_TOSHOST
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Redirect Type of Service and Host"
@@ -3705,6 +3910,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Redirect, Bad Code: %d"
@@ -3716,15 +3924,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|" (New addr: 0x%08x)\n"
+literal|"(New addr: 0x%08lx)\n"
 argument_list|,
 name|icp
 operator|->
-name|icmp_hun
+name|icmp_gwaddr
 operator|.
-name|ih_gwaddr
+name|s_addr
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -3758,6 +3969,9 @@ break|break;
 case|case
 name|ICMP_ECHO
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Echo Request\n"
@@ -3778,6 +3992,9 @@ block|{
 case|case
 name|ICMP_TIMXCEED_INTRANS
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Time to live exceeded\n"
@@ -3787,6 +4004,9 @@ break|break;
 case|case
 name|ICMP_TIMXCEED_REASS
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Frag reassembly time exceeded\n"
@@ -3794,6 +4014,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Time exceeded, Bad Code: %d\n"
@@ -3836,6 +4059,9 @@ break|break;
 case|case
 name|ICMP_PARAMPROB
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Parameter problem: pointer = 0x%02x\n"
@@ -3878,6 +4104,9 @@ break|break;
 case|case
 name|ICMP_TSTAMP
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Timestamp\n"
@@ -3888,6 +4117,9 @@ break|break;
 case|case
 name|ICMP_TSTAMPREPLY
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Timestamp Reply\n"
@@ -3898,6 +4130,9 @@ break|break;
 case|case
 name|ICMP_IREQ
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Information Request\n"
@@ -3908,6 +4143,9 @@ break|break;
 case|case
 name|ICMP_IREQREPLY
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Information Reply\n"
@@ -3921,6 +4159,9 @@ name|ICMP_MASKREQ
 case|case
 name|ICMP_MASKREQ
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Address Mask Request\n"
@@ -3935,6 +4176,9 @@ name|ICMP_MASKREPLY
 case|case
 name|ICMP_MASKREPLY
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Address Mask Reply\n"
@@ -3944,6 +4188,9 @@ break|break;
 endif|#
 directive|endif
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Bad ICMP type: %d\n"
@@ -3958,7 +4205,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *  Print an IP header with options.  */
+comment|/*  * pr_iph --  *	Print an IP header with options.  */
 end_comment
 
 begin_macro
@@ -3981,8 +4228,7 @@ block|{
 name|int
 name|hlen
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|;
@@ -3997,8 +4243,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|ip
@@ -4006,11 +4251,17 @@ operator|+
 literal|20
 expr_stmt|;
 comment|/* point to options */
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst Data\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %1x  %1x  %02x %04x %04x"
@@ -4036,6 +4287,9 @@ operator|->
 name|ip_id
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"   %1x %04x"
@@ -4061,6 +4315,9 @@ operator|&
 literal|0x1fff
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"  %02x  %02x %04x"
@@ -4078,6 +4335,9 @@ operator|->
 name|ip_sum
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s "
@@ -4099,6 +4359,9 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s "
@@ -4129,6 +4392,9 @@ operator|>
 literal|20
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%02x"
@@ -4139,16 +4405,19 @@ operator|++
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+operator|(
+name|void
+operator|)
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  *  Return an ascii host address  *  as a dotted quad and optionally with a hostname  */
+comment|/*  * pr_addr --  *	Return an ascii host address as a dotted quad and optionally with  * a hostname.  */
 end_comment
 
 begin_function
@@ -4158,8 +4427,7 @@ name|pr_addr
 parameter_list|(
 name|l
 parameter_list|)
-name|unsigned
-name|long
+name|u_long
 name|l
 decl_stmt|;
 block|{
@@ -4178,11 +4446,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|pingflags
+name|options
 operator|&
-name|NUMERIC
+name|F_NUMERIC
 operator|)
 operator|||
+operator|!
 operator|(
 name|hp
 operator|=
@@ -4200,9 +4469,10 @@ argument_list|,
 name|AF_INET
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -4223,6 +4493,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -4255,7 +4528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Dump some info on a returned (via ICMP) IP packet.  */
+comment|/*  * pr_retip --  *	Dump some info on a returned (via ICMP) IP packet.  */
 end_comment
 
 begin_macro
@@ -4278,8 +4551,7 @@ block|{
 name|int
 name|hlen
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|;
@@ -4299,8 +4571,7 @@ expr_stmt|;
 name|cp
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|ip
@@ -4315,10 +4586,12 @@ name|ip_p
 operator|==
 literal|6
 condition|)
-block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"TCP: from port %d, to port %d (decimal)\n"
+literal|"TCP: from port %u, to port %u (decimal)\n"
 argument_list|,
 operator|(
 operator|*
@@ -4353,7 +4626,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4363,10 +4635,12 @@ name|ip_p
 operator|==
 literal|17
 condition|)
-block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"UDP: from port %d, to port %d (decimal)\n"
+literal|"UDP: from port %u, to port %u (decimal)\n"
 argument_list|,
 operator|(
 operator|*
@@ -4401,7 +4675,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -4434,15 +4707,15 @@ name|jj
 decl_stmt|,
 name|kk
 decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|int
 name|pat
 index|[
 literal|16
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 for|for
 control|(
@@ -4466,16 +4739,14 @@ name|cp
 argument_list|)
 condition|)
 block|{
-name|printf
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"\"-p %s\" ???: "
+name|stderr
 argument_list|,
-name|patp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"patterns must be specified as hex digits\n"
+literal|"ping: patterns must be specified as hex digits.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4625,8 +4896,8 @@ name|jj
 operator|<
 name|ii
 condition|;
-name|jj
 operator|++
+name|jj
 control|)
 name|bp
 index|[
@@ -4644,12 +4915,15 @@ if|if
 condition|(
 operator|!
 operator|(
-name|pingflags
+name|options
 operator|&
-name|QUIET
+name|F_QUIET
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"PATTERN: 0x"
@@ -4665,9 +4939,12 @@ name|jj
 operator|<
 name|ii
 condition|;
-name|jj
 operator|++
+name|jj
 control|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%02x"
@@ -4680,12 +4957,40 @@ operator|&
 literal|0xFF
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: ping [-Rdfnqrv] [-c count] [-i wait] [-l preload]\n\t[-p pattern] [-s packetsize] host\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
