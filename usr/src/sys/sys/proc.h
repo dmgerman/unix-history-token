@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -447,7 +447,7 @@ comment|/* job control counter */
 name|dev_t
 name|e_tdev
 decl_stmt|;
-comment|/* controlling tty */
+comment|/* controlling tty dev */
 name|pid_t
 name|e_tpgid
 decl_stmt|;
@@ -487,9 +487,22 @@ name|short
 name|e_xswrss
 decl_stmt|;
 name|long
+name|e_flag
+decl_stmt|;
+define|#
+directive|define
+name|EPROC_CTTY
+value|0x01
+comment|/* controlling tty vnode active */
+define|#
+directive|define
+name|EPROC_SLEADER
+value|0x02
+comment|/* session leader */
+name|long
 name|e_spare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 block|}
