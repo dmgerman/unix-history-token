@@ -1965,7 +1965,7 @@ operator|&&
 ifdef|#
 directive|ifdef
 name|USE_PAM
-name|auth_pam_password
+name|auth_password
 argument_list|(
 name|authctxt
 argument_list|,
@@ -1973,6 +1973,7 @@ name|password
 argument_list|)
 operator|==
 literal|1
+condition|)
 else|#
 directive|else
 name|auth_password
@@ -1983,13 +1984,16 @@ name|password
 argument_list|)
 operator|==
 literal|1
+block|)
 endif|#
 directive|endif
-condition|)
-name|authenticated
-operator|=
+function|authenticated
+init|=
 literal|1
-expr_stmt|;
+function|;
+end_function
+
+begin_expr_stmt
 name|memset
 argument_list|(
 name|password
@@ -1999,25 +2003,31 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|xfree
 argument_list|(
 name|password
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|authenticated
 return|;
-block|}
-end_function
+end_return
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|userauth_kbdint
-parameter_list|(
-name|Authctxt
-modifier|*
-name|authctxt
-parameter_list|)
+argument_list|(
+argument|Authctxt *authctxt
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|authenticated
@@ -2091,7 +2101,7 @@ return|return
 name|authenticated
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int
