@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tp.h	4.1	%G%	*/
+comment|/*	@(#)tp.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -361,27 +361,6 @@ function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|char
-modifier|*
-name|nameblk
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|top
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|nptr
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
