@@ -10347,21 +10347,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 name|SYSINIT
 argument_list|(
-name|f00f_hack
+argument|f00f_hack
 argument_list|,
-name|SI_SUB_INTRINSIC
+argument|SI_SUB_INTRINSIC
 argument_list|,
-name|SI_ORDER_FIRST
+argument|SI_ORDER_FIRST
 argument_list|,
-name|f00f_hack
+argument|f00f_hack
 argument_list|,
-name|NULL
+argument|NULL
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_function
 specifier|static
@@ -10378,15 +10377,6 @@ name|gate_descriptor
 modifier|*
 name|new_idt
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|SMP
-name|struct
-name|region_descriptor
-name|r_idt
-decl_stmt|;
-endif|#
-directive|endif
 name|vm_offset_t
 name|tmp
 decl_stmt|;
@@ -10402,17 +10392,6 @@ name|printf
 argument_list|(
 literal|"Intel Pentium detected, installing workaround for F00F bug\n"
 argument_list|)
-expr_stmt|;
-name|r_idt
-operator|.
-name|rd_limit
-operator|=
-sizeof|sizeof
-argument_list|(
-name|idt0
-argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 name|tmp
 operator|=
@@ -10436,30 +10415,7 @@ argument_list|(
 literal|"kmem_alloc returned 0"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|unsigned
-name|int
-operator|)
-name|tmp
-operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-operator|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"kmem_alloc returned non-page-aligned memory"
-argument_list|)
-expr_stmt|;
-comment|/* Put the first seven entries in the lower page */
+comment|/* Put the problematic entry (#6) at the end of the lower page. */
 name|new_idt
 operator|=
 operator|(
@@ -10472,11 +10428,13 @@ name|tmp
 operator|+
 name|PAGE_SIZE
 operator|-
-operator|(
 literal|7
 operator|*
-literal|8
-operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|gate_descriptor
+argument_list|)
 operator|)
 expr_stmt|;
 name|bcopy
@@ -10496,7 +10454,7 @@ operator|.
 name|rd_base
 operator|=
 operator|(
-name|int
+name|u_int
 operator|)
 name|new_idt
 expr_stmt|;
@@ -10534,7 +10492,6 @@ argument_list|(
 literal|"vm_map_protect failed"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -10556,8 +10513,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|unsigned
-name|long
+name|u_long
 name|addr
 parameter_list|)
 block|{
