@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -651,6 +651,55 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|spec_blkatoff
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		off_t offset, \ 		char **res, \ 		struct buf **bpp))) spec_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spec_vget
+value|((int (*) __P(( \ 		struct mount *mp, \ 		ino_t ino, \ 		struct vnode **vpp))) spec_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spec_valloc
+value|((int (*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) spec_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spec_vfree
+value|((void (*) __P(( \ 		struct vnode *pvp, \ 		ino_t ino, \ 		int mode))) spec_badop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spec_truncate
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		u_long length, \ 		int flags))) nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spec_update
+value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct timeval *ta, \ 		struct timeval *tm, \ 		int waitfor))) nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|spec_bwrite
+value|((int (*) __P(( \ 		struct buf *bp))) nullop)
+end_define
 
 end_unit
 
