@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/diskmbr.h>
 end_include
 
@@ -242,7 +236,7 @@ name|struct
 name|dos_partition
 name|od_slicetab
 index|[
-name|MAX_SLICES
+name|NEXTDOSPART
 index|]
 decl_stmt|;
 block|}
@@ -3263,7 +3257,7 @@ name|od
 operator|->
 name|od_nslices
 operator|==
-name|MAX_SLICES
+name|NEXTDOSPART
 condition|)
 goto|goto
 name|done
