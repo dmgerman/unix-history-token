@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gmon.c	5.13 (Berkeley) %G%"
+literal|"@(#)gmon.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,19 +36,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/gmon.h>
 end_include
 
 begin_include
@@ -83,7 +83,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/gmon.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
