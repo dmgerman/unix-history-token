@@ -100,6 +100,7 @@ argument_list|)
 condition|)
 name|systemShutdown
 argument_list|(
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -412,6 +413,10 @@ block|{
 comment|/* If some media is open, close it down */
 if|if
 condition|(
+name|status
+operator|>=
+literal|0
+operator|&&
 name|mediaDevice
 condition|)
 name|mediaDevice
