@@ -151,6 +151,17 @@ value|5
 end_define
 
 begin_comment
+comment|/* Standard size of buffer returned by the _FDE method. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FDC_FDE_LEN
+value|(ACPI_FDC_MAXDEVS * sizeof(uint32_t))
+end_define
+
+begin_comment
 comment|/*  * Parameters for the tape drive (5th device).  Some BIOS authors use this  * for all drives, not just the tape drive (e.g., ASUS K8V).  This isn't  * grossly incompatible with the spec since it says the first four devices  * are simple booleans.  */
 end_comment
 
@@ -328,6 +339,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|fde_count
+decl_stmt|,
 name|i
 decl_stmt|;
 name|ACPI_OBJECT
@@ -341,8 +354,10 @@ name|ACPI_HANDLE
 name|h
 decl_stmt|;
 name|uint32_t
-modifier|*
 name|fde
+index|[
+name|ACPI_FDC_MAXDEVS
+index|]
 decl_stmt|;
 comment|/* Get our softc and use the same accessor as ISA. */
 name|sc
@@ -456,7 +471,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|ACPI_EVALUATE_OBJECT
 argument_list|(
@@ -474,6 +489,15 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* Parse the output of _FDE in various ways. */
 name|obj
 operator|=
 name|pkg
@@ -496,11 +520,57 @@ block|{
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/* 			 * The spec says _FDE should be a buffer of five 			 * 32-bit integers. 			 */
+comment|/* 		 * The spec says _FDE should be a buffer of five 32-bit 		 * integers.  In violation of the spec, some systems use 		 * five bytes instead. 		 */
+switch|switch
+condition|(
+name|obj
+operator|->
+name|Buffer
+operator|.
+name|Length
+condition|)
+block|{
+case|case
+name|ACPI_FDC_FDE_LEN
+case|:
+name|bcopy
+argument_list|(
+name|obj
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+argument_list|,
 name|fde
+argument_list|,
+name|ACPI_FDC_FDE_LEN
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_FDC_MAXDEVS
+case|:
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_FDC_MAXDEVS
+condition|;
+name|i
+operator|++
+control|)
+name|fde
+index|[
+name|i
+index|]
 operator|=
 operator|(
-name|uint32_t
+operator|(
+name|uint8_t
 operator|*
 operator|)
 name|obj
@@ -508,24 +578,29 @@ operator|->
 name|Buffer
 operator|.
 name|Pointer
+operator|)
+index|[
+name|i
+index|]
 expr_stmt|;
-if|if
-condition|(
+break|break;
+default|default:
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"_FDE wrong length: %d\n"
+argument_list|,
 name|obj
 operator|->
 name|Buffer
 operator|.
 name|Length
-operator|<
-literal|20
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"_FDE too small\n"
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
 expr_stmt|;
 goto|goto
 name|out
@@ -535,40 +610,20 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/* 			 * In violation of the spec, systems including the ASUS 			 * K8V return a package of five integers instead of a 			 * buffer of five 32-bit integers. 			 */
-name|fde
+comment|/* 		 * In violation of the spec, systems including the ASUS 		 * K8V return a package of five integers instead of a 		 * buffer of five 32-bit integers. 		 */
+name|fde_count
 operator|=
-name|malloc
+name|min
 argument_list|(
+name|ACPI_FDC_MAXDEVS
+argument_list|,
 name|pkg
 operator|->
 name|Package
 operator|.
 name|Count
-operator|*
-sizeof|sizeof
-argument_list|(
-name|uint32_t
-argument_list|)
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_NOWAIT
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fde
-operator|==
-name|NULL
-condition|)
-block|{
-goto|goto
-name|out
-goto|;
-block|}
 for|for
 control|(
 name|i
@@ -577,11 +632,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|pkg
-operator|->
-name|Package
-operator|.
-name|Count
+name|fde_count
 condition|;
 name|i
 operator|++
@@ -635,10 +686,15 @@ operator|->
 name|Type
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
+comment|/* Add fd child devices as specified. */
 name|error
 operator|=
 name|fdc_acpi_probe_children
@@ -650,23 +706,13 @@ argument_list|,
 name|fde
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+comment|/* If there was a problem, fall back to the hints-based probe. */
 if|if
 condition|(
-name|pkg
-operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_PACKAGE
+name|error
 condition|)
-name|free
-argument_list|(
-name|fde
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|error
 operator|=
 name|fdc_hints_probe
@@ -674,8 +720,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|out
-label|:
 if|if
 condition|(
 name|buf
