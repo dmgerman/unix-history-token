@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.22 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -440,6 +446,25 @@ name|debug
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|GETOPT_FLAGS
+value|"NRWerwd"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GETOPT_FLAGS
+value|"NRWerw"
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -504,7 +529,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"NRWerw"
+name|GETOPT_FLAGS
 argument_list|)
 operator|)
 operator|!=
@@ -1127,8 +1152,7 @@ name|name
 operator|=
 name|argv
 index|[
-operator|--
-name|argc
+literal|2
 index|]
 expr_stmt|;
 name|makelabel
@@ -1499,10 +1523,6 @@ decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 name|lp
 operator|->
 name|d_magic
@@ -1581,7 +1601,7 @@ name|off_t
 operator|)
 literal|0
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 comment|/* 		 * write enable label sector before write (if necessary), 		 * disable after writing. 		 */
@@ -1759,7 +1779,7 @@ operator|->
 name|d_secsize
 argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
