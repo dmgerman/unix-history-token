@@ -3184,6 +3184,29 @@ name|smapbase
 operator|==
 literal|0
 condition|)
+name|smapbase
+operator|=
+operator|(
+expr|struct
+name|bios_smap
+operator|*
+operator|)
+name|preload_search_info
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFO_METADATA
+operator||
+literal|0x0009
+argument_list|)
+expr_stmt|;
+comment|/* Old value for MODINFOMD_SMAP */
+if|if
+condition|(
+name|smapbase
+operator|==
+literal|0
+condition|)
 block|{
 name|panic
 argument_list|(
@@ -4921,7 +4944,7 @@ name|kmdp
 operator|=
 name|preload_search_by_type
 argument_list|(
-literal|"elf64 kernel"
+literal|"elf kernel"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4934,7 +4957,7 @@ name|kmdp
 operator|=
 name|preload_search_by_type
 argument_list|(
-literal|"elf kernel"
+literal|"elf64 kernel"
 argument_list|)
 expr_stmt|;
 name|boothowto
