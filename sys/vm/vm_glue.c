@@ -1548,8 +1548,8 @@ operator|)
 operator|||
 operator|(
 name|vm_page_free_count
-operator|>=
-name|vm_page_free_min
+operator|>
+name|vm_page_free_reserved
 operator|)
 condition|)
 block|{

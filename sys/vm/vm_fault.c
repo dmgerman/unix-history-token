@@ -4,7 +4,7 @@ comment|/*   * Copyright (c) 1991 Regents of the University of California.  * Al
 end_comment
 
 begin_comment
-comment|/*  * $Id: vm_fault.c,v 1.16 1994/04/14 07:50:18 davidg Exp $  */
+comment|/*  * $Id: vm_fault.c,v 1.17 1994/04/20 07:07:10 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -593,8 +593,6 @@ literal|48
 condition|)
 comment|/* XXX */
 block|{
-name|UNLOCK_AND_DEALLOCATE
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Process %d killed by vm_fault -- out of swap\n"
@@ -611,9 +609,23 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
-return|return
-name|KERN_RESOURCE_SHORTAGE
-return|;
+name|curproc
+operator|->
+name|p_cpu
+operator|=
+literal|0
+expr_stmt|;
+name|curproc
+operator|->
+name|p_nice
+operator|=
+name|PRIO_MIN
+expr_stmt|;
+name|setpri
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 			 *	Allocate a new page for this object/offset 			 *	pair. 			 */
