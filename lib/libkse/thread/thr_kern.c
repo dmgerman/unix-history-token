@@ -3959,6 +3959,12 @@ name|curkse
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|err_save
+init|=
+name|curthread
+operator|->
+name|error
 decl_stmt|;
 name|DBG_MSG
 argument_list|(
@@ -4001,6 +4007,12 @@ name|tm_context
 operator|=
 operator|*
 name|ucp
+expr_stmt|;
+name|curthread
+operator|->
+name|error
+operator|=
+name|err_save
 expr_stmt|;
 name|ret
 operator|=
