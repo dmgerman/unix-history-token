@@ -80,6 +80,20 @@ name|cap_t
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator||
+name|defined
+argument_list|(
+name|_CAPABILITY_NEEDMACROS
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -131,8 +145,44 @@ parameter_list|,
 name|tcap
 parameter_list|)
 define|\
-value|(((scap).c_permitted | (tcap).c_permitted == (scap).c_permitted)&& \ 	((scap).c_effective | (tcap).c_effective == (scap).c_effective)&& \ 	((scap).c_inheritable | (tcap).c_inheritable == (scap).c_inheritable))
+value|((((scap).c_permitted | (tcap).c_permitted) == (scap).c_permitted)&& \ 	(((scap).c_effective | (tcap).c_effective) == (scap).c_effective)&& \ 	(((scap).c_inheritable | (tcap).c_inheritable) == (scap).c_inheritable))
 end_define
+
+begin_comment
+comment|/*  * Put the union of the capability sets c1 and c2 into c2.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_UNITE
+parameter_list|(
+name|c1
+parameter_list|,
+name|c2
+parameter_list|)
+value|do { \ 	(c1).c_permitted |= (c2).c_permitted; \ 	(c1).c_effective |= (c2).c_effective; \ 	(c1).c_inheritable |= (c2).c_inheritable; \ 	} while (0)
+end_define
+
+begin_comment
+comment|/*  * Test whether any bits in a cap set are set.  * XXX: due to capability setting constraints, it should actually be  * sufficient to check c_permitted.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_NONZERO
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|((c).c_permitted != 0 || (c).c_effective != 0 || (c).c_inheritable != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Possible flags for a particular capability.  */
@@ -336,7 +386,7 @@ value|(0x0000000000200000)
 end_define
 
 begin_comment
-comment|/*  * The following capability, borrowed from Linux, is unsafe  */
+comment|/*  * The following is no longer functional.  * With our capability model, this serves no useful purpose. A process just  * has all the capabilities it needs, and if it are to be temporarily given  * up, they can be removed from the effective set.  * We do not support modifying the capabilities of other processes, as Linux  * (from which this one originated) does.  */
 end_comment
 
 begin_define
@@ -418,7 +468,7 @@ value|(0x0000000040000000)
 end_define
 
 begin_comment
-comment|/*  * The following capabilities, borrowed from Linux, are unsafe in a  * secure environment.  *  */
+comment|/*  * The following capabilities, borrowed from Linux, are unsafe in a  * secure environment.  */
 end_comment
 
 begin_define
@@ -464,7 +514,7 @@ value|(0x0000001000000000)
 end_define
 
 begin_comment
-comment|/*  * Back to the safe ones, again  */
+comment|/*  * Back to the safe ones, again.  */
 end_comment
 
 begin_define
@@ -520,7 +570,7 @@ begin_define
 define|#
 directive|define
 name|CAP_ALL_ON
-value|(CAP_CHOWN | CAP_DAC_EXECUTE | CAP_DAC_WRITE | \     CAP_DAC_READ_SEARCH | CAP_FOWNER | CAP_FSETID | CAP_KILL | CAP_LINK_DIR | \     CAP_SETFCAP | CAP_SETGID | CAP_SETUID | CAP_MAC_DOWNGRADE | \     CAP_MAC_READ | CAP_MAC_RELABEL_SUBJ | CAP_MAC_UPGRADE | \     CAP_MAC_WRITE | CAP_INF_NOFLOAT_OBJ | CAP_INF_NOFLOAT_SUBJ | \     CAP_INF_RELABEL_OBJ | CAP_INF_RELABEL_SUBJ | CAP_AUDIT_CONTROL | \     CAP_AUDIT_WRITE | CAP_SETPCAP | CAP_SYS_SETFFLAG | CAP_NET_BIND_SERVICE | \     CAP_NET_BROADCAST | CAP_NET_ADMIN | CAP_NET_RAW | CAP_IPC_LOCK | \     CAP_IPC_OWNER | CAP_SYS_MODULE | CAP_SYS_RAWIO | CAP_SYS_CHROOT | \     CAP_SYS_PTRACE | CAP_SYS_PACCT | CAP_SYS_ADMIN | CAP_SYS_BOOT | \     CAP_SYS_NICE | CAP_SYS_RESOURCE | CAP_SYS_TIME | CAP_SYS_TTY_CONFIG | \     CAP_MKNOD)
+value|(CAP_CHOWN | CAP_DAC_EXECUTE | CAP_DAC_WRITE | \     CAP_DAC_READ_SEARCH | CAP_FOWNER | CAP_FSETID | CAP_KILL | CAP_LINK_DIR | \     CAP_SETFCAP | CAP_SETGID | CAP_SETUID | CAP_MAC_DOWNGRADE | \     CAP_MAC_READ | CAP_MAC_RELABEL_SUBJ | CAP_MAC_UPGRADE | \     CAP_MAC_WRITE | CAP_INF_NOFLOAT_OBJ | CAP_INF_NOFLOAT_SUBJ | \     CAP_INF_RELABEL_OBJ | CAP_INF_RELABEL_SUBJ | CAP_AUDIT_CONTROL | \     CAP_AUDIT_WRITE | CAP_SYS_SETFFLAG | CAP_NET_BIND_SERVICE | \     CAP_NET_BROADCAST | CAP_NET_ADMIN | CAP_NET_RAW | CAP_IPC_LOCK | \     CAP_IPC_OWNER | CAP_SYS_MODULE | CAP_SYS_RAWIO | CAP_SYS_CHROOT | \     CAP_SYS_PTRACE | CAP_SYS_PACCT | CAP_SYS_ADMIN | CAP_SYS_BOOT | \     CAP_SYS_NICE | CAP_SYS_RESOURCE | CAP_SYS_TIME | CAP_SYS_TTY_CONFIG | \     CAP_MKNOD)
 end_define
 
 begin_define
