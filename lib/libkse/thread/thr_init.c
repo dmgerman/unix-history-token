@@ -1593,9 +1593,11 @@ literal|0
 condition|)
 name|_clock_res_usec
 operator|=
+literal|1000000
+operator|/
 name|clockinfo
 operator|.
-name|tick
+name|stathz
 expr_stmt|;
 else|else
 name|_clock_res_usec
