@@ -312,7 +312,7 @@ init|=
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 operator|<<
 literal|1
 operator|)
@@ -351,7 +351,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|unit
+name|channel
 operator|==
 literal|1
 condition|)
@@ -1162,7 +1162,7 @@ operator|>>
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 operator|<<
 literal|8
 operator|)
@@ -1436,7 +1436,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|unit
+name|channel
 condition|)
 block|{
 name|mask40
@@ -1556,7 +1556,7 @@ name|word40
 operator|>>=
 name|scp
 operator|->
-name|unit
+name|channel
 operator|*
 literal|16
 expr_stmt|;
@@ -2771,7 +2771,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -2811,7 +2811,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -2910,7 +2910,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -2950,7 +2950,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -3044,7 +3044,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -3084,7 +3084,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -3117,7 +3117,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -3129,7 +3129,7 @@ name|parent
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x7b
 else|:
@@ -3334,7 +3334,7 @@ name|dev
 argument_list|,
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x4e
 else|:
@@ -3839,7 +3839,7 @@ init|=
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 operator|*
 literal|2
 operator|)
@@ -4018,7 +4018,7 @@ operator|&
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|1
 operator|<<
@@ -4145,7 +4145,7 @@ operator|&
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|1
 operator|<<
@@ -4542,7 +4542,7 @@ operator|&
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x01
 else|:
@@ -4645,7 +4645,7 @@ operator|&
 operator|(
 name|scp
 operator|->
-name|unit
+name|channel
 condition|?
 literal|0x01
 else|:

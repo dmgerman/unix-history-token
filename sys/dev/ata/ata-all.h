@@ -810,9 +810,9 @@ define|#
 directive|define
 name|ATA_DEV
 parameter_list|(
-name|unit
+name|device
 parameter_list|)
-value|((unit == ATA_MASTER) ? 0 : 1)
+value|((device == ATA_MASTER) ? 0 : 1)
 end_define
 
 begin_define
@@ -822,9 +822,9 @@ name|ATA_PARAM
 parameter_list|(
 name|scp
 parameter_list|,
-name|unit
+name|device
 parameter_list|)
-value|(scp->dev_param[ATA_DEV(unit)])
+value|(scp->dev_param[ATA_DEV(device)])
 end_define
 
 begin_comment
@@ -1491,9 +1491,9 @@ name|dev
 decl_stmt|;
 comment|/* device handle */
 name|int
-name|unit
+name|channel
 decl_stmt|;
-comment|/* unit on this controller */
+comment|/* channel on this controller */
 name|struct
 name|resource
 modifier|*
@@ -1635,6 +1635,10 @@ define|#
 directive|define
 name|ATA_QUEUED
 value|0x10
+define|#
+directive|define
+name|ATA_RAID
+value|0x20
 name|int
 name|devices
 decl_stmt|;
@@ -1725,7 +1729,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* To convert unit numbers to devices */
+comment|/* externs */
 end_comment
 
 begin_decl_stmt
