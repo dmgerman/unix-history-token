@@ -71,11 +71,24 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|502113
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1897,6 +1910,11 @@ name|ndis_regvals
 operator|=
 name|ndis_regvals
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|502113
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -1905,6 +1923,8 @@ operator|->
 name|ndis_ctx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Create sysctl registry nodes */
 name|ndis_create_sysctls
 argument_list|(
@@ -3607,6 +3627,11 @@ operator|->
 name|ndis_parent_tag
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|502113
 name|sysctl_ctx_free
 argument_list|(
 operator|&
@@ -3615,6 +3640,8 @@ operator|->
 name|ndis_ctx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_destroy
 argument_list|(
 operator|&

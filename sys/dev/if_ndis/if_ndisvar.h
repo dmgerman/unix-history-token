@@ -294,6 +294,11 @@ decl_stmt|;
 name|int
 name|ndis_skip
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|502113
 name|struct
 name|sysctl_ctx_list
 name|ndis_ctx
@@ -303,6 +308,8 @@ name|sysctl_oid
 modifier|*
 name|ndis_tree
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ndis_devidx
 decl_stmt|;
