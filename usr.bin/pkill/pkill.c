@@ -202,17 +202,17 @@ value|99999
 end_define
 
 begin_comment
-comment|/* Check for system-processes which should always be ignored. */
+comment|/* Ignore system-processes (if '-S' flag is not specified) and myself. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IS_KERNPROC
+name|PSKIP
 parameter_list|(
 name|kp
 parameter_list|)
-value|((kp)->ki_flag& P_KTHREAD)
+value|((kp)->ki_pid == mypid ||			\ 			 (!kthreads&& ((kp)->ki_flag& P_KTHREAD) != 0))
 end_define
 
 begin_enum
@@ -333,6 +333,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|fullmatch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kthreads
 decl_stmt|;
 end_decl_stmt
 
@@ -815,7 +821,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:M:N:P:U:d:fg:ij:lns:t:u:vx"
+literal|"DF:G:M:N:P:SU:d:fg:ij:lns:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -897,6 +903,22 @@ name|optarg
 argument_list|)
 expr_stmt|;
 name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+if|if
+condition|(
+operator|!
+name|pgrep
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|kthreads
 operator|=
 literal|1
 expr_stmt|;
@@ -1292,12 +1314,10 @@ control|)
 block|{
 if|if
 condition|(
-name|IS_KERNPROC
+name|PSKIP
 argument_list|(
 name|kp
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 if|if
@@ -1330,10 +1350,7 @@ block|}
 if|if
 condition|(
 name|matchargs
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|pargv
 operator|=
@@ -1346,10 +1363,10 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-continue|continue;
+block|{
 name|jsz
 operator|=
 literal|0
@@ -1592,12 +1609,10 @@ control|)
 block|{
 if|if
 condition|(
-name|IS_KERNPROC
+name|PSKIP
 argument_list|(
 name|kp
 argument_list|)
-operator|!=
-literal|0
 condition|)
 continue|continue;
 if|if
@@ -2212,11 +2227,10 @@ control|)
 block|{
 if|if
 condition|(
+name|PSKIP
+argument_list|(
 name|kp
-operator|->
-name|ki_pid
-operator|==
-name|mypid
+argument_list|)
 condition|)
 continue|continue;
 if|if
@@ -2238,16 +2252,6 @@ if|if
 condition|(
 operator|!
 name|inverse
-condition|)
-continue|continue;
-if|if
-condition|(
-name|IS_KERNPROC
-argument_list|(
-name|kp
-argument_list|)
-operator|!=
-literal|0
 condition|)
 continue|continue;
 name|rv
@@ -2293,7 +2297,7 @@ name|pgrep
 condition|)
 name|ustr
 operator|=
-literal|"[-filnvx] [-d delim]"
+literal|"[-Sfilnvx] [-d delim]"
 expr_stmt|;
 else|else
 name|ustr
@@ -2383,10 +2387,7 @@ condition|(
 name|longfmt
 operator|&&
 name|matchargs
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|argv
 operator|=
@@ -2399,10 +2400,10 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return;
+block|{
 name|printf
 argument_list|(
 literal|"%d "
