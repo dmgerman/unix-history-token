@@ -342,6 +342,7 @@ end_ifndef
 begin_typedef
 typedef|typedef
 struct|struct
+name|_sigjmp_buf
 block|{
 name|char
 name|Buffer
@@ -371,6 +372,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|_jmp_buf
 block|{
 name|char
 name|Buffer
