@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.15 1997/10/20 12:53:54 charnier Exp $"
+literal|"$Id: sysctl.c,v 1.16 1997/11/18 03:37:45 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,6 +1143,9 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
+name|time_t
+name|tv_sec
+decl_stmt|;
 name|char
 modifier|*
 name|p1
@@ -1184,6 +1187,12 @@ operator|->
 name|tv_usec
 argument_list|)
 expr_stmt|;
+name|tv_sec
+operator|=
+name|tv
+operator|->
+name|tv_sec
+expr_stmt|;
 name|p1
 operator|=
 name|strdup
@@ -1191,8 +1200,6 @@ argument_list|(
 name|ctime
 argument_list|(
 operator|&
-name|tv
-operator|->
 name|tv_sec
 argument_list|)
 argument_list|)
