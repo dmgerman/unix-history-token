@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -136,7 +136,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|sysctlfn
-name|fs_sysctl
+name|vfs_sysctl
 decl_stmt|;
 end_decl_stmt
 
@@ -374,19 +374,14 @@ operator|=
 name|net_sysctl
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notyet
 case|case
-name|CTL_FS
+name|CTL_VFS
 case|:
 name|fn
 operator|=
-name|fs_sysctl
+name|vfs_sysctl
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|CTL_MACHDEP
 case|:
@@ -1818,6 +1813,13 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|>=
+name|CTL_DEBUG_MAXID
+operator|||
 name|cdp
 operator|->
 name|debugname
