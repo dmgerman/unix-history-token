@@ -104,7 +104,7 @@ name|u_long
 name|sb_mbmax
 decl_stmt|;
 comment|/* max chars of mbufs to use */
-name|u_long
+name|long
 name|sb_lowat
 decl_stmt|;
 comment|/* low water mark */
@@ -155,18 +155,32 @@ value|0x04
 comment|/* someone is waiting for data/space */
 define|#
 directive|define
-name|SB_COLL
+name|SB_SEL
 value|0x08
+comment|/* someone is selecting */
+define|#
+directive|define
+name|SB_ASYNC
+value|0x10
+comment|/* ASYNC I/O, need signals */
+define|#
+directive|define
+name|SB_NOTIFY
+value|(SB_WAIT|SB_SEL|SB_ASYNC)
+define|#
+directive|define
+name|SB_COLL
+value|0x20
 comment|/* collision selecting */
 define|#
 directive|define
 name|SB_NOINTR
-value|0x10
+value|0x40
 comment|/* operations not interruptible */
 name|caddr_t
 name|so_tpcb
 decl_stmt|;
-comment|/* Wisc. protocol control block XXX*/
+comment|/* Wisc. protocol control block XXX */
 block|}
 struct|;
 end_struct
@@ -301,7 +315,7 @@ comment|/*  * Macros for sockets and socket buffering.  */
 end_comment
 
 begin_comment
-comment|/* how much space is there in a socket buffer (so->so_snd or so->so_rcv) */
+comment|/*  * How much space is there in a socket buffer (so->so_snd or so->so_rcv)?  * This is problematical if the fields are unsigned, as the space might  * still be negative (cc> hiwat or mbcnt> mbmax).  Should detect  * overflow and return 0.  Should use "lmin" but it doesn't exist now.  */
 end_comment
 
 begin_define
@@ -312,7 +326,7 @@ parameter_list|(
 name|sb
 parameter_list|)
 define|\
-value|(min((long)((sb)->sb_hiwat - (sb)->sb_cc),\ 	 (long)((sb)->sb_mbmax - (sb)->sb_mbcnt)))
+value|((long) imin((int)((sb)->sb_hiwat - (sb)->sb_cc), \ 	 (int)((sb)->sb_mbmax - (sb)->sb_mbcnt)))
 end_define
 
 begin_comment
@@ -373,7 +387,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt += MCLBYTES; \ }
+value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt += (m)->m_ext.ext_size; \ }
 end_define
 
 begin_comment
@@ -389,7 +403,7 @@ name|sb
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= MCLBYTES; \ }
+value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_flags& M_EXT) \ 		(sb)->sb_mbcnt -= (m)->m_ext.ext_size; \ }
 end_define
 
 begin_comment
