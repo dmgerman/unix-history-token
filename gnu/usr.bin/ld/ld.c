@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.16 1993/12/11 11:58:24 jkh Exp $  */
+comment|/*  *	$Id: ld.c,v 1.17 1993/12/22 23:28:08 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -2305,15 +2305,10 @@ expr_stmt|;
 return|return;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|QMAGIC
 case|case
 literal|'Q'
 case|:
 name|magic
-operator|=
-name|oldmagic
 operator|=
 name|QMAGIC
 expr_stmt|;
@@ -2323,13 +2318,13 @@ literal|'Z'
 case|:
 name|magic
 operator|=
-name|oldmagic
-operator|=
 name|ZMAGIC
 expr_stmt|;
+name|netzmagic
+operator|=
+literal|1
+expr_stmt|;
 return|return;
-endif|#
-directive|endif
 case|case
 literal|'o'
 case|:
@@ -2512,8 +2507,6 @@ return|return;
 case|case
 literal|'z'
 case|:
-name|oldmagic
-operator|=
 name|magic
 operator|=
 name|ZMAGIC
@@ -5784,6 +5777,10 @@ name|magic
 operator|==
 name|ZMAGIC
 operator|||
+name|magic
+operator|==
+name|QMAGIC
+operator|||
 name|page_align_data
 condition|)
 block|{
@@ -5978,6 +5975,10 @@ condition|(
 name|magic
 operator|==
 name|ZMAGIC
+operator|||
+name|magic
+operator|==
+name|QMAGIC
 condition|)
 name|data_pad
 operator|=
@@ -8252,16 +8253,20 @@ name|EX_DYNAMIC
 else|:
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QMAGIC
 if|if
 condition|(
-operator|!
-name|oldmagic
+name|netzmagic
+operator|||
+name|magic
+operator|==
+name|QMAGIC
+operator|||
+operator|(
+name|link_mode
+operator|&
+name|DYNAMIC
+operator|)
 condition|)
-endif|#
-directive|endif
 name|N_SET_FLAG
 argument_list|(
 name|outheader

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ld.h,v 1.7 1993/12/04 00:52:58 jkh Exp $	*/
+comment|/*	$Id: ld.h,v 1.8 1993/12/11 11:58:26 jkh Exp $	*/
 end_comment
 
 begin_comment
@@ -226,7 +226,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_MAGIC
-value|ZMAGIC
+value|QMAGIC
 end_define
 
 begin_endif
@@ -234,22 +234,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QMAGIC
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|oldmagic
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_extern
+extern|extern netzmagic;
+end_extern
 
 begin_comment
 comment|/*  * Ok.  Following are the relocation information macros.  If your  * system should not be able to use the default set (below), you must  * define the following:   *   relocation_info: This must be typedef'd (or #define'd) to the type  * of structure that is stored in the relocation info section of your  * a.out files.  Often this is defined in the a.out.h for your system.  *  *   RELOC_ADDRESS (rval): Offset into the current section of the  *<whatever> to be relocated.  *Must be an lvalue*.  *  *   RELOC_EXTERN_P (rval):  Is this relocation entry based on an  * external symbol (1), or was it fully resolved upon entering the  * loader (0) in which case some combination of the value in memory  * (if RELOC_MEMORY_ADD_P) and the extra (if RELOC_ADD_EXTRA) contains  * what the value of the relocation actually was.  *Must be an lvalue*.  *  *   RELOC_TYPE (rval): If this entry was fully resolved upon  * entering the loader, what type should it be relocated as?  *  *   RELOC_SYMBOL (rval): If this entry was not fully resolved upon  * entering the loader, what is the index of it's symbol in the symbol  * table?  *Must be a lvalue*.  *  *   RELOC_MEMORY_ADD_P (rval): This should return true if the final  * relocation value output here should be added to memory, or if the  * section of memory described should simply be set to the relocation  * value.  *  *   RELOC_ADD_EXTRA (rval): (Optional) This macro, if defined, gives  * an extra value to be added to the relocation value based on the  * individual relocation entry.  *Must be an lvalue if defined*.  *  *   RELOC_PCREL_P (rval): True if the relocation value described is  * pc relative.  *  *   RELOC_VALUE_RIGHTSHIFT (rval): Number of bits right to shift the  * final relocation value before putting it where it belongs.  *  *   RELOC_TARGET_SIZE (rval): log to the base 2 of the number of  * bytes of size this relocation entry describes; 1 byte == 0; 2 bytes  * == 1; 4 bytes == 2, and etc.  This is somewhat redundant (we could  * do everything in terms of the bit operators below), but having this  * macro could end up producing better code on machines without fancy  * bit twiddling.  Also, it's easier to understand/code big/little  * endian distinctions with this macro.  *  *   RELOC_TARGET_BITPOS (rval): The starting bit position within the  * object described in RELOC_TARGET_SIZE in which the relocation value  * will go.  *  *   RELOC_TARGET_BITSIZE (rval): How many bits are to be replaced  * with the bits of the relocation value.  It may be assumed by the  * code that the relocation value will fit into this many bits.  This  * may be larger than RELOC_TARGET_SIZE if such be useful.  *  *  *		Things I haven't implemented  *		----------------------------  *  *    Values for RELOC_TARGET_SIZE other than 0, 1, or 2.  *  *    Pc relative relocation for External references.  *  *  */
