@@ -69,7 +69,7 @@ name|mydev_ioctl
 block|,
 name|nostop
 block|,
-name|nullreset
+name|noreset
 block|,
 name|nodevtotty
 block|,

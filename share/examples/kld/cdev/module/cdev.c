@@ -65,7 +65,10 @@ name|printf
 argument_list|(
 literal|"mydev_open: dev_t=%d, flag=%x, otyp=%x, procp=%p\n"
 argument_list|,
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|flag
 argument_list|,
@@ -105,7 +108,10 @@ name|printf
 argument_list|(
 literal|"mydev_close: dev_t=%d, flag=%x, otyp=%x, procp=%p\n"
 argument_list|,
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|flag
 argument_list|,

@@ -146,11 +146,14 @@ comment|/* Now declare the module to the system */
 end_comment
 
 begin_expr_stmt
-name|CDEV_MODULE
+name|DEV_MODULE
 argument_list|(
 name|cdev_mod
 argument_list|,
 name|CDEV_MAJOR
+argument_list|,
+operator|-
+literal|1
 argument_list|,
 name|my_devsw
 argument_list|,
