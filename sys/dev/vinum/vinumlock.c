@@ -829,7 +829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get a lock for the global config, wait if it's not available */
+comment|/* Get a lock for the global config.  Wait if it's not available. */
 end_comment
 
 begin_function
@@ -898,7 +898,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Unlock and wake up any waiters  */
+comment|/* Unlock global config and wake up any waiters. */
 end_comment
 
 begin_function
