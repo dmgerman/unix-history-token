@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.1 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,6 +813,13 @@ argument_list|,
 name|inumber
 argument_list|)
 expr_stmt|;
+name|statemap
+index|[
+name|inumber
+index|]
+operator|=
+name|FCLEAR
+expr_stmt|;
 if|if
 condition|(
 name|reply
@@ -823,6 +830,13 @@ operator|==
 literal|1
 condition|)
 block|{
+name|statemap
+index|[
+name|inumber
+index|]
+operator|=
+name|USTATE
+expr_stmt|;
 name|zapino
 argument_list|(
 name|dp
