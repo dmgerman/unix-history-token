@@ -1012,7 +1012,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void  ddp_clean(void ) {     struct ddpcb	*ddp;      for ( ddp = ddpcb; ddp; ddp = ddp->ddp_next ) { 	at_pcbdetach( ddp->ddp_socket, ddp );     } }
+unit|static void  ddp_clean(void) {     struct ddpcb	*ddp;      for (ddp = ddpcb; ddp; ddp = ddp->ddp_next) { 	at_pcbdetach(ddp->ddp_socket, ddp);     } }
 endif|#
 directive|endif
 end_endif

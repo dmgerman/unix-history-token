@@ -260,7 +260,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)->sat_len == (b)->sat_len&& \ 		    (a)->sat_family == (b)->sat_family&& \ 		    (a)->sat_addr.s_net == (b)->sat_addr.s_net&& \ 		    (a)->sat_addr.s_node == (b)->sat_addr.s_node )
+value|((a)->sat_len == (b)->sat_len&& \ 		    (a)->sat_family == (b)->sat_family&& \ 		    (a)->sat_addr.s_net == (b)->sat_addr.s_net&& \ 		    (a)->sat_addr.s_node == (b)->sat_addr.s_node)
 end_define
 
 begin_function
@@ -1669,7 +1669,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|} else if ( fp->if_flags& IFF_POINTOPOINT) {
+block|} else if (fp->if_flags& IFF_POINTOPOINT) {
 comment|/* unimplemented */
 comment|/* 	 * we'd have to copy the dstaddr field over from the sat  	 * but it's not clear that it would contain the right info.. 	 */
 endif|#
@@ -3057,7 +3057,9 @@ literal|1
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3377,7 +3379,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void aa_clean(void) {     struct at_ifaddr	*aa;     struct ifaddr	*ifa;     struct ifnet	*ifp;      while ( aa = at_ifaddr ) { 	ifp = aa->aa_ifp; 	at_scrub( ifp, aa ); 	at_ifaddr = aa->aa_next; 	if (( ifa = ifp->if_addrlist ) == (struct ifaddr *)aa ) { 	    ifp->if_addrlist = ifa->ifa_next; 	} else { 	    while ( ifa->ifa_next&& 		    ( ifa->ifa_next != (struct ifaddr *)aa )) { 		ifa = ifa->ifa_next; 	    } 	    if ( ifa->ifa_next ) { 		ifa->ifa_next = ((struct ifaddr *)aa)->ifa_next; 	    } else { 		panic( "at_entry" ); 	    } 	}     } }
+unit|static void aa_clean(void) {     struct at_ifaddr	*aa;     struct ifaddr	*ifa;     struct ifnet	*ifp;      while (aa = at_ifaddr) { 	ifp = aa->aa_ifp; 	at_scrub(ifp, aa); 	at_ifaddr = aa->aa_next; 	if ((ifa = ifp->if_addrlist) == (struct ifaddr *)aa) { 	    ifp->if_addrlist = ifa->ifa_next; 	} else { 	    while (ifa->ifa_next&& 		    (ifa->ifa_next != (struct ifaddr *)aa)) { 		ifa = ifa->ifa_next; 	    } 	    if (ifa->ifa_next) { 		ifa->ifa_next = ((struct ifaddr *)aa)->ifa_next; 	    } else { 		panic("at_entry"); 	    } 	}     } }
 endif|#
 directive|endif
 end_endif
@@ -3451,7 +3453,9 @@ operator|==
 literal|1
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 case|case
 literal|0
@@ -3534,7 +3538,9 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 break|break;
@@ -3546,7 +3552,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

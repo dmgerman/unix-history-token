@@ -182,7 +182,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((((a).s_net<< 8 ) + (a).s_node ) % AARPTAB_NB )
+value|((((a).s_net<< 8) + (a).s_node) % AARPTAB_NB)
 end_define
 
 begin_define
@@ -194,7 +194,7 @@ name|aat
 parameter_list|,
 name|addr
 parameter_list|)
-value|{ \     int		n; \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for ( n = 0; n< AARPTAB_BSIZ; n++, aat++ ) \ 	if ( aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node ) \ 	    break; \ 	if ( n>= AARPTAB_BSIZ ) \ 	    aat = 0; \ }
+value|{ \     int		n; \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for (n = 0; n< AARPTAB_BSIZ; n++, aat++) \ 	if (aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node) \ 	    break; \ 	if (n>= AARPTAB_BSIZ) \ 	    aat = 0; \ }
 end_define
 
 begin_define
