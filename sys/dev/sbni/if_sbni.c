@@ -1030,17 +1030,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: speed %ld, address %6D, rxl "
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"speed %ld, address %6D, rxl "
 argument_list|,
 name|ifp
 operator|->
@@ -3590,17 +3584,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"sbni%d: cannot allocate header mbuf\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"cannot allocate header mbuf\n"
 argument_list|)
 expr_stmt|;
 return|return
