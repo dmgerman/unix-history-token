@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -380,7 +380,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Some general configuration -- you shouldn't have to touch these */
+comment|/* **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. */
 end_comment
 
 begin_ifdef
@@ -440,10 +440,31 @@ begin_comment
 comment|/* use System V uname system call */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<vfork.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Remaining definitions should never have to be changed.  They are **  primarily to provide back compatibility for older systems -- for **  example, it includes some POSIX compatibility definitions */
+end_comment
 
 begin_comment
 comment|/* **  Older systems don't have this error code -- it should be in **  /usr/include/sysexits.h. */
@@ -664,23 +685,6 @@ end_endif
 begin_comment
 comment|/* HASUNAME */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<vfork.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
