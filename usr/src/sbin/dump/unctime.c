@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)unctime.c	1.1 (Berkeley) %G%"
+literal|"@(#)unctime.c	1.1 (Berkeley) 10/13/80"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_comment
@@ -147,6 +153,7 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 operator|-
@@ -154,6 +161,7 @@ literal|1
 operator|)
 return|;
 empty_stmt|;
+block|}
 name|then
 operator|.
 name|tm_mday
@@ -373,7 +381,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|31
+literal|30
 init|;
 name|i
 operator|>=
