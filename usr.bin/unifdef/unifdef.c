@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Yost. Support for #if and #elif was added by Tony Finch.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002, 2003 Tony Finch<dot@dotat.at>  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Yost. It was rewritten to support ANSI C by Tony Finch.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.148 2003/01/20 12:05:41 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.156 2003/06/30 14:30:54 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -77,6 +77,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FBSDID
+end_ifdef
+
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -84,6 +90,11 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *      generate #line directives in place of deleted code  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
@@ -1312,7 +1323,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: unifdef [-cdeklst]"
-literal|" [[-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym]] ... [file]\n"
+literal|" [-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym] ... [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1324,7 +1335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line. A NULL entry  * indicate that processing is complete.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
+comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line. A NULL entry  * indicates that processing is complete.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
 end_comment
 
 begin_typedef
@@ -2720,7 +2731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a line and determine its type. We keep the preprocessor line  * parser state between calls in a global variable.  */
+comment|/*  * Parse a line and determine its type. We keep the preprocessor line  * parser state between calls in the global variable linestate, with  * help from skipcomment().  */
 end_comment
 
 begin_function
@@ -3225,7 +3236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * These are the operators that are supported by the expression evaluator.  */
+comment|/*  * These are the binary operators that are supported by the expression  * evaluator. Note that if support for division is added then we also  * need short-circuiting booleans because of divide-by-zero.  */
 end_comment
 
 begin_function
@@ -4318,7 +4329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip over comments and stop at the next character position that is  * not whitespace. Between calls we keep the comment state in a global  * variable, and we also make a note when we get a proper end-of-line.  * XXX: doesn't cope with the buffer splitting inside a state transition.  */
+comment|/*  * Skip over comments and stop at the next character position that is  * not whitespace. Between calls we keep the comment state in the  * global variable incomment, and we also adjust the global variable  * linestate when we see a newline.  * XXX: doesn't cope with the buffer splitting inside a state transition.  */
 end_comment
 
 begin_function
@@ -4344,8 +4355,9 @@ name|depth
 index|]
 condition|)
 block|{
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|isspace
 argument_list|(
 operator|(
@@ -4355,10 +4367,20 @@ operator|)
 operator|*
 name|cp
 argument_list|)
-condition|)
+condition|;
 name|cp
-operator|+=
-literal|1
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
+condition|)
+name|linestate
+operator|=
+name|LS_START
 expr_stmt|;
 return|return
 operator|(
