@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.57 2003/04/07 03:17:39 ache Exp");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.58 2003/04/14 11:24:53 das Exp");
 endif|#
 directive|endif
 end_endif
@@ -3576,17 +3576,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* space for digits before decimal point */
 if|if
 condition|(
 name|expt
 operator|>
 literal|0
 condition|)
-block|{
 name|size
 operator|=
 name|expt
 expr_stmt|;
+else|else
+comment|/* "0" */
+name|size
+operator|=
+literal|1
+expr_stmt|;
+comment|/* space for decimal pt and following digits */
 if|if
 condition|(
 name|prec
@@ -3600,15 +3607,6 @@ operator|+=
 name|prec
 operator|+
 literal|1
-expr_stmt|;
-block|}
-else|else
-comment|/* "0.X" */
-name|size
-operator|=
-name|prec
-operator|+
-literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -4537,26 +4535,26 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|'0'
-expr_stmt|;
-name|buf
-index|[
-literal|1
-index|]
-operator|=
-operator|*
-name|decimal_point
-expr_stmt|;
 name|PRINT
 argument_list|(
-name|buf
+name|zeroes
 argument_list|,
-literal|2
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prec
+operator|||
+name|flags
+operator|&
+name|ALT
+condition|)
+name|PRINT
+argument_list|(
+name|decimal_point
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|PAD
