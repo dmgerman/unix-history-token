@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.10 1996/08/29 20:07:50 peter Exp $"
+literal|"$Id: gethostbydns.c,v 1.11 1996/10/01 03:45:06 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,6 +357,12 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|h_errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_dns_ttl_
 decl_stmt|;
 end_decl_stmt
 
@@ -796,6 +802,11 @@ name|had_error
 operator|=
 literal|0
 expr_stmt|;
+name|_dns_ttl_
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 while|while
 condition|(
 name|ancount
@@ -878,10 +889,30 @@ expr_stmt|;
 name|cp
 operator|+=
 name|INT16SZ
-operator|+
+expr_stmt|;
+comment|/* class */
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_A
+operator|&&
+name|type
+operator|==
+name|T_A
+condition|)
+name|_dns_ttl_
+operator|=
+name|_getlong
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
 name|INT32SZ
 expr_stmt|;
-comment|/* class, TTL */
+comment|/* TTL */
 name|n
 operator|=
 name|_getshort
