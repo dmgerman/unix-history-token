@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)whereis.c	4.8 (Berkeley) %G%"
+literal|"@(#)whereis.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,8 @@ block|,
 literal|"/usr/old"
 block|,
 literal|"/usr/hosts"
+block|,
+literal|"/usr/include"
 block|,
 literal|0
 block|}
@@ -125,6 +127,8 @@ literal|"/usr/src/new"
 block|,
 literal|"/usr/src/old"
 block|,
+literal|"/usr/src/include"
+block|,
 literal|"/usr/src/lib/libc/gen"
 block|,
 literal|"/usr/src/lib/libc/stdio"
@@ -136,12 +140,6 @@ block|,
 literal|"/usr/src/lib/libc/net/inet"
 block|,
 literal|"/usr/src/lib/libc/net/misc"
-block|,
-literal|"/usr/src/ucb/netser"
-block|,
-literal|"/usr/src/ucb/netser/misc"
-block|,
-literal|"/usr/src/ucb/arpanet"
 block|,
 literal|"/usr/src/ucb/pascal"
 block|,
@@ -246,45 +244,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|CORY
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|==
-literal|0
-condition|)
-name|nice
-argument_list|(
-operator|-
-literal|20
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|getuid
-argument_list|()
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0377
-operator|)
-operator|>
-literal|10
-condition|)
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|argc
 operator|--
 operator|,
