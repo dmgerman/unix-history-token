@@ -789,13 +789,21 @@ name|mem_res
 argument_list|)
 expr_stmt|;
 empty_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Not yet */
-block|pcic_attach(dev);  	pcic_isa_bus_width_probe (dev, sc->iot, sc->ioh, 	    rman_get_start(sc->port_res),  	    rman_get_end(sc->port_res) - rman_get_end(sc->port_res) + 1);  	pcic_attach_sockets(dev);
-endif|#
-directive|endif
+name|pcic_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|pcic_isa_bus_width_probe
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|pcic_attach_sockets
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

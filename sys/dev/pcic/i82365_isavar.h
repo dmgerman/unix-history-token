@@ -77,14 +77,6 @@ name|void
 name|pcic_isa_bus_width_probe
 parameter_list|(
 name|device_t
-parameter_list|,
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
-parameter_list|,
-name|bus_addr_t
-parameter_list|,
-name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
