@@ -468,13 +468,13 @@ comment|/* Hash related definitions */
 end_comment
 
 begin_comment
-comment|/* Don't nead to initialise them because it's a LIST */
+comment|/* XXX Don't need to initialise them because it's a LIST */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ID_HASH_SIZE
+name|NG_ID_HASH_SIZE
 value|32
 end_define
 
@@ -491,7 +491,7 @@ argument|ng_node
 argument_list|)
 name|ng_ID_hash
 index|[
-name|ID_HASH_SIZE
+name|NG_ID_HASH_SIZE
 index|]
 expr_stmt|;
 end_expr_stmt
@@ -503,6 +503,33 @@ name|mtx
 name|ng_idhash_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Method to find a node.. used twice so do it here */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_IDHASH_FN
+parameter_list|(
+name|ID
+parameter_list|)
+value|((ID) % (NG_ID_HASH_SIZE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_IDHASH_FIND
+parameter_list|(
+name|ID
+parameter_list|,
+name|node
+parameter_list|)
+define|\
+value|do { 								\ 		LIST_FOREACH(node,&ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
+end_define
 
 begin_comment
 comment|/* Mutex that protects the free queue item list */
@@ -2527,45 +2554,32 @@ operator|++
 expr_stmt|;
 comment|/* 137/second for 1 year before wrap */
 comment|/* Is there a problem with the new number? */
+name|NG_IDHASH_FIND
+argument_list|(
+name|node
+operator|->
+name|nd_ID
+argument_list|,
+name|node2
+argument_list|)
+expr_stmt|;
+comment|/* already taken? */
 if|if
 condition|(
 operator|(
 name|node
 operator|->
 name|nd_ID
-operator|==
+operator|!=
 literal|0
 operator|)
-operator|||
+operator|&&
 operator|(
 name|node2
-operator|=
-name|ng_ID2noderef
-argument_list|(
-name|node
-operator|->
-name|nd_ID
-argument_list|)
+operator|==
+name|NULL
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-name|node2
-condition|)
-block|{
-name|NG_NODE_UNREF
-argument_list|(
-name|node2
-argument_list|)
-expr_stmt|;
-name|node2
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-else|else
 block|{
 break|break;
 block|}
@@ -2575,11 +2589,12 @@ argument_list|(
 operator|&
 name|ng_ID_hash
 index|[
+name|NG_IDHASH_FN
+argument_list|(
 name|node
 operator|->
 name|nd_ID
-operator|%
-name|ID_HASH_SIZE
+argument_list|)
 index|]
 argument_list|,
 name|node
@@ -2909,35 +2924,13 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|NG_IDHASH_FIND
 argument_list|(
-argument|node
-argument_list|,
-argument|&ng_ID_hash[ID % ID_HASH_SIZE]
-argument_list|,
-argument|nd_idnodes
-argument_list|)
-block|{
-if|if
-condition|(
-name|NG_NODE_IS_VALID
-argument_list|(
-name|node
-argument_list|)
-operator|&&
-operator|(
-name|NG_NODE_ID
-argument_list|(
-name|node
-argument_list|)
-operator|==
 name|ID
-operator|)
-condition|)
-block|{
-break|break;
-block|}
-block|}
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|node
