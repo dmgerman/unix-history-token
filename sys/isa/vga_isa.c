@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vga_isa.c,v 1.4 1999/04/16 21:22:35 peter Exp $  */
+comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
 end_comment
 
 begin_include
@@ -111,11 +111,11 @@ directive|include
 file|<dev/fb/vgareg.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__i386__
+end_ifndef
 
 begin_include
 include|#
@@ -196,11 +196,11 @@ name|isavga_softc_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__i386__
+end_ifndef
 
 begin_define
 define|#
@@ -514,11 +514,11 @@ begin_comment
 comment|/* FB_INSTALL_CDEV */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__i386__
+end_ifndef
 
 begin_function
 specifier|static
@@ -2856,22 +2856,6 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|VGA_NO_BIOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VGA_NO_MODE_CHANGE
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|static
 name|u_char
@@ -2899,11 +2883,6 @@ end_decl_stmt
 begin_comment
 comment|/* CGA/MDA */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3217,12 +3196,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VGA_NO_FONT_LOADING
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -3261,11 +3234,6 @@ name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -4529,24 +4497,6 @@ decl_stmt|;
 name|u_int16_t
 name|v
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|VGA_NO_BIOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VGA_NO_MODE_CHANGE
-argument_list|)
-name|u_int32_t
-name|p
-decl_stmt|;
-endif|#
-directive|endif
 name|buf
 operator|=
 name|BIOS_PADDRTOVADDR
@@ -6060,10 +6010,6 @@ block|}
 else|else
 block|{
 comment|/* discard the table if we are not familiar with it... */
-name|u_char
-modifier|*
-name|mp
-decl_stmt|;
 name|map_mode_table
 argument_list|(
 name|mode_map
@@ -6288,10 +6234,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|u_char
-modifier|*
-name|mp
-decl_stmt|;
 name|map_mode_table
 argument_list|(
 name|mode_map
@@ -10646,10 +10588,6 @@ literal|0x20
 argument_list|)
 expr_stmt|;
 comment|/* enable palette */
-if|#
-directive|if
-name|notyet
-comment|/* a temporary workaround for kernel panic, XXX */
 ifndef|#
 directive|ifndef
 name|VGA_NO_BIOS
@@ -10718,9 +10656,6 @@ block|}
 endif|#
 directive|endif
 comment|/* VGA_NO_BIOS */
-endif|#
-directive|endif
-comment|/* notyet */
 name|splx
 argument_list|(
 name|s
@@ -11551,19 +11486,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* VGA_NO_BIOS */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|VGA_NO_BIOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VGA_NO_MODE_CHANGE
-argument_list|)
 name|printf
 argument_list|(
 literal|"vga: param table EGA/VGA:%p"
@@ -11578,8 +11500,6 @@ argument_list|,
 name|video_mode_ptr2
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"vga: rows_offset:%d\n"

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: promcons.c,v 1.2 1998/07/05 11:59:44 dfr Exp $ */
+comment|/* $Id: promcons.c,v 1.3 1998/07/12 16:15:02 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -491,7 +491,7 @@ name|tp
 operator|->
 name|t_ospeed
 operator|=
-literal|9600
+name|TTYDEF_SPEED
 expr_stmt|;
 name|ttsetwater
 argument_list|(
@@ -512,13 +512,17 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
+name|suser
+argument_list|(
 name|p
 operator|->
 name|p_ucred
+argument_list|,
+operator|&
+name|p
 operator|->
-name|cr_uid
-operator|!=
-literal|0
+name|p_acflag
+argument_list|)
 condition|)
 block|{
 name|splx
