@@ -2668,12 +2668,21 @@ name|v_mount
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* forced unmount */
+name|free
+argument_list|(
+name|buf
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBADF
 operator|)
 return|;
+block|}
 name|vp
 operator|=
 name|vp
