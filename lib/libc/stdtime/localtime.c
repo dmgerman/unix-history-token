@@ -1768,10 +1768,17 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
+name|_close
+argument_list|(
+name|fid
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 block|{
 name|struct
