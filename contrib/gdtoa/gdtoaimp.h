@@ -171,6 +171,12 @@ directive|define
 name|INFNAN_CHECK
 end_define
 
+begin_define
+define|#
+directive|define
+name|USE_LOCALE
+end_define
+
 begin_undef
 undef|#
 directive|undef
