@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.11 %G%"
+literal|"@(#)tmps.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,6 +680,21 @@ block|{
 name|alignment
 operator|=
 name|A_STACK
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|nl
+operator|+
+name|TPTR
+condition|)
+block|{
+name|alignment
+operator|=
+name|A_POINT
 expr_stmt|;
 block|}
 else|else
