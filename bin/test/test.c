@@ -123,6 +123,12 @@ else|#
 directive|else
 end_else
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -1058,6 +1064,21 @@ condition|)
 return|return
 literal|1
 return|;
+ifndef|#
+directive|ifndef
+name|SHELL
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX work around the absence of an eaccess(2) syscall */
 operator|(
 name|void
@@ -2333,6 +2354,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|s
+operator|==
+name|p
+condition|)
+name|error
+argument_list|(
+literal|"%s: bad number"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|errno
 operator|!=
 literal|0
@@ -2426,6 +2460,19 @@ operator|&
 name|p
 argument_list|,
 literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|p
+condition|)
+name|error
+argument_list|(
+literal|"%s: bad number"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 if|if
