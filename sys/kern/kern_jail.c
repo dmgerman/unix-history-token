@@ -524,6 +524,14 @@ argument_list|)
 expr_stmt|;
 name|bail
 label|:
+name|mtx_destroy
+argument_list|(
+operator|&
+name|pr
+operator|->
+name|pr_mtx
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|pr
