@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: readcf.c,v 8.382.4.42 2001/07/31 22:30:24 gshapiro Exp $"
+literal|"@(#)$Id: readcf.c,v 8.382.4.43 2001/08/14 23:08:13 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -866,6 +866,25 @@ block|{
 name|syserr
 argument_list|(
 literal|"R line: null LHS"
+argument_list|)
+expr_stmt|;
+name|rwp
+operator|->
+name|r_lhs
+operator|=
+name|null_list
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|nfuzzy
+operator|>
+name|MAXMATCH
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"R line: too many wildcards"
 argument_list|)
 expr_stmt|;
 name|rwp

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: clock.c,v 8.52.18.17 2001/07/31 23:04:59 ca Exp $"
+literal|"@(#)$Id: clock.c,v 8.52.18.18 2001/08/14 16:07:04 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1345,6 +1345,11 @@ name|abort
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
+comment|/* shut up stupid compiler warning on HP-UX 11 */
+name|sigbit
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 if|if
