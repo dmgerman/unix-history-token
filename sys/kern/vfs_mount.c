@@ -116,6 +116,30 @@ name|mountrootfsname
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOTP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|bootpc_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * vfs_init() will set maxvfsconf  * to the highest defined type number.  */
 end_comment
@@ -146,20 +170,18 @@ value|"root_device"
 end_define
 
 begin_comment
-comment|/*  * vfs_mountrootfs  *  * Common entry point for root mounts  *  * PARAMETERS:  *		fsname	name of the filesystem  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *		ENTRY  *<no locks held>  *		EXIT  *<no locks held>  *  * NOTES:  *		This code is currently supported only for use for  *		the FFS file system type.  This is a matter of  *		fixing the other file systems, not this code!  */
+comment|/*  * vfs_mountrootfs  *  * Common entry point for root mounts  *  * PARAMETERS:  * 		NONE  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *		ENTRY  *<no locks held>  *		EXIT  *<no locks held>  *  * NOTES:  *		This code is currently supported only for use for  *		the FFS file system type.  This is a matter of  *		fixing the other file systems, not this code!  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vfs_mountrootfs
 parameter_list|(
-name|fsname
-parameter_list|)
-name|char
+name|void
 modifier|*
-name|fsname
-decl_stmt|;
+name|unused
+parameter_list|)
 block|{
 name|struct
 name|mount
@@ -179,28 +201,46 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|BOOTP
+name|bootpc_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 *  New root mount structure 	 */
+if|if
+condition|(
+operator|(
 name|err
 operator|=
 name|vfs_rootmountalloc
 argument_list|(
-name|fsname
+name|mountrootfsname
 argument_list|,
 name|ROOTNAME
 argument_list|,
 operator|&
 name|mp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|err
-condition|)
-return|return
-operator|(
-name|err
 operator|)
-return|;
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"error %d: "
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"cannot mount root\n"
+argument_list|)
+expr_stmt|;
+return|return ;
+block|}
 name|mp
 operator|->
 name|mnt_flag
@@ -227,16 +267,43 @@ if|if
 condition|(
 name|err
 condition|)
-goto|goto
-name|error_2
-goto|;
+block|{
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* 		 * free mount struct before failing 		 * (hardly worthwhile with the PANIC eh?) 		 */
+name|free
+argument_list|(
+name|mp
+argument_list|,
+name|M_MOUNT
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"error %d: "
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"cannot mount root (2)\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|simple_lock
 argument_list|(
 operator|&
 name|mountlist_slock
 argument_list|)
 expr_stmt|;
-comment|/* Add fs to list of mounted file systems*/
+comment|/* 	 * Add fs to list of mounted file systems 	 */
 name|CIRCLEQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -268,122 +335,7 @@ operator|->
 name|mnt_time
 argument_list|)
 expr_stmt|;
-goto|goto
-name|success
-goto|;
-name|error_2
-label|:
-comment|/* mount error*/
-name|vfs_unbusy
-argument_list|(
-name|mp
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* free mount struct before failing*/
-name|free
-argument_list|(
-name|mp
-argument_list|,
-name|M_MOUNT
-argument_list|)
-expr_stmt|;
-name|success
-label|:
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ARGSUSED*/
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|xxx_vfs_mountroot
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|fsnamep
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BOOTP
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|bootpc_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-specifier|static
-name|void
-name|xxx_vfs_mountroot
-parameter_list|(
-name|fsnamep
-parameter_list|)
-name|void
-modifier|*
-name|fsnamep
-decl_stmt|;
-block|{
-comment|/* XXX Add a separate SYSINIT entry */
-ifdef|#
-directive|ifdef
-name|BOOTP
-name|bootpc_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Mount the root file system. */
-if|if
-condition|(
-name|vfs_mountrootfs
-argument_list|(
-operator|*
-operator|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|fsnamep
-operator|)
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"cannot mount root"
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -396,9 +348,9 @@ argument|SI_SUB_MOUNT_ROOT
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
-argument|xxx_vfs_mountroot
+argument|vfs_mountrootfs
 argument_list|,
-argument|&mountrootfsname
+argument|NULL
 argument_list|)
 end_macro
 
