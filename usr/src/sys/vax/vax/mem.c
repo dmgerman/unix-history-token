@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mem.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mem.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -451,20 +451,19 @@ name|uio
 operator|->
 name|uio_rw
 operator|==
-name|UIO_READ
+name|UIO_WRITE
 condition|)
+name|uio
+operator|->
+name|uio_resid
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|c
-operator|=
-name|iov
-operator|->
-name|iov_len
-expr_stmt|;
-break|break;
 comment|/* minor device 3 is unibus memory (addressed by shorts) */
 case|case
 literal|3
