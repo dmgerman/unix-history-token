@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ntfs_vnops.c,v 1.3 1999/04/20 21:06:43 semenu Exp $  *  */
+comment|/*	$NetBSD: ntfs_vnops.c,v 1.2 1999/05/06 15:43:20 christos Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ntfs_vnops.c,v 1.4 1999/05/11 19:54:52 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -19,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -123,16 +121,36 @@ directive|include
 file|<vm/vm_pager.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<vm/vnode_pager.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_comment
@@ -299,9 +317,10 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|__FreeBSD_version
-operator|<
-literal|300000
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -453,6 +472,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -484,6 +512,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -511,6 +544,15 @@ end_decl_stmt
 begin_comment
 comment|/* 1 => print out reclaim of active vnodes */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_function
 name|int
@@ -585,6 +627,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This is a noop, simply returning what one has been given.  */
@@ -670,6 +717,13 @@ name|a_runp
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 if|if
 condition|(
 name|ap
@@ -685,6 +739,8 @@ name|a_runb
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1307,12 +1363,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-name|VOP_UNLOCK
+name|VOP__UNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -1323,58 +1374,6 @@ operator|->
 name|a_p
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|VOP_ISLOCKED
-argument_list|(
-name|vp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"ntfs_inactive: locked vnode"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|curproc
-condition|)
-name|ip
-operator|->
-name|i_lockholder
-operator|=
-name|curproc
-operator|->
-name|p_pid
-expr_stmt|;
-else|else
-name|ip
-operator|->
-name|i_lockholder
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_LOCKED
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If we are done with the ntnode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
@@ -1392,9 +1391,10 @@ literal|0
 condition|)
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|vrecycle
 argument_list|(
 name|vp
@@ -1413,6 +1413,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* defined(__NetBSD__) */
 name|vgone
 argument_list|(
 name|vp
@@ -1511,10 +1512,11 @@ operator|)
 return|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-name|VOP_UNLOCK
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|VOP__UNLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -2313,9 +2315,10 @@ end_function
 begin_if
 if|#
 directive|if
-name|__FreeBSD_version
-operator|<
-literal|300000
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_comment
@@ -2418,6 +2421,9 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|struct
 name|proc
 modifier|*
@@ -2425,6 +2431,8 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
+endif|#
+directive|endif
 name|dprintf
 argument_list|(
 operator|(
@@ -3418,10 +3426,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* #undef dprintf #define dprintf(a) printf a */
-end_comment
-
 begin_function
 name|int
 name|ntfs_readdir
@@ -4056,9 +4060,10 @@ name|dp
 decl_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|u_long
 modifier|*
 name|cookies
@@ -4069,11 +4074,12 @@ name|cookiep
 decl_stmt|;
 else|#
 directive|else
-name|u_int
+comment|/* defined(__NetBSD__) */
+name|off_t
 modifier|*
 name|cookies
 decl_stmt|;
-name|u_int
+name|off_t
 modifier|*
 name|cookiep
 decl_stmt|;
@@ -4113,6 +4119,9 @@ name|dirent
 operator|*
 operator|)
 operator|(
+operator|(
+name|caddr_t
+operator|)
 name|uio
 operator|->
 name|uio_iov
@@ -4130,9 +4139,10 @@ operator|)
 expr_stmt|;
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|MALLOC
 argument_list|(
 name|cookies
@@ -4154,18 +4164,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* defined(__NetBSD__) */
 name|MALLOC
 argument_list|(
 name|cookies
 argument_list|,
-name|u_int
+name|off_t
 operator|*
 argument_list|,
 name|ncookies
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int
+name|off_t
 argument_list|)
 argument_list|,
 name|M_TEMP
@@ -4254,10 +4265,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* #undef dprintf #define dprintf(a)  */
-end_comment
 
 begin_function
 name|int
@@ -4524,12 +4531,7 @@ operator|(
 name|error
 operator|)
 return|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-name|VOP_UNLOCK
+name|VOP__UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -4540,15 +4542,6 @@ operator|->
 name|cn_proc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|VOP_UNLOCK
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|dprintf
 argument_list|(
 operator|(
@@ -4591,12 +4584,7 @@ condition|(
 name|error
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-name|VOP_LOCK
+name|VOP__LOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -4607,15 +4595,6 @@ operator|->
 name|cn_proc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|VOP_LOCK
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error
@@ -4634,15 +4613,10 @@ operator|&
 name|ISLASTCN
 operator|)
 operator|&&
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
 operator|(
 name|error
 operator|=
-name|VOP_LOCK
+name|VOP__LOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -4655,20 +4629,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-else|#
-directive|else
-operator|(
-name|error
-operator|=
-name|VOP_LOCK
-argument_list|(
-name|dvp
-argument_list|)
-operator|)
-block|)
-block|{
-endif|#
-directive|endif
 name|vput
 argument_list|(
 operator|*
@@ -4748,12 +4708,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-name|VOP_UNLOCK
+name|VOP__UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
@@ -4764,15 +4719,6 @@ operator|->
 name|cn_proc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|VOP_UNLOCK
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cnp
@@ -4840,8 +4786,19 @@ name|ntfs_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
+endif|#
+directive|endif
 name|struct
 name|vnodeopv_entry_desc
 name|ntfs_vnodeop_entries
@@ -4905,9 +4862,10 @@ block|}
 block|,
 if|#
 directive|if
-name|__FreeBSD_version
-operator|>=
-literal|30000
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 block|{
 operator|&
 name|vop_islocked_desc
@@ -5077,6 +5035,12 @@ operator|)
 name|ntfs_bmap
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 block|{
 operator|&
 name|vop_getpages_desc
@@ -5099,6 +5063,8 @@ operator|)
 name|ntfs_putpages
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 operator|&
 name|vop_strategy_desc
@@ -5110,6 +5076,12 @@ operator|)
 name|ntfs_strategy
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 block|{
 operator|&
 name|vop_bwrite_desc
@@ -5121,6 +5093,22 @@ operator|)
 name|vop_stdbwrite
 block|}
 block|,
+else|#
+directive|else
+comment|/* defined(__NetBSD__) */
+block|{
+operator|&
+name|vop_bwrite_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|vn_bwrite
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 operator|&
 name|vop_read_desc
@@ -5152,8 +5140,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
+endif|#
+directive|endif
 name|struct
 name|vnodeopv_desc
 name|ntfs_vnodeop_opv_desc
@@ -5167,6 +5166,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_expr_stmt
 name|VNODEOP_SET
 argument_list|(
@@ -5174,6 +5182,11 @@ name|ntfs_vnodeop_opv_desc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
