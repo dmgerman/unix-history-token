@@ -204,7 +204,7 @@ end_macro
 begin_undef
 undef|#
 directive|undef
-name|EBUS_ACCESSOR
+name|SBUS_ACCESSOR
 end_undef
 
 begin_endif
