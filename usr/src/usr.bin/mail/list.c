@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)list.c	1.4 %G%"
+literal|"@(#)list.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2383,6 +2383,8 @@ operator|=
 name|nameof
 argument_list|(
 name|mp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
