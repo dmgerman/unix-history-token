@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa_device.h	7.1 (Berkeley) 5/9/91  *	$Id: intr_machdep.h,v 1.2 1997/06/27 23:48:05 fsmp Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa_device.h	7.1 (Berkeley) 5/9/91  *	$Id: intr_machdep.h,v 1.6 1997/07/13 00:18:33 smp Exp smp $  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,133 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * XXX FIXME: rethink location for all IPI vectors.  */
+end_comment
+
+begin_comment
+comment|/*     APIC TPR priority vector levels:  	0xff (255) +------------+ 		   |		| 15 (highest) 	0xf0 (240) +------------+ 		   |		| 14 	0xe0 (224) +------------+ 		   |		| 13 	0xd0 (208) +------------+ 		   |		| 12 	0xc0 (192) +------------+ 		   |		| 11 	0xb0 (176) +------------+ 		   |		| 10 	0xa0 (160) +------------+ 		   |		|  9 	0x90 (144) +------------+ 		   |		|  8 	0x80 (128) +------------+ 		   |		|  7 	0x70 (112) +------------+ 		   |		|  6 (IPIs: Xspuriousint) 	0x60 (96)  +------------+ 		   |		|  5 (IPIs: Xcpustop) 	0x50 (80)  +------------+ 		   |		|  4 (IPIs: Xinvltlb) 	0x40 (64)  +------------+ 		   |		|  3 (extended APIC hardware INTs: PCI) 	0x30 (48)  +------------+ 		   |		|  2 (start of hardware INTs: ISA) 	0x20 (32)  +------------+ 		   |		|  1 (lowest) 	0x10 (16)  +------------+ 		   |		|  0 	0x00 (0)   +------------+  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_BLOCK_HWI
+value|0x3f
+end_define
+
+begin_comment
+comment|/* block hardware INTs via APIC TPR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_BLOCK_XINVLTLB
+value|0x4f
+end_define
+
+begin_comment
+comment|/* block ? via APIC TPR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPR_BLOCK_XCPUSTOP
+value|0x5f
+end_define
+
+begin_comment
+comment|/* block ? via APIC TPR */
+end_comment
+
+begin_comment
+comment|/*  * Note: this vector MUST be xxxx1111, 32 + 79 = 111 = 0x6f:  * also remember i386/include/segments.h: #define	NIDT	129  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XSPURIOUSINT_OFFSET
+value|(ICU_OFFSET + 79)
+end_define
+
+begin_comment
+comment|/* TLB shootdowns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XINVLTLB_OFFSET
+value|(ICU_OFFSET + 32)
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+end_if
+
+begin_comment
+comment|/* IPI to signal CPUs to stop and wait for another CPU to restart them */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XCPUSTOP_OFFSET
+value|(ICU_OFFSET + 48)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** TEST_CPUSTOP */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_TEST1
+argument_list|)
+end_if
+
+begin_comment
+comment|/* put a 'fake' HWI in top of APIC prio 0x3x, 32 + 31 = 63 = 0x3f */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XTEST1_OFFSET
+value|(ICU_OFFSET + 31)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** TEST_TEST1 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * Type of the first (asm) part of an interrupt handler.  */
@@ -405,16 +532,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|XINVLTLB_OFFSET
-value|(ICU_OFFSET + 32)
-end_define
-
 begin_decl_stmt
 name|inthand_t
 name|Xinvltlb
+decl_stmt|,
+name|Xspuriousint
 decl_stmt|;
 end_decl_stmt
 
@@ -427,13 +549,6 @@ name|TEST_CPUSTOP
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|XCPUSTOP_OFFSET
-value|(ICU_OFFSET + 64)
-end_define
-
 begin_decl_stmt
 name|inthand_t
 name|Xcpustop
@@ -441,21 +556,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * XXX FIXME: rethink location for this (and all IPI vectors)  * Note: this vector MUST be xxxx1111, 32 + 79 = 111 = 0x6f:  * also remember i386/include/segments.h: #define	NIDT	129  */
+comment|/* stop& wait for another CPU to restart it */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|XSPURIOUSINT_OFFSET
-value|(ICU_OFFSET + 79)
-end_define
-
-begin_decl_stmt
-name|inthand_t
-name|Xspuriousint
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -463,7 +565,35 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* TEST_CPUSTOP */
+comment|/** TEST_CPUSTOP */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|inthand_t
+name|Xtest1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 'fake' HWI in top of APIC prio 0x3x, 32+31 = 0x3f */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** TEST_TEST1 */
 end_comment
 
 begin_struct_decl
@@ -499,10 +629,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* this function ONLY exists in an SMP/APIC_IO kernel: */
-end_comment
-
 begin_decl_stmt
 name|int
 name|icu_irq_pending
@@ -517,6 +643,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* APIC_IO kernel */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -621,6 +751,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_endif
 endif|#
