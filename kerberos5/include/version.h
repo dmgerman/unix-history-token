@@ -4,7 +4,6 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|krb4_long_version
@@ -14,7 +13,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|krb4_version
