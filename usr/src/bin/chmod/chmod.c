@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.12 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,7 +393,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|info
+name|fts_info
 operator|==
 name|FTS_D
 condition|)
@@ -402,7 +402,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|info
+name|fts_info
 operator|==
 name|FTS_ERR
 condition|)
@@ -416,7 +416,7 @@ name|error
 argument_list|(
 name|p
 operator|->
-name|path
+name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -427,7 +427,7 @@ name|chmod
 argument_list|(
 name|p
 operator|->
-name|accpath
+name|fts_accpath
 argument_list|,
 name|oct
 condition|?
@@ -439,7 +439,7 @@ name|set
 argument_list|,
 name|p
 operator|->
-name|statb
+name|fts_statb
 operator|.
 name|st_mode
 argument_list|)
@@ -452,7 +452,7 @@ name|error
 argument_list|(
 name|p
 operator|->
-name|path
+name|fts_path
 argument_list|)
 expr_stmt|;
 block|}
