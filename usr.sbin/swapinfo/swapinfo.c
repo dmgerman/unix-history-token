@@ -55,7 +55,7 @@ begin_decl_stmt
 name|struct
 name|rlist
 modifier|*
-name|swapmap
+name|swaplist
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"_swapmap"
+literal|"_swaplist"
 block|}
 block|,
 comment|/* list of free swap areas */
@@ -627,7 +627,7 @@ operator|.
 name|n_value
 argument_list|,
 operator|&
-name|swapmap
+name|swaplist
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -649,7 +649,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:  didn't read all of swapmap\n"
+literal|"%s:  didn't read all of swaplist\n"
 argument_list|,
 name|argv
 index|[
@@ -670,7 +670,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|swapmap
+name|swaplist
 condition|)
 block|{
 name|int
@@ -689,7 +689,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|swapmap
+name|swaplist
 argument_list|,
 operator|&
 name|head
@@ -811,7 +811,7 @@ name|bottom
 operator|+
 literal|1
 expr_stmt|;
-name|swapmap
+name|swaplist
 operator|=
 name|head
 operator|.
