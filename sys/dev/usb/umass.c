@@ -1269,9 +1269,9 @@ name|USB_PRODUCT_PANASONIC_KXLCB20AN
 block|,
 name|RID_WILDCARD
 block|,
-name|UMASS_PROTO_ATAPI
+name|UMASS_PROTO_SCSI
 operator||
-name|UMASS_PROTO_CBI_I
+name|UMASS_PROTO_BBB
 block|,
 name|NO_QUIRKS
 block|}
