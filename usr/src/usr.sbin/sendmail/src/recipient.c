@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.11 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,6 +1348,10 @@ name|buf
 argument_list|,
 name|RealUid
 argument_list|,
+name|RealGid
+argument_list|,
+name|NULL
+argument_list|,
 name|TRUE
 argument_list|,
 name|S_IWRITE
@@ -2529,6 +2533,13 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
+name|gid_t
+name|gid
+decl_stmt|;
+name|char
+modifier|*
+name|uname
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2608,17 +2619,41 @@ name|ca
 operator|==
 name|NULL
 condition|)
+block|{
 name|uid
 operator|=
 literal|0
 expr_stmt|;
+name|gid
+operator|=
+literal|0
+expr_stmt|;
+name|uname
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
+block|{
 name|uid
 operator|=
 name|ca
 operator|->
 name|q_uid
 expr_stmt|;
+name|gid
+operator|=
+name|ca
+operator|->
+name|q_gid
+expr_stmt|;
+name|uname
+operator|=
+name|ca
+operator|->
+name|q_user
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|setjmp
@@ -2666,9 +2701,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* the input file must be marked safe */
-if|if
-condition|(
-operator|(
 name|ret
 operator|=
 name|safefile
@@ -2677,11 +2709,18 @@ name|fname
 argument_list|,
 name|uid
 argument_list|,
+name|gid
+argument_list|,
+name|uname
+argument_list|,
 name|forwarding
 argument_list|,
 name|S_IREAD
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|!=
 literal|0
 condition|)
