@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.13 (Berkeley) %G%"
+literal|"@(#)date.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,7 +541,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"date: set by %s"
+literal|"set by %s"
 argument_list|,
 name|username
 argument_list|)
