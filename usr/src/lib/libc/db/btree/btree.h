@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -719,15 +719,6 @@ name|int
 name|bt_fd
 decl_stmt|;
 comment|/* tree file descriptor */
-name|FILE
-modifier|*
-name|bt_rfp
-decl_stmt|;
-comment|/* R: record FILE pointer */
-name|int
-name|bt_rfd
-decl_stmt|;
-comment|/* R: record file descriptor */
 name|pgno_t
 name|bt_free
 decl_stmt|;
@@ -811,10 +802,19 @@ name|recno_t
 operator|)
 argument_list|)
 expr_stmt|;
-name|recno_t
-name|bt_nrecs
+name|FILE
+modifier|*
+name|bt_rfp
 decl_stmt|;
-comment|/* R: number of records */
+comment|/* R: record FILE pointer */
+name|int
+name|bt_rfd
+decl_stmt|;
+comment|/* R: record file descriptor */
+name|caddr_t
+name|bt_cmap
+decl_stmt|;
+comment|/* R: current point in mapped space */
 name|caddr_t
 name|bt_smap
 decl_stmt|;
@@ -824,66 +824,85 @@ name|bt_emap
 decl_stmt|;
 comment|/* R: end of mapped space */
 name|size_t
+name|bt_msize
+decl_stmt|;
+comment|/* R: size of mapped region. */
+name|recno_t
+name|bt_nrecs
+decl_stmt|;
+comment|/* R: number of records */
+name|size_t
 name|bt_reclen
 decl_stmt|;
 comment|/* R: fixed record length */
-name|int
-name|bt_reof
-decl_stmt|;
-comment|/* R: end of input file reached. */
 name|u_char
 name|bt_bval
 decl_stmt|;
 comment|/* R: delimiting byte/pad character */
 define|#
 directive|define
+name|BTF_CLOSEFP
+value|0x0001
+comment|/* R: opened a file pointer */
+define|#
+directive|define
 name|BTF_DELCRSR
-value|0x001
+value|0x0002
 comment|/* cursor has been deleted */
 define|#
 directive|define
+name|BTF_EOF
+value|0x0004
+comment|/* R: end of input file reached. */
+define|#
+directive|define
 name|BTF_FIXEDLEN
-value|0x002
+value|0x0008
 comment|/* R: fixed length records */
 define|#
 directive|define
 name|BTF_INMEM
-value|0x004
+value|0x0010
 comment|/* B: in-memory tree */
 define|#
 directive|define
+name|BTF_MEMMAPPED
+value|0x0020
+comment|/* R: memory mapped file. */
+define|#
+directive|define
 name|BTF_METADIRTY
-value|0x008
+value|0x0040
 comment|/* B: need to write metadata */
 define|#
 directive|define
 name|BTF_MODIFIED
-value|0x010
+value|0x0080
 comment|/* tree modified */
 define|#
 directive|define
 name|BTF_NODUPS
-value|0x020
+value|0x0100
 comment|/* B: no duplicate keys permitted */
 define|#
 directive|define
 name|BTF_RDONLY
-value|0x040
+value|0x0200
 comment|/* read-only tree */
 define|#
 directive|define
 name|BTF_RECNO
-value|0x080
+value|0x0400
 comment|/* R: record oriented tree */
 define|#
 directive|define
 name|BTF_RINMEM
-value|0x100
+value|0x0800
 comment|/* R: in-memory tree */
 define|#
 directive|define
 name|BTF_SEQINIT
-value|0x200
+value|0x1000
 comment|/* sequential scan initialized */
 name|u_long
 name|bt_flags
