@@ -179,7 +179,7 @@ name|__weak_reference
 argument_list|(
 name|__sem_unlink
 argument_list|,
-name|sem_post
+name|sem_unlink
 argument_list|)
 expr_stmt|;
 end_expr_stmt
