@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -873,11 +879,29 @@ expr_stmt|;
 name|gcalls
 operator|++
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"callout %p"
+argument_list|,
+name|c_func
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 name|mpcalls
 operator|++
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_CALLOUT
+argument_list|,
+literal|"callout mpsafe %p"
+argument_list|,
+name|c_func
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
