@@ -1739,6 +1739,10 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
+name|count
+init|=
+literal|0
+decl_stmt|,
 name|i
 init|=
 literal|0
@@ -1844,9 +1848,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|debug
+name|device_printf
 argument_list|(
-literal|2
+name|sc
+operator|->
+name|aac_dev
 argument_list|,
 literal|"error probing container %d"
 argument_list|,
@@ -1870,6 +1876,13 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+comment|/* XXX Need to check if count changed */
+name|count
+operator|=
+name|mir
+operator|->
+name|MntRespCount
+expr_stmt|;
 name|aac_add_container
 argument_list|(
 name|sc
@@ -1888,9 +1901,7 @@ condition|(
 operator|(
 name|i
 operator|<
-name|mir
-operator|->
-name|MntRespCount
+name|count
 operator|)
 operator|&&
 operator|(
@@ -8047,6 +8058,22 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* wrap the pi so the following test works */
+if|if
+condition|(
+name|pi
+operator|>=
+name|aac_qinfo
+index|[
+name|queue
+index|]
+operator|.
+name|size
+condition|)
+name|pi
+operator|=
+literal|0
+expr_stmt|;
 name|notify
 operator|=
 literal|0
@@ -10884,6 +10911,10 @@ decl_stmt|,
 name|found
 decl_stmt|;
 name|int
+name|count
+init|=
+literal|0
+decl_stmt|,
 name|added
 init|=
 literal|0
@@ -11032,9 +11063,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|debug
+name|device_printf
 argument_list|(
-literal|2
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"Error probing container %d\n"
 argument_list|,
@@ -11057,6 +11090,13 @@ name|data
 index|[
 literal|0
 index|]
+expr_stmt|;
+comment|/* XXX Need to check if count changed */
+name|count
+operator|=
+name|mir
+operator|->
+name|MntRespCount
 expr_stmt|;
 comment|/* 				 * Check the container against our list. 				 * co->co_found was already set to 0 in a 				 * previous run. 				 */
 if|if
@@ -11162,9 +11202,7 @@ condition|(
 operator|(
 name|i
 operator|<
-name|mir
-operator|->
-name|MntRespCount
+name|count
 operator|)
 operator|&&
 operator|(
