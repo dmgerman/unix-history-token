@@ -574,6 +574,7 @@ name|logpath
 argument_list|)
 argument_list|,
 literal|"%s/%s"
+argument_list|,
 name|X10DIR
 argument_list|,
 name|X10LOGNAME
@@ -1741,6 +1742,7 @@ name|logpath
 argument_list|)
 argument_list|,
 literal|"%s/%s"
+argument_list|,
 name|X10DIR
 argument_list|,
 name|X10LOGNAME
