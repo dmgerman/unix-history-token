@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.8 93/08/02$  *  *	@(#)hpux_net.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_net.c 1.8 93/08/02$  *  *	@(#)hpux_net.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -121,44 +121,49 @@ decl_stmt|,
 name|bind
 argument_list|()
 decl_stmt|,
-name|oaccept
+name|compat_43_accept
 argument_list|()
 decl_stmt|,
 name|connect
 argument_list|()
-decl_stmt|,
-name|orecv
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|osend
+name|compat_43_recv
+argument_list|()
+decl_stmt|,
+name|compat_43_send
 argument_list|()
 decl_stmt|,
 name|shutdown
 argument_list|()
-decl_stmt|,
-name|ogetsockname
-argument_list|()
-decl_stmt|,
-name|sendto
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|orecvfrom
+name|compat_43_getsockname
 argument_list|()
 decl_stmt|,
-name|ogetpeername
+name|sendto
+argument_list|()
+decl_stmt|,
+name|compat_43_recvfrom
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|compat_43_getpeername
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -206,7 +211,7 @@ block|,
 literal|3
 block|,
 comment|/* 3f0 */
-name|oaccept
+name|compat_43_accept
 block|,
 literal|3
 block|,
@@ -216,12 +221,12 @@ block|,
 literal|3
 block|,
 comment|/* 3f2 */
-name|orecv
+name|compat_43_recv
 block|,
 literal|4
 block|,
 comment|/* 3f3 */
-name|osend
+name|compat_43_send
 block|,
 literal|4
 block|,
@@ -231,7 +236,7 @@ block|,
 literal|2
 block|,
 comment|/* 3f5 */
-name|ogetsockname
+name|compat_43_getsockname
 block|,
 literal|3
 block|,
@@ -246,12 +251,12 @@ block|,
 literal|6
 block|,
 comment|/* 3f8 */
-name|orecvfrom
+name|compat_43_recvfrom
 block|,
 literal|6
 block|,
 comment|/* 3f9 */
-name|ogetpeername
+name|compat_43_getpeername
 block|,
 literal|3
 block|,
