@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed by the   * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Naffy, the Wonder Porpoise.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.13 1994/11/13 00:57:06 jkh Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed by the   * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Naffy, the Wonder Porpoise.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.14 1994/11/13 01:55:33 jkh Exp $  */
 end_comment
 
 begin_include
@@ -224,23 +224,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|long
-name|strtol
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|strncmp
 parameter_list|(
@@ -253,6 +236,24 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|strtoul
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -315,6 +316,17 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|set_device_flags
+parameter_list|(
+name|CmdParm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|set_device_enable
 parameter_list|(
 name|CmdParm
@@ -357,6 +369,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|int
+name|lineno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|CmdParm
 name|addr_parms
 index|[]
@@ -385,6 +405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|CmdParm
 name|int_parms
 index|[]
@@ -413,6 +434,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|CmdParm
 name|dev_parms
 index|[]
@@ -435,6 +457,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|Cmd
 name|CmdList
 index|[]
@@ -448,7 +471,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* ""		*/
+comment|/* ? (help)	*/
 block|{
 literal|"di"
 block|,
@@ -484,7 +507,16 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* ""		*/
+comment|/* exit (quit)	*/
+block|{
+literal|"f"
+block|,
+name|set_device_flags
+block|,
+name|int_parms
+block|}
+block|,
+comment|/* flags dev mask */
 block|{
 literal|"h"
 block|,
@@ -497,12 +529,12 @@ comment|/* help		*/
 block|{
 literal|"io"
 block|,
-name|set_device_ioaddr
+name|set_device_mem
 block|,
 name|addr_parms
 block|}
 block|,
-comment|/* io dev addr	*/
+comment|/* iomem dev addr */
 block|{
 literal|"ir"
 block|,
@@ -520,16 +552,16 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* ls		*/
+comment|/* ls, list	*/
 block|{
-literal|"m"
+literal|"p"
 block|,
-name|set_device_mem
+name|set_device_ioaddr
 block|,
-name|addr_parms
+name|int_parms
 block|}
 block|,
-comment|/* mem dev addr	*/
+comment|/* port dev addr */
 block|{
 literal|"q"
 block|,
@@ -538,7 +570,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* ""		*/
+comment|/* quit		*/
 block|{
 name|NULL
 block|,
@@ -605,7 +637,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 continue|continue;
 name|cmd
@@ -897,7 +929,7 @@ index|[
 name|i
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -914,7 +946,7 @@ condition|)
 block|{
 name|unit
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|cmd
 argument_list|,
@@ -1000,14 +1032,14 @@ name|parm
 operator|.
 name|iparm
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|cmd
 argument_list|,
 operator|&
 name|ptr
 argument_list|,
-literal|10
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1054,14 +1086,14 @@ operator|(
 name|void
 operator|*
 operator|)
-name|strtol
+name|strtoul
 argument_list|(
 name|cmd
 argument_list|,
 operator|&
 name|ptr
 argument_list|,
-literal|16
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1106,10 +1138,9 @@ modifier|*
 name|parms
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"Device	IOaddr	IRQ	DRQ	MemAddr	Flags	Enabled\n"
-argument_list|)
+name|lineno
+operator|=
+literal|0
 expr_stmt|;
 name|lsdevtab
 argument_list|(
@@ -1174,9 +1205,6 @@ name|dparm
 operator|->
 name|id_iobase
 operator|=
-operator|(
-name|int
-operator|)
 name|parms
 index|[
 literal|1
@@ -1184,7 +1212,7 @@ index|]
 operator|.
 name|parm
 operator|.
-name|aparm
+name|iparm
 expr_stmt|;
 return|return
 literal|0
@@ -1202,6 +1230,20 @@ modifier|*
 name|parms
 parameter_list|)
 block|{
+name|unsigned
+name|irq
+decl_stmt|;
+name|irq
+operator|=
+name|parms
+index|[
+literal|1
+index|]
+operator|.
+name|parm
+operator|.
+name|iparm
+expr_stmt|;
 name|parms
 index|[
 literal|0
@@ -1213,16 +1255,17 @@ name|dparm
 operator|->
 name|id_irq
 operator|=
+operator|(
+name|irq
+operator|<
+literal|16
+condition|?
 literal|1
 operator|<<
-name|parms
-index|[
-literal|1
-index|]
-operator|.
-name|parm
-operator|.
-name|iparm
+name|irq
+else|:
+literal|0
+operator|)
 expr_stmt|;
 return|return
 literal|0
@@ -1240,6 +1283,21 @@ modifier|*
 name|parms
 parameter_list|)
 block|{
+name|unsigned
+name|drq
+decl_stmt|;
+comment|/*      * The bounds checking is just to ensure that the value can be printed      * in 5 characters.  32768 gets converted to -32768 and doesn't fit.      */
+name|drq
+operator|=
+name|parms
+index|[
+literal|1
+index|]
+operator|.
+name|parm
+operator|.
+name|iparm
+expr_stmt|;
 name|parms
 index|[
 literal|0
@@ -1251,14 +1309,16 @@ name|dparm
 operator|->
 name|id_drq
 operator|=
-name|parms
-index|[
+operator|(
+name|drq
+operator|<
+literal|32768
+condition|?
+name|drq
+else|:
+operator|-
 literal|1
-index|]
-operator|.
-name|parm
-operator|.
-name|iparm
+operator|)
 expr_stmt|;
 return|return
 literal|0
@@ -1295,6 +1355,42 @@ operator|.
 name|parm
 operator|.
 name|aparm
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|set_device_flags
+parameter_list|(
+name|CmdParm
+modifier|*
+name|parms
+parameter_list|)
+block|{
+name|parms
+index|[
+literal|0
+index|]
+operator|.
+name|parm
+operator|.
+name|dparm
+operator|->
+name|id_flags
+operator|=
+name|parms
+index|[
+literal|1
+index|]
+operator|.
+name|parm
+operator|.
+name|iparm
 expr_stmt|;
 return|return
 literal|0
@@ -1403,22 +1499,27 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"io<devname><addr>\tSet device io address\n"
+literal|"port<devname><addr>\tSet device port (i/o address)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"irq<devname><irq>\tSet device IRQ\n"
+literal|"irq<devname><number>\tSet device irq\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drq<devname><drq>\tSet device DRQ\n"
+literal|"drq<devname><number>\tSet device drq\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"mem<devname><addr>\tSet device memory address\n"
+literal|"iomem<devname><addr>\tSet device maddr (memory address)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"flags<devname><mask>\tSet device flags\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1443,7 +1544,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Commands may also be abbreviated to a unique number of characters\n"
+literal|"Commands may be abbreviated to a unique prefix\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1463,19 +1564,8 @@ modifier|*
 name|dt
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|lineno
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
 init|;
 name|dt
 operator|->
@@ -1487,18 +1577,22 @@ name|dt
 operator|++
 control|)
 block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+name|line
+index|[
+literal|80
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|lineno
-operator|++
-operator|>
-literal|22
+operator|>=
+literal|23
 condition|)
 block|{
-name|lineno
-operator|=
-literal|0
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"<More> "
@@ -1515,10 +1609,41 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|lineno
+operator|=
+literal|0
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|lineno
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%s%d	0x%x	%d	%d	0x%x	0x%x	%s\n"
+literal|"Device   port       irq   drq   iomem      unit  flags      enabled\n"
+argument_list|)
+expr_stmt|;
+operator|++
+name|lineno
+expr_stmt|;
+block|}
+comment|/* 	 * printf() doesn't support %#, %- or even field widths for strings, 	 * so formatting is not straightforward. 	 */
+name|bzero
+argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+name|line
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"%s%d"
 argument_list|,
 name|dt
 operator|->
@@ -1529,10 +1654,30 @@ argument_list|,
 name|dt
 operator|->
 name|id_unit
+argument_list|)
+expr_stmt|;
+comment|/* Missing: id_id (don't need it). */
+comment|/* Missing: id_driver (useful if we could show it by name). */
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|9
+argument_list|,
+literal|"0x%x"
 argument_list|,
 name|dt
 operator|->
 name|id_iobase
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|20
+argument_list|,
+literal|"%d"
 argument_list|,
 name|ffs
 argument_list|(
@@ -1542,18 +1687,71 @@ name|id_irq
 argument_list|)
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|26
+argument_list|,
+literal|"%d"
 argument_list|,
 name|dt
 operator|->
 name|id_drq
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|32
+argument_list|,
+literal|"0x%x"
 argument_list|,
 name|dt
 operator|->
 name|id_maddr
+argument_list|)
+expr_stmt|;
+comment|/* Missing: id_msize (0 at start, useful if we can get here later). */
+comment|/* Missing: id_intr (useful if we could show it by name). */
+comment|/* Display only: id_unit. */
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|43
+argument_list|,
+literal|"%d"
+argument_list|,
+name|dt
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|49
+argument_list|,
+literal|"0x%x"
 argument_list|,
 name|dt
 operator|->
 name|id_flags
+argument_list|)
+expr_stmt|;
+comment|/* Missing: id_scsiid, id_alive, id_ri_flags, id_reconfig (0 now...) */
+name|sprintf
+argument_list|(
+name|line
+operator|+
+literal|60
+argument_list|,
+literal|"%s"
 argument_list|,
 name|dt
 operator|->
@@ -1563,6 +1761,45 @@ literal|"Yes"
 else|:
 literal|"No"
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|60
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|line
+index|[
+name|i
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|line
+index|[
+name|i
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+operator|++
+name|lineno
 expr_stmt|;
 block|}
 block|}
@@ -1814,7 +2051,7 @@ operator|*
 operator|--
 name|input
 operator|=
-name|NULL
+literal|'\0'
 operator|,
 operator|--
 name|nchars
@@ -1851,7 +2088,7 @@ operator|*
 operator|--
 name|input
 operator|=
-name|NULL
+literal|'\0'
 operator|,
 operator|--
 name|nchars
@@ -1885,7 +2122,7 @@ block|{
 operator|*
 name|input
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 break|break;
 block|}
@@ -1989,26 +2226,97 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a string to a long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  *  * Slightly lobotomized for inclusion here.  */
+comment|/*  * Kludges to get the library sources of strtoul.c to work in our  * environment.  isdigit() and isspace() could be used above too.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isalpha
+parameter_list|(
+name|c
+parameter_list|)
+value|(((c)>= 'A'&& (c)<= 'Z') \ 			 || ((c)>= 'a'&& (c)<= 'z'))
+end_define
+
+begin_comment
+comment|/* unsafe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|((unsigned)((c) - '0')<= '9' - '0')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isspace
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || (c) == '\t')
+end_define
+
+begin_comment
+comment|/* unsafe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isupper
+parameter_list|(
+name|c
+parameter_list|)
+value|((unsigned)((c) - 'A')<= 'Z' - 'A')
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The following should be identical with the library sources for strtoul.c.  */
+end_comment
+
+begin_comment
+comment|/*  * Convert a string to an unsigned long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
 end_comment
 
 begin_function
+name|unsigned
 name|long
-name|strtol
+name|strtoul
 parameter_list|(
+name|nptr
+parameter_list|,
+name|endptr
+parameter_list|,
+name|base
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|nptr
-parameter_list|,
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|endptr
-parameter_list|,
+decl_stmt|;
+specifier|register
 name|int
 name|base
-parameter_list|)
+decl_stmt|;
 block|{
 specifier|register
 specifier|const
@@ -2042,7 +2350,7 @@ name|any
 decl_stmt|,
 name|cutlim
 decl_stmt|;
-comment|/*      * Skip white space and pick up leading +/- sign if any.      * If base is 0, allow 0x for hex and 0 for octal, else      * assume decimal; if base is already 16, allow 0x.      */
+comment|/* 	 * See strtol for comments as to the logic used. 	 */
 do|do
 block|{
 name|c
@@ -2054,13 +2362,10 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|isspace
+argument_list|(
 name|c
-operator|==
-literal|' '
-operator|||
-name|c
-operator|==
-literal|'\t'
+argument_list|)
 condition|)
 do|;
 if|if
@@ -2155,32 +2460,28 @@ literal|8
 else|:
 literal|10
 expr_stmt|;
-comment|/*      * Compute the cutoff value between legal numbers and illegal      * numbers.  That is the largest legal value, divided by the      * base.  An input number that is greater than this value, if      * followed by a legal input character, is too big.  One that      * is equal to this value may be valid or not; the limit      * between valid and invalid numbers is then based on the last      * digit.  For instance, if the range for longs is      * [-2147483648..2147483647] and the input base is 10,      * cutoff will be set to 214748364 and cutlim to either      * 7 (neg==0) or 8 (neg==1), meaning that if we have accumulated      * a value> 214748364, or equal but the next digit is> 7 (or 8),      * the number is too big, and we will return a range error.      *      * Set any if any `digits' consumed; make it negative to indicate      * overflow.      */
 name|cutoff
 operator|=
-name|neg
-condition|?
-operator|-
 operator|(
 name|unsigned
 name|long
 operator|)
-name|LONG_MIN
-else|:
-name|LONG_MAX
-expr_stmt|;
-name|cutlim
-operator|=
-name|cutoff
-operator|%
+name|ULONG_MAX
+operator|/
 operator|(
 name|unsigned
 name|long
 operator|)
 name|base
 expr_stmt|;
-name|cutoff
-operator|/=
+name|cutlim
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|ULONG_MAX
+operator|%
 operator|(
 name|unsigned
 name|long
@@ -2207,13 +2508,10 @@ control|)
 block|{
 if|if
 condition|(
+name|isdigit
+argument_list|(
 name|c
-operator|>=
-literal|'0'
-operator|&&
-name|c
-operator|<=
-literal|'9'
+argument_list|)
 condition|)
 name|c
 operator|-=
@@ -2222,37 +2520,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
+name|isalpha
+argument_list|(
 name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'Z'
-operator|)
-operator|||
-operator|(
-name|c
-operator|>=
-literal|'a'
-operator|&&
-name|c
-operator|<=
-literal|'z'
-operator|)
+argument_list|)
 condition|)
 name|c
 operator|-=
-operator|(
+name|isupper
+argument_list|(
 name|c
-operator|>=
-literal|'A'
-operator|&&
-name|c
-operator|<=
-literal|'Z'
-operator|)
+argument_list|)
 condition|?
 literal|'A'
 operator|-
@@ -2319,11 +2597,11 @@ condition|)
 block|{
 name|acc
 operator|=
-name|neg
-condition|?
-name|LONG_MIN
-else|:
-name|LONG_MAX
+name|ULONG_MAX
+expr_stmt|;
+name|errno
+operator|=
+name|ERANGE
 expr_stmt|;
 block|}
 elseif|else
@@ -2340,7 +2618,7 @@ if|if
 condition|(
 name|endptr
 operator|!=
-name|NULL
+literal|0
 condition|)
 operator|*
 name|endptr
