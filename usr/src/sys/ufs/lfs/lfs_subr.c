@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -209,69 +209,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the current version number for a specific inode. */
-end_comment
-
-begin_function
-name|u_long
-name|lfs_getversion
-parameter_list|(
-name|fs
-parameter_list|,
-name|ino
-parameter_list|)
-name|struct
-name|lfs
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-block|{
-name|BUF
-modifier|*
-name|bp
-decl_stmt|;
-name|IFILE
-modifier|*
-name|ifp
-decl_stmt|;
-name|u_long
-name|version
-decl_stmt|;
-comment|/* 	 * Read the appropriate block from the ifile.  Return the 	 * version number. 	 */
-name|LFS_IENTRY
-argument_list|(
-name|ifp
-argument_list|,
-name|fs
-argument_list|,
-name|ino
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-name|version
-operator|=
-name|ifp
-operator|->
-name|if_version
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|version
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Search a block for a specific dinode. */
 end_comment
 
@@ -310,7 +247,7 @@ name|cnt
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ALLOCPRINT
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"lfs_ifind: inode %d\n"
@@ -406,7 +343,7 @@ name|ino
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ALLOCPRINT
+name|VERBOSE
 name|printf
 argument_list|(
 literal|"lfs_iset: setting ino %d daddr %lx time %lx\n"
@@ -497,6 +434,18 @@ decl_stmt|;
 name|daddr_t
 name|iaddr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"lfs_itod %d\n"
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Read the appropriate block from the ifile. */
 name|LFS_IENTRY
 argument_list|(
@@ -519,7 +468,7 @@ name|LFS_UNUSED_DADDR
 condition|)
 name|panic
 argument_list|(
-literal|"itod: unused disk address"
+literal|"lfs_itod: unused disk address"
 argument_list|)
 expr_stmt|;
 name|iaddr
