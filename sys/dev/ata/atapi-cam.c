@@ -3085,24 +3085,6 @@ operator||
 name|M_ZERO
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CAMDEBUG
-name|xpt_print_path
-argument_list|(
-name|cam_sim_path
-argument_list|(
-name|sim
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"rescanning ATAPI bus.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|xpt_create_path
@@ -3125,6 +3107,21 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|CAMDEBUG
+name|xpt_print_path
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"rescanning ATAPI bus.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|xpt_setup_ccb
 argument_list|(
 operator|&
