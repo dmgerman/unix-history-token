@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -531,7 +531,7 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* output to transcript */
+comment|/* output to transcript if serious */
 if|if
 condition|(
 name|CurEnv
@@ -539,6 +539,22 @@ operator|->
 name|e_xfp
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|msg
+index|[
+literal|0
+index|]
+operator|==
+literal|'4'
+operator|||
+name|msg
+index|[
+literal|0
+index|]
+operator|==
+literal|'5'
+operator|)
 condition|)
 name|fprintf
 argument_list|(
@@ -548,17 +564,7 @@ name|e_xfp
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|OpMode
-operator|==
-name|MD_SMTP
-condition|?
 name|msg
-else|:
-operator|&
-name|msg
-index|[
-literal|4
-index|]
 argument_list|)
 expr_stmt|;
 comment|/* output to channel if appropriate */

@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -110,6 +110,19 @@ end_define
 
 begin_comment
 comment|/* "Service Shutting Down" */
+end_comment
+
+begin_decl_stmt
+name|char
+name|SmtpMsgBuffer
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffer for commands */
 end_comment
 
 begin_decl_stmt
@@ -1474,7 +1487,69 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* log the input in the transcript for future error returns */
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
+operator|&&
+name|index
+argument_list|(
+literal|"45"
+argument_list|,
+name|SmtpReplyBuffer
+index|[
+literal|0
+index|]
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* serious error -- log the previous command */
+if|if
+condition|(
+name|SmtpMsgBuffer
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|fprintf
+argument_list|(
+name|CurEnv
+operator|->
+name|e_xfp
+argument_list|,
+literal|">>> %s\n"
+argument_list|,
+name|SmtpMsgBuffer
+argument_list|)
+expr_stmt|;
+name|SmtpMsgBuffer
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* now log the message as from the other side */
+name|fprintf
+argument_list|(
+name|CurEnv
+operator|->
+name|e_xfp
+argument_list|,
+literal|"<<< %s\n"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* display the input for verbose mode */
 if|if
 condition|(
 name|Verbose
@@ -1487,26 +1562,6 @@ argument_list|(
 name|Arpa_Info
 argument_list|,
 literal|"%s"
-argument_list|,
-name|SmtpReplyBuffer
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|CurEnv
-operator|->
-name|e_xfp
-operator|!=
-name|NULL
-condition|)
-name|fprintf
-argument_list|(
-name|CurEnv
-operator|->
-name|e_xfp
-argument_list|,
-literal|"%s\n"
 argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
@@ -1623,18 +1678,12 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
 operator|(
 name|void
 operator|)
 name|sprintf
 argument_list|(
-name|buf
+name|SmtpMsgBuffer
 argument_list|,
 name|f
 argument_list|,
@@ -1667,27 +1716,7 @@ name|Arpa_Info
 argument_list|,
 literal|">>> %s"
 argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|CurEnv
-operator|->
-name|e_xfp
-operator|!=
-name|NULL
-condition|)
-name|fprintf
-argument_list|(
-name|CurEnv
-operator|->
-name|e_xfp
-argument_list|,
-literal|">>> %s\n"
-argument_list|,
-name|buf
+name|SmtpMsgBuffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1702,7 +1731,7 @@ name|SmtpOut
 argument_list|,
 literal|"%s%s"
 argument_list|,
-name|buf
+name|SmtpMsgBuffer
 argument_list|,
 name|m
 operator|->
