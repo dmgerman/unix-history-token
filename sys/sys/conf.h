@@ -668,28 +668,35 @@ value|(*devsw((bp)->b_dev)->d_strategy)(bp)
 end_define
 
 begin_comment
-comment|/*  * Types for d_type.  */
+comment|/*  * Types for d_flags.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|D_TAPE
-value|1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|D_DISK
-value|2
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|D_TTY
-value|4
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_MEM
+value|0x0008
 end_define
 
 begin_define
