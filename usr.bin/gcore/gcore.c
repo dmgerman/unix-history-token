@@ -366,8 +366,6 @@ decl_stmt|,
 name|fname
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|int
