@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.58 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.59 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5979,14 +5979,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 specifier|register
 name|struct
 name|inode
@@ -6396,56 +6388,6 @@ name|ndp
 argument_list|)
 condition|)
 block|{
-name|ndp
-operator|->
-name|ni_nameiop
-operator|&=
-operator|~
-operator|(
-name|MODMASK
-operator||
-name|OPMASK
-operator|)
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_nameiop
-operator||=
-name|LOOKUP
-operator||
-name|LOCKLEAF
-operator||
-name|NOCACHE
-expr_stmt|;
-name|error
-operator|=
-name|namei
-argument_list|(
-name|ndp
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
-name|iput
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-name|dp
-operator|=
-name|VTOI
-argument_list|(
-name|ndp
-operator|->
-name|ni_vp
-argument_list|)
-expr_stmt|;
 name|dp
 operator|->
 name|i_nlink
@@ -6457,7 +6399,6 @@ name|i_flag
 operator||=
 name|ICHG
 expr_stmt|;
-block|}
 block|}
 name|bad
 label|:
