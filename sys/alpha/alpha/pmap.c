@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.3 1998/07/12 16:13:54 dfr Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.4 1998/07/15 20:07:33 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -298,7 +298,7 @@ name|alpha_l1trunc
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)& (ALPHA_L1SIZE-1))
+value|((va)& ~(ALPHA_L1SIZE-1))
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ name|alpha_l2trunc
 parameter_list|(
 name|va
 parameter_list|)
-value|((va)& (ALPHA_L2SIZE-1))
+value|((va)& ~(ALPHA_L2SIZE-1))
 end_define
 
 begin_comment
@@ -6421,6 +6421,10 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|va
+decl_stmt|,
+name|nva1
+decl_stmt|,
+name|nva2
 decl_stmt|;
 if|if
 condition|(
@@ -6440,6 +6444,25 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* 	 * special handling of removing one page.  a very 	 * common operation and easy to short circuit some 	 * code. 	 */
+if|if
+condition|(
+name|sva
+operator|+
+name|PAGE_SIZE
+operator|==
+name|eva
+condition|)
+block|{
+name|pmap_remove_page
+argument_list|(
+name|pmap
+argument_list|,
+name|sva
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 for|for
 control|(
 name|va
@@ -6449,6 +6472,88 @@ init|;
 name|va
 operator|<
 name|eva
+condition|;
+name|va
+operator|=
+name|nva1
+control|)
+block|{
+name|nva1
+operator|=
+name|alpha_l1trunc
+argument_list|(
+name|va
+operator|+
+name|ALPHA_L1SIZE
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pmap_pte_v
+argument_list|(
+name|pmap_lev1pte
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+argument_list|)
+condition|)
+continue|continue;
+for|for
+control|(
+init|;
+name|va
+operator|<
+name|eva
+operator|&&
+name|va
+operator|<
+name|nva1
+condition|;
+name|va
+operator|=
+name|nva2
+control|)
+block|{
+name|nva2
+operator|=
+name|alpha_l2trunc
+argument_list|(
+name|va
+operator|+
+name|ALPHA_L2SIZE
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pmap_pte_v
+argument_list|(
+name|pmap_lev2pte
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+argument_list|)
+condition|)
+continue|continue;
+for|for
+control|(
+init|;
+name|va
+operator|<
+name|eva
+operator|&&
+name|va
+operator|<
+name|nva2
 condition|;
 name|va
 operator|+=
@@ -6461,6 +6566,8 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -7498,6 +7605,11 @@ comment|/* 			 * If the level 2 page table is mapped, we just increment 			 * th
 if|if
 condition|(
 name|l2pte
+operator|&&
+name|pmap_pte_v
+argument_list|(
+name|l2pte
+argument_list|)
 condition|)
 block|{
 if|if
