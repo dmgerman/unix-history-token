@@ -31,7 +31,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -266,8 +266,6 @@ end_comment
 begin_decl_stmt
 name|char
 name|SpaceSub
-init|=
-literal|'.'
 decl_stmt|;
 end_decl_stmt
 
@@ -278,8 +276,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|QueueLA
-init|=
-literal|8
 decl_stmt|;
 end_decl_stmt
 
@@ -290,8 +286,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|RefuseLA
-init|=
-literal|12
 decl_stmt|;
 end_decl_stmt
 
