@@ -23,13 +23,34 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.3		%G%"
+literal|"@(#)cpr.c	1.4		%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  CPR -- print on concept 108 ** **	This filter arranges to output onto a printer connected **	to a Concept 108 terminal.  It probably works on other **	models in the Concept 100 series also. ** **	Usage: **		cpr [file ...] */
+comment|/* **  CPR -- print on concept 108 ** **	This filter arranges to output onto a printer connected **	to a Concept 108 terminal.  It probably works on other **	models in the Concept 100 series also. ** **	Usage: **		cpr [-f] [file ...] ** **	Flags: **		-f	form feed following to print. */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|bool
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
 
 begin_decl_stmt
 name|struct
@@ -41,6 +62,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|SysLine
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|FormFeedFollowing
 decl_stmt|;
 end_decl_stmt
 
@@ -80,21 +107,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* be nice on interrupts, etc. */
-end_comment
-
-begin_expr_stmt
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|cleanterm
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* set the terminal to output to printer */
+comment|/* arrange to stop the sysline program during printing */
 end_comment
 
 begin_expr_stmt
@@ -122,6 +135,71 @@ name|p
 argument_list|)
 expr_stmt|;
 end_if
+
+begin_comment
+comment|/* process arguments */
+end_comment
+
+begin_while
+while|while
+condition|(
+operator|--
+name|argc
+operator|>
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'-'
+condition|)
+block|{
+switch|switch
+condition|(
+operator|*
+operator|++
+name|p
+condition|)
+block|{
+case|case
+literal|'f'
+case|:
+name|FormFeedFollowing
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+end_while
+
+begin_comment
+comment|/* be nice on interrupts, etc. */
+end_comment
+
+begin_expr_stmt
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|cleanterm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* set the terminal to output to printer */
+end_comment
 
 begin_expr_stmt
 name|setupterm
@@ -376,6 +454,19 @@ end_macro
 
 begin_block
 block|{
+comment|/* output trailing formfeed */
+if|if
+condition|(
+name|FormFeedFollowing
+condition|)
+name|fputs
+argument_list|(
+literal|"\r\f"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+comment|/* disconnect printer */
 name|resetmodes
 argument_list|()
 expr_stmt|;
