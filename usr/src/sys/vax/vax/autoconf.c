@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4450,6 +4450,14 @@ condition|(
 name|boothowto
 operator|&
 name|RB_DFLTROOT
+operator|||
+operator|(
+name|bootdev
+operator|&
+name|B_MAGICMASK
+operator|)
+operator|!=
+name|B_DEVMAGIC
 condition|)
 return|return;
 name|majdev
@@ -4701,7 +4709,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"Changing root device to %c%c(%d, %d)\n"
+literal|"Changing root device to %c%c%d%c\n"
 argument_list|,
 name|devname
 index|[
@@ -4719,9 +4727,13 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|majdev
-argument_list|,
 name|mindev
+operator|>>
+name|PARTITIONSHIFT
+argument_list|,
+name|part
+operator|+
+literal|'a'
 argument_list|)
 expr_stmt|;
 ifdef|#
