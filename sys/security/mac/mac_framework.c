@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/extattr.h>
 end_include
 
@@ -1192,7 +1198,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * mac_policy_list_lock protects the consistency of 'mac_policy_list',  * the linked list of attached policy modules.  Read-only consumers of  * the list must acquire a shared lock for the duration of their use;  * writers must acquire an exclusive lock.  Note that for compound  * operations, locks should be held for the entire compound operation,  * and that this is not yet done for relabel requests.  */
+comment|/*  * mac_policy_list stores the list of active policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count  * is protected by mac_policy_list_lock; the list may be modified only  * while the busy count is 0, requiring that the lock be held to  * prevent new references to the list from being acquired.  For almost  * all operations, incrementing the busy count is sufficient to  * guarantee consistency, as the list cannot be modified while the  * busy count is elevated.  For a few special operations involving a  * change to the list of active policies, the lock itself must be held.  * A condition variable, mac_policy_list_not_busy, is used to signal  * potential exclusive consumers that they should try to acquire the  * lock if a first attempt at exclusive access fails.  */
 end_comment
 
 begin_decl_stmt
@@ -1200,6 +1206,14 @@ specifier|static
 name|struct
 name|mtx
 name|mac_policy_list_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cv
+name|mac_policy_list_not_busy
 decl_stmt|;
 end_decl_stmt
 
@@ -1226,7 +1240,7 @@ define|#
 directive|define
 name|MAC_POLICY_LIST_LOCKINIT
 parameter_list|()
-value|mtx_init(&mac_policy_list_lock,	\ 	"mac_policy_list_lock", NULL, MTX_DEF);
+value|do {					\ 	mtx_init(&mac_policy_list_lock, "mac_policy_list_lock", NULL,	\ 	    MTX_DEF);							\ 	cv_init(&mac_policy_list_not_busy, "mac_policy_list_not_busy");	\ } while (0)
 end_define
 
 begin_define
@@ -1234,7 +1248,7 @@ define|#
 directive|define
 name|MAC_POLICY_LIST_LOCK
 parameter_list|()
-value|mtx_lock(&mac_policy_list_lock);
+value|do {					\ 	mtx_lock(&mac_policy_list_lock);				\ } while (0)
 end_define
 
 begin_define
@@ -1242,7 +1256,19 @@ define|#
 directive|define
 name|MAC_POLICY_LIST_UNLOCK
 parameter_list|()
-value|mtx_unlock(&mac_policy_list_lock);
+value|do {					\ 	mtx_unlock(&mac_policy_list_lock);				\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * We manually invoke WITNESS_SLEEP() to allow Witness to generate  * warnings even if we don't end up ever triggering the wait at  * run-time.  The consumer of the exclusive interface must not hold  * any locks (other than potentially Giant) since we may sleep for  * long (potentially indefinite) periods of time waiting for the  * framework to become quiescent so that a policy list change may  * be made.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_POLICY_LIST_EXCLUSIVE
+parameter_list|()
+value|do {				\ 	WITNESS_SLEEP(1, NULL);						\ 	mtx_lock(&mac_policy_list_lock);				\ 	while (mac_policy_list_busy != 0)				\ 		cv_wait(&mac_policy_list_not_busy,			\&mac_policy_list_lock);				\ } while (0)
 end_define
 
 begin_define
@@ -1258,7 +1284,7 @@ define|#
 directive|define
 name|MAC_POLICY_LIST_UNBUSY
 parameter_list|()
-value|do {					\ 	MAC_POLICY_LIST_LOCK();						\ 	mac_policy_list_busy--;						\ 	if (mac_policy_list_busy< 0)					\ 		panic("Extra mac_policy_list_busy--");			\ 	MAC_POLICY_LIST_UNLOCK();					\ } while (0)
+value|do {					\ 	MAC_POLICY_LIST_LOCK();						\ 	mac_policy_list_busy--;						\ 	KASSERT(mac_policy_list_busy>= 0, ("MAC_POLICY_LIST_LOCK"));	\ 	if (mac_policy_list_busy == 0)					\ 		cv_signal(&mac_policy_list_not_busy);			\ 	MAC_POLICY_LIST_UNLOCK();					\ } while (0)
 end_define
 
 begin_comment
@@ -1541,25 +1567,9 @@ decl_stmt|;
 name|int
 name|slot
 decl_stmt|;
-name|MAC_POLICY_LIST_LOCK
+name|MAC_POLICY_LIST_EXCLUSIVE
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|mac_policy_list_busy
-operator|>
-literal|0
-condition|)
-block|{
-name|MAC_POLICY_LIST_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-block|}
 name|LIST_FOREACH
 argument_list|(
 argument|tmpc
@@ -1724,7 +1734,7 @@ name|mpc
 parameter_list|)
 block|{
 comment|/* 	 * If we fail the load, we may get a request to unload.  Check 	 * to see if we did the run-time registration, and if not, 	 * silently succeed. 	 */
-name|MAC_POLICY_LIST_LOCK
+name|MAC_POLICY_LIST_EXCLUSIVE
 argument_list|()
 expr_stmt|;
 if|if
@@ -1779,23 +1789,6 @@ name|EBUSY
 operator|)
 return|;
 block|}
-comment|/* 	 * Right now, we EBUSY if the list is in use.  In the future, 	 * for reliability reasons, we might want to sleep and wakeup 	 * later to try again. 	 */
-if|if
-condition|(
-name|mac_policy_list_busy
-operator|>
-literal|0
-condition|)
-block|{
-name|MAC_POLICY_LIST_UNLOCK
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|mpc
@@ -1827,15 +1820,15 @@ argument_list|,
 name|mpc_list
 argument_list|)
 expr_stmt|;
-name|MAC_POLICY_LIST_UNLOCK
-argument_list|()
-expr_stmt|;
 name|mpc
 operator|->
 name|mpc_runtime_flags
 operator|&=
 operator|~
 name|MPC_RUNTIME_FLAG_REGISTERED
+expr_stmt|;
+name|MAC_POLICY_LIST_UNLOCK
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
