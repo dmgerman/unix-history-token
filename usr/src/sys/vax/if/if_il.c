@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.21	83/06/12	*/
+comment|/*	if_il.c	4.22	83/06/12	*/
 end_comment
 
 begin_include
@@ -1327,6 +1327,8 @@ operator|.
 name|if_flags
 operator||=
 name|IFF_UP
+operator||
+name|IFF_RUNNING
 expr_stmt|;
 name|is
 operator|->

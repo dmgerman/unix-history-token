@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_hy.c	4.4	83/05/27	*/
+comment|/*	if_hy.c	4.6	83/06/12	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Network Systems Copropration Hyperchanel interface  *  * UNTESTED WITH 4.1C  */
+comment|/*  * Network Systems Copropration Hyperchanel interface  *  * UNTESTED WITH 4.2  */
 end_comment
 
 begin_include
@@ -207,6 +207,13 @@ decl_stmt|,
 name|hyinit
 argument_list|()
 decl_stmt|,
+name|hyioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|hyoutput
 argument_list|()
 decl_stmt|,
@@ -963,6 +970,12 @@ name|hyinit
 expr_stmt|;
 name|ifp
 operator|->
+name|if_ioctl
+operator|=
+name|hyioctl
+expr_stmt|;
+name|ifp
+operator|->
 name|if_output
 operator|=
 name|hyoutput
@@ -1195,6 +1208,14 @@ name|IFF_UP
 expr_stmt|;
 return|return;
 block|}
+name|is
+operator|->
+name|is_hy
+operator|.
+name|if_flags
+operator||=
+name|IFF_RUNNING
+expr_stmt|;
 comment|/* 	 * Issue wait for message and start the state machine 	 */
 name|s
 operator|=
@@ -6444,34 +6465,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|hyioctl
 argument_list|(
-argument|dev
+name|ifp
 argument_list|,
-argument|cmd
+name|cmd
 argument_list|,
-argument|data
-argument_list|,
-argument|flag
+name|data
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|dev_t
-name|dev
-decl_stmt|;
-end_decl_stmt
+specifier|register
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -6482,12 +6495,6 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -6503,24 +6510,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|NHY
-condition|)
-block|{
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 switch|switch
 condition|(
 name|cmd
@@ -6546,10 +6535,9 @@ goto|;
 block|}
 name|hy_route
 index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|ifp
+operator|->
+name|if_unit
 index|]
 operator|=
 operator|*
@@ -6558,14 +6546,15 @@ expr|struct
 name|hyroute
 operator|*
 operator|)
-name|data
+name|ifr
+operator|->
+name|ifr_data
 expr_stmt|;
 name|hy_route
 index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|ifp
+operator|->
+name|if_unit
 index|]
 operator|.
 name|hyr_lasttime
@@ -6582,21 +6571,22 @@ expr|struct
 name|hyroute
 operator|*
 operator|)
-name|data
+name|ifr
+operator|->
+name|ifr_data
 operator|=
 name|hy_route
 index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|ifp
+operator|->
+name|if_unit
 index|]
 expr_stmt|;
 break|break;
 default|default:
 name|error
 operator|=
-name|ENXIO
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -6614,11 +6604,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
