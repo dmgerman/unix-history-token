@@ -13,7 +13,7 @@ parameter_list|,
 name|tbl
 parameter_list|)
 define|\
-value|((line)[0] == (tbl).str_delim&& (line)[1] == '\n')
+value|(((unsigned char)(line)[0]) == (tbl).str_delim&& (line)[1] == '\n')
 end_define
 
 begin_typedef

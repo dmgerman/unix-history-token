@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)fortune.c   8.1 (Berkeley) 5/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +118,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"strfile.h"
 end_include
 
@@ -183,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|POS_UNKNOWN
-value|((off_t) -1)
+value|((long) -1)
 end_define
 
 begin_comment
@@ -216,7 +230,7 @@ name|l
 parameter_list|,
 name|x
 parameter_list|)
-value|if (Debug>= l) fprintf x; else
+value|{ if (Debug>= l) fprintf x; }
 end_define
 
 begin_undef
@@ -266,7 +280,7 @@ name|fd
 decl_stmt|,
 name|datfd
 decl_stmt|;
-name|off_t
+name|long
 name|pos
 decl_stmt|;
 name|FILE
@@ -341,6 +355,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* just find a list of proper fortune files */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|Fortunes_only
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* check only "fortunes" files */
 end_comment
 
 begin_decl_stmt
@@ -483,7 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
+name|long
 name|Seekpts
 index|[
 literal|2
@@ -1148,6 +1174,16 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* OK_TO_WRITE_DISK */
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|getargs
 argument_list|(
 name|ac
@@ -1189,7 +1225,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-operator|+
+operator|^
 name|getpid
 argument_list|()
 argument_list|)
@@ -1393,7 +1429,10 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|unsigned
+name|char
 name|ch
 decl_stmt|;
 name|char
@@ -1416,9 +1455,6 @@ name|fp
 operator|->
 name|inf
 argument_list|,
-operator|(
-name|long
-operator|)
 name|Seekpts
 index|[
 literal|0
@@ -1477,14 +1513,27 @@ name|p
 operator|=
 name|line
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|p
 control|)
+block|{
+if|if
+condition|(
+name|isascii
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|isupper
@@ -1530,6 +1579,8 @@ operator|)
 operator|%
 literal|26
 expr_stmt|;
+block|}
+block|}
 name|fputs
 argument_list|(
 name|line
@@ -1617,9 +1668,6 @@ name|Fortfile
 operator|->
 name|inf
 argument_list|,
-operator|(
-name|long
-operator|)
 name|Seekpts
 index|[
 literal|0
@@ -1942,21 +1990,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* errors printed through form_file_list() */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-operator|>=
-literal|1
-condition|)
-name|print_file_list
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 if|if
 condition|(
 name|Find_files
@@ -1971,6 +2004,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+elseif|else
+if|if
+condition|(
+name|Debug
+operator|>=
+literal|1
+condition|)
+name|print_file_list
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 ifndef|#
 directive|ifndef
 name|NO_REGEX
@@ -2082,7 +2131,13 @@ if|if
 condition|(
 name|Find_files
 condition|)
-return|return
+block|{
+name|Fortunes_only
+operator|=
+name|TRUE
+expr_stmt|;
+name|i
+operator|=
 name|add_file
 argument_list|(
 name|NO_PROB
@@ -2099,7 +2154,15 @@ name|File_tail
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|Fortunes_only
+operator|=
+name|FALSE
+expr_stmt|;
+return|return
+name|i
 return|;
+block|}
 else|else
 return|return
 name|add_file
@@ -2142,6 +2205,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|files
 index|[
 name|i
@@ -2175,6 +2242,10 @@ index|]
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|sp
 argument_list|)
@@ -2540,10 +2611,6 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-name|was_malloc
-operator|=
-name|TRUE
-expr_stmt|;
 if|if
 condition|(
 name|Offend
@@ -2561,6 +2628,27 @@ expr_stmt|;
 name|path
 operator|=
 name|offensive
+expr_stmt|;
+name|offensive
+operator|=
+name|NULL
+expr_stmt|;
+name|was_malloc
+operator|=
+name|TRUE
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"\ttrying \"%s\"\n"
+operator|,
+name|path
+operator|)
+argument_list|)
 expr_stmt|;
 name|file
 operator|=
@@ -2612,10 +2700,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|path
-operator|=
-name|offensive
-expr_stmt|;
 if|if
 condition|(
 name|was_malloc
@@ -2624,6 +2708,10 @@ name|free
 argument_list|(
 name|path
 argument_list|)
+expr_stmt|;
+name|path
+operator|=
+name|offensive
 expr_stmt|;
 name|offensive
 operator|=
@@ -3876,9 +3964,22 @@ operator|==
 literal|'o'
 operator|)
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"FALSE (offending file)\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -3919,6 +4020,37 @@ operator|(
 name|stderr
 operator|,
 literal|"FALSE (file starts with '.')\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+if|if
+condition|(
+name|Fortunes_only
+operator|&&
+name|strncmp
+argument_list|(
+name|sp
+argument_list|,
+literal|"fortunes"
+argument_list|,
+literal|8
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"FALSE (check fortunes only)\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4071,9 +4203,6 @@ argument_list|(
 name|datfile
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OK_TO_WRITE_DISK
 if|if
 condition|(
 name|posp
@@ -4081,6 +4210,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OK_TO_WRITE_DISK
 operator|*
 name|posp
 operator|=
@@ -4114,10 +4246,17 @@ argument_list|,
 literal|".pos"
 argument_list|)
 expr_stmt|;
-block|}
+else|#
+directive|else
+operator|*
+name|posp
+operator|=
+name|NULL
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* OK_TO_WRITE_DISK */
+block|}
 name|DPRINTF
 argument_list|(
 literal|2
@@ -4301,6 +4440,8 @@ name|fp
 decl_stmt|,
 modifier|*
 name|last
+init|=
+name|NULL
 decl_stmt|;
 specifier|register
 name|int
@@ -4392,7 +4533,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune: probabilities sum to %d%%!\n"
+literal|"fortune: probabilities sum to %d%%> 100%%!\n"
 argument_list|,
 name|percent
 argument_list|)
@@ -4422,7 +4563,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune: no place to put residual probability (%d%%)\n"
+literal|"fortune: no place to put residual probability (%d%%< 100%%)\n"
 argument_list|,
 name|percent
 argument_list|)
@@ -4452,7 +4593,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"fortune: no probability left to put in residual files\n"
+literal|"fortune: no probability left to put in residual files (100%%)\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4787,7 +4928,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"choice = %d (of %d) \n"
+literal|"choice = %d (of %ld) \n"
 operator|,
 name|choice
 operator|,
@@ -4829,7 +4970,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"    skip \"%s\", %d (choice = %d)\n"
+literal|"    skip \"%s\", %ld (choice = %d)\n"
 operator|,
 name|fp
 operator|->
@@ -4853,7 +4994,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"using \"%s\", %d\n"
+literal|"using \"%s\", %ld\n"
 operator|,
 name|fp
 operator|->
@@ -5107,7 +5248,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"    choice = %d (of %d)\n"
+literal|"    choice = %d (of %ld)\n"
 operator|,
 name|choice
 operator|,
@@ -5157,7 +5298,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"\tskip %s, %d (choice = %d)\n"
+literal|"\tskip %s, %ld (choice = %d)\n"
 operator|,
 name|fp
 operator|->
@@ -5181,7 +5322,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"    using %s, %d\n"
+literal|"    using %s, %ld\n"
 operator|,
 name|fp
 operator|->
@@ -5596,7 +5737,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"pos for %s is %qd\n"
+literal|"pos for %s is %ld\n"
 operator|,
 name|fp
 operator|->
@@ -5889,8 +6030,14 @@ name|tp
 operator|->
 name|str_shortlen
 operator|=
-operator|-
-literal|1
+operator|~
+operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
+literal|0
+operator|)
 expr_stmt|;
 block|}
 end_function
@@ -6084,7 +6231,7 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|" (%s, %s, %s)\n"
+literal|" (%s, %s, %s)"
 operator|,
 name|STR
 argument_list|(
@@ -6109,11 +6256,11 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|putc
+name|fprintf
 argument_list|(
-literal|'\n'
-argument_list|,
 name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6206,6 +6353,10 @@ if|if
 condition|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|sp
 argument_list|)
@@ -6264,6 +6415,10 @@ if|if
 condition|(
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|orig
 argument_list|)
@@ -6288,6 +6443,10 @@ operator|++
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|orig
 argument_list|)
@@ -6304,6 +6463,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|orig
 argument_list|)
@@ -6328,6 +6491,10 @@ operator|++
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|orig
 argument_list|)
@@ -6546,6 +6713,9 @@ specifier|register
 name|char
 modifier|*
 name|sp
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 specifier|register
 name|FILEDESC
@@ -6554,6 +6724,10 @@ name|fp
 decl_stmt|;
 name|int
 name|in_file
+decl_stmt|;
+name|unsigned
+name|char
+name|ch
 decl_stmt|;
 for|for
 control|(
@@ -6659,6 +6833,90 @@ name|sp
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|tbl
+operator|.
+name|str_flags
+operator|&
+name|STR_ROTATED
+condition|)
+for|for
+control|(
+name|p
+operator|=
+name|Fortbuf
+init|;
+operator|(
+name|ch
+operator|=
+operator|*
+name|p
+operator|)
+operator|!=
+literal|'\0'
+condition|;
+operator|++
+name|p
+control|)
+block|{
+if|if
+condition|(
+name|isascii
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|isupper
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+literal|'A'
+operator|+
+operator|(
+name|ch
+operator|-
+literal|'A'
+operator|+
+literal|13
+operator|)
+operator|%
+literal|26
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|islower
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+literal|'a'
+operator|+
+operator|(
+name|ch
+operator|-
+literal|'a'
+operator|+
+literal|13
+operator|)
+operator|%
+literal|26
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|RE_EXEC
