@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.32.2.4 1995/09/22 23:35:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.32.2.5 1995/09/25 15:18:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -109,6 +109,39 @@ define|#
 directive|define
 name|ROOT_MIN_SIZE
 value|(20 * ONE_MEG)
+end_define
+
+begin_comment
+comment|/* The smallest swap partition we want to create by default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAP_MIN_SIZE
+value|(16 * ONE_MEG)
+end_define
+
+begin_comment
+comment|/* The smallest /usr partition we're willing to create by default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USR_MIN_SIZE
+value|(80 * ONE_MEG)
+end_define
+
+begin_comment
+comment|/* The smallest /var partition we're willing to create by default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VAR_MIN_SIZE
+value|(30 * ONE_MEG)
 end_define
 
 begin_comment
@@ -2509,11 +2542,17 @@ index|]
 operator|.
 name|c
 argument_list|,
+literal|16
+operator|*
+name|ONE_MEG
+operator|+
+operator|(
 name|physmem
 operator|*
 literal|2
 operator|/
 literal|512
+operator|)
 argument_list|,
 name|part
 argument_list|,
@@ -2570,9 +2609,7 @@ index|]
 operator|.
 name|c
 argument_list|,
-literal|16
-operator|*
-name|ONE_MEG
+name|VAR_MIN_SIZE
 argument_list|,
 name|part
 argument_list|,
@@ -2589,7 +2626,11 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to create the /var partition.  Too big?"
+literal|"Less than %dMB free for /var - you will need to\npartition your disk manually with a custom install!"
+argument_list|,
+name|VAR_MIN_SIZE
+operator|/
+name|ONE_MEG
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2630,6 +2671,27 @@ operator|.
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sz
+operator|||
+name|sz
+operator|<
+name|USR_MIN_SIZE
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Less than %dMB free for /usr - you will need to\npartition your disk manually with a custom install!"
+argument_list|,
+name|USR_MIN_SIZE
+operator|/
+name|ONE_MEG
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|tmp
 operator|=
 name|Create_Chunk_DWIM
@@ -2667,7 +2729,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to create the /usr partition. Too big?"
+literal|"Unable to create the /usr partition.  Not enough space?\nYou will need to partition your disk manually with a custom install!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2796,7 +2858,7 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Not enough space to create additional FreeBSD partition"
+literal|"Not enough space to create an additional FreeBSD partition"
 expr_stmt|;
 break|break;
 block|}
@@ -3039,7 +3101,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"This region cannot be used for your root partition as\nthe FreeBSD boot code cannot deal with a root partition created in\nsuch a location.  Please choose another location for your root\npartition and try again!"
+literal|"This region cannot be used for your root partition as the\nFreeBSD boot code cannot deal with a root partition created\nin that location.  Please choose another location or smaller\nsize for your root partition and try again!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3129,7 +3191,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"This region cannot be used for your root partition as it starts\nor extends past the 1024'th cylinder mark and is thus a\npoor location to boot from.  Please choose another\nlocation for your root partition and try again!"
+literal|"This region cannot be used for your root partition as it starts\nor extends past the 1024'th cylinder mark and is thus a\npoor location to boot from.  Please choose another\nlocation (or smaller size) for your root partition and try again!"
 argument_list|)
 expr_stmt|;
 name|Delete_Chunk
@@ -3656,7 +3718,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Are you sure that you wish to make and mount all filesystems\nat this time?  You also have the option of doing it later in\none final 'commit' operation, and if you're at all unsure as\nto which option to chose, then chose No."
+literal|"Are you sure that you wish to make and mount all filesystems\nat this time?  You also have the option of doing it later in\none final 'commit' operation, and if you're at all unsure as\nto which option to chose, then please chose No!"
 argument_list|)
 condition|)
 block|{
@@ -3841,6 +3903,20 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|getenv
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"You must first partition the disk before this option can be used."
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
