@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.47 1999/10/13 23:46:10 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.51 1999/11/18 23:32:33 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -297,11 +297,11 @@ argument_list|(
 argument_list|,
 argument|usbd_xfer
 argument_list|)
-name|usbd_free_requests
+name|usbd_free_xfers
 operator|=
 name|SIMPLEQ_HEAD_INITIALIZER
 argument_list|(
-name|usbd_free_requests
+name|usbd_free_xfers
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -342,7 +342,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Last controller is gone, free all requests. */
+comment|/* Last controller is gone, free all xfers. */
 for|for
 control|(
 init|;
@@ -354,7 +354,7 @@ operator|=
 name|SIMPLEQ_FIRST
 argument_list|(
 operator|&
-name|usbd_free_requests
+name|usbd_free_xfers
 argument_list|)
 expr_stmt|;
 if|if
@@ -367,7 +367,7 @@ break|break;
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
-name|usbd_free_requests
+name|usbd_free_xfers
 argument_list|,
 name|xfer
 argument_list|,
@@ -602,6 +602,19 @@ condition|(
 name|ep
 operator|->
 name|edesc
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|USBD_IOERROR
+operator|)
+return|;
+if|if
+condition|(
+name|ep
+operator|->
+name|edesc
 operator|->
 name|bEndpointAddress
 operator|==
@@ -768,7 +781,7 @@ operator|)
 return|;
 name|xfer
 operator|=
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 argument_list|(
 name|iface
 operator|->
@@ -790,7 +803,7 @@ goto|goto
 name|bad1
 goto|;
 block|}
-name|usbd_setup_request
+name|usbd_setup_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -861,7 +874,7 @@ name|repeat
 operator|=
 literal|0
 expr_stmt|;
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -976,7 +989,7 @@ name|intrxfer
 operator|!=
 name|NULL
 condition|)
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|pipe
 operator|->
@@ -1567,7 +1580,7 @@ end_function
 
 begin_function
 name|usbd_xfer_handle
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 parameter_list|(
 name|dev
 parameter_list|)
@@ -1583,7 +1596,7 @@ operator|=
 name|SIMPLEQ_FIRST
 argument_list|(
 operator|&
-name|usbd_free_requests
+name|usbd_free_xfers
 argument_list|)
 expr_stmt|;
 if|if
@@ -1595,7 +1608,7 @@ condition|)
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
-name|usbd_free_requests
+name|usbd_free_xfers
 argument_list|,
 name|xfer
 argument_list|,
@@ -1651,7 +1664,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"usbd_alloc_request() = %p\n"
+literal|"usbd_alloc_xfer() = %p\n"
 operator|,
 name|xfer
 operator|)
@@ -1667,7 +1680,7 @@ end_function
 
 begin_function
 name|usbd_status
-name|usbd_free_request
+name|usbd_free_xfer
 parameter_list|(
 name|xfer
 parameter_list|)
@@ -1680,7 +1693,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"usbd_free_request: %p\n"
+literal|"usbd_free_xfer: %p\n"
 operator|,
 name|xfer
 operator|)
@@ -1706,7 +1719,7 @@ expr_stmt|;
 name|SIMPLEQ_INSERT_HEAD
 argument_list|(
 operator|&
-name|usbd_free_requests
+name|usbd_free_xfers
 argument_list|,
 name|xfer
 argument_list|,
@@ -1723,7 +1736,7 @@ end_function
 
 begin_function_decl
 name|void
-name|usbd_setup_request
+name|usbd_setup_xfer
 parameter_list|(
 name|xfer
 parameter_list|,
@@ -1857,7 +1870,7 @@ end_block
 
 begin_function_decl
 name|void
-name|usbd_setup_default_request
+name|usbd_setup_default_xfer
 parameter_list|(
 name|xfer
 parameter_list|,
@@ -2005,7 +2018,7 @@ end_block
 
 begin_function
 name|void
-name|usbd_setup_isoc_request
+name|usbd_setup_isoc_xfer
 parameter_list|(
 name|xfer
 parameter_list|,
@@ -2122,7 +2135,7 @@ end_function
 
 begin_function
 name|void
-name|usbd_get_request_status
+name|usbd_get_xfer_status
 parameter_list|(
 name|xfer
 parameter_list|,
@@ -3601,11 +3614,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|xfer
 operator|->
 name|status
-operator|==
-name|USBD_NORMAL_COMPLETION
 operator|&&
 name|xfer
 operator|->
@@ -4054,6 +4066,11 @@ name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|KASSERT
 argument_list|(
 name|intr_nesting_level
@@ -4091,7 +4108,7 @@ endif|#
 directive|endif
 name|xfer
 operator|=
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 argument_list|(
 name|dev
 argument_list|)
@@ -4107,7 +4124,7 @@ operator|(
 name|USBD_NOMEM
 operator|)
 return|;
-name|usbd_setup_default_request
+name|usbd_setup_default_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -4297,7 +4314,7 @@ name|usb_status_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|usbd_setup_default_request
+name|usbd_setup_default_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -4406,7 +4423,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usbd_setup_default_request
+name|usbd_setup_default_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -4446,7 +4463,7 @@ goto|;
 block|}
 name|bad
 label|:
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -4565,7 +4582,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -4607,7 +4624,7 @@ name|err
 decl_stmt|;
 name|xfer
 operator|=
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 argument_list|(
 name|dev
 argument_list|)
@@ -4623,7 +4640,7 @@ operator|(
 name|USBD_NOMEM
 operator|)
 return|;
-name|usbd_setup_default_request
+name|usbd_setup_default_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -4663,7 +4680,7 @@ operator|!=
 name|USBD_IN_PROGRESS
 condition|)
 block|{
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)

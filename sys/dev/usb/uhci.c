@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.63 1999/11/12 00:34:57 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.67 1999/11/18 23:32:28 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -644,7 +644,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void		uhci_enter_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *, 			    uhci_intr_info_t *)); static void		uhci_exit_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *));
+unit|static void		uhci_enter_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *, 				      uhci_intr_info_t *)); static void		uhci_exit_ctl_q __P((uhci_softc_t *, uhci_soft_qh_t *));
 endif|#
 directive|endif
 end_endif
@@ -768,7 +768,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|uhci_abort_req
+name|uhci_abort_xfer
 name|__P
 argument_list|(
 operator|(
@@ -784,7 +784,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|uhci_abort_req_end
+name|uhci_abort_xfer_end
 name|__P
 argument_list|(
 operator|(
@@ -3047,10 +3047,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* defined(__NetBSD__) */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5308,9 +5304,13 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"uhci_idone: ii=%p ready\n"
+literal|"uhci_idone: ii=%p, xfer=%p, pipe=%p ready\n"
 operator|,
 name|ii
+operator|,
+name|xfer
+operator|,
+name|upipe
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5599,7 +5599,7 @@ operator|->
 name|intr_context
 operator|++
 expr_stmt|;
-name|uhci_abort_req
+name|uhci_abort_xfer
 argument_list|(
 name|ii
 operator|->
@@ -7603,7 +7603,7 @@ literal|"uhci_device_bulk_abort:\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|uhci_abort_req
+name|uhci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -7615,7 +7615,7 @@ end_function
 
 begin_function
 name|void
-name|uhci_abort_req
+name|uhci_abort_xfer
 parameter_list|(
 name|xfer
 parameter_list|,
@@ -7654,6 +7654,19 @@ name|uhci_soft_td_t
 modifier|*
 name|std
 decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|1
+argument_list|,
+operator|(
+literal|"uhci_abort_xfer: xfer=%p, status=%d\n"
+operator|,
+name|xfer
+operator|,
+name|status
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Make interrupt routine ignore it, */
 name|xfer
 operator|->
@@ -7731,7 +7744,7 @@ block|{
 comment|/* We have no process context, so we can't use tsleep(). */
 name|timeout
 argument_list|(
-name|uhci_abort_req_end
+name|uhci_abort_xfer_end
 argument_list|,
 name|xfer
 argument_list|,
@@ -7753,6 +7766,11 @@ operator|&&
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 name|KASSERT
 argument_list|(
@@ -7781,7 +7799,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* and call final part of interrupt handler. */
-name|uhci_abort_req_end
+name|uhci_abort_xfer_end
 argument_list|(
 name|xfer
 argument_list|)
@@ -7792,7 +7810,7 @@ end_function
 
 begin_function
 name|void
-name|uhci_abort_req_end
+name|uhci_abort_xfer_end
 parameter_list|(
 name|v
 parameter_list|)
@@ -8484,7 +8502,7 @@ literal|"uhci_device_ctrl_abort:\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|uhci_abort_req
+name|uhci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -8585,7 +8603,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|uhci_abort_req
+name|uhci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -9819,6 +9837,7 @@ name|USBD_IN_PROGRESS
 condition|)
 block|{
 comment|/* This request has already been entered into the frame list */
+comment|/* XXX */
 block|}
 ifdef|#
 directive|ifdef
@@ -10422,7 +10441,7 @@ block|{
 comment|/* We have no process context, so we can't use tsleep(). */
 name|timeout
 argument_list|(
-name|uhci_abort_req_end
+name|uhci_abort_xfer_end
 argument_list|,
 name|xfer
 argument_list|,
@@ -10448,7 +10467,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* and call final part of interrupt handler. */
-name|uhci_abort_req_end
+name|uhci_abort_xfer_end
 argument_list|(
 name|xfer
 argument_list|)

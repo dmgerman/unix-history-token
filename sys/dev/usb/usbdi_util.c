@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.c,v 1.22 1999/10/13 08:10:59 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.c,v 1.24 1999/11/17 23:00:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2427,7 +2427,7 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-name|usbd_setup_request
+name|usbd_setup_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -2538,7 +2538,7 @@ name|USBD_INTERRUPTED
 operator|)
 return|;
 block|}
-name|usbd_get_request_status
+name|usbd_get_xfer_status
 argument_list|(
 name|xfer
 argument_list|,

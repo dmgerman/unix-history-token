@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.32 1999/10/13 08:10:56 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.34 1999/11/18 23:32:29 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (usbdebug) logprintf x
+value|if (uhubdebug) logprintf x
 end_define
 
 begin_define
@@ -152,13 +152,12 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (usbdebug>(n)) logprintf x
+value|if (uhubdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
-specifier|extern
 name|int
-name|usbdebug
+name|uhubdebug
 decl_stmt|;
 end_decl_stmt
 
@@ -307,12 +306,13 @@ name|__OpenBSD__
 argument_list|)
 end_if
 
-begin_macro
+begin_expr_stmt
 name|USB_DECLARE_DRIVER
 argument_list|(
-argument|uhub
+name|uhub
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Create the driver instance for the hub connected to hub case */
@@ -1745,7 +1745,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|5
+literal|3
 argument_list|,
 operator|(
 literal|"uhub_explore: port %d status 0x%04x 0x%04x\n"
@@ -1765,6 +1765,13 @@ operator|&
 name|UPS_C_PORT_ENABLED
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"uhub_explore: C_PORT_ENABLED\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|usbd_clear_port_feature
 argument_list|(
 name|dev
@@ -1858,6 +1865,18 @@ name|UPS_C_CONNECT_STATUS
 operator|)
 condition|)
 block|{
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+literal|"uhub_explore: port=%d !C_CONNECT_"
+literal|"STATUS\n"
+operator|,
+name|port
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* No status change, just do recursive explore. */
 if|if
 condition|(
@@ -1933,7 +1952,7 @@ comment|/* Disconnected */
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"uhub_explore: device %d disappeared "
+literal|"uhub_explore: device addr=%d disappeared "
 literal|"on port %d\n"
 operator|,
 name|up
@@ -1977,7 +1996,21 @@ operator|&
 name|UPS_CURRENT_CONNECT_STATUS
 operator|)
 condition|)
+block|{
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+literal|"uhub_explore: port=%d !CURRENT_CONNECT"
+literal|"_STATUS\n"
+operator|,
+name|port
+operator|)
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* Connected */
 name|up
 operator|->
@@ -2007,10 +2040,19 @@ name|up
 operator|->
 name|status
 argument_list|)
-operator|!=
-name|USBD_NORMAL_COMPLETION
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"uhub_explore: port=%d reset failed\n"
+operator|,
+name|port
+operator|)
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* Get device info and set its address. */
 name|err
 operator|=

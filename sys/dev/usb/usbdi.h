@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.31 1999/10/13 08:10:58 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.33 1999/11/17 23:00:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|usbd_xfer_handle
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 name|__P
 argument_list|(
 operator|(
@@ -292,7 +292,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|usbd_status
-name|usbd_free_request
+name|usbd_free_xfer
 name|__P
 argument_list|(
 operator|(
@@ -305,7 +305,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|usbd_setup_request
+name|usbd_setup_xfer
 name|__P
 argument_list|(
 operator|(
@@ -339,7 +339,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|usbd_setup_default_request
+name|usbd_setup_default_xfer
 name|__P
 argument_list|(
 operator|(
@@ -377,7 +377,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|usbd_setup_isoc_request
+name|usbd_setup_isoc_xfer
 name|__P
 argument_list|(
 operator|(
@@ -408,7 +408,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|usbd_get_request_status
+name|usbd_get_xfer_status
 name|__P
 argument_list|(
 operator|(

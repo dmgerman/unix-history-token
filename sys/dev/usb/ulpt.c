@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.27 1999/10/13 08:10:57 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.29 1999/11/17 23:00:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2188,7 +2188,7 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|=
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 argument_list|(
 name|sc
 operator|->
@@ -2222,7 +2222,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -2331,7 +2331,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)

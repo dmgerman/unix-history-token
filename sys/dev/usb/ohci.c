@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.52 1999/10/13 08:10:55 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.55 1999/11/18 23:32:26 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -109,6 +109,11 @@ operator|&&
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 end_if
 
@@ -285,7 +290,7 @@ begin_decl_stmt
 name|int
 name|ohcidebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,7 +1128,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|ohci_abort_req
+name|ohci_abort_xfer
 name|__P
 argument_list|(
 operator|(
@@ -1140,7 +1145,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|ohci_abort_req_end
+name|ohci_abort_xfer_end
 name|__P
 argument_list|(
 operator|(
@@ -2616,15 +2621,6 @@ literal|"ohci_init: start\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|rev
-operator|=
-name|OREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_REVISION
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2640,7 +2636,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%s:"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -2654,6 +2650,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|rev
+operator|=
+name|OREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_REVISION
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" OHCI version %d.%d%s\n"
@@ -2709,12 +2714,28 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|usbrev
+operator|=
+name|USBREV_UNKNOWN
+expr_stmt|;
 return|return
 operator|(
 name|USBD_INVAL
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|usbrev
+operator|=
+name|USBREV_1_0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4800,17 +4821,28 @@ operator|=
 name|stdnext
 control|)
 block|{
+name|stdnext
+operator|=
+name|std
+operator|->
+name|dnext
+expr_stmt|;
 name|xfer
 operator|=
 name|std
 operator|->
 name|xfer
 expr_stmt|;
-name|stdnext
-operator|=
-name|std
+name|usb_untimeout
+argument_list|(
+name|ohci_timeout
+argument_list|,
+name|xfer
+argument_list|,
+name|xfer
 operator|->
-name|dnext
+name|timo_handle
+argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -4841,17 +4873,6 @@ name|td
 operator|.
 name|td_flags
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|usb_untimeout
-argument_list|(
-name|ohci_timeout
-argument_list|,
-name|xfer
-argument_list|,
-name|xfer
-operator|->
-name|timo_handle
 argument_list|)
 expr_stmt|;
 if|if
@@ -6695,16 +6716,6 @@ operator|>
 literal|5
 condition|)
 block|{
-name|usb_delay_ms
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|,
-literal|5
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -7138,7 +7149,7 @@ operator|->
 name|intr_context
 operator|++
 expr_stmt|;
-name|ohci_abort_req
+name|ohci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -8157,7 +8168,7 @@ end_comment
 
 begin_function
 name|void
-name|ohci_abort_req
+name|ohci_abort_xfer
 parameter_list|(
 name|xfer
 parameter_list|,
@@ -8191,7 +8202,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ohci_abort_req: xfer=%p pipe=%p\n"
+literal|"ohci_abort_xfer: xfer=%p pipe=%p\n"
 operator|,
 name|xfer
 operator|,
@@ -8227,7 +8238,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"ohci_abort_req: stop ed=%p\n"
+literal|"ohci_abort_xfer: stop ed=%p\n"
 operator|,
 name|sed
 operator|)
@@ -8259,7 +8270,7 @@ block|{
 comment|/* We have no process context, so we can't use tsleep(). */
 name|timeout
 argument_list|(
-name|ohci_abort_req_end
+name|ohci_abort_xfer_end
 argument_list|,
 name|xfer
 argument_list|,
@@ -8281,6 +8292,11 @@ operator|&&
 name|defined
 argument_list|(
 name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 name|KASSERT
 argument_list|(
@@ -8308,7 +8324,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ohci_abort_req_end
+name|ohci_abort_xfer_end
 argument_list|(
 name|xfer
 argument_list|)
@@ -8319,7 +8335,7 @@ end_function
 
 begin_function
 name|void
-name|ohci_abort_req_end
+name|ohci_abort_xfer_end
 parameter_list|(
 name|v
 parameter_list|)
@@ -8400,7 +8416,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ohci_abort_req: hcpriv==0\n"
+literal|"ohci_abort_xfer: hcpriv==0\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8453,7 +8469,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"ohci_abort_req: set hd=%x, tl=%x\n"
+literal|"ohci_abort_xfer: set hd=%x, tl=%x\n"
 operator|,
 operator|(
 name|int
@@ -10866,7 +10882,7 @@ name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
-name|ohci_abort_req
+name|ohci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -11531,7 +11547,7 @@ name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
-name|ohci_abort_req
+name|ohci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -12050,7 +12066,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|ohci_abort_req
+name|ohci_abort_xfer
 argument_list|(
 name|xfer
 argument_list|,
