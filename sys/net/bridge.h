@@ -24,15 +24,13 @@ name|ifnet
 modifier|*
 name|name
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|etheraddr
 index|[
 literal|6
 index|]
 decl_stmt|;
-name|unsigned
-name|short
+name|u_short
 name|used
 decl_stmt|;
 block|}

@@ -145,10 +145,6 @@ name|x
 parameter_list|)
 end_define
 
-begin_comment
-comment|/*  * System initialization  */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
@@ -169,21 +165,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|interfaces
-argument_list|,
-argument|SI_SUB_PROTO_IF
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|bdginit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
 
 begin_decl_stmt
 specifier|static
@@ -212,7 +193,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * we need additional info for the bridge. The bdg_ifp2sc[] array  * provides a pointer to this struct using the if_index.  * bdg_softc has a backpointer to the struct ifnet, the bridge  * flags, and a group (bridging occurs only between port of the  * same group).  */
+comment|/*  * System initialization  */
+end_comment
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|interfaces
+argument_list|,
+argument|SI_SUB_PROTO_IF
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|bdginit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*  * we need additional info for the bridge. The bdg_ifp2sc[] array  * provides a pointer to this struct using the if_index.  * bdg_softc has a backpointer to the struct ifnet, the bridge  * flags, and a cluster (bridging occurs only between port of the  * same cluster).  */
 end_comment
 
 begin_struct
@@ -228,9 +228,10 @@ comment|/* ((struct arpcom *)ifp)->ac_enaddr is the eth. addr */
 name|int
 name|flags
 decl_stmt|;
-name|int
-name|group
+name|short
+name|cluster_id
 decl_stmt|;
+comment|/* in network format */
 block|}
 struct|;
 end_struct
@@ -266,7 +267,7 @@ name|ifp
 parameter_list|,
 name|src
 parameter_list|)
-value|(src == NULL || \     ifp2sc[ifp->if_index]->group == ifp2sc[src->if_index]->group )
+value|(src == NULL || \     ifp2sc[ifp->if_index]->cluster_id == ifp2sc[src->if_index]->cluster_id )
 end_define
 
 begin_define
@@ -381,23 +382,12 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|"called sysctl for bridge name %s arg2 %d val %d->%d\n"
-argument_list|,
-name|oidp
-operator|->
-name|oid_name
-argument_list|,
-name|oidp
-operator|->
-name|oid_arg2
-argument_list|,
-name|oldval
-argument_list|,
-name|do_bridge
+argument|, 	oidp->oid_name, oidp->oid_arg2, 	oldval, do_bridge);
 argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bdg_table
@@ -1298,7 +1288,7 @@ index|[
 name|bdg_ports
 index|]
 operator|->
-name|group
+name|cluster_id
 operator|=
 literal|0
 expr_stmt|;
@@ -1893,11 +1883,15 @@ condition|)
 block|{
 name|u_int16_t
 name|dummy
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ip_fw_chain
 modifier|*
 name|rule
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|off
@@ -1907,6 +1901,9 @@ operator|=
 operator|*
 name|m0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DUMMYNET
 if|if
 condition|(
 name|m
@@ -1982,11 +1979,8 @@ name|forward
 goto|;
 comment|/* HACK! */
 block|}
-else|else
-name|rule
-operator|=
-name|NULL
-expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bdg_ipfw
@@ -2006,6 +2000,7 @@ goto|goto
 name|forward
 goto|;
 comment|/* do not apply to packets from ether_output */
+comment|/* 	 * in this section, canfree=1 means m is the same as *m0. 	 * canfree==0 means m is a copy. 	 */
 if|if
 condition|(
 name|canfree
@@ -2029,16 +2024,10 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 comment|/* fail... */
 return|return
 literal|0
 return|;
-block|}
-name|dummy
-operator|=
-literal|0
-expr_stmt|;
 name|off
 operator|=
 call|(
@@ -2203,7 +2192,7 @@ name|forward
 label|:
 endif|#
 directive|endif
-comment|/* COMPAT_IPFW */
+comment|/* IPFIREWALL */
 if|if
 condition|(
 name|canfree
@@ -2335,7 +2324,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	     * Queue message on interface, and start output if interface 	     * not yet active. 	     */
+comment|/* 	     * execute last part of ether_output: 	     * Queue message on interface, and start output if interface 	     * not yet active. 	     */
 if|if
 condition|(
 name|IF_QFULL
@@ -2355,12 +2344,13 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-name|MUTE
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-comment|/* good measure... */
+if|#
+directive|if
+literal|0
+block|MUTE(ifp);
+comment|/* should I also mute ? */
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
