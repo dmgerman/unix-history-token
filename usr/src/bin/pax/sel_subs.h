@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)sel_subs.h	1.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  *  *	@(#)sel_subs.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -95,19 +95,34 @@ name|high_time
 decl_stmt|;
 comment|/* higher inclusive time limit */
 name|int
-name|flags
+name|flgs
 decl_stmt|;
 comment|/* option flags */
 define|#
 directive|define
 name|HASLOW
-value|0x1
+value|0x01
 comment|/* has lower time limit */
 define|#
 directive|define
 name|HASHIGH
-value|0x2
+value|0x02
 comment|/* has higher time limit */
+define|#
+directive|define
+name|CMPMTME
+value|0x04
+comment|/* compare file modification time */
+define|#
+directive|define
+name|CMPCTME
+value|0x08
+comment|/* compare inode change time */
+define|#
+directive|define
+name|CMPBOTH
+value|(CMPMTME|CMPCTME)
+comment|/* compare inode and mod time */
 name|struct
 name|time_rng
 modifier|*
