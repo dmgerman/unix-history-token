@@ -126,7 +126,7 @@ name|UNIT
 parameter_list|(
 name|d
 parameter_list|)
-value|(minor(d)& 3)
+value|((minor(d)>> 3)& 3)
 end_define
 
 begin_comment
