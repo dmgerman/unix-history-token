@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stabstring.c	5.2 (Berkeley) %G%"
+literal|"@(#)stabstring.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: stabstring.c,v 1.4 87/12/01 01:41:33 donn Exp $"
+literal|"$Header: stabstring.c,v 1.5 88/04/01 18:13:58 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,7 +531,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|{ \     newSym(s, n); \     s->storage = STK; \     s->class = cl; \     s->symvalue.offset = off; \     curparam->chain = s; \     curparam = s; \     getType(s); \ }
+value|{ \     if ((s = lookup(n)) == nil or s->block != curblock) { \ 	newSym(s, n); \ 	s->storage = STK; \ 	s->class = cl; \ 	s->symvalue.offset = off; \ 	getType(s); \     } \     curparam->chain = s; \     curparam = s; \ }
 end_define
 
 begin_function
@@ -1187,6 +1187,12 @@ name|IRIS
 comment|/* 		 * Bug in SGI C compiler -- generates stab offset 		 * for parameters with size added in. 		 */
 if|if
 condition|(
+name|s
+operator|->
+name|storage
+operator|==
+name|STK
+name|and
 name|curlang
 operator|==
 name|findlanguage
