@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)config.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -244,6 +244,36 @@ name|int
 name|d_flags
 decl_stmt|;
 comment|/* flags for device init */
+name|char
+modifier|*
+name|d_port
+decl_stmt|;
+comment|/* io port base manifest constant */
+name|int
+name|d_portn
+decl_stmt|;
+comment|/* io port base (if number not manifest) */
+name|char
+modifier|*
+name|d_mask
+decl_stmt|;
+comment|/* interrupt mask */
+name|int
+name|d_maddr
+decl_stmt|;
+comment|/* io memory base */
+name|int
+name|d_msize
+decl_stmt|;
+comment|/* io memory size */
+name|int
+name|d_drq
+decl_stmt|;
+comment|/* DMA request  */
+name|int
+name|d_irq
+decl_stmt|;
+comment|/* interrupt request  */
 name|struct
 name|device
 modifier|*
@@ -320,6 +350,13 @@ define|#
 directive|define
 name|MACHINE_HP300
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACHINE_I386
+value|4
 end_define
 
 begin_comment
@@ -504,6 +541,23 @@ end_if
 begin_decl_stmt
 name|int
 name|seen_vba
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|MACHINE_I386
+end_if
+
+begin_decl_stmt
+name|int
+name|seen_isa
 decl_stmt|;
 end_decl_stmt
 

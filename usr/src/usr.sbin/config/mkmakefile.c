@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.30 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,15 @@ literal|64
 block|}
 block|,
 comment|/* MACHINE_HP300 */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|64
+block|}
+block|,
+comment|/* MACHINE_I386 */
 block|}
 struct|;
 end_struct
@@ -2829,6 +2838,9 @@ break|break;
 case|case
 name|MACHINE_HP300
 case|:
+case|case
+name|MACHINE_I386
+case|:
 name|fprintf
 argument_list|(
 name|f
@@ -2891,6 +2903,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MACHINE_HP300
+case|:
+case|case
+name|MACHINE_I386
 case|:
 name|fprintf
 argument_list|(
@@ -3033,6 +3048,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MACHINE_HP300
+case|:
+case|case
+name|MACHINE_I386
 case|:
 name|fprintf
 argument_list|(
@@ -3426,6 +3444,33 @@ literal|"locore.o ${OBJS} vers.o ioconf.o param.o "
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MACHINE_I386
+case|:
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t@${LD} -n -T FE000000 -o %s -%c "
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|,
+name|debugging
+condition|?
+literal|'X'
+else|:
+literal|'x'
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"locore.o ${OBJS} vers.o ioconf.o param.o "
+argument_list|)
+expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
@@ -3639,6 +3684,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MACHINE_HP300
+case|:
+case|case
+name|MACHINE_I386
 case|:
 name|fprintf
 argument_list|(
