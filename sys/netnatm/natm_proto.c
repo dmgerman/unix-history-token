@@ -405,6 +405,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|natm_init
 parameter_list|()
