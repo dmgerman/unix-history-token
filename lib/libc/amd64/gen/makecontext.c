@@ -248,10 +248,10 @@ name|sp
 operator|-
 literal|6
 expr_stmt|;
-comment|/* Account for arguments on stack and align to 16 bytes. */
+comment|/* 	 * Account for arguments on stack and do the funky C entry alignment. 	 * This means that we need an 8-byte-odd alignment since the ABI expects 	 * the return address to be pushed, thus breaking the 16 byte alignment. 	 */
 name|sp
 operator|-=
-literal|8
+literal|7
 expr_stmt|;
 comment|/* Add the arguments: */
 name|va_start
