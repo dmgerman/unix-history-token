@@ -624,6 +624,9 @@ operator|(
 name|siginfo_t
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|info
 operator|->
 name|si_code
@@ -876,6 +879,9 @@ operator|,
 operator|(
 name|siginfo_t
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|info
 operator|->
