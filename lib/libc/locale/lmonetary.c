@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lmonetary.h"
 end_include
 
@@ -57,10 +45,7 @@ name|char
 name|numempty
 index|[]
 init|=
-name|__XSTRING
-argument_list|(
-name|CHAR_MAX
-argument_list|)
+literal|"-1"
 decl_stmt|;
 end_decl_stmt
 
