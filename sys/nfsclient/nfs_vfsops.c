@@ -2836,13 +2836,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|FREE
-argument_list|(
-name|nam
-argument_list|,
-name|M_SONAME
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
