@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.31 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.32 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.31 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.32 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -610,6 +610,8 @@ operator|!
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QSENT
 argument_list|,
 name|q
 operator|->

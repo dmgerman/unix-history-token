@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.27 (Berkeley) %G%"
+literal|"@(#)conf.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,6 +372,10 @@ expr_stmt|;
 name|DefGid
 operator|=
 literal|1
+expr_stmt|;
+name|CheckpointInterval
+operator|=
+literal|10
 expr_stmt|;
 name|setdefuser
 argument_list|()

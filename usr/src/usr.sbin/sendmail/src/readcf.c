@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.21 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2704,6 +2704,18 @@ comment|/* ignore dot lines in message */
 name|IgnrDot
 operator|=
 name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+comment|/* checkpoint every N addresses */
+name|CheckpointInterval
+operator|=
+name|atoi
 argument_list|(
 name|val
 argument_list|)
