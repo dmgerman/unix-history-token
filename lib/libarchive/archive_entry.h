@@ -548,6 +548,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|archive_entry_set_mtime
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|time_t
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|archive_entry_set_pathname
 parameter_list|(
 name|struct
