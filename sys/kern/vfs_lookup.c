@@ -1403,6 +1403,21 @@ operator||
 name|WANTPARENT
 operator|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cnp
+operator|->
+name|cn_nameiop
+operator|==
+name|LOOKUP
+operator|||
+name|wantparent
+argument_list|,
+operator|(
+literal|"CREATE, DELETE, RENAME require LOCKPARENT or WANTPARENT."
+operator|)
+argument_list|)
+expr_stmt|;
 name|docache
 operator|=
 operator|(
@@ -3039,10 +3054,6 @@ literal|0
 decl_stmt|;
 comment|/* the directory we are searching */
 name|int
-name|docache
-decl_stmt|;
-comment|/* == 0 do not cache last component */
-name|int
 name|wantparent
 decl_stmt|;
 comment|/* 1 => wantparent or lockparent flag */
@@ -3080,40 +3091,6 @@ name|LOCKPARENT
 operator||
 name|WANTPARENT
 operator|)
-expr_stmt|;
-name|docache
-operator|=
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|NOCACHE
-operator|)
-operator|^
-name|NOCACHE
-expr_stmt|;
-if|if
-condition|(
-name|cnp
-operator|->
-name|cn_nameiop
-operator|==
-name|DELETE
-operator|||
-operator|(
-name|wantparent
-operator|&&
-name|cnp
-operator|->
-name|cn_nameiop
-operator|!=
-name|CREATE
-operator|)
-condition|)
-name|docache
-operator|=
-literal|0
 expr_stmt|;
 name|rdonly
 operator|=
