@@ -215,14 +215,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|ddates_in
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|void
 name|dumprecout
@@ -519,10 +511,6 @@ name|dt_list
 argument_list|)
 expr_stmt|;
 block|}
-name|ddates_in
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 	 *	arrayify the list, leaving enough room for the additional 	 *	record that we may have to add to the ddate structure 	 */
 name|ddatev
 operator|=
@@ -810,10 +798,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|nddates
-operator|=
-literal|0
-expr_stmt|;
-name|ddates_in
 operator|=
 literal|0
 expr_stmt|;
