@@ -763,6 +763,9 @@ name|g_call_me_t
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 end_typedef
@@ -778,6 +781,8 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

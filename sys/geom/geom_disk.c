@@ -1378,6 +1378,10 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1658,6 +1662,10 @@ argument_list|(
 name|g_disk_create
 argument_list|,
 name|dp
+argument_list|,
+name|dp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1727,6 +1735,10 @@ parameter_list|(
 name|void
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1835,6 +1847,8 @@ argument_list|(
 name|g_kern_disks
 argument_list|,
 name|sb
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 while|while

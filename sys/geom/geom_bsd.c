@@ -2447,6 +2447,10 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3086,6 +3090,10 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3402,6 +3410,10 @@ argument_list|(
 name|g_bsd_hotwrite
 argument_list|,
 name|bp
+argument_list|,
+name|gp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -3593,6 +3605,10 @@ argument_list|(
 name|g_bsd_ioctl
 argument_list|,
 name|bp
+argument_list|,
+name|gp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

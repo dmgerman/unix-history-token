@@ -352,6 +352,10 @@ parameter_list|(
 name|void
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -584,6 +588,10 @@ parameter_list|(
 name|void
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1323,6 +1331,10 @@ parameter_list|(
 name|void
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|flag
+name|__unused
 parameter_list|)
 block|{
 name|g_topology_assert

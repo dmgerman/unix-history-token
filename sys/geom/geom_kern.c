@@ -469,6 +469,8 @@ argument_list|(
 name|g_conftxt
 argument_list|,
 name|sb
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 do|do
@@ -563,6 +565,8 @@ argument_list|(
 name|g_confdot
 argument_list|,
 name|sb
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 do|do
@@ -657,6 +661,8 @@ argument_list|(
 name|g_confxml
 argument_list|,
 name|sb
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 do|do
