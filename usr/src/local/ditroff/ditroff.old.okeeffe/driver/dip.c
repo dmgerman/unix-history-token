@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.5	(Berkeley)	83/12/18  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.6	(Berkeley)	84/01/03  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
@@ -4957,9 +4957,17 @@ name|maxgp
 operator|=
 name|gp
 operator|=
+operator|&
+operator|(
 name|fs
 operator|->
 name|glyph
+index|[
+name|p
+operator|.
+name|p_first
+index|]
+operator|)
 expr_stmt|;
 for|for
 control|(
