@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.8 (Berkeley) %G%"
+literal|"@(#)cp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1701,6 +1701,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|len
+decl_stmt|;
 name|char
 name|link
 index|[
@@ -1709,6 +1712,9 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|len
+operator|=
 name|readlink
 argument_list|(
 name|from
@@ -1722,6 +1728,7 @@ argument_list|(
 name|link
 argument_list|)
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
@@ -1736,6 +1743,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|link
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|exists
