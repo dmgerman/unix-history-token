@@ -4346,7 +4346,7 @@ operator|->
 name|i_ump
 argument_list|)
 expr_stmt|;
-name|ACTIVECLEAR
+name|ACTIVESET
 argument_list|(
 name|fs
 argument_list|,
