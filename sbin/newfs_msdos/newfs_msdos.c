@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs_msdos.c,v 1.4 1998/07/19 15:02:39 rnordier Exp $"
+literal|"$Id: newfs_msdos.c,v 1.5 1998/10/17 12:44:55 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2525,7 +2525,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"illegal media descriptor (0x%x)"
+literal|"illegal media descriptor (%#x)"
 argument_list|,
 name|opt_m
 argument_list|)
@@ -5964,7 +5964,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" mid=0x%x"
+literal|" mid=%#x"
 argument_list|,
 name|bpb
 operator|->
@@ -6052,7 +6052,7 @@ name|infs
 operator|==
 name|MAXU16
 condition|?
-literal|"0x%x"
+literal|"%#x"
 else|:
 literal|"%u"
 argument_list|,
@@ -6074,7 +6074,7 @@ name|bkbs
 operator|==
 name|MAXU16
 condition|?
-literal|"0x%x"
+literal|"%#x"
 else|:
 literal|"%u"
 argument_list|,
