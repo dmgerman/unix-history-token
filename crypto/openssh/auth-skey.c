@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|PROMPT
-value|"\nS/Key Password: "
+value|"\nOPIE Password: "
 end_define
 
 begin_function
@@ -130,6 +130,21 @@ name|struct
 name|opie
 name|opie
 decl_stmt|;
+if|if
+condition|(
+name|opie_haskey
+argument_list|(
+name|authctxt
+operator|->
+name|user
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|opiechallenge
