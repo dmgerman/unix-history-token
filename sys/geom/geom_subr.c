@@ -730,12 +730,6 @@ name|mp
 operator|->
 name|version
 operator|!=
-literal|0
-operator|&&
-name|mp
-operator|->
-name|version
-operator|!=
 name|G_VERSION
 condition|)
 block|{
