@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)buf.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)buf.h	7.3.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -136,6 +136,16 @@ name|daddr_t
 name|b_blkno
 decl_stmt|;
 comment|/* block # on device */
+ifdef|#
+directive|ifdef
+name|SECSIZE
+name|long
+name|b_blksize
+decl_stmt|;
+comment|/* size of device blocks */
+endif|#
+directive|endif
+endif|SECSIZE
 name|long
 name|b_resid
 decl_stmt|;
@@ -228,6 +238,39 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SECSIZE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BUFHSZ
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINSECSIZE
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|RND
+value|(MAXBSIZE/MINSECSIZE)
+end_define
+
+begin_else
+else|#
+directive|else
+else|SECSIZE
+end_else
+
 begin_define
 define|#
 directive|define
@@ -241,6 +284,12 @@ directive|define
 name|RND
 value|(MAXBSIZE/DEV_BSIZE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|SECSIZE
+end_endif
 
 begin_if
 if|#

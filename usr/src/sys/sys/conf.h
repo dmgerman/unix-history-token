@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.h	7.1.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,6 +29,13 @@ name|int
 function_decl|(
 modifier|*
 name|d_strategy
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|d_ioctl
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -289,6 +296,18 @@ decl_stmt|;
 name|int
 name|sw_nblks
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SECSIZE
+name|int
+name|sw_blksize
+decl_stmt|;
+name|int
+name|sw_bshift
+decl_stmt|;
+endif|#
+directive|endif
+endif|SECSIZE
 block|}
 struct|;
 end_struct
