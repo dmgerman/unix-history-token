@@ -1689,6 +1689,9 @@ case|:
 case|case
 name|IFT_ISO88025
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
 goto|goto
 name|overwrite
 goto|;
@@ -2225,6 +2228,9 @@ name|IFT_ISO88024
 case|:
 case|case
 name|IFT_ISO88025
+case|:
+case|case
+name|IFT_L2VLAN
 case|:
 goto|goto
 name|delete
@@ -2854,6 +2860,15 @@ case|:
 name|printf
 argument_list|(
 literal|" [token-ring]"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFT_L2VLAN
+case|:
+name|printf
+argument_list|(
+literal|" [vlan]"
 argument_list|)
 expr_stmt|;
 break|break;
