@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1738,11 +1738,23 @@ name|ifp
 argument_list|)
 condition|)
 block|{
+name|IFAFREE
+argument_list|(
+name|rt
+operator|->
+name|rt_ifa
+argument_list|)
+expr_stmt|;
 name|rt
 operator|->
 name|rt_ifa
 operator|=
 name|ifa
+expr_stmt|;
+name|ifa
+operator|->
+name|ifa_refcnt
+operator|++
 expr_stmt|;
 if|if
 condition|(
