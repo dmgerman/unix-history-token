@@ -769,7 +769,7 @@ name|char
 name|jfmt
 index|[]
 init|=
-literal|"user,pid,ppid,pgid,jobc,state,tt,time,command"
+literal|"user,pid,ppid,pgid,sid,jobc,state,tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
