@@ -426,6 +426,11 @@ end_if
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -449,7 +454,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile("" : : : "memory");		\ 	*p = v;						\ }							\ struct __hack
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ }							\ struct __hack
 end_define
 
 begin_else
