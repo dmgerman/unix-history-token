@@ -245,7 +245,7 @@ value|(sizeof(mapping) / sizeof(mapping[0]))
 end_define
 
 begin_comment
-comment|/*  * fflagstostr --  *	Convert file flags to a comma-separated string.  If no flags  *	are set, return the default string.  */
+comment|/*  * fflagstostr --  *	Convert file flags to a comma-separated string.  If no flags  *	are set, return the empty string.  */
 end_comment
 
 begin_function
@@ -254,15 +254,9 @@ modifier|*
 name|fflagstostr
 parameter_list|(
 name|flags
-parameter_list|,
-name|def
 parameter_list|)
 name|u_long
 name|flags
-decl_stmt|;
-name|char
-modifier|*
-name|def
 decl_stmt|;
 block|{
 specifier|static
@@ -389,16 +383,6 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|dp
-operator|==
-name|string
-operator|&&
-name|def
-operator|!=
-name|NULL
-condition|?
-name|def
-else|:
 name|string
 operator|)
 return|;
