@@ -12162,11 +12162,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
