@@ -166,6 +166,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<posix4/posix4.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1857,6 +1863,13 @@ name|async_io_version
 operator|=
 name|_POSIX_VERSION
 expr_stmt|;
+name|p31b_setcfg
+argument_list|(
+name|CTL_P1003_1B_AIO_LISTIO_MAX
+argument_list|,
+name|AIO_LISTIO_MAX
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1904,6 +1917,13 @@ expr_stmt|;
 name|kqueue_del_filteropts
 argument_list|(
 name|EVFILT_AIO
+argument_list|)
+expr_stmt|;
+name|p31b_setcfg
+argument_list|(
+name|CTL_P1003_1B_AIO_LISTIO_MAX
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
