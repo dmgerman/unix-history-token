@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	6.1	83/07/29	*/
+comment|/*	vfs_lookup.c	6.2	83/09/09	*/
 end_comment
 
 begin_include
@@ -553,7 +553,7 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|ENOENT
+name|EISDIR
 expr_stmt|;
 goto|goto
 name|bad
