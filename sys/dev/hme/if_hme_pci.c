@@ -477,13 +477,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|pci_enable_io
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_pci

@@ -3258,13 +3258,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|pci_enable_io
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Enable bus master. On ich4 this may prevent the detection of 	 * the primary codec becoming ready in ich_init(). 	 */
 name|pci_enable_busmaster
 argument_list|(
