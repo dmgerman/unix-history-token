@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.11 (Berkeley) %G%"
+literal|"@(#)err.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,11 +278,18 @@ name|olderrno
 operator|==
 name|EMFILE
 condition|)
+block|{
 name|printopenfds
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|mci_dump_all
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|panic
