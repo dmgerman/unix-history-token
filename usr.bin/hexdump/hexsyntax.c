@@ -336,7 +336,7 @@ condition|(
 operator|(
 name|skip
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|optarg
 argument_list|,

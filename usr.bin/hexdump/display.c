@@ -1742,7 +1742,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|stdin
 argument_list|,

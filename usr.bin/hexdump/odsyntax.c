@@ -699,7 +699,7 @@ expr_stmt|;
 block|}
 name|skip
 operator|=
-name|strtol
+name|strtoll
 argument_list|(
 name|num
 argument_list|,
