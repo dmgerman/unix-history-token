@@ -70,7 +70,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: compress.c,v 1.19 2001/03/20 04:22:02 christos Exp $"
+literal|"@(#)$Id: compress.c,v 1.20 2001/07/22 21:04:15 christos Exp $"
 argument_list|)
 end_macro
 
@@ -220,7 +220,7 @@ block|,
 block|{
 literal|"bzip2"
 block|,
-literal|"-d"
+literal|"-cd"
 block|,
 name|NULL
 block|}
