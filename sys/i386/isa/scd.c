@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.24 1996/07/23 21:51:39 phk Exp $ */
+comment|/* $Id: scd.c,v 1.25 1996/09/06 23:07:59 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1103,7 +1103,7 @@ name|audio_status
 operator|=
 name|CD_AS_AUDIO_INVALID
 expr_stmt|;
-name|TAILQ_INIT
+name|bufq_init
 argument_list|(
 operator|&
 name|cd
@@ -1850,7 +1850,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|tqdisksort
+name|bufqdisksort
 argument_list|(
 operator|&
 name|cd
@@ -1951,7 +1951,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|TAILQ_FIRST
+name|bufq_first
 argument_list|(
 operator|&
 name|cd
@@ -1967,7 +1967,7 @@ literal|0
 condition|)
 block|{
 comment|/* block found to process, dequeue */
-name|TAILQ_REMOVE
+name|bufq_remove
 argument_list|(
 operator|&
 name|cd
@@ -1975,8 +1975,6 @@ operator|->
 name|head
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 name|cd
