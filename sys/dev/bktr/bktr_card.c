@@ -3879,6 +3879,36 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
+case|case
+name|CARD_LEADTEK
+case|:
+if|#
+directive|if
+name|BROOKTREE_SYSTEM_DEFAULT
+operator|==
+name|BROOKTREE_PAL
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|PHILIPS_FR1216_PAL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|PHILIPS_FR1236_NTSC
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+goto|goto
+name|checkDBX
+goto|;
+break|break;
 block|}
 comment|/* end switch(card) */
 comment|/* At this point, a goto checkDBX has not occured */
