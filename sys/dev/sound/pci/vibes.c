@@ -116,12 +116,10 @@ name|sc_info
 modifier|*
 name|parent
 decl_stmt|;
-name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
-name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -253,7 +251,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
 name|pcmchan_caps
 name|sc_caps
 init|=
@@ -709,12 +706,10 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
-name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
-name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -835,7 +830,6 @@ end_function
 
 begin_function
 specifier|static
-name|struct
 name|pcmchan_caps
 modifier|*
 name|svchan_getcaps
@@ -1087,7 +1081,7 @@ name|err
 decl_stmt|,
 name|min_err
 decl_stmt|;
-comment|/* This algorithm is a variant described in sonicvibes.pdf 	 * appendix A.  This search is marginally more extensive and 	 * results in (nominally) better sample rate matching. */
+comment|/* This algorithm is a variant of that described in 	 * sonicvibes.pdf appendix A.  This search is marginally more 	 * extensive and results in (nominally) better sample rate 	 * matching. */
 name|f_out
 operator|=
 name|SV_F_SCALE
@@ -2638,7 +2632,6 @@ specifier|static
 name|int
 name|sv_mix_init
 parameter_list|(
-name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2742,7 +2735,6 @@ specifier|static
 name|int
 name|sv_mix_set
 parameter_list|(
-name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2787,7 +2779,6 @@ specifier|static
 name|int
 name|sv_mix_setrecsrc
 parameter_list|(
-name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -4105,7 +4096,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* XXX This is a hack, and it's ugly.  Okay, the deal is this 	 * card has two more io regions that available for automatic 	 * configuration by the pci code.  These need to be allocated 	 * to used as control registers for the DMA engines. 	 * Unfortunately FBSD has no bus_space_foo() functions so we 	 * have to grab port space in region of existing resources.  Go 	 * for space between midi and game ports. 	 */
+comment|/* 	 * XXX This is a hack, and it's ugly.  Okay, the deal is this 	 * card has two more io regions that available for automatic 	 * configuration by the pci code.  These need to be allocated 	 * to used as control registers for the DMA engines. 	 * Unfortunately FBSD has no bus_space_foo() functions so we 	 * have to grab port space in region of existing resources.  We go 	 * for space between midi and game ports. 	 */
 name|bus_get_resource
 argument_list|(
 name|dev
@@ -4175,7 +4166,7 @@ name|sdmaa
 operator|+
 literal|0x40
 expr_stmt|;
-comment|/* Add resources to list of pci resources for this device - from here on 	 * they look like normal pci resources. */
+comment|/* Add resources to list of pci resources for this device. 	 * From here on they look like normal pci resources. */
 name|bus_set_resource
 argument_list|(
 name|dev
@@ -4937,7 +4928,6 @@ name|sc_methods
 block|,
 expr|sizeof
 operator|(
-expr|struct
 name|snddev_info
 operator|)
 block|}
