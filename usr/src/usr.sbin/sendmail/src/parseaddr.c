@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.10	%G%"
+literal|"@(#)parseaddr.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|DELIMCHARS
-value|"$()<>@!.,;:\\\" \t\r\n"
+value|"$()<>,;\\\"\r\n"
 end_define
 
 begin_comment
@@ -1219,6 +1219,49 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|50
+index|]
+decl_stmt|;
+specifier|static
+name|char
+name|firstime
+decl_stmt|;
+if|if
+condition|(
+name|firstime
+operator|++
+operator|==
+literal|0
+condition|)
+block|{
+name|expand
+argument_list|(
+literal|"$o"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|DELIMCHARS
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|isspace
@@ -1233,19 +1276,19 @@ operator|)
 return|;
 if|if
 condition|(
+name|iscntrl
+argument_list|(
+name|c
+argument_list|)
+operator|||
 name|index
 argument_list|(
-name|DELIMCHARS
+name|buf
 argument_list|,
 name|c
 argument_list|)
 operator|!=
 name|NULL
-operator|||
-name|iscntrl
-argument_list|(
-name|c
-argument_list|)
 condition|)
 return|return
 operator|(
