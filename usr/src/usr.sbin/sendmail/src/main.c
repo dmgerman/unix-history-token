@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.6 (Berkeley) %G%"
+literal|"@(#)main.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1102,12 +1102,38 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPTIONS
+value|"B:b:C:cd:e:F:f:h:IiM:mno:p:q:r:sTtvX:"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|OPTIONS
 value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvX:"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2639,6 +2665,18 @@ case|case
 literal|'e'
 case|:
 comment|/* error message disposition */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+case|case
+literal|'M'
+case|:
+comment|/* define macro */
+endif|#
+directive|endif
 name|setoption
 argument_list|(
 name|j
