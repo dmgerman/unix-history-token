@@ -26,37 +26,6 @@ comment|/***************************************************************\ * Ioct
 end_comment
 
 begin_comment
-comment|/*  * Quirk select: chose the set of quirk functions to use for this  * device.  */
-end_comment
-
-begin_struct
-struct|struct
-name|wormio_quirk_select
-block|{
-specifier|const
-name|char
-modifier|*
-name|vendor
-decl_stmt|;
-comment|/* vendor name */
-specifier|const
-name|char
-modifier|*
-name|model
-decl_stmt|;
-comment|/* model name */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|WORMIOCQUIRKSELECT
-value|_IOW('W', 10, struct wormio_quirk_select)
-end_define
-
-begin_comment
 comment|/*  * Prepare disk-wide parameters.  */
 end_comment
 
@@ -99,6 +68,102 @@ name|int
 name|preemp
 decl_stmt|;
 comment|/* audio with preemphasis */
+define|#
+directive|define
+name|BLOCK_RAW
+value|0
+comment|/* 2352 bytes, raw data */
+define|#
+directive|define
+name|BLOCK_RAWPQ
+value|1
+comment|/* 2368 bytes, raw data with P and Q subchannels */
+define|#
+directive|define
+name|BLOCK_RAWPW
+value|2
+comment|/* 2448 bytes, raw data with P-W subchannel appended */
+define|#
+directive|define
+name|BLOCK_MODE_1
+value|8
+comment|/* 2048 bytes, mode 1 (ISO/IEC 10149) */
+define|#
+directive|define
+name|BLOCK_MODE_2
+value|9
+comment|/* 2336 bytes, mode 2 (ISO/IEC 10149) */
+define|#
+directive|define
+name|BLOCK_MODE_2_FORM_1
+value|10
+comment|/* 2048 bytes, CD-ROM XA form 1 */
+define|#
+directive|define
+name|BLOCK_MODE_2_FORM_1b
+value|11
+comment|/* 2056 bytes, CD-ROM XA form 1 */
+define|#
+directive|define
+name|BLOCK_MODE_2_FORM_2
+value|12
+comment|/* 2324 bytes, CD-ROM XA form 2 */
+define|#
+directive|define
+name|BLOCK_MODE_2_FORM_2b
+value|13
+comment|/* 2332 bytes, CD-ROM XA form 2 */
+name|int
+name|track_type
+decl_stmt|;
+comment|/* defines the number of bytes in a block */
+define|#
+directive|define
+name|COPY_INHIBIT
+value|0
+comment|/* no copy allowed */
+define|#
+directive|define
+name|COPY_PERMITTED
+value|1
+comment|/* track can be copied */
+define|#
+directive|define
+name|COPY_SCMS
+value|2
+comment|/* alternate copy */
+name|int
+name|copy_bits
+decl_stmt|;
+comment|/* define the possibilities for copying */
+name|int
+name|track_number
+decl_stmt|;
+name|char
+name|ISRC_country
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* country code (2 chars) */
+name|char
+name|ISRC_owner
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* owner code (3 chars) */
+name|int
+name|ISRC_year
+decl_stmt|;
+comment|/* year of recording */
+name|char
+name|ISRC_serial
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* serial number */
 block|}
 struct|;
 end_struct
@@ -135,6 +200,84 @@ define|#
 directive|define
 name|WORMIOCFIXATION
 value|_IOW('W', 22, struct wormio_fixation)
+end_define
+
+begin_comment
+comment|/*   * Finalize track  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WORMIOCFINISHTRACK
+value|_IO('W', 23)
+end_define
+
+begin_comment
+comment|/* Errors/warnings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WORM_SEQUENCE_ERROR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_DUMMY_BLOCKS_ADDED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_CALIBRATION_AREA_ALMOST_FULL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_CALIBRATION_AREA_FULL
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_BUFFER_UNDERRUN
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_ABSORPTION_CONTROL_ERROR
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_END_OF_MEDIUM
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORM_OPTIMUM_POWER_CALIBRATION_ERROR
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|WORMIOERROR
+value|_IOR('W', 24, int)
 end_define
 
 begin_endif
