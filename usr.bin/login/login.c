@@ -595,6 +595,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|prompt
@@ -613,6 +614,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|passwd_prompt
@@ -758,7 +760,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|arg0
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|shell
 init|=
@@ -2392,6 +2396,7 @@ operator|!
 name|quietlog
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cw
@@ -2511,6 +2516,11 @@ condition|)
 block|{
 name|asprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|cw
 argument_list|,
@@ -2577,6 +2587,10 @@ name|NULL
 condition|)
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cw
 argument_list|)
 expr_stmt|;

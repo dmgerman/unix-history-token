@@ -2569,6 +2569,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
+specifier|const
 name|char
 modifier|*
 name|fname

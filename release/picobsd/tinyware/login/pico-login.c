@@ -323,6 +323,7 @@ name|motd
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -653,16 +654,21 @@ modifier|*
 name|hostname
 decl_stmt|,
 modifier|*
-name|passwd_prompt
-decl_stmt|,
-modifier|*
-name|prompt
-decl_stmt|,
-modifier|*
 name|tty
 decl_stmt|,
 modifier|*
 name|username
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|passwd_prompt
+decl_stmt|,
+modifier|*
+name|prompt
 decl_stmt|;
 end_decl_stmt
 
@@ -781,6 +787,7 @@ operator|+
 literal|10
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|shell
@@ -3152,6 +3159,7 @@ operator|!
 name|quietlog
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|cw
@@ -4426,6 +4434,7 @@ name|motd
 parameter_list|(
 name|motdfile
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|motdfile

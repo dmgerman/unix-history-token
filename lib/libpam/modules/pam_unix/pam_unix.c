@@ -456,8 +456,7 @@ name|user
 decl_stmt|,
 modifier|*
 name|realpw
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|prompt
 decl_stmt|;
@@ -2118,10 +2117,12 @@ name|pfd
 decl_stmt|,
 name|tfd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|crypt_type
-decl_stmt|,
+decl_stmt|;
+name|char
 name|salt
 index|[
 name|SALTSIZE
