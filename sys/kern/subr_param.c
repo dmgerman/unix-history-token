@@ -63,12 +63,35 @@ directive|ifndef
 name|HZ
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|1024
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|HZ
 value|100
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
