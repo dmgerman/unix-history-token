@@ -609,6 +609,8 @@ operator|->
 name|t_cflag
 operator|=
 name|TTYDEF_CFLAG
+operator||
+name|CLOCAL
 expr_stmt|;
 name|tp
 operator|->
