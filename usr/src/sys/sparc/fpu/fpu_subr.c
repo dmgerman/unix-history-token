@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)fpu_subr.c	7.3 (Berkeley) %G%  *  * from: $Header: fpu_subr.c,v 1.2 92/06/17 05:41:35 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)fpu_subr.c	7.4 (Berkeley) %G%  *  * from: $Header: fpu_subr.c,v 1.4 92/12/01 08:46:52 torek Exp $  */
 end_comment
 
 begin_comment
@@ -609,11 +609,11 @@ name|m3
 condition|)
 name|m0
 operator|=
-name|m2
+name|m3
 operator|,
 name|m1
 operator|=
-name|m3
+literal|0
 operator|,
 name|m2
 operator|=
@@ -625,7 +625,7 @@ literal|0
 operator|,
 name|exp
 operator|-=
-literal|2
+literal|3
 operator|*
 literal|32
 expr_stmt|;
