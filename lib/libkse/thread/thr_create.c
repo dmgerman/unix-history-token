@@ -428,22 +428,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Unlock the garbage collector mutex. */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
-argument_list|)
-expr_stmt|;
 comment|/* Allocate a new stack. */
 name|stack
 operator|=
@@ -460,12 +444,30 @@ operator|+
 name|PTHREAD_STACK_GUARD
 operator|)
 expr_stmt|;
+comment|/* Unlock the garbage collector mutex. */
+if|if
+condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot unlock gc mutex"
+argument_list|)
+expr_stmt|;
 comment|/* Red zone: */
 if|if
 condition|(
 name|mmap
 argument_list|(
-name|_next_stack
+name|stack
+operator|-
+name|PTHREAD_STACK_GUARD
 argument_list|,
 name|PTHREAD_STACK_GUARD
 argument_list|,
@@ -523,7 +525,9 @@ name|EAGAIN
 expr_stmt|;
 name|munmap
 argument_list|(
-name|_next_stack
+name|stack
+operator|-
+name|PTHREAD_STACK_GUARD
 argument_list|,
 name|PTHREAD_STACK_GUARD
 argument_list|)

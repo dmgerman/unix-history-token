@@ -762,6 +762,8 @@ operator|)
 name|USRSTACK
 operator|-
 name|PTHREAD_STACK_INITIAL
+operator|-
+name|PTHREAD_STACK_GUARD
 argument_list|,
 name|PTHREAD_STACK_GUARD
 argument_list|,
@@ -777,13 +779,11 @@ argument_list|)
 operator|==
 name|MAP_FAILED
 condition|)
-block|{
 name|PANIC
 argument_list|(
 literal|"Cannot allocate red zone for initial thread"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Write a magic value to the thread structure 		 * to help identify valid ones: 		 */
 name|_thread_initial
 operator|->
