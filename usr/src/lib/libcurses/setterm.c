@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.3  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.4  */
 end_comment
 
 begin_undef
@@ -851,6 +851,34 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * return a capability from termcap  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|getcap
+parameter_list|(
+name|name
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+return|return
+name|tgetent
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|aoftspace
+argument_list|)
+return|;
+block|}
+end_function
 
 end_unit
 
