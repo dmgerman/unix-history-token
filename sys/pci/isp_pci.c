@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pci/pcireg.h>
 end_include
 
@@ -71,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
 end_include
 
 begin_decl_stmt
