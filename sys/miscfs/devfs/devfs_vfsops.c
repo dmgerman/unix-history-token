@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.11 1996/04/07 01:15:02 joerg Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.12 1996/06/12 05:08:30 gpalmer Exp $  *  *  */
 end_comment
 
 begin_include
@@ -175,7 +175,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"devfs ready to run\n"
+literal|"DEVFS: ready to run\n"
 argument_list|)
 expr_stmt|;
 return|return
