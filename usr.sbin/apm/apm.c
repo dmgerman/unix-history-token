@@ -1020,11 +1020,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tBattery status: "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|aps
