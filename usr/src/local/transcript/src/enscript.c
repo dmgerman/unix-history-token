@@ -21,7 +21,7 @@ name|char
 modifier|*
 name|RCSID
 init|=
-literal|"$Header: enscript.c,v 2.1 85/11/24 11:48:55 shore Rel $"
+literal|"$Header: enscript.c,v 1.7 89/03/12 01:31:55 van Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* enscript.c  *  * Copyright (c) 1985 Adobe Systems Incorporated  *  * inspired by Gosling's cz  * there have been major overhauls, but the input language is the same:  * 	new widths format  *	generate PostScript (much easier than Press)  *	new and renamed switches (to match 4.2bsd lpr spooler)  *	obeys PostScript comment conventions  *	doesn't worry so much about fonts (everything is scalable and  *	rotatable, use PS font names, no face properties)  *  * enscript generates POSTSCRIPT print files of a special kind  * the coordinate system is in 20ths of a point. (1440 per inch)  *  * Edit History:  * Andrew Shore: Mon Nov 18 14:05:05 1985  * End Edit History.  *  * RCSLOG:  * $Log:	enscript.c,v $  * Revision 2.1  85/11/24  11:48:55  shore  * Product Release 2.0  *   * Revision 1.3  85/11/20  00:10:01  shore  * Added System V support (input options and spooling)  * margins/linecount reworked (Dataproducts)  * incompatible options changes, getopt!  * Guy Riddle's Gaudy mode and other changes  * output spooling messages, pages, copies  *   * Revision 1.2  85/05/14  11:22:14  shore  * *** empty log message ***  *   *  */
+comment|/*  * enscript.c   *  * Copyright (c) 1985 Adobe Systems Incorporated   *  * inspired by Gosling's cz there have been major overhauls, but the input  * language is the same: new widths format generate PostScript (much easier  * than Press) new and renamed switches (to match 4.2bsd lpr spooler) obeys  * PostScript comment conventions doesn't worry so much about fonts  * (everything is scalable and rotatable, use PS font names, no face  * properties)   *  * enscript generates POSTSCRIPT print files of a special kind the coordinate  * system is in 20ths of a point. (1440 per inch)   *  * Edit History: Andrew Shore: Mon Nov 18 14:05:05 1985 End Edit History.   *  * RCSLOG: $Log:	enscript.c,v $  * Revision 1.7  89/03/12  01:31:55  van  * we have to escape special chars in title strings.  *   * Revision 1.6  89/03/10  00:30:39  van  * might as well let the user change everything.  *   * Revision 1.5  89/03/09  23:19:17  van  * gcc lint.  *   * Revision 1.4  89/03/09  23:08:50  van  * let user set the fonts used in 'gaudy' mode  *   * Revision 1.3  88/03/06  17:23:58  leres  * Fix logic bug; only spool output if that's want we want.  *   * Revision 1.2  86/07/03  00:06:31  van  * reformatted.  removed SYSV ifdefs.  *  Revision 1.1  86/07/03  00:03:12  van Initial  * revision   *  * Revision 2.1  85/11/24  11:48:55  shore Product Release 2.0   *  * Revision 1.3  85/11/20  00:10:01  shore Added System V support (input options  * and spooling) margins/linecount reworked (Dataproducts) incompatible  * options changes, getopt! Guy Riddle's Gaudy mode and other changes output  * spooling messages, pages, copies   *  * Revision 1.2  85/05/14  11:22:14  shore *** empty log message ***   *  *  */
 end_comment
 
 begin_define
@@ -53,6 +53,27 @@ define|#
 directive|define
 name|HEADFONT
 value|"Courier-Bold"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHEADFONT
+value|"Times-Bold"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PGNUMFONT
+value|"Helvetica-Bold"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATEFONT
+value|"Times-Bold"
 end_define
 
 begin_ifdef
@@ -130,11 +151,11 @@ value|((long)((UperInch*21)/2))
 end_define
 
 begin_comment
-comment|/*#define PageLength ((long) ((long) (UperInch*(8*11-3)))/8) */
+comment|/* #define PageLength ((long) ((long) (UperInch*(8*11-3)))/8) */
 end_comment
 
 begin_comment
-comment|/*#define PageWidth  ((long) ((long) (UperInch*(8*17-3)))/8) */
+comment|/* #define PageWidth  ((long) ((long) (UperInch*(8*17-3)))/8) */
 end_comment
 
 begin_comment
@@ -173,38 +194,6 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSV
-end_ifdef
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -216,11 +205,6 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -246,35 +230,12 @@ directive|include
 file|"transcript.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSV
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LPR
-value|"lp"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|LPR
 value|"lpr"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -284,7 +245,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* number of bad chars to pass before complaint */
+comment|/* number of bad chars to pass before 				 * complaint */
 end_comment
 
 begin_decl_stmt
@@ -294,6 +255,14 @@ name|stat
 name|S
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|double
+name|atof
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -322,6 +291,13 @@ begin_function_decl
 name|private
 name|VOID
 name|int1
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|private
+name|FlushShow
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -842,27 +818,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYSV
-end_ifdef
-
-begin_decl_stmt
-name|private
-name|char
-modifier|*
-name|spoolTitle
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|BSD
 end_ifdef
 
@@ -956,7 +911,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* table of fonts, indexed by font 				   designator ('a' to 'z') */
+comment|/* table of fonts, indexed by font designator 				 * ('a' to 'z') */
 end_comment
 
 begin_comment
@@ -975,6 +930,27 @@ define|#
 directive|define
 name|HeaderFont
 value|fontindex['h'-'a']
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHeaderFont
+value|fontindex['i'-'a']
+end_define
+
+begin_define
+define|#
+directive|define
+name|DateFont
+value|fontindex['j'-'a']
+end_define
+
+begin_define
+define|#
+directive|define
+name|PgNumFont
+value|fontindex['k'-'a']
 end_define
 
 begin_decl_stmt
@@ -1049,6 +1025,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* minimum y coord on page */
+end_comment
+
+begin_decl_stmt
+name|private
+name|long
+name|Xoffset
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* amount to offset left margin */
 end_comment
 
 begin_define
@@ -1130,7 +1117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* start on next page when have something to print */
+comment|/* start on next page when have something to 				 * print */
 end_comment
 
 begin_decl_stmt
@@ -1210,7 +1197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of characters skipped because 				   they weren't defined in some font */
+comment|/* number of characters skipped because they 				 * weren't defined in some font */
 end_comment
 
 begin_decl_stmt
@@ -1402,9 +1389,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_define
 define|#
 directive|define
@@ -1423,7 +1407,7 @@ value|for(p =&fonts[nf-1]; p>=&fonts[0]; p--)
 end_define
 
 begin_comment
-comment|/* Scan the font metrics directory looking for entries that match the  * entries in ``fonts''.  For entries  * that are found the data in the font description is filled in,  * if any are missing, it dies horribly.  */
+comment|/*  * Scan the font metrics directory looking for entries that match the entries  * in ``fonts''.  For entries that are found the data in the font description  * is filled in, if any are missing, it dies horribly.   */
 end_comment
 
 begin_function
@@ -1468,17 +1452,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
-name|char
-name|shortname
-index|[
-literal|15
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -1530,34 +1503,6 @@ sizeof|sizeof
 name|FontFile
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
-name|VOIDC
-name|mapname
-argument_list|(
-name|f
-operator|->
-name|name
-argument_list|,
-name|shortname
-argument_list|)
-decl_stmt|;
-name|VOIDC
-name|mstrcat
-argument_list|(
-name|FontFile
-argument_list|,
-name|FontFile
-argument_list|,
-name|shortname
-argument_list|,
-sizeof|sizeof
-name|FontFile
-argument_list|)
-decl_stmt|;
-else|#
-directive|else
 name|VOIDC
 name|mstrcat
 argument_list|(
@@ -1573,8 +1518,6 @@ sizeof|sizeof
 name|FontFile
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 name|VOIDC
 name|mstrcat
 argument_list|(
@@ -1932,7 +1875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a font number for the font with the indicated name  * and size.  Adds info to the font list for the eventual search.  */
+comment|/*  * Return a font number for the font with the indicated name and size.  Adds  * info to the font list for the eventual search.   */
 end_comment
 
 begin_function
@@ -2180,6 +2123,67 @@ block|}
 end_function
 
 begin_comment
+comment|/* put a correctly escaped string to the PS file */
+end_comment
+
+begin_function
+name|private
+name|VOID
+name|OUTstr
+parameter_list|(
+name|s
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|!
+name|showpending
+condition|)
+block|{
+name|putc
+argument_list|(
+literal|'('
+argument_list|,
+name|OutFile
+argument_list|)
+expr_stmt|;
+name|showpending
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|OUTputc
+argument_list|(
+operator|*
+name|s
+operator|++
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|')'
+argument_list|,
+name|OutFile
+argument_list|)
+expr_stmt|;
+name|showpending
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Set the current font */
 end_comment
 
@@ -2214,7 +2218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* put a character onto the page at the desired X and Y positions.  * If the current position doesn't agree with the desired position, put out  * movement directives.  Leave the current position updated  * to account for the character.  */
+comment|/*  * put a character onto the page at the desired X and Y positions. If the  * current position doesn't agree with the desired position, put out movement  * directives.  Leave the current position updated to account for the  * character.   */
 end_comment
 
 begin_function
@@ -2730,6 +2734,8 @@ operator|=
 name|UperInch
 operator|/
 literal|4
+operator|+
+name|Xoffset
 expr_stmt|;
 name|lY
 operator|=
@@ -2749,7 +2755,7 @@ name|maxX
 operator|=
 name|TruePageLength
 expr_stmt|;
-comment|/*	minY = (PageLength - TruePageWidth) + 3*UperLine+480; */
+comment|/* minY = (PageLength - TruePageWidth) + 3*UperLine+480; */
 name|minY
 operator|=
 operator|(
@@ -2773,6 +2779,9 @@ name|lX
 operator|=
 name|dX
 operator|=
+name|Xoffset
+operator|+
+operator|(
 name|TwoColumn
 condition|?
 operator|(
@@ -2789,6 +2798,7 @@ literal|5
 operator|)
 operator|/
 literal|8
+operator|)
 operator|)
 expr_stmt|;
 name|lY
@@ -2836,15 +2846,21 @@ condition|(
 name|Gaudy
 condition|)
 block|{
+name|OUTstr
+argument_list|(
+name|UsersHeader
+argument_list|)
+expr_stmt|;
+name|OUTstr
+argument_list|(
+name|Header
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|OutFile
 argument_list|,
-literal|"(%s)(%s)[%s](%d)Gaudy\n"
-argument_list|,
-name|UsersHeader
-argument_list|,
-name|Header
+literal|"[%s](%d)Gaudy\n"
 argument_list|,
 name|FileDate
 argument_list|,
@@ -3124,6 +3140,8 @@ name|lX
 operator|=
 name|dX
 operator|=
+name|Xoffset
+operator|+
 name|TruePageLength
 operator|/
 literal|2
@@ -3151,6 +3169,8 @@ name|lX
 operator|=
 name|dX
 operator|=
+name|Xoffset
+operator|+
 name|TruePageWidth
 operator|/
 literal|2
@@ -3394,25 +3414,12 @@ argument_list|,
 name|TempName
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
-name|VOIDC
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
-else|#
-directive|else
 name|VOIDC
 name|umask
 argument_list|(
 literal|077
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 name|OutFile
 operator|=
 name|fopen
@@ -3503,19 +3510,6 @@ argument_list|,
 name|f
 operator|->
 name|name
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|Gaudy
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|OutFile
-argument_list|,
-literal|" Times-Roman Times-Bold Helvetica-Bold"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3671,7 +3665,7 @@ operator|>
 name|MAXBAD
 condition|)
 block|{
-comment|/* allow some kruft but not much */
+comment|/* allow some kruft but 							 * not much */
 name|fprintf
 argument_list|(
 name|stderr
@@ -3984,9 +3978,16 @@ literal|'D'
 case|:
 comment|/* date string */
 name|VOIDC
-name|gets
+name|fgets
 argument_list|(
 name|DateStr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|DateStr
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 decl_stmt|;
 name|FileDate
@@ -4007,9 +4008,16 @@ literal|100
 index|]
 decl_stmt|;
 name|VOIDC
-name|gets
+name|fgets
 argument_list|(
 name|header
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|header
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 decl_stmt|;
 name|UsersHeader
@@ -4031,9 +4039,16 @@ literal|100
 index|]
 decl_stmt|;
 name|VOIDC
-name|gets
+name|fgets
 argument_list|(
 name|header
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|header
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 decl_stmt|;
 name|ClosePage
@@ -4063,9 +4078,16 @@ literal|200
 index|]
 decl_stmt|;
 name|VOIDC
-name|gets
+name|fgets
 argument_list|(
 name|psline
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|psline
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 decl_stmt|;
 name|fprintf
@@ -4132,7 +4154,7 @@ name|TabWidth
 expr_stmt|;
 break|break;
 default|default:
-comment|/* other control character, take your chances */
+comment|/* other control character, take your 					 * chances */
 if|if
 condition|(
 name|pagepending
@@ -4156,7 +4178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * close the PS file  */
+comment|/*  * close the PS file   */
 end_comment
 
 begin_function
@@ -4289,38 +4311,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSV
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|ARGS
-value|"12gGBlL:oqQrRkKmf:F:b:p:t:d:n:w:h"
+value|"12gGBlL:oqrRkKf:F:b:p:J:C:P:#:mhO:"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ARGS
-value|"12gGBlL:oqQrRkKf:F:b:p:J:C:P:#:mh"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|private
@@ -4420,6 +4416,33 @@ name|Header
 operator|=
 literal|""
 expr_stmt|;
+name|SHeaderFont
+operator|=
+name|DefineFont
+argument_list|(
+name|SHEADFONT
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+name|DateFont
+operator|=
+name|DefineFont
+argument_list|(
+name|DATEFONT
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+name|PgNumFont
+operator|=
+name|DefineFont
+argument_list|(
+name|PGNUMFONT
+argument_list|,
+literal|24
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'g'
@@ -4478,15 +4501,6 @@ case|:
 name|BeQuiet
 operator|=
 name|TRUE
-expr_stmt|;
-break|break;
-case|case
-literal|'Q'
-case|:
-name|BeQuiet
-operator|=
-operator|!
-name|BeQuiet
 expr_stmt|;
 break|break;
 case|case
@@ -4684,47 +4698,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|SYSV
-comment|/* SYS V lp options processing */
-case|case
-literal|'m'
-case|:
-case|case
-literal|'w'
-case|:
-name|spoolNotify
-operator|=
-name|argp
-expr_stmt|;
-break|break;
-case|case
-literal|'n'
-case|:
-name|spoolCopies
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-name|PrinterName
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-name|spoolTitle
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-else|#
-directive|else
 comment|/* BSD lpr options processing */
 case|case
 literal|'m'
@@ -4766,12 +4739,36 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'?'
 case|:
 comment|/* bad option */
+break|break;
+case|case
+literal|'O'
+case|:
+name|Xoffset
+operator|=
+name|atof
+argument_list|(
+name|optarg
+argument_list|)
+operator|*
+operator|(
+name|double
+operator|)
+name|UperInch
+expr_stmt|;
+if|if
+condition|(
+name|Xoffset
+operator|<
+literal|0
+condition|)
+name|Xoffset
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -4888,16 +4885,6 @@ name|nargs
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
-name|int
-name|cpid
-decl_stmt|,
-name|wpid
-decl_stmt|;
-endif|#
-directive|endif
 name|addarg
 argument_list|(
 name|argstr
@@ -4908,218 +4895,6 @@ operator|&
 name|nargs
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-literal|"-c"
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|PrinterName
-operator|==
-name|NULL
-operator|)
-operator|&&
-operator|(
-operator|(
-name|PrinterName
-operator|=
-name|envget
-argument_list|(
-literal|"LPDEST"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-name|PrinterName
-operator|=
-name|POSTSCRIPTPRINTER
-expr_stmt|;
-block|}
-name|VOIDC
-name|sprintf
-argument_list|(
-name|temparg
-argument_list|,
-literal|"-d%s"
-argument_list|,
-name|PrinterName
-argument_list|)
-decl_stmt|;
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-name|temparg
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|BeQuiet
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"spooled to %s\n"
-argument_list|,
-name|PrinterName
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|spoolNotify
-condition|)
-block|{
-name|VOIDC
-name|sprintf
-argument_list|(
-name|temparg
-argument_list|,
-literal|"-%c"
-argument_list|,
-name|spoolNotify
-argument_list|)
-decl_stmt|;
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-name|temparg
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|atoi
-argument_list|(
-name|spoolCopies
-argument_list|)
-operator|>
-literal|1
-condition|)
-block|{
-name|VOIDC
-name|sprintf
-argument_list|(
-name|temparg
-argument_list|,
-literal|"-n%s"
-argument_list|,
-name|spoolCopies
-argument_list|)
-decl_stmt|;
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-name|temparg
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|BeQuiet
-condition|)
-block|{
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-literal|"-s"
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|spoolTitle
-condition|)
-block|{
-name|VOIDC
-name|sprintf
-argument_list|(
-name|temparg
-argument_list|,
-literal|"-t%s"
-argument_list|,
-name|spoolTitle
-argument_list|)
-decl_stmt|;
-block|}
-else|else
-block|{
-name|VOIDC
-name|sprintf
-argument_list|(
-name|temparg
-argument_list|,
-literal|"-t%s"
-argument_list|,
-operator|(
-name|FileName
-operator|==
-name|NULL
-operator|)
-condition|?
-literal|"stdin"
-else|:
-name|FileName
-argument_list|)
-decl_stmt|;
-block|}
-if|if
-condition|(
-name|spoolNoBurst
-condition|)
-block|{
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-literal|"-o-h"
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-block|}
-name|addarg
-argument_list|(
-name|argstr
-argument_list|,
-name|temparg
-argument_list|,
-operator|&
-name|nargs
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* BSD spooler */
 if|if
 condition|(
@@ -5338,8 +5113,6 @@ name|nargs
 argument_list|)
 expr_stmt|;
 comment|/* should we use a symbolic link too? */
-endif|#
-directive|endif
 name|addarg
 argument_list|(
 name|argstr
@@ -5399,70 +5172,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|SYSV
-if|if
-condition|(
-operator|(
-name|cpid
-operator|=
-name|fork
-argument_list|()
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|pexit2
-argument_list|(
-name|prog
-argument_list|,
-literal|"can't fork spooler"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|cpid
-condition|)
-block|{
-while|while
-condition|(
-name|wpid
-operator|=
-name|wait
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
-argument_list|)
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|wpid
-operator|==
-name|cpid
-condition|)
-break|break;
-block|}
-name|VOIDC
-name|unlink
-argument_list|(
-name|TempName
-argument_list|)
-decl_stmt|;
-block|}
-else|else
-block|{
 name|execvp
 argument_list|(
 name|LPR
@@ -5479,27 +5188,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-else|#
-directive|else
-name|execvp
-argument_list|(
-name|LPR
-argument_list|,
-name|argstr
-argument_list|)
-expr_stmt|;
-name|pexit2
-argument_list|(
-name|prog
-argument_list|,
-literal|"can't exec spooler"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -6119,14 +5807,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|OutOnly
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 name|BeQuiet
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -6137,7 +5821,11 @@ name|OutName
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+operator|!
+name|OutOnly
+condition|)
 block|{
 name|SpoolIt
 argument_list|()
