@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.5 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1137,6 +1137,8 @@ modifier|*
 name|nbp
 decl_stmt|;
 name|int
+name|ofsmodified
+decl_stmt|,
 name|cnt
 init|=
 literal|0
@@ -1322,15 +1324,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|debug
-condition|)
-name|pwarn
-argument_list|(
-literal|"MARKING FILE SYSTEM CLEAN\n"
-argument_list|)
-expr_stmt|;
 name|sblock
 operator|.
 name|fs_clean
@@ -1340,12 +1333,30 @@ expr_stmt|;
 name|sbdirty
 argument_list|()
 expr_stmt|;
+name|ofsmodified
+operator|=
+name|fsmodified
+expr_stmt|;
 name|flush
 argument_list|(
 name|fswritefd
 argument_list|,
 operator|&
 name|sblk
+argument_list|)
+expr_stmt|;
+name|fsmodified
+operator|=
+name|ofsmodified
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|"\n***** FILE SYSTEM MARKED CLEAN *****\n"
 argument_list|)
 expr_stmt|;
 block|}
