@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)mkboottape.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)mkboottape.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -216,20 +216,10 @@ if|if
 condition|(
 name|argc
 operator|!=
-literal|5
+literal|4
 condition|)
 name|usage
 argument_list|()
-expr_stmt|;
-name|rootsize
-operator|=
-name|atoi
-argument_list|(
-name|argv
-index|[
-literal|4
-index|]
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -363,6 +353,16 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|rootsize
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check for exec header and skip to code segment. 	 */
