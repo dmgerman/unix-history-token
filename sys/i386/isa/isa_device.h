@@ -21,22 +21,17 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ISA_ISAVAR_H_
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa_dma.h>
+file|<isa/isavar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
