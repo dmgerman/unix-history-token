@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c 1.6 %G%"
+literal|"@(#)scanner.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1881,6 +1881,10 @@ block|}
 block|}
 else|else
 block|{
+name|curchar
+operator|=
+name|p
+expr_stmt|;
 operator|*
 name|q
 operator|++
