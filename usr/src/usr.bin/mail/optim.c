@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optim.c	5.5 (Berkeley) %G%"
+literal|"@(#)optim.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
 end_include
 
 begin_comment
@@ -2516,11 +2522,6 @@ specifier|register
 name|int
 name|m
 decl_stmt|;
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
 name|strcpy
 argument_list|(
 name|name
