@@ -3109,7 +3109,7 @@ operator|->
 name|size
 argument_list|()
 condition|)
-name|__throw_range_error
+name|__throw_out_of_range
 argument_list|(
 literal|"deque"
 argument_list|)
