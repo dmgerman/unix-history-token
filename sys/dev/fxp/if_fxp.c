@@ -7915,15 +7915,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"cluster allocation failed, packet dropped!\n"
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -7956,15 +7947,6 @@ block|}
 block|}
 else|else
 block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"mbuf allocation failed, packet dropped!\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|oldm
