@@ -201,7 +201,7 @@ index|[]
 init|=
 block|{
 block|{
-name|NSSRC_FILES
+name|NSSRC_COMPAT
 block|,
 name|NS_SUCCESS
 block|}
