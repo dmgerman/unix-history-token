@@ -38,7 +38,7 @@ value|\ 	uint64_t	pc_clock;
 comment|/* Clock counter. */
 value|\ 	uint64_t	pc_clockadj;
 comment|/* Clock adjust. */
-value|\ 	uint32_t	pc_acpi_id;
+value|\ 	uint32_t	pc_acpi_id
 end_define
 
 begin_comment

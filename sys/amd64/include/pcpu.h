@@ -34,7 +34,7 @@ value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
 value|\ 	register_t pc_scratch_rsp;
 comment|/* User %rsp in syscall */
-value|\ 	u_int   pc_acpi_id;
+value|\ 	u_int   pc_acpi_id
 end_define
 
 begin_comment
