@@ -4725,7 +4725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	union_link:  *  *	tdvp will be locked on entry, vp will not be locked on entry.  *	tdvp should remain locked on return and vp should remain unlocked  *	on return.  */
+comment|/*  *	union_link:  *  *	tdvp and vp will be locked on entry.  *	tdvp and vp should remain locked on return.  *	on return.  */
 end_comment
 
 begin_function
@@ -4832,19 +4832,6 @@ operator|==
 name|NULLVP
 condition|)
 block|{
-name|vn_lock
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -4872,25 +4859,6 @@ literal|0
 block|if (dun->un_uppervp == tun->un_dirvp) { 				vn_lock(dun->un_uppervp, 					    LK_EXCLUSIVE | LK_RETRY, td); 				dun->un_flags |= UN_ULOCK; 			}
 endif|#
 directive|endif
-name|VOP_UNLOCK
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-block|}
-name|vp
-operator|=
-name|tun
-operator|->
-name|un_uppervp
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -4900,6 +4868,25 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+name|vp
+operator|=
+name|tun
+operator|->
+name|un_uppervp
+expr_stmt|;
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Make sure upper is locked, then unlock the union directory we were  	 * called with to avoid a deadlock while we are calling VOP_LINK on  	 * the upper (with tdvp locked and vp not locked).  Our ap->a_tdvp 	 * is expected to be locked on return. 	 */
 if|if
 condition|(
@@ -4945,7 +4932,42 @@ name|cnp
 argument_list|)
 expr_stmt|;
 comment|/* call link on upper */
-comment|/* 	 * We have to unlock tdvp prior to relocking our calling node in 	 * order to avoid a deadlock. 	 */
+comment|/* 	 * Unlock tun->un_uppervp if we locked it above. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_tdvp
+operator|->
+name|v_op
+operator|==
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_op
+condition|)
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We have to unlock tdvp prior to relocking our calling node in 	 * order to avoid a deadlock.  We also have to unlock ap->a_vp 	 * before relocking the directory, but then we have to relock 	 * ap->a_vp as our caller expects. 	 */
+name|VOP_UNLOCK
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 name|union_unlock_upper
 argument_list|(
 name|tdvp
@@ -4958,6 +4980,19 @@ argument_list|(
 name|ap
 operator|->
 name|a_tdvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|vn_lock
+argument_list|(
+name|ap
+operator|->
+name|a_vp
 argument_list|,
 name|LK_EXCLUSIVE
 operator||
