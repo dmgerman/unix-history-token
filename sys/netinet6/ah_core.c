@@ -944,21 +944,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|const
-name|struct
-name|ah_algorithm
-modifier|*
-name|ah_algorithm_lookup
-parameter_list|(
-name|idx
-parameter_list|)
-name|int
-name|idx
-decl_stmt|;
-block|{
+begin_comment
 comment|/* checksum algorithms */
+end_comment
+
+begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ah_algorithm
 name|ah_algorithms
@@ -1144,8 +1136,23 @@ name|ah_aes_xcbc_mac_loop
 block|,
 name|ah_aes_xcbc_mac_result
 block|, }
-block|, 	}
+block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|const
+name|struct
+name|ah_algorithm
+modifier|*
+name|ah_algorithm_lookup
+parameter_list|(
+name|idx
+parameter_list|)
+name|int
+name|idx
+decl_stmt|;
+block|{
 switch|switch
 condition|(
 name|idx
