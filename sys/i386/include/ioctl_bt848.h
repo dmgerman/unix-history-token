@@ -995,6 +995,43 @@ comment|/* i2c read-write */
 end_comment
 
 begin_comment
+comment|/* Support for radio tuner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_SETMODE
+value|_IOW('x', 58, unsigned int)
+end_define
+
+begin_comment
+comment|/* set radio modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_SETFREQ
+value|_IOW('x', 59, unsigned int)
+end_define
+
+begin_comment
+comment|/* set frequency   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_GETFREQ
+value|_IOR('x', 59, unsigned int)
+end_define
+
+begin_comment
+comment|/* set frequency   */
+end_comment
+
+begin_comment
 comment|/*  XXX - Copied from /sys/pci/brktree_reg.h  */
 end_comment
 
