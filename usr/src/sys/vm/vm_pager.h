@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * get/put return values  * OK	operation was successful  * BAD	specified data was out of the accepted range  * FAIL	specified data was in range, but doesn't exist  * PEND	operations was initiated but not completed  */
+comment|/*  * get/put return values  * OK	 operation was successful  * BAD	 specified data was out of the accepted range  * FAIL	 specified data was in range, but doesn't exist  * PEND	 operations was initiated but not completed  * ERROR error while accessing data that is in range and exists  */
 end_comment
 
 begin_define
@@ -205,6 +205,13 @@ define|#
 directive|define
 name|VM_PAGER_PEND
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_PAGER_ERROR
+value|4
 end_define
 
 begin_define
