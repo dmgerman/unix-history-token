@@ -848,6 +848,17 @@ expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|cdevsw_add
+argument_list|(
+operator|&
+name|ugen_cdevsw
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 block|}
@@ -6102,7 +6113,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|ugen
 argument_list|,
@@ -6111,8 +6122,6 @@ argument_list|,
 name|ugen_driver
 argument_list|,
 name|ugen_devclass
-argument_list|,
-name|ugen_cdevsw
 argument_list|,
 name|usbd_driver_load
 argument_list|,

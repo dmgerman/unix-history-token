@@ -1043,6 +1043,17 @@ name|sc_repdesc_size
 operator|=
 name|size
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|cdevsw_add
+argument_list|(
+operator|&
+name|uhid_cdevsw
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 block|}
@@ -3166,7 +3177,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|uhid
 argument_list|,
@@ -3175,8 +3186,6 @@ argument_list|,
 name|uhid_driver
 argument_list|,
 name|uhid_devclass
-argument_list|,
-name|uhid_cdevsw
 argument_list|,
 name|usbd_driver_load
 argument_list|,
