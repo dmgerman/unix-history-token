@@ -9459,7 +9459,7 @@ operator|=
 literal|0x1f
 expr_stmt|;
 block|}
-comment|/* 	 * QCount mask to deal with broken aic7850s that 	 * sporatically get garbage in the upper bits of 	 * their QCount registers. 	 * 	 * QFullCount to guard against overflowing the 	 * QINFIFO or QOUTFIFO when we are paging SCBs. 	 * 	 * QOUTQCNT is a scratch ram variable that counts 	 * up as the sequencer fills the QOUTFIFO so it 	 * can guard against overflowing the FIFO.  Since 	 * the fifo starts empty, clear it. 	 */
+comment|/* 	 * QCount mask to deal with broken aic7850s that 	 * sporatically get garbage in the upper bits of 	 * their QCount registers. 	 */
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -9469,26 +9469,6 @@ argument_list|,
 name|ahc
 operator|->
 name|qcntmask
-argument_list|)
-expr_stmt|;
-name|ahc_outb
-argument_list|(
-name|ahc
-argument_list|,
-name|QFULLCNT
-argument_list|,
-name|ahc
-operator|->
-name|qfullcount
-argument_list|)
-expr_stmt|;
-name|ahc_outb
-argument_list|(
-name|ahc
-argument_list|,
-name|QOUTQCNT
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* We don't have any waiting selections */
