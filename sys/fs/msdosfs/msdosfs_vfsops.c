@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.1 1994/09/19 15:41:45 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -2474,25 +2474,12 @@ operator|->
 name|mnt_data
 decl_stmt|;
 comment|/* 	 * Fill in the stat block. 	 */
-ifdef|#
-directive|ifdef
-name|COMPAT_09
 name|sbp
 operator|->
 name|f_type
 operator|=
-literal|4
+name|MOUNT_MSDOS
 expr_stmt|;
-else|#
-directive|else
-name|sbp
-operator|->
-name|f_type
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|sbp
 operator|->
 name|f_bsize
