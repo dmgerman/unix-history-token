@@ -257,6 +257,8 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_cnd
