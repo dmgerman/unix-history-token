@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.20 (Berkeley) %G%"
+literal|"@(#)command.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2248,28 +2248,30 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|editfile
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|extern
 name|char
-operator|*
+modifier|*
 name|current_file
-block|;
+decl_stmt|;
 specifier|static
 name|int
 name|dolinenumber
-block|;
+decl_stmt|;
 specifier|static
 name|char
-operator|*
+modifier|*
 name|editor
-block|;
+decl_stmt|;
 name|int
 name|c
-block|;
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2279,11 +2281,11 @@ literal|2
 operator|+
 literal|20
 index|]
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|getenv
 argument_list|()
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|editor
@@ -2320,19 +2322,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 name|dolinenumber
 operator|=
 literal|0
 expr_stmt|;
-end_else
-
-begin_expr_stmt
-unit|} 	if
-operator|(
+block|}
+if|if
+condition|(
 name|dolinenumber
 operator|&&
 operator|(
@@ -2343,7 +2340,7 @@ argument_list|(
 name|MIDDLE
 argument_list|)
 operator|)
-operator|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -2360,9 +2357,6 @@ argument_list|,
 name|current_file
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|else
 operator|(
 name|void
@@ -2378,18 +2372,15 @@ argument_list|,
 name|current_file
 argument_list|)
 expr_stmt|;
-end_else
-
-begin_expr_stmt
 name|lsystem
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_macro
-unit|}  static
 name|showlist
 argument_list|()
 end_macro

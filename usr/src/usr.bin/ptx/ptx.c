@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ptx.c	4.5 (Berkeley) %G%"
+literal|"@(#)ptx.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,26 +399,19 @@ name|char
 modifier|*
 name|pend
 decl_stmt|;
-extern|extern onintr(
-block|)
-function|;
-end_function
-
-begin_decl_stmt
+specifier|extern
+name|void
+name|onintr
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|xfile
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|xptr
 decl_stmt|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 name|signal
@@ -437,9 +430,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|signal
@@ -458,9 +448,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -468,9 +455,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGTERM
@@ -478,26 +462,14 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*	argument decoding	*/
-end_comment
-
-begin_expr_stmt
 name|xfile
 operator|=
 name|_PATH_EIGN
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|argv
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|argc
@@ -742,9 +714,6 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-end_while
-
-begin_if
 if|if
 condition|(
 name|argc
@@ -818,13 +787,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* Default breaks of blank, tab and newline */
-end_comment
-
-begin_expr_stmt
 name|btable
 index|[
 literal|' '
@@ -832,9 +795,6 @@ index|]
 operator|=
 name|SET
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|btable
 index|[
 literal|'\t'
@@ -842,9 +802,6 @@ index|]
 operator|=
 name|SET
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|btable
 index|[
 literal|'\n'
@@ -852,9 +809,6 @@ index|]
 operator|=
 name|SET
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|bfile
@@ -903,13 +857,7 @@ operator|=
 name|SET
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/*	Allocate space for a buffer.  If only or ignore file present 	read it into buffer. Else read in default ignore file 	and put resulting words in buffer. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -932,25 +880,16 @@ argument_list|,
 name|empty
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|bufp
 operator|=
 name|strtbufp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|endbufp
 operator|=
 name|strtbufp
 operator|+
 name|MAX
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -973,9 +912,6 @@ argument_list|,
 name|xfile
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_while
 while|while
 condition|(
 name|bufp
@@ -1056,9 +992,6 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_while
-
-begin_if
 if|if
 condition|(
 name|bufp
@@ -1072,29 +1005,17 @@ argument_list|,
 name|xfile
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|endbufp
 operator|=
 operator|--
 name|bufp
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* open output file for sorting */
-end_comment
-
-begin_expr_stmt
 name|mktemp
 argument_list|(
 name|sortfile
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1117,13 +1038,7 @@ argument_list|,
 name|sortfile
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/*	get a line of data and compare each word for 	inclusion or exclusion in the sort phase */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|infile
@@ -1150,9 +1065,6 @@ argument_list|,
 name|infile
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_while
 while|while
 condition|(
 name|pend
@@ -1165,17 +1077,11 @@ argument_list|(
 name|pend
 argument_list|)
 expr_stmt|;
-end_while
-
-begin_expr_stmt
 name|fclose
 argument_list|(
 name|sortptr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_switch
 switch|switch
 condition|(
 name|pid
@@ -1237,42 +1143,37 @@ name|pid
 condition|)
 empty_stmt|;
 block|}
-end_switch
-
-begin_expr_stmt
 name|getsort
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|unlink
 argument_list|(
 name|sortfile
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  msg
-operator|(
-name|s
-operator|,
-name|arg
-operator|)
+begin_macro
+name|msg
+argument_list|(
+argument|s
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -2660,12 +2561,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|unlink
 argument_list|(
@@ -2678,7 +2577,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|hash

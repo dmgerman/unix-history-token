@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mesg.c	4.6 (Berkeley) %G%"
+literal|"@(#)mesg.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,16 +268,18 @@ comment|/*NOTREACHED*/
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|newmode
 argument_list|(
 argument|m
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|u_short
 name|m
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

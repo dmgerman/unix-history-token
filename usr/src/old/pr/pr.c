@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.7 (Berkeley) %G%"
+literal|"@(#)pr.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,7 @@ block|{
 name|int
 name|nfdone
 decl_stmt|;
-name|int
+name|void
 name|onintr
 parameter_list|()
 function_decl|;
@@ -702,12 +702,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -726,7 +724,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|fixtty

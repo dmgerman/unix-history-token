@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.65 (Berkeley) %G%"
+literal|"@(#)login.c	5.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2406,7 +2406,7 @@ decl_stmt|;
 name|sig_t
 name|oldint
 decl_stmt|;
-name|int
+name|void
 name|sigint
 parameter_list|()
 function_decl|;
@@ -2506,8 +2506,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+name|void
 name|sigint
-argument_list|()
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(

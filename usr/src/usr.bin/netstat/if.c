@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.14 (Berkeley) %G%"
+literal|"@(#)if.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,14 @@ name|ns_phost
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Print a description of the network interfaces.  */
@@ -360,11 +368,6 @@ name|n
 decl_stmt|,
 name|m
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 name|struct
 name|in_addr
 name|inet_makeaddr
@@ -1120,7 +1123,7 @@ decl_stmt|;
 name|int
 name|oldmask
 decl_stmt|;
-name|int
+name|void
 name|catchalarm
 parameter_list|()
 function_decl|;
@@ -1901,19 +1904,17 @@ begin_comment
 comment|/*  * Called if an interval expires before sidewaysintpr has completed a loop.  * Sets a flag to not wait for the alarm.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|catchalarm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signalled
 operator|=
 name|YES
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

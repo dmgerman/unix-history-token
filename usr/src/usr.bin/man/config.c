@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	5.5 (Berkeley) %G%"
+literal|"@(#)config.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,11 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|openconfig
+parameter_list|()
+function_decl|;
 name|openconfig
 argument_list|()
 expr_stmt|;

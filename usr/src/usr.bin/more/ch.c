@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ch.c	5.9 (Berkeley) %G%"
+literal|"@(#)ch.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1406,16 +1406,18 @@ begin_comment
 comment|/*  * Allocate some new buffers.  * The buffers are added to the tail of the buffer chain.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|ch_addbuf
 argument_list|(
 argument|nnew
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|nnew
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

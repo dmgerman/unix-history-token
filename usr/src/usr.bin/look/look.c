@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	4.7 (Berkeley) %G%"
+literal|"@(#)look.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,11 +350,14 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"look: search string is too long.\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"look: search string is too long.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -601,7 +604,6 @@ comment|/*  * getline --  *	get a line  */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|getline
 argument_list|(
 name|buf
@@ -673,7 +675,6 @@ comment|/*  * canon --  *	create canonical version of word  */
 end_comment
 
 begin_expr_stmt
-specifier|static
 name|canon
 argument_list|(
 name|src
@@ -761,24 +762,30 @@ begin_comment
 comment|/*  * usage --  *	print a usage message and die  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: look [-df] string [file]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: look [-df] string [file]\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

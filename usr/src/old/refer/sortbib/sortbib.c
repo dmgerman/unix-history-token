@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sortbib.c	4.3 (Berkeley) %G%"
+literal|"@(#)sortbib.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,10 +131,11 @@ argument_list|()
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|onintr
-argument_list|()
 decl_stmt|;
+name|void
+name|onintr
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|mktemp
@@ -1857,16 +1858,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_comment
+parameter_list|()
 comment|/* remove tempfile in case of interrupt */
-end_comment
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -1886,7 +1882,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|endcomma

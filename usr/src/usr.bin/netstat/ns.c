@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.12 (Berkeley) %G%"
+literal|"@(#)ns.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,24 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
-end_include
 
 begin_include
 include|#
@@ -158,6 +140,30 @@ begin_include
 include|#
 directive|include
 file|<netns/spp_debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -665,6 +671,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
+define|\
 value|((x) ? printf("\t%d %s%s%s -- %s\n",x,y,plural(x),z,"x") : 0)
 end_define
 
@@ -1815,31 +1822,33 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|ns_erputil
 argument_list|(
 argument|z
 argument_list|,
 argument|c
 argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|j
-block|;
+decl_stmt|;
 name|char
 name|codebuf
 index|[
 literal|30
 index|]
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|name
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|where
-block|;
+decl_stmt|;
 for|for
 control|(
 name|j
@@ -1880,9 +1889,6 @@ name|c
 condition|)
 break|break;
 block|}
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|name
@@ -1929,9 +1935,6 @@ index|]
 operator|.
 name|where
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|ANY
 argument_list|(
 name|z
@@ -1941,10 +1944,11 @@ argument_list|,
 name|where
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_decl_stmt
-unit|} static
+specifier|static
 name|struct
 name|sockaddr_ns
 name|ssns
@@ -1968,12 +1972,6 @@ modifier|*
 name|x
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|ns_print
-parameter_list|()
-function_decl|;
 name|struct
 name|sockaddr_ns
 modifier|*
@@ -1982,6 +1980,12 @@ init|=
 operator|&
 name|ssns
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ns_print
+parameter_list|()
+function_decl|;
 name|sns
 operator|->
 name|sns_addr

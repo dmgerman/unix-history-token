@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krb_passwd.c	5.3 (Berkeley) %G%"
+literal|"@(#)krb_passwd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,9 +234,6 @@ name|readfds
 decl_stmt|;
 name|int
 name|rval
-decl_stmt|,
-name|finish
-argument_list|()
 decl_stmt|;
 name|char
 name|pass
@@ -249,6 +246,11 @@ index|[
 name|_PASSWORD_LEN
 index|]
 decl_stmt|;
+specifier|static
+name|void
+name|finish
+parameter_list|()
+function_decl|;
 specifier|static
 name|struct
 name|rlimit
@@ -1553,12 +1555,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|finish
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -1574,7 +1575,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

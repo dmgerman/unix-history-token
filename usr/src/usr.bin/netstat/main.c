@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1584,6 +1584,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"netstat(kvm_openfiles): %s\n"
 argument_list|,
 name|kvm_geterr

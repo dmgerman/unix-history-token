@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)signal.c	5.7 (Berkeley) %G%"
+literal|"@(#)signal.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,10 +152,11 @@ begin_comment
 comment|/*  * "Stop" (^Z) signal handler.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|stop
-argument_list|()
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -166,11 +167,11 @@ name|SIGTSTP
 argument_list|,
 name|stop
 argument_list|)
-block|;
+expr_stmt|;
 name|sigs
 operator||=
 name|S_STOP
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|reading
@@ -179,7 +180,7 @@ name|intread
 argument_list|()
 expr_stmt|;
 block|}
-end_expr_stmt
+end_function
 
 begin_endif
 endif|#
@@ -196,12 +197,10 @@ begin_comment
 comment|/*  * "Window" change handler  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|winch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -225,7 +224,7 @@ name|intread
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_else
 else|#
@@ -285,7 +284,7 @@ end_endif
 
 begin_function
 specifier|static
-name|int
+name|void
 name|purgeandquit
 parameter_list|()
 block|{
@@ -318,10 +317,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|quit
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|on

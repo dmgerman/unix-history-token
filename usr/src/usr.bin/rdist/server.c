@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.14 (Berkeley) %G%"
+literal|"@(#)server.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,7 @@ comment|/* log file for mailing changes */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|cleanup
 parameter_list|()
 function_decl|;
@@ -7924,12 +7924,10 @@ begin_comment
 comment|/*  * Remove temporary files and do any cleanup operations before exiting.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -7945,7 +7943,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|note

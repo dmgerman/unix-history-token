@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)targ.c	5.8 (Berkeley) %G%"
+literal|"@(#)targ.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,7 +921,7 @@ name|Targ_FmtTime
 parameter_list|(
 name|time
 parameter_list|)
-name|int
+name|time_t
 name|time
 decl_stmt|;
 block|{

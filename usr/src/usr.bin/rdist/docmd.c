@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)docmd.c	5.7 (Berkeley) %G%"
+literal|"@(#)docmd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,19 +75,15 @@ name|env
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|void
 name|cleanup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|lostconn
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Do the commands in cmds (initialized by yyparse).  */
@@ -1416,12 +1412,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|lostconn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1445,7 +1439,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|okname

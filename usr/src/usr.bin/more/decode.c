@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)decode.c	5.8 (Berkeley) %G%"
+literal|"@(#)decode.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,19 +533,21 @@ begin_comment
 comment|/*  * Search a command table for the current command string (in kbuf).  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|cmd_search
 argument_list|(
 argument|table
 argument_list|,
 argument|endtable
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|table
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	5.6 (Berkeley) %G%"
+literal|"@(#)compat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|CompatInterrupt
 parameter_list|(
 name|signo
@@ -765,6 +765,10 @@ name|stat
 operator|=
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|reason
 argument_list|)

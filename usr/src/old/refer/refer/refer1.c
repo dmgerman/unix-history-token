@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer1.c	4.4 (Berkeley) %G%"
+literal|"@(#)refer1.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,14 +685,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-specifier|extern
-name|int
-name|intr
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_macro
 name|signals
 argument_list|()
@@ -700,6 +692,10 @@ end_macro
 
 begin_block
 block|{
+name|void
+name|intr
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|signal
@@ -742,12 +738,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|intr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -765,7 +759,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|cleanup

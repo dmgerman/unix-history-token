@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.5 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1350,7 +1350,7 @@ decl_stmt|;
 name|int
 name|oldmask
 decl_stmt|;
-name|int
+name|void
 name|catchalarm
 parameter_list|()
 function_decl|;
@@ -1762,19 +1762,17 @@ begin_comment
 comment|/*  * Called if an interval expires before sidewaysintpr has completed a loop.  * Sets a flag to not wait for the alarm.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|catchalarm
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signalled
 operator|=
 name|YES
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

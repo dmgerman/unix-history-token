@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.14 (Berkeley) %G%"
+literal|"@(#)job.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6180,6 +6180,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)os.c	5.11 (Berkeley) %G%"
+literal|"@(#)os.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -906,8 +906,7 @@ begin_comment
 comment|/*  * Copy a string, truncating to the specified length if necessary.  * Unlike strncpy(), the resulting string is guaranteed to be null-terminated.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|strtcpy
 argument_list|(
 argument|to
@@ -916,14 +915,17 @@ argument|from
 argument_list|,
 argument|len
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|to
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|from
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

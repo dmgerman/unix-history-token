@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crtplot.c	4.1 (Berkeley) %G%"
+literal|"@(#)crtplot.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,7 +277,7 @@ name|char
 modifier|*
 name|sp
 decl_stmt|;
-name|int
+name|void
 name|closepl
 parameter_list|()
 function_decl|;
@@ -308,12 +308,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|closepl
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -347,7 +345,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|plot_move
