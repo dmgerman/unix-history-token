@@ -139,6 +139,14 @@ name|uid_t
 name|user_uid
 decl_stmt|;
 comment|/* UID running this program */
+name|int
+name|return_value
+decl_stmt|;
+comment|/* Value returned by main() */
+name|char
+name|warned_lead_slash
+decl_stmt|;
+comment|/* Already displayed warning */
 comment|/* 	 * Data for various subsystems.  Full definitions are located in 	 * the file where they are used. 	 */
 name|struct
 name|archive_dir

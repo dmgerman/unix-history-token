@@ -1897,7 +1897,11 @@ name|bsdtar
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|bsdtar
+operator|->
+name|return_value
+operator|)
 return|;
 block|}
 comment|/*  * Verify that the mode is correct.  */
