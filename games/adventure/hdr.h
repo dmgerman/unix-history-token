@@ -1078,7 +1078,7 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-value|decr('a'+'+','b'+'-','c'+'#','d'+'&','e'+'%')
+value|decr(a+'+',b+'-',c+'#',d+'&',e+'%')
 name|gid_t
 name|egid
 decl_stmt|;
