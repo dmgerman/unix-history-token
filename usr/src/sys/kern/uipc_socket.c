@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.48	82/08/22	*/
+comment|/*	uipc_socket.c	4.49	82/09/04	*/
 end_comment
 
 begin_include
@@ -1308,6 +1308,13 @@ parameter_list|(
 name|errno
 parameter_list|)
 value|{ error = errno; splx(s); goto release; }
+name|u
+operator|.
+name|u_ru
+operator|.
+name|ru_msgsnd
+operator|++
+expr_stmt|;
 name|again
 label|:
 name|s
@@ -1983,6 +1990,13 @@ goto|goto
 name|restart
 goto|;
 block|}
+name|u
+operator|.
+name|u_ru
+operator|.
+name|ru_msgrcv
+operator|++
+expr_stmt|;
 name|m
 operator|=
 name|so
