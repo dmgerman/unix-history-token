@@ -4,11 +4,11 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 2.4 93/09/29 21:24:30 davidg Exp Locker: davidg $  */
+comment|/*  * $Id: if_ed.c,v 2.5 93/09/30 17:44:14 davidg Exp Locker: davidg $  */
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
+comment|/*  * Modification history  *  * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
 end_comment
 
 begin_include
@@ -753,7 +753,7 @@ name|asic_addr
 operator|+
 name|ED_WD_NIC_OFFSET
 expr_stmt|;
-comment|/* 	 * Attempt to do a checksum over the station address PROM. 	 *	If it fails, it's probably not a SMC/WD board. There 	 *	is a problem with this, though: some clone WD boards 	 *	don't pass the checksum test. Danpex boards for one. 	 *	XXX - We need to do additional checking for this case. 	 */
+comment|/* 	 * Attempt to do a checksum over the station address PROM. 	 *	If it fails, it's probably not a SMC/WD board. There 	 *	is a problem with this, though: some clone WD boards 	 *	don't pass the checksum test. Danpex boards for one. 	 */
 for|for
 control|(
 name|sum
@@ -790,11 +790,40 @@ name|sum
 operator|!=
 name|ED_WD_ROM_CHECKSUM_TOTAL
 condition|)
+block|{
+comment|/* 		 * Checksum is invalid. This often happens with cheap 		 *	WD8003E clones.  In this case, the checksum byte 		 *	(the eighth byte) seems to always be zero. 		 */
+if|if
+condition|(
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_CARD_ID
+argument_list|)
+operator|!=
+name|ED_TYPE_WD8003E
+operator|||
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_WD_PROM
+operator|+
+literal|7
+argument_list|)
+operator|!=
+literal|0
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* reset card to force it into a known state. */
 name|outb
 argument_list|(
