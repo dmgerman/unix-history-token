@@ -936,8 +936,7 @@ specifier|static
 name|int
 name|wi_txerate
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -961,7 +960,7 @@ name|wi_txerate
 argument_list|,
 literal|0
 argument_list|,
-literal|"max tx error msgs/sec; -1 disables msgs"
+literal|"max tx error msgs/sec; 0 to disable msgs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
