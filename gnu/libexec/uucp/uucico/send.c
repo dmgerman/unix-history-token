@@ -21,7 +21,7 @@ name|char
 name|send_rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 1.46 1994/04/10 23:13:29 ian Rel $"
+literal|"$Id: send.c,v 1.2 1994/05/07 18:13:57 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1290,17 +1290,6 @@ operator|->
 name|pseq
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|qtrans
-operator|!=
-name|NULL
-condition|)
-name|usfree_send
-argument_list|(
-name|qtrans
-argument_list|)
-expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -1381,7 +1370,9 @@ name|qinfo
 operator|->
 name|cbytes
 condition|)
-return|return
+block|{
+name|fret
+operator|=
 name|flocal_send_fail
 argument_list|(
 name|qtrans
@@ -1395,7 +1386,16 @@ name|qdaemon
 argument_list|,
 literal|"too large for receiver"
 argument_list|)
+expr_stmt|;
+name|usfree_send
+argument_list|(
+name|qtrans
+argument_list|)
+expr_stmt|;
+return|return
+name|fret
 return|;
+block|}
 comment|/* Make sure the file still exists--it may have been removed between      the conversation startup and now.  After we have sent over the S      command we must give an error if we can't find the file.  */
 if|if
 condition|(
@@ -2362,9 +2362,16 @@ argument_list|,
 name|zerr
 argument_list|)
 condition|)
+block|{
+name|usfree_send
+argument_list|(
+name|qtrans
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 comment|/* If the protocol does not support multiple channels, we can 	 simply remove the transaction.  Otherwise we must make sure 	 the remote side knows that we have finished sending the file 	 data.  If we have already sent the entire file, there will be 	 no confusion.  */
 if|if
@@ -4285,6 +4292,20 @@ decl_stmt|;
 name|boolean
 name|fret
 decl_stmt|;
+name|int
+name|ilocal
+init|=
+name|qtrans
+operator|->
+name|ilocal
+decl_stmt|;
+name|int
+name|iremote
+init|=
+name|qtrans
+operator|->
+name|iremote
+decl_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -4317,6 +4338,18 @@ literal|"RN"
 expr_stmt|;
 break|break;
 block|}
+name|xfree
+argument_list|(
+name|qtrans
+operator|->
+name|pinfo
+argument_list|)
+expr_stmt|;
+name|utransfree
+argument_list|(
+name|qtrans
+argument_list|)
+expr_stmt|;
 name|fret
 operator|=
 call|(
@@ -4332,25 +4365,9 @@ name|qdaemon
 argument_list|,
 name|z
 argument_list|,
-name|qtrans
-operator|->
 name|ilocal
 argument_list|,
-name|qtrans
-operator|->
 name|iremote
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|qtrans
-operator|->
-name|pinfo
-argument_list|)
-expr_stmt|;
-name|utransfree
-argument_list|(
-name|qtrans
 argument_list|)
 expr_stmt|;
 return|return
