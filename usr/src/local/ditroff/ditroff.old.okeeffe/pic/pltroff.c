@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pltroff.c	(Berkeley)	1.4	83/08/15  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
+comment|/* pltroff.c	(Berkeley)	1.5	83/10/07  *	This version has code generators to drive the old-style troff  *	that produces output for the Graphic Systems C/A/T.    *	Very few people actually have a C/A/T; they instead typically  *	use some other typesetter that simulates it.  This is slow and  *	rather silly, but compatibility with the past is important.  *	Or so they say.  Anyway ...   *	The code generator can be turned on to old-style troff by setting  *	the constant OLDTROFF with a #define statement;  this will also  *	have the effect of setting the default typesetter to the C/A/T  *	in a consistent manner.  */
 end_comment
 
 begin_include
@@ -39,6 +39,13 @@ name|OLDSTYLE
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXMOT
+value|8192
+end_define
+
 begin_else
 else|#
 directive|else
@@ -49,6 +56,13 @@ define|#
 directive|define
 name|OLDSTYLE
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXMOT
+value|32768
 end_define
 
 begin_endif
@@ -659,17 +673,17 @@ argument_list|(
 name|xmax
 argument_list|)
 operator|>=
-literal|8192
+name|MAXMOT
 operator|||
 name|yconv
 argument_list|(
 name|ymax
 argument_list|)
 operator|>=
-literal|8192
+name|MAXMOT
 condition|)
 block|{
-comment|/* internal troff limit: 13 bits for motion */
+comment|/* internal troff limit: 15 bits for motion */
 name|fprintf
 argument_list|(
 name|stderr
@@ -2669,9 +2683,19 @@ block|{
 name|hvflush
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|OLDSTYLE
+condition|)
 name|printf
 argument_list|(
 literal|"\\&.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\\D'l 0 0'\n"
 argument_list|)
 expr_stmt|;
 name|flyback
