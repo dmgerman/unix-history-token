@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/pccons.c,v 1.2 1993/07/15 17:53:10 davidg Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/pccons.c,v 1.3 1993/07/24 10:46:18 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -877,7 +877,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|1
+name|IO_KBDSIZE
 operator|)
 return|;
 block|}
