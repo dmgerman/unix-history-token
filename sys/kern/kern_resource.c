@@ -3809,8 +3809,6 @@ argument_list|,
 name|M_PLIMIT
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|limp
@@ -3819,18 +3817,13 @@ name|pl_refcnt
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|limp
 operator|->
 name|pl_mtx
-argument_list|,
-literal|"plimit lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
+operator|=
+name|mtx_pool_alloc
+argument_list|(
+name|mtxpool_sleep
 argument_list|)
 expr_stmt|;
 return|return
@@ -3918,12 +3911,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_destroy
+name|LIM_UNLOCK
 argument_list|(
-operator|&
 name|limp
-operator|->
-name|pl_mtx
 argument_list|)
 expr_stmt|;
 name|free

@@ -132,6 +132,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Kernel shareable process resource limits.  Because this structure  * is moderately large but changes infrequently, it is normally  * shared copy-on-write after forks.  */
 end_comment
@@ -153,21 +159,12 @@ decl_stmt|;
 comment|/* number of references */
 name|struct
 name|mtx
+modifier|*
 name|pl_mtx
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Lock order for operations involving the plimit lock:  *      filedesc<important to avoid deadlocks in the descriptor code>  *      proc  *      plimit  */
-end_comment
 
 begin_define
 define|#
@@ -176,7 +173,7 @@ name|LIM_LOCK
 parameter_list|(
 name|lim
 parameter_list|)
-value|mtx_lock(&(lim)->pl_mtx)
+value|mtx_lock((lim)->pl_mtx)
 end_define
 
 begin_define
@@ -186,7 +183,7 @@ name|LIM_UNLOCK
 parameter_list|(
 name|lim
 parameter_list|)
-value|mtx_unlock(&(lim)->pl_mtx)
+value|mtx_unlock((lim)->pl_mtx)
 end_define
 
 begin_define
@@ -198,7 +195,7 @@ name|lim
 parameter_list|,
 name|f
 parameter_list|)
-value|mtx_assert(&(lim)->pl_mtx, (f))
+value|mtx_assert((lim)->pl_mtx, (f))
 end_define
 
 begin_comment
