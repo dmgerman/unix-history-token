@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.22 1997/11/21 07:43:50 charnier Exp $"
+literal|"$Id: main.c,v 1.23 1998/10/08 23:14:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1850,6 +1850,29 @@ expr_stmt|;
 name|alarm
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|limit
+operator|.
+name|rlim_max
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+name|limit
+operator|.
+name|rlim_cur
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_CPU
+argument_list|,
+operator|&
+name|limit
 argument_list|)
 expr_stmt|;
 name|execle
