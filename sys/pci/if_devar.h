@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1997 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_devar.h,v 1.28 1997/07/03 16:55:07 thomas Exp $  */
+comment|/*	$NetBSD: if_devar.h,v 1.21 1997/10/16 22:02:32 matt Exp $	*/
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1994-1997 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Id: if_devar.h,v 1.28 1997/07/03 16:55:07 thomas Exp  */
 end_comment
 
 begin_if
@@ -27,6 +31,31 @@ argument_list|(
 name|__NetBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|"rnd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NRND
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/rnd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -593,7 +622,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_TXDESCS
-value|128
+value|32
 end_define
 
 begin_define
@@ -838,6 +867,8 @@ struct|struct
 block|{
 enum|enum
 block|{
+name|TULIP_MEDIAINFO_NONE
+block|,
 name|TULIP_MEDIAINFO_SIA
 block|,
 name|TULIP_MEDIAINFO_GPR
@@ -1189,6 +1220,9 @@ comment|/* ZNYX ZX342 10/100 */
 name|TULIP_21140_ASANTE
 block|,
 comment|/* AsanteFast 10/100 */
+name|TULIP_21140_EN1207
+block|,
+comment|/* Accton EN2107 10/100 BNC */
 name|TULIP_21041_GENERIC
 comment|/* Generic 21041 card */
 block|}
@@ -1861,6 +1895,11 @@ directive|define
 name|TULIP_HAVE_STOREFWD
 value|0x00008000
 comment|/* have CMD_STOREFWD */
+define|#
+directive|define
+name|TULIP_HAVE_SIA100
+value|0x00010000
+comment|/* has LS100 in SIA status */
 name|u_int32_t
 name|tulip_intrmask
 decl_stmt|;
@@ -2286,6 +2325,21 @@ index|[
 name|TULIP_TXDESCS
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|NRND
+operator|>
+literal|0
+name|rndsource_element_t
+name|tulip_rndsource
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
