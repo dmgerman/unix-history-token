@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logging.c,v 8.26 2000/04/23 02:19:02 vixie Exp $"
+literal|"$Id: logging.c,v 8.28 2000/12/23 08:14:54 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<isc/memcluster.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/misc.h>
 end_include
 
 begin_include
@@ -400,7 +406,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|rename
+name|isc_movefile
 argument_list|(
 name|old_name
 argument_list|,
@@ -426,7 +432,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|rename
+name|isc_movefile
 argument_list|(
 name|chan
 operator|->

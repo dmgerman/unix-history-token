@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 8.9 1999/10/13 16:39:19 vixie Exp $"
+literal|"$Id: send.c,v 8.10 2000/12/23 08:14:47 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -1493,7 +1499,9 @@ end_comment
 begin_function
 name|void
 name|SendRequest_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ndc.c,v 1.14 2000/02/04 08:28:32 vixie Exp $"
+literal|"$Id: ndc.c,v 1.16 2000/12/23 08:14:45 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -1757,9 +1763,40 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|e_channel
+case|:
+name|fmt
+operator|=
+literal|"(builtin) %s - %s\n"
+expr_stmt|;
+break|break;
+case|case
+name|e_signals
+case|:
+name|fmt
+operator|=
+name|helpfmt
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-name|helpfmt
+name|fmt
 argument_list|,
 literal|"start"
 argument_list|,
@@ -1768,7 +1805,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-name|helpfmt
+name|fmt
 argument_list|,
 literal|"restart"
 argument_list|,
@@ -2097,10 +2134,15 @@ if|if
 condition|(
 name|helping
 condition|)
+block|{
 name|quiet
 operator|=
 literal|0
 expr_stmt|;
+name|builtinhelp
+argument_list|()
+expr_stmt|;
+block|}
 name|channel_loop
 argument_list|(
 name|cmd
@@ -2745,9 +2787,6 @@ name|cmdsig
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|;
-name|int
-name|sig
 decl_stmt|;
 if|if
 condition|(

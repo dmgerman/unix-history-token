@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Perm
 end_comment
 
 begin_comment
-comment|/*  * $Id: misc.h,v 8.2 1999/01/08 19:23:10 vixie Exp $  */
+comment|/*  * $Id: misc.h,v 8.4 2000/12/23 08:14:52 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -26,6 +26,10 @@ name|bitncmp
 value|__bitncmp
 end_define
 
+begin_comment
+comment|/*#define isc_movefile	__isc_movefile */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -43,6 +47,22 @@ name|r
 parameter_list|,
 name|int
 name|n
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|isc_movefile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

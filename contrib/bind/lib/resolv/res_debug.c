@@ -48,7 +48,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 8.34 2000/02/29 05:30:55 vixie Exp $"
+literal|"$Id: res_debug.c,v 8.37 2000/11/13 05:22:53 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2125,6 +2125,14 @@ literal|"ATM address (unimplemented)"
 block|}
 block|,
 block|{
+name|ns_t_tkey
+block|,
+literal|"TKEY"
+block|,
+literal|"tkey"
+block|}
+block|,
+block|{
 name|ns_t_tsig
 block|,
 literal|"TSIG"
@@ -3099,7 +3107,7 @@ name|sprintf
 argument_list|(
 name|retbuf
 argument_list|,
-literal|"%ld.%.2ld"
+literal|"%lu.%.2lu"
 argument_list|,
 name|val
 operator|/
@@ -4419,13 +4427,14 @@ name|char
 name|northsouth
 decl_stmt|,
 name|eastwest
+decl_stmt|,
+modifier|*
+name|altsign
 decl_stmt|;
 name|int
 name|altmeters
 decl_stmt|,
 name|altfrac
-decl_stmt|,
-name|altsign
 decl_stmt|;
 specifier|const
 name|u_int32_t
@@ -4586,8 +4595,7 @@ name|templ
 expr_stmt|;
 name|altsign
 operator|=
-operator|-
-literal|1
+literal|"-"
 expr_stmt|;
 block|}
 else|else
@@ -4600,7 +4608,7 @@ name|referencealt
 expr_stmt|;
 name|altsign
 operator|=
-literal|1
+literal|""
 expr_stmt|;
 block|}
 if|if
@@ -4740,8 +4748,6 @@ name|altval
 operator|/
 literal|100
 operator|)
-operator|*
-name|altsign
 expr_stmt|;
 if|if
 condition|(
@@ -4807,7 +4813,7 @@ name|sprintf
 argument_list|(
 name|ascii
 argument_list|,
-literal|"%d %.2d %.2d.%.3d %c %d %.2d %.2d.%.3d %c %d.%.2dm %sm %sm %sm"
+literal|"%d %.2d %.2d.%.3d %c %d %.2d %.2d.%.3d %c %s%d.%.2dm %sm %sm %sm"
 argument_list|,
 name|latdeg
 argument_list|,
@@ -4828,6 +4834,8 @@ argument_list|,
 name|longsecfrac
 argument_list|,
 name|eastwest
+argument_list|,
+name|altsign
 argument_list|,
 name|altmeters
 argument_list|,

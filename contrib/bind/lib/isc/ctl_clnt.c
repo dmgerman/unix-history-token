@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_clnt.c,v 8.14 1999/10/13 16:39:33 vixie Exp $"
+literal|"$Id: ctl_clnt.c,v 8.15 2000/11/14 01:10:36 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1404,6 +1404,20 @@ name|uap
 operator|=
 name|uap
 expr_stmt|;
+name|INIT_LINK
+argument_list|(
+name|new
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|INIT_LINK
+argument_list|(
+name|new
+argument_list|,
+name|wlink
+argument_list|)
+expr_stmt|;
 name|APPEND
 argument_list|(
 name|ctx
@@ -1425,14 +1439,6 @@ name|ctx
 operator|->
 name|wtran
 argument_list|,
-name|new
-argument_list|,
-name|wlink
-argument_list|)
-expr_stmt|;
-else|else
-name|INIT_LINK
-argument_list|(
 name|new
 argument_list|,
 name|wlink

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_update.c,v 8.42 2000/04/21 06:54:04 vixie Exp $"
+literal|"$Id: db_update.c,v 8.45 2000/12/23 08:14:36 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1981,6 +1981,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -2022,6 +2023,7 @@ else|else
 goto|goto
 name|delete
 goto|;
+block|}
 if|#
 directive|if
 literal|0
@@ -2750,11 +2752,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NS_OPTION_P
-argument_list|(
-name|OPTION_HOSTSTATS
-argument_list|)
-operator|&&
 name|newdp
 operator|->
 name|d_zone
@@ -2773,16 +2770,11 @@ literal|0
 condition|)
 name|newdp
 operator|->
-name|d_ns
+name|d_addr
 operator|=
-name|nameserFind
-argument_list|(
 name|from
 operator|.
 name|sin_addr
-argument_list|,
-name|NS_F_INSERT
-argument_list|)
 expr_stmt|;
 comment|/* Add to end of list, generally preserving order */
 name|newdp
@@ -3940,60 +3932,30 @@ operator|+=
 name|t2
 expr_stmt|;
 comment|/* Replacement */
-name|t1
-operator|=
-name|strlen
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|cp1
-argument_list|)
-expr_stmt|;
-name|t2
-operator|=
-name|strlen
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|cp2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|t1
-operator|!=
-name|t2
-operator|||
-name|memcmp
+name|ns_samename
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cp1
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cp2
-argument_list|,
-name|t1
 argument_list|)
+operator|!=
+literal|1
 condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-name|cp1
-operator|+=
-name|t1
-operator|+
-literal|1
-expr_stmt|;
-name|cp2
-operator|+=
-name|t2
-operator|+
-literal|1
-expr_stmt|;
 comment|/* they all checked out! */
 return|return
 operator|(

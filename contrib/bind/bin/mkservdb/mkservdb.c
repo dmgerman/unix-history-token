@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkservdb.c,v 1.6 1999/10/13 16:39:00 vixie Exp $"
+literal|"$Id: mkservdb.c,v 1.9 2001/01/26 06:54:11 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,12 @@ directive|include
 file|<db.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -137,6 +143,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../../include/irs.h"
 end_include
 
@@ -144,6 +156,12 @@ begin_include
 include|#
 directive|include
 file|"../../lib/irs/irs_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../../include/isc/misc.h"
 end_include
 
 begin_include
@@ -253,6 +271,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -587,6 +606,7 @@ name|R_NOOVERWRITE
 argument_list|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|r
@@ -599,6 +619,10 @@ literal|1
 argument_list|,
 literal|"failed to write %s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 operator|.
 name|data
@@ -609,11 +633,16 @@ name|warnx
 argument_list|(
 literal|"will not overwrite %s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 operator|.
 name|data
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|n
@@ -704,6 +733,7 @@ name|R_NOOVERWRITE
 argument_list|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|r
@@ -716,6 +746,10 @@ literal|1
 argument_list|,
 literal|"failed to write %s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 operator|.
 name|data
@@ -726,11 +760,16 @@ name|warnx
 argument_list|(
 literal|"will not overwrite %s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|key
 operator|.
 name|data
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ports
 operator|=
@@ -948,6 +987,7 @@ name|R_NOOVERWRITE
 argument_list|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|r
@@ -990,6 +1030,7 @@ name|s_proto
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|db
 operator|->
 name|close
@@ -999,7 +1040,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rename
+name|isc_movefile
 argument_list|(
 name|tmpdatabase
 argument_list|,

@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 8.16 2000/05/09 07:10:12 vixie Exp $"
+literal|"$Id: res_init.c,v 8.17 2000/11/08 06:47:37 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1558,6 +1558,25 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  * Last chance to get a nameserver.  This should not normally  * be necessary  */
+ifdef|#
+directive|ifdef
+name|NO_RESOLV_CONF
+if|if
+condition|(
+name|nserv
+operator|==
+literal|0
+condition|)
+name|nserv
+operator|=
+name|get_nameservers
+argument_list|(
+name|statp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|statp

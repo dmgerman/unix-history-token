@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 8.43 2000/04/21 06:54:01 vixie Exp $"
+literal|"$Id: db_dump.c,v 8.48 2000/12/23 08:14:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,27 @@ directive|include
 file|"named.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+end_ifdef
+
+begin_decl_stmt
+name|u_int32_t
+name|db_total_hits
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HITCOUNTS */
+end_comment
+
 begin_function_decl
 specifier|static
 specifier|const
@@ -194,6 +215,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|fwd_dump
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Dump current data base in a format similar to RFC 883.  */
 end_comment
@@ -201,7 +234,9 @@ end_comment
 begin_function
 name|void
 name|doadump
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -236,6 +271,28 @@ operator|&
 name|tt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+if|if
+condition|(
+name|NS_OPTION_P
+argument_list|(
+name|OPTION_HITCOUNT
+argument_list|)
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"; Total hits: %d\n"
+argument_list|,
+name|db_total_hits
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 name|fprintf
 argument_list|(
 name|fp
@@ -659,6 +716,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fwd_dump
 parameter_list|(
@@ -2166,19 +2224,12 @@ argument_list|,
 name|preference
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -2197,20 +2248,12 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -2229,20 +2272,12 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -2261,7 +2296,6 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -3059,7 +3093,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%sLAME=%d"
+literal|"%sLAME=%ld"
 argument_list|,
 name|sep
 argument_list|,
@@ -3082,9 +3116,14 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_ns
+name|d_addr
+operator|.
+name|s_addr
 operator|!=
-name|NULL
+name|htonl
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
 name|fprintf
@@ -3099,9 +3138,7 @@ name|inet_ntoa
 argument_list|(
 name|dp
 operator|->
-name|d_ns
-operator|->
-name|addr
+name|d_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3110,6 +3147,38 @@ operator|=
 literal|" "
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|HITCOUNTS
+if|if
+condition|(
+name|NS_OPTION_P
+argument_list|(
+name|OPTION_HITCOUNT
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%shits=%d"
+argument_list|,
+name|sep
+argument_list|,
+name|dp
+operator|->
+name|d_hitcnt
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|" "
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HITCOUNTS */
 name|putc
 argument_list|(
 literal|'\n'

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.96 2000/04/21 06:54:06 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.102 2000/12/01 05:35:48 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -308,6 +308,35 @@ begin_comment
 comment|/* arbitrary but bigger than most MTU's */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_SYNCDELAY
+value|3
+end_define
+
+begin_comment
+comment|/* Presumed timeout in use by our clients. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SYNCDRAIN
+value|100000
+end_define
+
+begin_comment
+comment|/* How long we'll spin in drain_all_rcvbuf. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_SYNCSTORE
+value|500
+end_define
+
 begin_comment
 comment|/* maximum time to cache negative answers */
 end_comment
@@ -382,6 +411,9 @@ name|main_need_dump
 block|,
 comment|/* doadump() needed. */
 name|main_need_statsdump
+block|,
+comment|/* ns_stats() needed. */
+name|main_need_statsdumpandclear
 block|,
 comment|/* ns_stats() needed. */
 name|main_need_exit
@@ -590,6 +622,17 @@ end_define
 
 begin_comment
 comment|/* Part of IXFR file name logic. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_HITCOUNT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Keep track of each time an RR gets 					 * hit in the database */
 end_comment
 
 begin_define
@@ -2812,12 +2855,12 @@ name|u_int16_t
 name|flags
 decl_stmt|;
 comment|/* see below */
-endif|#
-directive|endif
 name|u_int8_t
 name|xfers
 decl_stmt|;
 comment|/* #/xfers running right now */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -3157,6 +3200,9 @@ name|heartbeat_interval
 decl_stmt|;
 name|u_int
 name|max_ncache_ttl
+decl_stmt|;
+name|u_int
+name|max_host_stats
 decl_stmt|;
 name|u_int
 name|lame_ttl

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ctl.c,v 8.34 2000/04/21 06:54:05 vixie Exp $"
+literal|"$Id: ns_ctl.c,v 8.39 2000/12/19 23:31:38 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1036,7 +1036,7 @@ literal|"stats"
 block|,
 name|verb_stats
 block|,
-literal|"stats"
+literal|"stats [clear]"
 block|}
 block|,
 block|{
@@ -1755,6 +1755,16 @@ name|next
 operator|=
 name|NEXT
 argument_list|(
+name|ctl
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|UNLINK
+argument_list|(
+operator|*
+name|new
+argument_list|,
 name|ctl
 argument_list|,
 name|link
@@ -3794,6 +3804,8 @@ name|e_version
 init|=
 literal|0
 block|,
+name|e_config
+block|,
 name|e_nzones
 block|,
 name|e_debug
@@ -3807,8 +3819,6 @@ block|,
 name|e_qrylog
 block|,
 name|e_priming
-block|,
-name|e_loading
 block|,
 name|e_finito
 block|}
@@ -3931,7 +3941,11 @@ name|pvt
 operator|->
 name|state
 operator|=
-name|e_version
+operator|(
+expr|enum
+name|state
+operator|)
+literal|0
 expr_stmt|;
 operator|(
 name|void
@@ -3982,6 +3996,27 @@ literal|1
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+break|break;
+case|case
+name|e_config
+case|:
+name|sprintf
+argument_list|(
+name|pvt
+operator|->
+name|text
+argument_list|,
+literal|"config (%s) last loaded at age: %24s"
+argument_list|,
+name|conffile
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|confmtime
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4081,38 +4116,27 @@ break|break;
 case|case
 name|e_priming
 case|:
+if|if
+condition|(
+name|priming
+condition|)
 name|sprintf
 argument_list|(
 name|pvt
 operator|->
 name|text
 argument_list|,
-literal|"server is %s priming"
-argument_list|,
-name|priming
-condition|?
-literal|"STILL"
-else|:
-literal|"DONE"
+literal|"server is initialising itself"
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|e_loading
-case|:
+else|else
 name|sprintf
 argument_list|(
 name|pvt
 operator|->
 name|text
 argument_list|,
-literal|"server %s loading its configuration"
-argument_list|,
-name|loading
-condition|?
-literal|"IS"
-else|:
-literal|"IS NOT"
+literal|"server is up and running"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5016,6 +5040,51 @@ modifier|*
 name|uctx
 parameter_list|)
 block|{
+if|if
+condition|(
+name|rest
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|rest
+argument_list|,
+literal|"clear"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ns_need
+argument_list|(
+name|main_need_statsdumpandclear
+argument_list|)
+expr_stmt|;
+name|ctl_response
+argument_list|(
+name|sess
+argument_list|,
+literal|250
+argument_list|,
+literal|"Statistics dump and clear initiated."
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ns_need
 argument_list|(
 name|main_need_statsdump
@@ -5042,6 +5111,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_init.c,v 8.68 2000/04/21 06:54:07 vixie Exp $"
+literal|"$Id: ns_init.c,v 8.70 2000/12/23 08:14:38 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ comment|/*  * Read configuration file and save it as internal state.  */
 end_comment
 
 begin_function
-name|void
+name|time_t
 name|ns_init
 parameter_list|(
 specifier|const
@@ -338,6 +338,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* number of times loaded */
+name|time_t
+name|mtime
+decl_stmt|;
 name|ns_debug
 argument_list|(
 name|ns_log_config
@@ -539,6 +542,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|mtime
+operator|=
 name|load_configuration
 argument_list|(
 name|conffile
@@ -710,6 +715,11 @@ expr_stmt|;
 name|loads
 operator|++
 expr_stmt|;
+return|return
+operator|(
+name|mtime
+operator|)
+return|;
 block|}
 end_function
 
@@ -953,6 +963,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
+operator|(
 name|type
 operator|!=
 name|z_master
@@ -998,6 +1009,7 @@ operator|->
 name|z_serial
 operator|!=
 literal|0
+operator|)
 operator|)
 condition|)
 return|return;
@@ -1774,7 +1786,10 @@ expr_stmt|;
 if|if
 condition|(
 name|s
+operator|!=
+name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1940,6 +1955,7 @@ name|source
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 8.42 2000/07/17 07:36:52 vixie Exp $"
+literal|"$Id: dig.c,v 8.44 2000/12/23 08:14:31 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,13 +281,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|sockFD
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|defsrv
@@ -490,7 +483,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|SetOption
+name|setopt
 parameter_list|(
 specifier|const
 name|char
@@ -762,10 +755,6 @@ literal|120
 index|]
 decl_stmt|,
 modifier|*
-name|msgptr
-decl_stmt|;
-name|char
-modifier|*
 modifier|*
 name|vtmp
 decl_stmt|;
@@ -821,10 +810,6 @@ name|__res_state
 name|res_x
 decl_stmt|,
 name|res_t
-decl_stmt|;
-name|char
-modifier|*
-name|pp
 decl_stmt|;
 name|ns_tsig_key
 name|key
@@ -1409,7 +1394,7 @@ operator|==
 literal|'+'
 condition|)
 block|{
-name|SetOption
+name|setopt
 argument_list|(
 operator|*
 name|argv
@@ -1551,12 +1536,25 @@ block|{
 case|case
 literal|'T'
 case|:
+if|if
+condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"; no arg for -T?\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|wait
 operator|=
 name|atoi
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 expr_stmt|;
@@ -1566,13 +1564,26 @@ literal|'c'
 case|:
 if|if
 condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"; no arg for -c?\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|tmp
 operator|=
 name|atoi
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 operator|)
@@ -1630,13 +1641,26 @@ literal|'t'
 case|:
 if|if
 condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"; no arg for -t?\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|tmp
 operator|=
 name|atoi
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 operator|)
@@ -1714,7 +1738,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|addrc
 operator|=
@@ -1722,6 +1745,8 @@ operator|*
 operator|++
 name|argv
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf
@@ -1838,6 +1863,20 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"; no arg for -p?\n"
+argument_list|)
+expr_stmt|;
 else|else
 name|port
 operator|=
@@ -1846,7 +1885,6 @@ argument_list|(
 name|atoi
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 argument_list|)
@@ -1917,6 +1955,20 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"; no arg for -n?\n"
+argument_list|)
+expr_stmt|;
 else|else
 name|res
 operator|.
@@ -1925,7 +1977,6 @@ operator|=
 name|atoi
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 expr_stmt|;
@@ -1962,11 +2013,27 @@ index|]
 operator|+
 literal|2
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"; no arg for -b?\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 else|else
 name|a
 operator|=
 operator|*
-operator|++
 name|argv
 expr_stmt|;
 if|if
@@ -2058,11 +2125,27 @@ index|]
 operator|+
 literal|2
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+operator|++
+name|argv
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"; no arg for -k?\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 else|else
 name|keyfile
 operator|=
 operator|*
-operator|++
 name|argv
 expr_stmt|;
 name|keyname
@@ -3871,9 +3954,6 @@ operator|&
 name|RES_PRF_STATS
 condition|)
 block|{
-name|time_t
-name|t
-decl_stmt|;
 name|query_time
 operator|=
 name|difftv
@@ -4079,7 +4159,7 @@ name|fputs
 argument_list|(
 literal|"\ notes:	defname and search don't work; use fully-qualified names.\n\ 	this is DiG version "
 name|VSTRING
-literal|"\n\ 	$Id: dig.c,v 8.42 2000/07/17 07:36:52 vixie Exp $\n\ "
+literal|"\n\ 	$Id: dig.c,v 8.44 2000/12/23 08:14:31 vixie Exp $\n\ "
 argument_list|,
 name|stderr
 argument_list|)
@@ -4090,7 +4170,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|SetOption
+name|setopt
 parameter_list|(
 specifier|const
 name|char
@@ -4100,11 +4180,6 @@ parameter_list|)
 block|{
 name|char
 name|option
-index|[
-name|NAME_LEN
-index|]
-decl_stmt|,
-name|type
 index|[
 name|NAME_LEN
 index|]
@@ -5925,10 +6000,6 @@ decl_stmt|;
 name|querybuf
 name|buf
 decl_stmt|;
-name|HEADER
-modifier|*
-name|headerPtr
-decl_stmt|;
 name|int
 name|msglen
 decl_stmt|,
@@ -5986,11 +6057,6 @@ literal|2
 index|]
 index|[
 name|NS_MAXDNAME
-index|]
-decl_stmt|,
-name|file
-index|[
-name|NAME_LEN
 index|]
 decl_stmt|;
 enum|enum
@@ -7550,6 +7616,9 @@ name|printf
 argument_list|(
 literal|";; pid %lu: exit %d, signal %d, core %c\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pid
 argument_list|,
 name|WEXITSTATUS

@@ -16,6 +16,12 @@ name|LIST_H
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<isc/assertions.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -69,7 +75,7 @@ name|elt
 parameter_list|,
 name|link
 parameter_list|)
-value|((elt)->link.prev != (void *)(-1))
+value|((void *)((elt)->link.prev) != (void *)(-1))
 end_define
 
 begin_define
@@ -114,7 +120,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		if ((list).head != NULL) \ 			(list).head->link.prev = (elt); \ 		else \ 			(list).tail = (elt); \ 		(elt)->link.prev = NULL; \ 		(elt)->link.next = (list).head; \ 		(list).head = (elt); \ 	} while (0)
+value|do { \ 		INSIST(!LINKED(elt, link));\ 		if ((list).head != NULL) \ 			(list).head->link.prev = (elt); \ 		else \ 			(list).tail = (elt); \ 		(elt)->link.prev = NULL; \ 		(elt)->link.next = (list).head; \ 		(list).head = (elt); \ 	} while (0)
 end_define
 
 begin_define
@@ -129,7 +135,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		if ((list).tail != NULL) \ 			(list).tail->link.next = (elt); \ 		else \ 			(list).head = (elt); \ 		(elt)->link.prev = (list).tail; \ 		(elt)->link.next = NULL; \ 		(list).tail = (elt); \ 	} while (0)
+value|do { \ 		INSIST(!LINKED(elt, link));\ 		if ((list).tail != NULL) \ 			(list).tail->link.next = (elt); \ 		else \ 			(list).head = (elt); \ 		(elt)->link.prev = (list).tail; \ 		(elt)->link.next = NULL; \ 		(list).tail = (elt); \ 	} while (0)
 end_define
 
 begin_define
@@ -144,7 +150,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		if ((elt)->link.next != NULL) \ 			(elt)->link.next->link.prev = (elt)->link.prev; \ 		else \ 			(list).tail = (elt)->link.prev; \ 		if ((elt)->link.prev != NULL) \ 			(elt)->link.prev->link.next = (elt)->link.next; \ 		else \ 			(list).head = (elt)->link.next; \ 		INIT_LINK(elt, link); \ 	} while (0)
+value|do { \ 		INSIST(LINKED(elt, link));\ 		if ((elt)->link.next != NULL) \ 			(elt)->link.next->link.prev = (elt)->link.prev; \ 		else \ 			(list).tail = (elt)->link.prev; \ 		if ((elt)->link.prev != NULL) \ 			(elt)->link.prev->link.next = (elt)->link.next; \ 		else \ 			(list).head = (elt)->link.next; \ 		INIT_LINK(elt, link); \ 	} while (0)
 end_define
 
 begin_define
@@ -185,7 +191,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		if ((before)->link.prev == NULL) \ 			PREPEND(list, elt, link); \ 		else { \ 			(elt)->link.prev = (before)->link.prev; \ 			(before)->link.prev = (elt); \ 			(elt)->link.prev->link.next = (elt); \ 			(elt)->link.next = (before); \ 		} \ 	} while (0)
+value|do { \ 		INSIST(!LINKED(elt, link));\ 		if ((before)->link.prev == NULL) \ 			PREPEND(list, elt, link); \ 		else { \ 			(elt)->link.prev = (before)->link.prev; \ 			(before)->link.prev = (elt); \ 			(elt)->link.prev->link.next = (elt); \ 			(elt)->link.next = (before); \ 		} \ 	} while (0)
 end_define
 
 begin_define
@@ -202,7 +208,7 @@ parameter_list|,
 name|link
 parameter_list|)
 define|\
-value|do { \ 		if ((after)->link.next == NULL) \ 			APPEND(list, elt, link); \ 		else { \ 			(elt)->link.next = (after)->link.next; \ 			(after)->link.next = (elt); \ 			(elt)->link.next->link.prev = (elt); \ 			(elt)->link.prev = (after); \ 		} \ 	} while (0)
+value|do { \ 		INSIST(!LINKED(elt, link));\ 		if ((after)->link.next == NULL) \ 			APPEND(list, elt, link); \ 		else { \ 			(elt)->link.next = (after)->link.next; \ 			(after)->link.next = (elt); \ 			(elt)->link.next->link.prev = (elt); \ 			(elt)->link.prev = (after); \ 		} \ 	} while (0)
 end_define
 
 begin_define
