@@ -263,16 +263,6 @@ directive|include
 file|<netinet6/ip6protosw.h>
 end_include
 
-begin_comment
-comment|/* we need it for NLOOP. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"loop.h"
-end_include
-
 begin_include
 include|#
 directive|include

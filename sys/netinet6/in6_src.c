@@ -170,12 +170,6 @@ directive|include
 file|<net/net_osdep.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"loop.h"
-end_include
-
 begin_comment
 comment|/*  * Return an IPv6 address, which is the most appropriate for given  * destination and user specified options.  * If necessary, this function lookups the routing table and return  * an entry to the caller for later use.  */
 end_comment
