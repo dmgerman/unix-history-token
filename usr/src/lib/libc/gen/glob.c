@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.4 (Berkeley) %G%"
+literal|"@(#)glob.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Glob: the interface is a superset of the one defined in POSIX 1003.2,  * draft 9.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *	GLOB_QUOTE: escaping convention: \ inhibits any special meaning 		the following character might have (except \ at end of  *		string is kept);  */
+comment|/*  * Glob: the interface is a superset of the one defined in POSIX 1003.2,  * draft 9.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags is pattern contained a globbing character.  * gl_matchc:  *	Number of matches in the current invocation of glob.  */
 end_comment
 
 begin_include
@@ -484,6 +484,9 @@ operator|->
 name|gl_flags
 operator|=
 name|flags
+operator|&
+operator|~
+name|GLOB_MAGCHAR
 expr_stmt|;
 name|pglob
 operator|->
@@ -496,6 +499,12 @@ operator|=
 name|pglob
 operator|->
 name|gl_pathc
+expr_stmt|;
+name|pglob
+operator|->
+name|gl_matchc
+operator|=
+literal|0
 expr_stmt|;
 name|bufnext
 operator|=
@@ -540,6 +549,12 @@ block|{
 case|case
 name|LBRACKET
 case|:
+name|pglob
+operator|->
+name|gl_flags
+operator||=
+name|GLOB_MAGCHAR
+expr_stmt|;
 name|c
 operator|=
 operator|*
@@ -683,6 +698,12 @@ break|break;
 case|case
 name|QUESTION
 case|:
+name|pglob
+operator|->
+name|gl_flags
+operator||=
+name|GLOB_MAGCHAR
+expr_stmt|;
 operator|*
 name|bufnext
 operator|++
@@ -742,6 +763,12 @@ break|break;
 case|case
 name|STAR
 case|:
+name|pglob
+operator|->
+name|gl_flags
+operator||=
+name|GLOB_MAGCHAR
+expr_stmt|;
 operator|*
 name|bufnext
 operator|++
@@ -1115,6 +1142,11 @@ operator|=
 name|EOS
 expr_stmt|;
 block|}
+operator|++
+name|pglob
+operator|->
+name|gl_matchc
+expr_stmt|;
 return|return
 operator|(
 name|globextend
