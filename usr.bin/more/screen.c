@@ -532,12 +532,13 @@ name|CBAUD
 expr_stmt|;
 else|#
 directive|else
-name|ospeed
-operator|=
+name|_set_ospeed
+argument_list|(
 name|cfgetospeed
 argument_list|(
 operator|&
 name|s
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
