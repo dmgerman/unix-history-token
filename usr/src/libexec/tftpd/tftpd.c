@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftpd.c	4.1	82/08/16	*/
+comment|/*	tftpd.c	4.2	82/08/19	*/
 end_comment
 
 begin_comment
@@ -72,13 +72,6 @@ include|#
 directive|include
 file|"tftp.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
 
 begin_decl_stmt
 specifier|extern
