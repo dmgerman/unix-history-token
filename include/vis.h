@@ -141,6 +141,17 @@ begin_comment
 comment|/* inhibit printing '\' */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIS_HTTPSTYLE
+value|0x80
+end_define
+
+begin_comment
+comment|/* http-style escape % HEX HEX */
+end_comment
+
 begin_comment
 comment|/*  * unvis return codes  */
 end_comment
