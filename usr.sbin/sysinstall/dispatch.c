@@ -287,9 +287,9 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"installNovice"
+literal|"installStandard"
 block|,
-name|installNovice
+name|installStandard
 block|}
 block|,
 block|{
