@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_get.c	7.1	%G%"
+literal|"@(#)ex_get.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,7 +246,7 @@ specifier|static
 name|char
 specifier|inline
 index|[
-literal|128
+name|BUFSIZ
 index|]
 expr_stmt|;
 name|struct
@@ -459,6 +459,9 @@ goto|goto
 name|top
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* mjm:	if (read(0, (char *)&lastc, 1) != 1)	CHANGED and added else */
 if|if
 condition|(
@@ -492,6 +495,42 @@ operator|(
 name|lastc
 operator|)
 return|;
+else|#
+directive|else
+name|c
+operator|=
+name|read
+argument_list|(
+literal|0
+argument_list|,
+specifier|inline
+argument_list|,
+sizeof|sizeof
+expr|inline
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|lastc
+operator|=
+name|EOF
+operator|)
+return|;
+name|input
+operator|=
+specifier|inline
+expr_stmt|;
+goto|goto
+name|top
+goto|;
+endif|#
+directive|endif
 block|}
 end_block
 
