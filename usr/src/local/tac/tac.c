@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tac.c	1.4 %G%"
+literal|"@(#)tac.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -435,7 +435,7 @@ end_macro
 
 begin_block
 block|{
-name|int
+name|void
 argument_list|(
 operator|*
 name|sigint
