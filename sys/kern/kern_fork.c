@@ -2555,6 +2555,9 @@ name|sched_lock
 operator|.
 name|mtx_lock
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|curproc
 expr_stmt|;
 name|sched_lock
