@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
 end_include
 
@@ -437,7 +443,7 @@ begin_decl_stmt
 name|char
 name|pasv
 index|[
-literal|64
+name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -846,7 +852,8 @@ comment|/* proxy is unix, can use binary for ascii */
 end_comment
 
 begin_decl_stmt
-name|u_int16_t
+name|char
+modifier|*
 name|ftpport
 decl_stmt|;
 end_decl_stmt
@@ -856,7 +863,8 @@ comment|/* port number to use for ftp connections */
 end_comment
 
 begin_decl_stmt
-name|u_int16_t
+name|char
+modifier|*
 name|httpport
 decl_stmt|;
 end_decl_stmt
@@ -866,7 +874,8 @@ comment|/* port number to use for http connections */
 end_comment
 
 begin_decl_stmt
-name|u_int16_t
+name|char
+modifier|*
 name|gateport
 decl_stmt|;
 end_decl_stmt
@@ -887,7 +896,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|bindto
 decl_stmt|;
 end_decl_stmt

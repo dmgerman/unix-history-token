@@ -563,7 +563,8 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|int
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
