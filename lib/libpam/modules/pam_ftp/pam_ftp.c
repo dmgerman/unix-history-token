@@ -34,12 +34,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<security/_pam_aconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
