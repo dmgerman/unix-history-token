@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ax.c,v 1.4 1999/01/28 00:57:52 dillon Exp $  */
+comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ax.c,v 1.9 1999/02/23 01:44:20 wpaul Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * ASIX AX88140A fast ethernet PCI NIC driver.  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * ASIX AX88140A and AX88141 fast ethernet PCI NIC driver.  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -197,7 +197,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_ax.c,v 1.4 1999/01/28 00:57:52 dillon Exp $"
+literal|"$Id: if_ax.c,v 1.9 1999/02/23 01:44:20 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,6 +224,14 @@ block|,
 name|AX_DEVICEID_AX88140A
 block|,
 literal|"ASIX AX88140A 10/100BaseTX"
+block|}
+block|,
+block|{
+name|AX_VENDORID
+block|,
+name|AX_DEVICEID_AX88140A
+block|,
+literal|"ASIX AX88141 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -4716,6 +4724,9 @@ name|ax_type
 modifier|*
 name|t
 decl_stmt|;
+name|u_int32_t
+name|rev
+decl_stmt|;
 name|t
 operator|=
 name|ax_devs
@@ -4756,6 +4767,27 @@ operator|->
 name|ax_did
 condition|)
 block|{
+comment|/* Check the PCI revision */
+name|rev
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|AX_PCI_REVID
+argument_list|)
+operator|&
+literal|0xFF
+expr_stmt|;
+if|if
+condition|(
+name|rev
+operator|>=
+name|AX_REVISION_88141
+condition|)
+name|t
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|t
@@ -9659,7 +9691,6 @@ block|}
 name|bzero
 argument_list|(
 operator|(
-specifier|volatile
 name|char
 operator|*
 operator|)
@@ -9743,7 +9774,6 @@ block|}
 name|bzero
 argument_list|(
 operator|(
-specifier|volatile
 name|char
 operator|*
 operator|)
