@@ -348,6 +348,13 @@ name|F_VERBOSE
 value|0x100
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_QUIET2
+value|0x200
+end_define
+
 begin_comment
 comment|/*  * MAX_DUP_CHK is the number of bits in received table, i.e. the maximum  * number of received sequence numbers we can keep track of.  Change 128  * to 8192 for complete accuracy...  */
 end_comment
@@ -799,7 +806,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Rc:dfh:i:l:np:qrs:v"
+literal|"QRc:dfh:i:l:np:qrs:v"
 argument_list|)
 operator|)
 operator|!=
@@ -997,6 +1004,14 @@ name|datap
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+name|options
+operator||=
+name|F_QUIET2
 expr_stmt|;
 break|break;
 case|case
@@ -1978,7 +1993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
+comment|/*  * pinger --  *	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in host  * byte-order, to compute the round-trip time.  */
 end_comment
 
 begin_macro
@@ -2775,17 +2790,118 @@ block|}
 block|}
 else|else
 block|{
-comment|/* We've got something other than an ECHOREPLY */
+comment|/* 		 * We've got something other than an ECHOREPLY. 		 * See if it's a reply to something that we sent. 		 * We can compare IP destination, protocol, 		 * and ICMP type and ID. 		 */
+ifndef|#
+directive|ifndef
+name|icmp_data
+name|struct
+name|ip
+modifier|*
+name|oip
+init|=
+operator|&
+name|icp
+operator|->
+name|icmp_ip
+decl_stmt|;
+else|#
+directive|else
+name|struct
+name|ip
+modifier|*
+name|oip
+init|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|icp
+operator|->
+name|icmp_data
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|icmp
+modifier|*
+name|oicmp
+init|=
+operator|(
+expr|struct
+name|icmp
+operator|*
+operator|)
+operator|(
+name|oip
+operator|+
+literal|1
+operator|)
+decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|options
 operator|&
 name|F_VERBOSE
 operator|)
+operator|||
+operator|(
+operator|!
+operator|(
+name|options
+operator|&
+name|F_QUIET2
+operator|)
+operator|&&
+operator|(
+name|oip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|==
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|whereto
+operator|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|)
+operator|&&
+operator|(
+name|oip
+operator|->
+name|ip_p
+operator|==
+name|IPPROTO_ICMP
+operator|)
+operator|&&
+operator|(
+name|oicmp
+operator|->
+name|icmp_type
+operator|==
+name|ICMP_ECHO
+operator|)
+operator|&&
+operator|(
+name|oicmp
+operator|->
+name|icmp_id
+operator|==
+name|ident
+operator|)
+operator|)
 condition|)
-return|return;
+block|{
 operator|(
 name|void
 operator|)
@@ -2810,6 +2926,9 @@ argument_list|(
 name|icp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+return|return;
 block|}
 comment|/* Display any IP options */
 name|cp
@@ -3982,7 +4101,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"frag needed and DF set\n"
+literal|"frag needed and DF set (MTU %d)\n"
+argument_list|,
+name|icp
+operator|->
+name|icmp_nextmtu
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3995,6 +4118,18 @@ operator|)
 name|printf
 argument_list|(
 literal|"Source Route Failed\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ICMP_UNREACH_FILTER_PROHIB
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Communication prohibited by filter\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4383,9 +4518,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX ID + Seq */
 break|break;
-ifdef|#
-directive|ifdef
-name|ICMP_MASKREQ
 case|case
 name|ICMP_MASKREQ
 case|:
@@ -4398,11 +4530,6 @@ literal|"Address Mask Request\n"
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|ICMP_MASKREPLY
 case|case
 name|ICMP_MASKREPLY
 case|:
@@ -4415,8 +4542,30 @@ literal|"Address Mask Reply\n"
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
+case|case
+name|ICMP_ROUTERADVERT
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Router Advertisement\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ICMP_ROUTERSOLICIT
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Router Solicitation\n"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 operator|(
 name|void
@@ -4486,7 +4635,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst Data\n"
+literal|"Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4508,13 +4657,19 @@ name|ip
 operator|->
 name|ip_tos
 argument_list|,
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4525,22 +4680,24 @@ argument_list|(
 literal|"   %1x %04x"
 argument_list|,
 operator|(
-operator|(
+name|ntohl
+argument_list|(
 name|ip
 operator|->
 name|ip_off
-operator|)
+argument_list|)
 operator|&
 literal|0xe000
 operator|)
 operator|>>
 literal|13
 argument_list|,
-operator|(
+name|ntohl
+argument_list|(
 name|ip
 operator|->
 name|ip_off
-operator|)
+argument_list|)
 operator|&
 literal|0x1fff
 argument_list|)
@@ -4560,9 +4717,12 @@ name|ip
 operator|->
 name|ip_p
 argument_list|,
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_sum
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4613,7 +4773,7 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* dump and option bytes */
+comment|/* dump any option bytes */
 while|while
 condition|(
 name|hlen
