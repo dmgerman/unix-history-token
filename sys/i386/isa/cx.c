@@ -143,12 +143,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/devconf.h>
 end_include
 
@@ -156,13 +150,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|oproc_func_t
-value|void(*)(struct tty*)
-end_define
 
 begin_endif
 endif|#
@@ -201,20 +188,6 @@ parameter_list|,
 name|x
 parameter_list|)
 value|((tp)->t_state |= TS_WOPEN,\ 		ttysleep (tp, (caddr_t)&tp->t_rawq, pri, msg, x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|oproc_func_t
-value|int(*)()
-end_define
-
-begin_define
-define|#
-directive|define
-name|timeout_func_t
-value|void(*)()
 end_define
 
 begin_endif
@@ -761,9 +734,6 @@ name|ttyp
 operator|->
 name|t_oproc
 operator|=
-operator|(
-name|oproc_func_t
-operator|)
 name|cxoproc
 expr_stmt|;
 name|c
@@ -5095,21 +5065,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|rint
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|tty
+modifier|*
+parameter_list|)
 init|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|(
-operator|)
-operator|)
 name|linesw
 index|[
 name|tp
@@ -5406,21 +5374,19 @@ name|TS_ISOPEN
 operator|)
 condition|)
 block|{
-name|void
+name|int
 function_decl|(
 modifier|*
 name|rint
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|tty
+modifier|*
+parameter_list|)
 init|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-operator|(
-operator|)
-operator|)
 name|linesw
 index|[
 name|tp
@@ -5970,7 +5936,8 @@ begin_function
 name|void
 name|cxtimeout
 parameter_list|(
-name|caddr_t
+name|void
+modifier|*
 name|a
 parameter_list|)
 block|{
@@ -6106,9 +6073,6 @@ expr_stmt|;
 block|}
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|cxtimeout
 argument_list|,
 literal|0
