@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -987,6 +987,17 @@ end_define
 
 begin_comment
 comment|/* spongy mount (soft for stat and lookup) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_COMPRESS
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Compress nfs rpc xdr */
 end_comment
 
 begin_define
