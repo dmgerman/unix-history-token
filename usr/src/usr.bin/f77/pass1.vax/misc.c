@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * misc.c  *  * Miscellaneous routines for the f77 compiler, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	misc.c,v $  * Revision 3.1  84/10/13  01:53:26  donn  * Installed Jerry Berkman's version; added UofU comment header.  *   */
+comment|/*  * misc.c  *  * Miscellaneous routines for the f77 compiler, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	misc.c,v $  * Revision 5.2  85/12/18  00:35:08  donn  * Prevent core dumps for peculiar statement numbers.  *   * Revision 5.1  85/08/10  03:48:29  donn  * 4.3 alpha  *   * Revision 3.1  84/10/13  01:53:26  donn  * Installed Jerry Berkman's version; added UofU comment header.  *   */
 end_comment
 
 begin_include
@@ -1404,11 +1404,10 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|l
+operator|=
+literal|0
+expr_stmt|;
 block|}
 for|for
 control|(
