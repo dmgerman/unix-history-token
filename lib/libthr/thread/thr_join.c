@@ -52,8 +52,8 @@ parameter_list|)
 block|{
 name|int
 name|ret
-init|=
-literal|0
+decl_stmt|,
+name|dead
 decl_stmt|;
 name|pthread_t
 name|thread
@@ -87,6 +87,18 @@ name|EDEADLK
 operator|)
 return|;
 comment|/* 	 * Search for the specified thread in the list of active threads.  This 	 * is done manually here rather than calling _find_thread() because 	 * the searches in _thread_list and _dead_list (as well as setting up 	 * join/detach state) have to be done atomically. 	 */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+name|dead
+operator|=
+literal|0
+expr_stmt|;
+name|thread
+operator|=
+name|NULL
+expr_stmt|;
 name|_thread_sigblock
 argument_list|()
 expr_stmt|;
@@ -127,7 +139,12 @@ break|break;
 block|}
 block|}
 block|}
-else|else
+if|if
+condition|(
+name|thread
+operator|==
+name|NULL
+condition|)
 block|{
 name|TAILQ_FOREACH
 argument_list|(
@@ -149,6 +166,10 @@ name|PTHREAD_LOCK
 argument_list|(
 name|pthread
 argument_list|)
+expr_stmt|;
+name|dead
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
@@ -247,9 +268,7 @@ comment|/* Check if the thread is not dead: */
 if|if
 condition|(
 operator|!
-name|pthread
-operator|->
-name|isdead
+name|dead
 condition|)
 block|{
 comment|/* Set the running thread to be the joiner: */

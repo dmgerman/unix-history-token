@@ -500,6 +500,11 @@ name|PTHREAD_DETACHED
 operator|)
 operator|==
 literal|0
+operator|||
+operator|!
+name|ptd
+operator|->
+name|isdead
 condition|)
 continue|continue;
 name|TAILQ_REMOVE
