@@ -92,7 +92,7 @@ name|zlncnt
 modifier|*
 name|zlnp
 decl_stmt|;
-name|struct
+name|union
 name|dinode
 modifier|*
 name|dp
@@ -358,9 +358,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DIP
+argument_list|(
 name|dp
-operator|->
+argument_list|,
 name|di_size
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -441,7 +444,7 @@ name|res
 init|=
 name|KEEPON
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blkno
 init|=
 name|idesc

@@ -134,6 +134,10 @@ modifier|*
 name|um_devvp
 decl_stmt|;
 comment|/* block device mounted vnode */
+name|u_long
+name|um_fstype
+decl_stmt|;
+comment|/* type of filesystem */
 name|struct
 name|fs
 modifier|*
@@ -425,6 +429,24 @@ parameter_list|,
 name|cc
 parameter_list|)
 value|VFSTOUFS((aa)->v_mount)->um_vfree(aa, bb, cc)
+end_define
+
+begin_comment
+comment|/*  * Filesystem types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UFS1
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS2
+value|2
 end_define
 
 begin_comment

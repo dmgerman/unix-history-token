@@ -169,9 +169,9 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 modifier|*
 parameter_list|,
 name|int
@@ -366,7 +366,7 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 parameter_list|,
 name|struct
 name|indir
@@ -600,7 +600,7 @@ modifier|*
 parameter_list|,
 name|off_t
 parameter_list|,
-name|long
+name|ino_t
 parameter_list|,
 name|struct
 name|buf
@@ -667,7 +667,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|long
+name|ino_t
 parameter_list|,
 name|int
 parameter_list|)

@@ -209,7 +209,7 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|newblkno
 decl_stmt|;
 block|{
@@ -247,10 +247,10 @@ decl_stmt|;
 name|ufs_lbn_t
 name|lbn
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|newblkno
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|oldblkno
 decl_stmt|;
 name|long
@@ -307,10 +307,10 @@ decl_stmt|;
 name|int
 name|ptrno
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|newblkno
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|oldblkno
 decl_stmt|;
 name|struct
@@ -359,7 +359,7 @@ decl_stmt|;
 name|int
 name|ptrno
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|newblkno
 decl_stmt|;
 block|{

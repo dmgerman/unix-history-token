@@ -777,6 +777,11 @@ name|timespec
 name|va_ctime
 decl_stmt|;
 comment|/* time file changed */
+name|struct
+name|timespec
+name|va_createtime
+decl_stmt|;
+comment|/* time file created */
 name|u_long
 name|va_gen
 decl_stmt|;

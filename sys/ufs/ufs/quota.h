@@ -231,11 +231,11 @@ name|u_int32_t
 name|dqb_curinodes
 decl_stmt|;
 comment|/* current # allocated inodes */
-name|ufs_time_t
+name|int32_t
 name|dqb_btime
 decl_stmt|;
 comment|/* time limit for excessive disk use */
-name|ufs_time_t
+name|int32_t
 name|dqb_itime
 decl_stmt|;
 comment|/* time limit for excessive files */
@@ -557,7 +557,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|long
+name|int64_t
 parameter_list|,
 name|struct
 name|ucred
@@ -576,7 +576,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|long
+name|ino_t
 parameter_list|,
 name|struct
 name|ucred

@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -40,7 +40,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -58,7 +58,7 @@ name|char
 modifier|*
 name|mesg
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|)
 function_decl|;
@@ -161,7 +161,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|struct
+name|union
 name|dinode
 modifier|*
 name|curinode
@@ -244,7 +244,7 @@ parameter_list|,
 name|ino_t
 name|inum
 parameter_list|,
-name|struct
+name|union
 name|dinode
 modifier|*
 name|dp

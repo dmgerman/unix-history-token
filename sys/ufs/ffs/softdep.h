@@ -10,7 +10,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Allocation dependencies are handled with undo/redo on the in-memory  * copy of the data. A particular data dependency is eliminated when  * it is ALLCOMPLETE: that is ATTACHED, DEPCOMPLETE, and COMPLETE.  *   * ATTACHED means that the data is not currently being written to  * disk. UNDONE means that the data has been rolled back to a safe  * state for writing to the disk. When the I/O completes, the data is  * restored to its current form and the state reverts to ATTACHED.  * The data must be locked throughout the rollback, I/O, and roll  * forward so that the rolled back information is never visible to  * user processes. The COMPLETE flag indicates that the item has been  * written. For example, a dependency that requires that an inode be  * written will be marked COMPLETE after the inode has been written  * to disk. The DEPCOMPLETE flag indicates the completion of any other  * dependencies such as the writing of a cylinder group map has been  * completed. A dependency structure may be freed only when both it  * and its dependencies have completed and any rollbacks that are in  * progress have finished as indicated by the set of ALLCOMPLETE flags  * all being set. The two MKDIR flags indicate additional dependencies  * that must be done when creating a new directory. MKDIR_BODY is  * cleared when the directory data block containing the "." and ".."  * entries has been written. MKDIR_PARENT is cleared when the parent  * inode with the increased link count for ".." has been written. When  * both MKDIR flags have been cleared, the DEPCOMPLETE flag is set to  * indicate that the directory dependencies have been completed. The  * writing of the directory inode itself sets the COMPLETE flag which  * then allows the directory entry for the new directory to be written  * to disk. The RMDIR flag marks a dirrem structure as representing  * the removal of a directory rather than a file. When the removal  * dependencies are completed, additional work needs to be done  * (truncation of the "." and ".." entries, an additional decrement  * of the associated inode, and a decrement of the parent inode). The  * DIRCHG flag marks a diradd structure as representing the changing  * of an existing entry rather than the addition of a new one. When  * the update is complete the dirrem associated with the inode for  * the old name must be added to the worklist to do the necessary  * reference count decrement. The GOINGAWAY flag indicates that the  * data structure is frozen from further change until its dependencies  * have been completed and its resources freed after which it will be  * discarded. The IOSTARTED flag prevents multiple calls to the I/O  * start routine from doing multiple rollbacks. The SPACECOUNTED flag  * says that the files space has been accounted to the pending free  * space count. The NEWBLOCK flag marks pagedep structures that have  * just been allocated, so must be claimed by the inode before all  * dependencies are complete. The ONWORKLIST flag shows whether the  * structure is currently linked onto a worklist.  */
+comment|/*  * Allocation dependencies are handled with undo/redo on the in-memory  * copy of the data. A particular data dependency is eliminated when  * it is ALLCOMPLETE: that is ATTACHED, DEPCOMPLETE, and COMPLETE.  *   * ATTACHED means that the data is not currently being written to  * disk. UNDONE means that the data has been rolled back to a safe  * state for writing to the disk. When the I/O completes, the data is  * restored to its current form and the state reverts to ATTACHED.  * The data must be locked throughout the rollback, I/O, and roll  * forward so that the rolled back information is never visible to  * user processes. The COMPLETE flag indicates that the item has been  * written. For example, a dependency that requires that an inode be  * written will be marked COMPLETE after the inode has been written  * to disk. The DEPCOMPLETE flag indicates the completion of any other  * dependencies such as the writing of a cylinder group map has been  * completed. A dependency structure may be freed only when both it  * and its dependencies have completed and any rollbacks that are in  * progress have finished as indicated by the set of ALLCOMPLETE flags  * all being set. The two MKDIR flags indicate additional dependencies  * that must be done when creating a new directory. MKDIR_BODY is  * cleared when the directory data block containing the "." and ".."  * entries has been written. MKDIR_PARENT is cleared when the parent  * inode with the increased link count for ".." has been written. When  * both MKDIR flags have been cleared, the DEPCOMPLETE flag is set to  * indicate that the directory dependencies have been completed. The  * writing of the directory inode itself sets the COMPLETE flag which  * then allows the directory entry for the new directory to be written  * to disk. The RMDIR flag marks a dirrem structure as representing  * the removal of a directory rather than a file. When the removal  * dependencies are completed, additional work needs to be done  * (truncation of the "." and ".." entries, an additional decrement  * of the associated inode, and a decrement of the parent inode). The  * DIRCHG flag marks a diradd structure as representing the changing  * of an existing entry rather than the addition of a new one. When  * the update is complete the dirrem associated with the inode for  * the old name must be added to the worklist to do the necessary  * reference count decrement. The GOINGAWAY flag indicates that the  * data structure is frozen from further change until its dependencies  * have been completed and its resources freed after which it will be  * discarded. The IOSTARTED flag prevents multiple calls to the I/O  * start routine from doing multiple rollbacks. The SPACECOUNTED flag  * says that the files space has been accounted to the pending free  * space count. The NEWBLOCK flag marks pagedep structures that have  * just been allocated, so must be claimed by the inode before all  * dependencies are complete. The INPROGRESS flag marks worklist  * structures that are still on the worklist, but are being considered  * for action by some process. The UFS1FMT flag indicates that the  * inode being processed is a ufs1 format. The ONWORKLIST flag shows  * whether the structure is currently linked onto a worklist.  */
 end_comment
 
 begin_define
@@ -138,6 +138,17 @@ end_define
 
 begin_comment
 comment|/* dirrem, freeblks, freefrag, freefile only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UFS1FMT
+value|0x2000
+end_define
+
+begin_comment
+comment|/* indirdep only */
 end_comment
 
 begin_define
@@ -423,7 +434,7 @@ begin_define
 define|#
 directive|define
 name|DAHASHSZ
-value|6
+value|5
 end_define
 
 begin_define
@@ -532,12 +543,6 @@ name|nlink_t
 name|id_nlinkdelta
 decl_stmt|;
 comment|/* saved effective link count */
-name|struct
-name|dinode
-modifier|*
-name|id_savedino
-decl_stmt|;
-comment|/* saved dinode contents */
 name|LIST_ENTRY
 argument_list|(
 argument|inodedep
@@ -580,9 +585,40 @@ name|allocdirectlst
 name|id_newinoupdt
 decl_stmt|;
 comment|/* updates when inode written */
+union|union
+block|{
+name|struct
+name|ufs1_dinode
+modifier|*
+name|idu_savedino1
+decl_stmt|;
+comment|/* saved ufs1_dinode contents */
+name|struct
+name|ufs2_dinode
+modifier|*
+name|idu_savedino2
+decl_stmt|;
+comment|/* saved ufs2_dinode contents */
+block|}
+name|id_un
+union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|id_savedino1
+value|id_un.idu_savedino1
+end_define
+
+begin_define
+define|#
+directive|define
+name|id_savedino2
+value|id_un.idu_savedino2
+end_define
 
 begin_comment
 comment|/*  * A "newblk" structure is attached to a bmsafemap structure when a block  * or fragment is allocated from a cylinder group. Its state is set to  * DEPCOMPLETE when its cylinder group map is written. It is consumed by  * an associated allocdirect or allocindir allocation which will attach  * themselves to the bmsafemap structure if the newblk's DEPCOMPLETE flag  * is not set (i.e., its cylinder group map has not been written).  */
@@ -605,14 +641,14 @@ modifier|*
 name|nb_fs
 decl_stmt|;
 comment|/* associated filesystem */
-name|ufs_daddr_t
-name|nb_newblkno
-decl_stmt|;
-comment|/* allocated block number */
 name|int
 name|nb_state
 decl_stmt|;
 comment|/* state of bitmap dependency */
+name|ufs2_daddr_t
+name|nb_newblkno
+decl_stmt|;
+comment|/* allocated block number */
 name|LIST_ENTRY
 argument_list|(
 argument|newblk
@@ -702,11 +738,11 @@ name|ufs_lbn_t
 name|ad_lbn
 decl_stmt|;
 comment|/* block within file */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|ad_newblkno
 decl_stmt|;
 comment|/* new value of block pointer */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|ad_oldblkno
 decl_stmt|;
 comment|/* old value of block pointer */
@@ -823,11 +859,11 @@ name|int
 name|ai_offset
 decl_stmt|;
 comment|/* pointer offset in indirect block */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|ai_newblkno
 decl_stmt|;
 comment|/* new block pointer value */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|ai_oldblkno
 decl_stmt|;
 comment|/* old block pointer value */
@@ -879,18 +915,12 @@ name|ff_state
 value|ff_list.wk_state
 comment|/* owning user; should be uid_t */
 name|struct
-name|vnode
-modifier|*
-name|ff_devvp
-decl_stmt|;
-comment|/* filesystem device vnode */
-name|struct
 name|mount
 modifier|*
 name|ff_mnt
 decl_stmt|;
 comment|/* associated mount point */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|ff_blkno
 decl_stmt|;
 comment|/* fragment physical block number */
@@ -923,6 +953,10 @@ name|ino_t
 name|fb_previousinum
 decl_stmt|;
 comment|/* inode of previous owner of blocks */
+name|uid_t
+name|fb_uid
+decl_stmt|;
+comment|/* uid of previous owner of blocks */
 name|struct
 name|vnode
 modifier|*
@@ -943,22 +977,18 @@ name|off_t
 name|fb_newsize
 decl_stmt|;
 comment|/* new file size */
-name|int
+name|ufs2_daddr_t
 name|fb_chkcnt
 decl_stmt|;
 comment|/* used to check cnt of blks released */
-name|uid_t
-name|fb_uid
-decl_stmt|;
-comment|/* uid of previous owner of blocks */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|fb_dblks
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
 comment|/* direct blk ptrs to deallocate */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|fb_iblks
 index|[
 name|NIADDR

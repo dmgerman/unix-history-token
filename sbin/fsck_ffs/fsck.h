@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fsck.h	8.4 (Berkeley) 5/9/95  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Marshall  * Kirk McKusick and Network Associates Laboratories, the Security  * Research Division of Network Associates, Inc. under DARPA/SPAWAR  * contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA CHATS  * research program  *  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fsck.h	8.4 (Berkeley) 5/9/95  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -64,6 +64,35 @@ end_define
 begin_comment
 comment|/* size of buffer to read inodes in pass1 */
 end_comment
+
+begin_union
+union|union
+name|dinode
+block|{
+name|struct
+name|ufs1_dinode
+name|dp1
+decl_stmt|;
+name|struct
+name|ufs2_dinode
+name|dp2
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|DIP
+parameter_list|(
+name|dp
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(dp)->dp1.field : (dp)->dp2.field)
+end_define
 
 begin_comment
 comment|/*  * Each inode on the filesystem is described by the following structure.  * The linkcnt is initially set to the value in the inode. Each time it  * is found during the descent in passes 2, 3, and 4 the count is  * decremented. Any inodes whose count is non-zero after pass 4 needs to  * have its link count adjusted by the value remaining in ino_linkcnt.  */
@@ -203,7 +232,7 @@ modifier|*
 name|b_prev
 decl_stmt|;
 comment|/* free list queue */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|b_bno
 decl_stmt|;
 name|int
@@ -222,11 +251,16 @@ modifier|*
 name|b_buf
 decl_stmt|;
 comment|/* buffer space */
-name|ufs_daddr_t
+name|ufs1_daddr_t
 modifier|*
-name|b_indir
+name|b_indir1
 decl_stmt|;
-comment|/* indirect block */
+comment|/* UFS1 indirect block */
+name|ufs2_daddr_t
+modifier|*
+name|b_indir2
+decl_stmt|;
+comment|/* UFS2 indirect block */
 name|struct
 name|fs
 modifier|*
@@ -240,11 +274,17 @@ name|b_cg
 decl_stmt|;
 comment|/* cylinder group */
 name|struct
-name|dinode
+name|ufs1_dinode
 modifier|*
-name|b_dinode
+name|b_dinode1
 decl_stmt|;
-comment|/* inode block */
+comment|/* UFS1 inode block */
+name|struct
+name|ufs2_dinode
+modifier|*
+name|b_dinode2
+decl_stmt|;
+comment|/* UFS2 inode block */
 block|}
 name|b_un
 union|;
@@ -254,6 +294,19 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IBLK
+parameter_list|(
+name|bp
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(bp)->b_un.b_indir1[i] : (bp)->b_un.b_indir2[i])
+end_define
 
 begin_define
 define|#
@@ -347,7 +400,7 @@ name|initbarea
 parameter_list|(
 name|bp
 parameter_list|)
-value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs_daddr_t)-1; \ 	(bp)->b_flags = 0; \ } while (0)
+value|do { \ 	(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs2_daddr_t)-1; \ 	(bp)->b_flags = 0; \ } while (0)
 end_define
 
 begin_define
@@ -426,11 +479,11 @@ name|ino_t
 name|id_parent
 decl_stmt|;
 comment|/* for DATA nodes, their parent */
-name|int
+name|ufs_lbn_t
 name|id_lbn
 decl_stmt|;
 comment|/* logical block number of current block */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|id_blkno
 decl_stmt|;
 comment|/* current block number being examined */
@@ -438,18 +491,18 @@ name|int
 name|id_numfrags
 decl_stmt|;
 comment|/* number of frags contained in block */
-name|quad_t
+name|off_t
 name|id_filesize
 decl_stmt|;
 comment|/* for DATA nodes, the size of the directory */
+name|ufs2_daddr_t
+name|id_entryno
+decl_stmt|;
+comment|/* for DATA nodes, current entry number */
 name|int
 name|id_loc
 decl_stmt|;
 comment|/* for DATA nodes, current location in dir */
-name|int
-name|id_entryno
-decl_stmt|;
-comment|/* for DATA nodes, current entry number */
 name|struct
 name|direct
 modifier|*
@@ -519,7 +572,7 @@ name|dups
 modifier|*
 name|next
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|dup
 decl_stmt|;
 block|}
@@ -616,7 +669,7 @@ name|u_int
 name|i_numblks
 decl_stmt|;
 comment|/* size of block array in bytes */
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|i_blks
 index|[
 literal|1
@@ -958,7 +1011,7 @@ comment|/* file descriptor for writing filesystem */
 end_comment
 
 begin_decl_stmt
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|maxfsblock
 decl_stmt|;
 end_decl_stmt
@@ -1020,7 +1073,7 @@ comment|/* lost& found directory creation mode */
 end_comment
 
 begin_decl_stmt
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|n_blks
 decl_stmt|;
 end_decl_stmt
@@ -1030,7 +1083,7 @@ comment|/* number of blocks in use */
 end_comment
 
 begin_decl_stmt
-name|ufs_daddr_t
+name|ino_t
 name|n_files
 decl_stmt|;
 end_decl_stmt
@@ -1056,13 +1109,21 @@ name|clearinode
 parameter_list|(
 name|dp
 parameter_list|)
-value|(*(dp) = zino)
+define|\
+value|if (sblock.fs_magic == FS_UFS1_MAGIC) { \ 		(dp)->dp1 = ufs1_zino; \ 	} else { \ 		(dp)->dp2 = ufs2_zino; \ 	}
 end_define
 
 begin_decl_stmt
 name|struct
-name|dinode
-name|zino
+name|ufs1_dinode
+name|ufs1_zino
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ufs2_dinode
+name|ufs2_zino
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,7 +1224,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|allocblk
 parameter_list|(
 name|long
@@ -1212,7 +1273,7 @@ name|char
 modifier|*
 name|type
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|)
 function_decl|;
@@ -1241,7 +1302,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -1270,7 +1331,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -1283,7 +1344,7 @@ begin_function_decl
 name|void
 name|cacheino
 parameter_list|(
-name|struct
+name|union
 name|dinode
 modifier|*
 name|dp
@@ -1333,7 +1394,7 @@ begin_function_decl
 name|int
 name|chkrange
 parameter_list|(
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|,
 name|int
@@ -1356,7 +1417,7 @@ begin_function_decl
 name|int
 name|ckinode
 parameter_list|(
-name|struct
+name|union
 name|dinode
 modifier|*
 name|dp
@@ -1448,7 +1509,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|ufs_daddr_t
+name|ufs1_daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1482,7 +1543,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|ufs_daddr_t
+name|ufs1_daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1498,7 +1559,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|ufs_daddr_t
+name|ufs1_daddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1561,7 +1622,7 @@ begin_function_decl
 name|void
 name|freeblk
 parameter_list|(
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blkno
 parameter_list|,
 name|long
@@ -1593,7 +1654,7 @@ begin_function_decl
 name|int
 name|ftypeok
 parameter_list|(
-name|struct
+name|union
 name|dinode
 modifier|*
 name|dp
@@ -1610,7 +1671,7 @@ name|bufarea
 modifier|*
 name|bp
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -1625,7 +1686,7 @@ name|bufarea
 modifier|*
 name|getdatablk
 parameter_list|(
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blkno
 parameter_list|,
 name|long
@@ -1647,7 +1708,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
+name|union
 name|dinode
 modifier|*
 name|getnextinode
@@ -1676,7 +1737,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
+name|union
 name|dinode
 modifier|*
 name|ginode
@@ -1954,7 +2015,7 @@ name|char
 modifier|*
 name|mesg
 parameter_list|,
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blk
 parameter_list|)
 function_decl|;

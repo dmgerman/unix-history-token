@@ -525,7 +525,7 @@ name|passes
 decl_stmt|,
 name|skipmeta
 decl_stmt|;
-name|daddr_t
+name|ufs_lbn_t
 name|lbn
 decl_stmt|;
 name|wait

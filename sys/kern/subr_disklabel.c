@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
@@ -1563,10 +1569,10 @@ name|DEV_BSIZE
 condition|)
 name|printf
 argument_list|(
-literal|"%ld"
+literal|"%lld"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|sn
 argument_list|)
@@ -1586,10 +1592,10 @@ name|blkdone
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ld of "
+literal|"%lld of "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|sn
 argument_list|)
@@ -1660,17 +1666,17 @@ expr_stmt|;
 comment|/* 		 * XXX should add slice offset and not print the slice, 		 * but we don't know the slice pointer. 		 * XXX should print bp->b_pblkno so that this will work 		 * independent of slices, labels and bad sector remapping, 		 * but some drivers don't set bp->b_pblkno. 		 */
 name|printf
 argument_list|(
-literal|" (%s bn %ld; cn %ld"
+literal|" (%s bn %lld; cn %lld"
 argument_list|,
 name|sname
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|sn
 argument_list|,
 call|(
-name|long
+name|intmax_t
 call|)
 argument_list|(
 name|sn
@@ -1683,9 +1689,6 @@ argument_list|)
 expr_stmt|;
 name|sn
 operator|%=
-operator|(
-name|long
-operator|)
 name|lp
 operator|->
 name|d_secpercyl

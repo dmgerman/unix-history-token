@@ -300,14 +300,16 @@ name|u_int32_t
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
+name|struct
+name|timespec
+name|st_createtimespec
+decl_stmt|;
+comment|/* time of file creation */
 name|int32_t
 name|st_lspare
 decl_stmt|;
 name|int64_t
 name|st_qspare
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -417,11 +419,13 @@ name|u_int32_t
 name|st_gen
 decl_stmt|;
 comment|/* file generation number */
+name|struct
+name|timespec
+name|st_createtimespec
+decl_stmt|;
+comment|/* time of file creation */
 name|int64_t
 name|st_qspare
-index|[
-literal|2
-index|]
 decl_stmt|;
 block|}
 struct|;

@@ -379,13 +379,13 @@ name|KERBEROS
 define|#
 directive|define
 name|optlist
-value|"b:cdf:hikmNRrs:tuvxy"
+value|"b:df:hikmNRrs:tuvxy"
 else|#
 directive|else
 define|#
 directive|define
 name|optlist
-value|"b:cdf:himNRrs:tuvxy"
+value|"b:df:himNRrs:tuvxy"
 endif|#
 directive|endif
 while|while
@@ -457,14 +457,6 @@ literal|1
 argument_list|,
 literal|"block size must be greater than 0"
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
-name|cvtflag
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case

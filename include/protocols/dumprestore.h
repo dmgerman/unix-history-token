@@ -75,6 +75,24 @@ name|NFS_MAGIC
 value|(int)60012
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FS_UFS2_MAGIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FS_UFS2_MAGIC
+value|(int)0x19540119
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -100,11 +118,11 @@ name|c_type
 decl_stmt|;
 comment|/* record type (see below) */
 name|int32_t
-name|c_date
+name|c_old_date
 decl_stmt|;
 comment|/* date of this dump */
 name|int32_t
-name|c_ddate
+name|c_old_ddate
 decl_stmt|;
 comment|/* date of previous dump */
 name|int32_t
@@ -112,7 +130,7 @@ name|c_volume
 decl_stmt|;
 comment|/* dump volume number */
 name|int32_t
-name|c_tapea
+name|c_old_tapea
 decl_stmt|;
 comment|/* logical block of this record */
 name|ino_t
@@ -127,11 +145,99 @@ name|int32_t
 name|c_checksum
 decl_stmt|;
 comment|/* record checksum */
-name|struct
-name|dinode
-name|c_dinode
+comment|/* 		 * Start old dinode structure, expanded for binary 		 * compatibility with UFS1. 		 */
+name|u_int16_t
+name|c_mode
 decl_stmt|;
-comment|/* ownership and mode of inode */
+comment|/* file mode */
+name|int16_t
+name|c_spare1
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* old nlink, ids */
+name|u_int64_t
+name|c_size
+decl_stmt|;
+comment|/* file byte count */
+name|int32_t
+name|c_old_atime
+decl_stmt|;
+comment|/* old last access time, seconds */
+name|int32_t
+name|c_atimensec
+decl_stmt|;
+comment|/* last access time, nanoseconds */
+name|int32_t
+name|c_old_mtime
+decl_stmt|;
+comment|/* old last modified time, secs */
+name|int32_t
+name|c_mtimensec
+decl_stmt|;
+comment|/* last modified time, nanosecs */
+name|int32_t
+name|c_spare2
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* old ctime */
+name|int32_t
+name|c_rdev
+decl_stmt|;
+comment|/* for devices, device number */
+name|int32_t
+name|c_createtimensec
+decl_stmt|;
+comment|/* creation time, nanosecs */
+name|int64_t
+name|c_createtime
+decl_stmt|;
+comment|/* creation time, seconds */
+name|int64_t
+name|c_atime
+decl_stmt|;
+comment|/* last access time, seconds */
+name|int64_t
+name|c_mtime
+decl_stmt|;
+comment|/* last modified time, seconds */
+name|int32_t
+name|c_spare4
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* old block pointers */
+name|u_int32_t
+name|c_file_flags
+decl_stmt|;
+comment|/* status flags (chflags) */
+name|int32_t
+name|c_spare5
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* old blocks, generation number */
+name|u_int32_t
+name|c_uid
+decl_stmt|;
+comment|/* file owner */
+name|u_int32_t
+name|c_gid
+decl_stmt|;
+comment|/* file group */
+name|int32_t
+name|c_spare6
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* previously unused spares */
+comment|/* 		 * End old dinode structure. 		 */
 name|int32_t
 name|c_count
 decl_stmt|;
@@ -180,13 +286,29 @@ name|c_flags
 decl_stmt|;
 comment|/* additional information */
 name|int32_t
+name|c_old_firstrec
+decl_stmt|;
+comment|/* first record on volume */
+name|int64_t
+name|c_date
+decl_stmt|;
+comment|/* date of this dump */
+name|int64_t
+name|c_ddate
+decl_stmt|;
+comment|/* date of previous dump */
+name|int64_t
+name|c_tapea
+decl_stmt|;
+comment|/* logical block of this record */
+name|int64_t
 name|c_firstrec
 decl_stmt|;
 comment|/* first record on volume */
 name|int32_t
 name|c_spare
 index|[
-literal|32
+literal|24
 index|]
 decl_stmt|;
 comment|/* reserved for future uses */
@@ -279,26 +401,8 @@ begin_comment
 comment|/*  * flag values  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DR_NEWHEADER
-value|0x0001
-end_define
-
 begin_comment
-comment|/* new format tape header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DR_NEWINODEFMT
-value|0x0002
-end_define
-
-begin_comment
-comment|/* new format inodes on tape */
+comment|/* None at the moment */
 end_comment
 
 begin_define

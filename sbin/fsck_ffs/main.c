@@ -115,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -335,6 +341,21 @@ argument_list|,
 name|optarg
 argument_list|,
 literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cvtlevel
+operator|<
+literal|3
+condition|)
+name|errx
+argument_list|(
+name|EEXIT
+argument_list|,
+literal|"cannot do level %d conversion"
+argument_list|,
+name|cvtlevel
 argument_list|)
 expr_stmt|;
 break|break;
@@ -649,7 +670,7 @@ modifier|*
 name|filesys
 parameter_list|)
 block|{
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|n_ffree
 decl_stmt|,
 name|n_bfree
@@ -673,16 +694,16 @@ name|zlncnt
 modifier|*
 name|zlnp
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blks
-decl_stmt|;
-name|ufs_daddr_t
-name|files
 decl_stmt|;
 name|int
 name|cylno
 decl_stmt|,
 name|size
+decl_stmt|;
+name|ino_t
+name|files
 decl_stmt|;
 name|cdevname
 operator|=
@@ -1492,7 +1513,7 @@ expr_stmt|;
 block|}
 name|pwarn
 argument_list|(
-literal|"%ld files, %ld used, %ld free "
+literal|"%ld files, %ld used, %qu free "
 argument_list|,
 operator|(
 name|long
@@ -1504,10 +1525,6 @@ name|long
 operator|)
 name|n_blks
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|n_ffree
 operator|+
 name|sblock
@@ -1516,11 +1533,10 @@ name|fs_frag
 operator|*
 name|n_bfree
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
+literal|"(%qu frags, %qu blocks, %.1f%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,
@@ -1749,7 +1765,7 @@ name|cylno
 argument_list|)
 argument_list|)
 argument_list|,
-name|SBSIZE
+name|SBLOCKSIZE
 argument_list|)
 expr_stmt|;
 block|}

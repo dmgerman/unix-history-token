@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by Marshall  * Kirk McKusick and Network Associates Laboratories, the Security  * Research Division of Network Associates, Inc. under DARPA/SPAWAR  * contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA CHATS  * research program  *  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * Copyright (c) 1983, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -216,18 +216,18 @@ value|16384
 end_define
 
 begin_comment
-comment|/*  * Cylinder groups may have up to many cylinders. The actual  * number used depends upon how much information can be stored  * on a single cylinder. The default is to use as many as possible  * cylinders per group.  */
+comment|/*  * Cylinder groups may have up to MAXBLKSPERCG blocks. The actual  * number used depends upon how much information can be stored  * in a cylinder group map which must fit in a single filesystem  * block. The default is to use as many as possible blocks per group.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DESCPG
-value|65536
+name|MAXBLKSPERCG
+value|0x7fffffff
 end_define
 
 begin_comment
-comment|/* desired fs_cpg ("infinity") */
+comment|/* desired fs_fpg ("infinity") */
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ name|MAXBLKPG
 parameter_list|(
 name|bsize
 parameter_list|)
-value|((bsize) / sizeof(daddr_t))
+value|((bsize) / sizeof(ufs2_daddr_t))
 end_define
 
 begin_comment
@@ -255,21 +255,6 @@ name|NFPI
 value|4
 end_define
 
-begin_comment
-comment|/*  * About the same time as the above, we knew what went where on the disks.  * no longer so, so kill the code which finds the different platters too...  * We do this by saying one head, with a lot of sectors on it.  * The number of sectors are used to determine the size of a cyl-group.  * Kirk suggested one or two meg per "cylinder" so we say two.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NSECTORS
-value|4096
-end_define
-
-begin_comment
-comment|/* number of sectors */
-end_comment
-
 begin_decl_stmt
 name|int
 name|Nflag
@@ -278,6 +263,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* run without writing filesystem */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Oflag
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* filesystem format (1 => UFS1, 2 => UFS2) */
 end_comment
 
 begin_decl_stmt
@@ -301,29 +298,17 @@ comment|/* enable soft updates for filesystem */
 end_comment
 
 begin_decl_stmt
-name|u_int
+name|quad_t
 name|fssize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* filesystem size */
+comment|/* file system size */
 end_comment
 
 begin_decl_stmt
-name|u_int
-name|secpercyl
-init|=
-name|NSECTORS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sectors per cylinder */
-end_comment
-
-begin_decl_stmt
-name|u_int
+name|int
 name|sectorsize
 decl_stmt|;
 end_decl_stmt
@@ -368,24 +353,26 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cpg
+name|maxbsize
 init|=
-name|DESCPG
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* cylinders/cylinder group */
+comment|/* maximum clustering */
 end_comment
 
 begin_decl_stmt
 name|int
-name|cpgflg
+name|maxblkspercg
+init|=
+name|MAXBLKSPERCG
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* cylinders/cylinder group flag was given */
+comment|/* maximum blocks per cylinder group */
 end_comment
 
 begin_decl_stmt
@@ -499,17 +486,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|t_or_u_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user has specified -t or -u */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|unlabeled
 decl_stmt|;
 end_decl_stmt
@@ -595,8 +571,6 @@ name|special
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
-name|n
 decl_stmt|;
 name|off_t
 name|mediasize
@@ -612,7 +586,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"NRS:T:Ua:b:c:e:f:g:h:i:m:o:s:u:"
+literal|"NO:RS:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -630,6 +604,36 @@ case|:
 name|Nflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+if|if
+condition|(
+operator|(
+name|Oflag
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|<
+literal|1
+operator|||
+name|Oflag
+operator|>
+literal|2
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: bad filesystem format value"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -740,7 +744,7 @@ case|:
 if|if
 condition|(
 operator|(
-name|cpg
+name|maxblkspercg
 operator|=
 name|atoi
 argument_list|(
@@ -754,13 +758,36 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad cylinders/group"
+literal|"%s: bad blocks per cylinder group"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|cpgflg
-operator|++
+break|break;
+case|case
+literal|'d'
+case|:
+if|if
+condition|(
+operator|(
+name|maxbsize
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|)
+operator|<
+name|MINBSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: bad extent block size"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -992,39 +1019,6 @@ literal|"%s: bad filesystem size"
 argument_list|,
 name|optarg
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'u'
-case|:
-name|t_or_u_flag
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|n
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: bad sectors/track"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|secpercyl
-operator|=
-name|n
 expr_stmt|;
 break|break;
 case|case
@@ -1411,18 +1405,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|secpercyl
-operator|==
-literal|0
-condition|)
-name|secpercyl
-operator|=
-name|lp
-operator|->
-name|d_nsectors
-expr_stmt|;
-if|if
-condition|(
 name|sectorsize
 operator|==
 literal|0
@@ -1511,18 +1493,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|secpercyl
-operator|<=
+name|maxbsize
+operator|==
 literal|0
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: no default #sectors/track"
-argument_list|,
-name|special
-argument_list|)
+name|maxbsize
+operator|=
+name|bsize
 expr_stmt|;
 comment|/* 	 * Maxcontig sets the default for the maximum number of blocks 	 * that may be allocated sequentially. With filesystem clustering 	 * it is possible to allocate contiguous blocks up to the maximum 	 * transfer size permitted by the controller or buffering. 	 */
 if|if
@@ -1540,8 +1517,6 @@ argument_list|,
 name|MAXPHYS
 operator|/
 name|bsize
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1588,41 +1563,6 @@ operator|=
 name|FS_OPTSPACE
 expr_stmt|;
 block|}
-comment|/* 	 * Only complain if -t or -u have been specified; the default 	 * case (4096 sectors per cylinder) is intended to disagree 	 * with the disklabel. 	 */
-if|if
-condition|(
-name|t_or_u_flag
-operator|&&
-name|lp
-operator|!=
-name|NULL
-operator|&&
-name|secpercyl
-operator|!=
-name|lp
-operator|->
-name|d_secpercyl
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s (%d) %s (%lu)\n"
-argument_list|,
-literal|"Warning: calculated sectors per cylinder"
-argument_list|,
-name|secpercyl
-argument_list|,
-literal|"disagrees with disk label"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|lp
-operator|->
-name|d_secpercyl
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|maxbpg
@@ -1658,10 +1598,6 @@ decl_stmt|;
 name|sectorsize
 operator|=
 name|DEV_BSIZE
-expr_stmt|;
-name|secpercyl
-operator|*=
-name|secperblk
 expr_stmt|;
 name|fssize
 operator|*=
@@ -1746,16 +1682,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|const
-name|char
-name|lmsg
-index|[]
-init|=
-literal|"%s: can't read disk label; disk type must be specified"
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|struct
@@ -1942,6 +1868,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\t-O filesystem format: 1 => UFS1, 2 => UFS2\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"\t-R regression test, supress random factors\n"
 argument_list|)
 expr_stmt|;
@@ -1984,7 +1917,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-c cylinders/group\n"
+literal|"\t-c blocks per cylinders group\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-d maximum extent size\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2040,21 +1980,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-s filesystem size (sectors)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-u sectors/cylinder\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-v do not attempt to determine partition name from device name\n"
+literal|"\t-s file systemsize (sectors)\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -99,6 +99,12 @@ directive|include
 file|<ufs/ufs/ufsmount.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufs_extern.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -136,7 +142,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|long
+name|ufs2_daddr_t
 parameter_list|,
 name|struct
 name|ucred
@@ -156,7 +162,7 @@ name|struct
 name|inode
 modifier|*
 parameter_list|,
-name|long
+name|ino_t
 parameter_list|,
 name|struct
 name|ucred
@@ -419,7 +425,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|long
+name|ufs2_daddr_t
 name|change
 decl_stmt|;
 name|struct
@@ -436,11 +442,11 @@ name|dquot
 modifier|*
 name|dq
 decl_stmt|;
-name|int
-name|i
+name|ufs2_daddr_t
+name|ncurblocks
 decl_stmt|;
 name|int
-name|ncurblocks
+name|i
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -816,7 +822,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|long
+name|ufs2_daddr_t
 name|change
 decl_stmt|;
 name|struct
@@ -840,7 +846,7 @@ index|[
 name|type
 index|]
 decl_stmt|;
-name|long
+name|ufs2_daddr_t
 name|ncurblocks
 init|=
 name|dq
@@ -1099,7 +1105,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|long
+name|ino_t
 name|change
 decl_stmt|;
 name|struct
@@ -1116,11 +1122,11 @@ name|dquot
 modifier|*
 name|dq
 decl_stmt|;
-name|int
-name|i
+name|ino_t
+name|ncurinodes
 decl_stmt|;
 name|int
-name|ncurinodes
+name|i
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -1496,7 +1502,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|long
+name|ino_t
 name|change
 decl_stmt|;
 name|struct
@@ -1520,7 +1526,7 @@ index|[
 name|type
 index|]
 decl_stmt|;
-name|long
+name|ino_t
 name|ncurinodes
 init|=
 name|dq

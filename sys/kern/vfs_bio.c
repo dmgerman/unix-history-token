@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
@@ -8460,9 +8466,6 @@ name|size
 expr_stmt|;
 name|offset
 operator|=
-operator|(
-name|off_t
-operator|)
 name|blkno
 operator|*
 name|bsize
@@ -10660,7 +10663,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" iosize: %ld, lblkno: %d, flags: 0x%lx, npages: %d\n"
+literal|" iosize: %ld, lblkno: %lld, flags: 0x%lx, npages: %d\n"
 argument_list|,
 name|bp
 operator|->
@@ -10673,7 +10676,7 @@ operator|.
 name|f_iosize
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|bp
 operator|->
@@ -10691,10 +10694,10 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" VDEV, lblkno: %d, flags: 0x%lx, npages: %d\n"
+literal|" VDEV, lblkno: %lld, flags: 0x%lx, npages: %d\n"
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|bp
 operator|->
@@ -12424,16 +12427,14 @@ argument_list|(
 literal|"vm_hold_free_pages: blkno: %lld, lblkno: %lld\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->
 name|b_blkno
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->
@@ -12598,16 +12599,14 @@ operator|->
 name|b_data
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->
 name|b_blkno
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|bp
 operator|->

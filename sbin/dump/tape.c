@@ -154,7 +154,7 @@ comment|/* size of malloc()ed buffer for tape */
 end_comment
 
 begin_decl_stmt
-name|long
+name|int64_t
 name|lastspclrec
 init|=
 operator|-
@@ -313,7 +313,7 @@ begin_struct
 struct|struct
 name|req
 block|{
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|dblk
 decl_stmt|;
 name|int
@@ -344,10 +344,14 @@ begin_struct
 struct|struct
 name|slave
 block|{
-name|int
+name|int64_t
 name|tapea
 decl_stmt|;
 comment|/* header number at start of this chunk */
+name|int64_t
+name|firstrec
+decl_stmt|;
+comment|/* record number of this block */
 name|int
 name|count
 decl_stmt|;
@@ -369,10 +373,6 @@ name|int
 name|sent
 decl_stmt|;
 comment|/* 1 == we've sent this slave requests */
-name|int
-name|firstrec
-decl_stmt|;
-comment|/* record number of this block */
 name|char
 argument_list|(
 operator|*
@@ -722,7 +722,7 @@ operator|.
 name|dblk
 operator|=
 operator|(
-name|ufs_daddr_t
+name|ufs2_daddr_t
 operator|)
 literal|0
 expr_stmt|;
@@ -789,7 +789,7 @@ begin_function
 name|void
 name|dumpblock
 parameter_list|(
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blkno
 parameter_list|,
 name|int
@@ -800,7 +800,8 @@ name|int
 name|avail
 decl_stmt|,
 name|tpblks
-decl_stmt|,
+decl_stmt|;
+name|ufs2_daddr_t
 name|dblkno
 decl_stmt|;
 name|dblkno
@@ -1018,7 +1019,7 @@ name|blks
 decl_stmt|,
 name|got
 decl_stmt|;
-name|long
+name|int64_t
 name|lastfirstrec
 decl_stmt|;
 name|int
@@ -1815,9 +1816,10 @@ name|i
 decl_stmt|,
 name|size
 decl_stmt|,
-name|savedtapea
-decl_stmt|,
 name|got
+decl_stmt|;
+name|int64_t
+name|savedtapea
 decl_stmt|;
 name|union
 name|u_spcl
@@ -2830,12 +2832,6 @@ name|c_type
 operator|=
 name|TS_TAPE
 expr_stmt|;
-name|spcl
-operator|.
-name|c_flags
-operator||=
-name|DR_NEWHEADER
-expr_stmt|;
 name|writeheader
 argument_list|(
 operator|(
@@ -2845,13 +2841,6 @@ name|slp
 operator|->
 name|inode
 argument_list|)
-expr_stmt|;
-name|spcl
-operator|.
-name|c_flags
-operator|&=
-operator|~
-name|DR_NEWHEADER
 expr_stmt|;
 if|if
 condition|(

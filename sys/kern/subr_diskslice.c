@@ -666,7 +666,7 @@ block|{
 name|daddr_t
 name|blkno
 decl_stmt|;
-name|u_long
+name|daddr_t
 name|endsecno
 decl_stmt|;
 name|daddr_t

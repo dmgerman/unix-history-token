@@ -609,20 +609,6 @@ begin_comment
 comment|/* swap offset */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int32_t
-name|ufs_daddr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int32_t
-name|ufs_time_t
-typedef|;
-end_typedef
-
 begin_ifdef
 ifdef|#
 directive|ifdef

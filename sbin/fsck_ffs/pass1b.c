@@ -104,7 +104,7 @@ name|c
 decl_stmt|,
 name|i
 decl_stmt|;
-name|struct
+name|union
 name|dinode
 modifier|*
 name|dp
@@ -295,7 +295,7 @@ name|res
 init|=
 name|KEEPON
 decl_stmt|;
-name|ufs_daddr_t
+name|ufs2_daddr_t
 name|blkno
 init|=
 name|idesc

@@ -2806,6 +2806,9 @@ name|inode
 operator|.
 name|i_size
 expr_stmt|;
+if|#
+directive|if
+name|should_be_but_is_hard
 name|fsp
 operator|->
 name|rdev
@@ -2814,6 +2817,16 @@ name|inode
 operator|.
 name|i_rdev
 expr_stmt|;
+else|#
+directive|else
+name|fsp
+operator|->
+name|rdev
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1151,40 +1157,21 @@ name|bp
 condition|)
 name|printf
 argument_list|(
-literal|"A+(%ld,%ld,%ld,%d) "
-argument_list|,
-operator|(
-name|long
-operator|)
-name|rbp
-operator|->
-name|b_lblkno
-argument_list|,
-name|rbp
-operator|->
-name|b_bcount
-argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
-name|rbp
-operator|->
-name|b_lblkno
-operator|-
-name|origblkno
-argument_list|)
-argument_list|,
-name|seqcount
+literal|"A+"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"A(%ld,%ld,%ld,%d) "
+literal|"A"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"(%lld,%ld,%lld,%d) "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|rbp
 operator|->
@@ -1195,7 +1182,7 @@ operator|->
 name|b_bcount
 argument_list|,
 call|(
-name|long
+name|intmax_t
 call|)
 argument_list|(
 name|rbp

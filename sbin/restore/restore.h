@@ -10,17 +10,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|cvtflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* convert from old to new tape format */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|bflag
 decl_stmt|;
 end_decl_stmt
@@ -221,17 +210,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* file descriptor for the terminal input */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|oldinofmt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* reading tape with old format inodes */
 end_comment
 
 begin_decl_stmt
@@ -452,25 +430,59 @@ begin_struct
 struct|struct
 name|context
 block|{
+name|short
+name|action
+decl_stmt|;
+comment|/* action being taken on this file */
+name|mode_t
+name|mode
+decl_stmt|;
+comment|/* mode of file */
+name|ino_t
+name|ino
+decl_stmt|;
+comment|/* inumber of file */
+name|uid_t
+name|uid
+decl_stmt|;
+comment|/* file owner */
+name|gid_t
+name|gid
+decl_stmt|;
+comment|/* file group */
+name|int
+name|file_flags
+decl_stmt|;
+comment|/* status flags (chflags) */
+name|int
+name|rdev
+decl_stmt|;
+comment|/* device number of file */
+name|time_t
+name|atime_sec
+decl_stmt|;
+comment|/* access time seconds */
+name|time_t
+name|mtime_sec
+decl_stmt|;
+comment|/* modified time seconds */
+name|int
+name|atime_nsec
+decl_stmt|;
+comment|/* access time nanoseconds */
+name|int
+name|mtime_nsec
+decl_stmt|;
+comment|/* modified time nanoseconds */
+name|off_t
+name|size
+decl_stmt|;
+comment|/* size of file */
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* name of file */
-name|ino_t
-name|ino
-decl_stmt|;
-comment|/* inumber of file */
-name|struct
-name|dinode
-modifier|*
-name|dip
-decl_stmt|;
-comment|/* pointer to inode */
-name|char
-name|action
-decl_stmt|;
-comment|/* action being taken on this file */
 block|}
 name|curfile
 struct|;
