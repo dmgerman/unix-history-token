@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cpufunc.h,v 1.42 1995/12/03 13:45:27 bde Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cpufunc.h,v 1.43 1995/12/19 14:30:42 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1170,47 +1170,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * These functions in support.s are declared elsewhere.  */
-end_comment
-
-begin_comment
-unit|void	bcopy		__P((const void *from, void *to, size_t len)); void	blkclr		__P((void *buf, size_t len)); void	bzero		__P((void *buf, size_t len)); int	copyin		__P((void *udaddr, void *kaddr, size_t len)); int	copyinstr	__P((void *udaddr, void *kaddr, size_t len, 			     size_t *lencopied)); int	copyout		__P((void *kaddr, void *udaddr, size_t len)); int	copystr		__P((void *kfaddr, void *kdaddr, size_t len, 			     size_t *lencopied)); int	fubyte		__P((void *base)); int	fuswintr	__P((void *base)); int	fuibyte		__P((void *base)); int	fuword		__P((void *base)); struct	region_descriptor; void	lgdt		__P((struct region_descriptor *rdp)); void	lidt		__P((struct region_descriptor *rdp)); void	lldt		__P((u_short sel));
-comment|/*  * longjmp() and setjmp() are only used by ddb.  They probably shouldn't  * shouldn't be supported in the kernel.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_comment
-unit|void	longjmp		__P((jmp_buf jb, int rv)); void	ovbcopy		__P((const void *from, void *to, size_t len); int	setjmp		__P((jmp_buf jb)); struct soft_segment_descriptor; union descriptor; int	ssdtosd		__P((struct soft_segment_descriptor *ssdp, 			     union descriptor *sdp)); int	subyte		__P((void *base, int byte)); int	suibyte		__P((void *base, int byte)); int	suswintr	__P((void *base, int word)); int	suword		__P((void *base, int word));
-comment|/*  * These functions in support.s are declared elsewhere, but never used.  * A silly amount of effort went into copyoutstr().  It's not worth  * maintaining, since the string length is usually known so copyout  * works better, or is easy to find so copyout() can be used.  */
-end_comment
-
-begin_comment
-unit|int	copyoutstr	__P((void *kaddr, void *udaddr, size_t len, 			     size_t *lencopied)); int	fuiword		__P((void *base)); int	suiword		__P((void *base, int word));
-comment|/*  * These functions in support.s are also in libkern.a and are declared in  * libkern.h.  * ffs() is built in to gcc-2 and was buggy in gcc-2.4.5 so we may may the  * buggy version if we don't replace it by an inline.  */
-end_comment
-
-begin_endif
-unit|int	bcmp		__P((const void *b1, const void *b2, size_t length)); int	ffs		__P((int mask));
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_comment
 comment|/*  * These variables and functions in support.s are used.  */
