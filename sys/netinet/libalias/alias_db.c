@@ -49,12 +49,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<osreldate.h>
-end_include
-
 begin_comment
 comment|/* BSD network include files */
 end_comment
@@ -6975,27 +6969,6 @@ name|fw_number
 operator|=
 name|fwhole
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|300000
-name|rule
-operator|.
-name|fw_nsp
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 1 source port */
-name|rule
-operator|.
-name|fw_ndp
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 1 destination port */
-else|#
-directive|else
 name|rule
 operator|.
 name|fw_nports
@@ -7003,8 +6976,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Number of source ports; dest ports follow */
-endif|#
-directive|endif
 name|rule
 operator|.
 name|fw_flg
