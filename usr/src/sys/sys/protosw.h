@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.12	82/09/27	*/
+comment|/*	protosw.h	4.13	82/11/03	*/
 end_comment
 
 begin_comment
@@ -714,17 +714,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_decl_stmt
-name|struct
-name|protosw
-name|protosw
-index|[]
-decl_stmt|,
-modifier|*
-name|protoswLAST
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
