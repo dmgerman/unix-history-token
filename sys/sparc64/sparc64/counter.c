@@ -198,7 +198,7 @@ name|sc
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"initialializing counter-timer\n"
+literal|"initializing counter-timer\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn off interrupts from both counters. Set the limit to the maximum 	 * value (although that should not change anything with CTLR_INTEN and 	 * CTLR_PERIODIC off). 	 */
@@ -330,6 +330,7 @@ end_function
 begin_function
 specifier|static
 name|unsigned
+name|int
 name|counter_get_timecount
 parameter_list|(
 name|struct
