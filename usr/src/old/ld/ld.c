@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.1 (Berkeley) %G%"
+literal|"@(#)ld.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2117,23 +2117,6 @@ argument_list|(
 literal|"l.out"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|delarg
-operator|==
-literal|0
-operator|&&
-name|Aflag
-operator|==
-literal|0
-condition|)
-name|chmod
-argument_list|(
-name|ofilename
-argument_list|,
-name|ofilemode
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We have to insure that the last block of the data segment 	 * is allocated a full pagesize block. If the underlying 	 * file system allocates frags that are smaller than pagesize, 	 * a full zero filled pagesize block needs to be allocated so  	 * that when it is demand paged, the paged in block will be  	 * appropriately filled with zeros. 	 */
 name|fstat
 argument_list|(
@@ -2177,6 +2160,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|biofd
@@ -2186,8 +2171,34 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
+operator|!=
+literal|1
+condition|)
+name|delarg
+operator||=
+literal|4
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|delarg
+operator|==
+literal|0
+operator|&&
+name|Aflag
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|ofilename
+argument_list|,
+name|ofilemode
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|delarg
@@ -10298,7 +10309,15 @@ name|bp
 operator|->
 name|b_ptr
 expr_stmt|;
-asm|asm("movc3 r8,(r11),(r7)");
+name|bcopy
+argument_list|(
+name|p
+argument_list|,
+name|to
+argument_list|,
+name|put
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_ptr
