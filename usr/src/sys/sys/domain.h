@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)domain.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)domain.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Structure per communications domain.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_comment
 comment|/*  * Forward structure declarations for function prototypes [sic].  */
@@ -22,11 +16,6 @@ struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -48,6 +37,7 @@ comment|/* initialize domain data structures */
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 expr_stmt|;
