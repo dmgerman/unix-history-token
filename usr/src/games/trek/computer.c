@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)computer.c	4.3 (Berkeley) %G%"
+literal|"@(#)computer.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,9 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|r
 operator|->
 name|value
