@@ -8,8 +8,25 @@ comment|/*  * Mail -- a mail program  *  * This file is included by normal files
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)rcv.h	2.1 %G%";  */
+comment|/*  * Sccs Id = "@(#)rcv.h	2.2 %G%";  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|pdp11
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<whoami.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
