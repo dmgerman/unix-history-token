@@ -309,6 +309,23 @@ argument_list|(
 name|openDirectories
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dot
+operator|==
+operator|(
+name|Path
+operator|*
+operator|)
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot open current directory"
+argument_list|)
+expr_stmt|;
 comment|/*      * We always need to have dot around, so we increment its reference count      * to make sure it's not destroyed.      */
 name|dot
 operator|->
