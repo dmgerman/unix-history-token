@@ -233,6 +233,17 @@ begin_comment
 comment|/* Don't try to prevent foot-shooting */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MD_ASYNC
+value|0x40
+end_define
+
+begin_comment
+comment|/* Don't try to prevent foot-shooting */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
