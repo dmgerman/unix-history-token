@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.25 1995/06/28 16:32:54 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 1.26 1995/07/27 21:38:45 se Exp $ ** **  General subroutines for the PCI bus. **  pci_configure () ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -5102,15 +5102,45 @@ init|=
 block|{
 comment|/*	{0x0e11, "? 0x0e11"},*/
 block|{
+literal|0x1000
+block|,
+literal|"NCR/Symbios"
+block|}
+block|,
+block|{
 literal|0x1002
 block|,
-literal|"ATI TECHNOLOGIES INC"
+literal|"ATI Technologies Inc."
+block|}
+block|,
+block|{
+literal|0x1004
+block|,
+literal|"VLSI"
+block|}
+block|,
+block|{
+literal|0x100B
+block|,
+literal|"National Semiconductor"
+block|}
+block|,
+block|{
+literal|0x100E
+block|,
+literal|"Weitek"
 block|}
 block|,
 block|{
 literal|0x1011
 block|,
-literal|"DIGITAL EQUIPMENT CORPORATION"
+literal|"Digital Equipment Corporation"
+block|}
+block|,
+block|{
+literal|0x1013
+block|,
+literal|"Cirrus Logic"
 block|}
 block|,
 block|{
@@ -5128,27 +5158,85 @@ block|,
 block|{
 literal|0x102B
 block|,
-literal|"MATROX"
+literal|"Matrox"
 block|}
 block|,
-comment|/*	{0x1039, "? 0x1039"},*/
+block|{
+literal|0x102C
+block|,
+literal|"Chips& Technologies"
+block|}
+block|,
+block|{
+literal|0x1039
+block|,
+literal|"Silicon Integrated Systems"
+block|}
+block|,
+block|{
+literal|0x1042
+block|,
+literal|"SMC"
+block|}
+block|,
+block|{
+literal|0x1044
+block|,
+literal|"DPT"
+block|}
+block|,
 block|{
 literal|0x1045
 block|,
 literal|"OPTI"
 block|}
 block|,
-comment|/*	{0x1095, "? 0x1095"},*/
+block|{
+literal|0x104B
+block|,
+literal|"Bus Logic"
+block|}
+block|,
+block|{
+literal|0x1060
+block|,
+literal|"UMC"
+block|}
+block|,
+block|{
+literal|0x1080
+block|,
+literal|"Contaq"
+block|}
+block|,
+block|{
+literal|0x1095
+block|,
+literal|"CMD"
+block|}
+block|,
+block|{
+literal|0x1106
+block|,
+literal|"VIA Technologies"
+block|}
+block|,
 block|{
 literal|0x5333
 block|,
-literal|"S3 INC."
+literal|"S3 Inc."
 block|}
 block|,
 block|{
 literal|0x8086
 block|,
-literal|"INTEL CORPORATION"
+literal|"Intel Corporation"
+block|}
+block|,
+block|{
+literal|0x9004
+block|,
+literal|"Adaptec"
 block|}
 block|,
 block|{
