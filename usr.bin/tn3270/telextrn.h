@@ -68,9 +68,6 @@ decl_stmt|,
 name|StringToTerminal
 argument_list|()
 decl_stmt|,
-name|_putchar
-argument_list|()
-decl_stmt|,
 name|ExitPerror
 argument_list|()
 decl_stmt|,
