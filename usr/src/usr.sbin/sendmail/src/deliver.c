@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	2.1.1.1	%G%"
+literal|"@(#)deliver.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,13 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|GotHdr
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	**  Compute receiving mailer, host, and to addreses. 	**	Do some initialization first.  To is the to address 	**	for error messages. 	*/
@@ -476,6 +483,9 @@ operator|&&
 name|editfcn
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|GotHdr
 condition|)
 name|editfcn
 operator|=

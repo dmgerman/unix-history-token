@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	2.1.1.1	%G%"
+literal|"@(#)collect.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* size of message in bytes */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|GotHdr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if set, "From ..." line exists */
 end_comment
 
 begin_function
@@ -394,19 +404,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|firstline
-operator|&&
 operator|!
-name|SaveFrom
+name|firstline
 condition|)
 block|{
-name|savedate
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 name|fputs
 argument_list|(
 literal|">"
@@ -415,6 +416,11 @@ name|tf
 argument_list|)
 expr_stmt|;
 name|MsgSize
+operator|++
+expr_stmt|;
+block|}
+else|else
+name|GotHdr
 operator|++
 expr_stmt|;
 block|}
