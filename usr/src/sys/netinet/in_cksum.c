@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_cksum.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_cksum.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/types.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_comment
@@ -37,7 +37,7 @@ value|{l_util.l = sum; sum = l_util.s[0] + l_util.s[1]; ADDCARRY(sum);}
 end_define
 
 begin_expr_stmt
-name|in_cksum_c
+name|in_cksum
 argument_list|(
 name|m
 argument_list|,
