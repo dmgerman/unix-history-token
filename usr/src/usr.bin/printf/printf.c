@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.5 (Berkeley) %G%"
+literal|"@(#)printf.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,7 +296,10 @@ operator|*
 name|fmt
 operator|==
 literal|'%'
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|*
 operator|++
 name|fmt
@@ -304,6 +307,26 @@ operator|!=
 literal|'%'
 condition|)
 break|break;
+operator|*
+name|fmt
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|start
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
 block|}
 comment|/* skip to field width */
 for|for
