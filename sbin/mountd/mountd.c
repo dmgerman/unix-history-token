@@ -4345,7 +4345,9 @@ name|umntall_each
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
