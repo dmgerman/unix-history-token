@@ -204,16 +204,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|bdgtakeifaces
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|flush_table
 parameter_list|(
 name|void
@@ -240,6 +230,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bdg_initialized
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1773,6 +1772,9 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|bdg_initialized
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|bdg_table
@@ -1889,6 +1891,12 @@ name|bdg_softc
 modifier|*
 name|bp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|bdg_initialized
+condition|)
+return|return;
 name|bdg_ports
 operator|=
 literal|0

@@ -3344,6 +3344,14 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BRIDGE
+name|bdgtakeifaces
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3396,6 +3404,14 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BRIDGE
+name|bdgtakeifaces
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

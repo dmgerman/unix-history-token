@@ -75,6 +75,16 @@ name|bdg_ports
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|bdgtakeifaces
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * out of the 6 bytes, the last ones are more "variable". Since  * we are on a little endian machine, we have to do some gimmick...  */
 end_comment
