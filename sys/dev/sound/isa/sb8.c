@@ -3635,7 +3635,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld drq %ld bufsz %u"
+literal|"at io 0x%lx irq %ld drq %ld bufsz %u %s"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -3661,6 +3661,11 @@ argument_list|,
 name|sb
 operator|->
 name|bufsize
+argument_list|,
+name|PCM_KLDSTRING
+argument_list|(
+name|snd_sb8
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -3322,7 +3322,7 @@ name|status
 argument_list|,
 literal|64
 argument_list|,
-literal|"at %s 0x%lx irq %ld"
+literal|"at %s 0x%lx irq %ld %s"
 argument_list|,
 operator|(
 name|fm801
@@ -3348,6 +3348,11 @@ argument_list|(
 name|fm801
 operator|->
 name|irq
+argument_list|)
+argument_list|,
+name|PCM_KLDSTRING
+argument_list|(
+name|snd_fm801
 argument_list|)
 argument_list|)
 expr_stmt|;

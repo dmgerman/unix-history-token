@@ -5790,7 +5790,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at %s 0x%lx irq %ld"
+literal|"at %s 0x%lx irq %ld %s"
 argument_list|,
 operator|(
 name|es
@@ -5816,6 +5816,11 @@ argument_list|(
 name|es
 operator|->
 name|irq
+argument_list|)
+argument_list|,
+name|PCM_KLDSTRING
+argument_list|(
+name|snd_es137x
 argument_list|)
 argument_list|)
 expr_stmt|;

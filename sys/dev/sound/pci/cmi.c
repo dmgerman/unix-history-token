@@ -4413,7 +4413,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld"
+literal|"at io 0x%lx irq %ld %s"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -4427,6 +4427,11 @@ argument_list|(
 name|sc
 operator|->
 name|irq
+argument_list|)
+argument_list|,
+name|PCM_KLDSTRING
+argument_list|(
+name|snd_cmi
 argument_list|)
 argument_list|)
 expr_stmt|;

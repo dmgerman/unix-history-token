@@ -1999,7 +1999,7 @@ argument_list|,
 sizeof|sizeof
 name|status
 argument_list|,
-literal|"at %s 0x%lx irq %ld"
+literal|"at %s 0x%lx irq %ld %s"
 argument_list|,
 operator|(
 name|aui
@@ -2025,6 +2025,11 @@ argument_list|(
 name|aui
 operator|->
 name|aui_irq
+argument_list|)
+argument_list|,
+name|PCM_KLDSTRING
+argument_list|(
+name|snd_au88x0
 argument_list|)
 argument_list|)
 expr_stmt|;
