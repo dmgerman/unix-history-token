@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.13 (Berkeley) %G%"
+literal|"@(#)headers.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -2285,7 +2291,12 @@ block|{
 name|char
 name|buf
 index|[
+name|MAX
+argument_list|(
+name|MAXFIELD
+argument_list|,
 name|BUFSIZ
+argument_list|)
 index|]
 decl_stmt|;
 specifier|register
@@ -2308,7 +2319,12 @@ function_decl|;
 name|char
 name|obuf
 index|[
+name|MAX
+argument_list|(
+name|MAXFIELD
+argument_list|,
 name|MAXLINE
+argument_list|)
 index|]
 decl_stmt|;
 for|for
