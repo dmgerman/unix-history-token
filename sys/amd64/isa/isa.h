@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: isa.h,v 1.13 1995/01/25 20:11:50 jmz Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: isa.h,v 1.14 1995/02/25 20:26:14 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IO_BEGIN
+name|IO_ISABEGIN
 end_ifndef
 
 begin_define
@@ -229,7 +229,7 @@ begin_define
 define|#
 directive|define
 name|IO_WD1
-value|0x1f0
+value|0x1F0
 end_define
 
 begin_comment
@@ -247,6 +247,10 @@ begin_comment
 comment|/* Game Controller */
 end_comment
 
+begin_comment
+comment|/* 0x202 (?) - 0x26F Open */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -261,8 +265,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_LPT2
+value|0x278
+end_define
+
+begin_comment
+comment|/* Parallel Port #2 */
+end_comment
+
+begin_comment
+comment|/* 0x280 - 0x2DF Open */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_GSC2
-value|0x2e0
+value|0x2E0
 end_define
 
 begin_comment
@@ -272,41 +291,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_GSC3
-value|0x370
-end_define
-
-begin_comment
-comment|/* GeniScan GS-4500 addr.grp. 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_GSC4
-value|0x3e0
-end_define
-
-begin_comment
-comment|/* GeniScan GS-4500 addr.grp. 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_LPT2
-value|0x278
-end_define
-
-begin_comment
-comment|/* Parallel Port #2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_COM4
-value|0x2e8
+value|0x2E8
 end_define
 
 begin_comment
@@ -321,7 +307,7 @@ begin_define
 define|#
 directive|define
 name|IO_COM2
-value|0x2f8
+value|0x2F8
 end_define
 
 begin_comment
@@ -330,17 +316,6 @@ end_comment
 
 begin_comment
 comment|/* 0x300 - 0x32F Open */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_BT0
-value|0x330
-end_define
-
-begin_comment
-comment|/* bustek 742a default addr. */
 end_comment
 
 begin_define
@@ -357,23 +332,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_BT0
+value|0x330
+end_define
+
+begin_comment
+comment|/* bustek 742a default addr. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_UHA0
 value|0x330
 end_define
 
 begin_comment
 comment|/* ultrastore 14f default addr. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_BT1
-value|0x334
-end_define
-
-begin_comment
-comment|/* bustek 742a default addr. */
 end_comment
 
 begin_define
@@ -387,8 +362,30 @@ begin_comment
 comment|/* adaptec 1542 default addr. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_BT1
+value|0x334
+end_define
+
 begin_comment
-comment|/* 0x338 - 0x36F Open */
+comment|/* bustek 742a default addr. */
+end_comment
+
+begin_comment
+comment|/* 0x340 - 0x36F Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_GSC3
+value|0x370
+end_define
+
+begin_comment
+comment|/* GeniScan GS-4500 addr.grp. 3 */
 end_comment
 
 begin_define
@@ -461,15 +458,22 @@ begin_comment
 comment|/* CGA Ports */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_GSC4
+value|0x3E0
+end_define
+
 begin_comment
-comment|/* 0x3E0 - 0x3E7 Open */
+comment|/* GeniScan GS-4500 addr.grp. 4 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IO_COM3
-value|0x3e8
+value|0x3E8
 end_define
 
 begin_comment
@@ -480,7 +484,7 @@ begin_define
 define|#
 directive|define
 name|IO_FD1
-value|0x3f0
+value|0x3F0
 end_define
 
 begin_comment
@@ -491,7 +495,7 @@ begin_define
 define|#
 directive|define
 name|IO_COM1
-value|0x3f8
+value|0x3F8
 end_define
 
 begin_comment
@@ -506,17 +510,20 @@ value|0x3FF
 end_define
 
 begin_comment
-comment|/* - 0x3FF End of I/O Registers */
+comment|/* End (actually Max) of I/O Regs */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|IO_ISABEGIN
 end_endif
 
 begin_comment
-comment|/*  * Input / Output Port Sizes - these are from several sources, and tend  * to be the larger of what was found, ie COM ports can be 4, but some  * boards do not fully decode the address, thus 8 ports are used.  */
+comment|/* IO_ISABEGIN */
+end_comment
+
+begin_comment
+comment|/*  * Input / Output Port Sizes - these are from several sources, and tend  * to be the larger of what was found.  */
 end_comment
 
 begin_ifndef
@@ -539,7 +546,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* 8250, 16X50 com controllers (4?) */
+comment|/* 8250, 16x50 com controllers */
 end_comment
 
 begin_define
@@ -741,7 +748,7 @@ begin_define
 define|#
 directive|define
 name|IOM_BEGIN
-value|0x0a0000
+value|0x0A0000
 end_define
 
 begin_comment
@@ -769,8 +776,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|IOM_BEGIN
 end_endif
+
+begin_comment
+comment|/* IOM_BEGIN */
+end_comment
 
 begin_comment
 comment|/*  * RAM Physical Address Space (ignoring the above mentioned "hole")  */
@@ -814,8 +824,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|RAM_BEGIN
 end_endif
+
+begin_comment
+comment|/* RAM_BEGIN */
+end_comment
 
 begin_comment
 comment|/*  * Oddball Physical Memory Addresses  */
@@ -831,7 +844,7 @@ begin_define
 define|#
 directive|define
 name|COMPAQ_RAMRELOC
-value|0x80c00000
+value|0x80C00000
 end_define
 
 begin_comment
@@ -842,7 +855,7 @@ begin_define
 define|#
 directive|define
 name|COMPAQ_RAMSETUP
-value|0x80c00002
+value|0x80C00002
 end_define
 
 begin_comment
@@ -874,8 +887,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|COMPAQ_RAMRELOC
 end_endif
+
+begin_comment
+comment|/* COMPAQ_RAMRELOC */
+end_comment
 
 begin_endif
 endif|#
