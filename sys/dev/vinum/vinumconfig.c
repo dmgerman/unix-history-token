@@ -5490,6 +5490,16 @@ literal|0
 index|]
 expr_stmt|;
 break|break;
+case|case
+name|kw_retryerrors
+case|:
+name|sd
+operator|->
+name|flags
+operator||=
+name|VF_RETRYERRORS
+expr_stmt|;
+break|break;
 default|default:
 name|throw_rude_remark
 argument_list|(
@@ -6452,37 +6462,6 @@ argument_list|,
 literal|"No plex organization specified"
 argument_list|)
 expr_stmt|;
-name|plex
-operator|->
-name|dev
-operator|=
-name|make_dev
-argument_list|(
-operator|&
-name|vinum_cdevsw
-argument_list|,
-name|VINUMRMINOR
-argument_list|(
-name|plexno
-argument_list|,
-name|VINUM_PLEX_TYPE
-argument_list|)
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-name|S_IRUSR
-operator||
-name|S_IWUSR
-argument_list|,
-literal|"vinum/plex/%s"
-argument_list|,
-name|plex
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -6693,6 +6672,37 @@ name|plexes_used
 operator|++
 expr_stmt|;
 comment|/* one more in use */
+name|plex
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|vinum_cdevsw
+argument_list|,
+name|VINUMRMINOR
+argument_list|(
+name|plexno
+argument_list|,
+name|VINUM_PLEX_TYPE
+argument_list|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|,
+literal|"vinum/plex/%s"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7280,7 +7290,7 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
-literal|"vinum/vol/%s"
+literal|"vinum/%s"
 argument_list|,
 name|vol
 operator|->
@@ -7326,6 +7336,8 @@ argument_list|(
 name|cptr
 argument_list|,
 name|token
+argument_list|,
+name|MAXTOKEN
 argument_list|)
 expr_stmt|;
 comment|/* chop up into tokens */
@@ -7340,6 +7352,26 @@ return|return
 name|tokens
 return|;
 comment|/* give up */
+elseif|else
+if|if
+condition|(
+name|tokens
+operator|==
+name|MAXTOKEN
+condition|)
+comment|/* too many */
+name|throw_rude_remark
+argument_list|(
+name|E2BIG
+argument_list|,
+literal|"Configuration error for %s: too many parameters"
+argument_list|,
+name|token
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|token
@@ -7925,7 +7957,6 @@ argument_list|,
 literal|"No such subdisk"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 elseif|else
 if|if
@@ -7936,7 +7967,6 @@ name|flags
 operator|&
 name|VF_OPEN
 condition|)
-block|{
 comment|/* we're open */
 name|ioctl_reply
 operator|->
@@ -7945,8 +7975,6 @@ operator|=
 name|EBUSY
 expr_stmt|;
 comment|/* no getting around that */
-return|return;
-block|}
 elseif|else
 if|if
 condition|(
@@ -7960,22 +7988,10 @@ block|{
 comment|/* we have a plex */
 if|if
 condition|(
-operator|!
 name|force
 condition|)
 block|{
 comment|/* do it at any cost */
-name|ioctl_reply
-operator|->
-name|error
-operator|=
-name|EBUSY
-expr_stmt|;
-comment|/* can't do that */
-return|return;
-block|}
-else|else
-block|{
 name|struct
 name|plex
 modifier|*
@@ -8031,7 +8047,6 @@ name|plex
 operator|->
 name|subdisks
 condition|)
-block|{
 comment|/* didn't find it */
 name|log
 argument_list|(
@@ -8051,14 +8066,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|ioctl_reply
-operator|->
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return;
-block|}
 else|else
 block|{
 comment|/* remove the subdisk from plex */
@@ -8147,8 +8154,6 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* need to reinitialize */
-block|}
-block|}
 name|log
 argument_list|(
 name|LOG_INFO
@@ -8165,6 +8170,35 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+comment|/* can't do that */
+block|}
+else|else
+block|{
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"vinum: removing %s\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|free_sd
+argument_list|(
+name|sdno
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -8517,6 +8551,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FREEBSD5
 if|if
 condition|(
 name|isstriped
@@ -8532,6 +8569,8 @@ operator|->
 name|lockmtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|free_plex
 argument_list|(
 name|plexno
@@ -8929,7 +8968,7 @@ expr_stmt|;
 comment|/* so take ourselves down */
 block|}
 block|}
-comment|/*      * Check that our subdisks make sense.  For      * striped, RAID-4 and RAID-5 plexes, we need at      * least two subdisks, and they must all be the      * same size.      */
+comment|/*      * Check that our subdisks make sense.  For      * striped plexes, we need at least two      * subdisks, and for RAID-4 and RAID-5 plexes we      * need at least three subdisks.  In each case      * they must all be the same size.      */
 if|if
 condition|(
 name|plex
