@@ -224,6 +224,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/dc21040reg.h>
 end_include
 
