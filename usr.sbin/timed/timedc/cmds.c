@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.3 1997/10/22 06:20:04 charnier Exp $"
+literal|"$Id: cmds.c,v 1.4 1997/10/29 07:35:27 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,8 +184,6 @@ name|char
 name|myname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt

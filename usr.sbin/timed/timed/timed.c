@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: timed.c,v 1.5 1997/10/22 06:19:49 charnier Exp $"
+literal|"$Id: timed.c,v 1.6 1997/10/29 07:32:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,8 +355,6 @@ name|char
 name|name
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct

@@ -438,8 +438,6 @@ name|char
 name|name
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|u_char
