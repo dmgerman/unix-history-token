@@ -1,4 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)collect.c	5.1 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -10,24 +36,6 @@ include|#
 directive|include
 file|"sendmail.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|collect
-operator|.
-name|c
-literal|4.5
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */

@@ -1,4 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)clock.c	5.1 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -10,24 +36,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|clock
-operator|.
-name|c
-literal|4.4
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
