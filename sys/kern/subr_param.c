@@ -532,13 +532,23 @@ argument_list|)
 expr_stmt|;
 name|maxprocperuid
 operator|=
+operator|(
 name|maxproc
-operator|-
-literal|1
+operator|*
+literal|9
+operator|)
+operator|/
+literal|10
 expr_stmt|;
 name|maxfilesperproc
 operator|=
+operator|(
 name|maxfiles
+operator|*
+literal|9
+operator|)
+operator|/
+literal|10
 expr_stmt|;
 comment|/* 	 * Cannot be changed after boot. 	 */
 name|nbuf
