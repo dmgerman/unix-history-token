@@ -1632,7 +1632,7 @@ block|,
 block|{
 literal|"Express"
 block|,
-literal|"Begin a quick installation (for the impatient)"
+literal|"Begin a quick installation (for experts)"
 block|,
 name|NULL
 block|,
