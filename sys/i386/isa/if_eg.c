@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Dean Huxley<dean@fsa.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Dean Huxley.  * 4. The name of Dean Huxley may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_eg.c,v 1.16 1996/08/04 20:04:11 phk Exp $  *  * Support for 3Com 3c505 Etherlink+ card.  */
+comment|/*  * Copyright (c) 1993 Dean Huxley<dean@fsa.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Dean Huxley.  * 4. The name of Dean Huxley may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_eg.c,v 1.17 1996/08/06 21:14:03 phk Exp $  *  * Support for 3Com 3c505 Etherlink+ card.  */
 end_comment
 
 begin_comment
@@ -65,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -337,11 +331,6 @@ modifier|*
 name|eg_outbuf
 decl_stmt|;
 comment|/* Outgoing packet buffer */
-name|struct
-name|kern_devconf
-name|kdc
-decl_stmt|;
-comment|/* kernel configuration database */
 block|}
 name|eg_softc
 index|[
@@ -390,122 +379,6 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_eg_template
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"eg"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-literal|""
-block|,
-comment|/* description */
-name|DC_CLS_NETIF
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|eg_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|descr
-parameter_list|)
-block|{
-name|struct
-name|kern_devconf
-modifier|*
-name|kdc
-init|=
-operator|&
-name|eg_softc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc
-decl_stmt|;
-operator|*
-name|kdc
-operator|=
-name|kdc_eg_template
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_description
-operator|=
-name|descr
-expr_stmt|;
-name|dev_attach
-argument_list|(
-name|kdc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_decl_stmt
 specifier|static
@@ -2069,14 +1942,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: 3Com 3C505"
-expr_stmt|;
-name|sc
-operator|->
 name|eg_pcb
 index|[
 literal|0
@@ -2260,15 +2125,6 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-comment|/* device attach does transition from UNCONFIGURED to IDLE state */
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
 expr_stmt|;
 if|#
 directive|if

@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.16 1996/06/18 01:22:21 bde Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.17 1996/08/06 21:14:07 phk Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -69,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -495,11 +489,6 @@ name|arpcom
 decl_stmt|;
 comment|/* Ethernet common */
 comment|/* Used by config codes.  */
-name|struct
-name|kern_devconf
-name|kdc
-decl_stmt|;
-comment|/* Kernel configuration database info.  */
 comment|/* Set by probe() and not modified in later phases.  */
 name|char
 modifier|*
@@ -626,20 +615,6 @@ name|sc_enaddr
 value|arpcom.ac_enaddr
 end_define
 
-begin_define
-define|#
-directive|define
-name|sc_dcstate
-value|kdc.kdc_state
-end_define
-
-begin_define
-define|#
-directive|define
-name|sc_description
-value|kdc.kdc_description
-end_define
-
 begin_comment
 comment|/* Standard driver entry points.  These can be static.  */
 end_comment
@@ -731,21 +706,6 @@ end_function_decl
 begin_comment
 comment|/* Local functions.  Order of declaration is confused.  FIXME.  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|fe_registerdev
-parameter_list|(
-name|struct
-name|fe_softc
-modifier|*
-parameter_list|,
-name|DEVICE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -980,62 +940,6 @@ literal|"fe"
 block|,
 literal|1
 comment|/* It's safe to mark as "sensitive"  */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Initial value for a kdc struct.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-specifier|const
-name|fe_kdc_template
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|"fe"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* This is an ISA device.  */
-literal|0
-block|,
-name|DC_UNCONFIGURED
-block|,
-comment|/* Not yet configured.  */
-literal|"Ethernet (MB8696x)"
-block|,
-comment|/* Tentative description (filled in later.)  */
-name|DC_CLS_NETIF
-comment|/* This is a network interface.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1638,57 +1542,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|void
-name|fe_registerdev
-parameter_list|(
-name|struct
-name|fe_softc
-modifier|*
-name|sc
-parameter_list|,
-name|DEVICE
-modifier|*
-name|dev
-parameter_list|)
-block|{
-comment|/* Fill the device config data and register it.  */
-name|sc
-operator|->
-name|kdc
-operator|=
-name|fe_kdc_template
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_unit
-operator|=
-name|sc
-operator|->
-name|sc_unit
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_parentdata
-operator|=
-name|dev
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|kdc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer to an isa_device struct  *   on exit:  *	zero if device not found  *	or number of i/o addresses used (if found)  */
 end_comment
@@ -1764,26 +1617,6 @@ expr_stmt|;
 if|#
 directive|if
 name|NCRD
-operator|==
-literal|0
-ifndef|#
-directive|ifndef
-name|DEV_LKM
-name|fe_registerdev
-argument_list|(
-name|sc
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* NCRD == 0 */
-if|#
-directive|if
-name|NCRD
 operator|>
 literal|0
 comment|/* 	 * If PC-Card probe required, then register driver with 	 * slot manager. 	 */
@@ -1794,13 +1627,6 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|fe_registerdev
-argument_list|(
-name|sc
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
 name|pccard_add_driver
 argument_list|(
 operator|&
@@ -3077,12 +2903,6 @@ name|typestr
 operator|=
 literal|"FMV-183"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-183"
-expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -3105,12 +2925,6 @@ name|typestr
 operator|=
 literal|"FMV-181"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-181"
-expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -3120,12 +2934,6 @@ operator|->
 name|typestr
 operator|=
 literal|"FMV-181A"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-181A"
 expr_stmt|;
 break|break;
 block|}
@@ -3147,12 +2955,6 @@ name|typestr
 operator|=
 literal|"FMV-184 (CSR = 2)"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-184"
-expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -3172,12 +2974,6 @@ operator|->
 name|typestr
 operator|=
 literal|"FMV-184 (CSR = 1)"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-184"
 expr_stmt|;
 break|break;
 block|}
@@ -3201,12 +2997,6 @@ name|typestr
 operator|=
 literal|"FMV-182"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-182"
-expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -3217,12 +3007,6 @@ name|typestr
 operator|=
 literal|"FMV-182A"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-182A"
-expr_stmt|;
 break|break;
 case|case
 literal|8
@@ -3232,12 +3016,6 @@ operator|->
 name|typestr
 operator|=
 literal|"FMV-184 (CSR = 3)"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: FMV-184"
 expr_stmt|;
 break|break;
 block|}
@@ -3258,12 +3036,6 @@ operator|->
 name|typestr
 operator|=
 literal|"unknown FMV-180 version"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: unknown FMV-180 version"
 expr_stmt|;
 name|log
 argument_list|(
@@ -4022,12 +3794,6 @@ name|typestr
 operator|=
 literal|"AT-1700T/RE2001"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: AT1700T or RE2001"
-expr_stmt|;
 break|break;
 case|case
 name|FE_ATI_MODEL_AT1700BT
@@ -4037,12 +3803,6 @@ operator|->
 name|typestr
 operator|=
 literal|"AT-1700BT/RE2003"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: AT1700BT or RE2003"
 expr_stmt|;
 break|break;
 case|case
@@ -4054,12 +3814,6 @@ name|typestr
 operator|=
 literal|"AT-1700FT/RE2009"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: AT1700FT or RE2009"
-expr_stmt|;
 break|break;
 case|case
 name|FE_ATI_MODEL_AT1700AT
@@ -4070,12 +3824,6 @@ name|typestr
 operator|=
 literal|"AT-1700AT/RE2005"
 expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: AT1700AT or RE2005"
-expr_stmt|;
 break|break;
 default|default:
 name|sc
@@ -4083,12 +3831,6 @@ operator|->
 name|typestr
 operator|=
 literal|"unknown AT-1700/RE2000 ?"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: AT1700 or RE2000 ?"
 expr_stmt|;
 break|break;
 block|}
@@ -4737,12 +4479,6 @@ operator|->
 name|typestr
 operator|=
 literal|"MBH10302 (PCMCIA)"
-expr_stmt|;
-name|sc
-operator|->
-name|sc_description
-operator|=
-literal|"Ethernet adapter: MBH10302 (PCMCIA)"
 expr_stmt|;
 comment|/* 	 * Initialize constants in the per-line structure. 	 */
 comment|/* Get our station address from EEPROM.  */
@@ -5849,12 +5585,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Update config status also.  */
-name|sc
-operator|->
-name|sc_dcstate
-operator|=
-name|DC_IDLE
-expr_stmt|;
 comment|/* Call a hook.  */
 if|if
 condition|(
@@ -6753,13 +6483,6 @@ operator|.
 name|if_flags
 operator||=
 name|IFF_RUNNING
-expr_stmt|;
-comment|/* Update device config status.  */
-name|sc
-operator|->
-name|sc_dcstate
-operator|=
-name|DC_BUSY
 expr_stmt|;
 comment|/* 	 * At this point, the interface is running properly, 	 * except that it receives *no* packets.  we then call 	 * fe_setmode() to tell the chip what packets to be 	 * received, based on the if_flags and multicast group 	 * list.  It completes the initialization process. 	 */
 name|fe_setmode

@@ -134,11 +134,6 @@ name|defined
 argument_list|(
 name|KERNEL
 argument_list|)
-name|struct
-name|kern_devconf
-name|kdc
-decl_stmt|;
-comment|/* kernel config database */
 ifdef|#
 directive|ifdef
 name|DEVFS

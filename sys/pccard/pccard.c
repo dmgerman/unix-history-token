@@ -60,19 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -222,63 +210,6 @@ include|#
 directive|include
 file|<machine/md_var.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|kern_devconf
-name|kdc_cpu0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|kern_devconf
-name|kdc_pccard0
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"pccard"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_BUS
-block|,
-literal|0
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|BUS_EXTERNALLEN
-block|,
-operator|&
-name|kdc_cpu0
-block|,
-comment|/* parent is the CPU */
-literal|0
-block|,
-comment|/* no parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* until we see it */
-literal|"PCCARD or PCMCIA bus"
-block|,
-name|DC_CLS_BUS
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -647,12 +578,6 @@ name|void
 name|pccard_configure
 parameter_list|()
 block|{
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_pccard0
-argument_list|)
-expr_stmt|;
 include|#
 directive|include
 file|"pcic.h"
@@ -1703,12 +1628,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|kdc_pccard0
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 name|MALLOC
 argument_list|(
 name|sp

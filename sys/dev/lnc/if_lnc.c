@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -287,9 +281,9 @@ decl_stmt|;
 name|int
 name|rdp
 decl_stmt|;
-name|struct
-name|kern_devconf
-name|kdc
+name|char
+modifier|*
+name|descr
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -855,56 +849,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_lnc
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"lnc"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-literal|""
-block|,
-name|DC_CLS_NETIF
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -1006,35 +950,6 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-name|struct
-name|kern_devconf
-modifier|*
-name|kdc
-init|=
-operator|&
-name|sc
-operator|->
-name|kdc
-decl_stmt|;
-operator|*
-name|kdc
-operator|=
-name|kdc_lnc
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_unit
-operator|=
-name|isa_dev
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_parentdata
-operator|=
-name|isa_dev
-expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -1057,9 +972,9 @@ name|ident
 operator|==
 name|BICC
 condition|)
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"BICC (LANCE) Ethernet controller"
 expr_stmt|;
@@ -1074,9 +989,9 @@ name|ident
 operator|==
 name|NE2100
 condition|)
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"NE2100 (LANCE) Ethernet controller"
 expr_stmt|;
@@ -1091,9 +1006,9 @@ name|ident
 operator|==
 name|DEPCA
 condition|)
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"DEPCA (LANCE) Ethernet controller"
 expr_stmt|;
@@ -1111,9 +1026,9 @@ name|ident
 operator|==
 name|BICC
 condition|)
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"BICC (C-LANCE) Ethernet controller"
 expr_stmt|;
@@ -1128,9 +1043,9 @@ name|ident
 operator|==
 name|NE2100
 condition|)
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"NE2100 (C-LANCE) Ethernet controller"
 expr_stmt|;
@@ -1145,9 +1060,9 @@ name|ident
 operator|==
 name|DEPCA
 condition|)
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"DEPCA (C-LANCE) Ethernet controller"
 expr_stmt|;
@@ -1155,9 +1070,9 @@ break|break;
 case|case
 name|PCnet_ISA
 case|:
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"PCnet-ISA Ethernet controller"
 expr_stmt|;
@@ -1165,9 +1080,9 @@ break|break;
 case|case
 name|PCnet_ISAplus
 case|:
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"PCnet-ISA+ Ethernet controller"
 expr_stmt|;
@@ -1175,9 +1090,9 @@ break|break;
 case|case
 name|PCnet_32
 case|:
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"PCnet-32 VL-Bus Ethernet controller"
 expr_stmt|;
@@ -1186,9 +1101,9 @@ case|case
 name|PCnet_PCI
 case|:
 comment|/* 			 * XXX - This should never be the case ... 			 */
-name|kdc
+name|sc
 operator|->
-name|kdc_description
+name|descr
 operator|=
 literal|"PCnet-PCI Ethernet controller"
 expr_stmt|;
@@ -1196,11 +1111,6 @@ break|break;
 default|default:
 break|break;
 block|}
-name|dev_attach
-argument_list|(
-name|kdc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5328,29 +5238,17 @@ operator|.
 name|ac_if
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
+name|descr
 operator|==
 name|NULL
 condition|)
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
+name|descr
 operator|=
 literal|"Lance Ethernet controller"
 expr_stmt|;
@@ -5362,9 +5260,7 @@ name|unit
 argument_list|,
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
+name|descr
 argument_list|,
 name|sc
 operator|->
@@ -7889,14 +7785,6 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 switch|switch
 condition|(
 name|ifa
@@ -8103,26 +7991,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-operator|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-condition|?
-name|DC_BUSY
-else|:
-name|DC_IDLE
-operator|)
-expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef

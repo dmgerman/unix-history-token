@@ -630,25 +630,6 @@ begin_comment
 comment|/* PCVT_FREEBSD>= 200 */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|PCVT_FREEBSD
-operator|>
-literal|205
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* setup irq disable function to use */
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt5xx-445.c,v 1.2 1995/12/14 14:19:15 peter Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt5xx-445.c,v 1.3 1996/03/31 03:06:20 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -102,131 +96,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_isa_bt
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"bt"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* always start here */
-name|NULL
-block|,
-name|DC_CLS_MISC
-comment|/* host adapters aren't special */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|bt_isa_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|BOGUS
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_bt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_bt
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_bt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_bt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_bt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
 begin_comment
 comment|/*  * Check if the device can be found at the port given  * and if so, set it up ready for further work  * as an argument, takes the isa_device structure from  * autoconf.c  */
 end_comment
@@ -282,17 +151,6 @@ condition|)
 return|return
 literal|0
 return|;
-ifndef|#
-directive|ifndef
-name|DEV_LKM
-name|bt_isa_registerdev
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not DEV_LKM */
 comment|/* 	 * Try initialise a unit at this location 	 * sets up dma and bus speed, loads bt->bt_int 	 */
 if|if
 condition|(

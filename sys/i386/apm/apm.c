@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.46 1996/07/11 16:35:12 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.47 1996/08/28 17:54:17 bde Exp $  */
 end_comment
 
 begin_include
@@ -154,12 +154,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/apm/apm_setup.h>
 end_include
 
@@ -278,56 +272,6 @@ directive|endif
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_apm
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"apm"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* state */
-literal|"Advanced Power Management BIOS"
-block|,
-name|DC_CLS_MISC
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -454,51 +398,6 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|apm_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|kdc_apm
-operator|.
-name|kdc_isa
-condition|)
-return|return;
-name|kdc_apm
-operator|.
-name|kdc_state
-operator|=
-name|DC_UNCONFIGURED
-expr_stmt|;
-name|kdc_apm
-operator|.
-name|kdc_unit
-operator|=
-literal|0
-expr_stmt|;
-name|kdc_apm
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_apm
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/* setup APM GDT discriptors */
@@ -2507,11 +2406,6 @@ return|return
 literal|0
 return|;
 block|}
-name|apm_registerdev
-argument_list|(
-name|dvp
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|apm_version
@@ -3111,12 +3005,6 @@ argument_list|(
 literal|"apm: running in APM 1.0 compatible mode\n"
 argument_list|)
 expr_stmt|;
-name|kcd_apm
-operator|.
-name|kdc_description
-operator|=
-literal|"Advanced Power Management BIOS (1.0 compatability mode)"
-operator|,
 else|#
 directive|else
 comment|/* Try to kick bios into 1.1 or greater mode */
@@ -3427,12 +3315,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|kdc_apm
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 name|sc
 operator|->
 name|initialized
@@ -3670,12 +3552,6 @@ break|break;
 case|case
 name|APMIO_ENABLE
 case|:
-name|kdc_apm
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 name|apm_event_enable
 argument_list|(
 name|sc
@@ -3685,12 +3561,6 @@ break|break;
 case|case
 name|APMIO_DISABLE
 case|:
-name|kdc_apm
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 name|apm_event_disable
 argument_list|(
 name|sc

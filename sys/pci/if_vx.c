@@ -62,12 +62,6 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -639,11 +633,8 @@ specifier|static
 name|int
 name|vx_pci_shutdown
 parameter_list|(
-name|struct
-name|kern_devconf
-modifier|*
-specifier|const
-name|kdc
+name|int
+name|unit
 parameter_list|,
 name|int
 name|force
@@ -651,14 +642,7 @@ parameter_list|)
 block|{
 name|vxreset
 argument_list|(
-name|kdc
-operator|->
-name|kdc_unit
-argument_list|)
-expr_stmt|;
-name|dev_detach
-argument_list|(
-name|kdc
+name|unit
 argument_list|)
 expr_stmt|;
 return|return

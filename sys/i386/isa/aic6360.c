@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.20 1996/03/10 07:04:43 gibbs Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.21 1996/05/02 10:43:08 phk Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -274,12 +274,6 @@ begin_include
 include|#
 directive|include
 file|<scsi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -3793,131 +3787,6 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_aic
-index|[
-name|NAIC
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"aic"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* start out in unconfig state */
-literal|"Adaptec AIC-6360 SCSI host adapter chipset"
-block|,
-name|DC_CLS_MISC
-comment|/* host adapters aren't special */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|aic_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_aic
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_aic
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_aic
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_aic
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_aic
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * INITIALIZATION ROUTINES (probe, attach ++)  */
 end_comment
@@ -4051,17 +3920,6 @@ name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|DEV_LKM
-name|aic_registerdev
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not DEV_LKM */
 if|if
 condition|(
 name|aic_find
@@ -4439,16 +4297,6 @@ operator|->
 name|sc_link
 expr_stmt|;
 comment|/* 	 * ask the adapter what subunits are present 	 */
-name|kdc_aic
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
-comment|/* host adapters are always busy */
 name|scsi_attachdevs
 argument_list|(
 name|scbus

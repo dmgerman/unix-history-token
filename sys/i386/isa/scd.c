@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.23 1996/07/12 04:11:25 bde Exp $ */
+comment|/* $Id: scd.c,v 1.24 1996/07/23 21:51:39 phk Exp $ */
 end_comment
 
 begin_comment
@@ -114,12 +114,6 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -1036,132 +1030,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_scd
-index|[
-name|NSCD
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"scd"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* status */
-literal|"Sony CD-ROM drive"
-block|,
-comment|/* properly filled later */
-name|DC_CLS_RDISK
-comment|/* class */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|scd_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_scd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_scd
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_scd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_scd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_scd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 name|int
 name|scd_attach
@@ -1197,36 +1065,7 @@ operator|->
 name|id_iobase
 expr_stmt|;
 comment|/* Already set by probe, but ... */
-name|kdc_scd
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 comment|/* name filled in probe */
-name|kdc_scd
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-name|scd_data
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|name
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"scd%d:<%s>\n"
@@ -1643,15 +1482,6 @@ name|flags
 operator||=
 name|SCDVALID
 expr_stmt|;
-name|kdc_scd
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1774,15 +1604,6 @@ operator|~
 name|SCDSPINNING
 expr_stmt|;
 block|}
-name|kdc_scd
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 comment|/* close channel */
 name|cd
 operator|->
@@ -3850,11 +3671,6 @@ sizeof|sizeof
 argument_list|(
 name|drive_config
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|scd_registerdev
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 name|again

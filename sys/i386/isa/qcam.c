@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
@@ -416,129 +410,6 @@ parameter_list|)
 value|minor(dev)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_qcam_template
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach() */
-literal|"qcam"
-block|,
-comment|/* kdc_name */
-literal|0
-block|,
-comment|/* kdc_unit */
-block|{
-comment|/* kdc_md */
-name|MDDT_ISA
-block|,
-comment|/* mddc_devtype */
-literal|0
-block|,
-comment|/* mddc_flags */
-literal|"tty"
-comment|/* mddc_imask[4] */
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-comment|/* kdc_externalize */
-literal|0
-block|,
-comment|/* kdc_internalize */
-literal|0
-block|,
-comment|/* kdc_goaway */
-name|ISA_EXTERNALLEN
-block|,
-comment|/* kdc_datalen */
-operator|&
-name|kdc_isa0
-block|,
-comment|/* kdc_parent */
-literal|0
-block|,
-comment|/* kdc_parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* kdc_state */
-literal|"QuickCam video input"
-block|,
-comment|/* kdc_description */
-name|DC_CLS_MISC
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|qcam_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-name|struct
-name|kern_devconf
-modifier|*
-name|kdc
-init|=
-operator|&
-name|qcam_softc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc
-decl_stmt|;
-operator|*
-name|kdc
-operator|=
-name|kdc_qcam_template
-expr_stmt|;
-comment|/* byte-copy template */
-name|kdc
-operator|->
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|QCAM_MODULE
-comment|/* there's a bug in dev_attach 					   when running from an LKM */
-name|dev_attach
-argument_list|(
-name|kdc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -612,11 +483,6 @@ return|return
 literal|0
 return|;
 comment|/* failure */
-name|qcam_registerdev
-argument_list|(
-name|devp
-argument_list|)
-expr_stmt|;
 return|return
 literal|1
 return|;
@@ -663,14 +529,6 @@ operator|=
 name|devp
 operator|->
 name|id_unit
-expr_stmt|;
-name|qs
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
 expr_stmt|;
 name|qs
 operator|->
@@ -865,14 +723,6 @@ name|flags
 operator||=
 name|QC_OPEN
 expr_stmt|;
-name|qs
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -948,14 +798,6 @@ name|flags
 operator|&=
 operator|~
 name|QC_OPEN
-expr_stmt|;
-name|qs
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
 expr_stmt|;
 return|return
 literal|0

@@ -62,9 +62,6 @@ directive|include
 file|<sys/malloc.h>
 include|#
 directive|include
-file|<sys/devconf.h>
-include|#
-directive|include
 file|<sys/errno.h>
 include|#
 directive|include
@@ -296,142 +293,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_spigot
-index|[
-name|NSPIGOT
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-comment|/* kdc_next -> filled in by dev_attach() */
-literal|0
-block|,
-comment|/* kdc_rlink -> filled in by dev_attach() */
-literal|0
-block|,
-comment|/* kdc_number -> filled in by dev_attach() */
-literal|"spigot"
-block|,
-comment|/* kdc_name */
-literal|0
-block|,
-comment|/* kdc_unit */
-block|{
-comment|/* kdc_md */
-name|MDDT_ISA
-block|,
-comment|/* mddc_devtype */
-literal|0
-comment|/* mddc_flags */
-comment|/* mddc_imask[4] */
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-comment|/* kdc_externalize */
-literal|0
-block|,
-comment|/* kdc_internalize */
-literal|0
-block|,
-comment|/* kdc_goaway */
-name|ISA_EXTERNALLEN
-block|,
-comment|/* kdc_datalen */
-operator|&
-name|kdc_isa0
-block|,
-comment|/* kdc_parent */
-literal|0
-block|,
-comment|/* kdc_parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* kdc_state - not supported */
-literal|"Video Spigot frame grabber"
-block|,
-comment|/* kdc_description */
-name|DC_CLS_MISC
-comment|/* class */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|spigot_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_spigot
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_spigot
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_spigot
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_spigot
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_spigot
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -515,11 +376,6 @@ name|flags
 operator||=
 name|ALIVE
 expr_stmt|;
-name|spigot_registerdev
-argument_list|(
-name|devp
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -558,15 +414,6 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-name|kdc_spigot
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_UNKNOWN
-expr_stmt|;
 name|ss
 operator|->
 name|maddr

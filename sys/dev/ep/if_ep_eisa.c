@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.3 1996/06/12 05:02:39 gpalmer Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.4 1996/07/19 13:19:47 amurai Exp $  */
 end_comment
 
 begin_include
@@ -27,12 +27,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -70,16 +64,6 @@ include|#
 directive|include
 file|<i386/isa/if_epreg.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_comment
-comment|/* For kdc_isa0 */
-end_comment
 
 begin_include
 include|#
@@ -307,58 +291,6 @@ name|ep_eisa_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_eisa_ep
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"ep"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_EISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|eisa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|EISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_eisa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* always start out here */
-name|NULL
-block|,
-name|DC_CLS_MISC
-comment|/* host adapters aren't special */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -661,37 +593,8 @@ name|e_dev
 argument_list|,
 operator|&
 name|ep_eisa_driver
-argument_list|,
-operator|&
-name|kdc_eisa_ep
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|e_dev
-operator|->
-name|id
-operator|!=
-name|EISA_DEVICE_ID_3COM_3C579_TP
-operator|&&
-name|e_dev
-operator|->
-name|id
-operator|!=
-name|EISA_DEVICE_ID_3COM_3C579_BNC
-condition|)
-block|{
-comment|/* Our real parent is the isa bus.  Say so. */
-name|e_dev
-operator|->
-name|kdc
-operator|->
-name|kdc_parent
-operator|=
-operator|&
-name|kdc_isa0
-expr_stmt|;
-block|}
 name|count
 operator|++
 expr_stmt|;
@@ -876,14 +779,6 @@ operator|->
 name|stat
 operator|=
 literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|=
-name|e_dev
-operator|->
-name|kdc
 expr_stmt|;
 name|level_intr
 operator|=

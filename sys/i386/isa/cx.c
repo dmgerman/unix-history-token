@@ -131,21 +131,6 @@ parameter_list|)
 value|getc(q)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* BSD 4.4 Lite */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -460,17 +445,6 @@ name|__FreeBSD__
 operator|>=
 literal|2
 end_if
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|kern_devconf
-name|kdc_cx
-index|[
-name|NCX
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1455,28 +1429,6 @@ name|dev
 operator|,
 name|tp
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-condition|)
-comment|/* Mark the board busy on the first startup. 		 * Never goes idle. */
-name|kdc_cx
-index|[
-name|c
-operator|->
-name|board
-operator|->
-name|num
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
 expr_stmt|;
 else|#
 directive|else

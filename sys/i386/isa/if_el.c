@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.24 1996/06/18 01:22:20 bde Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.25 1996/08/06 21:14:04 phk Exp $  */
 end_comment
 
 begin_comment
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -484,131 +478,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_el
-index|[
-name|NEL
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"el"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* state */
-literal|"Ethernet adapter: 3Com 3C501"
-block|,
-name|DC_CLS_NETIF
-comment|/* class */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|el_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_el
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_el
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_el
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_el
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_el
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* Probe routine.  See if the card is there and at the right place. */
 end_comment
@@ -667,16 +536,6 @@ name|sc
 operator|->
 name|el_base
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|DEV_LKM
-name|el_registerdev
-argument_list|(
-name|idev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* First check the base */
 if|if
 condition|(
@@ -1048,17 +907,6 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-name|kdc_el
-index|[
-name|idev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
 expr_stmt|;
 comment|/* Put the station address in the ifa address list's AF_LINK 	 * entry, if any. 	 */
 name|ifa

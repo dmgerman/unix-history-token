@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt74x.c,v 1.5 1996/02/26 01:01:41 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt74x.c,v 1.6 1996/06/12 05:02:40 gpalmer Exp $  */
 end_comment
 
 begin_include
@@ -27,12 +27,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -464,58 +458,6 @@ name|bt_eisa_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_eisa_bt
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"bt"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_EISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|eisa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|EISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_eisa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* always start out here */
-name|NULL
-block|,
-name|DC_CLS_MISC
-comment|/* host adapters aren't special */
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1047,9 +989,6 @@ name|e_dev
 argument_list|,
 operator|&
 name|bt_eisa_driver
-argument_list|,
-operator|&
-name|kdc_eisa_bt
 argument_list|)
 expr_stmt|;
 name|count
@@ -1303,15 +1242,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|e_dev
-operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
-comment|/* host adapters always busy */
 comment|/* Attach sub-devices - always succeeds */
 name|bt_attach
 argument_list|(

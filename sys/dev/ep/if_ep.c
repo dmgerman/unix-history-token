@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.51 1996/07/19 13:20:04 amurai Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.52 1996/07/27 12:40:31 amurai Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -66,12 +66,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_endif
@@ -391,27 +385,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|ep_isa_registerdev
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ep_softc
-operator|*
-name|sc
-operator|,
-expr|struct
-name|isa_device
-operator|*
-name|id
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|epioctl
 name|__P
@@ -659,58 +632,6 @@ block|,
 literal|"ep"
 block|,
 literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_isa_ep
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"ep"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* state */
-literal|"3Com 3C509 Ethernet adapter"
-block|,
-name|DC_CLS_NETIF
-comment|/* class */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1013,13 +934,6 @@ block|}
 name|ep_unit
 operator|++
 expr_stmt|;
-name|ep_isa_registerdev
-argument_list|(
-name|sc
-argument_list|,
-name|is
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* get_e() requires these. */
 name|sc
@@ -1190,14 +1104,6 @@ operator|!
 name|first
 condition|)
 block|{
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 name|sc
 operator|->
 name|gone
@@ -1430,11 +1336,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|==
-name|DC_UNCONFIGURED
+name|gone
 condition|)
 block|{
 name|printf
@@ -1450,14 +1352,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|=
-name|DC_UNCONFIGURED
-expr_stmt|;
 name|sc
 operator|->
 name|arpcom
@@ -1531,107 +1425,6 @@ end_endif
 begin_comment
 comment|/* NCRD> 0 */
 end_comment
-
-begin_function
-specifier|static
-name|void
-name|ep_isa_registerdev
-parameter_list|(
-name|sc
-parameter_list|,
-name|id
-parameter_list|)
-name|struct
-name|ep_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|struct
-name|isa_device
-modifier|*
-name|id
-decl_stmt|;
-block|{
-name|sc
-operator|->
-name|kdc
-operator|=
-operator|(
-expr|struct
-name|kern_devconf
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kern_devconf
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sc
-operator|->
-name|kdc
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: ep_isa_registerdev unable to malloc! "
-literal|"Device kdc will not be registerd\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|bcopy
-argument_list|(
-operator|&
-name|kdc_isa_ep
-argument_list|,
-name|sc
-operator|->
-name|kdc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|kdc_isa_ep
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_unit
-operator|=
-name|sc
-operator|->
-name|unit
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-name|sc
-operator|->
-name|kdc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -2530,13 +2323,6 @@ operator|=
 name|ep_unit
 operator|++
 expr_stmt|;
-name|ep_isa_registerdev
-argument_list|(
-name|sc
-argument_list|,
-name|is
-argument_list|)
-expr_stmt|;
 comment|/*      * The iobase was found and MFG_ID was 0x6d50. PROD_ID should be      * 0x9[0-f]50      */
 name|GO_WINDOW
 argument_list|(
@@ -3139,14 +2925,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 comment|/*      * Fill the hardware address into ifa_addr if we find an AF_LINK entry.      * We need to do this so bpf's can get the hardware addr of this card.      * netstat likes this too!      */
 name|ifa
 operator|=
@@ -6616,14 +6394,6 @@ operator||=
 name|IFF_UP
 expr_stmt|;
 comment|/* netifs are BUSY when UP */
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 switch|switch
 condition|(
 name|ifa
@@ -6912,27 +6682,6 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
-comment|/* UP controls BUSY/IDLE */
-name|sc
-operator|->
-name|kdc
-operator|->
-name|kdc_state
-operator|=
-operator|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-condition|?
-name|DC_BUSY
-else|:
-name|DC_IDLE
-operator|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.15 1996/07/23 21:51:13 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.16 1996/07/24 23:45:24 asami Exp $ */
 end_comment
 
 begin_comment
@@ -136,12 +136,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include

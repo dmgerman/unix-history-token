@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.48 1996/06/14 05:25:32 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.49 1996/08/06 21:09:25 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -79,12 +79,6 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
 
 begin_include
 include|#
@@ -18789,24 +18783,12 @@ specifier|static
 name|int
 name|tulip_pci_shutdown
 parameter_list|(
-name|struct
-name|kern_devconf
-modifier|*
-specifier|const
-name|kdc
+name|int
+name|unit
 parameter_list|,
 name|int
 name|force
 parameter_list|)
-block|{
-if|if
-condition|(
-name|kdc
-operator|->
-name|kdc_unit
-operator|<
-name|tulip_count
-condition|)
 block|{
 name|tulip_softc_t
 modifier|*
@@ -18815,9 +18797,7 @@ name|sc
 init|=
 name|TULIP_UNIT_TO_SOFTC
 argument_list|(
-name|kdc
-operator|->
-name|kdc_unit
+name|unit
 argument_list|)
 decl_stmt|;
 name|TULIP_CSR_WRITE
@@ -18834,16 +18814,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Wait 10 microseconds (actually 50 PCI cycles but at  			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
-block|}
-operator|(
-name|void
-operator|)
-name|dev_detach
-argument_list|(
-name|kdc
-argument_list|)
-expr_stmt|;
+comment|/* Wait 10 microseconds (actually 50 PCI cycles but at  		       33MHz that comes to two microseconds but wait a 		       bit longer anyways) */
 return|return
 literal|0
 return|;

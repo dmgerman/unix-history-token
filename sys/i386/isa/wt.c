@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.33 1996/07/23 21:51:50 phk Exp $  *  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.34 1996/08/31 14:47:45 bde Exp $  *  */
 end_comment
 
 begin_comment
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -874,63 +868,6 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|kern_devconf
-name|kdc_wt
-index|[
-name|NWT
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"wt"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* state */
-literal|"Archive or Wangtek QIC-02/QIC-36 tape controller"
-block|,
-name|DC_CLS_TAPE
-comment|/* class */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_open_t
 name|wtopen
 decl_stmt|;
@@ -1026,74 +963,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|wt_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_wt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_wt
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_wt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_wt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_wt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Probe for the presence of the device.  */
 end_comment
@@ -1119,11 +988,6 @@ name|id
 operator|->
 name|id_unit
 decl_stmt|;
-name|wt_registerdev
-argument_list|(
-name|id
-argument_list|)
-expr_stmt|;
 name|t
 operator|->
 name|unit
@@ -1532,17 +1396,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* unknown density */
-name|kdc_wt
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 name|isa_dmainit
 argument_list|(
 name|t
@@ -2103,15 +1956,6 @@ name|flags
 operator|=
 name|TPINUSE
 expr_stmt|;
-name|kdc_wt
-index|[
-name|u
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 if|if
 condition|(
 name|flag
@@ -2328,15 +2172,6 @@ operator||
 name|TPSTART
 operator||
 name|TPTIMER
-expr_stmt|;
-name|kdc_wt
-index|[
-name|u
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
 expr_stmt|;
 name|free
 argument_list|(

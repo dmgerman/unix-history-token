@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.60 1996/06/14 11:02:16 asami Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.61 1996/07/12 04:12:05 bde Exp $  */
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -1701,52 +1695,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX  * This is BOGUS.  * We do this because it was easier than adding the requisite information  * to the scsi_link structure and modifying everything to use that.  * Someday, we will do just that, and users will be able to nail down their  * preferred SCSI ids.  *  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|kern_devconf
-name|kdc_scbus0
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"scbus"
-block|,
-literal|0
-block|,
-name|MDDC_SCBUS
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* no external data */
-literal|0
-block|,
-comment|/* no parent */
-literal|0
-block|,
-comment|/* no parentdata */
-name|DC_BUSY
-block|,
-comment|/* busses are always busy */
-literal|"SCSI subsystem"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2012,12 +1960,6 @@ name|scbusses
 operator|=
 name|extend_new
 argument_list|()
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_scbus0
-argument_list|)
 expr_stmt|;
 comment|/* First call all type initialization functions. 		 */
 name|ukinit

@@ -1052,12 +1052,6 @@ name|int
 name|attached
 decl_stmt|;
 comment|/* the drive is attached */
-name|struct
-name|kern_devconf
-modifier|*
-name|parent
-decl_stmt|;
-comment|/* the devconf info pattern */
 block|}
 struct|;
 end_struct
@@ -1202,12 +1196,6 @@ index|]
 decl_stmt|;
 comment|/* params for units 0,1 */
 name|struct
-name|kern_devconf
-modifier|*
-name|parent
-decl_stmt|;
-comment|/* parent configuration pattern */
-name|struct
 name|atapicmd
 modifier|*
 name|queue
@@ -1246,12 +1234,6 @@ end_ifdef
 begin_struct_decl
 struct_decl|struct
 name|atapi
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|kern_devconf
 struct_decl|;
 end_struct_decl
 
@@ -1365,10 +1347,6 @@ name|unit
 parameter_list|,
 name|int
 name|port
-parameter_list|,
-name|struct
-name|kern_devconf
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

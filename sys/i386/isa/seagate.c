@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.16 1996/01/07 19:22:37 gibbs Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.17 1996/03/10 07:04:47 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -87,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -1360,73 +1354,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sea_description
-index|[
-literal|80
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX BOGUS!!! */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|sea_kdc
-index|[
-name|NSEA
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|"sea"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-literal|0
-block|,
-name|DC_UNCONFIGURED
-block|,
-name|sea_description
-block|,
-name|DC_CLS_MISC
-comment|/* host adapters aren't special */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* FD TMC885's can't handle detach& re-attach */
 end_comment
@@ -1492,59 +1419,6 @@ expr_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|dev
-operator|->
-name|id_unit
-condition|)
-name|sea_kdc
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|=
-name|sea_kdc
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|sea_kdc
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|dev
-operator|->
-name|id_unit
-expr_stmt|;
-name|sea_kdc
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|dev
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|sea_kdc
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* Init fields used by our routines */
 name|z
 operator|->
@@ -2411,27 +2285,6 @@ name|scsibus_data
 modifier|*
 name|scbus
 decl_stmt|;
-name|sea_kdc
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
-comment|/* host adapters are always busy */
-name|sprintf
-argument_list|(
-name|sea_description
-argument_list|,
-literal|"%s SCSI controller"
-argument_list|,
-name|z
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nsea%d: type %s%s\n"

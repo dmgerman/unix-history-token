@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.18 1996/06/08 09:17:51 bde Exp $ */
+comment|/* $Id: matcd.c,v 1.19 1996/07/23 21:51:56 phk Exp $ */
 end_comment
 
 begin_comment
@@ -132,12 +132,6 @@ end_include
 begin_comment
 comment|/*Host interface related defs*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
 
 begin_include
 include|#
@@ -708,61 +702,6 @@ end_struct
 begin_comment
 comment|/*	This mystery structure is supposed to make dynamic driver 	loading possible. */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_matcd
-index|[
-name|TOTALDRIVES
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/*Filled in by dev_attach*/
-literal|"matcdc"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/*<12>Parent*/
-literal|0
-block|,
-comment|/*<12>Parent Data*/
-name|DC_IDLE
-block|,
-comment|/*<12>Status*/
-literal|"Matsushita CD-ROM Controller"
-comment|/*<12>This is the description*/
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*--------------------------------------------------------------------------- 	These macros take apart the minor number and yield the 	partition, drive on controller, and controller. 	This must match the settings in /dev/MAKEDEV. ---------------------------------------------------------------------------*/
@@ -4907,81 +4846,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------<12>	matcd_register - Something to handle dynamic driver loading. 		Sorry for the lousy description but no one could point 		me to anything that explained what it is for either. 		Added in Edit 12. ---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|matcd_register
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-block|{
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_matcd
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
