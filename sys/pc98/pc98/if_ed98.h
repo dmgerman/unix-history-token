@@ -42,7 +42,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|pc98_set_register
 name|__P
 argument_list|(
@@ -1834,7 +1834,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pc98_set_register
 parameter_list|(
 name|struct
@@ -1861,6 +1861,9 @@ index|]
 decl_stmt|;
 name|int
 name|adj
+decl_stmt|;
+name|int
+name|nports
 decl_stmt|;
 switch|switch
 condition|(
@@ -1910,6 +1913,10 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|32
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_LGY
@@ -1953,6 +1960,10 @@ expr_stmt|;
 name|ED_PC_RESET
 operator|=
 literal|0x1f
+expr_stmt|;
+name|nports
+operator|=
+literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -1998,6 +2009,10 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|16
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_ICM
@@ -2042,6 +2057,10 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|16
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_BDN
@@ -2085,6 +2104,10 @@ expr_stmt|;
 name|ED_PC_RESET
 operator|=
 literal|0x1f
+expr_stmt|;
+name|nports
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2133,6 +2156,10 @@ operator|=
 literal|0x1f
 expr_stmt|;
 comment|/* dummy */
+name|nports
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_LPC
@@ -2176,6 +2203,10 @@ expr_stmt|;
 name|ED_PC_RESET
 operator|=
 literal|0x10f
+expr_stmt|;
+name|nports
+operator|=
+literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -2241,6 +2272,10 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|16
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_LA98
@@ -2285,6 +2320,10 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_CNET98EL
@@ -2326,6 +2365,10 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|16
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_CNET98
@@ -2356,7 +2399,7 @@ literal|0x0400
 expr_stmt|;
 name|ED_NOVELL_DATA
 operator|=
-literal|0x000e
+literal|0x0000
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
@@ -2367,8 +2410,15 @@ name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+name|nports
+operator|=
+literal|16
+expr_stmt|;
 break|break;
 block|}
+return|return
+name|nports
+return|;
 block|}
 end_function
 
