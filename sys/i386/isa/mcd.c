@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994 by Andrew A. Chernov  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.34 1994/12/21 15:17:59 ache Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994 by Andrew A. Chernov  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.35 1994/12/24 13:24:00 ache Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -502,6 +502,9 @@ name|config
 decl_stmt|;
 name|short
 name|flags
+decl_stmt|;
+name|u_char
+name|read_command
 decl_stmt|;
 name|short
 name|status
@@ -3577,6 +3580,15 @@ operator||=
 name|MCDNEWMODEL
 expr_stmt|;
 block|}
+name|mcd_data
+index|[
+name|unit
+index|]
+operator|.
+name|read_command
+operator|=
+name|MCD_CMDSINGLESPEEDREAD
+expr_stmt|;
 switch|switch
 condition|(
 name|stbytes
@@ -3683,6 +3695,15 @@ operator|.
 name|name
 operator|=
 literal|"Mitsumi FX001D"
+expr_stmt|;
+name|mcd_data
+index|[
+name|unit
+index|]
+operator|.
+name|read_command
+operator|=
+name|MCD_CMDDOUBLESPEEDREAD
 expr_stmt|;
 break|break;
 default|default:
@@ -3926,6 +3947,12 @@ condition|(
 name|i
 operator|<
 literal|0
+operator|||
+operator|(
+name|i
+operator|&
+name|MCD_ST_CMDCHECK
+operator|)
 condition|)
 return|return
 operator|-
@@ -4706,6 +4733,8 @@ case|case
 name|MCD_S_BEGIN1
 case|:
 comment|/* get status */
+name|retry_status
+label|:
 name|outb
 argument_list|(
 name|com_port
@@ -4811,6 +4840,17 @@ literal|0xFF
 expr_stmt|;
 if|if
 condition|(
+name|cd
+operator|->
+name|status
+operator|&
+name|MCD_ST_CMDCHECK
+condition|)
+goto|goto
+name|retry_status
+goto|;
+if|if
+condition|(
 name|mcd_setflags
 argument_list|(
 name|unit
@@ -4861,6 +4901,8 @@ goto|goto
 name|readerr
 goto|;
 block|}
+name|retry_mode
+label|:
 comment|/* to check for raw/cooked mode */
 if|if
 condition|(
@@ -5056,6 +5098,25 @@ literal|0xFF
 expr_stmt|;
 if|if
 condition|(
+name|cd
+operator|->
+name|status
+operator|&
+name|MCD_ST_CMDCHECK
+condition|)
+block|{
+name|cd
+operator|->
+name|curr_mode
+operator|=
+name|MCD_MD_UNKNOWN
+expr_stmt|;
+goto|goto
+name|retry_mode
+goto|;
+block|}
+if|if
+condition|(
 name|mcd_setflags
 argument_list|(
 name|unit
@@ -5177,6 +5238,8 @@ operator|.
 name|start_msf
 argument_list|)
 expr_stmt|;
+name|retry_read
+label|:
 comment|/* send the read command */
 name|disable_intr
 argument_list|()
@@ -5185,7 +5248,9 @@ name|mcd_put
 argument_list|(
 name|com_port
 argument_list|,
-name|MCD_CMDREAD2
+name|cd
+operator|->
+name|read_command
 argument_list|)
 expr_stmt|;
 name|mcd_put
@@ -5571,6 +5636,17 @@ argument_list|)
 operator|&
 literal|0xFF
 expr_stmt|;
+if|if
+condition|(
+name|cd
+operator|->
+name|status
+operator|&
+name|MCD_ST_CMDCHECK
+condition|)
+goto|goto
+name|retry_read
+goto|;
 if|if
 condition|(
 name|mcd_setflags
@@ -7995,7 +8071,7 @@ name|outb
 argument_list|(
 name|com_port
 argument_list|,
-name|MCD_CMDREAD2
+name|MCD_CMDSINGLESPEEDREAD
 argument_list|)
 expr_stmt|;
 name|outb
