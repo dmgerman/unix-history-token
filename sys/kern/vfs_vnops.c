@@ -3384,21 +3384,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|vp
-operator|->
-name|v_vxproc
-operator|!=
-name|NULL
-condition|)
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"VXLOCK interlock avoided in vn_lock\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* this can now occur in normal operation */
+block|if (vp->v_vxproc != NULL) 				log(LOG_INFO, "VXLOCK interlock avoided in vn_lock\n");
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS

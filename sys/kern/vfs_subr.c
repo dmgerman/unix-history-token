@@ -7055,13 +7055,13 @@ operator|==
 name|curthread
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"VXLOCK interlock avoided\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* this can now occur in normal operation */
+block|log(LOG_INFO, "VXLOCK interlock avoided\n");
+endif|#
+directive|endif
 block|}
 else|else
 block|{
