@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.9 (Berkeley) %G%"
+literal|"@(#)mount.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,48 +52,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
-end_include
 
 begin_include
 include|#
@@ -116,37 +74,56 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<err.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_ROOTUID
-value|-2
-end_define
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|BADTYPE
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(strcmp(type, FSTAB_RO)&& strcmp(type, FSTAB_RW)&& \ 	    strcmp(type, FSTAB_RQ))
-end_define
+begin_include
+include|#
+directive|include
+file|<fstab.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|SETTYPE
-parameter_list|(
-name|type
-parameter_list|)
-define|\
-value|(!strcmp(type, FSTAB_RW) || !strcmp(type, FSTAB_RQ))
-end_define
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|int
@@ -156,9 +133,9 @@ name|force
 decl_stmt|,
 name|verbose
 decl_stmt|,
-name|updateflg
-decl_stmt|,
 name|mnttype
+decl_stmt|,
+name|skipvfs
 decl_stmt|;
 end_decl_stmt
 
@@ -170,32 +147,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|vfslist
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|badvfstype
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|badvfsname
 name|__P
@@ -213,7 +164,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|int
+name|badvfstype
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|getexecopts
 name|__P
@@ -231,7 +197,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|statfs
 modifier|*
@@ -247,7 +212,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|getmnttype
 name|__P
@@ -261,7 +225,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|getstdopts
 name|__P
@@ -278,7 +241,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|getufsopts
 name|__P
@@ -295,7 +257,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 modifier|*
@@ -311,7 +272,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|mountfs
 name|__P
@@ -339,7 +299,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|prmount
 name|__P
@@ -358,7 +317,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|usage
 name|__P
@@ -383,8 +341,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|struct
@@ -392,57 +350,70 @@ name|fstab
 modifier|*
 name|fs
 decl_stmt|;
-name|int
-name|all
-decl_stmt|,
-name|ch
-decl_stmt|,
-name|rval
-decl_stmt|,
-name|flags
-decl_stmt|,
-name|ret
-decl_stmt|,
-name|pid
-decl_stmt|,
-name|i
-decl_stmt|;
-name|long
-name|mntsize
-decl_stmt|;
 name|struct
 name|statfs
 modifier|*
 name|mntbuf
 decl_stmt|;
+name|FILE
+modifier|*
+name|pidfile
+decl_stmt|;
+name|long
+name|mntsize
+decl_stmt|;
+name|int
+name|all
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|i
+decl_stmt|,
+name|pid
+decl_stmt|,
+name|ret
+decl_stmt|,
+name|rval
+decl_stmt|,
+name|updateflg
+decl_stmt|;
 name|char
+modifier|*
+name|cp
+decl_stmt|,
 modifier|*
 name|type
 decl_stmt|,
 modifier|*
 name|options
-init|=
-name|NULL
-decl_stmt|;
-name|FILE
+decl_stmt|,
 modifier|*
-name|pidfile
+modifier|*
+name|vfslist
 decl_stmt|;
-name|all
+name|mntname
 operator|=
-literal|0
-expr_stmt|;
-name|type
-operator|=
-name|NULL
+literal|"ufs"
 expr_stmt|;
 name|mnttype
 operator|=
 name|MOUNT_UFS
 expr_stmt|;
-name|mntname
+name|all
 operator|=
-literal|"ufs"
+name|updateflg
+operator|=
+literal|0
+expr_stmt|;
+name|options
+operator|=
+name|type
+operator|=
+name|NULL
+expr_stmt|;
+name|vfslist
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -455,7 +426,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adfrwuvt:o:"
+literal|"adfo:rwt:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -463,9 +434,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -494,11 +462,37 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+name|options
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|type
 operator|=
 name|FSTAB_RO
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|vfslist
+operator|=
+name|makevfslist
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+name|mnttype
+operator|=
+name|getmnttype
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -526,32 +520,6 @@ name|FSTAB_RW
 expr_stmt|;
 break|break;
 case|case
-literal|'o'
-case|:
-name|options
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-name|vfslist
-operator|=
-name|makevfslist
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-name|mnttype
-operator|=
-name|getmnttype
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -568,7 +536,14 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* NOSTRICT */
+define|#
+directive|define
+name|BADTYPE
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(strcmp(type, FSTAB_RO)&&					\ 	    strcmp(type, FSTAB_RW)&& strcmp(type, FSTAB_RQ))
 if|if
 condition|(
 name|all
@@ -580,10 +555,14 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|fs
 operator|=
 name|getfsent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -608,7 +587,7 @@ name|vfslist
 argument_list|)
 condition|)
 continue|continue;
-comment|/* `/' is special, it's always mounted */
+comment|/* `/' is special, it's always mounted. */
 name|mnttype
 operator|=
 name|getmnttype
@@ -758,12 +737,12 @@ operator|==
 literal|1
 operator|&&
 name|vfslist
+operator|!=
+name|NULL
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -787,7 +766,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -798,7 +776,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 name|mnttype
 operator|=
 name|mntbuf
@@ -820,7 +797,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -831,7 +807,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 name|mntname
 operator|=
 name|fs
@@ -866,10 +841,6 @@ name|fs_mntops
 expr_stmt|;
 else|else
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 comment|/* 			 * Concat the two strings with the command line 			 * options last so that they will override the 			 * fstab options. 			 */
 name|i
 operator|=
@@ -903,7 +874,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -911,10 +881,14 @@ argument_list|,
 literal|"-u malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
-name|sprintf
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
 name|cp
+argument_list|,
+name|i
 argument_list|,
 literal|"%s,%s"
 argument_list|,
@@ -948,10 +922,6 @@ name|type
 argument_list|,
 name|options
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -966,7 +936,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|fs
 operator|=
@@ -976,8 +945,9 @@ operator|*
 name|argv
 argument_list|)
 operator|)
+operator|==
+name|NULL
 operator|&&
-operator|!
 operator|(
 name|fs
 operator|=
@@ -987,8 +957,9 @@ operator|*
 name|argv
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -999,7 +970,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|BADTYPE
@@ -1009,7 +979,6 @@ operator|->
 name|fs_type
 argument_list|)
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -1020,7 +989,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 name|mnttype
 operator|=
 name|getmnttype
@@ -1072,17 +1040,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If -t flag has not been specified, and spec 		 * contains either a ':' or a '@' then assume that 		 * an NFS filesystem is being specified ala Sun. 		 */
+comment|/* 		 * If -t flag has not been specified, and spec contains either 		 * a ':' or a '@' then assume that an NFS filesystem is being 		 * specified ala Sun. 		 */
 if|if
 condition|(
 name|vfslist
 operator|==
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|strchr
@@ -1136,10 +1099,6 @@ name|type
 argument_list|,
 name|options
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1164,16 +1123,22 @@ name|pid
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fscanf
 argument_list|(
 name|pidfile
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 operator|&
 name|pid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|pidfile
@@ -1184,12 +1149,19 @@ condition|(
 name|pid
 operator|>
 literal|0
-condition|)
+operator|&&
 name|kill
 argument_list|(
 name|pid
 argument_list|,
 name|SIGHUP
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"signal mountd"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1202,7 +1174,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|mountfs
 parameter_list|(
@@ -1244,8 +1215,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|status
+name|struct
+name|ufs_args
+name|args
 decl_stmt|;
 name|pid_t
 name|pid
@@ -1254,10 +1226,8 @@ name|int
 name|argc
 decl_stmt|,
 name|i
-decl_stmt|;
-name|struct
-name|ufs_args
-name|args
+decl_stmt|,
+name|status
 decl_stmt|;
 name|char
 modifier|*
@@ -1281,8 +1251,7 @@ name|flagval
 index|[
 literal|12
 index|]
-decl_stmt|;
-name|char
+decl_stmt|,
 name|mntpath
 index|[
 name|MAXPATHLEN
@@ -1414,6 +1383,10 @@ name|fspec
 operator|=
 name|spec
 expr_stmt|;
+define|#
+directive|define
+name|DEFAULT_ROOTUID
+value|-2
 name|args
 operator|.
 name|export
@@ -1485,9 +1458,17 @@ index|]
 operator|=
 literal|"-F"
 expr_stmt|;
-name|sprintf
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
 name|flagval
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|flagval
+argument_list|)
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -1561,9 +1542,14 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|execname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|execname
+argument_list|)
 argument_list|,
 literal|"%s/mount_%s"
 argument_list|,
@@ -1810,10 +1796,6 @@ expr_stmt|;
 else|else
 name|perror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1821,10 +1803,6 @@ break|break;
 default|default:
 name|perror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1860,7 +1838,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|void
 name|prmount
 parameter_list|(
@@ -2055,7 +2032,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|int
 name|getmnttype
 parameter_list|(
@@ -2070,23 +2046,19 @@ name|mntname
 operator|=
 name|fstype
 expr_stmt|;
-if|if
-condition|(
-operator|!
+return|return
+operator|(
 name|strcmp
 argument_list|(
 name|fstype
 argument_list|,
 literal|"ufs"
 argument_list|)
-condition|)
-return|return
-operator|(
+operator|==
+literal|0
+condition|?
 name|MOUNT_UFS
-operator|)
-return|;
-return|return
-operator|(
+else|:
 literal|0
 operator|)
 return|;
@@ -2094,39 +2066,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|usage
-parameter_list|()
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage:\n  mount %s %s\n  mount %s\n  mount %s\n"
-argument_list|,
-literal|"[ -frwu ] [ -t ufs | external_type ]"
-argument_list|,
-literal|"[ -o options ] special node"
-argument_list|,
-literal|"[ -afrwu ] [ -t ufs | external_type ]"
-argument_list|,
-literal|"[ -frwu ] special | node"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|getstdopts
 parameter_list|(
@@ -2143,14 +2082,13 @@ modifier|*
 name|flagp
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|opt
-decl_stmt|;
 name|int
 name|negative
 decl_stmt|;
 name|char
+modifier|*
+name|opt
+decl_stmt|,
 name|optbuf
 index|[
 name|BUFSIZ
@@ -2183,10 +2121,6 @@ name|opt
 operator|=
 name|strtok
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|","
@@ -2229,12 +2163,10 @@ literal|2
 expr_stmt|;
 block|}
 else|else
-block|{
 name|negative
 operator|=
 literal|0
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2476,7 +2408,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|getufsopts
 parameter_list|(
@@ -2498,7 +2429,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|getexecopts
 parameter_list|(
@@ -2509,22 +2439,26 @@ parameter_list|)
 name|char
 modifier|*
 name|options
-decl_stmt|;
-name|char
-modifier|*
+decl_stmt|,
+decl|*
 modifier|*
 name|argv
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|int
 name|argc
-init|=
-literal|0
 decl_stmt|;
 name|char
 modifier|*
 name|opt
 decl_stmt|;
+name|argc
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|opt
@@ -2542,10 +2476,6 @@ name|opt
 operator|=
 name|strtok
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|","
@@ -2613,10 +2543,9 @@ name|argc
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
-specifier|static
 name|struct
 name|statfs
 modifier|*
@@ -2629,16 +2558,15 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|long
-name|mntsize
-decl_stmt|;
-name|long
-name|i
-decl_stmt|;
 name|struct
 name|statfs
 modifier|*
 name|mntbuf
+decl_stmt|;
+name|long
+name|i
+decl_stmt|,
+name|mntsize
 decl_stmt|;
 name|mntsize
 operator|=
@@ -2704,26 +2632,13 @@ return|;
 block|}
 return|return
 operator|(
-operator|(
-expr|struct
-name|statfs
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|skipvfs
-decl_stmt|;
-end_decl_stmt
-
 begin_function
-specifier|static
 name|int
 name|badvfstype
 parameter_list|(
@@ -2744,7 +2659,7 @@ if|if
 condition|(
 name|vfslist
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2755,6 +2670,8 @@ while|while
 condition|(
 operator|*
 name|vfslist
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2786,7 +2703,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|badvfsname
 parameter_list|(
@@ -2808,7 +2724,7 @@ if|if
 condition|(
 name|vfslist
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2819,6 +2735,8 @@ while|while
 condition|(
 operator|*
 name|vfslist
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2852,7 +2770,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 modifier|*
 modifier|*
@@ -2865,6 +2782,9 @@ modifier|*
 name|fslist
 decl_stmt|;
 block|{
+name|int
+name|i
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -2872,9 +2792,6 @@ name|av
 decl_stmt|,
 modifier|*
 name|nextcp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -2941,11 +2858,6 @@ operator|++
 expr_stmt|;
 name|av
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 call|(
@@ -2993,6 +2905,7 @@ name|nextcp
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|nextcp
 operator|=
 name|index
@@ -3001,6 +2914,9 @@ name|nextcp
 argument_list|,
 literal|','
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -3024,13 +2940,44 @@ name|i
 operator|++
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 operator|(
 name|av
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage:\n  mount %s %s\n  mount %s\n  mount %s\n"
+argument_list|,
+literal|"[ -frwu ] [ -t ufs | external_type ]"
+argument_list|,
+literal|"[ -o options ] special node"
+argument_list|,
+literal|"[ -afrwu ] [ -t ufs | external_type ]"
+argument_list|,
+literal|"[ -frwu ] special | node"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
