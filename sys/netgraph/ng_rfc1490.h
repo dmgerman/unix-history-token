@@ -58,6 +58,13 @@ name|NG_RFC1490_HOOK_PPP
 value|"ppp"
 end_define
 
+begin_define
+define|#
+directive|define
+name|NG_RFC1490_HOOK_ETHERNET
+value|"ethernet"
+end_define
+
 begin_endif
 endif|#
 directive|endif
