@@ -247,24 +247,6 @@ end_comment
 begin_typedef
 typedef|typedef
 name|u_int32_t
-name|in_addr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* base type for internet address */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|in_port_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
 name|ino_t
 typedef|;
 end_typedef
@@ -583,6 +565,10 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
+begin_comment
+comment|/*  * XXX: Deprecated;  * byteorder(3) functions now defined in<apra/inet.h>.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -630,6 +616,62 @@ begin_undef
 undef|#
 directive|undef
 name|_BSD_CLOCKID_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX: Deprecated; now defined in<apra/inet.h>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_IN_ADDR_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_IN_ADDR_T_
+name|in_addr_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_IN_ADDR_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX: Deprecated; now defined in<apra/inet.h>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_IN_PORT_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_IN_PORT_T_
+name|in_port_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_IN_PORT_T_
 end_undef
 
 begin_endif

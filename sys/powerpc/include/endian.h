@@ -83,140 +83,109 @@ name|BYTE_ORDER
 value|BIG_ENDIAN
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<machine/ansi.h>
 end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|in_addr_t
+name|__uint32_t
 name|htonl
 name|__P
 argument_list|(
 operator|(
-name|in_addr_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint32_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|in_port_t
+name|__uint16_t
 name|htons
 name|__P
 argument_list|(
 operator|(
-name|in_port_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint16_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|in_addr_t
+name|__uint32_t
 name|ntohl
 name|__P
 argument_list|(
 operator|(
-name|in_addr_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint32_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|in_port_t
+name|__uint16_t
 name|ntohs
 name|__P
 argument_list|(
 operator|(
-name|in_port_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint16_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int16_t
+name|__uint16_t
 name|bswap16
 name|__P
 argument_list|(
 operator|(
-name|u_int16_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint16_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|__uint32_t
 name|bswap32
 name|__P
 argument_list|(
 operator|(
-name|u_int32_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint32_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int64_t
+name|__uint64_t
 name|bswap64
 name|__P
 argument_list|(
 operator|(
-name|u_int64_t
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__const__
+name|__uint64_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -336,7 +305,7 @@ name|NTOHL
 parameter_list|(
 name|x
 parameter_list|)
-value|(x) = ntohl((in_addr_t)(x))
+value|(x) = ntohl((__uint32_t)(x))
 end_define
 
 begin_define
@@ -346,7 +315,7 @@ name|NTOHS
 parameter_list|(
 name|x
 parameter_list|)
-value|(x) = ntohs((in_port_t)(x))
+value|(x) = ntohs((__uint16_t)(x))
 end_define
 
 begin_define
@@ -356,7 +325,7 @@ name|HTONL
 parameter_list|(
 name|x
 parameter_list|)
-value|(x) = htonl((in_addr_t)(x))
+value|(x) = htonl((__uint32_t)(x))
 end_define
 
 begin_define
@@ -366,7 +335,7 @@ name|HTONS
 parameter_list|(
 name|x
 parameter_list|)
-value|(x) = htons((in_port_t)(x))
+value|(x) = htons((__uint16_t)(x))
 end_define
 
 begin_endif
