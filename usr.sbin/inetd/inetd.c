@@ -6591,7 +6591,7 @@ name|se_fd
 argument_list|,
 name|IPPROTO_IPV6
 argument_list|,
-name|IPV6_PKTINFO
+name|IPV6_RECVPKTINFO
 argument_list|,
 operator|(
 name|char
