@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.13 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.14 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.13 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.14 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2083,6 +2083,12 @@ literal|"%s%s"
 argument_list|,
 name|SmtpMsgBuffer
 argument_list|,
+name|m
+operator|==
+literal|0
+condition|?
+literal|"\r\n"
+else|:
 name|m
 operator|->
 name|m_eol
