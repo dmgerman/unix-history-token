@@ -74,52 +74,6 @@ begin_comment
 comment|/* subtract from NS val for REJECT bit */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|sticky_route
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|in_range
-block|{
-name|struct
-name|in_addr
-name|ipaddr
-decl_stmt|;
-name|struct
-name|in_addr
-name|mask
-decl_stmt|;
-name|int
-name|width
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|port_range
-block|{
-name|unsigned
-name|nports
-decl_stmt|;
-comment|/* How many ports */
-name|unsigned
-name|maxports
-decl_stmt|;
-comment|/* How many allocated (malloc) ports */
-name|u_short
-modifier|*
-name|port
-decl_stmt|;
-comment|/* The actual ports */
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|ipcp
@@ -153,7 +107,7 @@ block|}
 name|vj
 struct|;
 name|struct
-name|in_range
+name|ncprange
 name|my_range
 decl_stmt|;
 comment|/* MYADDR spec */
@@ -163,7 +117,7 @@ name|netmask
 decl_stmt|;
 comment|/* Iface netmask (unused by most OSs) */
 name|struct
-name|in_range
+name|ncprange
 name|peer_range
 decl_stmt|;
 comment|/* HISADDR spec */
@@ -172,14 +126,6 @@ name|iplist
 name|peer_list
 decl_stmt|;
 comment|/* Ranges of HISADDR values */
-name|u_long
-name|sendpipe
-decl_stmt|;
-comment|/* route sendpipe size */
-name|u_long
-name|recvpipe
-decl_stmt|;
-comment|/* route recvpipe size */
 name|struct
 name|in_addr
 name|TriggerAddress
@@ -218,29 +164,11 @@ comment|/* NetBIOS NS addresses offered */
 block|}
 name|ns
 struct|;
-struct|struct
-block|{
-name|struct
-name|port_range
-name|tcp
-decl_stmt|,
-name|udp
-decl_stmt|;
-comment|/* The range of urgent ports */
-name|unsigned
-name|tos
-range|:
-literal|1
-decl_stmt|;
-comment|/* Urgent IPTOS_LOWDELAY packets ? */
-block|}
-name|urgent
-struct|;
 name|struct
 name|fsm_retry
 name|fsm
 decl_stmt|;
-comment|/* How often/frequently to resend requests */
+comment|/* frequency to resend requests */
 block|}
 name|cfg
 struct|;
@@ -294,12 +222,6 @@ comment|/* Contents of resolv.conf without ns */
 block|}
 name|ns
 struct|;
-name|struct
-name|sticky_route
-modifier|*
-name|route
-decl_stmt|;
-comment|/* List of dynamic routes */
 name|unsigned
 name|heis1172
 range|:
@@ -335,14 +257,6 @@ name|u_int32_t
 name|my_compproto
 decl_stmt|;
 comment|/* VJ params I'm willing to use */
-name|struct
-name|in_addr
-name|dns
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* DNSs to REQ/ACK */
 name|u_int32_t
 name|peer_reject
 decl_stmt|;
@@ -403,6 +317,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|cmdargs
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|iface_addr
 struct_decl|;
 end_struct_decl
 
@@ -585,10 +505,32 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ipcp_CleanInterface
+name|ipcp_IfaceAddrAdded
 parameter_list|(
 name|struct
 name|ipcp
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|iface_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ipcp_IfaceAddrDeleted
+parameter_list|(
+name|struct
+name|ipcp
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|iface_addr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -601,62 +543,6 @@ name|ipcp_InterfaceUp
 parameter_list|(
 name|struct
 name|ipcp
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ipcp_IsUrgentPort
-parameter_list|(
-name|struct
-name|port_range
-modifier|*
-parameter_list|,
-name|u_short
-parameter_list|,
-name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ipcp_AddUrgentPort
-parameter_list|(
-name|struct
-name|port_range
-modifier|*
-parameter_list|,
-name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ipcp_RemoveUrgentPort
-parameter_list|(
-name|struct
-name|port_range
-modifier|*
-parameter_list|,
-name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ipcp_ClearUrgentPorts
-parameter_list|(
-name|struct
-name|port_range
 modifier|*
 parameter_list|)
 function_decl|;
@@ -710,129 +596,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|ipcp_IsUrgentTcpPort
+begin_function_decl
+specifier|extern
+name|size_t
+name|ipcp_QueueLen
 parameter_list|(
+name|struct
 name|ipcp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ipcp_PushPacket
+parameter_list|(
+name|struct
+name|ipcp
+modifier|*
 parameter_list|,
-name|p1
-parameter_list|,
-name|p2
+name|struct
+name|link
+modifier|*
 parameter_list|)
-define|\
-value|ipcp_IsUrgentPort(&(ipcp)->cfg.urgent.tcp, p1, p2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_IsUrgentUdpPort
-parameter_list|(
-name|ipcp
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|ipcp_IsUrgentPort(&(ipcp)->cfg.urgent.udp, p1, p2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_AddUrgentTcpPort
-parameter_list|(
-name|ipcp
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|ipcp_AddUrgentPort(&(ipcp)->cfg.urgent.tcp, p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_AddUrgentUdpPort
-parameter_list|(
-name|ipcp
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|ipcp_AddUrgentPort(&(ipcp)->cfg.urgent.udp, p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_RemoveUrgentTcpPort
-parameter_list|(
-name|ipcp
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|ipcp_RemoveUrgentPort(&(ipcp)->cfg.urgent.tcp, p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_RemoveUrgentUdpPort
-parameter_list|(
-name|ipcp
-parameter_list|,
-name|p
-parameter_list|)
-define|\
-value|ipcp_RemoveUrgentPort(&(ipcp)->cfg.urgent.udp, p)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_ClearUrgentTcpPorts
-parameter_list|(
-name|ipcp
-parameter_list|)
-define|\
-value|ipcp_ClearUrgentPorts(&(ipcp)->cfg.urgent.tcp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_ClearUrgentUdpPorts
-parameter_list|(
-name|ipcp
-parameter_list|)
-define|\
-value|ipcp_ClearUrgentPorts(&(ipcp)->cfg.urgent.udp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_ClearUrgentTOS
-parameter_list|(
-name|ipcp
-parameter_list|)
-value|(ipcp)->cfg.urgent.tos = 0;
-end_define
-
-begin_define
-define|#
-directive|define
-name|ipcp_SetUrgentTOS
-parameter_list|(
-name|ipcp
-parameter_list|)
-value|(ipcp)->cfg.urgent.tos = 1;
-end_define
+function_decl|;
+end_function_decl
 
 end_unit
 

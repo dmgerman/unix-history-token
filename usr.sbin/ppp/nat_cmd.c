@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -202,7 +208,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
 end_include
 
 begin_include
@@ -255,7 +279,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ip.h"
+file|"ncp.h"
 end_include
 
 begin_include
@@ -2901,6 +2925,8 @@ expr_stmt|;
 name|PacketCheck
 argument_list|(
 name|bundle
+argument_list|,
+name|AF_INET
 argument_list|,
 name|MBUF_CTOP
 argument_list|(

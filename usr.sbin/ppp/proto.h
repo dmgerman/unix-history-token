@@ -51,6 +51,28 @@ begin_comment
 comment|/* Multilink fragment */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOINET6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PROTO_IPV6
+value|0x0057
+end_define
+
+begin_comment
+comment|/* IPv6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -89,6 +111,24 @@ directive|define
 name|PROTO_IPCP
 value|0x8021
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOINET6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PROTO_IPV6CP
+value|0x8057
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

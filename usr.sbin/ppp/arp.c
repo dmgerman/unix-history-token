@@ -190,13 +190,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"filter.h"
+file|"ipv6cp.h"
 end_include
 
 begin_include
@@ -227,6 +233,18 @@ begin_include
 include|#
 directive|include
 file|"mp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filter.h"
 end_include
 
 begin_ifndef

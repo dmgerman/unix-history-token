@@ -83,67 +83,92 @@ name|OPT_IFACEALIAS
 value|0x0004
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOINET6
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|OPT_KEEPSESSION
+name|OPT_IPCP
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_LOOPBACK
+name|OPT_IPV6CP
 value|0x0010
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|OPT_PASSWDAUTH
+name|OPT_KEEPSESSION
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXY
+name|OPT_LOOPBACK
 value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_PROXYALL
+name|OPT_PASSWDAUTH
 value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_SROUTES
+name|OPT_PROXY
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_TCPMSSFIXUP
+name|OPT_PROXYALL
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_THROUGHPUT
+name|OPT_SROUTES
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_UTMP
+name|OPT_TCPMSSFIXUP
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_THROUGHPUT
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_UTMP
+value|0x2000
 end_define
 
 begin_define
@@ -379,21 +404,10 @@ struct|;
 block|}
 name|cfg
 struct|;
-struct|struct
-block|{
 name|struct
-name|ipcp
-name|ipcp
-decl_stmt|;
-comment|/* Our IPCP FSM */
-name|struct
-name|mp
-name|mp
-decl_stmt|;
-comment|/* Our MP */
-block|}
 name|ncp
-struct|;
+name|ncp
+decl_stmt|;
 struct|struct
 block|{
 name|struct
@@ -553,19 +567,6 @@ specifier|extern
 name|void
 name|bundle_LinksRemoved
 parameter_list|(
-name|struct
-name|bundle
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|bundle_LinkIsUp
-parameter_list|(
-specifier|const
 name|struct
 name|bundle
 modifier|*
@@ -1008,11 +1009,11 @@ name|bundle
 modifier|*
 parameter_list|,
 name|struct
-name|in_addr
+name|ncpaddr
 modifier|*
 parameter_list|,
 name|struct
-name|in_addr
+name|ncpaddr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1026,17 +1027,9 @@ parameter_list|(
 name|struct
 name|bundle
 modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-type|[
-function_decl|2]
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern

@@ -243,6 +243,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -286,6 +298,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
 
 begin_include
 include|#
@@ -1926,6 +1950,9 @@ name|mode
 operator|==
 name|PHYS_AUTO
 operator|&&
+name|ncprange_family
+argument_list|(
+operator|&
 name|bundle
 operator|->
 name|ncp
@@ -1935,12 +1962,9 @@ operator|.
 name|cfg
 operator|.
 name|peer_range
-operator|.
-name|ipaddr
-operator|.
-name|s_addr
+argument_list|)
 operator|==
-name|INADDR_ANY
+name|AF_UNSPEC
 condition|)
 block|{
 name|prompt_Printf

@@ -105,39 +105,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|LogLCP
+name|LogIPV6CP
 value|(13)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogLQM
+name|LogLCP
 value|(14)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogPHASE
+name|LogLQM
 value|(15)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogPHYSICAL
+name|LogPHASE
 value|(16)
 end_define
-
-begin_comment
-comment|/* syslog(LOG_INFO, ....)	 */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|LogSYNC
+name|LogPHYSICAL
 value|(17)
 end_define
 
@@ -148,15 +144,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogTCPIP
+name|LogSYNC
 value|(18)
+end_define
+
+begin_comment
+comment|/* syslog(LOG_INFO, ....)	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LogTCPIP
+value|(19)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogTIMER
-value|(19)
+value|(20)
 end_define
 
 begin_comment
@@ -167,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|LogTUN
-value|(20)
+value|(21)
 end_define
 
 begin_comment
@@ -178,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|LogWARN
-value|(21)
+value|(22)
 end_define
 
 begin_comment
@@ -189,7 +196,7 @@ begin_define
 define|#
 directive|define
 name|LogERROR
-value|(22)
+value|(23)
 end_define
 
 begin_comment
@@ -200,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|LogALERT
-value|(23)
+value|(24)
 end_define
 
 begin_comment
@@ -211,14 +218,14 @@ begin_define
 define|#
 directive|define
 name|LogMAXCONF
-value|(20)
+value|(21)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogMAX
-value|(23)
+value|(24)
 end_define
 
 begin_struct_decl

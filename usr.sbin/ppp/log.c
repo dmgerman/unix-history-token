@@ -116,6 +116,8 @@ literal|"ID0"
 block|,
 literal|"IPCP"
 block|,
+literal|"IPV6CP"
+block|,
 literal|"LCP"
 block|,
 literal|"LQM"

@@ -144,6 +144,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ncpaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipcp.h"
 end_include
 
@@ -187,6 +199,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ipv6cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ncp.h"
+end_include
 
 begin_include
 include|#

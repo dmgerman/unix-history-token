@@ -263,6 +263,10 @@ name|int
 name|link
 decl_stmt|;
 comment|/* Next link to send on */
+name|int
+name|af
+decl_stmt|;
+comment|/* Next address family to send */
 block|}
 name|out
 struct|;
@@ -552,7 +556,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mp_FillQueues
+name|mp_FillPhysicalQueues
 parameter_list|(
 name|struct
 name|bundle
@@ -637,18 +641,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mp_DeleteQueue
-parameter_list|(
-name|struct
-name|mp
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|mp_RestartAutoloadTimer
 parameter_list|(
 name|struct
@@ -674,6 +666,18 @@ begin_function_decl
 specifier|extern
 name|void
 name|mp_StopAutoloadTimer
+parameter_list|(
+name|struct
+name|mp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|mp_QueueLen
 parameter_list|(
 name|struct
 name|mp
