@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unix.c,v 1.6 1998/05/15 20:19:21 wollman Exp $"
+literal|"$Id: unix.c,v 1.7 1998/05/16 08:31:49 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_include
@@ -560,15 +566,6 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|s
-parameter_list|,
-name|e
-parameter_list|)
-value|((char *)&((s *)0)->e - (char *)((s *)0))
 name|unp
 operator|=
 operator|&
