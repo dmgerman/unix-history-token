@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	6.2	84/02/07	*/
+comment|/*	ufs_inode.c	6.3	84/02/15	*/
 end_comment
 
 begin_include
@@ -1284,40 +1284,16 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|i_flag
-operator|&
-operator|(
-name|IUPD
-operator||
-name|IACC
-operator||
-name|ICHG
-operator|)
-operator|)
-operator|&&
-operator|(
+operator|!
 operator|(
 name|ip
 operator|->
 name|i_flag
 operator|&
 name|ILOCKED
-operator|)
-operator|==
-literal|0
 operator|)
 condition|)
-block|{
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|ILOCKED
-expr_stmt|;
-name|iupdat
+name|ITIMES
 argument_list|(
 name|ip
 argument_list|,
@@ -1326,16 +1302,8 @@ name|time
 argument_list|,
 operator|&
 name|time
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|iunlock
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-block|}
 name|ip
 operator|->
 name|i_count
@@ -1422,6 +1390,8 @@ operator||
 name|IACC
 operator||
 name|ICHG
+operator||
+name|IMOD
 operator|)
 operator|)
 operator|!=
@@ -1540,6 +1510,8 @@ operator||
 name|IACC
 operator||
 name|ICHG
+operator||
+name|IMOD
 operator|)
 expr_stmt|;
 name|dp
