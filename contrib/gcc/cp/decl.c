@@ -462,6 +462,9 @@ operator|,
 name|tree
 operator|,
 name|tree
+operator|,
+name|tree
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1210,6 +1213,9 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|int
+parameter_list|,
+name|tree
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2628,6 +2634,8 @@ decl_stmt|;
 name|binding_entry
 modifier|*
 name|p
+init|=
+name|NULL
 decl_stmt|;
 name|size_t
 name|i
@@ -4035,6 +4043,25 @@ operator|->
 name|tag_transparent
 operator|)
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns the kind of the innermost scope.  */
+end_comment
+
+begin_function
+name|bool
+name|innermost_scope_is_class_p
+parameter_list|()
+block|{
+return|return
+name|current_binding_level
+operator|->
+name|parm_flag
+operator|==
+literal|2
 return|;
 block|}
 end_function
@@ -12809,6 +12836,14 @@ argument_list|(
 name|newdecl
 argument_list|)
 expr_stmt|;
+comment|/* Whether or not the builtin can throw exceptions has no 	 bearing on this declarator.  */
+name|TREE_NOTHROW
+argument_list|(
+name|olddecl
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|DECL_THIS_STATIC
@@ -20735,7 +20770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Define a label, specifying the location in the source file.    Return the LABEL_DECL node for the label, if the definition is valid.    Otherwise return 0.  */
+comment|/* Define a label, specifying the location in the source file.    Return the LABEL_DECL node for the label.  */
 end_comment
 
 begin_function
@@ -20856,7 +20891,6 @@ argument_list|)
 operator|!=
 name|NULL_TREE
 condition|)
-block|{
 name|error
 argument_list|(
 literal|"duplicate label `%D'"
@@ -20864,14 +20898,6 @@ argument_list|,
 name|decl
 argument_list|)
 expr_stmt|;
-name|POP_TIMEVAR_AND_RETURN
-argument_list|(
-name|TV_NAME_LOOKUP
-argument_list|,
-name|NULL_TREE
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* Mark label as having been defined.  */
@@ -20922,19 +20948,15 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
-name|POP_TIMEVAR_AND_RETURN
-argument_list|(
-name|TV_NAME_LOOKUP
-argument_list|,
-name|decl
-argument_list|)
-expr_stmt|;
 block|}
 name|timevar_pop
 argument_list|(
 name|TV_NAME_LOOKUP
 argument_list|)
 expr_stmt|;
+return|return
+name|decl
+return|;
 block|}
 end_function
 
@@ -30083,7 +30105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle initialization of references.    These three arguments are from `cp_finish_decl', and have the    same meaning here that they do there.     Quotes on semantics can be found in ARM 8.4.3.  */
+comment|/* Handle initialization of references.  DECL, TYPE, and INIT have the    same meaning as in cp_finish_decl.  *CLEANUP must be NULL on entry,    but will be set to a new CLEANUP_STMT if a temporary is created    that must be destroeyd subsequently.     Returns an initializer expression to use to initialize DECL, or    NULL if the initialization can be performed statically.     Quotes on semantics can be found in ARM 8.4.3.  */
 end_comment
 
 begin_function
@@ -30091,19 +30113,19 @@ specifier|static
 name|tree
 name|grok_reference_init
 parameter_list|(
-name|decl
-parameter_list|,
-name|type
-parameter_list|,
-name|init
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|,
+parameter_list|,
+name|tree
 name|type
-decl_stmt|,
+parameter_list|,
+name|tree
 name|init
-decl_stmt|;
+parameter_list|,
+name|tree
+modifier|*
+name|cleanup
+parameter_list|)
 block|{
 name|tree
 name|tmp
@@ -30257,6 +30279,8 @@ argument_list|,
 name|init
 argument_list|,
 name|decl
+argument_list|,
+name|cleanup
 argument_list|)
 expr_stmt|;
 if|if
@@ -31720,7 +31744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Verify INIT (the initializer for DECL), and record the    initialization in DECL_INITIAL, if appropriate.       If the return value is non-NULL, it is an expression that must be    evaluated dynamically to initialize DECL.  */
+comment|/* Verify INIT (the initializer for DECL), and record the    initialization in DECL_INITIAL, if appropriate.  CLEANUP is as for    grok_reference_init.     If the return value is non-NULL, it is an expression that must be    evaluated dynamically to initialize DECL.  */
 end_comment
 
 begin_function
@@ -31736,6 +31760,10 @@ name|init
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|tree
+modifier|*
+name|cleanup
 parameter_list|)
 block|{
 name|tree
@@ -31970,6 +31998,8 @@ argument_list|,
 name|type
 argument_list|,
 name|init
+argument_list|,
+name|cleanup
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -33013,7 +33043,6 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|tree
 name|type
 decl_stmt|;
@@ -33021,6 +33050,9 @@ name|tree
 name|ttype
 init|=
 name|NULL_TREE
+decl_stmt|;
+name|tree
+name|cleanup
 decl_stmt|;
 specifier|const
 name|char
@@ -33051,6 +33083,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Assume no cleanup is required.  */
+name|cleanup
+operator|=
+name|NULL_TREE
+expr_stmt|;
 comment|/* If a name was specified, get the string.  */
 if|if
 condition|(
@@ -33496,6 +33533,9 @@ argument_list|,
 name|init
 argument_list|,
 name|flags
+argument_list|,
+operator|&
+name|cleanup
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -33568,6 +33608,9 @@ argument_list|,
 name|init
 argument_list|,
 name|flags
+argument_list|,
+operator|&
+name|cleanup
 argument_list|)
 expr_stmt|;
 comment|/* Thread-local storage cannot be dynamically initialized.  */
@@ -33960,6 +34003,16 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* If a CLEANUP_STMT was created to destroy a temporary bound to a      reference, insert it in the statement-tree now.  */
+if|if
+condition|(
+name|cleanup
+condition|)
+name|add_stmt
+argument_list|(
+name|cleanup
+argument_list|)
+expr_stmt|;
 name|finish_end
 label|:
 if|if
@@ -45749,7 +45802,16 @@ name|ctype
 argument_list|,
 name|type
 argument_list|,
+name|TREE_CODE
+argument_list|(
 name|declarator
+argument_list|)
+operator|!=
+name|TEMPLATE_ID_EXPR
+condition|?
+name|declarator
+else|:
+name|dname
 argument_list|,
 name|declarator
 argument_list|,
@@ -52347,7 +52409,8 @@ name|FUNCDEF
 argument_list|,
 literal|1
 argument_list|,
-name|NULL
+operator|&
+name|attrs
 argument_list|)
 expr_stmt|;
 comment|/* If the declarator is not suitable for a function definition, 	 cause a syntax error.  */
