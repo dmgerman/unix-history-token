@@ -106,16 +106,6 @@ comment|/* #define SYM_CONF_IARB_SUPPORT */
 end_comment
 
 begin_comment
-comment|/*  *  Not needed on FreeBSD, since the system allocator   *  does provide naturally aligned addresses.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYM_CONF_USE_INTERNAL_ALLOCATOR
-end_define
-
-begin_comment
 comment|/*-------------------------------------------------------------------  *  Configuration that could be dynamic if it was possible   *  to pass arguments to the driver.  *-------------------------------------------------------------------  */
 end_comment
 
