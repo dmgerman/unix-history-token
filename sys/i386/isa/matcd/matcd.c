@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.27 1997/05/10 12:13:17 joerg Exp $ */
+comment|/* $Id: matcd.c,v 1.28 1997/07/20 11:14:53 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2997,7 +2997,7 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/*Make sure we don't get intr'ed*/
-name|tqdisksort
+name|bufqdisksort
 argument_list|(
 operator|&
 name|request_head
@@ -3088,7 +3088,7 @@ name|ldrive
 decl_stmt|;
 name|bp
 operator|=
-name|TAILQ_FIRST
+name|bufq_first
 argument_list|(
 operator|&
 name|request_head
@@ -3182,7 +3182,7 @@ comment|/*DEBUGIO*/
 return|return;
 block|}
 comment|/*	Ok, the controller is idle (not necessarily the drive) and so 	get the command to do and issue it */
-name|TAILQ_REMOVE
+name|bufq_remove
 argument_list|(
 operator|&
 name|request_head
@@ -3191,8 +3191,6 @@ name|controller
 index|]
 argument_list|,
 name|bp
-argument_list|,
-name|b_act
 argument_list|)
 expr_stmt|;
 name|part
@@ -4969,7 +4967,7 @@ argument_list|,
 name|iftype
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
+name|bufq_init
 argument_list|(
 operator|&
 name|request_head

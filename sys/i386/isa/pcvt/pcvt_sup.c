@@ -231,6 +231,20 @@ begin_comment
 comment|/* XSERVER */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|async_update_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|async_update_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -248,6 +262,20 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|scrnsv_timeout_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|scrnsv_timeout_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -350,6 +378,20 @@ end_decl_stmt
 begin_comment
 comment|/* attention char ptr */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|scrnsv_blink_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|scrnsv_blink_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -3502,6 +3544,8 @@ argument_list|(
 name|async_update
 argument_list|,
 name|UPDATE_START
+argument_list|,
+name|async_update_ch
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4565,6 +4609,8 @@ operator|==
 name|UPDATE_START
 condition|)
 block|{
+name|async_update_ch
+operator|=
 name|timeout
 argument_list|(
 name|async_update
@@ -8316,6 +8362,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|scrnsv_blink_ch
+operator|=
 name|timeout
 argument_list|(
 name|scrnsv_blink
@@ -8382,6 +8430,8 @@ argument_list|(
 name|scrnsv_timedout
 argument_list|,
 name|NULL
+argument_list|,
+name|scrnsv_timeout_ch
 argument_list|)
 expr_stmt|;
 name|scrnsv_timeout
@@ -8594,6 +8644,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* prepare for next time... */
+name|scrnsv_timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|scrnsv_timedout
@@ -8633,6 +8685,8 @@ name|vsp
 operator|->
 name|Crtat
 expr_stmt|;
+name|scrnsv_blink_ch
+operator|=
 name|timeout
 argument_list|(
 name|scrnsv_blink
@@ -8722,6 +8776,8 @@ argument_list|(
 name|scrnsv_timedout
 argument_list|,
 name|NULL
+argument_list|,
+name|scrnsv_timeout_ch
 argument_list|)
 expr_stmt|;
 block|}
@@ -8744,6 +8800,8 @@ argument_list|(
 name|scrnsv_blink
 argument_list|,
 name|NULL
+argument_list|,
+name|scrnsv_blink_ch
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8830,6 +8888,8 @@ name|reschedule
 condition|)
 block|{
 comment|/* mark next timeout */
+name|scrnsv_timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|scrnsv_timedout

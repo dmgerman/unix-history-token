@@ -718,6 +718,20 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout_handle
+name|lost_intr_ch
+init|=
+name|CALLOUT_HANDLE_INITIALIZER
+argument_list|(
+operator|&
+name|lost_intr_ch
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -809,6 +823,8 @@ name|opri
 argument_list|)
 expr_stmt|;
 block|}
+name|lost_intr_ch
+operator|=
 name|timeout
 argument_list|(
 name|check_for_lost_intr
@@ -1050,8 +1066,12 @@ argument_list|(
 name|check_for_lost_intr
 argument_list|,
 name|NULL
+argument_list|,
+name|lost_intr_ch
 argument_list|)
 expr_stmt|;
+name|lost_intr_ch
+operator|=
 name|timeout
 argument_list|(
 name|check_for_lost_intr
@@ -2151,6 +2171,8 @@ name|void
 operator|*
 operator|)
 name|NULL
+argument_list|,
+name|lost_intr_ch
 argument_list|)
 expr_stmt|;
 name|lost_intr_timeout_queued
@@ -2606,6 +2628,8 @@ expr_stmt|;
 name|update_led
 argument_list|()
 expr_stmt|;
+name|lost_intr_ch
+operator|=
 name|timeout
 argument_list|(
 name|check_for_lost_intr
