@@ -4342,6 +4342,12 @@ index|]
 operator|.
 name|controller
 operator|=
+name|itm
+condition|?
+name|itm
+operator|->
+name|type
+else|:
 name|PCIC_PD6729
 expr_stmt|;
 if|if
