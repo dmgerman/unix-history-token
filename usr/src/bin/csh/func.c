@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.35 (Berkeley) %G%"
+literal|"@(#)func.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5414,7 +5414,7 @@ end_function
 
 begin_typedef
 typedef|typedef
-name|int
+name|quad_t
 name|RLIM_TYPE
 typedef|;
 end_typedef
