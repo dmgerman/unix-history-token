@@ -4379,7 +4379,7 @@ if|if
 condition|(
 operator|(
 operator|!
-name|cDB
+name|DB
 operator|&&
 name|SF
 operator|!=

@@ -113,7 +113,7 @@ operator|&
 name|DA
 block|,
 operator|&
-name|cDB
+name|DB
 block|,
 operator|&
 name|EO

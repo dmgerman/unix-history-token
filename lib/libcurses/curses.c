@@ -102,7 +102,7 @@ name|CA
 decl_stmt|,
 name|DA
 decl_stmt|,
-name|cDB
+name|DB
 decl_stmt|,
 name|EO
 decl_stmt|,
