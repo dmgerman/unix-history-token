@@ -1452,11 +1452,11 @@ if|if
 condition|(
 name|foundfile
 condition|)
+comment|/* Format not recognized (or unloadable). */
 name|error
 operator|=
 name|ENOEXEC
 expr_stmt|;
-comment|/* Format not recognised (or unloadable) */
 else|else
 name|error
 operator|=
@@ -7788,7 +7788,8 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
-literal|"linker_load_module: verinfo is not NULL"
+literal|"linker_load_module: verinfo"
+literal|" is not NULL"
 operator|)
 argument_list|)
 expr_stmt|;
