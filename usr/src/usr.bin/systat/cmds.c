@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	1.5 (Berkeley) %G%"
+literal|"@(#)cmds.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,6 +443,51 @@ name|c_open
 call|)
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|wnd
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Couldn't open new display"
+argument_list|)
+expr_stmt|;
+name|wnd
+operator|=
+call|(
+modifier|*
+name|curcmd
+operator|->
+name|c_open
+call|)
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|wnd
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Couldn't change back to previous cmd"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|p
+operator|=
+name|curcmd
+expr_stmt|;
+block|}
 name|curcmd
 operator|=
 name|p
