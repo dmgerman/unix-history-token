@@ -1316,12 +1316,18 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Work around race with cv_timedwait_end similar to that 		 * between msleep and endtsleep. 		 */
+comment|/* 		 * Work around race with cv_timedwait_end similar to that 		 * between msleep and endtsleep. 		 * Go back to sleep. 		 */
 name|td
 operator|->
 name|td_flags
 operator||=
 name|TDF_TIMEOUT
+expr_stmt|;
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_SLP
 expr_stmt|;
 name|td
 operator|->
@@ -1624,12 +1630,18 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Work around race with cv_timedwait_end similar to that 		 * between msleep and endtsleep. 		 */
+comment|/* 		 * Work around race with cv_timedwait_end similar to that 		 * between msleep and endtsleep. 		 * Go back to sleep. 		 */
 name|td
 operator|->
 name|td_flags
 operator||=
 name|TDF_TIMEOUT
+expr_stmt|;
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_SLP
 expr_stmt|;
 name|td
 operator|->
