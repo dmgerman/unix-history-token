@@ -5257,6 +5257,7 @@ name|bus_dmamap_t
 name|map
 parameter_list|,
 name|int
+name|op
 parameter_list|)
 block|{
 name|struct
