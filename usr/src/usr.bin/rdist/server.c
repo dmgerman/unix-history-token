@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.21 (Berkeley) 84/12/06"
+literal|"@(#)server.c	4.22 (Berkeley) 84/12/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -3744,9 +3744,33 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+operator|||
+name|chkparent
+argument_list|(
+name|new
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|symlink
+argument_list|(
+name|buf
+argument_list|,
+name|new
+argument_list|)
+operator|<
+literal|0
+condition|)
 goto|goto
 name|badn
 goto|;
+block|}
 name|mode
 operator|&=
 literal|0777
@@ -3778,14 +3802,9 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 operator|)
-operator|<
+operator|>=
 literal|0
-condition|)
-goto|goto
-name|badt
-goto|;
-if|if
-condition|(
+operator|&&
 name|i
 operator|==
 name|size
@@ -3872,7 +3891,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|badt
+name|badn
 goto|;
 block|}
 name|ack
@@ -4339,8 +4358,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|fixup
-label|:
 if|if
 condition|(
 name|chog
@@ -4367,6 +4384,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|fixup
+label|:
 if|if
 condition|(
 name|rename
