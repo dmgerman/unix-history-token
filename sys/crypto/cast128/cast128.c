@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: cast128.c,v 1.4 2000/11/06 13:58:08 itojun Exp $	*/
+comment|/*	$KAME: cast128.c,v 1.5 2001/11/27 09:47:32 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -121,7 +121,10 @@ name|subkey
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|key
+name|key0
+parameter_list|,
+name|int
+name|keylen
 parameter_list|)
 block|{
 name|u_int32_t
@@ -131,6 +134,63 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* for x0x1x2x3, x4x5x6x7 ..., z0z1z2z3, ... */
+name|u_int32_t
+name|key
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* 	 * the key has to be initilized.  should it be logged when the key 	 * length is more than 16 bytes ?  anyway, ignore it at this moment. 	 */
+if|if
+condition|(
+name|keylen
+operator|>
+literal|16
+condition|)
+name|keylen
+operator|=
+literal|16
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|keylen
+condition|;
+name|i
+operator|++
+control|)
+name|key
+index|[
+name|i
+index|]
+operator|=
+name|key0
+index|[
+name|i
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|<
+literal|16
+condition|)
+name|key
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|buf
 index|[
 literal|0
