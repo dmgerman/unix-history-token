@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.1 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,13 +60,6 @@ name|MSG_INTERVAL
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|LONG_TIME
-value|100000
-end_define
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -79,42 +72,6 @@ name|int
 name|current_line
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|itimerval
-name|itimer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|timeval
-name|wait
-init|=
-block|{
-name|MSG_INTERVAL
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|timeval
-name|undo
-init|=
-block|{
-name|LONG_TIME
-block|,
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +97,10 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|itimerval
+name|itimer
+decl_stmt|;
 name|message
 argument_list|(
 name|current_state
@@ -155,12 +116,30 @@ expr_stmt|;
 name|itimer
 operator|.
 name|it_value
+operator|.
+name|tv_sec
 operator|=
 name|itimer
 operator|.
 name|it_interval
+operator|.
+name|tv_sec
 operator|=
-name|wait
+name|MSG_INTERVAL
+expr_stmt|;
+name|itimer
+operator|.
+name|it_value
+operator|.
+name|tv_usec
+operator|=
+name|itimer
+operator|.
+name|it_interval
+operator|.
+name|tv_usec
+operator|=
+literal|0
 expr_stmt|;
 name|setitimer
 argument_list|(
@@ -187,13 +166,10 @@ end_macro
 
 begin_block
 block|{
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
+name|struct
+name|itimerval
+name|itimer
+decl_stmt|;
 name|timerclear
 argument_list|(
 operator|&
@@ -223,6 +199,13 @@ name|timerval
 operator|*
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 block|}

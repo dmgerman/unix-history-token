@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_names.c	5.2 (Berkeley) %G%"
+literal|"@(#)get_names.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ directive|include
 file|<protocols/talkd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
 begin_function_decl
 name|char
 modifier|*
@@ -66,13 +72,6 @@ name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-specifier|static
-name|any
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -182,14 +181,34 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|my_name
 operator|=
 name|getlogin
 argument_list|()
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
 if|if
 condition|(
-name|my_name
+operator|(
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -206,6 +225,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|my_name
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+block|}
 name|gethostname
 argument_list|(
 name|hostname
@@ -219,20 +245,6 @@ expr_stmt|;
 name|my_machine_name
 operator|=
 name|hostname
-expr_stmt|;
-name|my_tty
-operator|=
-name|rindex
-argument_list|(
-name|ttyname
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-literal|'/'
-argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 comment|/* check for, and strip out, the machine name of the target */
 for|for

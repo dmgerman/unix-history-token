@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)talk.c	5.1 (Berkeley) %G%"
+literal|"@(#)talk.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
