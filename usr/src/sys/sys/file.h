@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.3	81/02/19	*/
+comment|/*	file.h	4.4	81/02/27	*/
 end_comment
 
 begin_comment
@@ -36,16 +36,6 @@ modifier|*
 name|f_chan
 decl_stmt|;
 comment|/* mpx channel pointer */
-ifdef|#
-directive|ifdef
-name|CHAOS
-name|struct
-name|connection
-modifier|*
-name|f_conn
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|f_un
 union|;
@@ -63,14 +53,24 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|file
+modifier|*
 name|file
-index|[]
+decl_stmt|,
+modifier|*
+name|fileNFILE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* the file table itself */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfile
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct

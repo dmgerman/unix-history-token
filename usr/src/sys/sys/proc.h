@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.4	81/02/26	*/
+comment|/*	proc.h	4.5	81/02/27	*/
 end_comment
 
 begin_comment
@@ -234,14 +234,24 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|proc
+modifier|*
 name|proc
-index|[]
+decl_stmt|,
+modifier|*
+name|procNPROC
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* the proc table itself */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nproc
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.8	81/02/19	*/
+comment|/*	buf.h	4.9	81/02/27	*/
 end_comment
 
 begin_comment
@@ -198,8 +198,8 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|buf
+modifier|*
 name|buf
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -209,16 +209,30 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|nbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
+modifier|*
 name|swbuf
-index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* swap I/O headers */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nswbuf
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -325,17 +339,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|NSWBUF
-value|48
-end_define
-
-begin_comment
-comment|/* number of swap I/O headers */
-end_comment
 
 begin_comment
 comment|/*  * These flags are kept in b_flags.  */
