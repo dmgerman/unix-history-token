@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BSD
-value|198810
+value|198908
 end_define
 
 begin_comment
@@ -288,22 +288,6 @@ directive|include
 file|"signal.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -312,8 +296,24 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((p)->p_sig&& ((p)->p_flag&STRC || \ 	 ((p)->p_sig&~ ((p)->p_sigignore | (p)->p_sigmask)))&& issig())
+value|((p)->p_sig&& \ 	    ((p)->p_flag&STRC || ((p)->p_sig&~ (p)->p_sigmask))&& issig())
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Machine type dependent parameters.  */
@@ -358,12 +358,23 @@ begin_comment
 comment|/* number of bytes in an integer */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NULL
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
