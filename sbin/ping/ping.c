@@ -3412,23 +3412,13 @@ name|s
 operator|>=
 name|FD_SETSIZE
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EX_OSERR
 argument_list|,
 literal|"descriptor too large"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EX_OSERR
-argument_list|)
-expr_stmt|;
-block|}
 name|FD_ZERO
 argument_list|(
 operator|&
