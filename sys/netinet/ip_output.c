@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94  *	$Id: ip_output.c,v 1.35 1996/04/18 15:49:06 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94  *	$Id: ip_output.c,v 1.36 1996/04/21 13:47:43 bde Exp $  */
 end_comment
 
 begin_define
@@ -360,6 +360,9 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+name|int
+name|isbroadcast
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -684,6 +687,17 @@ name|ip_ttl
 operator|=
 literal|1
 expr_stmt|;
+name|isbroadcast
+operator|=
+name|in_broadcast
+argument_list|(
+name|dst
+operator|->
+name|sin_addr
+argument_list|,
+name|ifp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -773,6 +787,40 @@ operator|->
 name|ro_rt
 operator|->
 name|rt_gateway
+expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_HOST
+condition|)
+name|isbroadcast
+operator|=
+operator|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_BROADCAST
+operator|)
+expr_stmt|;
+else|else
+name|isbroadcast
+operator|=
+name|in_broadcast
+argument_list|(
+name|dst
+operator|->
+name|sin_addr
+argument_list|,
+name|ifp
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1162,14 +1210,7 @@ block|}
 comment|/* 	 * Look for broadcast address and 	 * and verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
-name|in_broadcast
-argument_list|(
-name|dst
-operator|->
-name|sin_addr
-argument_list|,
-name|ifp
-argument_list|)
+name|isbroadcast
 condition|)
 block|{
 if|if
@@ -1243,6 +1284,7 @@ name|M_BCAST
 expr_stmt|;
 block|}
 else|else
+block|{
 name|m
 operator|->
 name|m_flags
@@ -1250,6 +1292,7 @@ operator|&=
 operator|~
 name|M_BCAST
 expr_stmt|;
+block|}
 name|sendit
 label|:
 comment|/* 	 * Check with the firewall... 	 */
@@ -1410,9 +1453,6 @@ name|error
 operator|=
 name|EMSGSIZE
 expr_stmt|;
-if|#
-directive|if
-literal|1
 comment|/* 		 * This case can happen if the user changed the MTU 		 * of an interface after enabling IP on it.  Because 		 * most netifs don't keep track of routes pointing to 		 * them, there is no way for one to update all its 		 * routes when the MTU is changed. 		 */
 if|if
 condition|(
@@ -1471,8 +1511,6 @@ operator|->
 name|if_mtu
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|ipstat
 operator|.
 name|ips_cantfrag
