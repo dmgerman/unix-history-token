@@ -99,6 +99,17 @@ begin_comment
 comment|/* ICH4 needs special handling too */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ICH5ID
+value|0x24d58086
+end_define
+
+begin_comment
+comment|/* ICH5 needs to be treated as ICH4 */
+end_comment
+
 begin_comment
 comment|/* buffer descriptor */
 end_comment
@@ -2817,9 +2828,10 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* ICH4 may fail when busmastering is enabled. Continue */
+comment|/* ICH4/ICH5 may fail when busmastering is enabled. Continue */
 if|if
 condition|(
+operator|(
 name|pci_get_devid
 argument_list|(
 name|sc
@@ -2828,6 +2840,18 @@ name|dev
 argument_list|)
 operator|!=
 name|ICH4ID
+operator|)
+operator|&&
+operator|(
+name|pci_get_devid
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|!=
+name|ICH5ID
+operator|)
 condition|)
 block|{
 return|return
@@ -3074,8 +3098,25 @@ literal|"Intel ICH4 (82801DB)"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1000
 return|;
+comment|/* allow a better driver to override us */
+case|case
+name|ICH5ID
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel ICH5 (82801EB)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1000
+return|;
+comment|/* allow a better driver to override us */
 case|case
 name|SIS7012ID
 case|:
@@ -3248,15 +3289,26 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 	 * By default, ich4 has NAMBAR and NABMBAR i/o spaces as 	 * read-only.  Need to enable "legacy support", by poking into 	 * pci config space.  The driver should use MMBAR and MBBAR, 	 * but doing so will mess things up here.  ich4 has enough new 	 * features it warrants it's own driver. 	 */
+comment|/* 	 * By default, ich4 has NAMBAR and NABMBAR i/o spaces as 	 * read-only.  Need to enable "legacy support", by poking into 	 * pci config space.  The driver should use MMBAR and MBBAR, 	 * but doing so will mess things up here.  ich4/5 have enough new 	 * features to warrant a seperate driver. 	 */
 if|if
 condition|(
+operator|(
 name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ICH4ID
+operator|)
+operator|||
+operator|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|ICH5ID
+operator|)
 condition|)
 block|{
 name|pci_write_config
@@ -3271,7 +3323,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Enable bus master. On ich4 this may prevent the detection of 	 * the primary codec becoming ready in ich_init(). 	 */
+comment|/* 	 * Enable bus master. On ich4/5 this may prevent the detection of 	 * the primary codec becoming ready in ich_init(). 	 */
 name|pci_enable_busmaster
 argument_list|(
 name|dev
