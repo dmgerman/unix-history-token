@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_time.c	5.3 (Berkeley) %G%"
+literal|"@(#)pr_time.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * pr_attime --  *	Print the time since the user logged in.   */
+comment|/*  * pr_attime --  *	Print the time since the user logged in.   *  *	Note: SCCS forces the bizarre string manipulation, things like  *	5.4 get replaced in the source code.  */
 end_comment
 
 begin_function
@@ -102,6 +102,12 @@ decl_stmt|;
 name|time_t
 name|diff
 decl_stmt|;
+name|char
+name|fmt
+index|[
+literal|20
+index|]
+decl_stmt|;
 name|tp
 operator|=
 name|localtime
@@ -129,18 +135,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strftime
+name|strcpy
 argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|fmt
 argument_list|,
 literal|"%d%b%y"
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 comment|/* If not today, use day-hour-am/pm. */
@@ -157,50 +156,46 @@ name|started
 operator|/
 name|SECSPERDAY
 condition|)
+block|{
 operator|(
 name|void
 operator|)
-name|strftime
+name|strcpy
 argument_list|(
-name|buf
+name|fmt
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"%a5.3p"
-argument_list|,
-name|tp
+literal|"%a%%%p"
 argument_list|)
 expr_stmt|;
-comment|/* If more than an hour, use hh:mm{am,pm}. */
-elseif|else
-if|if
-condition|(
-name|diff
-operator|>
-name|SECSPERHOUR
-condition|)
-operator|(
-name|void
-operator|)
-name|strftime
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"%l:pr_time.cp"
-argument_list|,
-name|tp
-argument_list|)
+name|fmt
+index|[
+literal|3
+index|]
+operator|=
+literal|'I'
 expr_stmt|;
-comment|/* Default is mm. */
+block|}
+comment|/* Default is hh:mm{am,pm}. */
 else|else
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|fmt
+argument_list|,
+literal|"%l:%%%p"
+argument_list|)
+expr_stmt|;
+name|fmt
+index|[
+literal|4
+index|]
+operator|=
+literal|'M'
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -213,7 +208,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"    %M"
+name|fmt
 argument_list|,
 name|tp
 argument_list|)
