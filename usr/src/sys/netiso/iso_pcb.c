@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1804,7 +1804,7 @@ if|if
 condition|(
 name|isop
 operator|->
-name|isop_refcnt
+name|isop_chan
 condition|)
 block|{
 specifier|register
@@ -1842,11 +1842,25 @@ name|lcd_state
 operator|==
 name|DATA_TRANSFER
 condition|)
+block|{
+name|lcp
+operator|->
+name|lcd_upper
+operator|=
+literal|0
+expr_stmt|;
+name|lcp
+operator|->
+name|lcd_upnext
+operator|=
+literal|0
+expr_stmt|;
 name|pk_disconnect
 argument_list|(
 name|lcp
 argument_list|)
 expr_stmt|;
+block|}
 name|isop
 operator|->
 name|isop_chan

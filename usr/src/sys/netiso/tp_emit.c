@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_emit.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3719,24 +3719,105 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
+begin_expr_stmt
 name|ENDDEBUG
-comment|/* Problem: if packet comes in on ISO but sock is listening 		 * in INET, this assertion will fail. 		 * Have to believe the argument, not the nlp_proto. 		ASSERT( tpcb->tp_nlproto->nlp_dgoutput == dgout_routine ); 		 */
-name|IFDEBUG
-parameter_list|(
-name|D_ERROR_EMIT
-parameter_list|)
-function_decl|printf
-parameter_list|(
-function_decl|"tp_error_emit 1 sending DG: Laddr\n"
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
+unit|} 	if
+operator|(
+name|cons_channel
+operator|)
+block|{
+ifdef|#
+directive|ifdef
+name|TPCONS
+block|struct
+name|pklcd
+operator|*
+name|lcp
+operator|=
+operator|(
+expr|struct
+name|pklcd
+operator|*
+operator|)
+name|cons_channel
+block|; 		struct
+name|isopcb
+operator|*
+name|isop
+operator|=
+operator|(
+expr|struct
+name|isopcb
+operator|*
+operator|)
+name|lcp
+operator|->
+name|lcd_upnext
+block|;
+name|tpcons_dg_output
+argument_list|(
+name|cons_channel
+argument_list|,
+name|m
+argument_list|,
+name|datalen
+argument_list|)
+block|;
+comment|/* was if (tpcb == 0) iso_pcbdetach(isop); */
+comment|/* but other side may want to try again over same VC, 		   so, we'll depend on him closing it, but in case it gets forgotten 		   we'll mark it for garbage collection */
+name|lcp
+operator|->
+name|lcd_flags
+operator||=
+name|X25_DG_CIRCUIT
+block|;
+name|IFDEBUG
+argument_list|(
+argument|D_ERROR_EMIT
+argument_list|)
+name|printf
+argument_list|(
+literal|"OUTPUT: dutype 0x%x channel 0x%x\n"
+argument_list|,
+name|dutype
+argument_list|,
+name|cons_channel
+argument_list|)
+block|;
+name|ENDDEBUG
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"TP panic! cons channel 0x%x but not cons configured\n"
+argument_list|,
+name|cons_channel
+argument_list|)
+block|;
+endif|#
+directive|endif
+block|}
+end_expr_stmt
+
+begin_elseif
+elseif|else
+if|if
+condition|(
+name|tpcb
+condition|)
+block|{
+name|IFDEBUG
+argument_list|(
+argument|D_ERROR_EMIT
+argument_list|)
+name|printf
+argument_list|(
+literal|"tp_error_emit 1 sending DG: Laddr\n"
+argument_list|)
+expr_stmt|;
 name|dump_addr
 argument_list|(
 operator|(
@@ -3747,17 +3828,11 @@ operator|)
 name|laddr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Faddr\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dump_addr
 argument_list|(
 operator|(
@@ -3768,13 +3843,7 @@ operator|)
 name|faddr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
 name|ENDDEBUG
-end_macro
-
-begin_return
 return|return
 call|(
 name|tpcb
@@ -3810,69 +3879,16 @@ operator|->
 name|tp_use_checksum
 argument_list|)
 return|;
-end_return
+block|}
+end_elseif
 
-begin_block
-unit|} else
-block|{
+begin_elseif
+elseif|else
 if|if
 condition|(
-name|cons_channel
+name|dgout_routine
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TPCONS
-name|tpcons_dg_output
-argument_list|(
-name|cons_channel
-argument_list|,
-name|m
-argument_list|,
-name|datalen
-argument_list|)
-expr_stmt|;
-name|pk_disconnect
-argument_list|(
-operator|(
-expr|struct
-name|pklcd
-operator|*
-operator|)
-name|cons_channel
-argument_list|)
-expr_stmt|;
-name|IFDEBUG
-argument_list|(
-argument|D_ERROR_EMIT
-argument_list|)
-name|printf
-argument_list|(
-literal|"OUTPUT: dutype 0x%x channel 0x%x\n"
-argument_list|,
-name|dutype
-argument_list|,
-name|cons_channel
-argument_list|)
-expr_stmt|;
-name|ENDDEBUG
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"TP panic! cons channel 0x%x but not cons configured\n"
-argument_list|,
-name|cons_channel
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-else|else
-block|{
-ifndef|#
-directive|ifndef
-name|notdef
 name|IFDEBUG
 argument_list|(
 argument|D_ERROR_EMIT
@@ -3938,9 +3954,12 @@ comment|/* nochecksum==false */
 literal|0
 argument_list|)
 return|;
-else|#
-directive|else
-else|notdef
+block|}
+end_elseif
+
+begin_else
+else|else
+block|{
 name|IFDEBUG
 argument_list|(
 argument|D_ERROR_EMIT
@@ -3966,12 +3985,8 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-endif|#
-directive|endif
-endif|notdef
 block|}
-block|}
-end_block
+end_else
 
 unit|}
 end_unit

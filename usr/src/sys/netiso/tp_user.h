@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_user.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_user.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -288,6 +288,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|TPOPT_MY_TSEL
+value|0x800
+end_define
+
+begin_define
+define|#
+directive|define
+name|TPOPT_PEER_TSEL
+value|0x900
+end_define
+
+begin_define
+define|#
+directive|define
 name|TPOPT_PERF_MEAS
 value|0xa00
 end_define
@@ -308,31 +322,6 @@ end_define
 
 begin_comment
 comment|/* to replace a bunch of the others */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPOPT_MY_TSEL
-value|0x800
-end_define
-
-begin_define
-define|#
-directive|define
-name|TPOPT_PEER_TSEL
-value|0x900
-end_define
-
-begin_define
-define|#
-directive|define
-name|TPOPT_NGC8_ACCEPT
-value|0xd00
-end_define
-
-begin_comment
-comment|/* negotiate connection requests */
 end_comment
 
 begin_define
@@ -368,57 +357,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TPFLAG_DISC_DATA_OUT
-value|(u_char)0x10
+name|TPFLAG_NLQOS_PDN
+value|(u_char)0x01
 end_define
-
-begin_comment
-comment|/* disc data present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPFLAG_DISC_DATA_IN
-value|(u_char)0x20
-end_define
-
-begin_comment
-comment|/* disc data present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPFLAG_CONN_DATA_OUT
-value|(u_char)0x40
-end_define
-
-begin_comment
-comment|/* conn data present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPFLAG_CONN_DATA_IN
-value|(u_char)0x80
-end_define
-
-begin_comment
-comment|/* conn data present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TPFLAG_XPD_PRESENT
-value|(u_char)0x08
-end_define
-
-begin_comment
-comment|/* xpd data present */
-end_comment
 
 begin_define
 define|#
@@ -430,19 +371,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|TPFLAG_NLQOS_PDN
-value|(u_char)0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|TPFLAG_NGC8_ACCEPT
+name|TPFLAG_GENERAL_ADDR
 value|(u_char)0x04
 end_define
 
 begin_comment
-comment|/* negotiate conn rq's */
+comment|/* bound to wildcard addr */
 end_comment
 
 begin_comment
