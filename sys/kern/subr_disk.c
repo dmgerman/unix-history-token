@@ -204,7 +204,7 @@ name|sn
 operator|=
 name|bp
 operator|->
-name|bio_blkno
+name|bio_pblkno
 expr_stmt|;
 if|if
 condition|(
@@ -264,7 +264,7 @@ name|intmax_t
 operator|)
 name|bp
 operator|->
-name|bio_blkno
+name|bio_pblkno
 argument_list|,
 call|(
 name|intmax_t
@@ -272,7 +272,7 @@ call|)
 argument_list|(
 name|bp
 operator|->
-name|bio_blkno
+name|bio_pblkno
 operator|+
 operator|(
 name|bp
