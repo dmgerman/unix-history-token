@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infodoc.c -- functions which build documentation nodes.    $Id: infodoc.c,v 1.5 2002/11/06 00:40:08 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* infodoc.c -- functions which build documentation nodes.    $Id: infodoc.c,v 1.6 2003/05/13 16:22:11 karl Exp $     Copyright (C) 1993, 1997, 1998, 1999, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The (more or less) static text which appears in the internal info    help node.  The actual key bindings are inserted.  Keep the     underlines (****, etc.) in the same N_ call as  the text lines they    refer to, so translations can make the number of *'s or -'s match.  */
+comment|/* The (more or less) static text which appears in the internal info    help node.  The actual key bindings are inserted.  Keep the    underlines (****, etc.) in the same N_ call as  the text lines they    refer to, so translations can make the number of *'s or -'s match.  */
 end_comment
 
 begin_if
@@ -868,7 +868,7 @@ endif|#
 directive|endif
 comment|/* not HELP_NODE_GETS_REGENERATED */
 comment|/* Make sure that we have a node containing the help text.  The      argument is false if help will be the only window (so l must be used      to quit help), true if help will be one of several visible windows      (so CTRL-x 0 must be used to quit help).  */
-argument|help_is_only_window_p      = (help_window&& !windows->next         || !help_window&& eligible->height< HELP_SPLIT_SIZE);   create_internal_info_help_node (help_is_only_window_p);
+argument|help_is_only_window_p      = ((help_window&& !windows->next)         || !help_window&& eligible->height< HELP_SPLIT_SIZE);   create_internal_info_help_node (help_is_only_window_p);
 comment|/* Either use the existing window to display the help node, or create      a new window if there was no existing help window. */
 argument|if (!help_window)     {
 comment|/* Split the largest window into 2 windows, and show the help text          in that window. */
@@ -1326,7 +1326,7 @@ argument|register FUNCTION_KEYSEQ *k;    for (k = cmd->keys; k; k = k->next)    
 else|#
 directive|else
 comment|/* !INFOKEY */
-comment|/* There is a bug in that create_internal_info_help_node calls      where_is_internal without setting where_is_rep_index to zero.  This      was found by Mandrake and reported by Thierry Vignaud<tvignaud@mandrakesoft.com> around April 24, 2002.            I think the best fix is to make where_is_rep_index another      parameter to this recursively-called function, instead of a static      variable.  But this [!INFOKEY] branch of the code is not enabled      any more, so let's just skip the whole thing.  --karl, 28sep02.  */
+comment|/* There is a bug in that create_internal_info_help_node calls      where_is_internal without setting where_is_rep_index to zero.  This      was found by Mandrake and reported by Thierry Vignaud<tvignaud@mandrakesoft.com> around April 24, 2002.       I think the best fix is to make where_is_rep_index another      parameter to this recursively-called function, instead of a static      variable.  But this [!INFOKEY] branch of the code is not enabled      any more, so let's just skip the whole thing.  --karl, 28sep02.  */
 argument|register int i;
 comment|/* If the function is directly invokable in MAP, return the representation      of that keystroke. */
 argument|for (i =

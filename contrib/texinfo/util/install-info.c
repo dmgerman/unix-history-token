@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* install-info -- create Info directory entry(ies) for an Info file.    $Id: install-info.c,v 1.7 2003/01/19 18:46:51 karl Exp $     Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
+comment|/* install-info -- create Info directory entry(ies) for an Info file.    $Id: install-info.c,v 1.9 2003/05/19 13:10:59 karl Exp $     Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.*/
 end_comment
 
 begin_include
@@ -555,128 +555,6 @@ end_block
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* Memory allocation and string operations.  */
-end_comment
-
-begin_comment
-comment|/* Like malloc but get fatal error if memory is exhausted.  */
-end_comment
-
-begin_function
-name|void
-modifier|*
-name|xmalloc
-parameter_list|(
-name|size
-parameter_list|)
-name|unsigned
-name|int
-name|size
-decl_stmt|;
-block|{
-specifier|extern
-name|void
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-name|void
-modifier|*
-name|result
-init|=
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|result
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-name|result
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Like realloc but get fatal error if memory is exhausted.  */
-end_comment
-
-begin_function
-name|void
-modifier|*
-name|xrealloc
-parameter_list|(
-name|obj
-parameter_list|,
-name|size
-parameter_list|)
-name|void
-modifier|*
-name|obj
-decl_stmt|;
-name|unsigned
-name|int
-name|size
-decl_stmt|;
-block|{
-specifier|extern
-name|void
-modifier|*
-name|realloc
-parameter_list|()
-function_decl|;
-name|void
-modifier|*
-name|result
-init|=
-name|realloc
-argument_list|(
-name|obj
-argument_list|,
-name|size
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|result
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"virtual memory exhausted"
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-name|result
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/* Return a newly-allocated string    whose contents concatenate those of S1, S2, S3.  */
@@ -5992,6 +5870,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* Avoid bogus warnings.  */
 block|}
 end_function
 

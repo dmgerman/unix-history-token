@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infokey.c -- compile ~/.infokey to ~/.info.    $Id: infokey.c,v 1.3 2003/01/19 18:46:27 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Andrew Bettison<andrewb@zip.com.au>. */
+comment|/* infokey.c -- compile ~/.infokey to ~/.info.    $Id: infokey.c,v 1.4 2003/05/13 16:26:02 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Andrew Bettison<andrewb@zip.com.au>. */
 end_comment
 
 begin_include
@@ -303,11 +303,6 @@ name|int
 name|getopt_long_index
 decl_stmt|;
 comment|/* Index returned by getopt_long (). */
-name|NODE
-modifier|*
-name|initial_node
-decl_stmt|;
-comment|/* First node loaded by Info. */
 ifdef|#
 directive|ifdef
 name|HAVE_SETLOCALE
@@ -784,11 +779,9 @@ name|inf
 argument_list|)
 expr_stmt|;
 block|}
-name|xexit
-argument_list|(
+return|return
 literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -867,7 +860,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Compilation - the real work.  	Source file syntax 	------------------ 	The source file is a line-based text file with the following 	structure:  		# comments 		# more comments  		#info 		u	prev-line 		d	next-line 		^a	invalid		# just beep 		\ku	prev-line 		#stop 		\kd	next-line 		q	quit		# of course!  		#echo-area 		^a	echo-area-beg-of-line 		^e	echo-area-end-of-line 		\kr	echo-area-forward 		\kl	echo-area-backward 		\kh	echo-area-beg-of-line 		\ke	echo-area-end-of-line  		#var 		scroll-step=1 		ISO-Latin=Off  	Lines starting with '#' are comments, and are ignored.  Blank 	lines are ignored.  Each section is introduced by one of the 	following lines:  		#info 		#echo-area 		#var 	 	The sections may occur in any order.  Each section may be 	omitted completely.  If the 'info' section is the first in the 	file, its '#info' line may be omitted. 	 	The 'info' and 'echo-area' sections 	----------------------------------- 	Each line in the 'info' or 'echo-area' sections has the 	following syntax:  		key-sequence SPACE action-name [ SPACE [ # comment ] ] \n 	 	Where SPACE is one or more white space characters excluding 	newline, "action-name" is the name of a GNU Info command, 	"comment" is any sequence of characters excluding newline, and 	"key-sequence" is a concatenation of one or more key definitions 	using the following syntax:  	   1.	A carat ^ followed by one character indicates a single 	   	control character;  	   2.	A backslash \ followed by one, two, or three octal 		digits indicates a single character having that ASCII 		code;  	   3.	\n indicates a single NEWLINE; 		\e indicates a single ESC; 		\r indicates a single CR; 		\t indicates a single TAB; 		\b indicates a single BACKSPACE; 	 	   4.	\ku indicates the Up Arrow key; 	   	\kd indicates the Down Arrow key; 	   	\kl indicates the Left Arrow key; 	   	\kr indicates the Right Arrow key; 	   	\kP indicates the Page Up (PRIOR) key; 	   	\kN indicates the Page Down (NEXT) key; 	   	\kh indicates the Home key; 	   	\ke indicates the End key; 	   	\kx indicates the DEL key; 		\k followed by any other character indicates a single 		control-K, and the following character is interpreted 		as in rules 1, 2, 3, 5 and 6.  	   5.	\m followed by any sequence defined in rules 1, 2, 3, 4 		or 6 indicates the "Meta" modification of that key.  	   6.	A backslash \ followed by any character not described 	   	above indicates that character itself.  In particular: 		\\ indicates a single backslash \, 		\  (backslash-space) indicates a single space, 		\^ indicates a single caret ^,  	If the following line:  		#stop 	 	occurs anywhere in an 'info' or 'echo-area' section, that 	indicates to GNU Info to suppress all of its default key 	bindings in that context. 	 	The 'var' section 	----------------- 	Each line in the 'var' section has the following syntax:  		variable-name = value \n 	 	Where "variable-name" is the name of a GNU Info variable and 	"value" is the value that GNU Info will assign to that variable 	when commencing execution.  There must be no white space in the 	variable name, nor between the variable name and the '='.  All 	characters immediately following the '=', up to but not 	including the terminating newline, are considered to be the 	value that will be assigned.  In other words, white space 	following the '=' is not ignored.  */
+comment|/* Compilation - the real work.  	Source file syntax 	------------------ 	The source file is a line-based text file with the following 	structure:  		# comments 		# more comments  		#info 		u	prev-line 		d	next-line 		^a	invalid		# just beep 		\ku	prev-line 		#stop 		\kd	next-line 		q	quit		# of course!  		#echo-area 		^a	echo-area-beg-of-line 		^e	echo-area-end-of-line 		\kr	echo-area-forward 		\kl	echo-area-backward 		\kh	echo-area-beg-of-line 		\ke	echo-area-end-of-line  		#var 		scroll-step=1 		ISO-Latin=Off  	Lines starting with '#' are comments, and are ignored.  Blank 	lines are ignored.  Each section is introduced by one of the 	following lines:  		#info 		#echo-area 		#var  	The sections may occur in any order.  Each section may be 	omitted completely.  If the 'info' section is the first in the 	file, its '#info' line may be omitted.  	The 'info' and 'echo-area' sections 	----------------------------------- 	Each line in the 'info' or 'echo-area' sections has the 	following syntax:  		key-sequence SPACE action-name [ SPACE [ # comment ] ] \n  	Where SPACE is one or more white space characters excluding 	newline, "action-name" is the name of a GNU Info command, 	"comment" is any sequence of characters excluding newline, and 	"key-sequence" is a concatenation of one or more key definitions 	using the following syntax:  	   1.	A carat ^ followed by one character indicates a single 	   	control character;  	   2.	A backslash \ followed by one, two, or three octal 		digits indicates a single character having that ASCII 		code;  	   3.	\n indicates a single NEWLINE; 		\e indicates a single ESC; 		\r indicates a single CR; 		\t indicates a single TAB; 		\b indicates a single BACKSPACE;  	   4.	\ku indicates the Up Arrow key; 	   	\kd indicates the Down Arrow key; 	   	\kl indicates the Left Arrow key; 	   	\kr indicates the Right Arrow key; 	   	\kP indicates the Page Up (PRIOR) key; 	   	\kN indicates the Page Down (NEXT) key; 	   	\kh indicates the Home key; 	   	\ke indicates the End key; 	   	\kx indicates the DEL key; 		\k followed by any other character indicates a single 		control-K, and the following character is interpreted 		as in rules 1, 2, 3, 5 and 6.  	   5.	\m followed by any sequence defined in rules 1, 2, 3, 4 		or 6 indicates the "Meta" modification of that key.  	   6.	A backslash \ followed by any character not described 	   	above indicates that character itself.  In particular: 		\\ indicates a single backslash \, 		\  (backslash-space) indicates a single space, 		\^ indicates a single caret ^,  	If the following line:  		#stop  	occurs anywhere in an 'info' or 'echo-area' section, that 	indicates to GNU Info to suppress all of its default key 	bindings in that context.  	The 'var' section 	----------------- 	Each line in the 'var' section has the following syntax:  		variable-name = value \n  	Where "variable-name" is the name of a GNU Info variable and 	"value" is the value that GNU Info will assign to that variable 	when commencing execution.  There must be no white space in the 	variable name, nor between the variable name and the '='.  All 	characters immediately following the '=', up to but not 	including the terminating newline, are considered to be the 	value that will be assigned.  In other words, white space 	following the '=' is not ignored.  */
 end_comment
 
 begin_decl_stmt
@@ -1569,7 +1562,7 @@ name|special_key
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Backslash followed by any other char  		     just means that char.  */
+comment|/* Backslash followed by any other char 		     just means that char.  */
 name|To_seq
 argument_list|(
 name|c

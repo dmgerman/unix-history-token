@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sectioning.c -- for @chapter, @section, ..., @contents ...    $Id: sectioning.c,v 1.6 2002/11/08 02:21:07 karl Exp $     Copyright (C) 1999, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* sectioning.c -- for @chapter, @section, ..., @contents ...    $Id: sectioning.c,v 1.10 2003/05/13 16:37:54 karl Exp $     Copyright (C) 1999, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_include
@@ -975,6 +975,15 @@ modifier|*
 name|cmd
 decl_stmt|;
 block|{
+comment|/* If we're not indenting the first paragraph, we shall make it behave      like @noindent is called directly after the section heading. */
+if|if
+condition|(
+operator|!
+name|do_first_par_indent
+condition|)
+name|cm_noindent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|xml
@@ -1734,14 +1743,19 @@ name|no_indent
 operator|=
 literal|1
 expr_stmt|;
-comment|/* level 0 (chapter) is<h2> */
+comment|/* level 0 (chapter) is<h2>, everything else is<h3>.  We don't want      to go lower than that because browsers then start rendering the      headings smaller than the text.  */
 name|add_word_args
 argument_list|(
 literal|"<h%d class=\"%s\">"
 argument_list|,
+name|MIN
+argument_list|(
+literal|3
+argument_list|,
 name|level
 operator|+
 literal|2
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|)
@@ -1799,7 +1813,7 @@ operator|+
 name|output_paragraph_offset
 argument_list|)
 expr_stmt|;
-comment|/* This must be added after toc_anchor is extracted, since          toc_anchor cannot include the closing</a>.  For details,          see toc.c:toc_add_entry and toc.c:contents_update_html.                    Also, the anchor close must be output before the section name          in case the name itself contains an anchor. */
+comment|/* This must be added after toc_anchor is extracted, since          toc_anchor cannot include the closing</a>.  For details,          see toc.c:toc_add_entry and toc.c:contents_update_html.           Also, the anchor close must be output before the section name          in case the name itself contains an anchor. */
 name|add_word
 argument_list|(
 literal|"</a>"
@@ -2161,15 +2175,6 @@ block|}
 block|}
 else|else
 block|{
-name|TAG_ENTRY
-modifier|*
-name|top_node
-init|=
-name|find_node
-argument_list|(
-literal|"Top"
-argument_list|)
-decl_stmt|;
 name|top_node_seen
 operator|=
 literal|1

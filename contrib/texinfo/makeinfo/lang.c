@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lang.c -- language-dependent support.    $Id: lang.c,v 1.5 2002/11/12 18:48:52 feloy Exp $     Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
+comment|/* lang.c -- language-dependent support.    $Id: lang.c,v 1.8 2003/05/01 00:05:27 karl Exp $     Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Originally written by Karl Heinz Marbaise<kama@hippo.fido.de>.  */
 end_comment
 
 begin_include
@@ -58,6 +58,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|iso_map_type
 name|us_ascii_map
 index|[]
@@ -83,6 +84,7 @@ comment|/* Translation table between HTML and ISO Codes.  The last item is    ho
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|iso_map_type
 name|iso8859_1_map
 index|[]
@@ -488,7 +490,6 @@ block|,
 literal|0x00D0
 block|}
 block|,
-comment|/* I don't know ;-( */
 block|{
 literal|"Ntilde"
 block|,
@@ -876,6 +877,895 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Date: Mon, 31 Mar 2003 00:19:28 +0200    From: Wojciech Polak<polak@gnu.org> ...  * Primary Polish site for ogonki is http://www.agh.edu.pl/ogonki/,    but it's only in Polish language (it has some interesting links).   * A general site about ISO 8859-2 at http://nl.ijs.si/gnusl/cee/iso8859-2.html   * ISO 8859-2 Character Set at http://nl.ijs.si/gnusl/cee/charset.html    This site provides almost all information about iso-8859-2,    including the character table!!! (must see!)   * ISO 8859-2 and even HTML entities !!! (must see!)    http://people.ssh.fi/mtr/genscript/88592.txt   * (minor) http://www.agh.edu.pl/ogonki/plchars.html    One more table, this time it includes even information about Polish    characters in Unicode. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|iso_map_type
+name|iso8859_2_map
+index|[]
+init|=
+block|{
+block|{
+literal|"nbsp"
+block|,
+literal|0xA0
+block|,
+literal|0x00A0
+block|}
+block|,
+comment|/* NO-BREAK SPACE */
+block|{
+literal|""
+block|,
+literal|0xA1
+block|,
+literal|0x0104
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER A WITH OGONEK */
+block|{
+literal|""
+block|,
+literal|0xA2
+block|,
+literal|0x02D8
+block|}
+block|,
+comment|/* BREVE */
+block|{
+literal|""
+block|,
+literal|0xA3
+block|,
+literal|0x0141
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER L WITH STROKE */
+block|{
+literal|"curren"
+block|,
+literal|0xA4
+block|,
+literal|0x00A4
+block|}
+block|,
+comment|/* CURRENCY SIGN */
+block|{
+literal|""
+block|,
+literal|0xA5
+block|,
+literal|0x013D
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER L WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xA6
+block|,
+literal|0x015A
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER S WITH ACUTE */
+block|{
+literal|"sect"
+block|,
+literal|0xA7
+block|,
+literal|0x00A7
+block|}
+block|,
+comment|/* SECTION SIGN */
+block|{
+literal|"uml"
+block|,
+literal|0xA8
+block|,
+literal|0x00A8
+block|}
+block|,
+comment|/* DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xA9
+block|,
+literal|0x0160
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER S WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xAA
+block|,
+literal|0x015E
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER S WITH CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xAB
+block|,
+literal|0x0164
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER T WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xAC
+block|,
+literal|0x0179
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER Z WITH ACUTE */
+block|{
+literal|"shy"
+block|,
+literal|0xAD
+block|,
+literal|0x00AD
+block|}
+block|,
+comment|/* SOFT HYPHEN */
+block|{
+literal|""
+block|,
+literal|0xAE
+block|,
+literal|0x017D
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER Z WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xAF
+block|,
+literal|0x017B
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER Z WITH DOT ABOVE */
+block|{
+literal|"deg"
+block|,
+literal|0xB0
+block|,
+literal|0x00B0
+block|}
+block|,
+comment|/* DEGREE SIGN */
+block|{
+literal|""
+block|,
+literal|0xB1
+block|,
+literal|0x0105
+block|}
+block|,
+comment|/* LATIN SMALL LETTER A WITH OGONEK */
+block|{
+literal|""
+block|,
+literal|0xB2
+block|,
+literal|0x02DB
+block|}
+block|,
+comment|/* OGONEK */
+block|{
+literal|""
+block|,
+literal|0xB3
+block|,
+literal|0x0142
+block|}
+block|,
+comment|/* LATIN SMALL LETTER L WITH STROKE */
+block|{
+literal|"acute"
+block|,
+literal|0xB4
+block|,
+literal|0x00B4
+block|}
+block|,
+comment|/* ACUTE ACCENT */
+block|{
+literal|""
+block|,
+literal|0xB5
+block|,
+literal|0x013E
+block|}
+block|,
+comment|/* LATIN SMALL LETTER L WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xB6
+block|,
+literal|0x015B
+block|}
+block|,
+comment|/* LATIN SMALL LETTER S WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xB7
+block|,
+literal|0x02C7
+block|}
+block|,
+comment|/* CARON (Mandarin Chinese third tone) */
+block|{
+literal|"cedil"
+block|,
+literal|0xB8
+block|,
+literal|0x00B8
+block|}
+block|,
+comment|/* CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xB9
+block|,
+literal|0x0161
+block|}
+block|,
+comment|/* LATIN SMALL LETTER S WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xBA
+block|,
+literal|0x015F
+block|}
+block|,
+comment|/* LATIN SMALL LETTER S WITH CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xBB
+block|,
+literal|0x0165
+block|}
+block|,
+comment|/* LATIN SMALL LETTER T WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xBC
+block|,
+literal|0x017A
+block|}
+block|,
+comment|/* LATIN SMALL LETTER Z WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xBD
+block|,
+literal|0x02DD
+block|}
+block|,
+comment|/* DOUBLE ACUTE ACCENT */
+block|{
+literal|""
+block|,
+literal|0xBE
+block|,
+literal|0x017E
+block|}
+block|,
+comment|/* LATIN SMALL LETTER Z WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xBF
+block|,
+literal|0x017C
+block|}
+block|,
+comment|/* LATIN SMALL LETTER Z WITH DOT ABOVE */
+block|{
+literal|""
+block|,
+literal|0xC0
+block|,
+literal|0x0154
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER R WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xC1
+block|,
+literal|0x00C1
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER A WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xC2
+block|,
+literal|0x00C2
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER A WITH CIRCUMFLEX */
+block|{
+literal|""
+block|,
+literal|0xC3
+block|,
+literal|0x0102
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER A WITH BREVE */
+block|{
+literal|""
+block|,
+literal|0xC4
+block|,
+literal|0x00C4
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER A WITH DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xC5
+block|,
+literal|0x0139
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER L WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xC6
+block|,
+literal|0x0106
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER C WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xC7
+block|,
+literal|0x00C7
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER C WITH CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xC8
+block|,
+literal|0x010C
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER C WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xC9
+block|,
+literal|0x00C9
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER E WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xCA
+block|,
+literal|0x0118
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER E WITH OGONEK */
+block|{
+literal|""
+block|,
+literal|0xCB
+block|,
+literal|0x00CB
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER E WITH DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xCC
+block|,
+literal|0x011A
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER E WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xCD
+block|,
+literal|0x00CD
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER I WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xCE
+block|,
+literal|0x00CE
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER I WITH CIRCUMFLEX */
+block|{
+literal|""
+block|,
+literal|0xCF
+block|,
+literal|0x010E
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER D WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xD0
+block|,
+literal|0x0110
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER D WITH STROKE */
+block|{
+literal|""
+block|,
+literal|0xD1
+block|,
+literal|0x0143
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER N WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xD2
+block|,
+literal|0x0147
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER N WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xD3
+block|,
+literal|0x00D3
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER O WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xD4
+block|,
+literal|0x00D4
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER O WITH CIRCUMFLEX */
+block|{
+literal|""
+block|,
+literal|0xD5
+block|,
+literal|0x0150
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER O WITH DOUBLE ACUTE */
+block|{
+literal|""
+block|,
+literal|0xD6
+block|,
+literal|0x00D6
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER O WITH DIAERESIS */
+block|{
+literal|"times"
+block|,
+literal|0xD7
+block|,
+literal|0x00D7
+block|}
+block|,
+comment|/* MULTIPLICATION SIGN */
+block|{
+literal|""
+block|,
+literal|0xD8
+block|,
+literal|0x0158
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER R WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xD9
+block|,
+literal|0x016E
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER U WITH RING ABOVE */
+block|{
+literal|""
+block|,
+literal|0xDA
+block|,
+literal|0x00DA
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER U WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xDB
+block|,
+literal|0x0170
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER U WITH DOUBLE ACUTE */
+block|{
+literal|""
+block|,
+literal|0xDC
+block|,
+literal|0x00DC
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER U WITH DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xDD
+block|,
+literal|0x00DD
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER Y WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xDE
+block|,
+literal|0x0162
+block|}
+block|,
+comment|/* LATIN CAPITAL LETTER T WITH CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xDF
+block|,
+literal|0x00DF
+block|}
+block|,
+comment|/* LATIN SMALL LETTER SHARP S (German) */
+block|{
+literal|""
+block|,
+literal|0xE0
+block|,
+literal|0x0155
+block|}
+block|,
+comment|/* LATIN SMALL LETTER R WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xE1
+block|,
+literal|0x00E1
+block|}
+block|,
+comment|/* LATIN SMALL LETTER A WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xE2
+block|,
+literal|0x00E2
+block|}
+block|,
+comment|/* LATIN SMALL LETTER A WITH CIRCUMFLEX */
+block|{
+literal|""
+block|,
+literal|0xE3
+block|,
+literal|0x0103
+block|}
+block|,
+comment|/* LATIN SMALL LETTER A WITH BREVE */
+block|{
+literal|""
+block|,
+literal|0xE4
+block|,
+literal|0x00E4
+block|}
+block|,
+comment|/* LATIN SMALL LETTER A WITH DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xE5
+block|,
+literal|0x013A
+block|}
+block|,
+comment|/* LATIN SMALL LETTER L WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xE6
+block|,
+literal|0x0107
+block|}
+block|,
+comment|/* LATIN SMALL LETTER C WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xE7
+block|,
+literal|0x00E7
+block|}
+block|,
+comment|/* LATIN SMALL LETTER C WITH CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xE8
+block|,
+literal|0x010D
+block|}
+block|,
+comment|/* LATIN SMALL LETTER C WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xE9
+block|,
+literal|0x00E9
+block|}
+block|,
+comment|/* LATIN SMALL LETTER E WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xEA
+block|,
+literal|0x0119
+block|}
+block|,
+comment|/* LATIN SMALL LETTER E WITH OGONEK */
+block|{
+literal|""
+block|,
+literal|0xEB
+block|,
+literal|0x00EB
+block|}
+block|,
+comment|/* LATIN SMALL LETTER E WITH DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xEC
+block|,
+literal|0x011B
+block|}
+block|,
+comment|/* LATIN SMALL LETTER E WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xED
+block|,
+literal|0x00ED
+block|}
+block|,
+comment|/* LATIN SMALL LETTER I WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xEE
+block|,
+literal|0x00EE
+block|}
+block|,
+comment|/* LATIN SMALL LETTER I WITH CIRCUMFLEX */
+block|{
+literal|""
+block|,
+literal|0xEF
+block|,
+literal|0x010F
+block|}
+block|,
+comment|/* LATIN SMALL LETTER D WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xF0
+block|,
+literal|0x0111
+block|}
+block|,
+comment|/* LATIN SMALL LETTER D WITH STROKE */
+block|{
+literal|""
+block|,
+literal|0xF1
+block|,
+literal|0x0144
+block|}
+block|,
+comment|/* LATIN SMALL LETTER N WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xF2
+block|,
+literal|0x0148
+block|}
+block|,
+comment|/* LATIN SMALL LETTER N WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xF3
+block|,
+literal|0x00F3
+block|}
+block|,
+comment|/* LATIN SMALL LETTER O WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xF4
+block|,
+literal|0x00F4
+block|}
+block|,
+comment|/* LATIN SMALL LETTER O WITH CIRCUMFLEX */
+block|{
+literal|""
+block|,
+literal|0xF5
+block|,
+literal|0x0151
+block|}
+block|,
+comment|/* LATIN SMALL LETTER O WITH DOUBLE ACUTE */
+block|{
+literal|""
+block|,
+literal|0xF6
+block|,
+literal|0x00F6
+block|}
+block|,
+comment|/* LATIN SMALL LETTER O WITH DIAERESIS */
+block|{
+literal|"divide"
+block|,
+literal|0xF7
+block|,
+literal|0x00F7
+block|}
+block|,
+comment|/* DIVISION SIGN */
+block|{
+literal|""
+block|,
+literal|0xF8
+block|,
+literal|0x0159
+block|}
+block|,
+comment|/* LATIN SMALL LETTER R WITH CARON */
+block|{
+literal|""
+block|,
+literal|0xF9
+block|,
+literal|0x016F
+block|}
+block|,
+comment|/* LATIN SMALL LETTER U WITH RING ABOVE */
+block|{
+literal|""
+block|,
+literal|0xFA
+block|,
+literal|0x00FA
+block|}
+block|,
+comment|/* LATIN SMALL LETTER U WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xFB
+block|,
+literal|0x0171
+block|}
+block|,
+comment|/* LATIN SMALL LETTER U WITH DOUBLE ACUTE */
+block|{
+literal|""
+block|,
+literal|0xFC
+block|,
+literal|0x00FC
+block|}
+block|,
+comment|/* LATIN SMALL LETTER U WITH DIAERESIS */
+block|{
+literal|""
+block|,
+literal|0xFD
+block|,
+literal|0x00FD
+block|}
+block|,
+comment|/* LATIN SMALL LETTER Y WITH ACUTE */
+block|{
+literal|""
+block|,
+literal|0xFE
+block|,
+literal|0x0163
+block|}
+block|,
+comment|/* LATIN SMALL LETTER T WITH CEDILLA */
+block|{
+literal|""
+block|,
+literal|0xFF
+block|,
+literal|0x02D9
+block|}
+block|,
+comment|/* DOT ABOVE (Mandarin Chinese light tone) */
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|encoding_type
 name|encoding_table
@@ -915,7 +1805,11 @@ name|ISO_8859_2
 block|,
 literal|"ISO-8859-2"
 block|,
-name|NULL
+operator|(
+name|iso_map_type
+operator|*
+operator|)
+name|iso8859_2_map
 block|}
 block|,
 block|{
@@ -2397,7 +3291,7 @@ index|[
 name|enc
 index|]
 operator|.
-name|ecname
+name|encname
 argument_list|)
 operator|==
 literal|0
@@ -2421,7 +3315,7 @@ name|warning
 argument_list|(
 name|_
 argument_list|(
-literal|"unrecogized encoding name `%s'"
+literal|"unrecognized encoding name `%s'"
 argument_list|)
 argument_list|,
 name|enc_arg
@@ -3691,9 +4585,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|add_word
+name|add_encoded_char
 argument_list|(
-literal|"&#140;"
+literal|"#140"
 argument_list|,
 name|command
 argument_list|)
@@ -3710,9 +4604,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|add_word
+name|add_encoded_char
 argument_list|(
-literal|"&#156;"
+literal|"#156"
 argument_list|,
 name|command
 argument_list|)
