@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.43 1997/04/27 21:18:58 fsmp Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.44 1997/07/20 14:10:02 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2759,6 +2759,27 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* INTRGET() is NOT MP_SAFE, forgo printing it for now... */
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"ze%d: device timeout, isr=%02x, imr=%02x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|isr
+argument_list|,
+name|imr
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|imask
 operator|=
 name|INTRGET
@@ -2781,6 +2802,9 @@ argument_list|,
 name|imask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SMP */
 else|#
 directive|else
 name|log
