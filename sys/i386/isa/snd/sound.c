@@ -6620,12 +6620,6 @@ begin_comment
 comment|/*  * code for translating between U8 and ULAW. Needed to support  * /dev/audio on the SoundBlaster. Actually, we would also need  * ulaw -> 16 bits (for the soundblaster as well, when used in  * full-duplex)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_function
 name|void
 name|translate_bytes
@@ -6680,49 +6674,6 @@ index|]
 expr_stmt|;
 block|}
 end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* inline */
-end_comment
-
-begin_function
-name|void
-name|translate_bytes
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|table
-parameter_list|,
-name|void
-modifier|*
-name|buff
-parameter_list|,
-name|int
-name|n
-parameter_list|)
-block|{
-if|if
-condition|(
-name|n
-operator|>
-literal|0
-condition|)
-block|{
-asm|__asm__ (  "   cld\n" 		   "1: lodsb\n" 		   "   xlatb\n" 		   "   stosb\n" 		   "   loop 1b\n": 	    : "b" (table), "c" (n), "D" (buff), "S" (buff) 	    : "bx", "cx", "di", "si", "ax");
-block|}
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
