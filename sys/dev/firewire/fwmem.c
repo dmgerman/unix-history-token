@@ -1103,7 +1103,7 @@ name|wreqb
 operator|.
 name|tcode
 operator|=
-name|FWTCODE_RREQB
+name|FWTCODE_WREQB
 expr_stmt|;
 name|fp
 operator|->
@@ -1513,10 +1513,11 @@ name|buf
 operator|==
 name|NULL
 condition|)
-return|return
-name|EINVAL
-return|;
-comment|/* XXX */
+name|err
+operator|=
+name|EIO
+expr_stmt|;
+else|else
 name|err
 operator|=
 name|uiomove
@@ -1619,10 +1620,11 @@ name|buf
 operator|==
 name|NULL
 condition|)
-return|return
-name|EINVAL
-return|;
-comment|/* XXX */
+name|err
+operator|=
+name|EIO
+expr_stmt|;
+else|else
 name|err
 operator|=
 name|uiomove
@@ -1920,19 +1922,11 @@ operator|->
 name|resp
 operator|!=
 literal|0
-operator|||
-name|xfer
-operator|->
-name|recv
-operator|.
-name|buf
-operator|==
-name|NULL
 condition|)
-return|return
-name|EINVAL
-return|;
-comment|/* XXX */
+name|err
+operator|=
+name|EIO
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2021,25 +2015,17 @@ operator|->
 name|resp
 operator|!=
 literal|0
-operator|||
-name|xfer
-operator|->
-name|recv
-operator|.
-name|buf
-operator|==
-name|NULL
 condition|)
-return|return
-name|EINVAL
-return|;
-comment|/* XXX */
+name|err
+operator|=
+name|EIO
+expr_stmt|;
+block|}
 name|fw_xfer_free
 argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 name|err
