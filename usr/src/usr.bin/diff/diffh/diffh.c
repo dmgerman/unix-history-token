@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffh.c 4.2 %G%"
+literal|"@(#)diffh.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,12 @@ modifier|*
 name|dopen
 parameter_list|()
 function_decl|;
+specifier|register
+name|int
+name|status
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -652,6 +658,10 @@ argument_list|(
 literal|"5"
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -681,7 +691,11 @@ name|s1
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|status
+operator|)
+return|;
 if|if
 condition|(
 name|s0
@@ -710,6 +724,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -1700,7 +1719,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
