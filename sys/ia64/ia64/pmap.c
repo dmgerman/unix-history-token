@@ -2834,7 +2834,8 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+name|pmap_allocate_rid
+argument_list|()
 expr_stmt|;
 name|pmap
 operator|->
@@ -2885,34 +2886,7 @@ name|pmap
 modifier|*
 name|pmap
 parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|5
-condition|;
-name|i
-operator|++
-control|)
-name|pmap
-operator|->
-name|pm_rid
-index|[
-name|i
-index|]
-operator|=
-name|pmap_allocate_rid
-argument_list|()
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
