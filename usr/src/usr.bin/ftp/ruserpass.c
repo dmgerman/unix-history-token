@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	1.1 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,7 +407,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s/.ftprc"
+literal|"%s/.netrc"
 argument_list|,
 name|hdir
 argument_list|)
@@ -595,7 +595,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Error - .ftprc file not correct mode.\n"
+literal|"Error - .netrc file not correct mode.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -679,7 +679,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Error - .ftprc file not correct mode.\n"
+literal|"Error - .netrc file not correct mode.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1088,7 +1088,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unknown .ftprc keyword %s\n"
+literal|"Unknown .netrc keyword %s\n"
 argument_list|,
 name|tokval
 argument_list|)
