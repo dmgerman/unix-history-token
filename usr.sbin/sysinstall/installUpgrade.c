@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.19 1996/04/07 03:52:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.20 1996/04/13 13:31:43 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -114,9 +114,6 @@ modifier|*
 name|h
 parameter_list|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"/etc/%s is one of those files that this upgrade procedure just isn't\n"
@@ -144,9 +141,6 @@ modifier|*
 name|h
 parameter_list|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"/etc/sysconfig is one of those files that this upgrade procedure just isn't\n"
@@ -852,17 +846,12 @@ name|h
 operator|->
 name|optional
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find an old /etc/%s file!  That is decidedly non-standard and\n"
 literal|"your upgraded system may function a little strangely as a result."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -907,10 +896,6 @@ operator|->
 name|name
 argument_list|)
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to resurrect your old /etc/%s!  Hmmmm."
@@ -920,7 +905,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 comment|/* call handler */
@@ -969,9 +953,6 @@ operator|!
 name|RunningAsInit
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You can only perform this procedure when booted off the installation\n"
@@ -1011,9 +992,6 @@ operator|!
 name|Dists
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You haven't specified any distributions yet.  The upgrade procedure will\n"
@@ -1047,9 +1025,6 @@ name|DIST_BIN
 operator|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1092,9 +1067,6 @@ operator|!
 name|mediaDevice
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Now you must specify an installation medium for the upgrade."
@@ -1116,9 +1088,6 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"OK.  First, we're going to go to the disk label editor.  In this editor\n"
@@ -1141,9 +1110,6 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The disk label editor failed to work properly!  Upgrade operation\n"
@@ -1172,9 +1138,6 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Not all file systems were properly mounted.  Upgrade operation\n"
@@ -1197,9 +1160,6 @@ name|copySelf
 argument_list|()
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't clone the boot floppy onto the root file system.\n"
@@ -1220,9 +1180,6 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to chroot to /mnt - something is wrong with the\n"
@@ -1253,9 +1210,6 @@ name|rootExtract
 argument_list|()
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Failed to load the ROOT distribution.  Please correct\n"
@@ -1305,9 +1259,6 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1363,9 +1314,6 @@ literal|"chflags noschg /kernel&& mv /kernel /kernel.205"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1413,9 +1361,6 @@ name|DIST_BIN
 operator|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
@@ -1423,15 +1368,15 @@ literal|"should be considered a failure and started from the beginning, sorry!\n
 literal|"The system will reboot now."
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|reboot
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The extraction process seems to have had some problems, but we got most\n"
@@ -1463,9 +1408,6 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Hmmmmm.  The fixups don't seem to have been very happy.\n"
@@ -1475,9 +1417,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"First stage of upgrade completed successfully!\n\n"
@@ -1493,9 +1432,6 @@ name|saved_etc
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to go to your saved /etc directory in %s?!  Argh!\n"
@@ -1514,9 +1450,6 @@ name|etc_files
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"OK!  At this stage, we've resurrected all the /etc files we could\n"

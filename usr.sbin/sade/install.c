@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.82 1996/04/07 03:52:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.83 1996/04/13 13:31:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -329,9 +329,6 @@ condition|(
 name|rootdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one root device set?!\n"
@@ -386,9 +383,6 @@ condition|(
 name|usrdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one /usr filesystem.\n"
@@ -588,9 +582,6 @@ operator|!
 name|rootdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No root device found - you must label a partition as /\n"
@@ -613,9 +604,6 @@ operator|!
 name|swapdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No swap devices found - you must create at least one\n"
@@ -638,9 +626,6 @@ operator|!
 name|usrdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  No /usr filesystem found.  This is not technically\n"
@@ -686,9 +671,6 @@ name|DISK_LABELLED
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You need to assign disk labels before you can proceed with\nthe installation."
@@ -715,9 +697,6 @@ literal|"yes"
 argument_list|)
 expr_stmt|;
 comment|/* If we refuse to proceed, bail. */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -742,9 +721,6 @@ operator|!=
 name|DITEM_SUCCESS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't make filesystems properly.  Aborting."
@@ -761,9 +737,6 @@ name|copySelf
 argument_list|()
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't clone the boot floppy onto the root file system.\n"
@@ -785,9 +758,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to chroot to /mnt - this is bad!"
@@ -808,9 +778,6 @@ name|RUNNING_ON_ROOT
 argument_list|,
 literal|"yes"
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 comment|/* stick a helpful shell over on the 4th VTY */
 name|systemCreateHoloshell
@@ -898,9 +865,6 @@ condition|(
 literal|1
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Please insert a writable fixit floppy and press return"
@@ -927,9 +891,6 @@ operator|-
 literal|1
 condition|)
 break|break;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -993,9 +954,6 @@ operator|!=
 name|DITEM_SUCCESS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  Was unable to create a /var/tmp/vi.recover directory.\n"
@@ -1017,18 +975,12 @@ argument_list|)
 operator|!=
 name|DITEM_SUCCESS
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to create an /etc directory!  Things are weird on this floppy.."
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|symlink
@@ -1041,17 +993,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't symlink the /etc/spwd.db file!  I'm not sure I like this.."
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 operator|!
@@ -1207,9 +1153,6 @@ argument_list|,
 name|MNT_FORCE
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Please remove the fixit floppy now."
@@ -1340,9 +1283,6 @@ argument_list|,
 literal|"novice"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
@@ -1365,9 +1305,6 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Next, you need to create BSD partitions inside of the fdisk partition(s)\n"
@@ -1390,9 +1327,6 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Now it is time to select an installation subset.  There are a number of\n"
@@ -1436,9 +1370,6 @@ operator|!
 name|mediaDevice
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Finally, you must specify an installation medium."
@@ -1554,9 +1485,6 @@ name|rootExtract
 argument_list|()
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Failed to load the ROOT distribution.  Please correct\n"
@@ -1609,9 +1537,6 @@ literal|"novice"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Since you're running the novice installation, a few post-configuration\n"
@@ -1634,9 +1559,6 @@ operator|!=
 name|DEVICE_TYPE_NFS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1662,9 +1584,6 @@ name|save
 expr_stmt|;
 block|}
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1679,9 +1598,6 @@ name|configSamba
 argument_list|(
 name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1699,9 +1615,6 @@ argument_list|,
 literal|"YES"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1715,9 +1628,6 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1730,9 +1640,6 @@ name|configNFSServer
 argument_list|(
 name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1749,9 +1656,6 @@ argument_list|,
 literal|"YES"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1764,9 +1668,6 @@ name|configApache
 argument_list|(
 name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1782,9 +1683,6 @@ operator|&
 name|MenuSyscons
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1793,14 +1691,28 @@ argument_list|(
 literal|"Would you like to set this machine's time zone now?"
 argument_list|)
 condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|systemExecute
 argument_list|(
 literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1823,9 +1735,6 @@ literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1834,9 +1743,9 @@ argument_list|(
 literal|"Would you like to configure your X server at this time?"
 argument_list|)
 condition|)
-name|systemExecute
+name|configXFree86
 argument_list|(
-literal|"/usr/X11R6/bin/xf86config"
+name|self
 argument_list|)
 expr_stmt|;
 block|}
@@ -1845,9 +1754,6 @@ condition|(
 name|cdromMounted
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1866,9 +1772,6 @@ name|self
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1887,9 +1790,6 @@ expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 block|}
 comment|/* Final menu of last resort */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1938,10 +1838,6 @@ name|i
 operator|==
 name|DITEM_FAILURE
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -1949,12 +1845,7 @@ literal|"scroll through the debugging messages on VTY1 with the\n"
 literal|"scroll-lock feature."
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed successfully.\n\n"
@@ -1962,7 +1853,6 @@ literal|"If you have any network devices you have not yet configured,\n"
 literal|"see the Interfaces configuration item on the Configuration menu."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1985,9 +1875,6 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -2000,9 +1887,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Congradulations!  You now have FreeBSD installed on your system.\n"
@@ -2076,9 +1960,6 @@ literal|"cp -p /kernel.GENERIC /kernel"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to link /kernel into place!"
@@ -2091,9 +1972,6 @@ block|}
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't find a kernel image to link to on the root file system!\n"
@@ -2125,9 +2003,6 @@ literal|"cd /dev; sh MAKEDEV all"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"MAKEDEV returned non-zero status"
@@ -2272,9 +2147,6 @@ name|name
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make slice entries for %s!"
@@ -2514,9 +2386,6 @@ name|dname
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make device node for %s in /dev!\n"
@@ -2590,9 +2459,6 @@ name|dname
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make device node for %s in /dev!\n"
@@ -2616,10 +2482,6 @@ argument_list|,
 literal|"/"
 argument_list|)
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: %s is marked as a root partition but is mounted on %s"
@@ -2633,7 +2495,6 @@ operator|->
 name|mountpoint
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|root
@@ -2669,9 +2530,6 @@ condition|(
 name|i
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make new root filesystem on %s!\n"
@@ -2695,9 +2553,6 @@ operator|!
 name|upgrade
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  Root device is selected read-only.  It will be assumed\n"
@@ -2725,10 +2580,6 @@ if|if
 condition|(
 name|i
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: fsck returned status of %d for %s.\n"
@@ -2739,7 +2590,6 @@ argument_list|,
 name|dname
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Switch to block device */
 name|sprintf
@@ -2765,9 +2615,6 @@ name|dname
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to mount the root file system on %s!  Giving up."
@@ -2836,9 +2683,6 @@ operator|->
 name|chunks
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No chunk list found for %s!"
@@ -3074,10 +2918,6 @@ name|fname
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to add %s as a swap device: %s"
@@ -3090,7 +2930,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -3173,9 +3012,6 @@ literal|"find -x /dev | cpio -pdumv /mnt"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't clone the /dev files!"
@@ -3350,9 +3186,6 @@ condition|(
 name|i
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Copy returned error status of %d!"
@@ -3373,9 +3206,6 @@ literal|"cd /mnt/stand; find etc | cpio -pdumv /mnt"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't copy up the /etc files!"
@@ -3491,9 +3321,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't get root image from %s!\n"
@@ -3697,9 +3524,6 @@ operator|!
 name|fp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to initialize termcap file. Some screen-oriented\nutilities may not work."

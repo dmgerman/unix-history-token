@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.49 1996/03/21 09:30:17 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.50 1996/04/13 13:32:10 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -337,9 +337,6 @@ name|struct
 name|termios
 name|foo
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|dialog_update
 argument_list|()
 expr_stmt|;
@@ -395,12 +392,6 @@ name|DialogActive
 operator|=
 name|TRUE
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
 return|return
 name|status
 return|;
@@ -431,10 +422,6 @@ name|buf
 index|[
 name|FILENAME_MAX
 index|]
-decl_stmt|;
-name|WINDOW
-modifier|*
-name|w
 decl_stmt|;
 name|fname
 operator|=
@@ -472,11 +459,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
 name|dialog_mesgbox
 argument_list|(
 literal|"Sorry!"
@@ -488,11 +470,6 @@ literal|1
 argument_list|,
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
 argument_list|)
 expr_stmt|;
 return|return
@@ -511,11 +488,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
 name|dialog_textbox
 argument_list|(
 name|file
@@ -525,11 +497,6 @@ argument_list|,
 name|LINES
 argument_list|,
 name|COLS
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.31 1996/04/07 03:52:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.32 1996/04/13 13:31:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -210,9 +210,6 @@ operator|!
 name|cnt
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No CDROM devices found!  Please check that your system's\n"
@@ -367,9 +364,6 @@ operator|!
 name|cnt
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No floppy devices found!  Please check that your system's configuration\n"
@@ -523,9 +517,6 @@ operator|!
 name|cnt
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No DOS primary partitions found!  This installation method is unavailable"
@@ -677,9 +668,6 @@ operator|!
 name|cnt
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No tape drive devices found!  Please check that your system's configuration\n"
@@ -835,19 +823,6 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_FTP_PATH
-argument_list|)
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -865,16 +840,12 @@ argument_list|(
 name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|cp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"%s not set!  Not setting an FTP installation path, OK?"
@@ -945,9 +916,6 @@ literal|6
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Sorry, %s is an invalid URL!"
@@ -1090,22 +1058,9 @@ name|ufsDevice
 decl_stmt|;
 name|char
 modifier|*
-name|val
+name|cp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|val
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_UFS_PATH
-argument_list|)
-operator|)
-condition|)
-block|{
-name|val
+name|cp
 operator|=
 name|variable_get_value
 argument_list|(
@@ -1118,12 +1073,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|val
+name|cp
 condition|)
 return|return
 name|DITEM_FAILURE
 return|;
-block|}
 name|strcpy
 argument_list|(
 name|ufsDevice
@@ -1169,7 +1123,7 @@ name|private
 operator|=
 name|strdup
 argument_list|(
-name|val
+name|cp
 argument_list|)
 expr_stmt|;
 name|mediaDevice
@@ -1707,9 +1661,6 @@ literal|0
 condition|)
 block|{
 comment|/* Don't check status - gunzip seems to return a bogus one! */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isDebug
@@ -1750,9 +1701,6 @@ name|j
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isDebug
@@ -2099,9 +2047,6 @@ literal|0
 condition|)
 block|{
 comment|/* Don't check status - gunzip seems to return a bogus one! */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isDebug
@@ -2142,9 +2087,6 @@ name|j
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isDebug
@@ -2214,9 +2156,6 @@ operator|!
 name|mediaDevice
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Media type not set!  Please select a media type\n"
@@ -2266,9 +2205,6 @@ operator|!
 name|cp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"FTP error handling is not set to anything!"
@@ -2348,9 +2284,6 @@ name|char
 modifier|*
 name|pass
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|variable_get_value
@@ -2373,9 +2306,6 @@ else|else
 name|pass
 operator|=
 name|NULL
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 return|return
 name|pass
@@ -2415,9 +2345,6 @@ operator|!
 name|cp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"CPIO Verbosity is not set to anything!"

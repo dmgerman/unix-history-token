@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.49 1996/04/07 03:52:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.50 1996/04/13 13:31:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ block|,
 comment|/* help file */
 block|{
 block|{
-literal|"Usage"
+literal|"1 Usage"
 block|,
 literal|"Quick start - How to use this menu system"
 block|,
@@ -52,7 +52,7 @@ literal|"usage"
 block|}
 block|,
 block|{
-literal|"Doc"
+literal|"2 Doc"
 block|,
 literal|"More detailed documentation on FreeBSD"
 block|,
@@ -67,7 +67,7 @@ name|MenuDocumentation
 block|}
 block|,
 block|{
-literal|"Options"
+literal|"3 Options"
 block|,
 literal|"Go to options editor"
 block|,
@@ -77,7 +77,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"Novice"
+literal|"4 Novice"
 block|,
 literal|"Begin a novice installation (for beginners)"
 block|,
@@ -87,7 +87,7 @@ name|installNovice
 block|}
 block|,
 block|{
-literal|"Express"
+literal|"5 Express"
 block|,
 literal|"Begin a quick installation (for the impatient)"
 block|,
@@ -97,7 +97,7 @@ name|installExpress
 block|}
 block|,
 block|{
-literal|"Custom"
+literal|"6 Custom"
 block|,
 literal|"Begin a custom installation (for experts)"
 block|,
@@ -112,7 +112,7 @@ name|MenuInstallCustom
 block|}
 block|,
 block|{
-literal|"Fixit"
+literal|"7 Fixit"
 block|,
 literal|"Go into repair mode with CDROM or floppy"
 block|,
@@ -127,7 +127,7 @@ name|MenuFixit
 block|}
 block|,
 block|{
-literal|"Upgrade"
+literal|"8 Upgrade"
 block|,
 literal|"Upgrade an existing 2.0.5 system"
 block|,
@@ -137,7 +137,7 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"Configure"
+literal|"9 Configure"
 block|,
 literal|"Do post-install configuration of FreeBSD"
 block|,
@@ -152,7 +152,7 @@ name|MenuConfigure
 block|}
 block|,
 block|{
-literal|"Quit"
+literal|"0 Exit"
 block|,
 literal|"Exit this menu (and the installation)"
 block|,
@@ -184,7 +184,7 @@ literal|"fixit"
 block|,
 block|{
 block|{
-literal|"CDROM"
+literal|"1 CDROM"
 block|,
 literal|"Use the 2nd \"live\" CDROM from the distribution"
 block|,
@@ -194,7 +194,7 @@ name|installFixitCDROM
 block|}
 block|,
 block|{
-literal|"Floppy"
+literal|"2 Floppy"
 block|,
 literal|"Use a floppy generated from the fixit image"
 block|,
@@ -233,7 +233,7 @@ literal|"usage"
 block|,
 block|{
 block|{
-literal|"README"
+literal|"1 README"
 block|,
 literal|"A general description of FreeBSD.  Read this!"
 block|,
@@ -247,7 +247,7 @@ literal|"readme"
 block|}
 block|,
 block|{
-literal|"Hardware"
+literal|"2 Hardware"
 block|,
 literal|"The FreeBSD survival guide for PC hardware."
 block|,
@@ -261,7 +261,7 @@ literal|"hardware"
 block|}
 block|,
 block|{
-literal|"Install"
+literal|"3 Install"
 block|,
 literal|"A step-by-step guide to installing FreeBSD."
 block|,
@@ -275,7 +275,7 @@ literal|"install"
 block|}
 block|,
 block|{
-literal|"Copyright"
+literal|"4 Copyright"
 block|,
 literal|"The FreeBSD Copyright notices."
 block|,
@@ -289,7 +289,7 @@ literal|"COPYRIGHT"
 block|}
 block|,
 block|{
-literal|"Release"
+literal|"5 Release"
 block|,
 literal|"The release notes for this version of FreeBSD."
 block|,
@@ -303,7 +303,7 @@ literal|"relnotes"
 block|}
 block|,
 block|{
-literal|"HTML Docs"
+literal|"6 HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)."
 block|,
@@ -313,7 +313,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"Exit"
+literal|"0 Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -330,14 +330,189 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|int
+name|whichMouse
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/dev/mouse"
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+name|readlink
+argument_list|(
+literal|"/dev/mouse"
+argument_list|,
+name|buf
+argument_list|,
+name|BUFSIZ
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"COM1"
+argument_list|)
+condition|)
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"/dev/cuaa0"
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"COM2"
+argument_list|)
+condition|)
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"/dev/cuaa1"
+argument_list|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"COM3"
+argument_list|)
+condition|)
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"/dev/cuaa2"
+argument_list|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"COM4"
+argument_list|)
+condition|)
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"/dev/cuaa3"
+argument_list|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"BusMouse"
+argument_list|)
+condition|)
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"/dev/msg0"
+argument_list|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"PS/2"
+argument_list|)
+condition|)
+return|return
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"/dev/psm0"
+argument_list|)
+return|;
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|DMenu
 name|MenuMouse
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
+name|DMENU_RADIO_TYPE
 block|,
 literal|"Please select your mouse type from the following menu"
 block|,
@@ -353,13 +528,21 @@ literal|"COM1"
 block|,
 literal|"Serial mouse on COM1"
 block|,
-name|NULL
+name|whichMouse
 block|,
 name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
 literal|"ln -fs /dev/cuaa0 /dev/mouse"
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -367,13 +550,21 @@ literal|"COM2"
 block|,
 literal|"Serial mouse on COM2"
 block|,
-name|NULL
+name|whichMouse
 block|,
 name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
 literal|"ln -fs /dev/cuaa1 /dev/mouse"
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -381,13 +572,21 @@ literal|"COM3"
 block|,
 literal|"Serial mouse on COM3"
 block|,
-name|NULL
+name|whichMouse
 block|,
 name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
 literal|"ln -fs /dev/cuaa2 /dev/mouse"
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -395,13 +594,21 @@ literal|"COM4"
 block|,
 literal|"Serial mouse on COM4"
 block|,
-name|NULL
+name|whichMouse
 block|,
 name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
 literal|"ln -fs /dev/cuaa3 /dev/mouse"
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -409,13 +616,21 @@ literal|"BusMouse"
 block|,
 literal|"Logitech or ATI bus mouse"
 block|,
-name|NULL
+name|whichMouse
 block|,
 name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
 literal|"ln -fs /dev/mse0 /dev/mouse"
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -423,13 +638,21 @@ literal|"PS/2"
 block|,
 literal|"PS/2 style mouse (requires kernel rebuild)"
 block|,
-name|NULL
+name|whichMouse
 block|,
 name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
 literal|"ln -fs /dev/psm0 /dev/mouse"
+block|,
+literal|'('
+block|,
+literal|'*'
+block|,
+literal|')'
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -1421,6 +1644,227 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|int
+name|whichMedia
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|mediaDevice
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"1 CDROM"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_CDROM
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"2 DOS"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_DOS
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"3 File System"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_UFS
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"4 Floppy"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_FLOPPY
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"5 FTP"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_FTP
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FTP_STATE
+argument_list|)
+argument_list|,
+literal|"active"
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"6 FTP Passive"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_FTP
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FTP_STATE
+argument_list|)
+argument_list|,
+literal|"passive"
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"7 NFS"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_NFS
+condition|)
+return|return
+name|TRUE
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|self
+operator|->
+name|prompt
+argument_list|,
+literal|"8 Tape"
+argument_list|)
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|==
+name|DEVICE_TYPE_TAPE
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* The media selection menu */
 end_comment
@@ -1442,81 +1886,81 @@ literal|"media"
 block|,
 block|{
 block|{
-literal|"CDROM"
+literal|"1 CDROM"
 block|,
 literal|"Install from a FreeBSD CDROM"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetCDROM
 block|}
 block|,
 block|{
-literal|"DOS"
+literal|"2 DOS"
 block|,
 literal|"Install from a DOS partition"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetDOS
 block|}
 block|,
 block|{
-literal|"File System"
+literal|"3 File System"
 block|,
 literal|"Install from an existing filesystem"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetUFS
 block|}
 block|,
 block|{
-literal|"Floppy"
+literal|"4 Floppy"
 block|,
 literal|"Install from a floppy disk set"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetFloppy
 block|}
 block|,
 block|{
-literal|"FTP"
+literal|"5 FTP"
 block|,
 literal|"Install from an FTP server"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetFTPActive
 block|}
 block|,
 block|{
-literal|"FTP Passive"
+literal|"6 FTP Passive"
 block|,
 literal|"Install from an FTP server through a firewall"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"NFS"
+literal|"7 NFS"
 block|,
 literal|"Install over NFS"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetNFS
 block|}
 block|,
 block|{
-literal|"Tape"
+literal|"8 Tape"
 block|,
 literal|"Install from SCSI or QIC tape"
 block|,
-name|NULL
+name|whichMedia
 block|,
 name|mediaSetTape
 block|}
@@ -1542,7 +1986,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Distributions"
 block|,
-literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose the\n\ list of distributions yourself, simply select \"Custom\".  You can also\n\ add distribution sets together by picking more than one, fine-tuning the\n\ final results with the Custom item.  When you are finished, select Cancel"
+literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose the\n\ list of distributions yourself, simply select \"Custom\".  You can also\n\ pick a canned distribution set and then fine-tune it with the Custom item.\n\ When you are finished, select Cancel or chose Exit."
 block|,
 literal|"Press F1 for more information on these options."
 block|,
@@ -1550,7 +1994,7 @@ literal|"distributions"
 block|,
 block|{
 block|{
-literal|"Developer"
+literal|"1 Developer"
 block|,
 literal|"Full sources, binaries and doc but no games [180MB]"
 block|,
@@ -1560,7 +2004,7 @@ name|distSetDeveloper
 block|}
 block|,
 block|{
-literal|"X-Developer"
+literal|"2 X-Developer"
 block|,
 literal|"Same as above, but includes XFree86 [201MB]"
 block|,
@@ -1570,7 +2014,7 @@ name|distSetXDeveloper
 block|}
 block|,
 block|{
-literal|"Kern-Developer"
+literal|"3 Kern-Developer"
 block|,
 literal|"Full binaries and doc, kernel sources only [70MB]"
 block|,
@@ -1580,7 +2024,7 @@ name|distSetKernDeveloper
 block|}
 block|,
 block|{
-literal|"User"
+literal|"4 User"
 block|,
 literal|"Average user - binaries and doc but no sources [52MB]"
 block|,
@@ -1590,7 +2034,7 @@ name|distSetUser
 block|}
 block|,
 block|{
-literal|"X-User"
+literal|"5 X-User"
 block|,
 literal|"Same as above, but includes XFree86 [52MB]"
 block|,
@@ -1600,7 +2044,7 @@ name|distSetXUser
 block|}
 block|,
 block|{
-literal|"Minimal"
+literal|"6 Minimal"
 block|,
 literal|"The smallest configuration possible [44MB]"
 block|,
@@ -1610,7 +2054,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"Everything"
+literal|"7 Everything"
 block|,
 literal|"All sources, binaries and XFree86 binaries [700MB]"
 block|,
@@ -1620,7 +2064,7 @@ name|distSetEverything
 block|}
 block|,
 block|{
-literal|"Custom"
+literal|"8 Custom"
 block|,
 literal|"Specify your own distribution set [?]"
 block|,
@@ -1635,13 +2079,23 @@ name|MenuSubDistributions
 block|}
 block|,
 block|{
-literal|"Clear"
+literal|"9 Clear"
 block|,
 literal|"Reset selected distribution list to None"
 block|,
 name|NULL
 block|,
 name|distReset
+block|}
+block|,
+block|{
+literal|"0 Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
 block|}
 block|,
 block|{
@@ -2029,6 +2483,46 @@ name|DIST_EXPERIMENTAL
 block|}
 block|,
 block|{
+literal|"Clear"
+block|,
+literal|"Reset selected distribution list to None"
+block|,
+name|NULL
+block|,
+name|distReset
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -2142,6 +2636,26 @@ block|,
 literal|']'
 block|,
 name|DIST_DES_SSECURE
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -2537,6 +3051,46 @@ name|DIST_SRC_SMAILCF
 block|}
 block|,
 block|{
+literal|"Clear"
+block|,
+literal|"Reset selected source distribution list to None"
+block|,
+name|NULL
+block|,
+name|distSrcReset
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -2572,6 +3126,35 @@ operator|~
 name|DIST_XF86
 expr_stmt|;
 return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearx11Servers
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator|&=
+operator|~
+name|DIST_XF86_SERVER
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
 name|DITEM_REDRAW
 return|;
 block|}
@@ -2694,6 +3277,36 @@ block|,
 name|NULL
 block|,
 name|clearx11
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -3020,6 +3633,46 @@ name|DIST_XF86_SRC
 block|}
 block|,
 block|{
+literal|"Clear"
+block|,
+literal|"Reset XFree86 distribution list"
+block|,
+name|NULL
+block|,
+name|clearx11
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -3179,6 +3832,26 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_FONTS_SERVER
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -3482,6 +4155,46 @@ name|DIST_XF86_SERVER_NEST
 block|}
 block|,
 block|{
+literal|"Clear"
+block|,
+literal|"Reset XFree86 server list"
+block|,
+name|NULL
+block|,
+name|clearx11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -3598,7 +4311,7 @@ literal|"install"
 block|,
 block|{
 block|{
-literal|"Options"
+literal|"1 Options"
 block|,
 literal|"Go to Options editor"
 block|,
@@ -3608,7 +4321,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"Partition"
+literal|"2 Partition"
 block|,
 literal|"Allocate disk space for FreeBSD"
 block|,
@@ -3618,7 +4331,7 @@ name|diskPartitionEditor
 block|}
 block|,
 block|{
-literal|"Label"
+literal|"3 Label"
 block|,
 literal|"Label allocated disk partitions"
 block|,
@@ -3628,7 +4341,7 @@ name|diskLabelEditor
 block|}
 block|,
 block|{
-literal|"Distributions"
+literal|"4 Distributions"
 block|,
 literal|"Select distribution(s) to extract"
 block|,
@@ -3643,7 +4356,7 @@ name|MenuDistributions
 block|}
 block|,
 block|{
-literal|"Media"
+literal|"5 Media"
 block|,
 literal|"Choose the installation media type"
 block|,
@@ -3658,7 +4371,7 @@ name|MenuMedia
 block|}
 block|,
 block|{
-literal|"Commit"
+literal|"6 Commit"
 block|,
 literal|"Perform any pending Partition/Label/Extract actions"
 block|,
@@ -3668,7 +4381,7 @@ name|installCommit
 block|}
 block|,
 block|{
-literal|"Extract"
+literal|"7 Extract"
 block|,
 literal|"Just do distribution extract step"
 block|,
@@ -3678,7 +4391,7 @@ name|distExtractAll
 block|}
 block|,
 block|{
-literal|"Exit"
+literal|"0 Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -3815,7 +4528,7 @@ literal|"configure"
 block|,
 block|{
 block|{
-literal|"Add User"
+literal|"1 Add User"
 block|,
 literal|"Add users to the system"
 block|,
@@ -3829,7 +4542,7 @@ literal|"adduser -config_create ; adduser -s"
 block|}
 block|,
 block|{
-literal|"Console"
+literal|"2 Console"
 block|,
 literal|"Customize system console behavior"
 block|,
@@ -3844,7 +4557,7 @@ name|MenuSyscons
 block|}
 block|,
 block|{
-literal|"Time Zone"
+literal|"3 Time Zone"
 block|,
 literal|"Set which time zone you're in"
 block|,
@@ -3858,7 +4571,7 @@ literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
 block|}
 block|,
 block|{
-literal|"Media"
+literal|"4 Media"
 block|,
 literal|"Change the installation media type"
 block|,
@@ -3873,7 +4586,7 @@ name|MenuMedia
 block|}
 block|,
 block|{
-literal|"Mouse"
+literal|"5 Mouse"
 block|,
 literal|"Select the type of mouse you have"
 block|,
@@ -3890,7 +4603,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"Networking"
+literal|"6 Networking"
 block|,
 literal|"Configure additional network services"
 block|,
@@ -3905,7 +4618,7 @@ name|MenuNetworking
 block|}
 block|,
 block|{
-literal|"Options"
+literal|"7 Options"
 block|,
 literal|"Go to options editor"
 block|,
@@ -3915,7 +4628,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"Packages"
+literal|"8 Packages"
 block|,
 literal|"Install pre-packaged software for FreeBSD"
 block|,
@@ -3925,7 +4638,7 @@ name|configPackages
 block|}
 block|,
 block|{
-literal|"Ports"
+literal|"9 Ports"
 block|,
 literal|"Link to FreeBSD Ports Collection on CD/NFS"
 block|,
@@ -3935,7 +4648,7 @@ name|configPorts
 block|}
 block|,
 block|{
-literal|"Root Password"
+literal|"A Root Password"
 block|,
 literal|"Set the system manager's password"
 block|,
@@ -3949,7 +4662,7 @@ literal|"passwd root"
 block|}
 block|,
 block|{
-literal|"HTML Docs"
+literal|"B HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)"
 block|,
@@ -3959,7 +4672,7 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"XFree86"
+literal|"C XFree86"
 block|,
 literal|"Configure XFree86"
 block|,
@@ -3969,7 +4682,7 @@ name|configXFree86
 block|}
 block|,
 block|{
-literal|"Exit"
+literal|"0 Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -4152,6 +4865,26 @@ block|,
 name|NULL
 block|,
 name|configPCNFSD
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -4625,6 +5358,20 @@ block|,
 name|NULL
 block|,
 literal|"keymap=german.iso"
+block|}
+block|,
+block|{
+literal|"Italian"
+block|,
+literal|"Italian ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=it.iso"
 block|}
 block|,
 block|{

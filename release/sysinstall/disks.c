@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.39 1996/04/07 03:52:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.40 1996/04/13 13:31:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -225,9 +225,6 @@ block|{
 name|int
 name|sz
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  The current geometry for %s is incorrect.  Using\n"
@@ -802,6 +799,10 @@ name|u_char
 modifier|*
 name|mbrContents
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
 name|chunking
 operator|=
 name|TRUE
@@ -812,6 +813,11 @@ name|stdscr
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|w
+operator|=
+name|savescr
+argument_list|()
 expr_stmt|;
 name|clear
 argument_list|()
@@ -1450,9 +1456,6 @@ operator|!
 name|d
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't reopen disk %s! Internal state is probably corrupted"
@@ -1462,7 +1465,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 name|Free_Disk
 argument_list|(
@@ -1561,24 +1564,17 @@ argument_list|)
 operator|!=
 name|DITEM_SUCCESS
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Disk partition write returned an error status!"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|msgConfirm
 argument_list|(
 literal|"Wrote FDISK partition information out successfully."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -1594,6 +1590,15 @@ literal|"No seat belts whatsoever are provided!"
 argument_list|)
 condition|)
 block|{
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
+name|w
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1626,6 +1631,11 @@ expr_stmt|;
 name|record_chunks
 argument_list|(
 name|d
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 block|}
@@ -1720,8 +1730,10 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear
-argument_list|()
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1743,10 +1755,6 @@ name|devs
 init|=
 name|NULL
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|w
-decl_stmt|;
 name|devs
 operator|=
 name|deviceFind
@@ -1764,9 +1772,6 @@ operator|!
 name|devs
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find disk %s!"
@@ -1789,11 +1794,6 @@ name|enabled
 operator|=
 name|TRUE
 expr_stmt|;
-name|w
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
 name|diskPartition
 argument_list|(
 name|devs
@@ -1811,11 +1811,6 @@ literal|0
 index|]
 operator|->
 name|private
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
 argument_list|)
 expr_stmt|;
 return|return
@@ -1931,9 +1926,6 @@ operator|!
 name|cnt
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No disks found!  Please verify that your disk controller is being\n"
@@ -2009,9 +2001,6 @@ operator|!
 name|menu
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No devices suitable for installation found!\n\n"
@@ -2028,35 +2017,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|WINDOW
-modifier|*
-name|w
-decl_stmt|;
-name|w
+name|i
 operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|dmenuOpenSimple
 argument_list|(
 name|menu
 argument_list|)
-condition|)
-name|i
-operator|=
+condition|?
 name|DITEM_SUCCESS
-expr_stmt|;
-else|else
-name|i
-operator|=
+else|:
 name|DITEM_FAILURE
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -2120,9 +2090,6 @@ operator|!
 name|cp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You must partition the disk(s) before this option can be used."
@@ -2147,9 +2114,6 @@ operator|!
 name|devs
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find any disks to write to??"
@@ -2230,9 +2194,6 @@ name|d
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"ERROR: Unable to write data to disk %s!"
@@ -2302,10 +2263,6 @@ if|if
 condition|(
 name|ret
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Bad144 init on %s returned status of %d!"
@@ -2317,7 +2274,6 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-block|}
 name|ret
 operator|=
 name|vsystem
@@ -2333,10 +2289,6 @@ if|if
 condition|(
 name|ret
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Bad144 scan on %s returned status of %d!"
@@ -2348,7 +2300,6 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
