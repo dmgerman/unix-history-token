@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.14	82/04/24	*/
+comment|/*	if.c	4.15	82/05/04	*/
 end_comment
 
 begin_include
@@ -404,14 +404,27 @@ modifier|*
 name|netmatch
 function_decl|)
 parameter_list|()
-init|=
+function_decl|;
+if|if
+condition|(
+name|af
+operator|>=
+name|AF_MAX
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|netmatch
+operator|=
 name|afswitch
 index|[
 name|af
 index|]
 operator|.
 name|af_netmatch
-function_decl|;
+expr_stmt|;
 for|for
 control|(
 name|ifp

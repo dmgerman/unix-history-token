@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.6	82/03/31	*/
+comment|/*	route.c	4.7	82/05/04	*/
 end_comment
 
 begin_include
@@ -158,6 +158,13 @@ operator|->
 name|rt_ifp
 condition|)
 comment|/* XXX */
+return|return;
+if|if
+condition|(
+name|af
+operator|>=
+name|AF_MAX
+condition|)
 return|return;
 operator|(
 operator|*
@@ -551,6 +558,17 @@ argument_list|(
 name|RTREQUEST
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|af
+operator|>=
+name|AF_MAX
+condition|)
+return|return
+operator|(
+name|EAFNOSUPPORT
+operator|)
+return|;
 operator|(
 operator|*
 name|afswitch
