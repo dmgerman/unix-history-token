@@ -347,11 +347,6 @@ name|defined
 argument_list|(
 name|HAVE_LOGIN_CAP
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LOGIN_ACCESS
-argument_list|)
 specifier|const
 name|char
 modifier|*
@@ -376,7 +371,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_LOGIN_CAP || LOGIN_ACCESS */
+comment|/* HAVE_LOGIN_CAP */
 name|debug
 argument_list|(
 literal|"Attempting authentication for %s%.100s."
@@ -1487,48 +1482,6 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
-ifdef|#
-directive|ifdef
-name|LOGIN_ACCESS
-if|if
-condition|(
-name|pw
-operator|!=
-name|NULL
-operator|&&
-operator|!
-name|login_access
-argument_list|(
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|from_host
-argument_list|)
-condition|)
-block|{
-name|log
-argument_list|(
-literal|"Denied connection for %.200s from %.200s [%.200s]."
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|from_host
-argument_list|,
-name|from_ip
-argument_list|)
-expr_stmt|;
-name|packet_disconnect
-argument_list|(
-literal|"Sorry, you are not allowed to connect."
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* LOGIN_ACCESS */
 ifdef|#
 directive|ifdef
 name|BSD_AUTH
