@@ -24,18 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -48,31 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/event.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pioctl.h>
 end_include
 
 begin_include
@@ -84,31 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/condvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
+file|<sys/event.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -121,6 +79,42 @@ begin_include
 include|#
 directive|include
 file|<sys/ktrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/pioctl.h>
 end_include
 
 begin_include
@@ -156,7 +150,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -168,19 +162,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/sysproto.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
