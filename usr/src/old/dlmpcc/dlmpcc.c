@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dlmpcc.c	5.2 (Berkeley) %G%"
+literal|"@(#)dlmpcc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2016,11 +2016,7 @@ name|sprintf
 argument_list|(
 name|fullname
 argument_list|,
-literal|"/etc/mpcc%s"
-argument_list|,
-name|cf
-operator|.
-name|loadname
+literal|"/etc/mpccdl"
 argument_list|)
 expr_stmt|;
 if|if
