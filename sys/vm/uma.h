@@ -298,6 +298,17 @@ begin_comment
 comment|/* Create a new lock class */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_VM
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Used for internal vm datastructures */
+end_comment
+
 begin_comment
 comment|/* Definitions for align */
 end_comment

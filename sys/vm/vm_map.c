@@ -374,6 +374,8 @@ argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZONE_MTXCLASS
+operator||
+name|UMA_ZONE_VM
 argument_list|)
 expr_stmt|;
 name|uma_prealloc

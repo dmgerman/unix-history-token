@@ -665,6 +665,17 @@ begin_comment
 comment|/* This zone reached uz_maxpages */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZFLAG_BUCKETCACHE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Only allocate buckets from cache */
+end_comment
+
 begin_comment
 comment|/* This lives in uflags */
 end_comment

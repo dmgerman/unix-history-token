@@ -94,6 +94,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NOVM
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Don't ask the VM for pages */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_MAGIC
 value|877983977
 end_define
