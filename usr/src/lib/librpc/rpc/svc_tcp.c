@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -64,14 +70,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|bool_t
-name|abort
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_extern
 extern|extern errno;
@@ -184,10 +182,31 @@ name|rendezvous_request
 block|,
 name|rendezvous_stat
 block|,
+operator|(
+name|bool_t
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|abort
 block|,
+operator|(
+name|bool_t
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|abort
 block|,
+operator|(
+name|bool_t
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|abort
 block|,
 name|svctcp_destroy
