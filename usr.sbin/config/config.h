@@ -25,13 +25,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NODEV
-value|((dev_t)-1)
-end_define
-
 begin_struct
 struct|struct
 name|file_list
@@ -666,6 +659,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Config file name - for error messages */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|srcdir
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* root of the kernel source tree */
 end_comment
 
 begin_define
