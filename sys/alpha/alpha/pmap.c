@@ -3609,6 +3609,9 @@ operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|m
@@ -3627,6 +3630,9 @@ name|PG_MAPPED
 operator||
 name|PG_WRITEABLE
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * The pcb may be at a different physical address now so cache the 	 * new address. 	 */
