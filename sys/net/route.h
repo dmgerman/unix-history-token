@@ -258,11 +258,12 @@ modifier|*
 name|rt_parent
 decl_stmt|;
 comment|/* cloning parent of this route */
-name|void
+name|struct
+name|mtx
 modifier|*
-name|rt_filler2
+name|rt_mtx
 decl_stmt|;
-comment|/* more filler */
+comment|/* mutex for routing entry */
 block|}
 struct|;
 end_struct
@@ -1200,6 +1201,47 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RT_LOCK_INIT
+parameter_list|(
+name|rt
+parameter_list|)
+define|\
+value|mtx_init((rt)->rt_mtx, "rtentry", NULL, MTX_DEF | MTX_DUPOK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_LOCK
+parameter_list|(
+name|rt
+parameter_list|)
+value|mtx_lock((rt)->rt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_UNLOCK
+parameter_list|(
+name|rt
+parameter_list|)
+value|mtx_unlock((rt)->rt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_LOCK_DESTROY
+parameter_list|(
+name|rt
+parameter_list|)
+value|mtx_destroy((rt)->rt_mtx)
+end_define
 
 begin_define
 define|#
