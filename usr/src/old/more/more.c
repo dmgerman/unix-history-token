@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.12 (Berkeley) %G%"
+literal|"@(#)more.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1689,20 +1689,18 @@ end_decl_stmt
 
 begin_block
 block|{
-for|for
-control|(
-name|dlines
-operator|=
+name|int
+name|seen_num
+init|=
 literal|0
-init|;
+decl_stmt|;
+while|while
+condition|(
 operator|*
 name|s
 operator|!=
 literal|'\0'
-condition|;
-name|s
-operator|++
-control|)
+condition|)
 block|{
 switch|switch
 condition|(
@@ -1740,6 +1738,21 @@ case|:
 case|case
 literal|'9'
 case|:
+if|if
+condition|(
+operator|!
+name|seen_num
+condition|)
+block|{
+name|dlines
+operator|=
+literal|0
+expr_stmt|;
+name|seen_num
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|dlines
 operator|=
 name|dlines
@@ -1807,6 +1820,9 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+name|s
+operator|++
+expr_stmt|;
 block|}
 block|}
 end_block
