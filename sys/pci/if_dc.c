@@ -10859,23 +10859,11 @@ name|m_new
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dc%d: no memory for rx list "
-literal|"-- packet dropped!\n"
-argument_list|,
-name|sc
-operator|->
-name|dc_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
-block|}
 name|MCLGET
 argument_list|(
 name|m_new
@@ -10895,16 +10883,6 @@ name|M_EXT
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"dc%d: no memory for rx list "
-literal|"-- packet dropped!\n"
-argument_list|,
-name|sc
-operator|->
-name|dc_unit
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m_new
@@ -13534,22 +13512,11 @@ name|m_new
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dc%d: no memory for tx list"
-argument_list|,
-name|sc
-operator|->
-name|dc_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|m
@@ -13583,15 +13550,6 @@ block|{
 name|m_freem
 argument_list|(
 name|m_new
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"dc%d: no memory for tx list"
-argument_list|,
-name|sc
-operator|->
-name|dc_unit
 argument_list|)
 expr_stmt|;
 return|return
