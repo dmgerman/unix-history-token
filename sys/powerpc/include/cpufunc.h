@@ -110,7 +110,7 @@ name|register_t
 name|value
 parameter_list|)
 block|{
-asm|__asm __volatile ("mtmsr %0" :: "r"(value));
+asm|__asm __volatile ("mtmsr %0; isync" :: "r"(value));
 block|}
 end_function
 
