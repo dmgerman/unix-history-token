@@ -797,7 +797,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"2.25"
+literal|"2.26"
 decl_stmt|;
 end_decl_stmt
 
