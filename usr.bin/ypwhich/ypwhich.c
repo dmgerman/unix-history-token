@@ -448,7 +448,9 @@ name|ypbinderr_string
 argument_list|(
 name|ypbr
 operator|.
-name|ypbind_status
+name|ypbind_respbody
+operator|.
+name|ypbind_error
 argument_list|)
 argument_list|)
 expr_stmt|;
