@@ -4541,12 +4541,16 @@ argument_list|,
 name|statack
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Free any finished transmit mbuf chains. 		 */
+comment|/* 		 * Free any finished transmit mbuf chains. 		 * 		 * Handle the CNA event likt a CXTNO event. It used to 		 * be that this event (control unit not ready) was not 		 * encountered, but it is now with the SMPng modifications. 		 * The exact sequence of events that occur when the interface 		 * is brought up are different now, and if this event 		 * goes unhandled, the configuration/rxfilter setup sequence 		 * can stall for several seconds. The result is that no 		 * packets go out onto the wire for about 5 to 10 seconds 		 * after the interface is ifconfig'ed for the first time. 		 */
 if|if
 condition|(
 name|statack
 operator|&
+operator|(
 name|FXP_SCB_STATACK_CXTNO
+operator||
+name|FXP_SCB_STATACK_CNA
+operator|)
 condition|)
 block|{
 name|struct
