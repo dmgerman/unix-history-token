@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)main.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
+comment|/* @(#)main.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_comment
@@ -418,6 +424,19 @@ decl_stmt|,
 modifier|*
 name|strcpy
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Version number */
+end_comment
+
+begin_decl_stmt
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)main.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2147,7 +2166,9 @@ name|i
 argument_list|,
 literal|0
 argument_list|,
-literal|10000000
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2305,6 +2326,10 @@ else|SIGTINT
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|timeval
+name|selectpoll
+decl_stmt|;
 endif|#
 directive|endif
 endif|SIGTINT
@@ -2419,6 +2444,18 @@ argument_list|(
 name|stdin
 argument_list|)
 expr_stmt|;
+name|selectpoll
+operator|.
+name|tv_sec
+operator|=
+literal|0l
+expr_stmt|;
+name|selectpoll
+operator|.
+name|tv_usec
+operator|=
+literal|0l
+expr_stmt|;
 if|if
 condition|(
 name|select
@@ -2431,6 +2468,9 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|selectpoll
 argument_list|)
 operator|<=
 literal|0
@@ -2515,9 +2555,61 @@ if|if
 condition|(
 name|cmd
 operator|!=
+literal|'\
 literal|'
+condition|)
+name|putchar
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|SHCommand
+argument_list|(
+operator|&
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+name|TxLine
+argument_list|(
+specifier|inline
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"                                                                              "
+argument_list|)
+expr_stmt|;
+name|TxLine
+argument_list|(
+specifier|inline
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Consume
+condition|)
+name|CP
+argument_list|()
+expr_stmt|;
+name|Consume
+operator|=
+name|TRUE
+expr_stmt|;
+name|UNForget
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 end_block
 
-unit|\') putchar(cmd);         (void) fflush(stdout);         SHCommand(&cmd);     }     TxLine(inline);     printf("                                                                              ");     TxLine(inline);     if (Consume) CP();     Consume = TRUE;     UNForget();     } }
 end_unit
 
