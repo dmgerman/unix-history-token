@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)encrypt.c	5.2 (Berkeley) %G%"
+literal|"@(#)encrypt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -338,7 +338,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DES_ENCRYPT
+name|DES_ENCRYPTION
 argument_list|)
 block|{
 literal|"DES_CFB64"
@@ -2848,6 +2848,41 @@ argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+operator|!
+name|encrypt_output
+operator|&&
+name|autoencrypt
+operator|&&
+operator|!
+name|server
+condition|)
+name|encrypt_start_output
+argument_list|(
+name|ep
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|decrypt_input
+operator|&&
+name|autodecrypt
+operator|&&
+operator|!
+name|server
+condition|)
+name|encrypt_send_request_start
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 operator|++
 name|ep
 expr_stmt|;

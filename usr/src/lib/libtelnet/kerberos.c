@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos.c	5.2 (Berkeley) %G%"
+literal|"@(#)kerberos.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,32 +56,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENCRYPT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__NEED_ENCRYPT__
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ENCRYPT
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -97,38 +71,6 @@ include|#
 directive|include
 file|<krb.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NEED_ENCRYPT__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ENCRYPT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ENCRYPT
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|__NEED_ENCRYPT__
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -195,7 +137,7 @@ end_include
 
 begin_decl_stmt
 name|int
-name|cksum
+name|kerberos4_cksum
 name|P
 argument_list|(
 operator|(
@@ -411,12 +353,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KRB_CHALLANGE
+name|KRB_CHALLENGE
 value|3
 end_define
 
 begin_comment
-comment|/* Challange for mutual auth. */
+comment|/* Challenge for mutual auth. */
 end_comment
 
 begin_define
@@ -429,6 +371,13 @@ end_define
 begin_comment
 comment|/* Response for mutual auth. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KRB_SERVICE_NAME
+value|"rcmd"
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -463,7 +412,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -478,11 +427,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|Schedule
@@ -493,13 +437,18 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|Block
-name|challange
+name|challenge
 init|=
 block|{
 literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -735,10 +684,15 @@ name|int
 name|server
 decl_stmt|;
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 if|if
 condition|(
 name|server
 condition|)
+block|{
 name|str_data
 index|[
 literal|3
@@ -746,7 +700,34 @@ index|]
 operator|=
 name|TELQUAL_REPLY
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|KEYFILE
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|str_data
 index|[
 literal|3
@@ -754,6 +735,7 @@ index|]
 operator|=
 name|TELQUAL_IS
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -827,6 +809,11 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"[ Trying KERBEROS4 ... ]\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -910,11 +897,6 @@ operator|!
 name|realm
 condition|)
 block|{
-if|if
-condition|(
-name|auth_debug_mode
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"Kerberos V4: no realm for %s\r\n"
@@ -922,7 +904,6 @@ argument_list|,
 name|RemoteHostName
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -938,7 +919,7 @@ argument_list|(
 operator|&
 name|auth
 argument_list|,
-literal|"rcmd"
+name|KRB_SERVICE_NAME
 argument_list|,
 name|instance
 argument_list|,
@@ -946,11 +927,6 @@ name|realm
 argument_list|,
 literal|0L
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|auth_debug_mode
 condition|)
 block|{
 name|printf
@@ -963,7 +939,6 @@ name|r
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -976,7 +951,7 @@ name|r
 operator|=
 name|krb_get_cred
 argument_list|(
-literal|"rcmd"
+name|KRB_SERVICE_NAME
 argument_list|,
 name|instance
 argument_list|,
@@ -985,11 +960,6 @@ argument_list|,
 operator|&
 name|cred
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|auth_debug_mode
 condition|)
 block|{
 name|printf
@@ -1002,7 +972,6 @@ name|r
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1089,7 +1058,13 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * If we are doing mutual authentication, get set up to send 	 * the challange, and verify it when the response comes back. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+comment|/* 	 * If we are doing mutual authentication, get set up to send 	 * the challenge, and verify it when the response comes back. 	 */
 if|if
 condition|(
 operator|(
@@ -1125,12 +1100,12 @@ argument_list|)
 expr_stmt|;
 name|des_new_random_key
 argument_list|(
-name|challange
+name|challenge
 argument_list|)
 expr_stmt|;
 name|des_ecb_encrypt
 argument_list|(
-name|challange
+name|challenge
 argument_list|,
 name|session_key
 argument_list|,
@@ -1139,7 +1114,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Increment the challange by 1, and encrypt it for 		 * later comparison. 		 */
+comment|/* 		 * Increment the challenge by 1, and encrypt it for 		 * later comparison. 		 */
 for|for
 control|(
 name|i
@@ -1164,14 +1139,14 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|challange
+name|challenge
 index|[
 name|i
 index|]
 operator|+
 literal|1
 expr_stmt|;
-name|challange
+name|challenge
 index|[
 name|i
 index|]
@@ -1190,9 +1165,9 @@ break|break;
 block|}
 name|des_ecb_encrypt
 argument_list|(
-name|challange
+name|challenge
 argument_list|,
-name|challange
+name|challenge
 argument_list|,
 name|sched
 argument_list|,
@@ -1200,6 +1175,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|auth_debug_mode
@@ -1209,7 +1186,7 @@ name|printf
 argument_list|(
 literal|"CK: %d:"
 argument_list|,
-name|cksum
+name|kerberos4_cksum
 argument_list|(
 name|auth
 operator|.
@@ -1398,7 +1375,7 @@ name|printf
 argument_list|(
 literal|"CK: %d:"
 argument_list|,
-name|cksum
+name|kerberos4_cksum
 argument_list|(
 name|auth
 operator|.
@@ -1450,7 +1427,7 @@ argument_list|(
 operator|&
 name|auth
 argument_list|,
-literal|"rcmd"
+name|KRB_SERVICE_NAME
 argument_list|,
 name|instance
 argument_list|,
@@ -1502,6 +1479,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
 name|bcopy
 argument_list|(
 operator|(
@@ -1524,6 +1504,8 @@ name|Block
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|krb_kntoln
 argument_list|(
 operator|&
@@ -1532,6 +1514,19 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|UserNameRequested
+operator|&&
+operator|!
+name|kuserok
+argument_list|(
+operator|&
+name|adat
+argument_list|,
+name|UserNameRequested
+argument_list|)
+condition|)
 name|Data
 argument_list|(
 name|ap
@@ -1547,6 +1542,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+name|Data
+argument_list|(
+name|ap
+argument_list|,
+name|KRB_REJECT
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"user is not authorized"
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|auth_finished
 argument_list|(
 name|ap
@@ -1554,23 +1566,34 @@ argument_list|,
 name|AUTH_USER
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|auth_debug_mode
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Kerberos accepting him as %s\r\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
-name|KRB_CHALLANGE
+name|KRB_CHALLENGE
 case|:
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+name|Data
+argument_list|(
+name|ap
+argument_list|,
+name|KRB_RESPONSE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|!
@@ -1625,7 +1648,7 @@ name|Block
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Take the received encrypted challange, and encrypt 		 * it again to get a unique session_key for the 		 * ENCRYPT option. 		 */
+comment|/* 		 * Take the received encrypted challenge, and encrypt 		 * it again to get a unique session_key for the 		 * ENCRYPT option. 		 */
 name|des_ecb_encrypt
 argument_list|(
 name|datablock
@@ -1663,12 +1686,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Now decrypt the received encrypted challange, 		 * increment by one, re-encrypt it and send it back. 		 */
+comment|/* 		 * Now decrypt the received encrypted challenge, 		 * increment by one, re-encrypt it and send it back. 		 */
 name|des_ecb_encrypt
 argument_list|(
 name|datablock
 argument_list|,
-name|challange
+name|challenge
 argument_list|,
 name|sched
 argument_list|,
@@ -1699,14 +1722,14 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|challange
+name|challenge
 index|[
 name|r
 index|]
 operator|+
 literal|1
 expr_stmt|;
-name|challange
+name|challenge
 index|[
 name|r
 index|]
@@ -1725,9 +1748,9 @@ break|break;
 block|}
 name|des_ecb_encrypt
 argument_list|(
-name|challange
+name|challenge
 argument_list|,
-name|challange
+name|challenge
 argument_list|,
 name|sched
 argument_list|,
@@ -1744,14 +1767,16 @@ operator|(
 name|void
 operator|*
 operator|)
-name|challange
+name|challenge
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|challange
+name|challenge
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 if|if
@@ -1877,12 +1902,36 @@ operator|==
 name|AUTH_HOW_MUTUAL
 condition|)
 block|{
-comment|/* 			 * Send over the encrypted challange. 		 	 */
+comment|/* 			 * Send over the encrypted challenge. 		 	 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
 name|Data
 argument_list|(
 name|ap
 argument_list|,
-name|KRB_CHALLANGE
+name|KRB_CHALLENGE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|Data
+argument_list|(
+name|ap
+argument_list|,
+name|KRB_CHALLENGE
 argument_list|,
 operator|(
 name|void
@@ -1896,12 +1945,6 @@ name|session_key
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ENCRYPT
-argument_list|)
 name|des_ecb_encrypt
 argument_list|(
 name|session_key
@@ -1954,7 +1997,13 @@ return|return;
 case|case
 name|KRB_RESPONSE
 case|:
-comment|/* 		 * Verify that the response to the challange is correct. 		 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+comment|/* 		 * Verify that the response to the challenge is correct. 		 */
 if|if
 condition|(
 operator|(
@@ -1981,29 +2030,37 @@ operator|(
 name|void
 operator|*
 operator|)
-name|challange
+name|challenge
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|challange
+name|challenge
 argument_list|)
 argument_list|)
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
 name|printf
 argument_list|(
-literal|"[ Kerberos V4 challange failed!!! ]\r\n"
+literal|"[ Kerberos V4 challenge failed!!! ]\r\n"
 argument_list|)
 expr_stmt|;
 name|auth_send_retry
 argument_list|()
 expr_stmt|;
 return|return;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
 block|}
 name|printf
 argument_list|(
-literal|"[ Kerberos V4 challange successful ]\r\n"
+literal|"[ Kerberos V4 challenge successful ]\r\n"
 argument_list|)
 expr_stmt|;
 name|auth_finished
@@ -2013,6 +2070,8 @@ argument_list|,
 name|AUTH_USER
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 if|if
@@ -2321,7 +2380,7 @@ goto|goto
 name|common2
 goto|;
 case|case
-name|KRB_CHALLANGE
+name|KRB_CHALLENGE
 case|:
 name|strncpy
 argument_list|(
@@ -2331,7 +2390,7 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-literal|" CHALLANGE"
+literal|" CHALLENGE"
 argument_list|,
 name|buflen
 argument_list|)
@@ -2447,7 +2506,7 @@ end_block
 
 begin_function
 name|int
-name|cksum
+name|kerberos4_cksum
 parameter_list|(
 name|d
 parameter_list|,
@@ -2467,6 +2526,7 @@ name|ck
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * A comment is probably needed here for those not 	 * well versed in the "C" language.  Yes, this is 	 * supposed to be a "switch" with the body of the 	 * "switch" being a "while" statement.  The whole 	 * purpose of the switch is to allow us to jump into 	 * the middle of the while() loop, and then not have 	 * to do any more switch()s. 	 * 	 * Some compilers will spit out a warning message 	 * about the loop not being entered at the top. 	 */
 switch|switch
 condition|(
 name|n
@@ -2485,6 +2545,9 @@ literal|0
 case|:
 name|ck
 operator|^=
+operator|(
+name|int
+operator|)
 operator|*
 name|d
 operator|++
@@ -2499,6 +2562,9 @@ literal|3
 case|:
 name|ck
 operator|^=
+operator|(
+name|int
+operator|)
 operator|*
 name|d
 operator|++
@@ -2513,6 +2579,9 @@ literal|2
 case|:
 name|ck
 operator|^=
+operator|(
+name|int
+operator|)
 operator|*
 name|d
 operator|++
@@ -2527,6 +2596,9 @@ literal|1
 case|:
 name|ck
 operator|^=
+operator|(
+name|int
+operator|)
 operator|*
 name|d
 operator|++

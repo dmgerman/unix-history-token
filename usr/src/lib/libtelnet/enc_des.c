@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)enc_des.c	5.1 (Berkeley) %G%"
+literal|"@(#)enc_des.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,17 +33,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|AUTHENTICATE
+name|AUTHENTICATION
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|ENCRYPT
+name|ENCRYPTION
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|DES_ENCRYPT
+name|DES_ENCRYPTION
 argument_list|)
 end_if
 
@@ -1713,11 +1713,6 @@ name|encrypt_send_keyid
 argument_list|(
 name|DIR_ENCRYPT
 argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 literal|"\0"
 argument_list|,
 literal|1
