@@ -201,7 +201,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: parse.c,v 2.0.2.18 1997/10/19 15:39:29 darrenr Exp $"
+literal|"@(#)$Id: parse.c,v 2.0.2.18.2.1 1997/11/20 12:43:49 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2799,6 +2799,17 @@ name|fil
 operator|.
 name|fr_proto
 operator|&&
+operator|!
+operator|(
+name|fil
+operator|.
+name|fr_ip
+operator|.
+name|fi_fl
+operator|&
+name|FI_TCPUDP
+operator|)
+operator|&&
 operator|(
 name|fil
 operator|.
@@ -3118,6 +3129,19 @@ operator|*
 name|seg
 argument_list|,
 literal|'/'
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|s
+operator|=
+name|index
+argument_list|(
+operator|*
+operator|*
+name|seg
+argument_list|,
+literal|':'
 argument_list|)
 operator|)
 condition|)

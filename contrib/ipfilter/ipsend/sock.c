@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sock.c,v 2.0.2.9 1997/09/28 07:13:37 darrenr Exp $"
+literal|"@(#)$Id: sock.c,v 2.0.2.9.2.1 1997/11/28 03:36:01 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1513,7 +1513,10 @@ name|pid
 expr_stmt|;
 name|n
 operator|=
-literal|1
+sizeof|sizeof
+argument_list|(
+name|kp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_state.c,v 2.0.2.24.2.3 1997/11/12 10:55:34 darrenr Exp $"
+literal|"@(#)$Id: ip_state.c,v 2.0.2.24.2.4 1997/11/19 11:44:09 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -928,23 +928,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|MUTEX_ENTER
-argument_list|(
-operator|&
-name|ipf_state
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|fr_state_flush
 argument_list|(
 name|arg
-argument_list|)
-expr_stmt|;
-name|MUTEX_EXIT
-argument_list|(
-operator|&
-name|ipf_state
 argument_list|)
 expr_stmt|;
 name|IWCOPY

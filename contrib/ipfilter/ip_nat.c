@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_nat.c,v 2.0.2.44.2.3 1997/11/12 10:53:29 darrenr Exp $"
+literal|"@(#)$Id: ip_nat.c,v 2.0.2.44.2.7 1997/12/02 13:54:27 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1702,6 +1702,12 @@ operator|=
 name|nat_flushtable
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ap_unload
+argument_list|()
+expr_stmt|;
 name|IWCOPY
 argument_list|(
 operator|(
@@ -2588,39 +2594,11 @@ begin_comment
 comment|/*  * Create a new NAT table entry.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|nat_t
 modifier|*
 name|nat_new
 parameter_list|(
-name|ipnat_t
-modifier|*
-name|np
-parameter_list|,
-name|ip_t
-modifier|*
-name|ip
-parameter_list|,
-name|fr_info_t
-modifier|*
-name|fin
-parameter_list|,
-name|u_short
-name|flags
-parameter_list|,
-name|int
-name|direction
-parameter_list|)
-else|#
-directive|else
-function|nat_t *nat_new
-parameter_list|(
 name|np
 parameter_list|,
 name|ip
@@ -2649,8 +2627,6 @@ decl_stmt|;
 name|int
 name|direction
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|u_long
@@ -2659,6 +2635,8 @@ decl_stmt|,
 name|sum2
 decl_stmt|,
 name|sumd
+decl_stmt|,
+name|l
 decl_stmt|;
 name|u_short
 name|port
@@ -2790,8 +2768,15 @@ name|NAT_OUTBOUND
 condition|)
 block|{
 comment|/* 		 * If it's an outbound packet which doesn't match any existing 		 * record, then create a new port 		 */
+name|l
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
+name|l
+operator|++
+expr_stmt|;
 name|port
 operator|=
 literal|0
@@ -2822,6 +2807,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|l
+operator|>
+literal|1
+operator|)
+operator|||
 name|nat_ifpaddr
 argument_list|(
 name|nat
@@ -2837,9 +2828,16 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|KFREE
+argument_list|(
+name|nat
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2855,6 +2853,22 @@ operator|->
 name|in_outmsk
 condition|)
 block|{
+if|if
+condition|(
+name|l
+operator|>
+literal|1
+condition|)
+block|{
+name|KFREE
+argument_list|(
+name|nat
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|in
 operator|.
 name|s_addr
@@ -3169,12 +3183,9 @@ operator|!
 operator|(
 name|nport
 operator|=
-name|htons
-argument_list|(
 name|np
 operator|->
 name|in_pnext
-argument_list|)
 operator|)
 condition|)
 name|nport
@@ -5810,7 +5821,8 @@ name|ipf_nat
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+operator|-
+literal|2
 return|;
 block|}
 name|MUTEX_EXIT
@@ -6521,7 +6533,8 @@ name|ipf_nat
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+operator|-
+literal|2
 return|;
 block|}
 name|MUTEX_EXIT
@@ -6685,6 +6698,9 @@ name|ns_expire
 operator|++
 expr_stmt|;
 block|}
+name|ap_expire
+argument_list|()
+expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(
 operator|&
