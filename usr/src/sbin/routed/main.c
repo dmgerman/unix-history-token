@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,8 @@ argument_list|(
 literal|"routed"
 argument_list|,
 name|LOG_PID
+operator||
+name|LOG_ODELAY
 argument_list|,
 literal|0
 argument_list|)
@@ -427,7 +429,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|cc
+name|t
 argument_list|)
 expr_stmt|;
 operator|(
@@ -788,18 +790,11 @@ name|sockaddr_in
 argument_list|)
 condition|)
 return|return;
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<<((s)-1))
 name|omask
 operator|=
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGALRM
 argument_list|)
@@ -873,8 +868,6 @@ argument_list|(
 name|domain
 argument_list|,
 name|type
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
