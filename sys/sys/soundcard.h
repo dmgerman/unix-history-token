@@ -467,9 +467,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 end_if
 
 begin_define
