@@ -6255,7 +6255,7 @@ condition|?
 name|td
 operator|->
 name|td_proc
-argument_list|,
+else|:
 name|NULL
 argument_list|,
 name|LOG_INFO
