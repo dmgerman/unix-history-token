@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.66 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1860,6 +1860,44 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|mips
+name|ucp
+operator|=
+name|USRSTACK
+expr_stmt|;
+name|ssize
+operator|=
+operator|(
+name|nc
+operator|+
+operator|(
+name|na
+operator|+
+literal|3
+operator|)
+operator|*
+name|NBPW
+operator|+
+literal|7
+operator|)
+operator|&
+operator|~
+literal|7
+expr_stmt|;
+name|ap
+operator|=
+name|ucp
+operator|-
+name|ssize
+expr_stmt|;
+name|ucp
+operator|-=
+name|nc
+expr_stmt|;
+else|#
+directive|else
 name|ssize
 operator|=
 operator|(
@@ -1886,6 +1924,8 @@ name|ssize
 operator|+=
 name|nc
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|error
