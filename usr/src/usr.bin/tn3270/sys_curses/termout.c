@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.2 (Berkeley) %G%"
+literal|"@(#)termout.c	3.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -672,11 +672,12 @@ comment|/* There are two separate reasons for wanting to terminate this      * l
 if|if
 condition|(
 name|Highest
-operator|==
+operator|>=
 name|HighestScreen
 argument_list|()
 condition|)
 block|{
+comment|/* Could be> if screen shrunk... */
 name|Highest
 operator|=
 name|ScreenDec
