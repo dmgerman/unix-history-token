@@ -2033,6 +2033,37 @@ name|pass
 goto|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IPSEC_FILTERGIF
+argument_list|)
+comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
+if|if
+condition|(
+name|m_tag_find
+argument_list|(
+name|m
+argument_list|,
+name|PACKET_TAG_IPSEC_IN_DONE
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+goto|goto
+name|pass
+goto|;
+endif|#
+directive|endif
 comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Pipe: pass pkt through dummynet. 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
 name|iphack
 label|:
