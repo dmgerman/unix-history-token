@@ -67,6 +67,13 @@ name|PAM_OPT_ECHO_PASS
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|PAM_OPT_AUTH_AS_SELF
+value|0x40
+end_define
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|int

@@ -96,6 +96,12 @@ name|PAM_OPT_ECHO_PASS
 block|}
 block|,
 block|{
+literal|"auth_as_self"
+block|,
+name|PAM_OPT_AUTH_AS_SELF
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
