@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.39 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7685,6 +7685,9 @@ decl_stmt|;
 name|int
 name|quotecnt
 decl_stmt|;
+name|int
+name|spacecnt
+decl_stmt|;
 name|bool
 name|quotemode
 decl_stmt|;
@@ -7700,6 +7703,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|quotecnt
+operator|=
+literal|0
+expr_stmt|;
+name|spacecnt
 operator|=
 literal|0
 expr_stmt|;
@@ -7782,6 +7789,13 @@ return|return
 name|NULL
 return|;
 break|break;
+case|case
+literal|' '
+case|:
+name|spacecnt
+operator|++
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -7860,6 +7874,10 @@ name|quotemode
 operator|||
 name|quotecnt
 operator|<=
+literal|0
+operator|||
+name|spacecnt
+operator|!=
 literal|0
 condition|)
 return|return
