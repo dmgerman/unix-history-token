@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.4 (Berkeley) 1/12/94  * $Id: vm_mmap.c,v 1.10 1995/02/21 01:22:46 davidg Exp $  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.4 (Berkeley) 1/12/94  * $Id: vm_mmap.c,v 1.11 1995/02/22 08:40:54 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2728,13 +2728,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Lose vm_object_lookup() reference. 		 */
+comment|/* 		 * Lose vm_object_lookup() reference. Retain reference 		 * gained by vm_pager_allocate(). 		 */
 name|vm_object_deallocate
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * At this point, our actions above have gained a total of 	 * one reference to the object, and we have a pager. 	 */
 comment|/* 	 * Anonymous memory, shared file, or character special file. 	 */
 if|if
 condition|(
@@ -2779,7 +2780,7 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
-comment|/* 			 * Lose reference gained by vm_pager_allocate(). This 			 * will also destroy the pager if noone else holds a 			 * reference. 			 */
+comment|/* 			 * Lose the object reference. This will also destroy 			 * the pager if there are no other references. 			 */
 name|vm_object_deallocate
 argument_list|(
 name|object
@@ -2887,6 +2888,7 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
+comment|/* 				 * Deallocate and delete the temporary map. 				 * Note that since the object insertion 				 * above has failed, the vm_map_deallocate 				 * doesn't lose the object reference - we 				 * must do it explicitly. 				 */
 name|vm_object_deallocate
 argument_list|(
 name|object
@@ -2921,6 +2923,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Deallocate temporary map. XXX - depending 			 * on events, this may leave the object with 			 * no net gain in reference count! ...this 			 * needs to be looked at! 			 */
 name|vm_map_deallocate
 argument_list|(
 name|tmap
@@ -2941,6 +2944,7 @@ block|{
 name|vm_object_t
 name|user_object
 decl_stmt|;
+comment|/* 			 * Create a new object and make the original object 			 * the backing object. NOTE: the object reference gained 			 * above is now changed into the reference held by 			 * user_object. Since we don't map 'object', we want 			 * only this one reference. 			 */
 name|user_object
 operator|=
 name|vm_object_allocate
@@ -2965,12 +2969,6 @@ name|user_object
 argument_list|,
 name|reverse_shadow_list
 argument_list|)
-expr_stmt|;
-name|object
-operator|->
-name|ref_count
-operator|+=
-literal|1
 expr_stmt|;
 name|rv
 operator|=
@@ -2999,11 +2997,6 @@ block|{
 name|vm_object_deallocate
 argument_list|(
 name|user_object
-argument_list|)
-expr_stmt|;
-name|vm_object_deallocate
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 goto|goto
