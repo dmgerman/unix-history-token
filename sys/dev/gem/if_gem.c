@@ -1260,17 +1260,6 @@ argument_list|,
 name|GEM_RX_FIFO_SIZE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|", %uKB RX fifo"
-argument_list|,
-name|sc
-operator|->
-name|sc_rxfifosize
-operator|/
-literal|1024
-argument_list|)
-expr_stmt|;
 comment|/* Get TX FIFO size */
 name|v
 operator|=
@@ -1287,9 +1276,19 @@ argument_list|,
 name|GEM_TX_FIFO_SIZE
 argument_list|)
 expr_stmt|;
-name|printf
+name|device_printf
 argument_list|(
-literal|", %uKB TX fifo\n"
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%ukB RX FIFO, %ukB TX FIFO\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_rxfifosize
+operator|/
+literal|1024
 argument_list|,
 name|v
 operator|/
