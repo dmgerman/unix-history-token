@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -62,6 +68,32 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_decl_stmt
+name|void
+name|pffasttimo
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pfslowtimo
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -249,11 +281,31 @@ name|MHLEN
 operator|-
 name|max_hdr
 expr_stmt|;
+name|timeout
+argument_list|(
 name|pffasttimo
-argument_list|()
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+name|timeout
+argument_list|(
 name|pfslowtimo
-argument_list|()
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -837,12 +889,16 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|pfslowtimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -906,7 +962,8 @@ argument_list|(
 name|pfslowtimo
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -916,14 +973,18 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|pffasttimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -987,7 +1048,8 @@ argument_list|(
 name|pffasttimo
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -997,7 +1059,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
