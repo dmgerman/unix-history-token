@@ -1,13 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.1.1.2 1997/03/18 17:58:48 mpp Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
+comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#

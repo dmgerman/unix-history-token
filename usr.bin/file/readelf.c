@@ -1,27 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|BUILTIN_ELF
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -32,19 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -182,14 +190,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -215,14 +220,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -317,14 +319,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -350,14 +349,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -509,14 +505,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -533,14 +526,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 name|off
@@ -572,14 +562,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"lseek failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"lseek failed"
 argument_list|)
 expr_stmt|;
 name|bufsize
@@ -600,14 +587,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 name|offset

@@ -3,10 +3,36 @@ begin_comment
 comment|/*  * softmagic - interpret variable magic from /etc/magic  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -30,39 +56,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"file.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|moduleid
-init|=
-literal|"@(#)$Id: softmagic.c,v 1.1.1.3 1997/03/18 17:58:45 mpp Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -312,9 +307,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"out of memory\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 for|for
@@ -451,9 +448,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"out of memory\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 while|while
@@ -684,9 +683,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"out of memory\n"
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1107,9 +1108,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"invalid m->type (%d) in mprint().\n"
+literal|1
+argument_list|,
+literal|"invalid m->type (%d) in mprint()"
 argument_list|,
 name|m
 operator|->
@@ -1414,9 +1417,11 @@ return|return
 literal|1
 return|;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"invalid type %d in mconvert().\n"
+literal|1
+argument_list|,
+literal|"invalid type %d in mconvert()"
 argument_list|,
 name|m
 operator|->
@@ -2008,9 +2013,11 @@ break|break;
 block|}
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"invalid type %d in mcheck().\n"
+literal|1
+argument_list|,
+literal|"invalid type %d in mcheck()"
 argument_list|,
 name|m
 operator|->
@@ -2353,9 +2360,11 @@ name|matched
 operator|=
 literal|0
 expr_stmt|;
-name|error
+name|errx
 argument_list|(
-literal|"mcheck: can't happen: invalid relation %d.\n"
+literal|1
+argument_list|,
+literal|"mcheck: can't happen: invalid relation %d"
 argument_list|,
 name|m
 operator|->

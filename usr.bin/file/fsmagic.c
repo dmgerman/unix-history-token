@@ -3,22 +3,42 @@ begin_comment
 comment|/*  * fsmagic - magic based on filesystem info - directory, special files, etc.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -31,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_ifndef
@@ -159,45 +173,29 @@ comment|/*major*/
 include|#
 directive|include
 file|"file.h"
-ifndef|#
-directive|ifndef
-name|lint
-expr|static
+name|int
+name|fsmagic
+argument_list|(
+argument|fn
+argument_list|,
+argument|sb
+argument_list|)
+specifier|const
 name|char
 operator|*
-name|moduleid
-operator|=
-literal|"@(#)$Id: fsmagic.c,v 1.1.1.3 1997/03/18 17:58:44 mpp Exp $"
+name|fn
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
-
-begin_function
-name|int
-name|fsmagic
-parameter_list|(
-name|fn
-parameter_list|,
-name|sb
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|fn
-decl_stmt|;
+begin_decl_stmt
 name|struct
 name|stat
 modifier|*
 name|sb
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|ret
@@ -246,7 +244,7 @@ name|stdout
 argument_list|,
 comment|/* Yes, I do mean stdout. */
 comment|/* No \n, caller will provide. */
-literal|"can't stat `%s' (%s)."
+literal|"can't stat `%s': %s."
 argument_list|,
 name|fn
 argument_list|,
@@ -461,7 +459,7 @@ name|ckfprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"unreadable symlink (%s)."
+literal|"unreadable symlink: %s."
 argument_list|,
 name|strerror
 argument_list|(
@@ -688,9 +686,11 @@ name|S_IFREG
 case|:
 break|break;
 default|default:
-name|error
+name|err
 argument_list|(
-literal|"invalid mode 0%o.\n"
+literal|1
+argument_list|,
+literal|"invalid mode 0%o"
 argument_list|,
 name|sb
 operator|->
@@ -724,7 +724,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

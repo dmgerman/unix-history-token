@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
-name|moduleid
+name|rcsid
+index|[]
 init|=
-literal|"@(#)$Id: file.c,v 1.7 1997/03/18 19:37:18 mpp Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,14 +26,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* lint */
+comment|/* not lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_comment
+comment|/* for open() */
+end_comment
 
 begin_include
 include|#
@@ -44,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -67,16 +72,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_comment
-comment|/* for open() */
-end_comment
 
 begin_if
 if|#
@@ -145,16 +140,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_comment
-comment|/* for byte swapping */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"patchlevel.h"
 end_include
 
@@ -174,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-vczL] [-f namefile] [-m magicfiles] file...\n"
+value|"usage: file [-vczL] [-f namefile] [-m magicfiles] file...\n"
 end_define
 
 begin_else
@@ -186,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|USAGE
-value|"Usage: %s [-vcz] [-f namefile] [-m magicfiles] file...\n"
+value|"usage: file [-vcz] [-f namefile] [-m magicfiles] file...\n"
 end_define
 
 begin_endif
@@ -272,17 +257,6 @@ comment|/* where magic be found 		*/
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* used throughout 			*/
-end_comment
-
-begin_decl_stmt
 name|int
 name|lineno
 decl_stmt|;
@@ -302,6 +276,19 @@ operator|(
 name|char
 operator|*
 name|fn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -366,35 +353,6 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|progname
-operator|=
-name|strrchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|progname
-operator|++
-expr_stmt|;
-else|else
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-if|if
-condition|(
 operator|!
 operator|(
 name|magicfile
@@ -442,9 +400,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s-%d.%d\n"
-argument_list|,
-name|progname
+literal|"file-%d.%d\n"
 argument_list|,
 name|FILE_VERSION_MAJOR
 argument_list|,
@@ -549,25 +505,9 @@ if|if
 condition|(
 name|errflg
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|USAGE
-argument_list|,
-name|progname
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -609,25 +549,9 @@ condition|(
 operator|!
 name|didsomefiles
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|USAGE
-argument_list|,
-name|progname
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -704,6 +628,27 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|USAGE
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * unwrap -- read a file of filenames, do each one.  */
 end_comment
@@ -776,16 +721,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
+name|err
 argument_list|(
-literal|"Cannot open `%s' (%s).\n"
+literal|1
+argument_list|,
+literal|"cannot open `%s'"
 argument_list|,
 name|fn
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1000,16 +942,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|error
+name|err
 argument_list|(
-literal|"cannot fstat `%s' (%s).\n"
+literal|1
+argument_list|,
+literal|"cannot fstat `%s'"
 argument_list|,
 name|stdname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1128,7 +1067,7 @@ name|ckfprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"can't read `%s' (%s).\n"
+literal|"can't read `%s': %s.\n"
 argument_list|,
 name|inname
 argument_list|,
@@ -1165,14 +1104,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|error
+name|err
 argument_list|(
-literal|"read failed (%s).\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1357,7 +1293,7 @@ name|buf
 parameter_list|,
 name|nb
 parameter_list|,
-name|zflag
+name|lzflag
 parameter_list|)
 name|unsigned
 name|char
@@ -1367,13 +1303,13 @@ decl_stmt|;
 name|int
 name|nb
 decl_stmt|,
-name|zflag
+name|lzflag
 decl_stmt|;
 block|{
 comment|/* try compression stuff */
 if|if
 condition|(
-name|zflag
+name|lzflag
 operator|&&
 name|zmagic
 argument_list|(

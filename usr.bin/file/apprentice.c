@@ -3,10 +3,48 @@ begin_comment
 comment|/*  * apprentice - make one pass through /etc/magic, learning its secrets.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -24,45 +62,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"file.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|moduleid
-init|=
-literal|"@(#)$Id: apprentice.c,v 1.1.1.3 1997/03/18 17:58:42 mpp Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
 
 begin_define
 define|#
@@ -273,16 +274,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Out of memory.\n"
-argument_list|,
-name|progname
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 if|if
@@ -364,16 +358,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: couldn't find any magic files!\n"
-argument_list|,
-name|progname
+literal|"couldn't find any magic files"
 argument_list|)
 expr_stmt|;
 if|if
@@ -465,23 +452,11 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: can't read magic file %s (%s)\n"
-argument_list|,
-name|progname
+literal|"can't read magic file %s"
 argument_list|,
 name|fn
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -696,13 +671,17 @@ name|STRING
 case|:
 break|break;
 default|default:
-name|magwarn
+name|warnx
 argument_list|(
-literal|"can't happen: m->type=%d\n"
+literal|"can't happen: m->type=%d in file %s, line %d"
 argument_list|,
 name|m
 operator|->
 name|type
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 return|return
@@ -808,16 +787,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Out of memory.\n"
-argument_list|,
-name|progname
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 if|if
@@ -969,11 +941,15 @@ name|l
 operator|==
 name|t
 condition|)
-name|magwarn
+name|warnx
 argument_list|(
-literal|"offset %s invalid"
+literal|"offset %s invalid in file %s, line %d"
 argument_list|,
 name|l
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 name|l
@@ -1069,12 +1045,16 @@ name|BYTE
 expr_stmt|;
 break|break;
 default|default:
-name|magwarn
+name|warnx
 argument_list|(
-literal|"indirect offset type %c invalid"
+literal|"indirect offset type %c invalid in file %s, line %d"
 argument_list|,
 operator|*
 name|l
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1165,9 +1145,13 @@ operator|++
 operator|!=
 literal|')'
 condition|)
-name|magwarn
+name|warnx
 argument_list|(
-literal|"missing ')' in indirect offset"
+literal|"missing ')' in indirect offset in file %s, line %d"
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 name|l
@@ -1552,11 +1536,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|magwarn
+name|warnx
 argument_list|(
-literal|"type %s invalid"
+literal|"type %s invalid in file %s, line %d"
 argument_list|,
 name|l
+argument_list|,
+name|magicfile
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1742,7 +1730,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* 	 * TODO finish this macro and start using it! 	 * #define offsetcheck {if (offset> HOWMANY-1) 	 *	magwarn("offset too big"); } 	 */
+comment|/* 	 * TODO finish this macro and start using it! 	 * #define offsetcheck {if (offset> HOWMANY-1) 	 *	warnx("offset too big in file %s, line %d", 	 *		 magicfile, lineno); } 	 */
 comment|/* 	 * now get last part - the description 	 */
 name|GetDesc
 label|:
@@ -2070,11 +2058,9 @@ operator|>=
 name|pmax
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"String too long: %s\n"
+literal|"string too long: %s"
 argument_list|,
 name|origs
 argument_list|)
