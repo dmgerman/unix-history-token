@@ -288,8 +288,21 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
 name|FILE
-name|__sF
-index|[]
+name|__stdin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+name|__stdout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+name|__stderr
 decl_stmt|;
 end_decl_stmt
 
@@ -465,15 +478,15 @@ directive|endif
 define|#
 directive|define
 name|stdin
-value|(&__sF[0])
+value|(&__stdin)
 define|#
 directive|define
 name|stdout
-value|(&__sF[1])
+value|(&__stdout)
 define|#
 directive|define
 name|stderr
-value|(&__sF[2])
+value|(&__stderr)
 comment|/*  * Functions defined in ANSI C standard.  */
 name|__BEGIN_DECLS
 name|void
