@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: sem.h,v 1.4 1995/07/08 16:36:28 joerg Exp $ */
+comment|/* $Id: sem.h,v 1.5 1995/07/29 11:42:50 bde Exp $ */
 end_comment
 
 begin_comment
@@ -704,18 +704,6 @@ block|}
 name|semconfig_ctl_t
 typedef|;
 end_typedef
-
-begin_decl_stmt
-name|void
-name|seminit
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
