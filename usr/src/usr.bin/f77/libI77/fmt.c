@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fmt[] = "@(#)fmt.c	1.3";  *  * fortran format parser  */
+comment|/* char id_fmt[] = "@(#)fmt.c	1.4";  *  * fortran format parser  */
 end_comment
 
 begin_include
@@ -807,10 +807,14 @@ name|sign
 operator|=
 literal|1
 expr_stmt|;
+comment|/* OUTRAGEOUS CODING */
+case|case
+literal|'+'
+case|:
 name|s
 operator|++
 expr_stmt|;
-comment|/*OUTRAGEOUS CODING TRICK*/
+comment|/* OUTRAGEOUS CODING */
 case|case
 literal|'0'
 case|:
