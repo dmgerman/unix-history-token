@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	7.3 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	7.4 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -290,12 +290,8 @@ name|f_root
 operator|=
 name|rvp
 expr_stmt|;
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_LOCAL
-expr_stmt|;
+comment|/* XXX -- don't mark as local to work around fts() problems */
+comment|/*mp->mnt_flag |= MNT_LOCAL;*/
 name|mp
 operator|->
 name|mnt_data
