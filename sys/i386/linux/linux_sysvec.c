@@ -860,6 +860,127 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|LINUX_T_UNKNOWN
+value|255
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|_bsd_to_linux_trapcode
+index|[]
+init|=
+block|{
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 0 */
+literal|6
+block|,
+comment|/* 1  T_PRIVINFLT */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 2 */
+literal|3
+block|,
+comment|/* 3  T_BPTFLT */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 4 */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 5 */
+literal|16
+block|,
+comment|/* 6  T_ARITHTRAP */
+literal|254
+block|,
+comment|/* 7  T_ASTFLT */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 8 */
+literal|13
+block|,
+comment|/* 9  T_PROTFLT */
+literal|1
+block|,
+comment|/* 10 T_TRCTRAP */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 11 */
+literal|14
+block|,
+comment|/* 12 T_PAGEFLT */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 13 */
+literal|17
+block|,
+comment|/* 14 T_ALIGNFLT */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 15 */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 16 */
+name|LINUX_T_UNKNOWN
+block|,
+comment|/* 17 */
+literal|0
+block|,
+comment|/* 18 T_DIVIDE */
+literal|2
+block|,
+comment|/* 19 T_NMI */
+literal|4
+block|,
+comment|/* 20 T_OFLOW */
+literal|5
+block|,
+comment|/* 21 T_BOUND */
+literal|7
+block|,
+comment|/* 22 T_DNA */
+literal|8
+block|,
+comment|/* 23 T_DOUBLEFLT */
+literal|9
+block|,
+comment|/* 24 T_FPOPFLT */
+literal|10
+block|,
+comment|/* 25 T_TSSFLT */
+literal|11
+block|,
+comment|/* 26 T_SEGNPFLT */
+literal|12
+block|,
+comment|/* 27 T_STKFLT */
+literal|18
+block|,
+comment|/* 28 T_MCHK */
+literal|19
+block|,
+comment|/* 29 T_XMMFLT */
+literal|15
+comment|/* 30 T_RESERVED */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|bsd_to_linux_trapcode
+parameter_list|(
+name|code
+parameter_list|)
+define|\
+value|((code)<sizeof(_bsd_to_linux_trapcode)/sizeof(*_bsd_to_linux_trapcode)? \      _bsd_to_linux_trapcode[(code)]: \      LINUX_T_UNKNOWN)
+end_define
+
 begin_comment
 comment|/*  * If FreeBSD& Linux have a difference of opinion about what a trap  * means, deal with it here.  *  * MPSAFE  */
 end_comment
@@ -2028,9 +2149,11 @@ name|uc_mcontext
 operator|.
 name|sc_trapno
 operator|=
+name|bsd_to_linux_trapcode
+argument_list|(
 name|code
+argument_list|)
 expr_stmt|;
-comment|/* XXX ???? */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2731,9 +2854,11 @@ name|sf_sc
 operator|.
 name|sc_trapno
 operator|=
+name|bsd_to_linux_trapcode
+argument_list|(
 name|code
+argument_list|)
 expr_stmt|;
-comment|/* XXX ???? */
 name|bzero
 argument_list|(
 operator|&
