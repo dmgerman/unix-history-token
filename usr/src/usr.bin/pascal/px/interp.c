@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.25 %G%"
+literal|"@(#)interp.c 1.26 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8275,7 +8275,16 @@ block|{
 name|blkclr
 argument_list|(
 operator|*
+operator|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
 name|tcp
+operator|)
+operator|)
 argument_list|,
 name|tl
 argument_list|)
