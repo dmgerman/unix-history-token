@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	5.1 %G%"
+literal|"@(#)ex_unix.c	5.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,7 +582,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 if|if
 condition|(
 name|dosusp
@@ -940,7 +940,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 if|if
 condition|(
 name|dosusp

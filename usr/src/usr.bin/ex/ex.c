@@ -393,7 +393,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 if|if
 condition|(
 name|signal
@@ -1553,7 +1553,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 if|if
 condition|(
 name|dosusp

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	5.1 %G%"
+literal|"@(#)ex_put.c	5.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3533,7 +3533,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|TIOCGLTC
 name|ioctl
 argument_list|(
 name|i
@@ -3719,7 +3719,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|TIOCSLTC
 name|ioctl
 argument_list|(
 name|i
@@ -3778,7 +3778,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 end_ifdef
 
 begin_comment

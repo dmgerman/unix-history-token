@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	5.2 %G%"
+literal|"@(#)ex_vmain.c	5.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2229,7 +2229,7 @@ name|doinit
 goto|;
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 comment|/* 		 * ^Z:	suspend editor session and temporarily return 		 * 	to shell.  Only works on Berkeley tty driver. 		 */
 case|case
 name|CTRL

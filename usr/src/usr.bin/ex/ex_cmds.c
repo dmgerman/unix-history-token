@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	5.2 %G%"
+literal|"@(#)ex_cmds.c	5.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1991,7 +1991,7 @@ expr_stmt|;
 continue|continue;
 ifdef|#
 directive|ifdef
-name|TIOCLGET
+name|SIGTSTP
 comment|/* stop */
 case|case
 literal|'t'
