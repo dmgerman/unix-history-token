@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syscall.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -79,11 +73,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"ntp_timex.h"
-end_include
+begin_comment
+comment|/* SYS_DECOSF1 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -91,11 +83,46 @@ directive|ifdef
 name|KERNEL_PLL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS_ntp_adjtime
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/timex.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ntp_gettime
+parameter_list|(
+name|t
+parameter_list|)
+value|syscall(SYS_ntp_gettime, (t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ntp_adjtime
+parameter_list|(
+name|t
+parameter_list|)
+value|syscall(SYS_ntp_adjtime, (t))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* KERNEL_PLL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"ntp_timex.h"
+end_include
 
 begin_define
 define|#
@@ -103,17 +130,6 @@ directive|define
 name|SYS_ntp_adjtime
 value|NTP_SYSCALL_ADJ
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS_ntp_gettime
-end_ifndef
 
 begin_define
 define|#
@@ -127,13 +143,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* KERNEL_PLL */
+end_comment
+
+begin_comment
+comment|/*  * Function prototypes  */
 end_comment
 
 begin_decl_stmt
@@ -152,6 +167,24 @@ operator|,
 expr|struct
 name|sigvec
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|syscall
+name|P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|void
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -269,6 +302,8 @@ index|]
 decl_stmt|;
 name|double
 name|ftemp
+decl_stmt|,
+name|gtemp
 decl_stmt|;
 name|l_fp
 name|ts
@@ -291,11 +326,22 @@ name|rawtime
 init|=
 literal|0
 decl_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|ntx
-operator|.
-name|mode
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ntx
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|progname
 operator|=
@@ -762,7 +808,7 @@ operator|&
 name|ntv
 argument_list|)
 expr_stmt|;
-name|ntx
+name|_ntx
 operator|.
 name|mode
 operator|=
@@ -975,7 +1021,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  mode: %02x, offset: %ld usec, frequency: %6.3f ppm,\n"
+literal|"  mode: %02x, offset: %ld usec, frequency:%8.3f ppm,\n"
 argument_list|,
 name|ntx
 operator|.
@@ -1001,9 +1047,23 @@ operator|.
 name|esterror
 argument_list|)
 expr_stmt|;
+name|ftemp
+operator|=
+name|ntx
+operator|.
+name|tolerance
+expr_stmt|;
+name|ftemp
+operator|/=
+operator|(
+literal|1
+operator|<<
+name|SHIFT_USEC
+operator|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"  status: %d, time constant: %ld, precision: %ld usec, tolerance: %ld usec\n"
+literal|"  status: %d, time constant: %ld, precision: %ld usec, tolerance:%4.0f ppm\n"
 argument_list|,
 name|ntx
 operator|.
@@ -1017,9 +1077,71 @@ name|ntx
 operator|.
 name|precision
 argument_list|,
+name|ftemp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ntx
 operator|.
-name|tolerance
+name|shift
+operator|==
+literal|0
+condition|)
+return|return;
+name|ftemp
+operator|=
+name|ntx
+operator|.
+name|ybar
+expr_stmt|;
+name|ftemp
+operator|/=
+operator|(
+literal|1
+operator|<<
+name|SHIFT_USEC
+operator|)
+expr_stmt|;
+name|gtemp
+operator|=
+name|ntx
+operator|.
+name|disp
+expr_stmt|;
+name|gtemp
+operator|/=
+operator|(
+literal|1
+operator|<<
+name|SHIFT_USEC
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  pps frequency%8.3f ppm, pps dispersion:%8.3f ppm, interval:%4d sec,\n  intervals:%5ld, jitter exceeded:%4ld, dispersion exceeded:%4ld\n"
+argument_list|,
+name|ftemp
+argument_list|,
+name|gtemp
+argument_list|,
+literal|1
+operator|<<
+name|ntx
+operator|.
+name|shift
+argument_list|,
+name|ntx
+operator|.
+name|calcnt
+argument_list|,
+name|ntx
+operator|.
+name|jitcnt
+argument_list|,
+name|ntx
+operator|.
+name|discnt
 argument_list|)
 expr_stmt|;
 block|}

@@ -57,11 +57,11 @@ literal|"LOCAL"
 block|}
 block|,
 block|{
-name|REFCLK_WWV_HEATH
+name|REFCLK_GPS_TRAK
 block|,
-literal|"Heathkit WWV clock (2)"
+literal|"TRAK 8810 GPS Receiver (2)"
 block|,
-literal|"WWV_HEATH"
+literal|"GPS_TRAK"
 block|}
 block|,
 block|{
