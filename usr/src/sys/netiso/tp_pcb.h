@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -413,6 +413,12 @@ name|u_int
 name|tp_seqhalf
 decl_stmt|;
 comment|/* half the seq space */
+name|struct
+name|mbuf
+modifier|*
+name|tp_ucddata
+decl_stmt|;
+comment|/* user connect/disconnect data */
 comment|/* credit& sequencing info for SENDING */
 name|u_short
 name|tp_fcredit
@@ -436,32 +442,24 @@ name|SeqNum
 name|tp_snduna
 decl_stmt|;
 comment|/* seq # of lowest unacked DT */
-name|struct
-name|tp_rtc
-modifier|*
-name|tp_snduna_rtc
-decl_stmt|;
-comment|/* lowest unacked stuff sent so far */
 name|SeqNum
 name|tp_sndhiwat
 decl_stmt|;
 comment|/* highest seq # sent so far */
-name|struct
-name|tp_rtc
-modifier|*
-name|tp_sndhiwat_rtc
+name|SeqNum
+name|tp_sndnum
 decl_stmt|;
-comment|/* last stuff sent so far */
+comment|/* next seq # to be assigned */
+name|struct
+name|mbuf
+modifier|*
+name|tp_sndhiwat_m
+decl_stmt|;
+comment|/* packet corres. to sndhiwat*/
 name|int
 name|tp_Nwindow
 decl_stmt|;
 comment|/* for perf. measurement */
-name|struct
-name|mbuf
-modifier|*
-name|tp_ucddata
-decl_stmt|;
-comment|/* user connect/disconnect data */
 comment|/* credit& sequencing info for RECEIVING */
 name|SeqNum
 name|tp_sent_lcdt
@@ -472,6 +470,10 @@ name|tp_sent_uwe
 decl_stmt|;
 comment|/* uwe according to last ack sent */
 name|SeqNum
+name|tp_rcvnxt
+decl_stmt|;
+comment|/* next DT seq # expect to recv */
+name|SeqNum
 name|tp_sent_rcvnxt
 decl_stmt|;
 comment|/* rcvnxt according to last ack sent  										 * needed for perf measurements only 										 */
@@ -479,16 +481,25 @@ name|u_short
 name|tp_lcredit
 decl_stmt|;
 comment|/* current local credit in # packets */
-name|SeqNum
-name|tp_rcvnxt
+name|u_short
+name|tp_maxlcredit
 decl_stmt|;
-comment|/* next DT seq # expect to recv */
+comment|/* needed for reassembly queue */
+name|u_long
+name|tp_sbmax
+decl_stmt|;
+comment|/* needed for reassembly queue */
 name|struct
-name|tp_rtc
+name|mbuf
 modifier|*
-name|tp_rcvnxt_rtc
+modifier|*
+name|tp_rsyq
 decl_stmt|;
 comment|/* unacked stuff recvd out of order */
+name|int
+name|tp_rsycnt
+decl_stmt|;
+comment|/* number of packets */
 comment|/* receiver congestion state stuff ...  */
 name|u_int
 name|tp_win_recv
@@ -703,9 +714,14 @@ parameter_list|(
 name|t
 parameter_list|)
 value|(((t)->tp_flags& TPF_NLQOS_PDN) != 0)
+name|tp_oktonagle
+range|:
+literal|1
+decl_stmt|,
+comment|/* Last unsent packet that may be append to */
 name|tp_unused
 range|:
-literal|16
+literal|15
 decl_stmt|;
 ifdef|#
 directive|ifdef
