@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.4 (Berkeley) %G%"
+literal|"@(#)macro.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -790,6 +790,22 @@ operator|*
 name|p
 operator|==
 literal|'\0'
+operator|||
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'{'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'}'
+operator|)
 condition|)
 block|{
 name|syserr
@@ -896,6 +912,28 @@ sizeof|sizeof
 name|mbuf
 index|]
 condition|)
+block|{
+if|if
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+operator|(
+name|isalnum
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|||
+operator|*
+name|p
+operator|==
+literal|'_'
+operator|)
+condition|)
 operator|*
 name|bp
 operator|++
@@ -903,6 +941,16 @@ operator|=
 operator|*
 name|p
 expr_stmt|;
+else|else
+name|syserr
+argument_list|(
+literal|"Invalid macro/class character %c"
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|bp
 operator|=
