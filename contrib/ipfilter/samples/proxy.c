@@ -472,9 +472,12 @@ operator|.
 name|nl_realip
 argument_list|)
 argument_list|,
+name|ntohs
+argument_list|(
 name|natlook
 operator|.
 name|nl_realport
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf

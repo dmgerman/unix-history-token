@@ -268,7 +268,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fils.c,v 2.0.2.25.2.1 1997/11/06 21:21:19 darrenr Exp $"
+literal|"@(#)$Id: fils.c,v 2.0.2.25.2.2 1997/11/20 12:41:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1630,7 +1630,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"TCP cksum fails in:\t%lu\tout%lu\n"
+literal|"TCP cksum fails(in):\t%lu\t(out):\t%lu\n"
 argument_list|,
 name|fp
 operator|->

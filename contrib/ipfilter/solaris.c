@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"@(#)$Id: solaris.c,v 2.0.2.22.2.1 1997/11/08 04:55:57 darrenr Exp $"
+literal|"@(#)$Id: solaris.c,v 2.0.2.22.2.2 1997/11/24 06:15:52 darrenr Exp $"
 name|;
 end_pragma
 
@@ -2617,7 +2617,8 @@ if|if
 condition|(
 name|err
 operator|==
-literal|1
+operator|-
+literal|2
 condition|)
 block|{
 if|if
