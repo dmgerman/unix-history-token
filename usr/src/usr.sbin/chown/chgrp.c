@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chgrp.c	5.2 (Berkeley) %G%"
+literal|"@(#)chgrp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -700,7 +700,7 @@ argument_list|,
 name|savedir
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Change what we are given before doing it's contents. 	 */
+comment|/* 	 * Change what we are given before doing its contents. 	 */
 if|if
 condition|(
 name|chown
@@ -835,6 +835,30 @@ condition|(
 name|ecode
 condition|)
 break|break;
+continue|continue;
+block|}
+if|if
+condition|(
+name|uid
+operator|&&
+name|uid
+operator|!=
+name|st
+operator|.
+name|st_uid
+condition|)
+block|{
+name|ecode
+operator|=
+name|error
+argument_list|(
+literal|"You are not the owner of %s"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
