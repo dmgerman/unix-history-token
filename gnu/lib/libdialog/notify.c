@@ -3,6 +3,28 @@ begin_comment
 comment|/*  * File: 	notify.c  * Author: 	Marc van Kempen  * Desc:	display a notify box with a message  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -70,7 +92,7 @@ argument_list|()
 expr_stmt|;
 name|use_helpline
 argument_list|(
-literal|"Press enter to continue"
+literal|"Press enter or space"
 argument_list|)
 expr_stmt|;
 name|dialog_mesgbox
