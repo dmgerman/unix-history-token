@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.4 (Berkeley) %G%"
+literal|"@(#)su.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -770,12 +770,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|fulllogin
+operator|||
 name|strcmp
 argument_list|(
 name|user
 argument_list|,
 literal|"root"
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|setenv
 argument_list|(
