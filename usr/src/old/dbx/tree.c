@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	1.6 (Berkeley) %G%"
+literal|"@(#)tree.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,12 +401,6 @@ name|O_LCON
 case|:
 case|case
 name|O_CONT
-case|:
-case|case
-name|O_CATCH
-case|:
-case|case
-name|O_IGNORE
 case|:
 case|case
 name|O_TRACEOFF
@@ -1342,12 +1336,6 @@ name|scon
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|O_CATCH
-case|:
-case|case
-name|O_IGNORE
-case|:
 case|case
 name|O_TRACEOFF
 case|:
