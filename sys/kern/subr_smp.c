@@ -8721,14 +8721,6 @@ name|gd_cpuid
 operator|=
 name|x
 expr_stmt|;
-name|gd
-operator|->
-name|gd_cpu_lockid
-operator|=
-name|x
-operator|<<
-literal|24
-expr_stmt|;
 comment|/* setup a vector to our boot code */
 operator|*
 operator|(
