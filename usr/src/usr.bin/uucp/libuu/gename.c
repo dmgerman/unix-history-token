@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gename.c	5.6 (Berkeley) %G%"
+literal|"@(#)gename.c	5.7	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,10 +350,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"open(%s) failed: %m"
+argument_list|,
+name|SEQFILE
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|creat
@@ -378,15 +383,6 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|SEQFILE
-argument_list|,
-literal|"is missing or trashed\n"
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 for|for

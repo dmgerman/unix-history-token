@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gio.c	5.8 (Berkeley) %G%"
+literal|"@(#)gio.c	5.9	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -718,7 +718,7 @@ argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
-name|syslog
+name|log_xferstats
 argument_list|(
 name|text
 argument_list|)
@@ -1039,7 +1039,7 @@ argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
-name|syslog
+name|log_xferstats
 argument_list|(
 name|text
 argument_list|)

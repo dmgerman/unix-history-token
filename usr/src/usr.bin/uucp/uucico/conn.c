@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conn.c	5.12 (Berkeley) %G%"
+literal|"@(#)conn.c	5.13	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -542,19 +542,28 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|fsys
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"CAN'T OPEN"
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|SYSFILE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|DEBUG
 argument_list|(
 literal|4
@@ -709,19 +718,28 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|dfp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"Can't open"
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|DEVFILE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -1786,21 +1804,30 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|na
-operator|>=
+operator|<
 literal|4
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"BAD DEVICE ENTRY"
+literal|"%s: invalid device entry"
 argument_list|,
 name|dev
 operator|->
 name|D_argbfr
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|na
@@ -2024,19 +2051,28 @@ name|k
 decl_stmt|,
 name|ok
 decl_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|nf
-operator|>
+operator|<
 literal|4
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"TOO FEW LOG FIELDS"
-argument_list|,
-name|CNULL
+literal|"Too few log fields: %d"
 argument_list|,
 name|nf
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|setjmp
@@ -2597,19 +2633,28 @@ name|ps
 operator|->
 name|sp_name
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|speed
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"BAD SPEED"
-argument_list|,
-name|CNULL
+literal|"unrecognized speed: %d"
 argument_list|,
 name|speed
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|USG
@@ -3355,7 +3400,7 @@ operator|++
 expr_stmt|;
 name|bld_partab
 argument_list|(
-name|P_EVEN
+name|P_ZERO
 argument_list|)
 expr_stmt|;
 block|}
@@ -5655,19 +5700,28 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|linebaudrate
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"BAD SPEED"
+literal|"unrecognized speed: %d"
 argument_list|,
-name|CNULL
-argument_list|,
-name|speed
+name|linebaudrate
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
