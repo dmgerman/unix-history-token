@@ -158,6 +158,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/mutex.h>
 end_include
 
@@ -2337,7 +2343,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * Unprivileged processes and privileged processes in 		 * jail() are not permitted to unset system flags, or 		 * modify flags if any system flags are set. 		 * Privileged non-jail processes may not modify system flags 		 * if securelevel> 0 and any existing system flags are set. 		 */
+comment|/* 		 * Unprivileged processes are not permitted to unset system 		 * flags, or modify flags if any system flags are set. 		 * Privileged non-jail processes may not modify system flags 		 * if securelevel> 0 and any existing system flags are set. 		 * Privileged jail processes behave like privileged non-jail 		 * processes if the security.jail.chflags_allowed sysctl is 		 * is non-zero; otherwise, they behave like unprivileged 		 * processes. 		 */
 if|if
 condition|(
 operator|!
@@ -2345,6 +2351,10 @@ name|suser_cred
 argument_list|(
 name|cred
 argument_list|,
+name|jail_chflags_allowed
+condition|?
+name|SUSER_ALLOWJAIL
+else|:
 literal|0
 argument_list|)
 condition|)

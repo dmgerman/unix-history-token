@@ -266,6 +266,13 @@ name|jail_allow_raw_sockets
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|jail_chflags_allowed
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(

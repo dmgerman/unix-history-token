@@ -339,6 +339,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|jail_chflags_allowed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|chflags_allowed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|jail_chflags_allowed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Processes in jail can alter system file flags"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* allprison, lastprid, and prisoncount are protected by allprison_mtx. */
 end_comment
