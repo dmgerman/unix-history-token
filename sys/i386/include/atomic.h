@@ -161,7 +161,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }
+value|static __inline void					\ atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(__XSTRING(MPLOCKED) OP		\ 			 : "+m" (*p)			\ 			 : CONS (V));			\ }							\ struct __hack
 end_define
 
 begin_else
@@ -430,7 +430,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ 	__asm __volatile("" : : : "memory");		\ }
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ 	__asm __volatile("" : : : "memory");		\ }							\ struct __hack
 end_define
 
 begin_else
@@ -464,7 +464,7 @@ value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p,
 comment|/* 0 */
 value|\ 	  "+r" (v)
 comment|/* 1 */
-value|\ 	: : "memory");				 	\ }
+value|\ 	: : "memory");				 	\ }							\ struct __hack
 end_define
 
 begin_endif
