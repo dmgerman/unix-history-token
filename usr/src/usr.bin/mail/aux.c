@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.9 (Berkeley) %G%"
+literal|"@(#)aux.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2668,49 +2668,6 @@ name|s2
 operator|-
 literal|1
 return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Add a single character onto a string.  */
-end_comment
-
-begin_expr_stmt
-name|stradd
-argument_list|(
-name|str
-argument_list|,
-name|c
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|str
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-while|while
-condition|(
-operator|*
-name|str
-operator|++
-condition|)
-empty_stmt|;
-name|str
-index|[
-operator|-
-literal|1
-index|]
-operator|=
-name|c
-expr_stmt|;
-operator|*
-name|str
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_block
 
