@@ -769,7 +769,10 @@ name|ACPI_TYPE_DEVICE
 operator|&&
 name|acpi_MatchHid
 argument_list|(
+name|acpi_get_handle
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 literal|"ATK0100"
 argument_list|)
