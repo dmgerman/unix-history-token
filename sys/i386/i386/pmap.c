@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.100 1996/06/05 06:36:21 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.101 1996/06/07 02:36:08 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -2614,42 +2614,6 @@ argument_list|(
 literal|"pmap_release: pteobj reference count != 1"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait until any (bogus) paging activity on this object is 	 * complete. 	 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-name|object
-operator|->
-name|paging_in_progress
-condition|)
-block|{
-name|object
-operator|->
-name|flags
-operator||=
-name|OBJ_PIPWNT
-expr_stmt|;
-name|tsleep
-argument_list|(
-name|object
-argument_list|,
-name|PVM
-argument_list|,
-literal|"pmrlob"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ptdpg
 operator|=
 name|NULL
@@ -2703,21 +2667,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
-operator|||
-name|p
-operator|->
-name|busy
-condition|)
-continue|continue;
-if|if
-condition|(
 operator|!
 name|pmap_release_free_page
 argument_list|(
@@ -2741,13 +2690,19 @@ argument_list|(
 literal|"pmap_release: missing page table directory page"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|pmap_release_free_page
 argument_list|(
 name|pmap
 argument_list|,
 name|ptdpg
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|retry
+goto|;
 name|vm_object_deallocate
 argument_list|(
 name|object
@@ -4185,6 +4140,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Remove pte mapping, don't do everything that we would do  * for normal pages because many things aren't necessary (like  * pmap_update())...  */
+end_comment
+
 begin_function
 name|void
 name|pmap_remove_pte_mapping
@@ -4248,10 +4207,6 @@ name|pmap
 modifier|*
 name|pmap
 decl_stmt|;
-name|anyvalid
-operator|=
-literal|1
-expr_stmt|;
 name|pmap
 operator|=
 name|pv
@@ -4307,11 +4262,6 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|anyvalid
-condition|)
-block|{
 for|for
 control|(
 name|pv
@@ -4344,7 +4294,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
@@ -4353,7 +4302,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|pmap_remove_all
 parameter_list|(
