@@ -494,17 +494,13 @@ argument_list|,
 literal|0
 argument_list|)
 operator|&&
-operator|(
 name|errno
 operator|!=
 name|ENOENT
-operator|)
 operator|&&
-operator|(
 name|errno
 operator|!=
 name|EOPNOTSUPP
-operator|)
 condition|)
 name|syslog
 argument_list|(
