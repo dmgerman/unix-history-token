@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mt.c	4.3 (Berkeley) 81/11/12"
+literal|"@(#)mt.c	4.4 (Berkeley) 82/12/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,28 +553,34 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|<sys/mtreg.h>
+file|<vaxmba/mtreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/utreg.h>
+file|<vaxmba/htreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/htreg.h>
+file|<vaxuba/utreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/tmreg.h>
+file|<vaxuba/tmreg.h>
 end_include
 
 begin_undef
@@ -590,8 +596,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/tsreg.h>
+file|<vaxuba/tsreg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -621,6 +632,9 @@ name|tapes
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 block|{
 name|MT_ISTS
 block|,
@@ -671,6 +685,8 @@ block|,
 name|UTER_BITS
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|}
