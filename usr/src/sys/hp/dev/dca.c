@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -125,11 +125,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|dcastart
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
-name|dcastart
-argument_list|()
-decl_stmt|,
 name|dcaparam
 argument_list|()
 decl_stmt|,
@@ -2780,20 +2784,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|dcastart
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -3040,7 +3042,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stop output on a line.  */
