@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: fetch.c,v 1.3 1997/12/13 20:38:16 pst Exp $"
+literal|"$Id: fetch.c,v 1.4 1997/12/16 08:22:35 ache Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1339,6 +1339,10 @@ if|if
 condition|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
