@@ -998,6 +998,13 @@ end_endif
 
 begin_function_decl
 name|int
+name|ntp_adjtime
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|setgid
 parameter_list|()
 function_decl|;
@@ -3059,7 +3066,7 @@ comment|/* 175 = nosys */
 block|{
 literal|1
 block|,
-name|nosys
+name|ntp_adjtime
 block|}
 block|,
 comment|/* 176 = ntp_adjtime */

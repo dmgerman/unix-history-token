@@ -1247,7 +1247,7 @@ end_endif
 begin_macro
 name|HIDE_BSD
 argument_list|(
-argument|nosys
+argument|ntp_adjtime
 argument_list|)
 end_macro
 
