@@ -3504,7 +3504,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
@@ -3514,13 +3513,6 @@ literal|"WARNING: cannot attach cardbus bus!\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|cbdev
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|sc
 operator|->
 name|exca
@@ -3570,7 +3562,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
@@ -3580,15 +3571,6 @@ literal|"WARNING: cannot attach pccard bus.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|exca
-operator|.
-name|pccarddev
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 comment|/* Map and establish the interrupt. */
 name|rid
 operator|=
