@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	telnet.h	4.5	85/03/24	*/
+comment|/*	telnet.h	4.6	85/03/24	*/
 end_comment
 
 begin_comment
@@ -193,6 +193,59 @@ end_define
 begin_comment
 comment|/* for telfunc calls */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TELCMDS
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|telcmds
+index|[]
+init|=
+block|{
+literal|"SE"
+block|,
+literal|"NOP"
+block|,
+literal|"DMARK"
+block|,
+literal|"BRK"
+block|,
+literal|"IP"
+block|,
+literal|"AO"
+block|,
+literal|"AYT"
+block|,
+literal|"EC"
+block|,
+literal|"EL"
+block|,
+literal|"GA"
+block|,
+literal|"SB"
+block|,
+literal|"WILL"
+block|,
+literal|"WONT"
+block|,
+literal|"DO"
+block|,
+literal|"DONT"
+block|,
+literal|"IAC"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* telnet options */
@@ -440,8 +493,26 @@ begin_comment
 comment|/* supdup protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TELOPT_SUPDUPOUTPUT
+value|22
+end_define
+
 begin_comment
-comment|/* 22-23 are assigned */
+comment|/* supdup output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_SNDLOC
+value|23
+end_define
+
+begin_comment
+comment|/* send location */
 end_comment
 
 begin_define
@@ -458,6 +529,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_EOR
+value|25
+end_define
+
+begin_comment
+comment|/* end or record */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
@@ -465,59 +547,6 @@ end_define
 begin_comment
 comment|/* extended-options-list */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TELCMDS
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|telcmds
-index|[]
-init|=
-block|{
-literal|"SE"
-block|,
-literal|"NOP"
-block|,
-literal|"DMARK"
-block|,
-literal|"BRK"
-block|,
-literal|"IP"
-block|,
-literal|"AO"
-block|,
-literal|"AYT"
-block|,
-literal|"EC"
-block|,
-literal|"EL"
-block|,
-literal|"GA"
-block|,
-literal|"SB"
-block|,
-literal|"WILL"
-block|,
-literal|"WONT"
-block|,
-literal|"DO"
-block|,
-literal|"DONT"
-block|,
-literal|"IAC"
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -585,11 +614,13 @@ literal|"DATA ENTRY TERMINAL"
 block|,
 literal|"SUPDUP"
 block|,
-literal|"#22"
+literal|"SUPDUP OUTPUT"
 block|,
-literal|"#23"
+literal|"SEND LOCATION"
 block|,
-literal|"TTYPE"
+literal|"TERMINAL TYPE"
+block|,
+literal|"END OF RECORD"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -598,6 +629,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* sub-option qualifiers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_IS
+value|0
+end_define
+
+begin_comment
+comment|/* option is... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELQUAL_SEND
+value|1
+end_define
+
+begin_comment
+comment|/* send option */
+end_comment
 
 end_unit
 
