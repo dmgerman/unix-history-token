@@ -235,6 +235,10 @@ modifier|*
 name|ref_cnt
 decl_stmt|;
 comment|/* pointer to ref count info */
+name|short
+name|ext_type
+decl_stmt|;
+comment|/* type of external storage */
 block|}
 struct|;
 end_struct
@@ -406,18 +410,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO1
+name|M_RDONLY
 value|0x0008
 end_define
 
 begin_comment
-comment|/* protocol-specific */
+comment|/* associated data is marked read-only */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_PROTO2
+name|M_PROTO1
 value|0x0010
 end_define
 
@@ -428,7 +432,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO3
+name|M_PROTO2
 value|0x0020
 end_define
 
@@ -439,7 +443,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO4
+name|M_PROTO3
 value|0x0040
 end_define
 
@@ -450,8 +454,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_PROTO5
+name|M_PROTO4
 value|0x0080
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO5
+value|0x0100
 end_define
 
 begin_comment
@@ -466,7 +481,7 @@ begin_define
 define|#
 directive|define
 name|M_BCAST
-value|0x0100
+value|0x0200
 end_define
 
 begin_comment
@@ -477,7 +492,7 @@ begin_define
 define|#
 directive|define
 name|M_MCAST
-value|0x0200
+value|0x0400
 end_define
 
 begin_comment
@@ -488,7 +503,7 @@ begin_define
 define|#
 directive|define
 name|M_FRAG
-value|0x0400
+value|0x0800
 end_define
 
 begin_comment
@@ -499,7 +514,7 @@ begin_define
 define|#
 directive|define
 name|M_FIRSTFRAG
-value|0x0800
+value|0x1000
 end_define
 
 begin_comment
@@ -510,11 +525,48 @@ begin_define
 define|#
 directive|define
 name|M_LASTFRAG
-value|0x1000
+value|0x2000
 end_define
 
 begin_comment
 comment|/* packet is last fragment */
+end_comment
+
+begin_comment
+comment|/* external buffer types: identify ext_buf type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_CLUSTER
+value|1
+end_define
+
+begin_comment
+comment|/* mbuf cluster */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_SFBUF
+value|2
+end_define
+
+begin_comment
+comment|/* sendfile(2)'s sf_bufs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_NET_DRV
+value|100
+end_define
+
+begin_comment
+comment|/* custom ext_buf provided by net driver(s) */
 end_comment
 
 begin_comment
@@ -525,7 +577,7 @@ begin_define
 define|#
 directive|define
 name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3 | \ 			    M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG)
+value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3 | \ 			    M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG|M_RDONLY)
 end_define
 
 begin_comment
@@ -1233,7 +1285,7 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF);				\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 		}							\ 	}								\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF);				\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 			_mm->m_ext.ext_type = EXT_CLUSTER;		\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1250,8 +1302,12 @@ parameter_list|,
 name|free
 parameter_list|,
 name|args
+parameter_list|,
+name|flags
+parameter_list|,
+name|type
 parameter_list|)
-value|do {				\ 	struct mbuf *_mm = (m);						\ 									\ 	MEXT_INIT_REF(_mm, M_WAIT);					\ 	if (_mm->m_ext.ref_cnt != NULL) {				\ 		_mm->m_flags |= M_EXT;					\ 		_mm->m_ext.ext_buf = (caddr_t)(buf);			\ 		_mm->m_data = _mm->m_ext.ext_buf;			\ 		_mm->m_ext.ext_size = (size);				\ 		_mm->m_ext.ext_free = (free);				\ 		_mm->m_ext.ext_args = (args);				\ 	}								\ } while (0)
+value|do {		\ 	struct mbuf *_mm = (m);						\ 									\ 	MEXT_INIT_REF(_mm, M_WAIT);					\ 	if (_mm->m_ext.ref_cnt != NULL) {				\ 		_mm->m_flags |= (M_EXT | (flags));			\ 		_mm->m_ext.ext_buf = (caddr_t)(buf);			\ 		_mm->m_data = _mm->m_ext.ext_buf;			\ 		_mm->m_ext.ext_size = (size);				\ 		_mm->m_ext.ext_free = (free);				\ 		_mm->m_ext.ext_args = (args);				\ 		_mm->m_ext.ext_type = (type);				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1271,7 +1327,7 @@ name|MEXTFREE
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	if (MEXT_IS_REF(_mmm))						\ 		MEXT_REM_REF(_mmm);					\ 	else if (_mmm->m_ext.ext_free != NULL) {			\ 		(*(_mmm->m_ext.ext_free))(_mmm->m_ext.ext_buf,		\ 		    _mmm->m_ext.ext_args);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	} else {							\ 		_MCLFREE(_mmm->m_ext.ext_buf);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	}								\ 	_mmm->m_flags&= ~M_EXT;					\ } while (0)
+value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	if (MEXT_IS_REF(_mmm))						\ 		MEXT_REM_REF(_mmm);					\ 	else if (_mmm->m_ext.ext_type != EXT_CLUSTER) {			\ 		(*(_mmm->m_ext.ext_free))(_mmm->m_ext.ext_buf,		\ 		    _mmm->m_ext.ext_args);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	} else {							\ 		_MCLFREE(_mmm->m_ext.ext_buf);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	}								\ 	_mmm->m_flags&= ~M_EXT;					\ } while (0)
 end_define
 
 begin_comment
@@ -1288,6 +1344,20 @@ parameter_list|,
 name|n
 parameter_list|)
 value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	mbtypes[_mm->m_type]--;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid);					\ 	mtx_exit(&mmbfree.m_mtx, MTX_DEF); 				\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * M_WRITABLE(m)  * Evaluate TRUE if it's safe to write to the mbuf m's data region (this  * can be both the local data payload, or an external buffer area,  * depending on whether M_EXT is set).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_WRITABLE
+parameter_list|(
+name|m
+parameter_list|)
+value|(!((m)->m_flags& M_RDONLY)&& (!((m)->m_flags  \& M_EXT) || !MEXT_IS_REF(m)))
 end_define
 
 begin_comment
