@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -672,6 +672,20 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"<null>"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 while|while
 condition|(
 operator|(
@@ -1829,6 +1843,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|LineNumber
+operator|++
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
@@ -1899,7 +1919,7 @@ operator|--
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sfgets
 argument_list|(
 name|p
 argument_list|,
