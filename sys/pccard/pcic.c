@@ -1251,7 +1251,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pcic: mem addr %p: reg %d: %x %x %x %x %x %x\n"
+literal|"pcic: mem addr %p: reg %d: %x %x %x %x %x %x %x\n"
 argument_list|,
 name|mp
 operator|->
@@ -1321,6 +1321,15 @@ argument_list|,
 name|reg
 operator|+
 literal|5
+argument_list|)
+argument_list|,
+name|sp
+operator|->
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_ADDRWINE
 argument_list|)
 argument_list|)
 expr_stmt|;
