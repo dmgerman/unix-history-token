@@ -211,7 +211,7 @@ if|if
 condition|(
 name|addr
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* validate passed address */
@@ -525,7 +525,7 @@ operator|-
 literal|1
 index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 break|break;
@@ -730,7 +730,7 @@ name|at_ifaddr
 modifier|*
 name|aa
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -845,7 +845,7 @@ expr_stmt|;
 block|}
 name|aa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -976,12 +976,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -992,12 +987,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|||
 name|ro
 operator|->
@@ -1005,12 +995,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 operator|==
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|ro
@@ -1101,7 +1086,7 @@ block|}
 comment|/*      * Make sure any route that we have has a valid interface.      */
 name|aa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1152,7 +1137,7 @@ if|if
 condition|(
 name|aa
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 return|return
@@ -1185,12 +1170,7 @@ name|at_pcbsetaddr
 argument_list|(
 name|ddp
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|td
 argument_list|)
@@ -1375,7 +1355,7 @@ name|so
 operator|->
 name|so_pcb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|sotryfree
 argument_list|(

@@ -243,7 +243,7 @@ name|SZ_ELAPHDR
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|)
 block|{
@@ -482,7 +482,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|)
 block|{
@@ -716,7 +716,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|)
 condition|)
 block|{
@@ -1275,12 +1275,7 @@ name|forwro
 operator|.
 name|ro_rt
 operator|=
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * If we don't have a cached one (any more) or it's useless, 	 * Then get a new route. 	 * XXX this could cause a 'route leak'. check this! 	 */
@@ -1290,12 +1285,7 @@ name|forwro
 operator|.
 name|ro_rt
 operator|==
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|||
 name|forwro
 operator|.
@@ -1303,12 +1293,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 operator|==
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|forwro
@@ -1666,12 +1651,7 @@ name|from
 argument_list|,
 name|m
 argument_list|,
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|==
 literal|0
