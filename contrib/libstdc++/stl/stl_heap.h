@@ -46,34 +46,35 @@ name|woff
 name|1209
 endif|#
 directive|endif
+comment|// Heap-manipulation functions: push_heap, pop_heap, make_heap, sort_heap.
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 name|void
 name|__push_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|Distance holeIndex
+argument|_Distance __holeIndex
 argument_list|,
-argument|Distance topIndex
+argument|_Distance __topIndex
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|)
 block|{
-name|Distance
-name|parent
+name|_Distance
+name|__parent
 operator|=
 operator|(
-name|holeIndex
+name|__holeIndex
 operator|-
 literal|1
 operator|)
@@ -82,42 +83,42 @@ literal|2
 block|;
 while|while
 condition|(
-name|holeIndex
+name|__holeIndex
 operator|>
-name|topIndex
+name|__topIndex
 operator|&&
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|parent
+name|__parent
 operator|)
 operator|<
-name|value
+name|__value
 condition|)
 block|{
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|parent
+name|__parent
 operator|)
 expr_stmt|;
-name|holeIndex
+name|__holeIndex
 operator|=
-name|parent
+name|__parent
 expr_stmt|;
-name|parent
+name|__parent
 operator|=
 operator|(
-name|holeIndex
+name|__holeIndex
 operator|-
 literal|1
 operator|)
@@ -127,12 +128,12 @@ expr_stmt|;
 block|}
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
-name|value
+name|__value
 expr_stmt|;
 end_expr_stmt
 
@@ -140,52 +141,52 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|__push_heap_aux
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Distance*
+argument|_Distance*
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
 name|__push_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
 operator|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|)
 operator|-
 literal|1
 argument_list|)
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|T
+name|_Tp
 argument_list|(
 operator|*
 operator|(
-name|last
+name|__last
 operator|-
 literal|1
 operator|)
@@ -195,67 +196,67 @@ block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|>
 specifier|inline
 name|void
 name|push_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|)
 block|{
 name|__push_heap_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|distance_type
+name|__DISTANCE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 name|void
 name|__push_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|Distance holeIndex
+argument|_Distance __holeIndex
 argument_list|,
-argument|Distance topIndex
+argument|_Distance __topIndex
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
-name|Distance
-name|parent
+name|_Distance
+name|__parent
 operator|=
 operator|(
-name|holeIndex
+name|__holeIndex
 operator|-
 literal|1
 operator|)
@@ -264,45 +265,45 @@ literal|2
 block|;
 while|while
 condition|(
-name|holeIndex
+name|__holeIndex
 operator|>
-name|topIndex
+name|__topIndex
 operator|&&
-name|comp
+name|__comp
 argument_list|(
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|parent
+name|__parent
 operator|)
 argument_list|,
-name|value
+name|__value
 argument_list|)
 condition|)
 block|{
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|parent
+name|__parent
 operator|)
 expr_stmt|;
-name|holeIndex
+name|__holeIndex
 operator|=
-name|parent
+name|__parent
 expr_stmt|;
-name|parent
+name|__parent
 operator|=
 operator|(
-name|holeIndex
+name|__holeIndex
 operator|-
 literal|1
 operator|)
@@ -312,12 +313,12 @@ expr_stmt|;
 block|}
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
-name|value
+name|__value
 expr_stmt|;
 end_expr_stmt
 
@@ -325,194 +326,194 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|__push_heap_aux
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|,
-argument|Distance*
+argument|_Distance*
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
 name|__push_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
 operator|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|)
 operator|-
 literal|1
 argument_list|)
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|T
+name|_Tp
 argument_list|(
 operator|*
 operator|(
-name|last
+name|__last
 operator|-
 literal|1
 operator|)
 argument_list|)
 argument_list|,
-name|comp
+name|__comp
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 specifier|inline
 name|void
 name|push_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
 name|__push_heap_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|comp
+name|__comp
 argument_list|,
-name|distance_type
+name|__DISTANCE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 name|void
 name|__adjust_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|Distance holeIndex
+argument|_Distance __holeIndex
 argument_list|,
-argument|Distance len
+argument|_Distance __len
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|)
 block|{
-name|Distance
-name|topIndex
+name|_Distance
+name|__topIndex
 operator|=
-name|holeIndex
+name|__holeIndex
 block|;
-name|Distance
-name|secondChild
+name|_Distance
+name|__secondChild
 operator|=
 literal|2
 operator|*
-name|holeIndex
+name|__holeIndex
 operator|+
 literal|2
 block|;
 while|while
 condition|(
-name|secondChild
+name|__secondChild
 operator|<
-name|len
+name|__len
 condition|)
 block|{
 if|if
 condition|(
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|secondChild
+name|__secondChild
 operator|)
 operator|<
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
 operator|(
-name|secondChild
+name|__secondChild
 operator|-
 literal|1
 operator|)
 operator|)
 condition|)
-name|secondChild
+name|__secondChild
 operator|--
 expr_stmt|;
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|secondChild
+name|__secondChild
 operator|)
 expr_stmt|;
-name|holeIndex
+name|__holeIndex
 operator|=
-name|secondChild
+name|__secondChild
 expr_stmt|;
-name|secondChild
+name|__secondChild
 operator|=
 literal|2
 operator|*
 operator|(
-name|secondChild
+name|__secondChild
 operator|+
 literal|1
 operator|)
@@ -523,32 +524,32 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|secondChild
+name|__secondChild
 operator|==
-name|len
+name|__len
 condition|)
 block|{
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
 operator|(
-name|secondChild
+name|__secondChild
 operator|-
 literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|holeIndex
+name|__holeIndex
 operator|=
-name|secondChild
+name|__secondChild
 operator|-
 literal|1
 expr_stmt|;
@@ -558,13 +559,13 @@ end_if
 begin_expr_stmt
 name|__push_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|holeIndex
+name|__holeIndex
 argument_list|,
-name|topIndex
+name|__topIndex
 argument_list|,
-name|value
+name|__value
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -573,226 +574,226 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|>
 specifier|inline
 name|void
 name|__pop_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|RandomAccessIterator result
+argument|_RandomAccessIterator __result
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|,
-argument|Distance*
+argument|_Distance*
 argument_list|)
 block|{
 operator|*
-name|result
+name|__result
 operator|=
 operator|*
-name|first
+name|__first
 block|;
 name|__adjust_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|value
+name|__value
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|void
 name|__pop_heap_aux
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
 name|__pop_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 operator|-
 literal|1
 argument_list|,
-name|last
+name|__last
 operator|-
 literal|1
 argument_list|,
-name|T
+name|_Tp
 argument_list|(
 operator|*
 operator|(
-name|last
+name|__last
 operator|-
 literal|1
 operator|)
 argument_list|)
 argument_list|,
-name|distance_type
+name|__DISTANCE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|>
 specifier|inline
 name|void
 name|pop_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|)
 block|{
 name|__pop_heap_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 name|void
 name|__adjust_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|Distance holeIndex
+argument|_Distance __holeIndex
 argument_list|,
-argument|Distance len
+argument|_Distance __len
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
-name|Distance
-name|topIndex
+name|_Distance
+name|__topIndex
 operator|=
-name|holeIndex
+name|__holeIndex
 block|;
-name|Distance
-name|secondChild
+name|_Distance
+name|__secondChild
 operator|=
 literal|2
 operator|*
-name|holeIndex
+name|__holeIndex
 operator|+
 literal|2
 block|;
 while|while
 condition|(
-name|secondChild
+name|__secondChild
 operator|<
-name|len
+name|__len
 condition|)
 block|{
 if|if
 condition|(
-name|comp
+name|__comp
 argument_list|(
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|secondChild
+name|__secondChild
 operator|)
 argument_list|,
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
 operator|(
-name|secondChild
+name|__secondChild
 operator|-
 literal|1
 operator|)
 operator|)
 argument_list|)
 condition|)
-name|secondChild
+name|__secondChild
 operator|--
 expr_stmt|;
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|secondChild
+name|__secondChild
 operator|)
 expr_stmt|;
-name|holeIndex
+name|__holeIndex
 operator|=
-name|secondChild
+name|__secondChild
 expr_stmt|;
-name|secondChild
+name|__secondChild
 operator|=
 literal|2
 operator|*
 operator|(
-name|secondChild
+name|__secondChild
 operator|+
 literal|1
 operator|)
@@ -803,32 +804,32 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|secondChild
+name|__secondChild
 operator|==
-name|len
+name|__len
 condition|)
 block|{
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|holeIndex
+name|__holeIndex
 operator|)
 operator|=
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
 operator|(
-name|secondChild
+name|__secondChild
 operator|-
 literal|1
 operator|)
 operator|)
 expr_stmt|;
-name|holeIndex
+name|__holeIndex
 operator|=
-name|secondChild
+name|__secondChild
 operator|-
 literal|1
 expr_stmt|;
@@ -838,15 +839,15 @@ end_if
 begin_expr_stmt
 name|__push_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|holeIndex
+name|__holeIndex
 argument_list|,
-name|topIndex
+name|__topIndex
 argument_list|,
-name|value
+name|__value
 argument_list|,
-name|comp
+name|__comp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -855,195 +856,195 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|>
 specifier|inline
 name|void
 name|__pop_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|RandomAccessIterator result
+argument|_RandomAccessIterator __result
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|,
-argument|Distance*
+argument|_Distance*
 argument_list|)
 block|{
 operator|*
-name|result
+name|__result
 operator|=
 operator|*
-name|first
+name|__first
 block|;
 name|__adjust_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|Distance
+name|_Distance
 argument_list|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|value
+name|__value
 argument_list|,
-name|comp
+name|__comp
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 specifier|inline
 name|void
 name|__pop_heap_aux
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
 name|__pop_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 operator|-
 literal|1
 argument_list|,
-name|last
+name|__last
 operator|-
 literal|1
 argument_list|,
-name|T
+name|_Tp
 argument_list|(
 operator|*
 operator|(
-name|last
+name|__last
 operator|-
 literal|1
 operator|)
 argument_list|)
 argument_list|,
-name|comp
+name|__comp
 argument_list|,
-name|distance_type
+name|__DISTANCE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 specifier|inline
 name|void
 name|pop_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
 name|__pop_heap_aux
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|comp
+name|__comp
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|>
 name|void
 name|__make_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|,
-argument|Distance*
+argument|_Distance*
 argument_list|)
 block|{
 if|if
 condition|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|<
 literal|2
 condition|)
 return|return;
-name|Distance
-name|len
+name|_Distance
+name|__len
 operator|=
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|Distance
-name|parent
+name|_Distance
+name|__parent
 init|=
 operator|(
-name|len
+name|__len
 operator|-
 literal|2
 operator|)
@@ -1060,31 +1061,31 @@ condition|)
 block|{
 name|__adjust_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|parent
+name|__parent
 argument_list|,
-name|len
+name|__len
 argument_list|,
-name|T
+name|_Tp
 argument_list|(
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|parent
+name|__parent
 operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|parent
+name|__parent
 operator|==
 literal|0
 condition|)
 return|return;
-name|parent
+name|__parent
 operator|--
 expr_stmt|;
 block|}
@@ -1094,86 +1095,86 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|>
 specifier|inline
 name|void
 name|make_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|)
 block|{
 name|__make_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|distance_type
+name|__DISTANCE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Distance
+name|_Distance
 operator|>
 name|void
 name|__make_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|,
-argument|Distance*
+argument|_Distance*
 argument_list|)
 block|{
 if|if
 condition|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|<
 literal|2
 condition|)
 return|return;
-name|Distance
-name|len
+name|_Distance
+name|__len
 operator|=
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|Distance
-name|parent
+name|_Distance
+name|__parent
 init|=
 operator|(
-name|len
+name|__len
 operator|-
 literal|2
 operator|)
@@ -1190,33 +1191,33 @@ condition|)
 block|{
 name|__adjust_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|parent
+name|__parent
 argument_list|,
-name|len
+name|__len
 argument_list|,
-name|T
+name|_Tp
 argument_list|(
 operator|*
 operator|(
-name|first
+name|__first
 operator|+
-name|parent
+name|__parent
 operator|)
 argument_list|)
 argument_list|,
-name|comp
+name|__comp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|parent
+name|__parent
 operator|==
 literal|0
 condition|)
 return|return;
-name|parent
+name|__parent
 operator|--
 expr_stmt|;
 block|}
@@ -1226,67 +1227,67 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 specifier|inline
 name|void
 name|make_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
 name|__make_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|comp
+name|__comp
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|distance_type
+name|__DISTANCE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 block|; }
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|>
 name|void
 name|sort_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|)
 block|{
 while|while
 condition|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|>
 literal|1
 condition|)
 name|pop_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 operator|--
 argument_list|)
 expr_stmt|;
@@ -1297,37 +1298,37 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|RandomAccessIterator
+name|_RandomAccessIterator
 operator|,
 name|class
-name|Compare
+name|_Compare
 operator|>
 name|void
 name|sort_heap
 argument_list|(
-argument|RandomAccessIterator first
+argument|_RandomAccessIterator __first
 argument_list|,
-argument|RandomAccessIterator last
+argument|_RandomAccessIterator __last
 argument_list|,
-argument|Compare comp
+argument|_Compare __comp
 argument_list|)
 block|{
 while|while
 condition|(
-name|last
+name|__last
 operator|-
-name|first
+name|__first
 operator|>
 literal|1
 condition|)
 name|pop_heap
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 operator|--
 argument_list|,
-name|comp
+name|__comp
 argument_list|)
 expr_stmt|;
 block|}

@@ -35,6 +35,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<algobase.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stl_hash_set.h>
 end_include
 

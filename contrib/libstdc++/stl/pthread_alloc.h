@@ -31,13 +31,13 @@ begin_expr_stmt
 name|using
 name|__STD
 operator|::
-name|__pthread_alloc_template
+name|_Pthread_alloc_template
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
 name|using
-name|__STL
+name|__STD
 operator|::
 name|pthread_alloc
 expr_stmt|;

@@ -38,17 +38,29 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_comment
+comment|/* XXX should use<climits> */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
 
+begin_comment
+comment|/* XXX should use<cstddef> */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_comment
+comment|/* XXX should use<cstdlib> */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -77,6 +89,23 @@ begin_include
 include|#
 directive|include
 file|<stl_construct.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__SGI_STL_INTERNAL_UNINITIALIZED_H
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stl_uninitialized.h>
 end_include
 
 begin_endif

@@ -299,6 +299,99 @@ return|;
 block|}
 end_extern
 
+begin_if
+if|#
+directive|if
+name|defined
+name|__i486__
+operator|||
+name|defined
+name|__i586__
+operator|||
+name|defined
+name|__i686__
+end_if
+
+begin_function
+name|void
+name|release
+parameter_list|()
+block|{
+name|size_t
+name|__val
+decl_stmt|;
+comment|// This opcode exists as a .byte instead of as a mnemonic for the
+comment|// benefit of SCO OpenServer 5.  The system assembler (which is
+comment|// essentially required on this target) can't assemble xaddl in
+comment|//COFF mode.
+asm|asm (".byte 0xf0, 0x0f, 0xc1, 0x02"
+comment|// lock; xaddl %eax, (%edx)
+asm|: "=a" (__val) 	    : "0" (-1), "m" (ref), "d" (&ref) 	    : "memory");
+if|if
+condition|(
+name|__val
+operator|==
+literal|1
+condition|)
+name|delete
+name|this
+decl_stmt|;
+block|}
+end_function
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__sparcv9__
+end_elif
+
+begin_function
+name|void
+name|release
+parameter_list|()
+block|{
+name|size_t
+name|__newval
+decl_stmt|,
+name|__oldval
+init|=
+name|ref
+decl_stmt|;
+do|do
+block|{
+name|__newval
+operator|=
+name|__oldval
+operator|-
+literal|1
+expr_stmt|;
+asm|__asm__ ("cas	[%4], %2, %0" 		     : "=r" (__oldval), "=m" (ref) 		     : "r" (__oldval), "m" (ref), "r"(&(ref)), "0" (__newval));
+block|}
+do|while
+condition|(
+name|__newval
+operator|!=
+name|__oldval
+condition|)
+do|;
+if|if
+condition|(
+name|__oldval
+operator|==
+literal|0
+condition|)
+name|delete
+name|this
+decl_stmt|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function
 name|void
 name|release
@@ -316,6 +409,11 @@ name|this
 decl_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|inline

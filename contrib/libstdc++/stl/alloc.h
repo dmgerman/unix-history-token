@@ -134,6 +134,29 @@ begin_comment
 comment|/* __STL_STATIC_TEMPLATE_MEMBER_BUG */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STL_USE_STD_ALLOCATORS
+end_ifdef
+
+begin_expr_stmt
+name|using
+name|__STD
+operator|::
+name|allocator
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __STL_USE_STD_ALLOCATORS */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -16,175 +16,259 @@ name|__STL_CONFIG_H
 end_define
 
 begin_comment
-comment|// What this file does.
+comment|// Flags:
 end_comment
 
 begin_comment
-comment|//  (1)  Defines bool, true, and false if the compiler doesn't do so already.
+comment|// * __STL_NO_BOOL: defined if the compiler doesn't have bool as a builtin
 end_comment
 
 begin_comment
-comment|//  (2)  Defines __STL_NO_DRAND48 if the compiler's standard library does
+comment|//   type.
 end_comment
 
 begin_comment
-comment|//       not support the drand48() function.
+comment|// * __STL_HAS_WCHAR_T: defined if the compier has wchar_t as a builtin type.
 end_comment
 
 begin_comment
-comment|//  (3)  Defines __STL_STATIC_TEMPLATE_MEMBER_BUG if the compiler can't
+comment|// * __STL_NO_DRAND48: defined if the compiler doesn't have the drand48
 end_comment
 
 begin_comment
-comment|//       handle static members of template classes.
+comment|//   function.
 end_comment
 
 begin_comment
-comment|//  (4)  Defines 'typename' as a null macro if the compiler does not support
+comment|// * __STL_STATIC_TEMPLATE_MEMBER_BUG: defined if the compiler can't handle
 end_comment
 
 begin_comment
-comment|//       the typename keyword.
+comment|//   static members of template classes.
 end_comment
 
 begin_comment
-comment|//  (5)  Defines __STL_CLASS_PARTIAL_SPECIALIZATION if the compiler
+comment|// * __STL_CLASS_PARTIAL_SPECIALIZATION: defined if the compiler supports
 end_comment
 
 begin_comment
-comment|//       supports partial specialization of class templates.
+comment|//   partial specialization of template classes.
 end_comment
 
 begin_comment
-comment|//  (6)  Defines __STL_FUNCTION_TMPL_PARTIAL_ORDER if the compiler supports
+comment|// * __STL_PARTIAL_SPECIALIZATION_SYNTAX: defined if the compiler
 end_comment
 
 begin_comment
-comment|//       partial ordering of function templates (a.k.a partial specialization
+comment|//   supports partial specialization syntax for full specialization of
 end_comment
 
 begin_comment
-comment|//       of function templates.
+comment|//   class templates.  (Even if it doesn't actually support partial
 end_comment
 
 begin_comment
-comment|//  (7)  Defines __STL_EXPLICIT_FUNCTION_TMPL_ARGS if the compiler
+comment|//   specialization itself.)
 end_comment
 
 begin_comment
-comment|//       supports calling a function template by providing its template
+comment|// * __STL_FUNCTION_TMPL_PARTIAL_ORDER: defined if the compiler supports
 end_comment
 
 begin_comment
-comment|//       arguments explicitly.
+comment|//   partial ordering of function templates.  (a.k.a partial specialization
 end_comment
 
 begin_comment
-comment|//  (8)  Defines __STL_MEMBER_TEMPLATES if the compiler supports
+comment|//   of function templates.)
 end_comment
 
 begin_comment
-comment|//       template members of classes.
+comment|// * __STL_MEMBER_TEMPLATES: defined if the compiler supports template
 end_comment
 
 begin_comment
-comment|//  (9)  Defines 'explicit' as a null macro if the compiler does not support
+comment|//   member functions of classes.
 end_comment
 
 begin_comment
-comment|//       the explicit keyword.
+comment|// * __STL_MEMBER_TEMPLATE_CLASSES: defined if the compiler supports
 end_comment
 
 begin_comment
-comment|//  (10) Defines __STL_LIMITED_DEFAULT_TEMPLATES if the compiler is
+comment|//   nested classes that are member templates of other classes.
 end_comment
 
 begin_comment
-comment|//       unable to handle default template parameters that depend on
+comment|// * __STL_EXPLICIT_FUNCTION_TMPL_ARGS: defined if the compiler
 end_comment
 
 begin_comment
-comment|//       previous template parameters.
+comment|//   supports calling a function template by providing its template
 end_comment
 
 begin_comment
-comment|//  (11) Defines __STL_NON_TYPE_TMPL_PARAM_BUG if the compiler has
+comment|//   arguments explicitly.
 end_comment
 
 begin_comment
-comment|//       trouble performing function template argument deduction for
+comment|// * __STL_LIMITED_DEFAULT_TEMPLATES: defined if the compiler is unable
 end_comment
 
 begin_comment
-comment|//       non-type template parameters.
+comment|//   to handle default template parameters that depend on previous template
 end_comment
 
 begin_comment
-comment|//  (12) Defines __SGI_STL_NO_ARROW_OPERATOR if the compiler is unable
+comment|//   parameters.
 end_comment
 
 begin_comment
-comment|//       to support the -> operator for iterators.
+comment|// * __STL_NON_TYPE_TMPL_PARAM_BUG: defined if the compiler has trouble with
 end_comment
 
 begin_comment
-comment|//  (13) Defines __STL_USE_EXCEPTIONS if the compiler (in the current
+comment|//   function template argument deduction for non-type template parameters.
 end_comment
 
 begin_comment
-comment|//       compilation mode) supports exceptions.
+comment|// * __SGI_STL_NO_ARROW_OPERATOR: defined if the compiler is unable
 end_comment
 
 begin_comment
-comment|//  (14) Define __STL_USE_NAMESPACES if we're putting the STL into a
+comment|//   to support the -> operator for iterators.
 end_comment
 
 begin_comment
-comment|//       namespace.
+comment|// * __STL_USE_EXCEPTIONS: defined if the compiler (in the current compilation
 end_comment
 
 begin_comment
-comment|//  (15) Defines __STL_SGI_THREADS if this is being compiled on an SGI
+comment|//   mode) supports exceptions.
 end_comment
 
 begin_comment
-comment|//       compiler, and if the user hasn't selected pthreads or no threads
+comment|// * __STL_USE_NAMESPACES: defined if the compiler has the necessary
 end_comment
 
 begin_comment
-comment|//       instead.
+comment|//   support for namespaces.
 end_comment
 
 begin_comment
-comment|//  (16) Defines __STL_WIN32THREADS if this is being compiled on a
+comment|// * __STL_NO_EXCEPTION_HEADER: defined if the compiler does not have a
 end_comment
 
 begin_comment
-comment|//       WIN32 compiler in multithreaded mode.
+comment|//   standard-conforming header<exception>.
 end_comment
 
 begin_comment
-comment|//  (17) Define namespace-related macros (__STD, __STL_BEGIN_NAMESPACE, etc.)
+comment|// * __STL_SGI_THREADS: defined if this is being compiled for an SGI IRIX
 end_comment
 
 begin_comment
-comment|//       apropriately.
+comment|//   system in multithreaded mode, using native SGI threads instead of
 end_comment
 
 begin_comment
-comment|//  (18) Define exception-related macros (__STL_TRY, __STL_UNWIND, etc.)
+comment|//   pthreads.
 end_comment
 
 begin_comment
-comment|//       appropriately.
+comment|// * __STL_WIN32THREADS: defined if this is being compiled on a WIN32
 end_comment
 
 begin_comment
-comment|//  (19) Defines __stl_assert either as a test or as a null macro,
+comment|//   compiler in multithreaded mode.
 end_comment
 
 begin_comment
-comment|//       depending on whether or not __STL_ASSERTIONS is defined.
+comment|// * __STL_LONG_LONG if the compiler has long long and unsigned long long
+end_comment
+
+begin_comment
+comment|//   types.  (They're not in the C++ standard, but they are expected to be
+end_comment
+
+begin_comment
+comment|//   included in the forthcoming C9X standard.)
+end_comment
+
+begin_comment
+comment|// User-settable macros that control compilation:
+end_comment
+
+begin_comment
+comment|// * __STL_USE_SGI_ALLOCATORS: if defined, then the STL will use older
+end_comment
+
+begin_comment
+comment|//   SGI-style allocators, instead of standard-conforming allocators,
+end_comment
+
+begin_comment
+comment|//   even if the compiler supports all of the language features needed
+end_comment
+
+begin_comment
+comment|//   for standard-conforming allocators.
+end_comment
+
+begin_comment
+comment|// * __STL_NO_NAMESPACES: if defined, don't put the library in namespace
+end_comment
+
+begin_comment
+comment|//   std, even if the compiler supports namespaces.
+end_comment
+
+begin_comment
+comment|// * __STL_ASSERTIONS: if defined, then enable runtime checking through the
+end_comment
+
+begin_comment
+comment|//   __stl_assert macro.
+end_comment
+
+begin_comment
+comment|// * _PTHREADS: if defined, use Posix threads for multithreading support.
+end_comment
+
+begin_comment
+comment|// * _NOTHREADS: if defined, don't use any multithreading support.
+end_comment
+
+begin_comment
+comment|// Other macros defined by this file:
+end_comment
+
+begin_comment
+comment|// * bool, true, and false, if __STL_NO_BOOL is defined.
+end_comment
+
+begin_comment
+comment|// * typename, as a null macro if it's not already a keyword.
+end_comment
+
+begin_comment
+comment|// * explicit, as a null macro if it's not already a keyword.
+end_comment
+
+begin_comment
+comment|// * namespace-related macros (__STD, __STL_BEGIN_NAMESPACE, etc.)
+end_comment
+
+begin_comment
+comment|// * exception-related macros (__STL_TRY, __STL_UNWIND, etc.)
+end_comment
+
+begin_comment
+comment|// * __stl_assert, either as a test or as a null macro, depending on
+end_comment
+
+begin_comment
+comment|//   whether or not __STL_ASSERTIONS is defined.
 end_comment
 
 begin_ifdef
@@ -197,6 +281,23 @@ begin_define
 define|#
 directive|define
 name|__STL_PTHREADS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SOLTHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__STL_SOLTHREADS
 end_define
 
 begin_endif
@@ -232,7 +333,27 @@ end_if
 begin_define
 define|#
 directive|define
-name|__STL_NEED_BOOL
+name|__STL_NO_BOOL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WCHAR_T_IS_KEYWORD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_HAS_WCHAR_T
 end_define
 
 begin_endif
@@ -288,6 +409,62 @@ begin_define
 define|#
 directive|define
 name|__STL_MEMBER_TEMPLATES
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_MEMBER_TEMPLATE_CLASSES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MEMBER_TEMPLATE_KEYWORD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_MEMBER_TEMPLATE_KEYWORD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|_COMPILER_VERSION
+operator|>=
+literal|730
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|_MIPS_SIM
+argument_list|)
+operator|&&
+name|_MIPS_SIM
+operator|!=
+name|_ABIO32
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_MEMBER_TEMPLATE_KEYWORD
 end_define
 
 begin_endif
@@ -351,7 +528,28 @@ end_if
 begin_define
 define|#
 directive|define
-name|__STL_USE_NAMESPACES
+name|__STL_HAS_NAMESPACES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|_COMPILER_VERSION
+operator|<
+literal|721
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_NO_EXCEPTION_HEADER
 end_define
 
 begin_endif
@@ -386,6 +584,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LONGLONG
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SGIAPI
+argument_list|)
+operator|&&
+name|_SGIAPI
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_LONG_LONG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -402,6 +627,12 @@ include|#
 directive|include
 file|<_G_config.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__STL_HAS_WCHAR_T
+end_define
 
 begin_if
 if|#
@@ -459,13 +690,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|__STL_MEMBER_TEMPLATES
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_MEMBER_TEMPLATE_CLASSES
+end_define
+
+begin_define
+define|#
+directive|define
 name|__STL_EXPLICIT_FUNCTION_TMPL_ARGS
 end_define
 
 begin_define
 define|#
 directive|define
-name|__STL_MEMBER_TEMPLATES
+name|__STL_HAS_NAMESPACES
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_NO_NAMESPACES
+end_define
+
+begin_define
+define|#
+directive|define
+name|__SGI_STL_USE_AUTO_PTR_CONVERSIONS
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_USE_NAMESPACES
 end_define
 
 begin_endif
@@ -473,8 +734,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
 begin_comment
-comment|/* glibc pre 2.0 is very buggy. We have to disable thread for it.        It should be upgraded to glibc 2.0 or later. */
+comment|/* glibc pre 2.0 is very buggy. We have to disable thread for it.         It should be upgraded to glibc 2.0 or later. */
 end_comment
 
 begin_if
@@ -502,6 +772,33 @@ directive|define
 name|__STL_PTHREADS
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STRICT_ANSI__
+end_ifdef
+
+begin_comment
+comment|/* Work around a bug in the glibc 2.0.x pthread.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sigset_t
+value|__sigset_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -517,6 +814,23 @@ begin_define
 define|#
 directive|define
 name|__STL_USE_EXCEPTIONS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STRICT_ANSI__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__STL_LONG_LONG
 end_define
 
 begin_endif
@@ -541,7 +855,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__STL_NEED_BOOL
+name|__STL_NO_BOOL
 end_define
 
 begin_define
@@ -585,6 +899,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|__STL_MEMBER_TEMPLATE_CLASSES
+end_define
+
+begin_define
+define|#
+directive|define
 name|__STL_CLASS_PARTIAL_SPECIALIZATION
 end_define
 
@@ -597,7 +917,47 @@ end_define
 begin_define
 define|#
 directive|define
-name|__STL_USE_NAMESPACES
+name|__STL_HAS_NAMESPACES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MINGW32__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_NO_DRAND48
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_NO_DRAND48
 end_define
 
 begin_endif
@@ -613,36 +973,6 @@ argument_list|(
 name|_MSC_VER
 argument_list|)
 end_if
-
-begin_if
-if|#
-directive|if
-name|_MSC_VER
-operator|>
-literal|1000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<yvals.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__STL_NEED_BOOL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -664,11 +994,46 @@ operator|<
 literal|1100
 end_if
 
+begin_comment
+comment|/* 1000 is version 4.0, 1100 is 5.0, 1200 is 6.0. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|__STL_NEED_EXPLICIT
 end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_NO_BOOL
+end_define
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|>
+literal|1000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<yvals.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|__STL_DONT_USE_BOOL_TYPEDEF
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -714,6 +1079,37 @@ begin_define
 define|#
 directive|define
 name|__STL_WIN32THREADS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|>=
+literal|1200
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_PARTIAL_SPECIALIZATION_SYNTAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_HAS_NAMESPACES
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_NO_NAMESPACES
 end_define
 
 begin_endif
@@ -809,7 +1205,13 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__STL_NEED_BOOL
+name|__STL_NO_BOOL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STL_DONT_USE_BOOL_TYPEDEF
 argument_list|)
 end_if
 
@@ -849,6 +1251,35 @@ begin_define
 define|#
 directive|define
 name|typename
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STL_MEMBER_TEMPLATE_KEYWORD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__STL_TEMPLATE
+value|template
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__STL_TEMPLATE
 end_define
 
 begin_endif
@@ -902,11 +1333,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STL_CLASS_PARTIAL_SPECIALIZATION
-end_ifdef
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__STL_PARTIAL_SPECIALIZATION_SYNTAX
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -932,6 +1372,129 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// Use standard-conforming allocators if we have the necessary language
+end_comment
+
+begin_comment
+comment|// features.  __STL_USE_SGI_ALLOCATORS is a hook so that users can
+end_comment
+
+begin_comment
+comment|// disable new-style allocators, and continue to use the same kind of
+end_comment
+
+begin_comment
+comment|// allocators as before, without having to edit library headers.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STL_CLASS_PARTIAL_SPECIALIZATION
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|__STL_MEMBER_TEMPLATES
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|__STL_MEMBER_TEMPLATE_CLASSES
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__STL_NO_BOOL
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__STL_NON_TYPE_TMPL_PARAM_BUG
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__STL_LIMITED_DEFAULT_TEMPLATES
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|__STL_USE_SGI_ALLOCATORS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__STL_USE_STD_ALLOCATORS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STL_DEFAULT_ALLOCATOR
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STL_USE_STD_ALLOCATORS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__STL_DEFAULT_ALLOCATOR
+parameter_list|(
+name|T
+parameter_list|)
+value|allocator<T>
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__STL_DEFAULT_ALLOCATOR
+parameter_list|(
+name|T
+parameter_list|)
+value|alloc
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// __STL_NO_NAMESPACES is a hook so that users can disable namespaces
 end_comment
 
@@ -944,7 +1507,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__STL_USE_NAMESPACES
+name|__STL_HAS_NAMESPACES
 argument_list|)
 operator|&&
 operator|!
@@ -1002,6 +1565,12 @@ name|__STD_RELOPS
 value|std
 end_define
 
+begin_define
+define|#
+directive|define
+name|__STL_USE_NAMESPACES
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1049,6 +1618,12 @@ directive|define
 name|__STD_RELOPS
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|__STL_USE_NAMESPACES
+end_undef
+
 begin_endif
 endif|#
 directive|endif
@@ -1072,6 +1647,16 @@ define|#
 directive|define
 name|__STL_CATCH_ALL
 value|catch(...)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_THROW
+parameter_list|(
+name|x
+parameter_list|)
+value|throw x
 end_define
 
 begin_define
@@ -1114,6 +1699,15 @@ define|#
 directive|define
 name|__STL_CATCH_ALL
 value|if (false)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__STL_THROW
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_define

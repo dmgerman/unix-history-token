@@ -24,43 +24,43 @@ name|__STL_BEGIN_NAMESPACE
 name|template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
-name|T
+name|_Tp
 name|accumulate
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|T init
+argument|_Tp __init
 argument_list|)
 block|{
 for|for
 control|(
 init|;
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|;
 operator|++
-name|first
+name|__first
 control|)
-name|init
+name|__init
 operator|=
-name|init
+name|__init
 operator|+
 operator|*
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
 begin_return
 return|return
-name|init
+name|__init
 return|;
 end_return
 
@@ -68,51 +68,51 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|BinaryOperation
+name|_BinaryOperation
 operator|>
-name|T
+name|_Tp
 name|accumulate
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|T init
+argument|_Tp __init
 argument_list|,
-argument|BinaryOperation binary_op
+argument|_BinaryOperation __binary_op
 argument_list|)
 block|{
 for|for
 control|(
 init|;
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|;
 operator|++
-name|first
+name|__first
 control|)
-name|init
+name|__init
 operator|=
-name|binary_op
+name|__binary_op
 argument_list|(
-name|init
+name|__init
 argument_list|,
 operator|*
-name|first
+name|__first
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_return
 return|return
-name|init
+name|__init
 return|;
 end_return
 
@@ -120,56 +120,56 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator1
+name|_InputIterator1
 operator|,
 name|class
-name|InputIterator2
+name|_InputIterator2
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
-name|T
+name|_Tp
 name|inner_product
 argument_list|(
-argument|InputIterator1 first1
+argument|_InputIterator1 __first1
 argument_list|,
-argument|InputIterator1 last1
+argument|_InputIterator1 __last1
 argument_list|,
-argument|InputIterator2 first2
+argument|_InputIterator2 __first2
 argument_list|,
-argument|T init
+argument|_Tp __init
 argument_list|)
 block|{
 for|for
 control|(
 init|;
-name|first1
+name|__first1
 operator|!=
-name|last1
+name|__last1
 condition|;
 operator|++
-name|first1
+name|__first1
 operator|,
 operator|++
-name|first2
+name|__first2
 control|)
-name|init
+name|__init
 operator|=
-name|init
+name|__init
 operator|+
 operator|(
 operator|*
-name|first1
+name|__first1
 operator|*
 operator|*
-name|first2
+name|__first2
 operator|)
 expr_stmt|;
 end_expr_stmt
 
 begin_return
 return|return
-name|init
+name|__init
 return|;
 end_return
 
@@ -177,62 +177,62 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator1
+name|_InputIterator1
 operator|,
 name|class
-name|InputIterator2
+name|_InputIterator2
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|BinaryOperation1
+name|_BinaryOperation1
 operator|,
 name|class
-name|BinaryOperation2
+name|_BinaryOperation2
 operator|>
-name|T
+name|_Tp
 name|inner_product
 argument_list|(
-argument|InputIterator1 first1
+argument|_InputIterator1 __first1
 argument_list|,
-argument|InputIterator1 last1
+argument|_InputIterator1 __last1
 argument_list|,
-argument|InputIterator2 first2
+argument|_InputIterator2 __first2
 argument_list|,
-argument|T init
+argument|_Tp __init
 argument_list|,
-argument|BinaryOperation1 binary_op1
+argument|_BinaryOperation1 __binary_op1
 argument_list|,
-argument|BinaryOperation2 binary_op2
+argument|_BinaryOperation2 __binary_op2
 argument_list|)
 block|{
 for|for
 control|(
 init|;
-name|first1
+name|__first1
 operator|!=
-name|last1
+name|__last1
 condition|;
 operator|++
-name|first1
+name|__first1
 operator|,
 operator|++
-name|first2
+name|__first2
 control|)
-name|init
+name|__init
 operator|=
-name|binary_op1
+name|__binary_op1
 argument_list|(
-name|init
+name|__init
 argument_list|,
-name|binary_op2
+name|__binary_op2
 argument_list|(
 operator|*
-name|first1
+name|__first1
 argument_list|,
 operator|*
-name|first2
+name|__first2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -240,7 +240,7 @@ end_expr_stmt
 
 begin_return
 return|return
-name|init
+name|__init
 return|;
 end_return
 
@@ -248,52 +248,52 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|__partial_sum
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
-name|T
-name|value
+name|_Tp
+name|__value
 operator|=
 operator|*
-name|first
+name|__first
 block|;
 while|while
 condition|(
 operator|++
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|)
 block|{
-name|value
+name|__value
 operator|=
-name|value
+name|__value
 operator|+
 operator|*
-name|first
+name|__first
 expr_stmt|;
 operator|*
 operator|++
-name|result
+name|__result
 operator|=
-name|value
+name|__value
 expr_stmt|;
 block|}
 end_expr_stmt
@@ -301,7 +301,7 @@ end_expr_stmt
 begin_return
 return|return
 operator|++
-name|result
+name|__result
 return|;
 end_return
 
@@ -309,35 +309,35 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|partial_sum
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|)
 block|{
 if|if
 condition|(
-name|first
+name|__first
 operator|==
-name|last
+name|__last
 condition|)
 return|return
-name|result
+name|__result
 return|;
 operator|*
-name|result
+name|__result
 operator|=
 operator|*
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
@@ -345,15 +345,15 @@ begin_return
 return|return
 name|__partial_sum
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 return|;
@@ -363,60 +363,60 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|BinaryOperation
+name|_BinaryOperation
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|__partial_sum
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|,
-argument|BinaryOperation binary_op
+argument|_BinaryOperation __binary_op
 argument_list|)
 block|{
-name|T
-name|value
+name|_Tp
+name|__value
 operator|=
 operator|*
-name|first
+name|__first
 block|;
 while|while
 condition|(
 operator|++
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|)
 block|{
-name|value
+name|__value
 operator|=
-name|binary_op
+name|__binary_op
 argument_list|(
-name|value
+name|__value
 argument_list|,
 operator|*
-name|first
+name|__first
 argument_list|)
 expr_stmt|;
 operator|*
 operator|++
-name|result
+name|__result
 operator|=
-name|value
+name|__value
 expr_stmt|;
 block|}
 end_expr_stmt
@@ -424,7 +424,7 @@ end_expr_stmt
 begin_return
 return|return
 operator|++
-name|result
+name|__result
 return|;
 end_return
 
@@ -432,40 +432,40 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|,
 name|class
-name|BinaryOperation
+name|_BinaryOperation
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|partial_sum
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|,
-argument|BinaryOperation binary_op
+argument|_BinaryOperation __binary_op
 argument_list|)
 block|{
 if|if
 condition|(
-name|first
+name|__first
 operator|==
-name|last
+name|__last
 condition|)
 return|return
-name|result
+name|__result
 return|;
 operator|*
-name|result
+name|__result
 operator|=
 operator|*
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
@@ -473,18 +473,18 @@ begin_return
 return|return
 name|__partial_sum
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|binary_op
+name|__binary_op
 argument_list|)
 return|;
 end_return
@@ -493,57 +493,57 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|__adjacent_difference
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|)
 block|{
-name|T
-name|value
+name|_Tp
+name|__value
 operator|=
 operator|*
-name|first
+name|__first
 block|;
 while|while
 condition|(
 operator|++
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|)
 block|{
-name|T
-name|tmp
+name|_Tp
+name|__tmp
 init|=
 operator|*
-name|first
+name|__first
 decl_stmt|;
 operator|*
 operator|++
-name|result
+name|__result
 operator|=
-name|tmp
+name|__tmp
 operator|-
-name|value
+name|__value
 expr_stmt|;
-name|value
+name|__value
 operator|=
-name|tmp
+name|__tmp
 expr_stmt|;
 block|}
 end_expr_stmt
@@ -551,7 +551,7 @@ end_expr_stmt
 begin_return
 return|return
 operator|++
-name|result
+name|__result
 return|;
 end_return
 
@@ -559,35 +559,35 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|adjacent_difference
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|)
 block|{
 if|if
 condition|(
-name|first
+name|__first
 operator|==
-name|last
+name|__last
 condition|)
 return|return
-name|result
+name|__result
 return|;
 operator|*
-name|result
+name|__result
 operator|=
 operator|*
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
@@ -595,15 +595,15 @@ begin_return
 return|return
 name|__adjacent_difference
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|)
 return|;
@@ -613,65 +613,65 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|BinaryOperation
+name|_BinaryOperation
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|__adjacent_difference
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|,
-argument|T*
+argument|_Tp*
 argument_list|,
-argument|BinaryOperation binary_op
+argument|_BinaryOperation __binary_op
 argument_list|)
 block|{
-name|T
-name|value
+name|_Tp
+name|__value
 operator|=
 operator|*
-name|first
+name|__first
 block|;
 while|while
 condition|(
 operator|++
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|)
 block|{
-name|T
-name|tmp
+name|_Tp
+name|__tmp
 init|=
 operator|*
-name|first
+name|__first
 decl_stmt|;
 operator|*
 operator|++
-name|result
+name|__result
 operator|=
-name|binary_op
+name|__binary_op
 argument_list|(
-name|tmp
+name|__tmp
 argument_list|,
-name|value
+name|__value
 argument_list|)
 expr_stmt|;
-name|value
+name|__value
 operator|=
-name|tmp
+name|__tmp
 expr_stmt|;
 block|}
 end_expr_stmt
@@ -679,7 +679,7 @@ end_expr_stmt
 begin_return
 return|return
 operator|++
-name|result
+name|__result
 return|;
 end_return
 
@@ -687,40 +687,40 @@ begin_expr_stmt
 unit|}  template
 operator|<
 name|class
-name|InputIterator
+name|_InputIterator
 operator|,
 name|class
-name|OutputIterator
+name|_OutputIterator
 operator|,
 name|class
-name|BinaryOperation
+name|_BinaryOperation
 operator|>
-name|OutputIterator
+name|_OutputIterator
 name|adjacent_difference
 argument_list|(
-argument|InputIterator first
+argument|_InputIterator __first
 argument_list|,
-argument|InputIterator last
+argument|_InputIterator __last
 argument_list|,
-argument|OutputIterator result
+argument|_OutputIterator __result
 argument_list|,
-argument|BinaryOperation binary_op
+argument|_BinaryOperation __binary_op
 argument_list|)
 block|{
 if|if
 condition|(
-name|first
+name|__first
 operator|==
-name|last
+name|__last
 condition|)
 return|return
-name|result
+name|__result
 return|;
 operator|*
-name|result
+name|__result
 operator|=
 operator|*
-name|first
+name|__first
 expr_stmt|;
 end_expr_stmt
 
@@ -728,63 +728,63 @@ begin_return
 return|return
 name|__adjacent_difference
 argument_list|(
-name|first
+name|__first
 argument_list|,
-name|last
+name|__last
 argument_list|,
-name|result
+name|__result
 argument_list|,
-name|value_type
+name|__VALUE_TYPE
 argument_list|(
-name|first
+name|__first
 argument_list|)
 argument_list|,
-name|binary_op
+name|__binary_op
 argument_list|)
 return|;
 end_return
 
 begin_comment
 unit|}
-comment|// Returns x ** n, where n>= 0.  Note that "multiplication"
+comment|// Returns __x ** __n, where __n>= 0.  _Note that "multiplication"
 end_comment
 
 begin_comment
-comment|//  is required to be associative, but not necessarily commutative.
+comment|// is required to be associative, but not necessarily commutative.
 end_comment
 
 begin_expr_stmt
 unit|template
 operator|<
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Integer
+name|_Integer
 operator|,
 name|class
-name|MonoidOperation
+name|_MonoidOperation
 operator|>
-name|T
-name|power
+name|_Tp
+name|__power
 argument_list|(
-argument|T x
+argument|_Tp __x
 argument_list|,
-argument|Integer n
+argument|_Integer __n
 argument_list|,
-argument|MonoidOperation op
+argument|_MonoidOperation __oper
 argument_list|)
 block|{
 if|if
 condition|(
-name|n
+name|__n
 operator|==
 literal|0
 condition|)
 return|return
 name|identity_element
 argument_list|(
-name|op
+name|__oper
 argument_list|)
 return|;
 else|else
@@ -792,7 +792,7 @@ block|{
 while|while
 condition|(
 operator|(
-name|n
+name|__n
 operator|&
 literal|1
 operator|)
@@ -800,29 +800,29 @@ operator|==
 literal|0
 condition|)
 block|{
-name|n
+name|__n
 operator|>>=
 literal|1
 expr_stmt|;
-name|x
+name|__x
 operator|=
-name|op
+name|__oper
 argument_list|(
-name|x
+name|__x
 argument_list|,
-name|x
+name|__x
 argument_list|)
 expr_stmt|;
 block|}
-name|T
-name|result
+name|_Tp
+name|__result
 operator|=
-name|x
+name|__x
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|n
+name|__n
 operator|>>=
 literal|1
 expr_stmt|;
@@ -831,40 +831,40 @@ end_expr_stmt
 begin_while
 while|while
 condition|(
-name|n
+name|__n
 operator|!=
 literal|0
 condition|)
 block|{
-name|x
+name|__x
 operator|=
-name|op
+name|__oper
 argument_list|(
-name|x
+name|__x
 argument_list|,
-name|x
+name|__x
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|n
+name|__n
 operator|&
 literal|1
 operator|)
 operator|!=
 literal|0
 condition|)
-name|result
+name|__result
 operator|=
-name|op
+name|__oper
 argument_list|(
-name|result
+name|__result
 argument_list|,
-name|x
+name|__x
 argument_list|)
 expr_stmt|;
-name|n
+name|__n
 operator|>>=
 literal|1
 expr_stmt|;
@@ -873,7 +873,7 @@ end_while
 
 begin_return
 return|return
-name|result
+name|__result
 return|;
 end_return
 
@@ -882,33 +882,77 @@ unit|} }
 name|template
 operator|<
 name|class
-name|T
+name|_Tp
 operator|,
 name|class
-name|Integer
+name|_Integer
 operator|>
 specifier|inline
-name|T
-name|power
+name|_Tp
+name|__power
 argument_list|(
-argument|T x
+argument|_Tp __x
 argument_list|,
-argument|Integer n
+argument|_Integer __n
 argument_list|)
 block|{
 return|return
-name|power
+name|__power
 argument_list|(
-name|x
+name|__x
 argument_list|,
-name|n
+name|__n
 argument_list|,
 name|multiplies
 operator|<
-name|T
+name|_Tp
 operator|>
 operator|(
 operator|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// Alias for the internal name __power.  Note that power is an extension,
+end_comment
+
+begin_comment
+comment|// not part of the C++ standard.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_Tp
+operator|,
+name|class
+name|_Integer
+operator|,
+name|class
+name|_MonoidOperation
+operator|>
+specifier|inline
+name|_Tp
+name|power
+argument_list|(
+argument|_Tp __x
+argument_list|,
+argument|_Integer __n
+argument_list|,
+argument|_MonoidOperation __oper
+argument_list|)
+block|{
+return|return
+name|__power
+argument_list|(
+name|__x
+argument_list|,
+name|__n
+argument_list|,
+name|__oper
 argument_list|)
 return|;
 block|}
@@ -918,32 +962,65 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_Tp
 operator|,
 name|class
-name|T
+name|_Integer
+operator|>
+specifier|inline
+name|_Tp
+name|power
+argument_list|(
+argument|_Tp __x
+argument_list|,
+argument|_Integer __n
+argument_list|)
+block|{
+return|return
+name|__power
+argument_list|(
+name|__x
+argument_list|,
+name|__n
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// iota is not part of the C++ standard.  It is an extension.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|_ForwardIterator
+operator|,
+name|class
+name|_Tp
 operator|>
 name|void
 name|iota
 argument_list|(
-argument|ForwardIterator first
+argument|_ForwardIterator __first
 argument_list|,
-argument|ForwardIterator last
+argument|_ForwardIterator __last
 argument_list|,
-argument|T value
+argument|_Tp __value
 argument_list|)
 block|{
 while|while
 condition|(
-name|first
+name|__first
 operator|!=
-name|last
+name|__last
 condition|)
 operator|*
-name|first
+name|__first
 operator|++
 operator|=
-name|value
+name|__value
 operator|++
 expr_stmt|;
 block|}

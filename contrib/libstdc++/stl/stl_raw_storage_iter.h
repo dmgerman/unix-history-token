@@ -4,7 +4,7 @@ comment|/*  *  * Copyright (c) 1994  * Hewlett-Packard Company  *  * Permission 
 end_comment
 
 begin_comment
-comment|/* NOTE: This is an internal header file, included by other STL headers.  *   You should not attempt to use it directly.  */
+comment|/* NOTE: This is an internal header file, included by other STL headers.  * You should not attempt to use it directly.  */
 end_comment
 
 begin_ifndef
@@ -24,18 +24,18 @@ name|__STL_BEGIN_NAMESPACE
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 name|class
 name|raw_storage_iterator
 block|{
 name|protected
 operator|:
-name|ForwardIterator
-name|iter
+name|_ForwardIterator
+name|_M_iter
 block|;
 name|public
 operator|:
@@ -80,15 +80,15 @@ end_macro
 begin_macro
 name|raw_storage_iterator
 argument_list|(
-argument|ForwardIterator x
+argument|_ForwardIterator __x
 argument_list|)
 end_macro
 
 begin_macro
 unit|:
-name|iter
+name|_M_iter
 argument_list|(
-argument|x
+argument|__x
 argument_list|)
 end_macro
 
@@ -96,50 +96,39 @@ begin_block
 block|{}
 end_block
 
-begin_expr_stmt
+begin_function
 name|raw_storage_iterator
-operator|<
-name|ForwardIterator
-operator|,
-name|T
-operator|>
-operator|&
+modifier|&
 name|operator
-operator|*
-operator|(
-operator|)
+modifier|*
+parameter_list|()
 block|{
 return|return
 operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
+begin_decl_stmt
 name|raw_storage_iterator
-operator|<
-name|ForwardIterator
-operator|,
-name|T
-operator|>
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
-name|T
+name|_Tp
 operator|&
-name|element
+name|__element
 operator|)
 block|{
 name|construct
 argument_list|(
 operator|&
 operator|*
-name|iter
+name|_M_iter
 argument_list|,
-name|element
+name|__element
 argument_list|)
 block|;
 return|return
@@ -147,14 +136,14 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_expr_stmt
 name|raw_storage_iterator
 operator|<
-name|ForwardIterator
+name|_ForwardIterator
 operator|,
-name|T
+name|_Tp
 operator|>
 operator|&
 name|operator
@@ -163,7 +152,7 @@ operator|(
 operator|)
 block|{
 operator|++
-name|iter
+name|_M_iter
 block|;
 return|return
 operator|*
@@ -175,9 +164,9 @@ end_expr_stmt
 begin_expr_stmt
 name|raw_storage_iterator
 operator|<
-name|ForwardIterator
+name|_ForwardIterator
 operator|,
-name|T
+name|_Tp
 operator|>
 name|operator
 operator|++
@@ -187,20 +176,20 @@ operator|)
 block|{
 name|raw_storage_iterator
 operator|<
-name|ForwardIterator
+name|_ForwardIterator
 block|,
-name|T
+name|_Tp
 operator|>
-name|tmp
+name|__tmp
 operator|=
 operator|*
 name|this
 block|;
 operator|++
-name|iter
+name|_M_iter
 block|;
 return|return
-name|tmp
+name|__tmp
 return|;
 block|}
 end_expr_stmt
@@ -216,18 +205,18 @@ begin_expr_stmt
 name|template
 operator|<
 name|class
-name|ForwardIterator
+name|_ForwardIterator
 operator|,
 name|class
-name|T
+name|_Tp
 operator|>
 specifier|inline
 name|output_iterator_tag
 name|iterator_category
 argument_list|(
-argument|const raw_storage_iterator<ForwardIterator
+argument|const raw_storage_iterator<_ForwardIterator
 argument_list|,
-argument|T>&
+argument|_Tp>&
 argument_list|)
 block|{
 return|return
@@ -246,6 +235,10 @@ begin_comment
 comment|/* __STL_CLASS_PARTIAL_SPECIALIZATION */
 end_comment
 
+begin_macro
+name|__STL_END_NAMESPACE
+end_macro
+
 begin_endif
 endif|#
 directive|endif
@@ -254,10 +247,6 @@ end_endif
 begin_comment
 comment|/* __SGI_STL_INTERNAL_RAW_STORAGE_ITERATOR_H */
 end_comment
-
-begin_macro
-name|__STL_END_NAMESPACE
-end_macro
 
 begin_comment
 comment|// Local Variables:
