@@ -466,6 +466,10 @@ begin_comment
 comment|/*  * External MBUFs. The card needs a lot of mbufs in the pools for high  * performance. The problem with using mbufs directly is that we would need  * a dmamap for each of the mbufs. This can exhaust iommu space on the sparc  * and it eats also a lot of processing time. So we use external mbufs  * for the small buffers and clusters for the large buffers.  * For receive group 0 we use 5 ATM cells, for group 1 one (52 byte) ATM  * cell. The mbuf storage is allocated pagewise and one dmamap is used per  * page.  *  * The handle we give to the card for the small buffers is a word combined  * of the page number and the number of the chunk in the page. This restricts  * the number of chunks per page to 256 (8 bit) and the number of pages to  * 65536 (16 bits).  *  * A chunk may be in one of three states: free, on the card and floating around  * in the system. If it is free, it is on one of the two free lists and  * start with a struct mbufx_free. Each page has a bitmap that tracks where  * its chunks are.  *  * For large buffers we use mbuf clusters. Here we have two problems: we need  * to track the buffers on the card (in the case we want to stop it) and  * we need to map the 64bit mbuf address to a 26bit handle for 64-bit machines.  * The card uses the buffers in the order we give it to the card. Therefor  * we can use a private array holding pointers to the mbufs as a circular  * queue for both tasks. This is done with the lbufs member of softc. The  * handle for these buffer is the lbufs index ored with a flag.  */
 end_comment
 
+begin_comment
+comment|/* data space in each external mbuf */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -483,6 +487,14 @@ directive|define
 name|MBUF1_SIZE
 value|(52)
 end_define
+
+begin_comment
+comment|/* 1 raw cell */
+end_comment
+
+begin_comment
+comment|/* size of the buffer. Must fit data, offset and header */
+end_comment
 
 begin_define
 define|#
@@ -506,23 +518,9 @@ begin_comment
 comment|/* 44 free bytes */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XXX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MBUF0_OFFSET
-value|(MBUF0_CHUNK - sizeof(struct mbuf_chunk_hdr) \     - MBUF0_SIZE)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* start of actual data in buffer */
+end_comment
 
 begin_define
 define|#
@@ -531,16 +529,11 @@ name|MBUF0_OFFSET
 value|0
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|MBUF1_OFFSET
-value|(MBUF1_CHUNK - sizeof(struct mbuf_chunk_hdr) \     - MBUF1_SIZE)
+value|16
 end_define
 
 begin_define
@@ -678,6 +671,14 @@ parameter_list|)
 value|((ARRAY)[(BIT) / 8]& (1<< ((BIT) % 8)))
 end_define
 
+begin_comment
+comment|/*  * Convert to/from handles  */
+end_comment
+
+begin_comment
+comment|/* small buffers */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -688,8 +689,23 @@ parameter_list|,
 name|CHUNKNO
 parameter_list|)
 define|\
-value|(((PAGENO)<< 10) | (CHUNKNO))
+value|((((PAGENO)<< 10) | (CHUNKNO))<< HE_REGS_RBRQ_ADDR)
 end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_MAKE_LHANDLE
+parameter_list|(
+name|INDEX
+parameter_list|)
+define|\
+value|(MBUF_LARGE_FLAG | ((INDEX)<< HE_REGS_RBRQ_ADDR))
+end_define
+
+begin_comment
+comment|/* large buffers */
+end_comment
 
 begin_define
 define|#
@@ -702,14 +718,26 @@ name|PAGENO
 parameter_list|,
 name|CHUNKNO
 parameter_list|)
-value|do {	\ 	(CHUNKNO) = (HANDLE)& 0x3ff;			\ 	(PAGENO) = ((HANDLE)>> 10)& 0x3ff;		\     } while (0)
+value|do {			\ 	(CHUNKNO) = ((HANDLE)>> HE_REGS_RBRQ_ADDR)& 0x3ff;		\ 	(PAGENO) = (((HANDLE)>> 10)>> HE_REGS_RBRQ_ADDR)& 0x3fff;	\     } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_PARSE_LHANDLE
+parameter_list|(
+name|HANDLE
+parameter_list|,
+name|INDEX
+parameter_list|)
+value|do {				\ 	(INDEX) = ((HANDLE)>> HE_REGS_RBRQ_ADDR)& 0xffffff;		\     } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MBUF_LARGE_FLAG
-value|(1<< 20)
+value|0x80000000
 end_define
 
 begin_comment
