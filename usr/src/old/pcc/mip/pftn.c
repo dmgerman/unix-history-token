@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.28 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,29 +1008,6 @@ break|break;
 case|case
 name|MOE
 case|:
-if|if
-condition|(
-name|scl
-operator|==
-name|class
-condition|)
-block|{
-if|if
-condition|(
-name|p
-operator|->
-name|offset
-operator|!=
-name|strucoff
-operator|++
-condition|)
-break|break;
-name|psave
-argument_list|(
-name|idp
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|EXTDEF
