@@ -800,16 +800,6 @@ begin_comment
 comment|/* EFI_FW_NT */
 end_comment
 
-begin_comment
-comment|/*  * Some compilers don't support the forward reference construct:  *  typedef struct XXXXX  *  * The following macro provide a workaround for such cases.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_INTERFACE_DECL
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -817,27 +807,8 @@ name|INTERFACE_DECL
 parameter_list|(
 name|x
 parameter_list|)
+value|struct x
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INTERFACE_DECL
-parameter_list|(
-name|x
-parameter_list|)
-value|typedef struct x
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
