@@ -184,13 +184,13 @@ comment|/* Destination port operation: OP_... */
 name|unsigned
 name|f_srctype
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* T_ value of src */
 name|unsigned
 name|f_dsttype
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* T_ value of dst */
 name|unsigned
