@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.1 (Berkeley) %G%"
+literal|"@(#)last.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,6 +419,20 @@ name|i
 index|]
 argument_list|,
 literal|"ftp"
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"uucp"
 argument_list|)
 condition|)
 continue|continue;
@@ -1132,6 +1146,30 @@ operator|->
 name|ut_line
 index|[
 literal|3
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|bp
+operator|->
+name|ut_line
+argument_list|,
+literal|"uucp"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|bp
+operator|->
+name|ut_line
+index|[
+literal|4
 index|]
 operator|=
 literal|'\0'
