@@ -783,11 +783,6 @@ name|queryType
 operator|!=
 name|T_A
 operator|&&
-name|queryType
-operator|!=
-name|T_AAAA
-operator|&&
-comment|/* A6? */
 operator|!
 operator|(
 name|iquery
@@ -1539,17 +1534,7 @@ name|l
 operator|<
 name|k
 condition|)
-block|{
-name|free
-argument_list|(
-name|host_aliases
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 name|hostPtr
 operator|->
 name|aliases
@@ -1791,17 +1776,7 @@ name|l
 operator|<
 name|k
 condition|)
-block|{
-name|free
-argument_list|(
-name|addr_list
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 name|hostPtr
 operator|->
 name|addrList
