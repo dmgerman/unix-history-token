@@ -317,7 +317,7 @@ block|{
 operator|*
 name|tptr
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|endedflag
 operator|=
@@ -438,7 +438,7 @@ block|{
 operator|*
 name|tptr
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|endedflag
 operator|=
@@ -584,7 +584,7 @@ condition|)
 operator|*
 name|tptr
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -647,7 +647,7 @@ condition|)
 operator|*
 name|tptr
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|strcpy
 argument_list|(

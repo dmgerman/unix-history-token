@@ -842,7 +842,7 @@ condition|(
 operator|*
 name|cp
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 return|return
 literal|2

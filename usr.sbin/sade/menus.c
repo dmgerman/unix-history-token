@@ -7692,8 +7692,6 @@ name|NULL
 block|,
 operator|&
 name|MenuMouse
-block|,
-name|NULL
 block|}
 block|,
 endif|#

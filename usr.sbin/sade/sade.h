@@ -6943,7 +6943,7 @@ name|DEVICE_INIT
 parameter_list|(
 name|d
 parameter_list|)
-value|((d) != NULL ? (d)->init((d)) : NULL)
+value|((d) != NULL ? (d)->init((d)) : (Boolean)0)
 end_define
 
 begin_define

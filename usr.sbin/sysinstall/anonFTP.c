@@ -431,7 +431,7 @@ name|NULL
 block|}
 block|,
 block|{
-name|NULL
+literal|0
 block|}
 block|, }
 decl_stmt|;
