@@ -215,8 +215,10 @@ name|RSA_eay_public_encrypt
 block|,
 name|RSA_eay_public_decrypt
 block|,
+comment|/* signature verification */
 name|RSA_eay_private_encrypt
 block|,
+comment|/* signing */
 name|RSA_eay_private_decrypt
 block|,
 name|RSA_eay_mod_exp
@@ -498,6 +500,33 @@ name|err
 goto|;
 if|if
 condition|(
+name|BN_ucmp
+argument_list|(
+operator|&
+name|f
+argument_list|,
+name|rsa
+operator|->
+name|n
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* usually the padding functions would catch this */
+name|RSAerr
+argument_list|(
+name|RSA_F_RSA_EAY_PUBLIC_ENCRYPT
+argument_list|,
+name|RSA_R_DATA_TOO_LARGE_FOR_MODULUS
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|rsa
 operator|->
@@ -751,6 +780,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* signing */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -956,6 +989,33 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|BN_ucmp
+argument_list|(
+operator|&
+name|f
+argument_list|,
+name|rsa
+operator|->
+name|n
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* usually the padding functions would catch this */
+name|RSAerr
+argument_list|(
+name|RSA_F_RSA_EAY_PRIVATE_ENCRYPT
+argument_list|,
+name|RSA_R_DATA_TOO_LARGE_FOR_MODULUS
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1420,6 +1480,32 @@ name|err
 goto|;
 if|if
 condition|(
+name|BN_ucmp
+argument_list|(
+operator|&
+name|f
+argument_list|,
+name|rsa
+operator|->
+name|n
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|RSAerr
+argument_list|(
+name|RSA_F_RSA_EAY_PRIVATE_DECRYPT
+argument_list|,
+name|RSA_R_DATA_TOO_LARGE_FOR_MODULUS
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
 operator|(
 name|rsa
 operator|->
@@ -1790,6 +1876,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* signature verification */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1952,6 +2042,32 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|BN_ucmp
+argument_list|(
+operator|&
+name|f
+argument_list|,
+name|rsa
+operator|->
+name|n
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|RSAerr
+argument_list|(
+name|RSA_F_RSA_EAY_PUBLIC_DECRYPT
+argument_list|,
+name|RSA_R_DATA_TOO_LARGE_FOR_MODULUS
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 comment|/* do the decrypt */
 if|if
 condition|(

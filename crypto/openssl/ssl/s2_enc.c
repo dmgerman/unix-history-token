@@ -355,7 +355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* read/writes from s->s2->mac_data using length for encrypt and   * decrypt.  It sets the s->s2->padding, s->[rw]length and  * s->s2->pad_data ptr if we are encrypting */
+comment|/* read/writes from s->s2->mac_data using length for encrypt and   * decrypt.  It sets s->s2->padding and s->[rw]length  * if we are encrypting */
 end_comment
 
 begin_function

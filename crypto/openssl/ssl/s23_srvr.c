@@ -7,6 +7,10 @@ begin_comment
 comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  *  * $FreeBSD$  */
 end_comment
 
+begin_comment
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -292,6 +296,11 @@ name|ctx
 operator|->
 name|info_callback
 expr_stmt|;
+name|s
+operator|->
+name|in_handshake
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -309,11 +318,6 @@ name|SSL_clear
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|++
 expr_stmt|;
 for|for
 control|(
@@ -561,6 +565,11 @@ block|}
 block|}
 name|end
 label|:
+name|s
+operator|->
+name|in_handshake
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|cb
@@ -575,11 +584,6 @@ name|SSL_CB_ACCEPT_EXIT
 argument_list|,
 name|ret
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|--
 expr_stmt|;
 return|return
 operator|(
@@ -1082,7 +1086,7 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* major version (= SSL3_VERSION_MAJOR) */
-comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version. 			 * However if we have only a pathologically small fragment of the 			 * Client Hello message, this would be difficult, we'd have 			 * to read at least one additional record to find out. 			 * This doesn't usually happen in real life, so we just complain 			 * for now. 			 */
+comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version. 			 * However if we have only a pathologically small fragment of the 			 * Client Hello message, this would be difficult, and we'd have 			 * to read more records to find out. 			 * No known SSL 3.0 client fragments ClientHello like this, 			 * so we simply assume TLS 1.0 to avoid protocol version downgrade 			 * attacks. */
 if|if
 condition|(
 name|p
@@ -1100,17 +1104,23 @@ operator|<
 literal|6
 condition|)
 block|{
-name|SSLerr
-argument_list|(
-name|SSL_F_SSL23_GET_CLIENT_HELLO
-argument_list|,
-name|SSL_R_RECORD_TOO_SMALL
-argument_list|)
+if|#
+directive|if
+literal|0
+block|SSLerr(SSL_F_SSL23_GET_CLIENT_HELLO,SSL_R_RECORD_TOO_SMALL); 				goto err;
+else|#
+directive|else
+name|v
+index|[
+literal|1
+index|]
+operator|=
+name|TLS1_VERSION_MINOR
 expr_stmt|;
-goto|goto
-name|err
-goto|;
+endif|#
+directive|endif
 block|}
+else|else
 name|v
 index|[
 literal|1
@@ -1180,7 +1190,9 @@ literal|3
 expr_stmt|;
 block|}
 block|}
-elseif|else
+else|else
+block|{
+comment|/* client requests SSL 3.0 */
 if|if
 condition|(
 operator|!
@@ -1203,6 +1215,32 @@ name|type
 operator|=
 literal|3
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|s
+operator|->
+name|options
+operator|&
+name|SSL_OP_NO_TLSv1
+operator|)
+condition|)
+block|{
+comment|/* we won't be able to use TLS of course, 					 * but this will send an appropriate alert */
+name|s
+operator|->
+name|version
+operator|=
+name|TLS1_VERSION
+expr_stmt|;
+name|type
+operator|=
+literal|3
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else

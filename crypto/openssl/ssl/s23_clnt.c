@@ -305,6 +305,11 @@ name|ctx
 operator|->
 name|info_callback
 expr_stmt|;
+name|s
+operator|->
+name|in_handshake
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -322,11 +327,6 @@ name|SSL_clear
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|in_handshake
-operator|++
 expr_stmt|;
 for|for
 control|(
