@@ -6074,8 +6074,8 @@ operator||
 name|AMR_QIDB_ACK
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifndef|#
+directive|ifndef
 name|AMR_QUARTZ_GOFASTER
 comment|/* 	 * This waits for the controller to notice that we've taken the 	 * command from it.  It's very inefficient, and we shouldn't do it, 	 * but if we remove this code, we stop completing commands under 	 * load. 	 * 	 * Peter J says we shouldn't do this.  The documentation says we 	 * should.  Who is right? 	 */
 while|while
