@@ -1307,6 +1307,7 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
+specifier|static
 name|char
 name|devname
 index|[
