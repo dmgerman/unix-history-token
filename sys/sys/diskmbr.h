@@ -1638,23 +1638,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|bioqdisksort
-parameter_list|(
-name|struct
-name|bio_queue_head
-modifier|*
-name|ap
-parameter_list|,
-name|struct
-name|bio
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|setdisklabel
 parameter_list|(

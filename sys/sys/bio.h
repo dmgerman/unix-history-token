@@ -484,6 +484,35 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|bioq_disksort
+parameter_list|(
+name|struct
+name|bio_queue_head
+modifier|*
+name|ap
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|bioqdisksort
+parameter_list|(
+name|foo
+parameter_list|,
+name|bar
+parameter_list|)
+value|bioq_disksort(foo, bar)
+end_define
+
+begin_function_decl
+name|void
 name|bioq_init
 parameter_list|(
 name|struct
