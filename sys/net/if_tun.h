@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|TUNMTU
-value|1600
+value|1500
 end_define
 
 begin_struct
