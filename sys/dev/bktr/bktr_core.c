@@ -49,6 +49,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_devfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pci.h"
 end_include
 
@@ -2433,26 +2439,6 @@ end_define
 begin_comment
 comment|/*  * misc. support routines.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|CARDTYPE
-name|cards
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|TUNER
-name|tuners
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -17211,6 +17197,7 @@ comment|/*  * the data for each type of card  *  * Note:  *   these entried MUST
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|CARDTYPE
@@ -17535,6 +17522,7 @@ comment|/** struct TUNER { 	char*		name; 	u_char		type; 	u_char		pllAddr; 	u_cha
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|TUNER
