@@ -4620,6 +4620,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|thread_user_enter
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|thread_sanity_check
 parameter_list|(
 name|struct
