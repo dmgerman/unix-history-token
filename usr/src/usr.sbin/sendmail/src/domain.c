@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.4 (Berkeley) %G% (no MXDOMAIN)"
+literal|"@(#)domain.c	5.5 (Berkeley) %G% (no MXDOMAIN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.4 (Berkeley) %G%"
+literal|"@(#)domain.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,17 @@ name|int
 name|h_errno
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|getshort
+value|_getshort
+end_define
+
+begin_comment
+comment|/* XXX hack attack! */
+end_comment
 
 begin_macro
 name|getmxrr

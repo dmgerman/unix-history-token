@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.18 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.19 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.18 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,6 +594,10 @@ name|SmtpPhase
 operator|=
 literal|"startup"
 expr_stmt|;
+name|sendinghost
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -884,30 +888,20 @@ argument_list|,
 name|RealHostName
 argument_list|)
 expr_stmt|;
-name|define
-argument_list|(
-literal|'s'
-argument_list|,
+name|sendinghost
+operator|=
 name|newstr
 argument_list|(
 name|hostbuf
 argument_list|)
-argument_list|,
-name|CurEnv
-argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|define
-argument_list|(
-literal|'s'
-argument_list|,
+name|sendinghost
+operator|=
 name|newstr
 argument_list|(
 name|p
-argument_list|)
-argument_list|,
-name|CurEnv
 argument_list|)
 expr_stmt|;
 name|message
@@ -946,14 +940,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|define
-argument_list|(
-literal|'s'
-argument_list|,
+name|sendinghost
+operator|=
 name|RealHostName
-argument_list|,
-name|CurEnv
-argument_list|)
 expr_stmt|;
 comment|/* check for validity of this command */
 if|if
@@ -997,6 +986,15 @@ operator|>
 literal|0
 condition|)
 break|break;
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|sendinghost
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
 name|initsys
 argument_list|()
 expr_stmt|;
