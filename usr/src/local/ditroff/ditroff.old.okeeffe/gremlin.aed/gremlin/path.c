@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* path.c  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains routines that a) implement a path mechanism, whereby  * several places may be searched for files, and b) provide a defaulting  * mechanism for file name extensions.  *  * (modified from code originally written by John Ousterhout for the caesar  *  design system)  */
+comment|/* @(#)path.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains routines that a) implement a path mechanism, whereby  * several places may be searched for files, and b) provide a defaulting  * mechanism for file name extensions.  *  * (modified from code originally written by John Ousterhout for the caesar  *  design system)  */
 end_comment
 
 begin_include
@@ -173,9 +170,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_function
 name|int
@@ -632,9 +626,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_function
 name|int
 name|PSetPath
@@ -827,9 +818,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_function
 name|char
 modifier|*
@@ -842,9 +830,6 @@ name|path
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_function
 name|FILE

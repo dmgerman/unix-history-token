@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* gremlin.h -  *  *  * This file contains standard definitions used by the gremlin program.  *  * (modified from software written by John Ousterhout for the caesar  * program)  */
+comment|/* @(#)gremlin.h	1.2	%G%  *  *  * This file contains standard definitions used by the gremlin program.  *  * (modified from software written by John Ousterhout for the caesar  * program)  */
 end_comment
 
 begin_include

@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* short.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the short commands  * of the gremlin picture editor.  *  */
+comment|/* @(#)short.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the short commands  * of the gremlin picture editor.  *  */
 end_comment
 
 begin_include
@@ -607,9 +604,6 @@ begin_comment
 comment|/* text positioning              */
 end_comment
 
-begin_escape
-end_escape
-
 begin_extern
 extern|extern SHUpdate(
 end_extern
@@ -830,9 +824,6 @@ begin_comment
 comment|/* manhattan adjust */
 end_comment
 
-begin_escape
-end_escape
-
 begin_function
 name|int
 name|SHLookup
@@ -935,9 +926,6 @@ begin_comment
 comment|/* end SHLookup */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHCommand
 argument_list|(
@@ -1013,9 +1001,6 @@ end_block
 begin_comment
 comment|/* end SHCommand */
 end_comment
-
-begin_escape
-end_escape
 
 begin_decl_stmt
 specifier|static
@@ -1725,9 +1710,6 @@ begin_comment
 comment|/* end SHDrawARc */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHDrawCurve
 argument_list|()
@@ -2005,9 +1987,6 @@ begin_comment
 comment|/* end SHErase */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHGravity
 argument_list|()
@@ -2126,9 +2105,6 @@ begin_comment
 comment|/* end SHGrid */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHMAdjust
 argument_list|()
@@ -2216,9 +2192,6 @@ name|FALSE
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|SHDefineSet
@@ -2384,9 +2357,6 @@ end_block
 begin_comment
 comment|/* end SHSetArea */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|SHTranslate
@@ -2589,9 +2559,6 @@ end_block
 begin_comment
 comment|/* end SHTranslate */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|SHCopy
@@ -2826,9 +2793,6 @@ end_block
 begin_comment
 comment|/* end SHCopy */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|SHRotate
@@ -3306,9 +3270,6 @@ begin_comment
 comment|/* end SHRotate */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHScale
 argument_list|()
@@ -3785,9 +3746,6 @@ begin_comment
 comment|/* end SHScale */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHUpdate
 argument_list|()
@@ -3980,9 +3938,6 @@ end_block
 begin_comment
 comment|/* end SHUpdate */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|SHRedis
@@ -4211,9 +4166,6 @@ begin_comment
 comment|/* end SHRedis */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|SHShellEsc
 argument_list|()
@@ -4285,9 +4237,6 @@ end_block
 begin_comment
 comment|/* end ShellEsc */
 end_comment
-
-begin_escape
-end_escape
 
 begin_expr_stmt
 specifier|static
@@ -4626,9 +4575,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|SHBox

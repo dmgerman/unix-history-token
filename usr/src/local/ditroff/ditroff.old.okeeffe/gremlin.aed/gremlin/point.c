@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* point.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines for manipulating the point data  * structures for the gremlin picture editor.  */
+comment|/* @(#)point.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines for manipulating the point data  * structures for the gremlin picture editor.  */
 end_comment
 
 begin_include

@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* long2.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the long text commands  * of the gremlin PICTURE editor.  *  */
+comment|/* @(#)long2.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the long text commands  * of the gremlin PICTURE editor.  *  */
 end_comment
 
 begin_include
@@ -725,9 +722,6 @@ literal|"bad args"
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGFont
 argument_list|(
@@ -903,9 +897,6 @@ end_block
 begin_comment
 comment|/* end LGFont */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGJust
@@ -1108,9 +1099,6 @@ end_block
 begin_comment
 comment|/* end LGJust */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGSize
@@ -1350,9 +1338,6 @@ begin_comment
 comment|/* end LGAlign */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGIncludeSet
 argument_list|(
@@ -1517,9 +1502,6 @@ end_block
 begin_comment
 comment|/* end LGIncludeSet */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGMenu
@@ -1793,9 +1775,6 @@ end_block
 begin_comment
 comment|/* end LGMenu */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGRead
@@ -2088,9 +2067,6 @@ end_block
 begin_comment
 comment|/* end LGRead */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGEdit
@@ -2471,9 +2447,6 @@ unit|}
 comment|/* end restorepoints */
 end_comment
 
-begin_escape
-end_escape
-
 begin_expr_stmt
 unit|LGUndo
 operator|(
@@ -2839,9 +2812,6 @@ begin_comment
 unit|}
 comment|/* LGUndo */
 end_comment
-
-begin_escape
-end_escape
 
 begin_expr_stmt
 unit|LGWrite
@@ -3359,9 +3329,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGQuit
 argument_list|(
@@ -3509,9 +3476,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGVAdjust
 argument_list|()
@@ -3599,9 +3563,6 @@ name|FALSE
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_expr_stmt
 specifier|static
@@ -4191,9 +4152,6 @@ end_block
 begin_comment
 comment|/* end LGMirror */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGPath

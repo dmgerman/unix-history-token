@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* long1.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the long text commands  * of the gremlin PICTURE editor.  *  */
+comment|/* @(#)long1.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the long text commands  * of the gremlin PICTURE editor.  *  */
 end_comment
 
 begin_include
@@ -612,9 +609,6 @@ name|bang
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*      The following are defined to allow creation of the command  * lookup table.  */
 end_comment
@@ -912,9 +906,6 @@ begin_comment
 comment|/* create point from cursor */
 end_comment
 
-begin_escape
-end_escape
-
 begin_decl_stmt
 name|int
 name|LGLookup
@@ -1162,9 +1153,6 @@ block|}
 block|}
 end_expr_stmt
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGCommand
 argument_list|(
@@ -1268,9 +1256,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_decl_stmt
 specifier|static
@@ -1462,9 +1447,6 @@ begin_comment
 comment|/* end GetNumParm */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGOpoint
 argument_list|(
@@ -1566,9 +1548,6 @@ end_block
 begin_comment
 comment|/* end LGOpoint */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGPoint
@@ -1865,9 +1844,6 @@ begin_comment
 comment|/* end CP */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGClearPoints
 argument_list|(
@@ -2132,9 +2108,6 @@ begin_comment
 comment|/* end DeletePoint */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGShowPoints
 argument_list|(
@@ -2264,9 +2237,6 @@ end_block
 begin_comment
 comment|/* end ShowPoints */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGText
@@ -2586,9 +2556,6 @@ begin_comment
 comment|/* end LGText */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGBrush
 argument_list|(
@@ -2756,9 +2723,6 @@ end_block
 begin_comment
 comment|/* end LGBrush */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGMBrush
@@ -2961,9 +2925,6 @@ end_block
 begin_comment
 comment|/* end MBrush */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGMFont
@@ -3172,9 +3133,6 @@ end_block
 begin_comment
 comment|/* end MFont */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGMSize
@@ -3478,9 +3436,6 @@ begin_comment
 comment|/* end MSize */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGMText
 argument_list|(
@@ -3759,9 +3714,6 @@ begin_comment
 comment|/* end LGMText */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGMPoint
 argument_list|(
@@ -4013,9 +3965,6 @@ begin_comment
 comment|/* end MPOINT */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|LGGripe
 argument_list|(
@@ -4103,9 +4052,6 @@ end_block
 begin_comment
 comment|/* end Little Point */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|SetOrient
@@ -4254,9 +4200,6 @@ end_block
 begin_comment
 comment|/* end Orient */
 end_comment
-
-begin_escape
-end_escape
 
 begin_macro
 name|LGSave

@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* menu.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *   *      This file contains the routines for initializing and displaying  * the graphics menu.  */
+comment|/* @(#)menu.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *   *      This file contains the routines for initializing and displaying  * the graphics menu.  */
 end_comment
 
 begin_include
@@ -245,9 +242,6 @@ directive|define
 name|border
 value|395
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* bytewise definitions of menu symbols (special fonts), left to right,  * top to bottom.  See textcommand array for corresponding commands.  */
@@ -1033,9 +1027,6 @@ begin_comment
 comment|/* end Icon */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|MNInitMenu
 argument_list|(
@@ -1323,9 +1314,6 @@ begin_comment
 comment|/* end initmenu */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|MNDisplayMenu
 argument_list|()
@@ -1572,9 +1560,6 @@ end_comment
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_escape
-end_escape
 
 begin_function
 name|char
@@ -1900,9 +1885,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|MNInterpretCursor

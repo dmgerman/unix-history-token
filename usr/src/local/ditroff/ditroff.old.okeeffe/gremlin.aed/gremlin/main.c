@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* main.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
+comment|/* @(#)main.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -851,9 +848,6 @@ name|FALSE
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_function
 name|main
@@ -2236,9 +2230,6 @@ begin_comment
 comment|/* end main */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|OnStop
 argument_list|(
@@ -2290,9 +2281,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|OnCommand
@@ -2527,61 +2515,9 @@ if|if
 condition|(
 name|cmd
 operator|!=
-literal|'\
 literal|'
-condition|)
-name|putchar
-argument_list|(
-name|cmd
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|SHCommand
-argument_list|(
-operator|&
-name|cmd
-argument_list|)
-expr_stmt|;
-block|}
-name|TxLine
-argument_list|(
-specifier|inline
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"                                                                              "
-argument_list|)
-expr_stmt|;
-name|TxLine
-argument_list|(
-specifier|inline
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Consume
-condition|)
-name|CP
-argument_list|()
-expr_stmt|;
-name|Consume
-operator|=
-name|TRUE
-expr_stmt|;
-name|UNForget
-argument_list|()
-expr_stmt|;
-block|}
-block|}
 end_block
 
+unit|\') putchar(cmd);         (void) fflush(stdout);         SHCommand(&cmd);     }     TxLine(inline);     printf("                                                                              ");     TxLine(inline);     if (Consume) CP();     Consume = TRUE;     UNForget();     } }
 end_unit
 
