@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.56.2.10 1998/03/09 08:04:13 msmith Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.56.2.11 1998/03/09 08:36:43 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -1456,56 +1462,32 @@ begin_comment
 comment|/* not a dev_t - encoding is different */
 end_comment
 
+begin_comment
+comment|/* Name lookup for bootable majors */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|devname
 index|[]
-index|[
-literal|2
-index|]
 init|=
 block|{
-block|{
-literal|'w'
+literal|"wd"
 block|,
-literal|'d'
-block|}
+literal|"wfd"
 block|,
-comment|/* 0 = wd */
-block|{
-literal|'s'
-block|,
-literal|'w'
-block|}
-block|,
-comment|/* 1 = sw */
 define|#
 directive|define
 name|FDMAJOR
 value|2
-block|{
-literal|'f'
+literal|"fd"
 block|,
-literal|'d'
-block|}
+literal|"wt"
 block|,
-comment|/* 2 = fd */
-block|{
-literal|'w'
-block|,
-literal|'t'
-block|}
-block|,
-comment|/* 3 = wt */
-block|{
-literal|'s'
-block|,
-literal|'d'
-block|}
-block|,
-comment|/* 4 = sd -- new SCSI system */
-block|}
+literal|"st"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1562,6 +1544,15 @@ name|slice
 decl_stmt|;
 name|dev_t
 name|orootdev
+decl_stmt|;
+name|char
+modifier|*
+name|sname
+decl_stmt|,
+name|partname
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/*printf("howto %x bootdev %x ", boothowto, bootdev);*/
 if|if
@@ -1620,13 +1611,13 @@ operator|)
 operator|||
 operator|(
 name|slice
-operator|>
+operator|>=
 name|MAX_SLICES
 operator|)
 condition|)
 name|slice
 operator|=
-name|BASE_SLICE
+name|COMPATIBILITY_SLICE
 expr_stmt|;
 if|if
 condition|(
@@ -1678,19 +1669,14 @@ name|B_PARTITIONMASK
 expr_stmt|;
 name|mindev
 operator|=
-operator|(
-name|slice
-operator|<<
-literal|16
-operator|)
-operator|+
-operator|(
+name|dkmakeminor
+argument_list|(
 name|unit
-operator|<<
-name|PARTITIONSHIFT
-operator|)
-operator|+
+argument_list|,
+name|slice
+argument_list|,
 name|part
+argument_list|)
 expr_stmt|;
 block|}
 name|orootdev
@@ -1706,55 +1692,49 @@ argument_list|,
 name|mindev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the original rootdev is the same as the one 	 * just calculated, don't need to adjust the swap configuration. 	 */
+comment|/* 	 * If the original rootdev is the same as the one 	 * just calculated modulo the slice number, don't print an otherwise 	 * confusing diagnostic. 	 */
 if|if
 condition|(
+operator|(
 name|rootdev
+operator|&
+operator|~
+literal|0xff0000
+operator|)
 operator|==
+operator|(
 name|orootdev
+operator|&
+operator|~
+literal|0xff0000
+operator|)
 condition|)
 return|return;
-name|printf
+name|sname
+operator|=
+name|dsname
 argument_list|(
-literal|"changing root device to %c%c%ds%d%c\n"
-argument_list|,
 name|devname
 index|[
 name|majdev
 index|]
-index|[
-literal|0
-index|]
 argument_list|,
-name|devname
-index|[
-name|majdev
-index|]
-index|[
-literal|1
-index|]
-argument_list|,
-operator|(
-name|mindev
-operator|&
-literal|0xf
-operator|)
-operator|>>
-operator|(
-name|majdev
-operator|==
-name|FDMAJOR
-condition|?
-name|FDUNITSHIFT
-else|:
-name|PARTITIONSHIFT
-operator|)
+name|unit
 argument_list|,
 name|slice
 argument_list|,
 name|part
-operator|+
-literal|'a'
+argument_list|,
+name|partname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"changing root device to %s%s\n"
+argument_list|,
+name|sname
+argument_list|,
+name|partname
 argument_list|)
 expr_stmt|;
 block|}
