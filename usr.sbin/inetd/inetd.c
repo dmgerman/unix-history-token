@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.48 1999/04/11 09:22:17 markm Exp $"
+literal|"$Id: inetd.c,v 1.46.2.1 1999/05/01 22:01:52 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2260,6 +2260,9 @@ operator|&
 name|allsock
 argument_list|)
 expr_stmt|;
+name|nsock
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|signalpipe
@@ -2297,31 +2300,18 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sigblock
+name|syslog
 argument_list|(
-name|SIGBLOCK
+name|LOG_ERR
+argument_list|,
+literal|"%s: nsock=0"
+argument_list|,
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|nsock
-operator|==
-literal|0
-condition|)
-name|sigpause
+name|exit
 argument_list|(
-literal|0L
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-literal|0L
+name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
