@@ -4068,13 +4068,11 @@ operator|)
 name|ifp
 decl_stmt|;
 comment|/* A "debug" message.  */
-name|printf
+name|if_printf
 argument_list|(
-literal|"fe%d: transmission timeout (%d+%d)%s\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"transmission timeout (%d+%d)%s\n"
 argument_list|,
 name|sc
 operator|->
@@ -4115,13 +4113,11 @@ name|if_ipackets
 operator|==
 literal|0
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"fe%d: wrong IRQ setting in config?\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"wrong IRQ setting in config?\n"
 argument_list|)
 expr_stmt|;
 name|fe_reset
@@ -4712,13 +4708,11 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Txb_count and txb_free co-works to manage the 		 * transmission buffer.  Txb_count keeps track of the 		 * used potion of the buffer, while txb_free does unused 		 * potion.  So, as long as the driver runs properly, 		 * txb_count is zero if and only if txb_free is same 		 * as txb_size (which represents whole buffer.) 		 */
-name|printf
+name|if_printf
 argument_list|(
-literal|"fe%d: inconsistent txb variables (%d, %d)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sc_unit
+literal|"inconsistent txb variables (%d, %d)\n"
 argument_list|,
 name|sc
 operator|->
@@ -4759,13 +4753,11 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"fe%d: transmitter idle with %d buffered packets\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|sc_unit
+literal|"transmitter idle with %d buffered packets\n"
 argument_list|,
 name|sc
 operator|->
