@@ -224,6 +224,9 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|LIST_EMPTY
