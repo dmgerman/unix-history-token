@@ -612,7 +612,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
-name|MA401RA
+name|ISL37100P
 argument_list|,
 literal|0
 argument_list|)
@@ -621,7 +621,16 @@ name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
-name|DWL650
+name|ISL37110P
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
+name|INTERSIL
+argument_list|,
+name|ISL37300P
 argument_list|,
 literal|0
 argument_list|)
@@ -700,7 +709,7 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
-name|PLANEX_2
+name|PLANEX
 argument_list|,
 name|GWNS11H
 argument_list|,
@@ -957,11 +966,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|wi_free
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* Make sure interrupts are disabled. */
 name|CSR_WRITE_2
 argument_list|(
@@ -979,6 +983,11 @@ argument_list|,
 name|WI_EVENT_ACK
 argument_list|,
 literal|0xFFFF
+argument_list|)
+expr_stmt|;
+name|wi_free
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
