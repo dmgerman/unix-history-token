@@ -927,10 +927,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|u_int64_t
-name|uniqueid
-decl_stmt|;
-comment|/* for gdb */
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|umtx_t
 name|lock

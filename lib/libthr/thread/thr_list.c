@@ -140,15 +140,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|u_int64_t
-name|next_uniqueid
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
@@ -875,7 +866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add an active thread:  *  *   o Assign the thread a unique id (which GDB uses to track  *     threads.  *   o Add the thread to the list of all threads and increment  *     number of active threads.  */
+comment|/*  * Add the thread to the list of all threads and increment  * number of active threads.  */
 end_comment
 
 begin_function
@@ -897,14 +888,6 @@ name|THREAD_LIST_LOCK
 argument_list|(
 name|curthread
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Initialize the unique id (which GDB uses to track 	 * threads), add the thread to the list of all threads, 	 * and 	 */
-name|thread
-operator|->
-name|uniqueid
-operator|=
-name|next_uniqueid
-operator|++
 expr_stmt|;
 name|THR_LIST_ADD
 argument_list|(

@@ -1297,12 +1297,6 @@ name|state
 operator|=
 name|PS_RUNNING
 expr_stmt|;
-name|thread
-operator|->
-name|uniqueid
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Others cleared to zero by thr_alloc() */
 block|}
 end_function
