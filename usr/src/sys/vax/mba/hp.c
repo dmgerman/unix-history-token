@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -2075,8 +2075,6 @@ name|unit
 decl_stmt|;
 name|long
 name|sz
-decl_stmt|,
-name|bn
 decl_stmt|;
 name|int
 name|xunit
@@ -2219,12 +2217,20 @@ operator|==
 name|sc
 operator|->
 name|sc_mlsize
-operator|+
-literal|1
 condition|)
+block|{
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|bp
 operator|->
 name|b_error
@@ -2252,13 +2258,9 @@ name|b_blkno
 operator|<
 literal|0
 operator|||
-operator|(
-name|bn
-operator|=
 name|bp
 operator|->
 name|b_blkno
-operator|)
 operator|+
 name|sz
 operator|>
@@ -2286,12 +2288,20 @@ name|xunit
 index|]
 operator|.
 name|nblocks
-operator|+
-literal|1
 condition|)
+block|{
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|bp
 operator|->
 name|b_error
@@ -2306,7 +2316,9 @@ name|bp
 operator|->
 name|b_cylin
 operator|=
-name|bn
+name|bp
+operator|->
+name|b_blkno
 operator|/
 name|st
 operator|->

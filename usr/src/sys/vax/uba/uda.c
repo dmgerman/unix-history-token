@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.11 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2547,12 +2547,20 @@ operator|->
 name|b_blkno
 operator|==
 name|maxsz
-operator|+
-literal|1
 condition|)
+block|{
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|bp
 operator|->
 name|b_error

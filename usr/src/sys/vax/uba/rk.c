@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -960,7 +960,7 @@ specifier|register
 name|int
 name|unit
 init|=
-name|idcunit
+name|rkunit
 argument_list|(
 name|dev
 argument_list|)
@@ -1184,12 +1184,20 @@ name|xunit
 index|]
 operator|.
 name|nblocks
-operator|+
-literal|1
 condition|)
+block|{
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|bp
 operator|->
 name|b_error
@@ -3327,7 +3335,7 @@ specifier|register
 name|int
 name|unit
 init|=
-name|idcunit
+name|rkunit
 argument_list|(
 name|dev
 argument_list|)
@@ -3397,7 +3405,7 @@ specifier|register
 name|int
 name|unit
 init|=
-name|idcunit
+name|rkunit
 argument_list|(
 name|dev
 argument_list|)
@@ -4693,7 +4701,7 @@ name|st
 decl_stmt|;
 name|unit
 operator|=
-name|idcunit
+name|rkunit
 argument_list|(
 name|dev
 argument_list|)
@@ -5181,7 +5189,7 @@ block|{
 name|int
 name|unit
 init|=
-name|idcunit
+name|rkunit
 argument_list|(
 name|dev
 argument_list|)
