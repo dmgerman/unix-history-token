@@ -3359,9 +3359,7 @@ name|fp
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|ev
-operator|.
-name|str
+name|ptr
 argument_list|)
 expr_stmt|;
 block|}
