@@ -984,6 +984,11 @@ name|defined
 argument_list|(
 name|MUTEX_NOINLINE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MUTEX_PROFILING
+argument_list|)
 end_if
 
 begin_define
