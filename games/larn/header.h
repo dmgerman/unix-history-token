@@ -3,6 +3,36 @@ begin_comment
 comment|/*	header.h		Larn is copyrighted 1986 by Noah Morgan. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2421,14 +2451,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|long
-name|randx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|cel
 modifier|*
@@ -2470,42 +2492,22 @@ name|fortune
 argument_list|()
 decl_stmt|,
 modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
-decl_stmt|,
-modifier|*
 name|lgetw
 argument_list|()
 decl_stmt|,
 modifier|*
 name|lgetl
 argument_list|()
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|tmcapcnv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|tgetstr
-argument_list|()
-decl_stmt|,
-modifier|*
-name|tgoto
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|long
@@ -2517,9 +2519,6 @@ argument_list|()
 decl_stmt|,
 name|lrint
 argument_list|()
-decl_stmt|,
-name|time
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2527,14 +2526,6 @@ begin_function_decl
 name|unsigned
 name|long
 name|readnum
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-modifier|*
-name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2883,6 +2874,20 @@ parameter_list|)
 value|((lpnt>=lpend)?(*lpnt++ =(ch), lflush()):(*lpnt++ =(ch)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MACRORND
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|randx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* macro to seed the random number generator */
 end_comment
@@ -2896,12 +2901,6 @@ name|x
 parameter_list|)
 value|(randx=x)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MACRORND
-end_ifdef
 
 begin_comment
 comment|/* macros to generate random numbers   1<=rnd(N)<=N   0<=rund(N)<=N-1 */

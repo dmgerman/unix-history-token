@@ -43,25 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -81,9 +63,9 @@ name|mail
 index|[]
 init|=
 block|{
-literal|"From: the LRS (Larn Revenue Service)\n"
+literal|"From: dev-null (the LRS - Larn Revenue Service)\n"
 block|,
-literal|"~s undeclared income\n"
+literal|"Subject: undeclared income\n"
 block|,
 literal|"\n   We have heard you survived the caverns of Larn.  Let me be the"
 block|,
@@ -107,9 +89,9 @@ literal|"\nto your future successful expeditions.\n"
 block|,
 name|NULL
 block|,
-literal|"From: His Majesty King Wilfred of Larndom\n"
+literal|"From: dev-null (His Majesty King Wilfred of Larndom)\n"
 block|,
-literal|"~s a noble deed\n"
+literal|"Subject: a noble deed\n"
 block|,
 literal|"\n   I have heard of your magnificent feat, and I, King Wilfred,"
 block|,
@@ -125,9 +107,9 @@ literal|"\n\nMay you live in happiness forevermore...\n"
 block|,
 name|NULL
 block|,
-literal|"From: Count Endelford\n"
+literal|"From: dev-null (Count Endelford)\n"
 block|,
-literal|"~s You Bastard!\n"
+literal|"Subject: You Bastard!\n"
 block|,
 literal|"\n   I have heard (from sources) of your journey.  Congratulations!"
 block|,
@@ -139,9 +121,9 @@ literal|" onward, bewarned\nupon our meeting you shall pay the price!\n"
 block|,
 name|NULL
 block|,
-literal|"From: Mainair, Duke of Larnty\n"
+literal|"From: dev-null (Mainair, Duke of Larnty)\n"
 block|,
-literal|"~s High Praise\n"
+literal|"Subject: High Praise\n"
 block|,
 literal|"\n   With certainty, a hero I declare to be amongst us!  A nod of"
 block|,
@@ -157,9 +139,9 @@ literal|"\nDuke Mainair, shall equal thy gift also.\n"
 block|,
 name|NULL
 block|,
-literal|"From: St. Mary's Children's Home\n"
+literal|"From: dev-null (St. Mary's Children's Home)\n"
 block|,
-literal|"~s these poor children\n"
+literal|"Subject: these poor children\n"
 block|,
 literal|"\n   News of your great conquests has spread to all of Larndom."
 block|,
@@ -177,9 +159,9 @@ literal|"\n(your gift is tax deductible)\n"
 block|,
 name|NULL
 block|,
-literal|"From: The National Cancer Society of Larn\n"
+literal|"From: dev-null (The National Cancer Society of Larn)\n"
 block|,
-literal|"~s hope\n"
+literal|"Subject: hope\n"
 block|,
 literal|"\nCongratulations on your successful expedition.  We are sure much"
 block|,
@@ -299,7 +281,7 @@ operator||
 name|O_CREAT
 argument_list|)
 operator|,
-literal|0666
+literal|0660
 operator|)
 operator|==
 operator|-
@@ -430,7 +412,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"mail -I %s< %s> /dev/null"
+literal|"/usr/sbin/sendmail %s< %s> /dev/null"
 argument_list|,
 name|loginname
 argument_list|,

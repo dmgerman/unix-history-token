@@ -321,7 +321,9 @@ literal|39
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -583,7 +585,9 @@ name|lflush
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -657,7 +661,9 @@ name|showscores
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* show scoreboard   */
 case|case
@@ -668,7 +674,9 @@ name|diedlog
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 case|case
 literal|'i'
@@ -677,7 +685,9 @@ name|showallscores
 argument_list|()
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* show all scoreboard */
 case|case
@@ -711,7 +721,9 @@ argument_list|()
 expr_stmt|;
 block|}
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 case|case
 literal|'n'
@@ -798,7 +810,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 case|case
 literal|'o'
@@ -831,7 +845,9 @@ index|]
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -929,7 +945,9 @@ literal|22
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#

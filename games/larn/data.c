@@ -1245,17 +1245,8 @@ begin_comment
 comment|/* true if program is not to beep  					*/
 end_comment
 
-begin_decl_stmt
-name|unsigned
-name|long
-name|randx
-init|=
-literal|33601
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*	the random number seed						*/
+comment|/* unsigned long randx=33601;      /*      the random number seed                                          */
 end_comment
 
 begin_decl_stmt

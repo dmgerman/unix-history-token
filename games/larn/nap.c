@@ -84,25 +84,21 @@ comment|/* eliminate chance for infinite loop */
 name|lflush
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|x
-operator|>
-literal|999
-condition|)
-name|sleep
+if|#
+directive|if
+literal|0
+block|if (x> 999) sleep(x/1000); else napms(x);
+else|#
+directive|else
+name|usleep
 argument_list|(
 name|x
-operator|/
+operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-else|else
-name|napms
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

@@ -291,7 +291,9 @@ name|ckpfile
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -445,6 +447,13 @@ literal|0
 condition|)
 comment|/* child */
 block|{
+comment|/* revoke */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 literal|"/bin/csh"
@@ -453,7 +462,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|wait
