@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_synch.c	8.9 (Berkeley) 5/19/95  * $Id: kern_synch.c,v 1.72 1999/01/10 01:58:24 eivind Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_synch.c	8.9 (Berkeley) 5/19/95  * $Id: kern_synch.c,v 1.73 1999/02/22 16:57:47 bde Exp $  */
 end_comment
 
 begin_include
@@ -2823,6 +2823,10 @@ name|void
 name|mi_switch
 parameter_list|()
 block|{
+name|struct
+name|timeval
+name|new_switchtime
+decl_stmt|;
 specifier|register
 name|struct
 name|proc
@@ -2867,7 +2871,7 @@ comment|/* 	 * Compute the amount of time during which the current 	 * process w
 name|microuptime
 argument_list|(
 operator|&
-name|switchtime
+name|new_switchtime
 argument_list|)
 expr_stmt|;
 name|p
@@ -2875,25 +2879,21 @@ operator|->
 name|p_runtime
 operator|+=
 operator|(
-name|switchtime
+name|new_switchtime
 operator|.
 name|tv_usec
 operator|-
-name|p
-operator|->
-name|p_switchtime
+name|switchtime
 operator|.
 name|tv_usec
 operator|)
 operator|+
 operator|(
-name|switchtime
+name|new_switchtime
 operator|.
 name|tv_sec
 operator|-
-name|p
-operator|->
-name|p_switchtime
+name|switchtime
 operator|.
 name|tv_sec
 operator|)
@@ -3001,6 +3001,10 @@ operator|.
 name|v_swtch
 operator|++
 expr_stmt|;
+name|switchtime
+operator|=
+name|new_switchtime
+expr_stmt|;
 name|cpu_switch
 argument_list|(
 name|p
@@ -3011,20 +3015,13 @@ condition|(
 name|switchtime
 operator|.
 name|tv_sec
+operator|==
+literal|0
 condition|)
-name|p
-operator|->
-name|p_switchtime
-operator|=
-name|switchtime
-expr_stmt|;
-else|else
 name|microuptime
 argument_list|(
 operator|&
-name|p
-operator|->
-name|p_switchtime
+name|switchtime
 argument_list|)
 expr_stmt|;
 name|switchticks
