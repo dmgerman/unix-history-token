@@ -5288,12 +5288,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/*  			 * Busy the page 			 */
-name|vm_page_busy
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
