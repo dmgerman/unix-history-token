@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.8	82/02/21	*/
+comment|/*	if_imp.c	4.9	82/02/21	*/
 end_comment
 
 begin_include
@@ -514,7 +514,7 @@ name|next
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|IMP_INPUT
+name|IMPINPUT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Verify leader length.  Be careful with control 	 * message which don't get a length included. 	 * We should generate a "bad leader" message 	 * to the IMP about messages too short. 	 */
