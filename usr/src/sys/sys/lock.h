@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.4 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -67,6 +67,10 @@ name|lk_exclusivecount
 decl_stmt|;
 comment|/* # of recursive exclusive locks */
 name|int
+name|lk_waitcount
+decl_stmt|;
+comment|/* # of processes sleeping for lock */
+name|int
 name|lk_prio
 decl_stmt|;
 comment|/* priority at which to sleep */
@@ -88,7 +92,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Lock request types:  *   LK_SHARED - get one of many possible shared locks. If a process  *	holding an exclusive lock requests a shared lock, the exclusive  *	lock(s) will be downgraded to shared locks.  *   LK_EXCLUSIVE - stop further shared locks, when they are cleared,  *	grant a pending upgrade if it exists, then grant an exclusive  *	lock. Only one exclusive lock may exist at a time, except that  *	a process holding an exclusive lock may get additional exclusive  *	locks if it explicitly sets the LK_CANRECURSE flag in the lock  *	request, or if the LK_CANRECUSE flag was set when the lock was  *	initialized.  *   LK_UPGRADE - the process must hold a shared lock that it wants to  *	have upgraded to an exclusive lock. Other processes may get  *	exclusive access to the resource between the time that the upgrade  *	is requested and the time that it is granted.  *   LK_EXCLUPGRADE - the process must hold a shared lock that it wants to  *	have upgraded to an exclusive lock. If the request succeeds, no  *	other processes will have gotten exclusive access to the resource  *	between the time that the upgrade is requested and the time that  *	it is granted. However, if another process has already requested  *	an upgrade, the request will fail (see error returns below).  *   LK_DOWNGRADE - the process must hold an exclusive lock that it wants  *	to have downgraded to a shared lock. If the process holds multiple  *	(recursive) exclusive locks, they will all be downgraded to shared  *	locks.  *   LK_RELEASE - release one instance of a lock.  *  * These are flags that are passed to the lockmgr routine.  */
+comment|/*  * Lock request types:  *   LK_SHARED - get one of many possible shared locks. If a process  *	holding an exclusive lock requests a shared lock, the exclusive  *	lock(s) will be downgraded to shared locks.  *   LK_EXCLUSIVE - stop further shared locks, when they are cleared,  *	grant a pending upgrade if it exists, then grant an exclusive  *	lock. Only one exclusive lock may exist at a time, except that  *	a process holding an exclusive lock may get additional exclusive  *	locks if it explicitly sets the LK_CANRECURSE flag in the lock  *	request, or if the LK_CANRECUSE flag was set when the lock was  *	initialized.  *   LK_UPGRADE - the process must hold a shared lock that it wants to  *	have upgraded to an exclusive lock. Other processes may get  *	exclusive access to the resource between the time that the upgrade  *	is requested and the time that it is granted.  *   LK_EXCLUPGRADE - the process must hold a shared lock that it wants to  *	have upgraded to an exclusive lock. If the request succeeds, no  *	other processes will have gotten exclusive access to the resource  *	between the time that the upgrade is requested and the time that  *	it is granted. However, if another process has already requested  *	an upgrade, the request will fail (see error returns below).  *   LK_DOWNGRADE - the process must hold an exclusive lock that it wants  *	to have downgraded to a shared lock. If the process holds multiple  *	(recursive) exclusive locks, they will all be downgraded to shared  *	locks.  *   LK_RELEASE - release one instance of a lock.  *   LK_DRAIN - wait for all activity on the lock to end, then mark it  *	decommissioned. This feature is used before freeing a lock that  *	is part of a piece of memory that is about to be freed.  *  * These are flags that are passed to the lockmgr routine.  */
 end_comment
 
 begin_define
@@ -168,6 +172,17 @@ begin_comment
 comment|/* release any type of lock */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LK_DRAIN
+value|0x00000007
+end_define
+
+begin_comment
+comment|/* wait for all lock activity to end */
+end_comment
+
 begin_comment
 comment|/*  * External lock flags.  *  * These flags may be set in lock_init to set their mode permanently,  * or passed in as arguments to the lock manager.  */
 end_comment
@@ -223,19 +238,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_WAITING
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* process is sleeping on lock */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LK_WANT_UPGRADE
-value|0x00000200
+value|0x00000100
 end_define
 
 begin_comment
@@ -246,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|LK_WANT_EXCL
-value|0x00000400
+value|0x00000200
 end_define
 
 begin_comment
@@ -257,11 +261,33 @@ begin_define
 define|#
 directive|define
 name|LK_HAVE_EXCL
-value|0x00000800
+value|0x00000400
 end_define
 
 begin_comment
 comment|/* exclusive lock obtained */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_WAITDRAIN
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* process waiting for lock to drain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_DRAINED
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* lock has been decommissioned */
 end_comment
 
 begin_comment
@@ -312,17 +338,17 @@ name|lockmgr
 name|__P
 argument_list|(
 operator|(
-specifier|volatile
+name|__volatile
 expr|struct
 name|lock
 operator|*
 operator|,
+name|u_int
+name|flags
+operator|,
 expr|struct
 name|proc
 operator|*
-operator|,
-name|u_int
-name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -383,7 +409,7 @@ name|atomic_lock
 parameter_list|(
 name|lkp
 parameter_list|)
-specifier|volatile
+name|__volatile
 name|struct
 name|atomic_lk
 modifier|*
@@ -401,6 +427,34 @@ name|lock_data
 argument_list|)
 condition|)
 continue|continue;
+block|}
+end_function
+
+begin_function
+name|__inline
+name|int
+name|atomic_lock_try
+parameter_list|(
+name|lkp
+parameter_list|)
+name|__volatile
+name|struct
+name|atomic_lk
+modifier|*
+name|lkp
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|!
+name|test_and_set
+argument_list|(
+operator|&
+name|lkp
+operator|->
+name|lock_data
+argument_list|)
+operator|)
 block|}
 end_function
 
@@ -470,7 +524,7 @@ name|atomic_lock
 parameter_list|(
 name|alp
 parameter_list|)
-specifier|volatile
+name|__volatile
 name|struct
 name|atomic_lk
 modifier|*
@@ -490,13 +544,53 @@ argument_list|(
 literal|"atomic lock held"
 argument_list|)
 expr_stmt|;
-else|else
 name|alp
 operator|->
 name|lock_data
 operator|=
 literal|1
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|__inline
+name|int
+name|atomic_lock_try
+parameter_list|(
+name|alp
+parameter_list|)
+name|__volatile
+name|struct
+name|atomic_lk
+modifier|*
+name|alp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|alp
+operator|->
+name|lock_data
+operator|==
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"atomic lock held"
+argument_list|)
+expr_stmt|;
+name|alp
+operator|->
+name|lock_data
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -526,7 +620,6 @@ argument_list|(
 literal|"atomic lock not held"
 argument_list|)
 expr_stmt|;
-else|else
 name|alp
 operator|->
 name|lock_data
@@ -542,7 +635,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !DIAGNOSTIC */
+comment|/* !DEBUG */
 end_comment
 
 begin_define
@@ -562,6 +655,20 @@ parameter_list|(
 name|alp
 parameter_list|)
 end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_lock_try
+parameter_list|(
+name|alp
+parameter_list|)
+value|(1)
+end_define
+
+begin_comment
+comment|/* always succeeds */
+end_comment
 
 begin_define
 define|#
