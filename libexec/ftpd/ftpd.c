@@ -2701,6 +2701,13 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
+specifier|static
+name|char
+name|homedir
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|logged_in
@@ -3080,6 +3087,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 	 * Set home directory so that use of ~ (tilde) works correctly. 	 */
+name|setenv
+argument_list|(
+literal|"HOME"
+argument_list|,
+name|getcwd
+argument_list|(
+name|homedir
+argument_list|,
+name|MAXPATHLEN
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Display a login message, if it exists. 	 * N.B. reply(230,) must follow the message. 	 */
 if|if
 condition|(
