@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)primes.c	8.1 (Berkeley) %G%"
+literal|"@(#)primes.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,13 +54,31 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll   chongo@toad.com,   ...!{sun,tolsoft}!hoptoad!chongo  *  *   chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	primes [start [stop]]  *  *	Print primes>= start and< stop.  If stop is omitted,  *	the value 4294967295 (2^32-1) is assumed.  If start is  *	omitted, start is read from standard input.  *  *	Prints "ouch" if start or stop is bogus.  *  * validation check: there are 664579 primes between 0 and 10^7  */
+comment|/*  * primes - generate a table of primes between two values  *  * By: Landon Curt Noll chongo@toad.com, ...!{sun,tolsoft}!hoptoad!chongo  *  * chongo<for a good prime call: 391581 * 2^216193 - 1> /\oo/\  *  * usage:  *	primes [start [stop]]  *  *	Print primes>= start and< stop.  If stop is omitted,  *	the value 4294967295 (2^32-1) is assumed.  If start is  *	omitted, start is read from standard input.  *  * validation check: there are 664579 primes between 0 and 10^7  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -78,7 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -162,41 +186,51 @@ begin_comment
 comment|/* max line allowed on stdin */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|read_num_buf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* read a number buffer */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 name|void
 name|primes
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* print the primes in range */
-end_comment
+name|__P
+argument_list|(
+operator|(
+name|ubig
+operator|,
+name|ubig
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|program
+name|read_num_buf
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* our name */
-end_comment
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -206,14 +240,23 @@ parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-comment|/* arg count */
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-comment|/* args */
 block|{
+name|ubig
+name|start
+decl_stmt|;
+comment|/* where to start generating */
+name|ubig
+name|stop
+decl_stmt|;
+comment|/* don't generate at or above this value */
+name|int
+name|ch
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -223,27 +266,45 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* input buffer */
-name|char
-modifier|*
-name|ret
-decl_stmt|;
-comment|/* return result */
-name|ubig
-name|start
-decl_stmt|;
-comment|/* where to start generating */
-name|ubig
-name|stop
-decl_stmt|;
-comment|/* don't generate at or above this value */
-comment|/* 	 * parse args 	 */
-name|program
+while|while
+condition|(
+operator|(
+name|ch
 operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
 name|argv
-index|[
-literal|0
-index|]
+argument_list|,
+literal|""
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'?'
+case|:
+default|default:
+name|usage
+argument_list|()
 expr_stmt|;
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+comment|/* 	 * parse args 	 */
 name|start
 operator|=
 literal|0
@@ -256,7 +317,7 @@ if|if
 condition|(
 name|argc
 operator|==
-literal|3
+literal|2
 condition|)
 block|{
 comment|/* convert low and high args */
@@ -268,28 +329,46 @@ name|NULL
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|&
+name|start
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|read_num_buf
@@ -298,28 +377,17 @@ name|NULL
 argument_list|,
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sscanf
@@ -329,40 +397,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|"%ld"
-argument_list|,
-operator|&
-name|start
-argument_list|)
-operator|!=
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|argv
-index|[
-literal|2
-index|]
-argument_list|,
-literal|"%ld"
+literal|"%lu"
 argument_list|,
 operator|&
 name|stop
@@ -370,29 +405,25 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
 condition|(
 name|argc
 operator|==
-literal|2
+literal|1
 condition|)
 block|{
 comment|/* convert low arg */
@@ -404,38 +435,27 @@ name|NULL
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sscanf
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
-literal|"%ld"
+literal|"%lu"
 argument_list|,
 operator|&
 name|start
@@ -443,22 +463,18 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -471,18 +487,21 @@ name|stdin
 argument_list|,
 name|buf
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
-comment|/* convert the buffer */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sscanf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ld"
+literal|"%lu"
 argument_list|,
 operator|&
 name|start
@@ -490,31 +509,15 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"illegal value: %s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -522,22 +525,13 @@ name|start
 operator|>
 name|stop
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"start value> stop value"
 argument_list|)
 expr_stmt|;
-block|}
 name|primes
 argument_list|(
 name|start
@@ -554,7 +548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read_num_buf - read a number buffer from a stream  *  * Read a number on a line of the form:  *  *	^[ \t]*\(+?[0-9][0-9]\)*.*$  *  * where ? is a 1-or-0 operator and the number is within \( \).  *  * If does not match the above pattern, it is ignored and a new  * line is read.  If the number is too large or small, we will  * print ouch and read a new line.  *  * We have to be very careful on how we check the magnitude of the  * input.  We can not use numeric checks because of the need to  * check values against maximum numeric values.  *  * This routine will return a line containing a ascii number between  * 0 and BIG, or it will return NULL.  *  * If the stream is NULL then buf will be processed as if were  * a single line stream.  *  * returns:  *	char *	pointer to leading digit or +  *	NULL	EOF or error  */
+comment|/*  * read_num_buf - read a number buffer from a stream  *  * Read a number on a line of the form:  *  *	^[ \t]*\(+?[0-9][0-9]\)*.*$  *  * where ? is a 1-or-0 operator and the number is within \( \).  *  * If does not match the above pattern, it is ignored and a new  * line is read.  If the number is too large or small, we will  * object and read a new line.  *  * We have to be very careful on how we check the magnitude of the  * input.  We can not use numeric checks because of the need to  * check values against maximum numeric values.  *  * This routine will return a line containing a ascii number between  * 0 and BIG, or it will return NULL.  *  * If the stream is NULL then buf will be processed as if were  * a single line stream.  *  * returns:  *	char *	pointer to leading digit or +  *	NULL	EOF or error  */
 end_comment
 
 begin_function
@@ -616,7 +610,7 @@ modifier|*
 name|z
 decl_stmt|;
 comment|/* zero scan pointer */
-comment|/* form the ascii value of SEMIBIG if needed */
+comment|/* form the ascii value of BIG if needed */
 if|if
 condition|(
 operator|!
@@ -638,13 +632,16 @@ index|]
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|limit
 argument_list|,
-literal|"%ld"
+literal|"%lu"
 argument_list|,
-name|SEMIBIG
+name|BIG
 argument_list|)
 expr_stmt|;
 name|limit_len
@@ -676,7 +673,9 @@ condition|)
 block|{
 comment|/* error or EOF */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 do|do
@@ -730,13 +729,14 @@ operator|==
 literal|'-'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
+literal|"primes: numbers can't be negative.\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -880,9 +880,11 @@ condition|)
 block|{
 comment|/* we have good input */
 return|return
+operator|(
 name|s
+operator|)
 return|;
-comment|/* reject very large numbers */
+comment|/* 		 * reject very large numbers, carefully check against 		 * near limit numbers 		 */
 block|}
 elseif|else
 if|if
@@ -890,23 +892,7 @@ condition|(
 name|len
 operator|>
 name|limit_len
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
-argument_list|)
-expr_stmt|;
-continue|continue;
-comment|/* carefully check against near limit numbers */
-block|}
-elseif|else
-if|if
-condition|(
+operator|||
 name|strcmp
 argument_list|(
 name|z
@@ -917,20 +903,24 @@ operator|>
 literal|0
 condition|)
 block|{
-name|fprintf
+name|errno
+operator|=
+name|ERANGE
+expr_stmt|;
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"%s: ouch\n"
-argument_list|,
-name|program
+name|z
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
 comment|/* number is near limit, but is under it */
 return|return
+operator|(
 name|s
+operator|)
 return|;
 block|}
 do|while
@@ -953,7 +943,9 @@ condition|)
 do|;
 comment|/* error or EOF */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -1007,7 +999,7 @@ name|ubig
 name|fact_lim
 decl_stmt|;
 comment|/* highest prime for current block */
-comment|/* 	 * A number of systems can not convert double values  	 * into unsigned longs when the values are larger than 	 * the largest signed value.  Thus we take case when 	 * the double is larger than the value SEMIBIG. *sigh* 	 */
+comment|/* 	 * A number of systems can not convert double values into unsigned 	 * longs when the values are larger than the largest signed value. 	 * We don't have this problem, so we can go all the way to BIG. 	 */
 if|if
 condition|(
 name|start
@@ -1500,6 +1492,29 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: primes [start stop]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
