@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.7 (Berkeley) %G%"
+literal|"@(#)w.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,28 +173,6 @@ name|Start
 operator|=
 name|End
 expr_stmt|;
-if|if
-condition|(
-name|Start
-operator|==
-name|NULL
-condition|)
-block|{
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"buffer empty"
-argument_list|)
-expr_stmt|;
-operator|*
-name|errnum
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return;
-block|}
 name|Start_default
 operator|=
 name|End_default
@@ -517,6 +495,17 @@ goto|goto
 name|point
 goto|;
 comment|/* Write it out and get a report on the number of bytes written. */
+if|if
+condition|(
+name|Start
+operator|==
+name|NULL
+condition|)
+name|l_ttl
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|l_ttl
 operator|=
 name|edwrite

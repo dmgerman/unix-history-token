@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,6 +1123,16 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|errnum
+operator|==
+literal|0
+condition|)
+goto|goto
+name|errmsg2
+goto|;
 block|}
 block|}
 for|for
@@ -1209,6 +1219,16 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|errnum
+operator|==
+literal|0
+condition|)
+goto|goto
+name|errmsg2
+goto|;
 break|break;
 case|case
 literal|'f'
@@ -1595,6 +1615,26 @@ case|:
 case|case
 literal|'Q'
 case|:
+if|if
+condition|(
+operator|(
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|ss
+operator|==
+literal|'q'
+operator|)
+condition|)
+name|ss
+operator|=
+literal|'Q'
+expr_stmt|;
 name|q
 argument_list|(
 name|inputt
@@ -1613,6 +1653,16 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|errnum
+operator|==
+literal|0
+condition|)
+goto|goto
+name|errmsg2
+goto|;
 break|break;
 case|case
 literal|'s'
@@ -2127,17 +2177,6 @@ name|EOF
 operator|)
 condition|)
 empty_stmt|;
-name|exit_code
-operator|=
-literal|4
-expr_stmt|;
-if|if
-condition|(
-name|g_flag
-operator|==
-literal|0
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -2146,6 +2185,8 @@ argument_list|(
 literal|"?\n"
 argument_list|)
 expr_stmt|;
+name|errmsg2
+label|:
 if|if
 condition|(
 name|help_flag
@@ -2160,7 +2201,10 @@ argument_list|,
 name|help_msg
 argument_list|)
 expr_stmt|;
-block|}
+name|exit_code
+operator|=
+literal|4
+expr_stmt|;
 comment|/* for people wanting scripts to carry on after a cmd error, then  * define NOENDONSCRIPT on the compile line.  */
 ifndef|#
 directive|ifndef

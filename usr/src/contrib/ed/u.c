@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)u.c	5.4 (Berkeley) %G%"
+literal|"@(#)u.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,16 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_decl_stmt
+name|struct
+name|d_layer
+modifier|*
+name|old_d_stk
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This restores the buffer to the state it was in just before the  * last buffer modifying command - the global commands (with command  * list) are looked at as one buffer modifying command. Note: this  * just manipulates the undo stack (u_stk); x-ref u_add_stk(),  * u_clr_stk(), d_add(), and d_do().  */
 end_comment
@@ -163,6 +173,11 @@ decl_stmt|,
 modifier|*
 name|l_temp
 decl_stmt|;
+name|struct
+name|d_layer
+modifier|*
+name|l_d_temp
+decl_stmt|;
 name|sigspecial
 operator|++
 expr_stmt|;
@@ -190,6 +205,18 @@ expr_stmt|;
 name|u_bottom
 operator|=
 name|bottom
+expr_stmt|;
+name|l_d_temp
+operator|=
+name|old_d_stk
+expr_stmt|;
+name|old_d_stk
+operator|=
+name|d_stk
+expr_stmt|;
+name|d_stk
+operator|=
+name|l_d_temp
 expr_stmt|;
 name|l_old_u_stk
 operator|=
@@ -345,6 +372,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Just to sure. */
+name|old_d_stk
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* so something in use isn't freed! */
 name|sigspecial
 operator|--
 expr_stmt|;

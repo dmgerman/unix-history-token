@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)g.c	5.9 (Berkeley) %G%"
+literal|"@(#)g.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -554,11 +554,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|l_patt
-decl_stmt|,
-name|l_ohm
-index|[
-literal|130
-index|]
 decl_stmt|;
 specifier|static
 name|int
@@ -1038,13 +1033,6 @@ name|current
 operator|=
 name|Start
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|l_ohm
-argument_list|,
-name|help_msg
-argument_list|)
-expr_stmt|;
 name|sigspecial
 operator|++
 expr_stmt|;
@@ -1463,13 +1451,6 @@ block|}
 block|}
 name|point
 label|:
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-name|l_ohm
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|GV_flag

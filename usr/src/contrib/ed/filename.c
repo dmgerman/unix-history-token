@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)filename.c	5.6 (Berkeley) %G%"
+literal|"@(#)filename.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,6 +343,12 @@ operator|(
 name|l_esc
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|l_cnt
+operator|<
+literal|2
 operator|)
 condition|)
 name|l_bang_flag

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub.c	5.7 (Berkeley) %G%"
+literal|"@(#)sub.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,9 @@ name|l_kval
 decl_stmt|,
 modifier|*
 name|l_last
+decl_stmt|,
+modifier|*
+name|l_cur
 decl_stmt|;
 name|int
 name|l_s_flag
@@ -191,6 +194,10 @@ init|=
 literal|0
 decl_stmt|,
 name|l_local_len
+decl_stmt|,
+name|l_nudge
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -918,6 +925,10 @@ name|SIGINT_ACTION
 expr_stmt|;
 name|bcg2
 label|:
+name|l_cur
+operator|=
+name|current
+expr_stmt|;
 name|current
 operator|=
 name|Start
@@ -1004,6 +1015,22 @@ index|]
 operator|.
 name|rm_eo
 expr_stmt|;
+if|if
+condition|(
+name|l_nudge
+condition|)
+name|RE_match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+operator|++
+expr_stmt|;
+name|l_nudge
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
@@ -1086,9 +1113,19 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
+name|current
+operator|=
+name|l_cur
+expr_stmt|;
 name|u_clr_stk
 argument_list|()
 expr_stmt|;
+name|current
+operator|=
+name|Start
+expr_stmt|;
+block|}
 name|l_count
 operator|=
 name|l_s_flag
@@ -1100,6 +1137,26 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 				 * The l_local passed into re_replace is not 				 * freed in re_replace because it is "text", 				 * the global line holder, for the first pass 				 * through this loop. The value returned by 				 * re_replace is a new string (with the first 				 * replacement in it). If the 'g' flag was 				 * set with substitute then this new string 				 * is passed in for the second pass and can 				 * be freed once re_replace is done with it. 				 * (...and so on for the rest of the 'g' 				 * passes. RE_match[0].rm_eo is changed in 				 * re_replace to be the new location of the 				 * next character immediately after the 				 * replacement since it is likely the 				 * position of that character has changed 				 * because of the replacement. 				 */
+if|if
+condition|(
+name|RE_match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+operator|==
+name|RE_match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_eo
+condition|)
+name|l_nudge
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|REG_STARTEND
@@ -1599,6 +1656,12 @@ name|current
 operator|=
 name|Start
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|g_flag
+condition|)
+block|{
 name|strcpy
 argument_list|(
 name|help_msg
@@ -1618,6 +1681,13 @@ literal|'\n'
 argument_list|,
 name|inputt
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|errnum
+operator|=
+literal|0
 expr_stmt|;
 return|return;
 block|}

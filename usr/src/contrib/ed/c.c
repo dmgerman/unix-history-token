@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c	5.4 (Berkeley) %G%"
+literal|"@(#)c.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,11 @@ modifier|*
 name|errnum
 decl_stmt|;
 block|{
+name|int
+name|l_flag
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|Start_default
@@ -144,6 +149,16 @@ name|End_default
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|End
+operator|==
+name|bottom
+condition|)
+name|l_flag
+operator|=
+literal|0
+expr_stmt|;
 comment|/* first delete the lines */
 name|d
 argument_list|(
@@ -165,6 +180,7 @@ name|errnum
 operator|=
 literal|0
 expr_stmt|;
+comment|/*if ((current != NULL)&& (current != bottom)) RMSR */
 if|if
 condition|(
 operator|(
@@ -173,11 +189,7 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-operator|(
-name|current
-operator|!=
-name|bottom
-operator|)
+name|l_flag
 condition|)
 name|current
 operator|=

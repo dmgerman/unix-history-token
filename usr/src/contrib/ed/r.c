@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)r.c	5.7 (Berkeley) %G%"
+literal|"@(#)r.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|End_default
+condition|)
+block|{
+name|End
+operator|=
+name|bottom
+expr_stmt|;
+name|End_default
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|l_temp
 operator|=
 name|filename
@@ -562,10 +576,7 @@ argument_list|(
 name|l_fp
 argument_list|)
 expr_stmt|;
-name|change_flag
-operator|=
-literal|1
-expr_stmt|;
+comment|/*change_flag = 1; done in input_lines() already */
 if|if
 condition|(
 name|sigint_flag

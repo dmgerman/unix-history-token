@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)e.c	5.6 (Berkeley) %G%"
+literal|"@(#)e.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -704,6 +704,11 @@ block|}
 name|change_flag
 operator|=
 literal|0
+expr_stmt|;
+operator|*
+name|errnum
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
