@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|VERS_LOCAL
-value|"Phase-26"
+value|"Phase-27"
 end_define
 
 begin_decl_stmt
@@ -202,20 +202,20 @@ argument_list|)
 expr_stmt|;
 name|kiff
 operator|->
-name|argc
+name|dipsw
 operator|=
-literal|0
-expr_stmt|;
-name|kiff
-operator|->
-name|argv
-operator|=
+operator|~
 operator|(
-name|char
-operator|*
-operator|*
+operator|(
+name|dipsw2
+operator|<<
+literal|8
 operator|)
-literal|0
+operator||
+name|dipsw1
+operator|)
+operator|&
+literal|0xFFFF
 expr_stmt|;
 name|i
 operator|=
