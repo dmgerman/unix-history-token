@@ -4392,10 +4392,20 @@ name|rt0
 operator|=
 name|rt
 expr_stmt|;
-comment|/* XXX LOR here */
+comment|/* XXX workaround LOR */
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
+argument_list|)
+expr_stmt|;
+name|RT_LOCK
+argument_list|(
+name|rt
 argument_list|)
 expr_stmt|;
 name|rnh
