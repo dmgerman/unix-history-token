@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.21 (Berkeley) %G%"
+literal|"@(#)conf.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3750,11 +3750,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"enoughspace: bfree=%ld, min=%ld\n"
+literal|"enoughspace: bavail=%ld, min=%ld\n"
 argument_list|,
 name|fs
 operator|.
-name|f_bfree
+name|f_bavail
 argument_list|,
 name|MinBlocksFree
 argument_list|)
@@ -3763,7 +3763,7 @@ if|if
 condition|(
 name|fs
 operator|.
-name|f_bfree
+name|f_bavail
 operator|<
 name|MinBlocksFree
 condition|)
@@ -3787,7 +3787,7 @@ name|QueueDir
 argument_list|,
 name|fs
 operator|.
-name|f_bfree
+name|f_bavail
 argument_list|,
 name|MinBlocksFree
 argument_list|)
