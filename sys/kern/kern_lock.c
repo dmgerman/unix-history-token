@@ -501,7 +501,7 @@ name|error
 decl_stmt|;
 name|CTR3
 argument_list|(
-name|KTR_LOCKMGR
+name|KTR_LOCK
 argument_list|,
 literal|"acquire(): lkp == %p, extflags == 0x%x, wanted == 0x%x\n"
 argument_list|,
@@ -855,7 +855,7 @@ name|lockflags
 decl_stmt|;
 name|CTR5
 argument_list|(
-name|KTR_LOCKMGR
+name|KTR_LOCK
 argument_list|,
 literal|"lockmgr(): lkp == %p (lk_wmesg == \"%s\"), flags == 0x%x, "
 literal|"interlkp == %p, td == %p"
@@ -2195,7 +2195,7 @@ decl_stmt|;
 block|{
 name|CTR5
 argument_list|(
-name|KTR_LOCKMGR
+name|KTR_LOCK
 argument_list|,
 literal|"lockinit(): lkp == %p, prio == %d, wmesg == \"%s\", "
 literal|"timo == %d, flags = 0x%x\n"
@@ -2397,7 +2397,7 @@ decl_stmt|;
 block|{
 name|CTR2
 argument_list|(
-name|KTR_LOCKMGR
+name|KTR_LOCK
 argument_list|,
 literal|"lockdestroy(): lkp == %p (lk_wmesg == \"%s\")"
 argument_list|,
