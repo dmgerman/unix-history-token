@@ -3266,11 +3266,11 @@ argument_list|)
 operator|)
 return|;
 default|default:
-name|panic
-argument_list|(
-literal|"fpathconf"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 comment|/*NOTREACHED*/
 block|}
