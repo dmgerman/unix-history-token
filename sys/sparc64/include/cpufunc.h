@@ -453,7 +453,7 @@ name|membar
 parameter_list|(
 name|mask
 parameter_list|)
-value|do {						\ 	__asm __volatile("membar %0" : : "n" (mask));			\ } while (0)
+value|do {						\ 	__asm __volatile("membar %0" : : "n" (mask) : "memory");	\ } while (0)
 end_define
 
 begin_define
