@@ -676,26 +676,11 @@ name|int
 name|fd
 decl_stmt|;
 comment|/*      * If installing to the whole disk      * then clobber any existing bootcode.      */
-name|sprintf
+name|TellEm
 argument_list|(
-name|scratch
-argument_list|,
-literal|"\nLoading MBR code from %s\n"
+literal|"Loading MBR code from %s"
 argument_list|,
 name|bootcode
-argument_list|)
-expr_stmt|;
-name|dialog_msgbox
-argument_list|(
-name|TITLE
-argument_list|,
-name|scratch
-argument_list|,
-literal|5
-argument_list|,
-literal|60
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|fd
@@ -1369,7 +1354,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|draw_box
@@ -1750,15 +1735,14 @@ name|TITLE
 argument_list|,
 literal|"Are you sure you wish to proceed ?"
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|dedicated_mbr
@@ -1801,9 +1785,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 name|sprintf
@@ -1813,7 +1794,7 @@ argument_list|,
 literal|"Do you wish to dedicate the whole disk to FreeBSD?\n\nDoing so will overwrite any existing data on the disk."
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 if|if
@@ -1825,9 +1806,11 @@ name|TITLE
 argument_list|,
 name|scratch
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|)
 condition|)
 if|if
@@ -1909,7 +1892,7 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|draw_box
@@ -2595,7 +2578,7 @@ argument_list|,
 literal|"Writing a new master boot record can erase the current disk contents.\n\n Are you sure you want to write the new MBR?"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 if|if
@@ -2607,9 +2590,11 @@ literal|"Write new MBR?"
 argument_list|,
 name|scratch
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{

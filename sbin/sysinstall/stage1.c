@@ -1149,14 +1149,11 @@ name|selection
 argument_list|)
 condition|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"\n\n\nYou selected cancel\n\n"
+literal|"You selected cancel."
 argument_list|)
 expr_stmt|;
 name|AskAbort
@@ -1168,10 +1165,8 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|choice
 operator|=
 name|atoi
@@ -1233,6 +1228,9 @@ operator|!
 name|valid
 condition|)
 do|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1434,14 +1432,11 @@ name|selection
 argument_list|)
 condition|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"\n\n\nYou selected cancel\n\n"
+literal|"You selected cancel."
 argument_list|)
 expr_stmt|;
 name|AskAbort
@@ -1453,10 +1448,8 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|choice
 operator|=
 name|atoi
@@ -1496,7 +1489,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"The following error occured while\nediting the master boot record.\n\n%s"
+literal|"The following error occured while\nediting the master boot record.\n%s"
 argument_list|,
 name|errmsg
 argument_list|)
@@ -1510,6 +1503,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 block|}
 empty_stmt|;
 name|disk_list
@@ -1554,7 +1548,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"The following error occured while\nediting the disklabel.\n\n%s"
+literal|"The following error occured while\nediting the disklabel.\n%s"
 argument_list|,
 name|errmsg
 argument_list|)
@@ -1568,6 +1562,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 block|}
 block|}
 block|}
@@ -1577,6 +1572,9 @@ operator|!
 name|valid
 condition|)
 do|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1731,9 +1729,6 @@ name|scratch
 argument_list|,
 literal|"You did not select a valid partition"
 argument_list|)
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
 expr_stmt|;
 name|AskAbort
 argument_list|(
