@@ -40,19 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|<time.h>
 end_include
 
 begin_include
