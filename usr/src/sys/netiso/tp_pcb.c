@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1069,6 +1069,26 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_long
+name|tp_sendspace
+init|=
+literal|1024
+operator|*
+literal|4
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_long
+name|tp_recvspace
+init|=
+literal|1024
+operator|*
+literal|4
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * NAME:  tp_init()  *  * CALLED FROM:  *  autoconf through the protosw structure  *  * FUNCTION:  *  initialize tp machine  *  * RETURNS:  Nada  *  * SIDE EFFECTS:  *   * NOTES:  */
 end_comment
@@ -2007,6 +2027,8 @@ name|tpcb
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|dom
@@ -2087,21 +2109,37 @@ comment|/* socket already part of a connection*/
 block|}
 end_if
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_hiwat
+operator|==
+literal|0
+operator|||
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_hiwat
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|soreserve
 argument_list|(
 name|so
 argument_list|,
-literal|2
-operator|*
-name|TP_SOCKBUFSIZE
+name|tp_sendsize
 argument_list|,
-name|TP_SOCKBUFSIZE
+name|tp_recvsize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_comment
 comment|/* later an ioctl will allow reallocation IF still in closed state */

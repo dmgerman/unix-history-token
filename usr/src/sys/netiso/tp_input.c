@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.24 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -938,25 +938,6 @@ argument_list|,
 name|newtpcb
 operator|->
 name|tp_lsuffixlen
-argument_list|)
-expr_stmt|;
-name|soreserve
-argument_list|(
-name|so
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|tpcb
-operator|->
-name|tp_winsize
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|tpcb
-operator|->
-name|tp_winsize
 argument_list|)
 expr_stmt|;
 if|if
