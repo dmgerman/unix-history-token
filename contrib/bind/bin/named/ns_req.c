@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.118 2000/07/17 07:57:56 vixie Exp $"
+literal|"$Id: ns_req.c,v 8.119 2000/08/21 05:57:09 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,10 +1012,25 @@ name|msglen
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It's not a response so these bits have no business 	 * being set. will later simplify work if we can 	 * safely assume these are always 0 when a query 	 * comes in. 	 */
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+if|if
+condition|(
+name|hp
+operator|->
+name|opcode
+operator|!=
+name|ns_o_notify
+condition|)
+endif|#
+directive|endif
 name|hp
 operator|->
 name|aa
 operator|=
+literal|0
+expr_stmt|;
 name|hp
 operator|->
 name|ra
@@ -2017,6 +2032,47 @@ name|zoneinfo
 modifier|*
 name|zp
 decl_stmt|;
+comment|/* valid notify's are authoritative */
+if|if
+condition|(
+operator|!
+name|hp
+operator|->
+name|aa
+condition|)
+block|{
+name|ns_debug
+argument_list|(
+name|ns_log_notify
+argument_list|,
+literal|1
+argument_list|,
+literal|"FORMERR Notify request without AA"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|not_yet
+name|hp
+operator|->
+name|rcode
+operator|=
+name|ns_r_formerr
+expr_stmt|;
+return|return
+operator|(
+name|Finish
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
+name|hp
+operator|->
+name|aa
+operator|=
+literal|0
+expr_stmt|;
 comment|/* valid notify's have one question */
 if|if
 condition|(
@@ -2037,36 +2093,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"FORMERR Notify header counts wrong"
-argument_list|)
-expr_stmt|;
-name|hp
-operator|->
-name|rcode
-operator|=
-name|ns_r_formerr
-expr_stmt|;
-return|return
-operator|(
-name|Finish
-operator|)
-return|;
-block|}
-comment|/* valid notify's are authoritative */
-if|if
-condition|(
-operator|!
-name|hp
-operator|->
-name|aa
-condition|)
-block|{
-name|ns_debug
-argument_list|(
-name|ns_log_notify
-argument_list|,
-literal|1
-argument_list|,
-literal|"FORMERR Notify request without AA"
 argument_list|)
 expr_stmt|;
 name|hp
