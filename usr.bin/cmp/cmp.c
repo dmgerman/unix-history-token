@@ -194,7 +194,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-lsxz"
+literal|"lsxz"
 argument_list|)
 operator|)
 operator|!=
@@ -251,16 +251,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'-'
-case|:
-comment|/* stdin (must be after options) */
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|endargs
-goto|;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -268,8 +258,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|endargs
-label|:
 name|argv
 operator|+=
 name|optind
