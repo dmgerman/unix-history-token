@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -202,12 +202,6 @@ begin_include
 include|#
 directive|include
 file|"nqnfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"syslog.h"
 end_include
 
 begin_define
@@ -1938,23 +1932,31 @@ if|if
 condition|(
 name|error
 condition|)
-name|printf
-argument_list|(
-literal|"nfssnd err=%d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 block|{
 if|if
 condition|(
 name|rep
 condition|)
 block|{
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"nfs send error %d for server %s\n"
+argument_list|,
+name|error
+argument_list|,
+name|rep
+operator|->
+name|r_nmp
+operator|->
+name|nm_mountp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntfromname
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Deal with errors for the client side. 			 */
 if|if
 condition|(
@@ -1976,6 +1978,16 @@ operator||=
 name|R_MUSTRESEND
 expr_stmt|;
 block|}
+else|else
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"nfsd send error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Handle any recoverable (soft) socket errors here. (???) 		 */
 if|if
 condition|(
@@ -2494,10 +2506,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|rep
-condition|)
 name|log
 argument_list|(
 name|LOG_INFO
@@ -2559,10 +2567,6 @@ operator|>
 name|NFS_MAXPACKET
 condition|)
 block|{
-if|if
-condition|(
-name|rep
-condition|)
 name|log
 argument_list|(
 name|LOG_ERR
@@ -2663,10 +2667,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|rep
-condition|)
 name|log
 argument_list|(
 name|LOG_INFO
@@ -2872,8 +2872,6 @@ condition|(
 name|error
 operator|!=
 name|EPIPE
-operator|&&
-name|rep
 condition|)
 name|log
 argument_list|(
