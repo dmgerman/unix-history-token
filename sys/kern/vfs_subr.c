@@ -14548,34 +14548,9 @@ argument_list|,
 literal|"VOP_LOOKUP"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this is the last path component for this lookup and LOCKPARENT 	 * is set, OR if there is an error the directory has to be locked. 	 */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|LOCKPARENT
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|&
-name|ISLASTCN
-operator|)
-condition|)
-name|ASSERT_VOP_LOCKED
-argument_list|(
-name|dvp
-argument_list|,
-literal|"VOP_LOOKUP (LOCKPARENT)"
-argument_list|)
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|rc
-operator|!=
-literal|0
 condition|)
 name|ASSERT_VOP_LOCKED
 argument_list|(
@@ -14587,28 +14562,35 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|dvp
-operator|!=
-name|vp
+name|flags
+operator|&
+name|ISDOTDOT
 condition|)
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|dvp
 argument_list|,
-literal|"VOP_LOOKUP (dvp)"
+literal|"VOP_LOOKUP (ISDOTDOT)"
+argument_list|)
+expr_stmt|;
+else|else
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|dvp
+argument_list|,
+literal|"VOP_LOOKUP"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
-operator|&
-name|PDIRUNLOCK
+operator|!
+name|rc
 condition|)
-name|ASSERT_VOP_UNLOCKED
+name|ASSERT_VOP_LOCKED
 argument_list|(
-name|dvp
+name|vp
 argument_list|,
-literal|"VOP_LOOKUP (PDIRUNLOCK)"
+literal|"VOP_LOOKUP (child)"
 argument_list|)
 expr_stmt|;
 block|}
