@@ -2581,13 +2581,6 @@ index|[
 literal|3
 index|]
 operator|=
-name|rpc
-operator|->
-name|rc_srtt
-index|[
-literal|4
-index|]
-operator|=
 operator|(
 name|RPC_TIMEO
 operator|<<
@@ -2620,13 +2613,6 @@ operator|->
 name|rc_sdrtt
 index|[
 literal|3
-index|]
-operator|=
-name|rpc
-operator|->
-name|rc_sdrtt
-index|[
-literal|4
 index|]
 operator|=
 literal|0
