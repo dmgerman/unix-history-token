@@ -1656,14 +1656,14 @@ literal|0xff
 expr_stmt|;
 name|ivp
 index|[
-literal|3
+name|IEEE80211_WEP_IVLEN
 index|]
 operator|=
 name|kid
-operator|&
-literal|0x03
+operator|<<
+literal|6
 expr_stmt|;
-comment|/* clear pad and keyid */
+comment|/* pad and keyid */
 name|noff
 operator|+=
 name|IEEE80211_WEP_IVLEN
@@ -1685,20 +1685,20 @@ argument_list|)
 operator|+
 name|moff
 expr_stmt|;
-name|moff
-operator|+=
-name|IEEE80211_WEP_IVLEN
-operator|+
-name|IEEE80211_WEP_KIDLEN
-expr_stmt|;
 name|kid
 operator|=
 name|ivp
 index|[
 name|IEEE80211_WEP_IVLEN
 index|]
-operator|&
-literal|0x03
+operator|>>
+literal|6
+expr_stmt|;
+name|moff
+operator|+=
+name|IEEE80211_WEP_IVLEN
+operator|+
+name|IEEE80211_WEP_KIDLEN
 expr_stmt|;
 block|}
 name|key
