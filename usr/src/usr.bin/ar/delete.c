@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delete.c	5.2 (Berkeley) %G%"
+literal|"@(#)delete.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,7 @@ operator|=
 name|tmp
 argument_list|()
 expr_stmt|;
+comment|/* Read and write to an archive; pad on both. */
 name|SETCF
 argument_list|(
 name|afd
@@ -213,20 +214,14 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-name|SKIP
+name|skipobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
@@ -237,16 +232,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -310,9 +295,7 @@ name|afd
 argument_list|,
 name|archive
 argument_list|,
-name|RPAD
-operator||
-name|WPAD
+name|NOPAD
 argument_list|)
 expr_stmt|;
 name|copyfile
