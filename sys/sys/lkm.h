@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Header file used by loadable kernel modules and loadable kernel module  * utilities.  *  * 23 Jan 93	Terry Lambert		Original  *  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lkm.h,v 1.3 1994/09/27 20:39:48 phk Exp $  */
+comment|/*  * Header file used by loadable kernel modules and loadable kernel module  * utilities.  *  * 23 Jan 93	Terry Lambert		Original  *  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * lkm.h,v 1.5 1995/04/20 05:08:51 wpaul Exp  */
 end_comment
 
 begin_ifndef
@@ -593,7 +593,9 @@ parameter_list|)
 define|\
 value|if (ver != LKM_VERSION)						\ 		return EINVAL;
 comment|/* version mismatch */
-value|\ 	switch (cmd) {							\ 	int	error;							\ 	case LKM_E_LOAD:						\ 		lkmtp->private.lkm_any = (struct lkm_any *)&_module;	\ 		if (load != nosys&& (error = load(lkmtp, cmd)))	\ 			return error;					\ 		break;							\ 	case LKM_E_UNLOAD:						\ 		if (unload != nosys&& (error = unload(lkmtp, cmd)))	\ 			return error;					\ 		break;							\ 	case LKM_E_STAT:						\ 		if (stat != nosys&& (error = stat(lkmtp, cmd)))	\ 			return error;					\ 		break;							\ 	}								\ 	return lkmdispatch(lkmtp, cmd);
+value|\ 	switch (cmd) {							\ 	int	error;							\ 	case LKM_E_LOAD:						\ 		lkmtp->private.lkm_any = (struct lkm_any *)&_module;	\ 		if (lkmexists(lkmtp))
+comment|/* !!! */
+value|\ 			return EEXIST;					\ 		if (load != nosys&& (error = load(lkmtp, cmd)))	\ 			return error;					\ 		break;							\ 	case LKM_E_UNLOAD:						\ 		if (unload != nosys&& (error = unload(lkmtp, cmd)))	\ 			return error;					\ 		break;							\ 	case LKM_E_STAT:						\ 		if (stat != nosys&& (error = stat(lkmtp, cmd)))	\ 			return error;					\ 		break;							\ 	}								\ 	return lkmdispatch(lkmtp, cmd);
 end_define
 
 begin_decl_stmt
@@ -609,6 +611,21 @@ name|lkmtp
 operator|,
 name|int
 name|cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lkmexists
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+name|lkmtp
 operator|)
 argument_list|)
 decl_stmt|;
