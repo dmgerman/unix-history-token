@@ -5665,7 +5665,7 @@ name|dev
 argument_list|,
 name|fmt
 argument_list|,
-literal|0
+name|DSO_BAD144
 argument_list|,
 operator|&
 name|du

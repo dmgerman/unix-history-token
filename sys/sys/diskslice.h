@@ -266,6 +266,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DSO_BAD144
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|dsgetbad
 parameter_list|(
 name|dev
