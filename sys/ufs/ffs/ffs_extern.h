@@ -1009,20 +1009,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|softdep_fsync
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* XXX incorrectly moved to mount.h - should be indirect function */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int	softdep_fsync __P((struct vnode *vp));
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

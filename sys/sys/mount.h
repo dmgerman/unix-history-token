@@ -2599,6 +2599,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX - these should be indirect functions!!! */
+end_comment
+
 begin_decl_stmt
 name|int
 name|softdep_process_worklist
@@ -2607,6 +2611,20 @@ argument_list|(
 operator|(
 expr|struct
 name|mount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|softdep_fsync
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
 operator|*
 operator|)
 argument_list|)
