@@ -5935,8 +5935,6 @@ default|default:
 name|dprintf
 argument_list|(
 literal|"removing entry\n"
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 operator|(
