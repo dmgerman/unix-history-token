@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.12 1998/04/21 22:02:01 des Exp $"
+literal|"$Id: util.c,v 1.13 1998/04/24 07:49:51 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,6 +254,18 @@ name|isprint
 argument_list|(
 name|ch
 argument_list|)
+operator|&&
+operator|(
+name|ch
+operator|!=
+literal|'\"'
+operator|)
+operator|&&
+operator|(
+name|ch
+operator|!=
+literal|'\\'
+operator|)
 condition|)
 name|putchar
 argument_list|(
@@ -280,38 +292,11 @@ name|ch
 condition|)
 block|{
 case|case
-literal|0
-case|:
-name|putchar
-argument_list|(
-literal|'0'
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'\\'
 case|:
 name|putchar
 argument_list|(
 literal|'\\'
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'\?'
-case|:
-name|putchar
-argument_list|(
-literal|'?'
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'\''
-case|:
-name|putchar
-argument_list|(
-literal|'\''
 argument_list|)
 expr_stmt|;
 break|break;
@@ -497,9 +482,6 @@ name|void
 name|usage
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|BSD4_4_LITE
 operator|(
 name|void
 operator|)
@@ -507,23 +489,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ls [-1ACFLRTacdfiklqrstu] [file ...]\n"
+literal|"usage: ls [-?ACFHLPRTWacdfgikloqrstu1]"
+literal|" [file ...]\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: ls [-ACFLRTWacdfgikloqrstu1] [file ...]\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1

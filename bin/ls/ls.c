@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.18 1998/04/21 22:02:00 des Exp $"
+literal|"$Id: ls.c,v 1.19 1998/04/24 07:49:47 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,16 +358,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_newline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if precede with newline */
-end_comment
-
-begin_decl_stmt
-name|int
 name|f_nonprint
 decl_stmt|;
 end_decl_stmt
@@ -464,16 +454,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* use time of last mode change */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_dirname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if precede with directory name */
 end_comment
 
 begin_decl_stmt
@@ -688,7 +668,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"?1ABCFLRTWabcdfgikloqrstu"
+literal|"?1ABCFHLPRTWabcdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -794,6 +774,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'H'
+case|:
+name|fts_options
+operator||=
+name|FTS_COMFOLLOW
+expr_stmt|;
+break|break;
+case|case
 literal|'L'
 case|:
 name|fts_options
@@ -804,6 +792,24 @@ expr_stmt|;
 name|fts_options
 operator||=
 name|FTS_LOGICAL
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|fts_options
+operator|&=
+operator|~
+name|FTS_COMFOLLOW
+expr_stmt|;
+name|fts_options
+operator|&=
+operator|~
+name|FTS_LOGICAL
+expr_stmt|;
+name|fts_options
+operator||=
+name|FTS_PHYSICAL
 expr_stmt|;
 break|break;
 case|case
