@@ -1688,7 +1688,7 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize Bind Addrs. 	 *   When hostname is NULL, wild card bind addrs are obtained from 	 *   getaddrinfo(). But getaddrinfo() requires at least one of 	 *   hostname or servname is non NULL. 	 *   So when hostname is NULL, set dummy value to servname. 	 */
+comment|/* 	 * Initialize Bind Addrs. 	 *   When hostname is NULL, wild card bind addrs are obtained from 	 *   getaddrinfo(). But getaddrinfo() requires at least one of 	 *   hostname or servname is non NULL. 	 *   So when hostname is NULL, set dummy value to servname. 	 *   Since getaddrinfo() doesn't accept numeric servname, and 	 *   we doesn't use ai_socktype of struct addrinfo returned 	 *   from getaddrinfo(), we set dummy value to ai_socktype. 	 */
 name|servname
 operator|=
 operator|(
@@ -1697,7 +1697,7 @@ operator|==
 name|NULL
 operator|)
 condition|?
-literal|"discard"
+literal|"0"
 comment|/* dummy */
 else|:
 name|NULL
@@ -1726,6 +1726,13 @@ name|ai_family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+comment|/* dummy */
 name|error
 operator|=
 name|getaddrinfo
