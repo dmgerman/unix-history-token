@@ -26,29 +26,6 @@ comment|/*  * Access functions for device resources.  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|char
-name|static_hints
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* by config for now */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hintmode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 0 = off. 1 = config, 2 = fallback */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|char
 modifier|*

@@ -300,6 +300,56 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * XXX the hints declarations are even more misplaced than most declarations  * in this file, since they are needed in one file (per arch) and only used  * in two files.  * XXX most of these variables should be const.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|envmode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hintmode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0 = off. 1 = config, 2 = fallback */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|kern_envp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|static_env
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|static_hints
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* by config for now */
+end_comment
+
+begin_comment
 comment|/*  * General function declarations.  */
 end_comment
 
@@ -336,12 +386,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|thread
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|timeval
 struct_decl|;
 end_struct_decl
 
@@ -1648,34 +1692,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|kern_envp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|static_env
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|envmode
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|APM_FIXUP_CALLTODO
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|timeval
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 name|void
