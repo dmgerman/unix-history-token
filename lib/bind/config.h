@@ -16,7 +16,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.35.2.4.2.8 2004/05/21 08:24:04 marka Exp $ */
+comment|/* $Id: acconfig.h,v 1.35.2.4.2.10 2004/12/04 06:50:02 marka Exp $ */
 end_comment
 
 begin_comment
@@ -429,7 +429,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you are running under Compaq TruCluster..  */
+comment|/* Define if you are running under Compaq TruCluster. */
 end_comment
 
 begin_comment
@@ -446,6 +446,25 @@ directive|define
 name|HAVE_OPENSSL_DSA
 value|1
 end_define
+
+begin_comment
+comment|/* Define to the length type used by the socket API (socklen_t, size_t, int). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_SOCKADDR_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* Define if threads need PTHREAD_SCOPE_SYSTEM */
+end_comment
+
+begin_comment
+comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<fcntl.h> header file. */
