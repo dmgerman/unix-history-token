@@ -2407,6 +2407,15 @@ argument_list|(
 name|save
 argument_list|)
 expr_stmt|;
+name|wmove
+argument_list|(
+name|dialog
+argument_list|,
+name|cur_y
+argument_list|,
+name|cur_x
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
