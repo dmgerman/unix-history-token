@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.13 1995/04/26 15:08:02 jkh Exp $"
+literal|"$Id: perform.c,v 1.14 1995/04/28 18:24:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,6 +373,14 @@ name|len
 decl_stmt|;
 if|if
 condition|(
+operator|*
+name|pkg
+operator|!=
+literal|'/'
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|getcwd
 argument_list|(
@@ -406,6 +414,15 @@ operator|-
 name|len
 argument_list|,
 literal|"/%s"
+argument_list|,
+name|pkg
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|strcpy
+argument_list|(
+name|fname
 argument_list|,
 name|pkg
 argument_list|)
