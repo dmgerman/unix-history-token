@@ -1830,8 +1830,6 @@ name|ngsr_connect
 block|,
 name|ngsr_rcvdata
 block|,
-name|ngsr_rcvdata
-block|,
 name|ngsr_disconnect
 block|,
 name|NULL
