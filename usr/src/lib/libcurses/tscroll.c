@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tscroll.c	5.2 (Berkeley) %G%"
+literal|"@(#)tscroll.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,13 +63,6 @@ name|int
 name|n
 decl_stmt|;
 block|{
-specifier|static
-name|char
-name|result
-index|[
-name|MAXRETURNSIZE
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -82,6 +75,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+name|result
+index|[
+name|MAXRETURNSIZE
+index|]
 decl_stmt|;
 if|if
 condition|(
