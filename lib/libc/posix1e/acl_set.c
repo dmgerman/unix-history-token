@@ -340,8 +340,10 @@ name|entry_d
 operator|->
 name|ae_id
 operator|=
+operator|*
 operator|(
 name|uid_t
+operator|*
 operator|)
 name|tag_qualifier_p
 expr_stmt|;
