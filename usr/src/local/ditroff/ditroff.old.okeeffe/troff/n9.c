@@ -438,6 +438,8 @@ decl_stmt|,
 name|o
 index|[
 name|NOV
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -446,6 +448,8 @@ decl_stmt|,
 name|w
 index|[
 name|NOV
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
