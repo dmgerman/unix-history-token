@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.35 1994/09/04 04:11:57 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.36 1994/09/16 13:33:26 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -653,14 +659,8 @@ name|vm_offset_t
 name|va
 decl_stmt|;
 block|{
-name|pd_entry_t
-name|save
-decl_stmt|;
 name|vm_offset_t
 name|pa
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 if|if
 condition|(
@@ -872,7 +872,7 @@ comment|/*  * find the vm_page_t of a pte (only) given va of pte and pmap  */
 end_comment
 
 begin_function
-specifier|inline
+name|__inline
 name|vm_page_t
 name|pmap_pte_vm_page
 parameter_list|(
@@ -1330,8 +1330,6 @@ decl_stmt|;
 block|{
 name|vm_offset_t
 name|addr
-decl_stmt|,
-name|addr2
 decl_stmt|;
 name|vm_size_t
 name|npg
@@ -1339,14 +1337,7 @@ decl_stmt|,
 name|s
 decl_stmt|;
 name|int
-name|rv
-decl_stmt|;
-name|int
 name|i
-decl_stmt|;
-specifier|extern
-name|int
-name|KPTphys
 decl_stmt|;
 comment|/* 	 * Now that kernel map has been allocated, we can mark as 	 * unavailable regions which we have mapped in locore. 	 */
 name|addr
@@ -2159,8 +2150,6 @@ operator|+=
 name|PV_FREELIST_MIN
 expr_stmt|;
 comment|/* 		 * allocate a physical page out of the vm system 		 */
-if|if
-condition|(
 name|m
 operator|=
 name|vm_page_alloc
@@ -2174,6 +2163,10 @@ argument_list|(
 name|kernel_map
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 condition|)
 block|{
 name|int
@@ -2468,9 +2461,6 @@ decl_stmt|;
 block|{
 name|pv_entry_t
 name|npv
-decl_stmt|;
-name|int
-name|wired
 decl_stmt|;
 name|int
 name|s
@@ -2918,8 +2908,6 @@ literal|0
 condition|)
 block|{
 comment|/* We can race ahead here, straight to next pde.. */
-name|nextpde
-label|:
 name|sva
 operator|=
 operator|(
@@ -3229,11 +3217,6 @@ name|struct
 name|pmap
 modifier|*
 name|pmap
-decl_stmt|;
-name|struct
-name|map
-modifier|*
-name|map
 decl_stmt|;
 name|vm_page_t
 name|m
@@ -3549,9 +3532,6 @@ name|i386_btop
 argument_list|(
 name|eva
 argument_list|)
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|int
 name|anyvalid
@@ -3966,19 +3946,6 @@ name|pmap_pte_w
 argument_list|(
 name|pte
 argument_list|)
-operator|||
-operator|!
-name|wired
-operator|&&
-name|pmap_pte_w
-argument_list|(
-name|pte
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|wired
 condition|)
 name|pmap
 operator|->
@@ -3987,7 +3954,17 @@ operator|.
 name|wired_count
 operator|++
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|wired
+operator|&&
+name|pmap_pte_w
+argument_list|(
+name|pte
+argument_list|)
+condition|)
 name|pmap
 operator|->
 name|pm_stats
@@ -3995,7 +3972,6 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-block|}
 goto|goto
 name|validate
 goto|;
@@ -4750,8 +4726,6 @@ operator|.
 name|resident_count
 operator|++
 expr_stmt|;
-name|validate
-label|:
 if|if
 condition|(
 operator|*
@@ -4828,18 +4802,8 @@ decl_stmt|;
 name|vm_page_t
 name|p
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|vm_offset_t
 name|v
-decl_stmt|,
-name|lastv
-init|=
-literal|0
-decl_stmt|;
-name|pt_entry_t
-name|pte
 decl_stmt|;
 name|vm_offset_t
 name|objbytes
@@ -5042,8 +5006,6 @@ operator|+=
 name|NBPG
 control|)
 block|{
-if|if
-condition|(
 name|p
 operator|=
 name|vm_page_lookup
@@ -5054,6 +5016,10 @@ name|tmpoff
 operator|+
 name|offset
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
 condition|)
 block|{
 if|if
@@ -5196,19 +5162,6 @@ name|pmap_pte_w
 argument_list|(
 name|pte
 argument_list|)
-operator|||
-operator|!
-name|wired
-operator|&&
-name|pmap_pte_w
-argument_list|(
-name|pte
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|wired
 condition|)
 name|pmap
 operator|->
@@ -5217,7 +5170,17 @@ operator|.
 name|wired_count
 operator|++
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|wired
+operator|&&
+name|pmap_pte_w
+argument_list|(
+name|pte
+argument_list|)
+condition|)
 name|pmap
 operator|->
 name|pm_stats
@@ -5225,7 +5188,6 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-block|}
 comment|/* 	 * Wiring is not a hardware characteristic so there is no need 	 * to invalidate TLB. 	 */
 name|pmap_pte_set_w
 argument_list|(
