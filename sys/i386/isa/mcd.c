@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *      for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.1 1993/10/12 06:08:29 rgrimes Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *      for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.2 1993/10/16 13:46:13 rgrimes Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -615,7 +615,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|mcdstrategy
 parameter_list|(
 name|struct
@@ -1624,7 +1624,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|mcdstrategy
 parameter_list|(
 name|struct
@@ -3994,11 +3994,14 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|mcdintr
 parameter_list|(
 name|unit
 parameter_list|)
+name|int
+name|unit
+decl_stmt|;
 block|{
 name|int
 name|port
@@ -4189,8 +4192,14 @@ name|RDELAY_WAITSTAT
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITSTAT
 argument_list|,
 name|hz
@@ -4198,6 +4207,7 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 case|case
 name|MCD_S_WAITSTAT
@@ -4233,8 +4243,14 @@ condition|)
 block|{
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITSTAT
 argument_list|,
 name|hz
@@ -4242,6 +4258,7 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 block|}
 name|mcd_setflags
@@ -4351,8 +4368,14 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITMODE
 argument_list|,
 name|hz
@@ -4360,6 +4383,7 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 block|}
 else|else
@@ -4430,8 +4454,14 @@ condition|)
 block|{
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITMODE
 argument_list|,
 name|hz
@@ -4634,8 +4664,14 @@ name|RDELAY_WAITREAD
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITREAD
 argument_list|,
 name|hz
@@ -4643,6 +4679,7 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 case|case
 name|MCD_S_WAITREAD
@@ -4829,8 +4866,14 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|mcd_doread
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|MCD_S_WAITREAD
 argument_list|,
 name|hz
@@ -4838,6 +4881,7 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 block|}
 else|else

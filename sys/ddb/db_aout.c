@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id$  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_aout.c,v 1.3 1993/10/16 16:47:06 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -20,18 +20,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/db_machdep.h>
+file|"ddb/ddb.h"
 end_include
-
-begin_comment
-comment|/* data types */
-end_comment
 
 begin_include
 include|#
@@ -123,47 +125,30 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|X_db_sym_init
-argument_list|(
-argument|symtab
-argument_list|,
-argument|esymtab
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|symtab
+parameter_list|,
+name|esymtab
+parameter_list|,
+name|name
+parameter_list|)
 name|int
 modifier|*
 name|symtab
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* pointer to start of symbol table */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|esymtab
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* pointer to end of string table, 				   for checking - rounded up to integer 				   boundary */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -321,7 +306,7 @@ name|symtab
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|db_sym_t
@@ -770,12 +755,12 @@ begin_comment
 comment|/*  * Initialization routine for a.out files.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kdb_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -793,7 +778,7 @@ literal|"mach"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_if
 if|#

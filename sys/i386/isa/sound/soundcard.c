@@ -1955,6 +1955,9 @@ literal|0
 condition|)
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|sequencer_timer
 argument_list|,
 literal|0
@@ -1997,6 +2000,9 @@ literal|1
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|sequencer_timer
 argument_list|,
 literal|0

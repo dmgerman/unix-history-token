@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id$  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.4 1993/10/16 14:15:04 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -243,16 +243,18 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|put_fs_byte
-argument_list|(
-argument|unsigned char val
-argument_list|,
-argument|char *adr
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|char
+name|val
+parameter_list|,
+name|char
+modifier|*
+name|adr
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -265,18 +267,20 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|put_fs_word
-argument_list|(
-argument|unsigned short val
-argument_list|,
-argument|short *adr
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unsigned
+name|short
+name|val
+parameter_list|,
+name|short
+modifier|*
+name|adr
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -289,18 +293,20 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|put_fs_long
-argument_list|(
-argument|unsigned long val
-argument_list|,
-argument|unsigned long *adr
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_long
+name|val
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|adr
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -313,16 +319,17 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|math_emulate
-argument_list|(
-argument|struct trapframe * info
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|info
+parameter_list|)
 block|{
 name|unsigned
 name|short
@@ -3394,7 +3401,7 @@ name|SIGFPE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

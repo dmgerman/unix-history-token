@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 2.4 93/10/24 12:47:00 julian Exp Locker: julian $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.11 1993/11/18 05:02:15 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -256,17 +256,9 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|void
-argument_list|(
-argument|*timeout_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-argument_list|)
-expr_stmt|;
+name|timeout_func_t
+name|timeout_t
+typedef|;
 end_typedef
 
 begin_endif
@@ -1370,7 +1362,11 @@ end_function_decl
 begin_function_decl
 name|void
 name|ahb_timeout
-parameter_list|()
+parameter_list|(
+name|caddr_t
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -3236,6 +3232,8 @@ block|{
 name|unsigned
 name|int
 name|opri
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ahb_data
@@ -3351,6 +3349,8 @@ index|]
 decl_stmt|;
 name|unsigned
 name|opri
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ecb
@@ -4372,9 +4372,6 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_t
-operator|)
 name|ahb_timeout
 argument_list|,
 operator|(
@@ -5058,9 +5055,6 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_t
-operator|)
 name|ahb_timeout
 argument_list|,
 operator|(
@@ -5253,12 +5247,25 @@ begin_function
 name|void
 name|ahb_timeout
 parameter_list|(
+name|caddr_t
+name|arg1
+parameter_list|,
+name|int
+name|arg2
+parameter_list|)
+block|{
 name|struct
 name|ecb
 modifier|*
 name|ecb
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|ecb
+operator|*
+operator|)
+name|arg1
+decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
@@ -5460,9 +5467,6 @@ expr_stmt|;
 comment|/* 2 secs for the abort */
 name|timeout
 argument_list|(
-operator|(
-name|timeout_t
-operator|)
 name|ahb_timeout
 argument_list|,
 operator|(

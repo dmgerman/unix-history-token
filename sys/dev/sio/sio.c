@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.14 1993/11/14 23:29:01 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.15 1993/11/17 23:38:23 ache Exp $  */
 end_comment
 
 begin_include
@@ -659,87 +659,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* XXX - these functions ought to be declared in systm.h. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|nonint
-value|int
-end_define
-
-begin_decl_stmt
-name|nonint
-name|timeout
-name|__P
-argument_list|(
-operator|(
-name|timeout_func_t
-name|func
-operator|,
-name|caddr_t
-name|arg
-operator|,
-name|int
-name|t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tsleep
-name|__P
-argument_list|(
-operator|(
-name|caddr_t
-name|chan
-operator|,
-name|int
-name|pri
-operator|,
-name|char
-operator|*
-name|wmesg
-operator|,
-name|int
-name|timo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ttnread
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|tty
-operator|*
-name|tp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|nonint
-name|wakeup
-name|__P
-argument_list|(
-operator|(
-name|caddr_t
-name|chan
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * These functions in the com module ought to be declared (with a prototype)  * in a com-driver system header.  The void ones may need to be int to match  * ancient devswitch declarations, but they don't actually return anything.  */
 end_comment
 
@@ -908,35 +827,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * sioopen gets compared to the d_open entry in struct cdevsw.  d_open and  * other functions are declared in<sys/conf.h> with short types like dev_t  * in the prototype.  Such declarations are broken because they vary with  * __P (significantly in theory - the compiler is allowed to push a short  * arg if it has seen the prototype; insignificantly in practice - gcc  * doesn't push short args and it would be slower on 386's to do so).  *  * Also, most of the device switch functions are still declared old-style  * so they take a Dev_t arg and shorten it to a dev_t.  It would be simpler  * and faster if dev_t's were always promoted (to ints or whatever) as  * early as possible.  *  * Until<sys/conf.h> is fixed, we cast sioopen to the following `wrong' type  * when comparing it to the d_open entry just to avoid compiler warnings.  */
+comment|/*  * Also, most of the device switch functions are still declared old-style  * so they take a Dev_t arg and shorten it to a dev_t.  It would be simpler  * and faster if dev_t's were always promoted (to ints or whatever) as  * early as possible.  */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-argument_list|(
-argument|*bogus_open_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-name|int
-name|oflags
-operator|,
-name|int
-name|devtype
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-expr_stmt|;
-end_typedef
 
 begin_decl_stmt
 name|int
@@ -1201,7 +1093,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|comstart
 name|__P
 argument_list|(
@@ -1217,7 +1109,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|nonint
+name|void
 name|comwakeup
 name|__P
 argument_list|(
@@ -3262,6 +3154,8 @@ operator|(
 name|dev
 operator|,
 name|tp
+operator|,
+literal|0
 operator|)
 expr_stmt|;
 ifdef|#
@@ -5062,6 +4956,8 @@ block|{
 name|u_char
 modifier|*
 name|buf
+init|=
+literal|0
 decl_stmt|;
 name|u_char
 modifier|*
@@ -6407,8 +6303,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
-comment|/* XXX - should be void */
+name|void
 name|comstart
 parameter_list|(
 name|tp
@@ -6748,11 +6643,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -6985,7 +6875,7 @@ end_function
 
 begin_function
 specifier|static
-name|nonint
+name|void
 name|comwakeup
 parameter_list|(
 name|chan
@@ -7081,11 +6971,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
@@ -7148,9 +7034,6 @@ index|]
 operator|.
 name|d_open
 operator|==
-operator|(
-name|bogus_open_t
-operator|)
 name|sioopen
 condition|)
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.3 1993/10/16 14:39:08 rgrimes Exp $  */
+comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.4 1993/11/07 17:42:47 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -36,7 +36,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|bdb
 parameter_list|(
@@ -68,7 +68,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|disable_intr
 parameter_list|(
@@ -81,7 +81,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|enable_intr
 parameter_list|(
@@ -108,7 +108,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|u_int
 name|u_int_inb
 parameter_list|(
@@ -129,7 +129,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|void
 name|outb
 parameter_list|(
@@ -159,7 +159,8 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
+name|int
 name|imin
 parameter_list|(
 name|a
@@ -188,7 +189,8 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
+name|int
 name|imax
 parameter_list|(
 name|a
@@ -217,7 +219,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|unsigned
 name|int
 name|min
@@ -249,7 +251,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|unsigned
 name|int
 name|max
@@ -281,7 +283,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|long
 name|lmin
 parameter_list|(
@@ -311,7 +313,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|long
 name|lmax
 parameter_list|(
@@ -341,7 +343,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|unsigned
 name|long
 name|ulmin
@@ -373,7 +375,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|unsigned
 name|long
 name|ulmax
@@ -405,7 +407,8 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
+name|int
 name|ffs
 parameter_list|(
 name|mask
@@ -461,7 +464,8 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
+name|int
 name|bcmp
 parameter_list|(
 name|v1
@@ -530,14 +534,14 @@ end_block
 
 begin_function
 specifier|static
-name|__inline__
+specifier|inline
 name|size_t
 name|strlen
 parameter_list|(
 name|s1
 parameter_list|)
 specifier|register
-name|__const__
+specifier|const
 name|char
 modifier|*
 name|s1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.2 1993/10/16 14:14:55 rgrimes Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.3 1993/11/07 17:41:34 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -16,13 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/db_machdep.h>
+file|"ddb/ddb.h"
 end_include
 
 begin_include
@@ -49,16 +55,6 @@ directive|include
 file|<setjmp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_comment
-comment|/* just for boothowto --eichin */
-end_comment
-
 begin_decl_stmt
 name|int
 name|db_active
@@ -77,22 +73,17 @@ begin_comment
 comment|/*  * Received keyboard interrupt sequence.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kdb_kbd_trap
-argument_list|(
-argument|regs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|regs
+parameter_list|)
 name|struct
 name|i386_saved_state
 modifier|*
 name|regs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -124,7 +115,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  kdb_trap - field a TRACE or BPT trap  */
@@ -140,35 +131,27 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|kdb_trap
-argument_list|(
-argument|type
-argument_list|,
-argument|code
-argument_list|,
-argument|regs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|,
+name|regs
+parameter_list|)
 name|int
 name|type
 decl_stmt|,
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|i386_saved_state
 modifier|*
 name|regs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|#
 directive|if
@@ -444,30 +427,25 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print trap reason.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kdbprinttrap
-argument_list|(
-argument|type
-argument_list|,
-argument|code
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|)
 name|int
 name|type
 decl_stmt|,
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -489,7 +467,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Read bytes from kernel address space for debugger.  */
@@ -795,25 +773,20 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|Debugger
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 asm|asm ("int $3");
 block|}
-end_block
+end_function
 
 end_unit
 

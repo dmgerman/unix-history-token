@@ -60,6 +60,8 @@ parameter_list|)
 block|{
 name|int
 name|retcode
+init|=
+name|EINVAL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -151,6 +153,8 @@ parameter_list|)
 block|{
 name|int
 name|retcode
+init|=
+name|EINVAL
 decl_stmt|;
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 2.2 93/10/16 00:58:30 julian Exp Locker: julian $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.5 1993/11/18 05:02:48 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -452,7 +452,10 @@ name|initialized
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
+comment|/* XXX ??? is this the right return val? */
 block|}
 end_function
 
@@ -466,6 +469,9 @@ name|chopen
 parameter_list|(
 name|dev
 parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
 block|{
 name|errval
 name|errcode
@@ -700,6 +706,9 @@ name|chclose
 parameter_list|(
 name|dev
 parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
 block|{
 name|unsigned
 name|char
@@ -794,6 +803,9 @@ name|cmd
 decl_stmt|;
 name|caddr_t
 name|arg
+decl_stmt|;
+name|int
+name|mode
 decl_stmt|;
 block|{
 comment|/* struct ch_cmd_buf *args; */
@@ -1217,6 +1229,9 @@ decl_stmt|,
 name|from
 decl_stmt|,
 name|flags
+decl_stmt|;
+name|int
+name|type
 decl_stmt|;
 name|short
 modifier|*

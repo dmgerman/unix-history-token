@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Dummy driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.2 93/10/11 11:53:28 julian Exp Locker: julian $  */
+comment|/*   * Dummy driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.1 1993/11/18 05:03:13 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -222,7 +222,10 @@ name|flags
 operator|=
 name|UK_KNOWN
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
+comment|/* XXX ??? */
 block|}
 end_function
 
@@ -236,6 +239,9 @@ name|ukopen
 parameter_list|(
 name|dev
 parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
 block|{
 name|errval
 name|errcode
@@ -380,13 +386,19 @@ name|ukclose
 parameter_list|(
 name|dev
 parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
 block|{
 name|unsigned
 name|char
 name|unit
+init|=
+literal|0
 decl_stmt|,
 name|mode
 decl_stmt|;
+comment|/* XXX !!! XXX FIXME!!! 0??? */
 name|struct
 name|scsi_link
 modifier|*
@@ -451,6 +463,9 @@ name|cmd
 decl_stmt|;
 name|caddr_t
 name|arg
+decl_stmt|;
+name|int
+name|mode
 decl_stmt|;
 block|{
 name|unsigned
