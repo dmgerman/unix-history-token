@@ -10293,6 +10293,13 @@ if|if
 condition|(
 name|user_addr
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -10300,6 +10307,13 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|write
