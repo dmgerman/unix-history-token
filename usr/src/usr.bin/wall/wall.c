@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wall.c	4.4 (Berkeley) 81/05/06"
+literal|"@(#)wall.c	4.5 (Berkeley) 81/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,13 @@ define|#
 directive|define
 name|USERS
 value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGNOREUSER
+value|"sleeper"
 end_define
 
 begin_decl_stmt
@@ -389,6 +396,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|ut_name
@@ -397,6 +405,27 @@ literal|0
 index|]
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|strncmp
+argument_list|(
+name|p
+operator|->
+name|ut_name
+argument_list|,
+name|IGNOREUSER
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|ut_name
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 continue|continue;
 comment|/***		this might be nice, but utmp gets so out of date !! 		sleep(1); 	***/
