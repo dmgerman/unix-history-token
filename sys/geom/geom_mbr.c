@@ -127,11 +127,22 @@ directive|include
 file|<geom/geom_slice.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"opt_geom.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -367,7 +378,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|g_haveattr_int
+name|g_handleattr_int
 argument_list|(
 name|bp
 argument_list|,
@@ -1337,7 +1348,7 @@ name|g_mbr_taste
 block|,
 name|NULL
 block|,
-name|G_CLASS_INITSTUFF
+name|G_CLASS_INITIALIZER
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1448,7 +1459,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|g_haveattr_int
+name|g_handleattr_int
 argument_list|(
 name|bp
 argument_list|,
@@ -2247,7 +2258,7 @@ name|g_mbrext_taste
 block|,
 name|NULL
 block|,
-name|G_CLASS_INITSTUFF
+name|G_CLASS_INITIALIZER
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1436,7 +1436,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|g_dettach
+name|g_detach
 argument_list|(
 name|cp
 argument_list|)
@@ -1456,7 +1456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We keep the "geoms" list sorted by topological order (== increasing  * numerical rank) at all times.  * When an attach is done, the attaching geoms rank is invalidated  * and it is moved to the tail of the list.  * All geoms later in the sequence has their ranks reevaluated in  * sequence.  If we cannot assign rank to a geom because it's  * prerequisites do not have rank, we move that element to the tail  * of the sequence with invalid rank as well.  * At some point we encounter our original geom and if we stil fail  * to assign it a rank, there must be a loop and we fail back to  * g_attach() which dettach again and calls redo_rank again  * to fix up the damage.  * It would be much simpler code wise to do it recursively, but we  * can't risk that on the kernel stack.  */
+comment|/*  * We keep the "geoms" list sorted by topological order (== increasing  * numerical rank) at all times.  * When an attach is done, the attaching geoms rank is invalidated  * and it is moved to the tail of the list.  * All geoms later in the sequence has their ranks reevaluated in  * sequence.  If we cannot assign rank to a geom because it's  * prerequisites do not have rank, we move that element to the tail  * of the sequence with invalid rank as well.  * At some point we encounter our original geom and if we stil fail  * to assign it a rank, there must be a loop and we fail back to  * g_attach() which detach again and calls redo_rank again  * to fix up the damage.  * It would be much simpler code wise to do it recursively, but we  * can't risk that on the kernel stack.  */
 end_comment
 
 begin_function
@@ -1782,7 +1782,7 @@ end_function
 
 begin_function
 name|void
-name|g_dettach
+name|g_detach
 parameter_list|(
 name|struct
 name|g_consumer
@@ -1799,7 +1799,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_dettach(%p)"
+literal|"g_detach(%p)"
 argument_list|,
 name|cp
 argument_list|)
@@ -1831,7 +1831,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"dettach but not attached"
+literal|"detach but not attached"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1844,7 +1844,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"dettach but nonzero acr"
+literal|"detach but nonzero acr"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1857,7 +1857,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"dettach but nonzero acw"
+literal|"detach but nonzero acw"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1870,7 +1870,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"dettach but nonzero ace"
+literal|"detach but nonzero ace"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1883,7 +1883,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"dettach but nonzero biocount"
+literal|"detach but nonzero biocount"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2516,7 +2516,7 @@ end_function
 
 begin_function
 name|int
-name|g_haveattr_int
+name|g_handleattr_int
 parameter_list|(
 name|struct
 name|bio
@@ -2533,7 +2533,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|g_haveattr
+name|g_handleattr
 argument_list|(
 name|bp
 argument_list|,
@@ -2552,7 +2552,7 @@ end_function
 
 begin_function
 name|int
-name|g_haveattr_off_t
+name|g_handleattr_off_t
 parameter_list|(
 name|struct
 name|bio
@@ -2569,7 +2569,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|g_haveattr
+name|g_handleattr
 argument_list|(
 name|bp
 argument_list|,
@@ -2588,7 +2588,7 @@ end_function
 
 begin_function
 name|int
-name|g_haveattr
+name|g_handleattr
 parameter_list|(
 name|struct
 name|bio
@@ -2815,7 +2815,7 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-name|g_dettach
+name|g_detach
 argument_list|(
 name|cp
 argument_list|)

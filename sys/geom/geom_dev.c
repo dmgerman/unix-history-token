@@ -215,7 +215,7 @@ name|g_dev_taste
 block|,
 name|NULL
 block|,
-name|G_CLASS_INITSTUFF
+name|G_CLASS_INITIALIZER
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -263,7 +263,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|g_rattle
+name|g_waitidle
 argument_list|()
 expr_stmt|;
 comment|/* XXX: can I drop Giant here ??? */
@@ -714,7 +714,7 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
-name|g_rattle
+name|g_waitidle
 argument_list|()
 expr_stmt|;
 return|return
@@ -869,7 +869,7 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
-name|g_rattle
+name|g_waitidle
 argument_list|()
 expr_stmt|;
 return|return
@@ -1353,7 +1353,7 @@ block|}
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
-name|g_rattle
+name|g_waitidle
 argument_list|()
 expr_stmt|;
 if|if
@@ -1895,7 +1895,7 @@ operator|->
 name|ace
 argument_list|)
 expr_stmt|;
-name|g_dettach
+name|g_detach
 argument_list|(
 name|cp
 argument_list|)

@@ -862,7 +862,7 @@ name|g_pc98_taste
 block|,
 name|NULL
 block|,
-name|G_CLASS_INITSTUFF
+name|G_CLASS_INITIALIZER
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -298,7 +298,7 @@ name|g_create_geom_t
 modifier|*
 name|create_geom
 decl_stmt|;
-comment|/* 	 * The remaning elements are private and classes should use 	 * the G_CLASS_INITSTUFF macro to initialize them.          */
+comment|/* 	 * The remaning elements are private and classes should use 	 * the G_CLASS_INITIALIZER macro to initialize them.          */
 name|LIST_ENTRY
 argument_list|(
 argument|g_class
@@ -327,7 +327,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|G_CLASS_INITSTUFF
+name|G_CLASS_INITIALIZER
 value|{ 0, 0 }, { 0 }, 0, 0
 end_define
 
@@ -764,7 +764,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_rattle
+name|g_waitidle
 parameter_list|(
 name|void
 parameter_list|)
@@ -942,7 +942,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_dettach
+name|g_detach
 parameter_list|(
 name|struct
 name|g_consumer
@@ -1007,7 +1007,7 @@ end_define
 
 begin_function_decl
 name|int
-name|g_haveattr
+name|g_handleattr
 parameter_list|(
 name|struct
 name|bio
@@ -1030,7 +1030,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|g_haveattr_int
+name|g_handleattr_int
 parameter_list|(
 name|struct
 name|bio
@@ -1049,7 +1049,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|g_haveattr_off_t
+name|g_handleattr_off_t
 parameter_list|(
 name|struct
 name|bio

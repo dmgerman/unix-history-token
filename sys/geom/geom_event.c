@@ -194,7 +194,7 @@ end_function
 
 begin_function
 name|void
-name|g_rattle
+name|g_waitidle
 parameter_list|(
 name|void
 parameter_list|)
@@ -226,7 +226,7 @@ name|g_pending_events
 argument_list|,
 name|PPAUSE
 argument_list|,
-literal|"g_rattle"
+literal|"g_waitidle"
 argument_list|,
 name|hz
 operator|/

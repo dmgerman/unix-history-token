@@ -772,7 +772,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|g_haveattr_off_t
+name|g_handleattr_off_t
 argument_list|(
 name|bp
 argument_list|,
@@ -852,7 +852,7 @@ name|gsl
 operator|->
 name|length
 expr_stmt|;
-name|g_haveattr_off_t
+name|g_handleattr_off_t
 argument_list|(
 name|bp
 argument_list|,
@@ -1526,7 +1526,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|g_dettach
+name|g_detach
 argument_list|(
 name|cp
 argument_list|)
