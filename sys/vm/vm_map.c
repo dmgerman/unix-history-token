@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.4 1994/08/04 19:40:47 davidg Exp $  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.5 1994/08/18 22:36:04 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -801,9 +801,6 @@ name|vm_map_entry_t
 name|entry
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 define|#
@@ -832,8 +829,6 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-if|if
-condition|(
 name|m
 operator|=
 name|vm_page_alloc
@@ -847,6 +842,10 @@ argument_list|(
 name|kmem_map
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
 condition|)
 block|{
 name|int
@@ -952,11 +951,13 @@ operator|==
 name|pager_map
 condition|)
 block|{
-if|if
-condition|(
 name|entry
 operator|=
 name|kentry_free
+expr_stmt|;
+if|if
+condition|(
+name|entry
 condition|)
 block|{
 name|kentry_free
@@ -972,11 +973,13 @@ return|return
 name|entry
 return|;
 block|}
-if|if
-condition|(
 name|entry
 operator|=
 name|mappool
+expr_stmt|;
+if|if
+condition|(
+name|entry
 condition|)
 block|{
 name|mappool
@@ -995,11 +998,13 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
 name|entry
 operator|=
 name|mappool
+expr_stmt|;
+if|if
+condition|(
+name|entry
 condition|)
 block|{
 name|mappool
@@ -1033,8 +1038,6 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
-name|dopanic
-label|:
 if|if
 condition|(
 name|entry
@@ -1073,9 +1076,6 @@ name|vm_map_entry_t
 name|entry
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|map
@@ -7146,8 +7146,6 @@ name|KERN_PROTECTION_FAILURE
 argument_list|)
 expr_stmt|;
 comment|/* 	 *	If this page is not pageable, we have to get 	 *	it for all possible accesses. 	 */
-if|if
-condition|(
 operator|*
 name|wired
 operator|=
@@ -7158,6 +7156,11 @@ name|wired_count
 operator|!=
 literal|0
 operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|wired
 condition|)
 name|prot
 operator|=
@@ -7168,14 +7171,16 @@ operator|->
 name|protection
 expr_stmt|;
 comment|/* 	 *	If we don't already have a VM object, track 	 *	it down. 	 */
-if|if
-condition|(
 name|su
 operator|=
 operator|!
 name|entry
 operator|->
 name|is_a_map
+expr_stmt|;
+if|if
+condition|(
+name|su
 condition|)
 block|{
 name|share_map
