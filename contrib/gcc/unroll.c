@@ -12598,7 +12598,16 @@ name|initial_value
 operator|=
 name|temp
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|loop_invariant_p
+argument_list|(
+name|loop
+argument_list|,
+name|reg2
+argument_list|)
+condition|)
 block|{
 comment|/* Find what reg2 is equivalent to.  Hopefully it will 		 either be reg1 or reg1 plus a constant.  Let's ignore 		 the latter case for now since it is not so common.  */
 name|temp

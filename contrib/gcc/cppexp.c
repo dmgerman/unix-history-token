@@ -2405,6 +2405,11 @@ operator|->
 name|context
 operator|!=
 name|initial_context
+operator|&&
+name|CPP_PEDANTIC
+argument_list|(
+name|pfile
+argument_list|)
 condition|)
 name|cpp_error
 argument_list|(

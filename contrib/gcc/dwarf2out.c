@@ -39626,7 +39626,16 @@ argument_list|(
 name|link
 argument_list|)
 argument_list|,
-literal|0
+name|TREE_UNSIGNED
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|link
+argument_list|)
+argument_list|)
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -39673,7 +39682,7 @@ argument_list|(
 name|link
 argument_list|)
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

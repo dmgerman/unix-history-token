@@ -1637,6 +1637,14 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
+comment|/* The COPY is not abstract; it will be generated in TO_FN.  */
+name|DECL_ABSTRACT
+argument_list|(
+name|copy
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 call|(
 modifier|*
 name|lang_hooks

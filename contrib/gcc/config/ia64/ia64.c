@@ -7360,7 +7360,6 @@ if|if
 condition|(
 name|sibcall_p
 condition|)
-block|{
 name|use_reg
 argument_list|(
 operator|&
@@ -7372,23 +7371,6 @@ argument_list|,
 name|b0
 argument_list|)
 expr_stmt|;
-name|use_reg
-argument_list|(
-operator|&
-name|CALL_INSN_FUNCTION_USAGE
-argument_list|(
-name|insn
-argument_list|)
-argument_list|,
-name|gen_rtx_REG
-argument_list|(
-name|DImode
-argument_list|,
-name|AR_PFS_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -7580,6 +7562,14 @@ condition|(
 name|REG_P
 argument_list|(
 name|addr
+argument_list|)
+operator|&&
+name|GR_REGNO_P
+argument_list|(
+name|REGNO
+argument_list|(
+name|addr
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -12468,8 +12458,14 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|current_function_is_leaf
+name|TEST_HARD_REG_BIT
+argument_list|(
+name|current_frame_info
+operator|.
+name|mask
+argument_list|,
+name|AR_PFS_REGNUM
+argument_list|)
 condition|)
 block|{
 name|alt_regno
@@ -31438,17 +31434,13 @@ argument_list|(
 literal|1
 argument_list|)
 case|:
-comment|/* When a function makes a call through a function descriptor, we          will write a (potentially) new value to "gp".  After returning          from such a call, we need to make sure the function restores the          original gp-value, even if the function itself does not use the          gp anymore.  */
+comment|/* With a call to a function in another module, we will write a new 	 value to "gp".  After returning from such a call, we need to make 	 sure the function restores the original gp-value, even if the 	 function itself does not use the gp anymore.  */
 return|return
-operator|(
-name|TARGET_CONST_GP
-operator|&&
 operator|!
 operator|(
 name|TARGET_AUTO_PIC
 operator|||
 name|TARGET_NO_PIC
-operator|)
 operator|)
 return|;
 case|case
@@ -32121,23 +32113,18 @@ name|tree
 name|decl
 decl_stmt|;
 block|{
-comment|/* Direct calls are always ok.  */
-if|if
-condition|(
+comment|/* We must always return with our current GP.  This means we can      only sibcall to functions defined in the current module.  */
+return|return
 name|decl
-condition|)
-return|return
-name|true
-return|;
-comment|/* If TARGET_CONST_GP is in effect, then our caller expects us to      return with our current GP.  This means that we'll always have      a GP reload after an indirect call.  */
-return|return
-operator|!
-name|ia64_epilogue_uses
+operator|&&
+call|(
+modifier|*
+name|targetm
+operator|.
+name|binds_local_p
+call|)
 argument_list|(
-name|R_GR
-argument_list|(
-literal|1
-argument_list|)
+name|decl
 argument_list|)
 return|;
 block|}

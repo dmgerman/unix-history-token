@@ -69,7 +69,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Usage of TREE_LANG_FLAG_?:    0: BINFO_MARKED (BINFO nodes).       IDENTIFIER_MARKED (IDENTIFIER_NODEs)       NEW_EXPR_USE_GLOBAL (in NEW_EXPR).       DELETE_EXPR_USE_GLOBAL (in DELETE_EXPR).       LOOKUP_EXPR_GLOBAL (in LOOKUP_EXPR).       TREE_INDIRECT_USING (in NAMESPACE_DECL).       ICS_USER_FLAG (in _CONV)       CLEANUP_P (in TRY_BLOCK)       AGGR_INIT_VIA_CTOR_P (in AGGR_INIT_EXPR)       PTRMEM_OK_P (in ADDR_EXPR, OFFSET_REF)       PARMLIST_ELLIPSIS_P (in PARMLIST)    1: IDENTIFIER_VIRTUAL_P.       TI_PENDING_TEMPLATE_FLAG.       TEMPLATE_PARMS_FOR_INLINE.       DELETE_EXPR_USE_VEC (in DELETE_EXPR).       (TREE_CALLS_NEW) (in _EXPR or _REF) (commented-out).       TYPE_BASE_CONVS_MAY_REQUIRE_CODE_P (in _TYPE).       ICS_ELLIPSIS_FLAG (in _CONV)       BINFO_ACCESS (in BINFO)       DECL_INITIALIZED_P (in VAR_DECL)    2: IDENTIFIER_OPNAME_P.       TYPE_POLYMORPHIC_P (in _TYPE)       ICS_THIS_FLAG (in _CONV)       BINFO_LOST_PRIMARY_P (in BINFO)       TREE_PARMLIST (in TREE_LIST)    3: TYPE_USES_VIRTUAL_BASECLASSES (in a class TYPE).       BINFO_VTABLE_PATH_MARKED.       BINFO_PUSHDECLS_MARKED.       (TREE_REFERENCE_EXPR) (in NON_LVALUE_EXPR) (commented-out).       ICS_BAD_FLAG (in _CONV)       FN_TRY_BLOCK_P (in TRY_BLOCK)       IDENTIFIER_CTOR_OR_DTOR_P (in IDENTIFIER_NODE)    4: BINFO_NEW_VTABLE_MARKED.       TREE_HAS_CONSTRUCTOR (in INDIRECT_REF, SAVE_EXPR, CONSTRUCTOR,           or FIELD_DECL).       NEED_TEMPORARY_P (in REF_BIND, BASE_CONV)       IDENTIFIER_TYPENAME_P (in IDENTIFIER_NODE)    5: C_IS_RESERVED_WORD (in IDENTIFIER_NODE)    6: BINFO_ACCESS (in BINFO)     Usage of TYPE_LANG_FLAG_?:    0: C_TYPE_FIELDS_READONLY (in RECORD_TYPE or UNION_TYPE).    1: TYPE_HAS_CONSTRUCTOR.    2: TYPE_HAS_DESTRUCTOR.    3: TYPE_FOR_JAVA.    4: TYPE_HAS_NONTRIVIAL_DESTRUCTOR    5: IS_AGGR_TYPE.    6: TYPE_BUILT_IN.     Usage of DECL_LANG_FLAG_?:    0: DECL_ERROR_REPORTED (in VAR_DECL).       DECL_TEMPLATE_PARM_P (in PARM_DECL, CONST_DECL, TYPE_DECL, or TEMPLATE_DECL)       DECL_LOCAL_FUNCTION_P (in FUNCTION_DECL)       DECL_MUTABLE_P (in FIELD_DECL)    1: C_TYPEDEF_EXPLICITLY_SIGNED (in TYPE_DECL).       DECL_TEMPLATE_INSTANTIATED (in a VAR_DECL or a FUNCTION_DECL)    2: DECL_THIS_EXTERN (in VAR_DECL or FUNCTION_DECL).       DECL_IMPLICIT_TYPEDEF_P (in a TYPE_DECL)    3: DECL_IN_AGGR_P.    4: DECL_C_BIT_FIELD (in a FIELD_DECL)       DECL_VAR_MARKED_P (in a VAR_DECL)    5: DECL_INTERFACE_KNOWN.    6: DECL_THIS_STATIC (in VAR_DECL or FUNCTION_DECL).    7: DECL_DEAD_FOR_LOCAL (in VAR_DECL).       DECL_THUNK_P (in a member FUNCTION_DECL)     Usage of language-independent fields in a language-dependent manner:     TREE_USED      This field is BINFO_INDIRECT_PRIMARY_P in a BINFO.     TYPE_ALIAS_SET      This field is used by TYPENAME_TYPEs, TEMPLATE_TYPE_PARMs, and so      forth as a substitute for the mark bits provided in `lang_type'.      At present, only the six low-order bits are used.     TYPE_BINFO      For an ENUMERAL_TYPE, this is ENUM_TEMPLATE_INFO.      For a FUNCTION_TYPE or METHOD_TYPE, this is TYPE_RAISES_EXCEPTIONS    BINFO_VIRTUALS      For a binfo, this is a TREE_LIST.  There is an entry for each      virtual function declared either in BINFO or its direct and      indirect primary bases.       The BV_DELTA of each node gives the amount by which to adjust the      `this' pointer when calling the function.  If the method is an      overriden version of a base class method, then it is assumed      that, prior to adjustment, the this pointer points to an object      of the base class.       The BV_VCALL_INDEX of each node, if non-NULL, gives the vtable      index of the vcall offset for this entry.         The BV_FN is the declaration for the virtual function itself.     BINFO_VTABLE      This is an expression with POINTER_TYPE that gives the value      to which the vptr should be initialized.  Use get_vtbl_decl_for_binfo      to extract the VAR_DECL for the complete vtable.     DECL_ARGUMENTS      For a VAR_DECL this is DECL_ANON_UNION_ELEMS.     DECL_VINDEX      This field is NULL for a non-virtual function.  For a virtual      function, it is eventually set to an INTEGER_CST indicating the      index in the vtable at which this function can be found.  When      a virtual function is declared, but before it is known what      function is overriden, this field is the error_mark_node.       Temporarily, it may be set to a TREE_LIST whose TREE_VALUE is      the virtual function this one overrides, and whose TREE_CHAIN is      the old DECL_VINDEX.  */
+comment|/* Usage of TREE_LANG_FLAG_?:    0: BINFO_MARKED (BINFO nodes).       IDENTIFIER_MARKED (IDENTIFIER_NODEs)       NEW_EXPR_USE_GLOBAL (in NEW_EXPR).       DELETE_EXPR_USE_GLOBAL (in DELETE_EXPR).       LOOKUP_EXPR_GLOBAL (in LOOKUP_EXPR).       TREE_INDIRECT_USING (in NAMESPACE_DECL).       ICS_USER_FLAG (in _CONV)       CLEANUP_P (in TRY_BLOCK)       AGGR_INIT_VIA_CTOR_P (in AGGR_INIT_EXPR)       PTRMEM_OK_P (in ADDR_EXPR, OFFSET_REF)       PARMLIST_ELLIPSIS_P (in PARMLIST)    1: IDENTIFIER_VIRTUAL_P.       TI_PENDING_TEMPLATE_FLAG.       TEMPLATE_PARMS_FOR_INLINE.       DELETE_EXPR_USE_VEC (in DELETE_EXPR).       (TREE_CALLS_NEW) (in _EXPR or _REF) (commented-out).       TYPE_BASE_CONVS_MAY_REQUIRE_CODE_P (in _TYPE).       ICS_ELLIPSIS_FLAG (in _CONV)       BINFO_ACCESS (in BINFO)       DECL_INITIALIZED_P (in VAR_DECL)    2: IDENTIFIER_OPNAME_P.       TYPE_POLYMORPHIC_P (in _TYPE)       ICS_THIS_FLAG (in _CONV)       BINFO_LOST_PRIMARY_P (in BINFO)       TREE_PARMLIST (in TREE_LIST)    3: TYPE_USES_VIRTUAL_BASECLASSES (in a class TYPE).       BINFO_VTABLE_PATH_MARKED.       BINFO_PUSHDECLS_MARKED.       (TREE_REFERENCE_EXPR) (in NON_LVALUE_EXPR) (commented-out).       ICS_BAD_FLAG (in _CONV)       FN_TRY_BLOCK_P (in TRY_BLOCK)       IDENTIFIER_CTOR_OR_DTOR_P (in IDENTIFIER_NODE)    4: BINFO_NEW_VTABLE_MARKED.       TREE_HAS_CONSTRUCTOR (in INDIRECT_REF, SAVE_EXPR, CONSTRUCTOR,           or FIELD_DECL).       NEED_TEMPORARY_P (in REF_BIND, BASE_CONV)       IDENTIFIER_TYPENAME_P (in IDENTIFIER_NODE)    5: C_IS_RESERVED_WORD (in IDENTIFIER_NODE)    6: BINFO_ACCESS (in BINFO)     Usage of TYPE_LANG_FLAG_?:    0: C_TYPE_FIELDS_READONLY (in RECORD_TYPE or UNION_TYPE).    1: TYPE_HAS_CONSTRUCTOR.    2: TYPE_HAS_DESTRUCTOR.    3: TYPE_FOR_JAVA.    4: TYPE_HAS_NONTRIVIAL_DESTRUCTOR    5: IS_AGGR_TYPE.    6: TYPE_BUILT_IN.     Usage of DECL_LANG_FLAG_?:    0: DECL_ERROR_REPORTED (in VAR_DECL).       DECL_TEMPLATE_PARM_P (in PARM_DECL, CONST_DECL, TYPE_DECL, or TEMPLATE_DECL)       DECL_LOCAL_FUNCTION_P (in FUNCTION_DECL)       DECL_MUTABLE_P (in FIELD_DECL)    1: C_TYPEDEF_EXPLICITLY_SIGNED (in TYPE_DECL).       DECL_TEMPLATE_INSTANTIATED (in a VAR_DECL or a FUNCTION_DECL)    2: DECL_THIS_EXTERN (in VAR_DECL or FUNCTION_DECL).       DECL_IMPLICIT_TYPEDEF_P (in a TYPE_DECL)    3: DECL_IN_AGGR_P.    4: DECL_C_BIT_FIELD (in a FIELD_DECL)       DECL_VAR_MARKED_P (in a VAR_DECL)       DECL_SELF_REFERENCE_P (in a TYPE_DECL)    5: DECL_INTERFACE_KNOWN.    6: DECL_THIS_STATIC (in VAR_DECL or FUNCTION_DECL).    7: DECL_DEAD_FOR_LOCAL (in VAR_DECL).       DECL_THUNK_P (in a member FUNCTION_DECL)     Usage of language-independent fields in a language-dependent manner:     TREE_USED      This field is BINFO_INDIRECT_PRIMARY_P in a BINFO.     TYPE_ALIAS_SET      This field is used by TYPENAME_TYPEs, TEMPLATE_TYPE_PARMs, and so      forth as a substitute for the mark bits provided in `lang_type'.      At present, only the six low-order bits are used.     TYPE_BINFO      For an ENUMERAL_TYPE, this is ENUM_TEMPLATE_INFO.      For a FUNCTION_TYPE or METHOD_TYPE, this is TYPE_RAISES_EXCEPTIONS    BINFO_VIRTUALS      For a binfo, this is a TREE_LIST.  There is an entry for each      virtual function declared either in BINFO or its direct and      indirect primary bases.       The BV_DELTA of each node gives the amount by which to adjust the      `this' pointer when calling the function.  If the method is an      overriden version of a base class method, then it is assumed      that, prior to adjustment, the this pointer points to an object      of the base class.       The BV_VCALL_INDEX of each node, if non-NULL, gives the vtable      index of the vcall offset for this entry.         The BV_FN is the declaration for the virtual function itself.     BINFO_VTABLE      This is an expression with POINTER_TYPE that gives the value      to which the vptr should be initialized.  Use get_vtbl_decl_for_binfo      to extract the VAR_DECL for the complete vtable.     DECL_ARGUMENTS      For a VAR_DECL this is DECL_ANON_UNION_ELEMS.     DECL_VINDEX      This field is NULL for a non-virtual function.  For a virtual      function, it is eventually set to an INTEGER_CST indicating the      index in the vtable at which this function can be found.  When      a virtual function is declared, but before it is known what      function is overriden, this field is the error_mark_node.       Temporarily, it may be set to a TREE_LIST whose TREE_VALUE is      the virtual function this one overrides, and whose TREE_CHAIN is      the old DECL_VINDEX.  */
 end_comment
 
 begin_comment
@@ -8551,7 +8551,7 @@ value|(TREE_CODE (NODE) == TYPE_DECL || DECL_CLASS_TEMPLATE_P (NODE))
 end_define
 
 begin_comment
-comment|/* Nonzero if NODE is the typedef implicitly generated for a type when    the type is declared.  (In C++, `struct S {};' is roughly equivalent    to `struct S {}; typedef struct S S;' in C.  This macro will hold    for the typedef indicated in this example.  Note that in C++, there    is a second implicit typedef for each class, in the scope of `S'    itself, so that you can say `S::S'.  This macro does *not* hold for    those typedefs.  */
+comment|/* Nonzero if NODE is the typedef implicitly generated for a type when    the type is declared.  In C++, `struct S {};' is roughly    equivalent to `struct S {}; typedef struct S S;' in C.    DECL_IMPLICIT_TYPEDEF_P will hold for the typedef indicated in this    example.  In C++, there is a second implicit typedef for each    class, in the scope of `S' itself, so that you can say `S::S'.    DECL_SELF_REFERENCE_P will hold for that second typedef.  */
 end_comment
 
 begin_define
@@ -8574,6 +8574,28 @@ name|NODE
 parameter_list|)
 define|\
 value|(DECL_LANG_FLAG_2 (NODE) = 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DECL_SELF_REFERENCE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(TREE_CODE (NODE) == TYPE_DECL&& DECL_LANG_FLAG_4 (NODE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_DECL_SELF_REFERENCE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_LANG_FLAG_4 (NODE) = 1)
 end_define
 
 begin_comment
@@ -8821,7 +8843,7 @@ directive|define
 name|PROCESSING_REAL_TEMPLATE_DECL_P
 parameter_list|()
 define|\
-value|(processing_template_decl> template_class_depth (current_class_type))
+value|(processing_template_decl> template_class_depth (current_scope ()))
 end_define
 
 begin_comment
@@ -11593,6 +11615,18 @@ parameter_list|,
 name|tree
 parameter_list|,
 name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|tree
+name|convert_to_base_statically
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -17616,6 +17650,8 @@ operator|(
 name|tree
 operator|,
 name|tree
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -18026,6 +18062,18 @@ end_decl_stmt
 begin_comment
 comment|/* in search.c */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|accessible_base_p
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
