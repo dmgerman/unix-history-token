@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in_pcb.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)in_pcb.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,6 +59,15 @@ name|route
 name|inp_route
 decl_stmt|;
 comment|/* placeholder for routing entry */
+name|int
+name|inp_flags
+decl_stmt|;
+comment|/* generic IP/datagram flags */
+name|struct
+name|ip
+name|inp_ip
+decl_stmt|;
+comment|/* header prototype; should have more */
 name|struct
 name|mbuf
 modifier|*
@@ -68,6 +77,50 @@ comment|/* IP options */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* flags in inp_flags: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RECVOPTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* receive incoming IP options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RECVRETOPTS
+value|0x02
+end_define
+
+begin_comment
+comment|/* receive IP options for reply */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_RECVDSTADDR
+value|0x04
+end_define
+
+begin_comment
+comment|/* receive IP dst address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INP_CONTROLOPTS
+value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR)
+end_define
 
 begin_ifdef
 ifdef|#
