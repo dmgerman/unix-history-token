@@ -3397,6 +3397,12 @@ name|me
 operator|->
 name|selected
 condition|)
+block|{
+name|wrefresh
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
 name|me
 operator|->
 name|selected
@@ -3406,6 +3412,7 @@ argument_list|,
 name|selected
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
