@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by NAI Labs, the  * Security Research Division of Network Associates, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002, 2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by NAI Labs, the  * Security Research Division of Network Associates, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -36,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -57,6 +77,69 @@ directive|include
 file|<ugidfw.h>
 end_include
 
+begin_function_decl
+name|void
+name|add_rule
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|list_rules
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|remove_rule
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|set_rule
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|usage
@@ -68,7 +151,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ugidfw add [subject [not] [uid uid] [gid gid]]"
+literal|"usage: ugidfw add [subject [not] [uid uid] [gid gid]]"
 literal|" [object [not] [uid uid] \\\n"
 argument_list|)
 expr_stmt|;
@@ -83,14 +166,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ugidfw list\n"
+literal|"       ugidfw list\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ugidfw set rulenum [subject [not] [uid uid] [gid gid]]"
+literal|"       ugidfw set rulenum [subject [not] [uid uid] [gid gid]]"
 literal|" [object [not] \\\n"
 argument_list|)
 expr_stmt|;
@@ -105,12 +188,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ugidfw remove rulenum\n"
+literal|"       ugidfw remove rulenum\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -140,17 +222,10 @@ name|struct
 name|mac_bsdextended_rule
 name|rule
 decl_stmt|;
-name|long
-name|value
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|rulenum
-decl_stmt|;
-name|char
-modifier|*
-name|endp
 decl_stmt|;
 name|error
 operator|=
@@ -173,11 +248,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|errstr
 argument_list|)
@@ -204,11 +277,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|errstr
 argument_list|)
@@ -273,27 +344,19 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unable to get rule slots; mac_bsdextended.ko "
-literal|"may not be loaded.\n"
+literal|"unable to get rule slots; mac_bsdextended.ko "
+literal|"may not be loaded"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"bsde_get_rule_slots: %s\n"
+literal|"bsde_get_rule_slots: %s"
 argument_list|,
 name|errstr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -313,23 +376,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"bsde_get_rule_count: %s\n"
+literal|"bsde_get_rule_count: %s"
 argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"%d slots, %d rules\n"
@@ -381,11 +436,9 @@ case|case
 operator|-
 literal|1
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rule %d: %s\n"
+literal|"rule %d: %s"
 argument_list|,
 name|i
 argument_list|,
@@ -413,11 +466,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unable to translate rule %d to string\n"
+literal|"unable to translate rule %d to string"
 argument_list|,
 name|i
 argument_list|)
@@ -553,11 +604,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|errstr
 argument_list|)
@@ -583,11 +632,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|errstr
 argument_list|)
@@ -700,11 +747,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|errstr
 argument_list|)
