@@ -385,7 +385,7 @@ operator|==
 name|EEXIST
 condition|)
 continue|continue;
-comment|/* 				 * We only need to continue in case of 				 * EEXIT error. Most other error 				 * codes means that we will fail all 				 * the times. 				 */
+comment|/* 				 * We only need to continue in case of 				 * EEXIST error. Most other error 				 * codes means that we will fail all 				 * the time. 				 */
 return|return;
 block|}
 else|else
