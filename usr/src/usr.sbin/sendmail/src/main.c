@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.105
+literal|3.106
 operator|%
 name|G
 operator|%
@@ -3650,6 +3650,10 @@ index|[]
 init|=
 block|{
 comment|/* these are important on the LHS */
+literal|'*'
+block|,
+name|MATCHZANY
+block|,
 literal|'+'
 block|,
 name|MATCHANY
@@ -3674,6 +3678,10 @@ block|,
 literal|':'
 block|,
 name|CANONUSER
+block|,
+literal|'>'
+block|,
+name|CALLSUBR
 block|,
 comment|/* and finally the conditional operations */
 literal|'?'
