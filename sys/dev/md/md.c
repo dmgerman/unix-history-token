@@ -1589,16 +1589,6 @@ name|softc
 expr_stmt|;
 name|bp
 operator|->
-name|bio_blkno
-operator|=
-name|bp
-operator|->
-name|bio_offset
-operator|>>
-name|DEV_BSHIFT
-expr_stmt|;
-name|bp
-operator|->
 name|bio_pblkno
 operator|=
 name|bp
