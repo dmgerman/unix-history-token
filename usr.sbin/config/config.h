@@ -210,6 +210,20 @@ name|COMPSPEC
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVDONE
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPEMASK
+value|0x7fffffff
+end_define
+
 begin_comment
 comment|/*  * Attributes (flags).  */
 end_comment

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.22 1997/09/15 06:37:09 charnier Exp $"
+literal|"$Id: mkmakefile.c,v 1.23 1997/10/22 00:38:48 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1403,6 +1403,8 @@ decl_stmt|,
 name|no_obj
 decl_stmt|,
 name|before_depend
+decl_stmt|,
+name|mandatory
 decl_stmt|;
 name|ftab
 operator|=
@@ -1467,7 +1469,7 @@ expr_stmt|;
 block|}
 name|next
 label|:
-comment|/* 	 * filename	[ standard | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] 	 */
+comment|/* 	 * filename    [ standard | mandatory | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1746,6 +1748,8 @@ literal|0
 expr_stmt|;
 name|std
 operator|=
+name|mandatory
+operator|=
 literal|0
 expr_stmt|;
 name|imp_rule
@@ -1777,6 +1781,21 @@ name|std
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * If an entry is marked "mandatory", config will abort if it's 	 * not called by a configuration line in the config file.  Apart 	 * from this, the device is handled like one marked "optional". 	 */
+elseif|else
+if|if
+condition|(
+name|eq
+argument_list|(
+name|wd
+argument_list|,
+literal|"mandatory"
+argument_list|)
+condition|)
+name|mandatory
+operator|=
+literal|1
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -1791,7 +1810,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s must be optional or standard\n"
+literal|"%s: %s must be optional, mandatory or standard\n"
 argument_list|,
 name|fname
 argument_list|,
@@ -2176,6 +2195,26 @@ expr_stmt|;
 goto|goto
 name|nextparam
 goto|;
+block|}
+if|if
+condition|(
+name|mandatory
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: mandatory device \"%s\" not found\n"
+argument_list|,
+name|fname
+argument_list|,
+name|wd
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
