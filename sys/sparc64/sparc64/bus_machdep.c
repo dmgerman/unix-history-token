@@ -2363,7 +2363,7 @@ name|mapp
 argument_list|,
 name|ddmat
 operator|->
-name|maxsize
+name|dt_maxsize
 argument_list|)
 operator|)
 return|;
