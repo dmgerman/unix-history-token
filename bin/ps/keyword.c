@@ -2520,7 +2520,7 @@ decl_stmt|;
 define|#
 directive|define
 name|FMTSEP
-value|" \t,\n"
+value|"\t,\n"
 name|tempstr1
 operator|=
 name|tempstr
