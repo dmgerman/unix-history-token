@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.19	(Berkeley)	85/02/18"
+literal|"@(#)utilities.c	3.20	(Berkeley)	85/02/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +141,7 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
+block|}
 name|ep
 operator|->
 name|e_flags
@@ -149,7 +150,6 @@ name|NEW
 operator||
 name|KEEP
 expr_stmt|;
-block|}
 operator|*
 name|cp
 operator|=
