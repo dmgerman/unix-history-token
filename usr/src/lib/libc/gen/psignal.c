@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)psignal.c	5.2 (Berkeley) %G%"
+literal|"@(#)psignal.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_comment
 comment|/*  * Print the name of the signal indicated  * along with the supplied message.  */
@@ -64,6 +67,7 @@ end_macro
 
 begin_decl_stmt
 name|unsigned
+name|int
 name|sig
 decl_stmt|;
 end_decl_stmt
@@ -83,12 +87,9 @@ modifier|*
 name|c
 decl_stmt|;
 specifier|register
+name|int
 name|n
-expr_stmt|;
-name|c
-operator|=
-literal|"Unknown signal"
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|sig
@@ -102,6 +103,11 @@ index|[
 name|sig
 index|]
 expr_stmt|;
+else|else
+name|c
+operator|=
+literal|"Unknown signal"
+expr_stmt|;
 name|n
 operator|=
 name|strlen
@@ -114,6 +120,9 @@ condition|(
 name|n
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -123,6 +132,9 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -133,6 +145,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -145,6 +160,9 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
