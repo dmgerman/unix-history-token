@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.290 1999/01/11 03:18:27 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.291 1999/01/13 01:14:26 yokota Exp $  */
 end_comment
 
 begin_include
@@ -807,6 +807,13 @@ end_decl_stmt
 begin_comment
 comment|/* about to run the saver */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|scrn_saver_failed
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|u_char
@@ -1747,6 +1754,9 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
+parameter_list|,
+name|int
+name|changemode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10870,11 +10880,7 @@ name|scrn_idle
 condition|)
 if|if
 condition|(
-name|scp
-operator|->
-name|status
-operator|&
-name|SAVER_RUNNING
+name|scrn_blanked
 condition|)
 name|stop_scrn_saver
 argument_list|(
@@ -11164,10 +11170,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|scp
-operator|=
-name|cur_console
-expr_stmt|;
 comment|/* should we stop the screen saver? */
 name|getmicrouptime
 argument_list|(
@@ -11238,11 +11240,7 @@ name|scrn_idle
 condition|)
 if|if
 condition|(
-name|scp
-operator|->
-name|status
-operator|&
-name|SAVER_RUNNING
+name|scrn_blanked
 condition|)
 name|stop_scrn_saver
 argument_list|(
@@ -11284,6 +11282,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Update the screen */
+name|scp
+operator|=
+name|cur_console
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -11327,13 +11329,7 @@ argument_list|(
 name|scp
 argument_list|)
 operator|||
-operator|(
-name|scp
-operator|->
-name|status
-operator|&
-name|SAVER_RUNNING
-operator|)
+name|scrn_blanked
 condition|)
 call|(
 modifier|*
@@ -11769,6 +11765,10 @@ block|{
 case|case
 name|SPLASH_INIT
 case|:
+name|scrn_saver_failed
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|add_scrn_saver
@@ -11873,12 +11873,6 @@ name|busy
 init|=
 name|FALSE
 decl_stmt|;
-specifier|static
-name|int
-name|failed
-init|=
-name|FALSE
-decl_stmt|;
 name|scr_stat
 modifier|*
 name|scp
@@ -11904,7 +11898,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|failed
+name|scrn_saver_failed
 condition|)
 block|{
 if|if
@@ -11924,7 +11918,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|splash
 argument_list|(
@@ -11934,18 +11928,31 @@ name|adp
 argument_list|,
 name|TRUE
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
+case|case
+literal|0
+case|:
+comment|/* succeeded */
 name|scrn_blanked
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
-else|else
-block|{
-name|failed
+break|break;
+case|case
+name|EAGAIN
+case|:
+comment|/* try later */
+name|restore_scrn_saver_mode
+argument_list|(
+name|scp
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|scrn_saver_failed
 operator|=
 name|TRUE
 expr_stmt|;
@@ -11962,8 +11969,11 @@ expr_stmt|;
 name|restore_scrn_saver_mode
 argument_list|(
 name|scp
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
@@ -11995,6 +12005,8 @@ block|{
 name|restore_scrn_saver_mode
 argument_list|(
 name|scp
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|scrn_blanked
@@ -12174,7 +12186,11 @@ operator|->
 name|status
 operator|&=
 operator|~
+operator|(
+name|GRAPHICS_MODE
+operator||
 name|PIXEL_MODE
+operator|)
 expr_stmt|;
 name|scp
 operator|->
@@ -12312,6 +12328,9 @@ parameter_list|(
 name|scr_stat
 modifier|*
 name|scp
+parameter_list|,
+name|int
+name|changemode
 parameter_list|)
 block|{
 name|int
@@ -12357,8 +12376,6 @@ operator|~
 operator|(
 name|UNKNOWN_MODE
 operator||
-name|GRAPHICS_MODE
-operator||
 name|SAVER_RUNNING
 operator|)
 expr_stmt|;
@@ -12370,6 +12387,21 @@ name|scp
 operator|->
 name|splash_save_status
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|changemode
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|set_mode
@@ -12662,14 +12694,14 @@ operator|||
 name|blink_in_progress
 condition|)
 block|{
-name|sc_touch_scrn_saver
-argument_list|()
-expr_stmt|;
 name|delayed_next_scr
 operator|=
 name|next_scr
 operator|+
 literal|1
+expr_stmt|;
+name|sc_touch_scrn_saver
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
