@@ -51,6 +51,12 @@ directive|include
 file|<dev/ic/isp_target.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ic/isp_tpublic.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<dev/isp/isp_target.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_tpublic.h>
 end_include
 
 begin_endif
@@ -119,6 +131,12 @@ directive|include
 file|"isp_target.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"isp_tpublic.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -140,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|11
+value|12
 end_define
 
 begin_comment
@@ -1464,6 +1482,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_CFG_NPORT
+value|0x04
+end_define
+
+begin_comment
+comment|/* try to force N- instead of L-Port */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISP_FW_REV
 parameter_list|(
 name|maj
@@ -1574,15 +1603,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_1080
-value|0xd
+name|ISP_HA_SCSI_1240
+value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISP_HA_SCSI_12X0
-value|0xe
+name|ISP_HA_SCSI_1080
+value|0x9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1280
+value|0xa
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_12160
+value|0xb
 end_define
 
 begin_define
@@ -1619,6 +1662,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_1240
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_1240)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_1080
 parameter_list|(
 name|isp
@@ -1629,11 +1682,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_1280
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_1280)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_12160
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_12160)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_12X0
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type == ISP_HA_SCSI_12X0)
+value|(IS_1240(isp) || IS_1280(isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DUALBUS
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_12X0(isp) || IS_12160(isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ULTRA2
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_1080(isp) || IS_1280(isp) || IS_12160(isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ULTRA3
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_12160(isp))
 end_define
 
 begin_define
@@ -1644,6 +1747,26 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|(isp->isp_type& ISP_HA_FC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2100
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_FC_2100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2200
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_FC_2200)
 end_define
 
 begin_comment
@@ -1758,19 +1881,14 @@ comment|/* Abort Command */
 name|ISPCTL_UPDATE_PARAMS
 block|,
 comment|/* Update Operating Parameters */
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-name|ISPCTL_ENABLE_LUN
-block|,
-comment|/* enable a LUN */
-name|ISPCTL_MODIFY_LUN
-block|,
-comment|/* enable a LUN */
-endif|#
-directive|endif
 name|ISPCTL_FCLINK_TEST
+block|,
 comment|/* Test FC Link Status */
+name|ISPCTL_PDB_SYNC
+block|,
+comment|/* Synchronize Port Database */
+name|ISPCTL_TOGGLE_TMODE
+comment|/* toggle target mode */
 block|}
 name|ispctl_t
 typedef|;
@@ -1823,11 +1941,14 @@ comment|/* FC SNS Change Notification */
 name|ISPASYNC_FABRIC_DEV
 block|,
 comment|/* FC New Fabric Device */
-name|ISPASYNC_TARGET_CMD
+name|ISPASYNC_TARGET_MESSAGE
 block|,
-comment|/* New target command */
+comment|/* target message */
 name|ISPASYNC_TARGET_EVENT
-comment|/* New target event */
+block|,
+comment|/* target asynchronous event */
+name|ISPASYNC_TARGET_ACTION
+comment|/* other target command action */
 block|}
 name|ispasync_t
 typedef|;
