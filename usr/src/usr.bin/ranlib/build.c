@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)build.c	5.3 (Berkeley) %G%"
+literal|"@(#)build.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,10 +526,6 @@ name|read
 argument_list|(
 name|rfd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ebuf
 argument_list|,
@@ -577,12 +573,12 @@ name|lseek
 argument_list|(
 name|rfd
 argument_list|,
+name|r_off
+operator|+
 name|N_STROFF
 argument_list|(
 name|ebuf
 argument_list|)
-operator|+
-name|r_off
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -605,10 +601,6 @@ name|read
 argument_list|(
 name|rfd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|strsize
 argument_list|,
@@ -640,10 +632,6 @@ argument_list|)
 expr_stmt|;
 name|strtab
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 name|strsize
@@ -691,12 +679,15 @@ name|fseek
 argument_list|(
 name|fp
 argument_list|,
+operator|(
+name|long
+operator|)
+name|r_off
+operator|+
 name|N_SYMOFF
 argument_list|(
 name|ebuf
 argument_list|)
-operator|+
-name|r_off
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -734,10 +725,6 @@ condition|(
 operator|!
 name|fread
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|nl
 argument_list|,
@@ -920,9 +907,6 @@ name|lseek
 argument_list|(
 name|rfd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|r_off
 argument_list|,
 name|SEEK_SET
@@ -950,6 +934,14 @@ name|struct
 name|ranlib
 name|rn
 decl_stmt|;
+name|off_t
+name|ransize
+decl_stmt|;
+name|long
+name|size
+decl_stmt|,
+name|stroff
+decl_stmt|;
 name|char
 name|hb
 index|[
@@ -964,21 +956,6 @@ index|]
 decl_stmt|,
 name|pad
 decl_stmt|;
-name|long
-name|ransize
-decl_stmt|,
-name|size
-decl_stmt|,
-name|stroff
-decl_stmt|;
-name|gid_t
-name|getgid
-parameter_list|()
-function_decl|;
-name|uid_t
-name|getuid
-parameter_list|()
-function_decl|;
 comment|/* Rewind the archive, leaving the magic number. */
 if|if
 condition|(
@@ -987,7 +964,7 @@ argument_list|(
 name|fp
 argument_list|,
 operator|(
-name|off_t
+name|long
 operator|)
 name|SARMAG
 argument_list|,
@@ -995,7 +972,7 @@ name|SEEK_SET
 argument_list|)
 operator|==
 operator|(
-name|off_t
+name|long
 operator|)
 operator|-
 literal|1
@@ -1124,10 +1101,6 @@ condition|(
 operator|!
 name|fwrite
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|size
 argument_list|,
@@ -1208,10 +1181,6 @@ condition|(
 operator|!
 name|fwrite
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|rn
 argument_list|,
@@ -1238,10 +1207,6 @@ condition|(
 operator|!
 name|fwrite
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|tsymlen
 argument_list|,
