@@ -741,7 +741,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+name|int
 name|inspeed
 init|=
 literal|0
@@ -3893,6 +3893,24 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|inspeed
+condition|)
+block|{
+name|tios
+operator|.
+name|c_ispeed
+operator|=
+name|inspeed
+expr_stmt|;
+name|tios
+operator|.
+name|c_ospeed
+operator|=
+name|inspeed
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ioctl
