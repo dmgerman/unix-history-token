@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_ppp.c  *  * Copyright (c) 1996-2000 Whistle Communications, Inc.  * All rights reserved.  *   * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *   * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Author: Archie Cobbs<archie@whistle.com>  *  * $FreeBSD$  * $Whistle: ng_ppp.c,v 1.24 1999/11/01 09:24:52 julian Exp $  */
+comment|/*  * ng_ppp.c  *  * Copyright (c) 1996-2000 Whistle Communications, Inc.  * All rights reserved.  *   * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *   * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Author: Archie Cobbs<archie@freebsd.org>  *  * $FreeBSD$  * $Whistle: ng_ppp.c,v 1.24 1999/11/01 09:24:52 julian Exp $  */
 end_comment
 
 begin_comment
@@ -47,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -316,22 +310,12 @@ begin_define
 define|#
 directive|define
 name|MP_NOSEQ
-value|INT_MAX
+value|0x7fffffff
 end_define
 
 begin_comment
 comment|/* impossible sequence number */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MP_SEQ_MASK
-parameter_list|(
-name|priv
-parameter_list|)
-value|((priv)->conf.recvShortSeq ? \ 				    MP_SHORT_SEQ_MASK : MP_LONG_SEQ_MASK)
-end_define
 
 begin_comment
 comment|/* Sign extension of MP sequence numbers */
@@ -344,7 +328,7 @@ name|MP_SHORT_EXTEND
 parameter_list|(
 name|s
 parameter_list|)
-value|(((s)& MP_SHORT_SEQ_HIBIT) ? \ 				    ((s) | ~MP_SHORT_SEQ_MASK) : (s))
+value|(((s)& MP_SHORT_SEQ_HIBIT) ?		\ 				    ((s) | ~MP_SHORT_SEQ_MASK)		\ 				    : ((s)& MP_SHORT_SEQ_MASK))
 end_define
 
 begin_define
@@ -354,11 +338,11 @@ name|MP_LONG_EXTEND
 parameter_list|(
 name|s
 parameter_list|)
-value|(((s)& MP_LONG_SEQ_HIBIT) ? \ 				    ((s) | ~MP_LONG_SEQ_MASK) : (s))
+value|(((s)& MP_LONG_SEQ_HIBIT) ?		\ 				    ((s) | ~MP_LONG_SEQ_MASK)		\ 				    : ((s)& MP_LONG_SEQ_MASK))
 end_define
 
 begin_comment
-comment|/* Comparision of MP sequence numbers */
+comment|/* Comparision of MP sequence numbers. Note: all sequence numbers    except priv->xseq are stored with the sign bit extended. */
 end_comment
 
 begin_define
@@ -370,7 +354,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(MP_SHORT_EXTEND(x) - MP_SHORT_EXTEND(y))
+value|MP_SHORT_EXTEND((x) - (y))
 end_define
 
 begin_define
@@ -382,13 +366,13 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(MP_LONG_EXTEND(x) - MP_LONG_EXTEND(y))
+value|MP_LONG_EXTEND((x) - (y))
 end_define
 
 begin_define
 define|#
 directive|define
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 parameter_list|(
 name|priv
 parameter_list|,
@@ -396,31 +380,25 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((priv)->conf.recvShortSeq ? \ 				    MP_SHORT_SEQ_DIFF((x), (y)) : \ 				    MP_LONG_SEQ_DIFF((x), (y)))
+define|\
+value|((priv)->conf.recvShortSeq ?		\ 				    MP_SHORT_SEQ_DIFF((x), (y)) :	\ 				    MP_LONG_SEQ_DIFF((x), (y)))
 end_define
+
+begin_comment
+comment|/* Increment receive sequence number */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MP_NEXT_SEQ
+name|MP_NEXT_RECV_SEQ
 parameter_list|(
 name|priv
 parameter_list|,
 name|seq
 parameter_list|)
-value|(((seq) + 1)& MP_SEQ_MASK(priv))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MP_PREV_SEQ
-parameter_list|(
-name|priv
-parameter_list|,
-name|seq
-parameter_list|)
-value|(((seq) - 1)& MP_SEQ_MASK(priv))
+define|\
+value|(((seq) + 1)& ((priv)->conf.recvShortSeq ? \ 				    MP_SHORT_SEQ_MASK : MP_LONG_SEQ_MASK))
 end_define
 
 begin_comment
@@ -634,7 +612,7 @@ name|hook_p
 name|hook
 decl_stmt|;
 comment|/* connection to link data */
-name|int
+name|int32_t
 name|seq
 decl_stmt|;
 comment|/* highest rec'd seq# - MSEQ */
@@ -682,11 +660,11 @@ name|NG_PPP_MAX_LINKS
 index|]
 decl_stmt|;
 comment|/* per-link info */
-name|int
+name|int32_t
 name|xseq
 decl_stmt|;
 comment|/* next out MP seq # */
-name|int
+name|int32_t
 name|mseq
 decl_stmt|;
 comment|/* min links[i].seq */
@@ -1121,6 +1099,75 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Parse type for struct ng_ppp_mp_state_type */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_fixedarray_info
+name|ng_ppp_rseq_array_info
+init|=
+block|{
+operator|&
+name|ng_parse_hint32_type
+block|,
+name|NG_PPP_MAX_LINKS
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_ppp_rseq_array_type
+init|=
+block|{
+operator|&
+name|ng_parse_fixedarray_type
+block|,
+operator|&
+name|ng_ppp_rseq_array_info
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_struct_info
+name|ng_ppp_mp_state_type_info
+init|=
+name|NG_PPP_MP_STATE_TYPE_INFO
+argument_list|(
+operator|&
+name|ng_ppp_rseq_array_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_ppp_mp_state_type
+init|=
+block|{
+operator|&
+name|ng_parse_struct_type
+block|,
+operator|&
+name|ng_ppp_mp_state_type_info
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Parse type for struct ng_ppp_link_conf */
 end_comment
 
@@ -1189,6 +1236,8 @@ comment|/* Parse type for struct ng_ppp_node_conf */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|ng_parse_fixedarray_info
 name|ng_ppp_array_info
@@ -1323,6 +1372,19 @@ name|NULL
 block|,
 operator|&
 name|ng_ppp_conf_type
+block|}
+block|,
+block|{
+name|NGM_PPP_COOKIE
+block|,
+name|NGM_PPP_GET_MP_STATE
+block|,
+literal|"getmpstate"
+block|,
+name|NULL
+block|,
+operator|&
+name|ng_ppp_mp_state_type
 block|}
 block|,
 block|{
@@ -2219,6 +2281,128 @@ name|i
 index|]
 operator|.
 name|conf
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|NGM_PPP_GET_MP_STATE
+case|:
+block|{
+name|struct
+name|ng_ppp_mp_state
+modifier|*
+name|info
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|NG_MKRESPONSE
+argument_list|(
+name|resp
+argument_list|,
+name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|info
+argument_list|)
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|resp
+operator|==
+name|NULL
+condition|)
+name|ERROUT
+argument_list|(
+name|ENOMEM
+argument_list|)
+expr_stmt|;
+name|info
+operator|=
+operator|(
+expr|struct
+name|ng_ppp_mp_state
+operator|*
+operator|)
+name|resp
+operator|->
+name|data
+expr_stmt|;
+name|bzero
+argument_list|(
+name|info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|info
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NG_PPP_MAX_LINKS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|priv
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|.
+name|seq
+operator|!=
+name|MP_NOSEQ
+condition|)
+name|info
+operator|->
+name|rseq
+index|[
+name|i
+index|]
+operator|=
+name|priv
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|.
+name|seq
+expr_stmt|;
+block|}
+name|info
+operator|->
+name|mseq
+operator|=
+name|priv
+operator|->
+name|mseq
+expr_stmt|;
+name|info
+operator|->
+name|xseq
+operator|=
+name|priv
+operator|->
+name|xseq
 expr_stmt|;
 break|break;
 block|}
@@ -4662,9 +4846,10 @@ name|frag
 operator|->
 name|seq
 operator|=
+name|MP_SHORT_EXTEND
+argument_list|(
 name|shdr
-operator|&
-name|MP_SHORT_SEQ_MASK
+argument_list|)
 expr_stmt|;
 name|frag
 operator|->
@@ -4798,9 +4983,10 @@ name|frag
 operator|->
 name|seq
 operator|=
+name|MP_LONG_EXTEND
+argument_list|(
 name|lhdr
-operator|&
-name|MP_LONG_SEQ_MASK
+argument_list|)
 expr_stmt|;
 name|frag
 operator|->
@@ -4945,7 +5131,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -5035,7 +5221,7 @@ argument_list|)
 block|{
 name|diff
 operator|=
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -5211,7 +5397,7 @@ name|qent
 operator|->
 name|first
 operator|||
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -5274,7 +5460,7 @@ name|qnext
 operator|->
 name|seq
 operator|!=
-name|MP_NEXT_SEQ
+name|MP_NEXT_RECV_SEQ
 argument_list|(
 name|priv
 argument_list|,
@@ -5610,7 +5796,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -5661,7 +5847,7 @@ name|qnext
 operator|->
 name|seq
 operator|!=
-name|MP_NEXT_SEQ
+name|MP_NEXT_RECV_SEQ
 argument_list|(
 name|priv
 argument_list|,
@@ -5946,7 +6132,7 @@ expr_stmt|;
 comment|/* Bump MSEQ if necessary */
 if|if
 condition|(
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -6007,7 +6193,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -6237,7 +6423,7 @@ break|break;
 block|}
 name|seq
 operator|=
-name|MP_NEXT_SEQ
+name|MP_NEXT_RECV_SEQ
 argument_list|(
 name|priv
 argument_list|,
@@ -6392,7 +6578,7 @@ expr_stmt|;
 comment|/* Bump MSEQ if necessary */
 if|if
 condition|(
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -6453,7 +6639,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|MP_SEQ_DIFF
+name|MP_RECV_SEQ_DIFF
 argument_list|(
 name|priv
 argument_list|,
@@ -7086,7 +7272,7 @@ name|xseq
 operator|+
 literal|1
 operator|)
-operator|%
+operator|&
 name|MP_SHORT_SEQ_MASK
 expr_stmt|;
 if|if
@@ -7147,7 +7333,7 @@ name|xseq
 operator|+
 literal|1
 operator|)
-operator|%
+operator|&
 name|MP_LONG_SEQ_MASK
 expr_stmt|;
 if|if
