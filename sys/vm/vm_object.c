@@ -4595,7 +4595,6 @@ end_define
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|vm_object_backing_scan
 parameter_list|(
