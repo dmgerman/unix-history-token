@@ -305,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|DUMPOUTFMT
-value|"%-16s %c %s"
+value|"%-32s %c %s"
 end_define
 
 begin_comment
@@ -320,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|DUMPINFMT
-value|"%16s %c %[^\n]\n"
+value|"%32s %c %[^\n]\n"
 end_define
 
 begin_comment
