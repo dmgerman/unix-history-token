@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.44 2002/01/23 17:47:15 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.46 2003/12/10 03:19:06 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -500,7 +500,23 @@ comment|/* !SM_CONF_TEST_LLONG */
 end_comment
 
 begin_comment
-comment|/* Does LDAP library have ldap_memfree()? */
+comment|/* LDAP Checks */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|LDAPMAP
+end_if
+
+begin_include
+include|#
+directive|include
+file|<ldap.h>
+end_include
+
+begin_comment
+comment|/* Does the LDAP library have ldap_memfree()? */
 end_comment
 
 begin_ifndef
@@ -562,6 +578,90 @@ end_endif
 
 begin_comment
 comment|/* ! SM_CONF_LDAP_MEMFREE */
+end_comment
+
+begin_comment
+comment|/* Does the LDAP library have ldap_initialize()? */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_CONF_LDAP_INITIALIZE
+end_ifndef
+
+begin_comment
+comment|/* **  Check for ldap_initialize() support for support for LDAP URI's with **  non-ldap:// schemes. */
+end_comment
+
+begin_comment
+comment|/* OpenLDAP does it with LDAP_OPT_URI */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LDAP_OPT_URI
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SM_CONF_LDAP_INITIALIZE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LDAP_OPT_URI */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SM_CONF_LDAP_INITIALIZE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LDAPMAP */
+end_comment
+
+begin_comment
+comment|/* don't use strcpy() */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DO_NOT_USE_STRCPY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DO_NOT_USE_STRCPY
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! DO_NOT_USE_STRCPY */
 end_comment
 
 begin_endif

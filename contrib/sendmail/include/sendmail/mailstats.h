@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mailstats.h,v 8.18 2001/11/21 13:39:10 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mailstats.h,v 8.19 2002/06/27 22:47:22 gshapiro Exp $  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
 
 begin_define
 define|#
@@ -15,31 +9,6 @@ directive|define
 name|STAT_VERSION
 value|4
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STAT_VERSION
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 begin_define
 define|#
@@ -126,9 +95,6 @@ name|MAXMAILERS
 index|]
 decl_stmt|;
 comment|/* # discards by each mailer */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|long
 name|stat_nq
 index|[
@@ -136,9 +102,6 @@ name|MAXMAILERS
 index|]
 decl_stmt|;
 comment|/* # quarantines by each mailer */
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 struct|;
 end_struct

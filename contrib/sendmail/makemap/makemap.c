@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: makemap.c,v 8.175 2001/12/28 22:44:01 ca Exp $"
+literal|"@(#)$Id: makemap.c,v 8.176 2002/06/27 23:41:04 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -218,25 +218,55 @@ modifier|*
 name|progname
 decl_stmt|;
 block|{
-comment|/* XXX break the usage output into multiple lines? it's too long */
 name|sm_io_fprintf
 argument_list|(
 name|smioerr
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
-literal|"Usage: %s [-C cffile] [-N] [-c cachesize] [-d] [-e] [-f] [-l] [-o] [-r] [-s] [-t delimiter] [-u] [-v] type mapname\n"
+literal|"Usage: %s [-C cffile] [-N] [-c cachesize] [-D commentchar]\n"
 argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_COMMENT_CHAR
-comment|/* add -D comment-char */
-endif|#
-directive|endif
-comment|/* _FFR_COMMENT_CHAR */
+name|sm_io_fprintf
+argument_list|(
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"       %*s [-d] [-e] [-f] [-l] [-o] [-r] [-s] [-t delimiter]\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|strlen
+argument_list|(
+name|progname
+argument_list|)
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|sm_io_fprintf
+argument_list|(
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"       %*s [-u] [-v] type mapname\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|strlen
+argument_list|(
+name|progname
+argument_list|)
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_USAGE
@@ -663,9 +693,6 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_COMMENT_CHAR
 case|case
 literal|'D'
 case|:
@@ -675,9 +702,6 @@ operator|*
 name|optarg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_COMMENT_CHAR */
 case|case
 literal|'l'
 case|:

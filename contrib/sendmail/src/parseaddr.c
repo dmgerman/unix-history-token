@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359.2.9 2003/09/16 18:07:50 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.378 2004/05/18 20:01:54 ca Exp $"
 argument_list|)
 end_macro
 
@@ -276,6 +276,8 @@ argument_list|,
 name|delimptr
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -824,6 +826,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false
@@ -1483,7 +1488,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses) (if the token type **	for left paren is SPC). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. **		pvpbsize -- size of pvpbuf. **		delimptr -- if non-NULL, set to the location of the **			terminating delimiter. **		toktab -- if set, a token table to use for parsing. **			If NULL, use the default table. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses) (if the token type **	for left paren is SPC). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. **			If '\t' then we are reading the .cf file. **		pvpbuf -- place to put the saved text -- note that **			the pointers are static. **		pvpbsize -- size of pvpbuf. **		delimptr -- if non-NULL, set to the location of the **			terminating delimiter. **		toktab -- if set, a token table to use for parsing. **			If NULL, use the default table. **		ignore -- if true, ignore unbalanced addresses ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. */
 end_comment
 
 begin_comment
@@ -3422,6 +3427,8 @@ parameter_list|,
 name|delimptr
 parameter_list|,
 name|toktab
+parameter_list|,
+name|ignore
 parameter_list|)
 name|char
 modifier|*
@@ -3446,6 +3453,9 @@ name|unsigned
 name|char
 modifier|*
 name|toktab
+decl_stmt|;
+name|bool
+name|ignore
 decl_stmt|;
 block|{
 specifier|register
@@ -3512,10 +3522,6 @@ name|bool
 name|firsttime
 init|=
 name|true
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 if|if
 condition|(
@@ -3729,6 +3735,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -3894,6 +3903,12 @@ block|{
 comment|/* diagnose and patch up bad syntax */
 if|if
 condition|(
+name|ignore
+condition|)
+break|break;
+elseif|else
+if|if
+condition|(
 name|state
 operator|==
 name|QST
@@ -3983,6 +3998,9 @@ literal|','
 operator|&&
 operator|!
 name|route_syntax
+operator|&&
+operator|!
+name|ignore
 condition|)
 block|{
 name|usrerr
@@ -4151,6 +4169,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ignore
+condition|)
+block|{
 name|usrerr
 argument_list|(
 literal|"553 Unbalanced ')'"
@@ -4160,6 +4184,7 @@ name|c
 operator|=
 name|NOCHAR
 expr_stmt|;
+block|}
 block|}
 else|else
 name|cmntcnt
@@ -4240,6 +4265,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ignore
+condition|)
+block|{
 name|usrerr
 argument_list|(
 literal|"553 Unbalanced '>'"
@@ -4249,6 +4280,7 @@ name|c
 operator|=
 name|NOCHAR
 expr_stmt|;
+block|}
 block|}
 else|else
 name|anglecnt
@@ -4448,6 +4480,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|tok
 argument_list|)
 expr_stmt|;
@@ -4564,6 +4599,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
@@ -4863,6 +4901,8 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|smioout
+argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
@@ -4889,6 +4929,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
@@ -5020,6 +5063,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rwr
 operator|->
 name|r_lhs
@@ -5075,6 +5121,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
@@ -5120,6 +5169,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
@@ -5130,6 +5182,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
@@ -5277,6 +5332,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
@@ -5287,6 +5345,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
@@ -5591,6 +5652,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rp
 argument_list|)
 expr_stmt|;
@@ -5601,6 +5665,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
@@ -5757,6 +5824,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rvp
 argument_list|)
 expr_stmt|;
@@ -6258,6 +6328,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -6985,6 +7057,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -7170,6 +7244,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
@@ -7200,6 +7277,8 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|smioout
+argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
@@ -7226,6 +7305,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|pvp
 argument_list|)
 expr_stmt|;
@@ -8397,6 +8479,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|tv
 argument_list|)
 expr_stmt|;
@@ -8483,13 +8568,7 @@ argument_list|)
 expr_stmt|;
 name|badaddr
 label|:
-if|#
-directive|if
-name|_FFR_ALLOW_S0_ERROR_4XX
-comment|/* 		**  ExitStat may have been set by an earlier map open 		**  failure (to a permanent error (EX_OSERR) in syserr()) 		**  so we also need to check if this particular $#error 		**  return wanted a 4XX failure. 		** 		**  XXX the real fix is probably to set ExitStat correctly, 		**  i.e., to EX_TEMPFAIL if the map open is just a temporary 		**  error. 		** 		**  tempfail is tested here even if _FFR_ALLOW_S0_ERROR_4XX 		**  is not set; that's ok because it is initialized to false. 		*/
-endif|#
-directive|endif
-comment|/* _FFR_ALLOW_S0_ERROR_4XX */
+comment|/* 		**  ExitStat may have been set by an earlier map open 		**  failure (to a permanent error (EX_OSERR) in syserr()) 		**  so we also need to check if this particular $#error 		**  return wanted a 4XX failure. 		** 		**  XXX the real fix is probably to set ExitStat correctly, 		**  i.e., to EX_TEMPFAIL if the map open is just a temporary 		**  error. 		*/
 if|if
 condition|(
 name|ExitStat
@@ -8982,9 +9061,6 @@ name|off
 argument_list|)
 expr_stmt|;
 comment|/* XXX ubuf[off - 1] = ' '; */
-if|#
-directive|if
-name|_FFR_ALLOW_S0_ERROR_4XX
 if|if
 condition|(
 name|ubuf
@@ -8998,9 +9074,6 @@ name|tempfail
 operator|=
 name|true
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_ALLOW_S0_ERROR_4XX */
 block|}
 else|else
 block|{
@@ -9475,6 +9548,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false
@@ -9634,9 +9710,6 @@ literal|0
 condition|)
 break|break;
 block|}
-if|if
-condition|(
-operator|(
 name|i
 operator|=
 name|sm_strlcpy
@@ -9648,9 +9721,16 @@ name|pvp
 argument_list|,
 name|sz
 argument_list|)
-operator|)
-operator|>=
+expr_stmt|;
 name|sz
+operator|-=
+name|i
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|<=
+literal|0
 condition|)
 break|break;
 name|oatomtok
@@ -9659,10 +9739,6 @@ name|natomtok
 expr_stmt|;
 name|p
 operator|+=
-name|i
-expr_stmt|;
-name|sz
-operator|-=
 name|i
 expr_stmt|;
 if|if
@@ -9674,25 +9750,18 @@ name|evp
 condition|)
 break|break;
 block|}
-if|#
-directive|if
-name|_FFR_CATCH_LONG_STRINGS
-comment|/* Don't silently truncate long strings; broken for evp != NULL */
+comment|/* Don't silently truncate long strings */
 if|if
 condition|(
-operator|*
-name|pvp
-operator|!=
-name|NULL
+name|sz
+operator|<=
+literal|0
 condition|)
 name|syserr
 argument_list|(
 literal|"cataddr: string too long"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_CATCH_LONG_STRINGS */
 operator|*
 name|p
 operator|=
@@ -10022,10 +10091,16 @@ begin_function
 name|void
 name|printaddr
 parameter_list|(
+name|fp
+parameter_list|,
 name|a
 parameter_list|,
 name|follow
 parameter_list|)
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
@@ -10064,7 +10139,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10085,7 +10160,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10099,7 +10174,7 @@ name|void
 operator|)
 name|sm_io_flush
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|)
@@ -10142,7 +10217,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10186,7 +10261,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10214,7 +10289,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10236,7 +10311,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10252,7 +10327,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10268,7 +10343,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10284,7 +10359,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10300,7 +10375,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10316,7 +10391,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10332,7 +10407,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10348,7 +10423,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10364,7 +10439,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10380,7 +10455,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10396,7 +10471,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10412,7 +10487,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10428,7 +10503,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10444,7 +10519,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10460,7 +10535,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10474,7 +10549,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10492,7 +10567,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10526,7 +10601,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10582,7 +10657,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10598,7 +10673,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10615,7 +10690,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10627,7 +10702,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10675,7 +10750,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10723,7 +10798,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10747,7 +10822,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -10771,7 +10846,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -11137,6 +11212,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -11596,6 +11673,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false
@@ -11620,6 +11700,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -11936,6 +12018,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false
@@ -12554,9 +12639,6 @@ name|saveSuprErrs
 init|=
 name|SuprErrs
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|bool
 name|quarantine
 init|=
@@ -12570,9 +12652,6 @@ operator|*
 literal|2
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|char
 name|buf0
 index|[
@@ -12787,6 +12866,17 @@ condition|?
 name|NULL
 else|:
 name|TokTypeNoC
+argument_list|,
+name|bitset
+argument_list|(
+name|RSF_RMCOMM
+argument_list|,
+name|flags
+argument_list|)
+condition|?
+name|false
+else|:
+name|true
 argument_list|)
 expr_stmt|;
 name|SuprErrs
@@ -12958,9 +13048,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -13120,9 +13207,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 else|else
 block|{
 name|int
@@ -13340,9 +13424,6 @@ argument_list|,
 name|lbuf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -13365,9 +13446,6 @@ argument_list|,
 name|ubuf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 else|else
 name|sm_syslog
 argument_list|(
@@ -13732,6 +13810,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -14,6 +14,12 @@ if|#
 directive|if
 name|MILTER
 end_if
+
+begin_include
+include|#
+directive|include
+file|<libmilter/mfapi.h>
+end_include
 
 begin_include
 include|#
@@ -33,9 +39,21 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.34 2004/01/14 19:13:46 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.900 2004/07/08 23:29:33 ca Exp $"
 argument_list|)
 end_macro
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/fdset.h>
+end_include
 
 begin_if
 if|#
@@ -44,12 +62,6 @@ name|SASL
 operator|||
 name|STARTTLS
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
 
 begin_include
 include|#
@@ -363,6 +375,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SRV_REQ_SEC
+value|0x0800
+end_define
+
+begin_comment
+comment|/* require security - equiv to AuthOptions=p */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SRV_TMP_FAIL
 value|0x1000
 end_define
@@ -392,6 +415,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|STOP_ATTACK
+value|((time_t) -1)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|time_t
@@ -404,6 +434,7 @@ name|unsigned
 name|int
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|,
 name|bool
@@ -566,7 +597,7 @@ define|#
 directive|define
 name|RESET_SASLCONN
 define|\
-value|result = reset_saslconn(&conn, hostname, remoteip, localip, auth_id, \&ext_ssf);	\ 	if (result != SASL_OK)			\ 	{					\
+value|result = reset_saslconn(&conn, AuthRealm, remoteip, localip, auth_id, \&ext_ssf);	\ 	if (result != SASL_OK)			\ 	{					\
 comment|/* This is pretty fatal */
 value|\ 		goto doquit;			\ 	}
 end_define
@@ -619,7 +650,7 @@ define|#
 directive|define
 name|RESET_SASLCONN
 define|\
-value|result = reset_saslconn(&conn, hostname,&saddr_r,&saddr_l,&ext_ssf); \ 	if (result != SASL_OK)			\ 	{					\
+value|result = reset_saslconn(&conn, AuthRealm,&saddr_r,&saddr_l,&ext_ssf); \ 	if (result != SASL_OK)			\ 	{					\
 comment|/* This is pretty fatal */
 value|\ 		goto doquit;			\ 	}
 end_define
@@ -648,6 +679,14 @@ name|ENVELOPE
 name|BlankEnvelope
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NBADRCPTS
+define|\
+value|do							\ 	{							\ 		char buf[16];					\ 		(void) sm_snprintf(buf, sizeof buf, "%d",	\ 			BadRcptThrottle> 0&& n_badrcpts> BadRcptThrottle \ 				? n_badrcpts - 1 : n_badrcpts);	\ 		macdefine(&e->e_macro, A_TEMP, macid("{nbadrcpts}"), buf); \ 	} while (0)
+end_define
 
 begin_define
 define|#
@@ -1288,25 +1327,90 @@ begin_comment
 comment|/* ! MAXTIMEOUT */
 end_comment
 
+begin_comment
+comment|/* **  Maximum shift value to compute timeout for bad commands. **  This introduces an upper limit of 2^MAXSHIFT for the timeout. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXSHIFT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXSHIFT
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! MAXSHIFT */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|SM_HEAP_CHECK
+name|MAXSHIFT
+operator|>
+literal|31
 end_if
 
-begin_decl_stmt
+begin_expr_stmt
+name|ERROR
+name|_MAXSHIFT
+operator|>
+literal|31
+name|is
+name|invalid
+endif|#
+directive|endif
+comment|/* MAXSHIFT */
+if|#
+directive|if
+name|MAXBADCOMMANDS
+operator|>
+literal|0
+define|#
+directive|define
+name|STOP_IF_ATTACK
+parameter_list|(
+name|r
+parameter_list|)
+value|do		\ 	{					\ 		if ((r) == STOP_ATTACK)		\ 			goto stopattack;	\ 	} while (0)
+else|#
+directive|else
+comment|/* MAXBADCOMMANDS> 0 */
+define|#
+directive|define
+name|STOP_IF_ATTACK
+parameter_list|(
+name|r
+parameter_list|)
+value|r
+endif|#
+directive|endif
+comment|/* MAXBADCOMMANDS> 0 */
+if|#
+directive|if
+name|SM_HEAP_CHECK
 specifier|static
 name|SM_DEBUG_T
 name|DebugLeakSmtp
-init|=
+operator|=
 name|SM_DEBUG_INITIALIZER
 argument_list|(
 literal|"leak_smtp"
 argument_list|,
 literal|"@(#)$Debug: leak_smtp - trace memory leaks during SMTP processing $"
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -1330,69 +1434,54 @@ name|int
 name|sm_nrcpts
 decl_stmt|;
 comment|/* number of successful RCPT commands */
-if|#
-directive|if
-name|_FFR_ADAPTIVE_EOL
-name|WARNING
-label|:
-do|do
-name|NOT
-name|use
-name|this
-name|FFR
-decl_stmt|,
-name|it
-name|is
-name|most
-name|likely
-name|broken
 name|bool
-name|sm_crlf
+name|sm_discard
 decl_stmt|;
-comment|/* input in CRLF form? */
-endif|#
-directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
-do|bool	sm_discard;
 if|#
 directive|if
 name|MILTER
-do|bool	sm_milterize; 	bool	sm_milterlist;
+name|bool
+name|sm_milterize
+decl_stmt|;
+name|bool
+name|sm_milterlist
+decl_stmt|;
 comment|/* any filters in the list? */
 endif|#
 directive|endif
 comment|/* MILTER */
-if|#
-directive|if
-name|_FFR_QUARANTINE
-do|char	*sm_quarmsg;
+name|char
+modifier|*
+name|sm_quarmsg
+decl_stmt|;
 comment|/* carry quarantining across messages */
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
-do|}
+block|}
 name|SMTP_T
-expr_stmt|;
+typedef|;
+end_typedef
+
+begin_decl_stmt
 specifier|static
-name|void
+name|bool
 name|smtp_data
 name|__P
-decl|((
+argument_list|(
+operator|(
 name|SMTP_T
-modifier|*
-decl_stmt|,
+operator|*
+operator|,
 name|ENVELOPE
-modifier|*
-decl_stmt|)
-block|)
-struct|;
-end_typedef
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|MSG_TEMPFAIL
-value|"451 4.7.1 Please try again later"
+value|"451 4.3.2 Please try again later"
 end_define
 
 begin_if
@@ -1411,44 +1500,6 @@ parameter_list|)
 value|milter_abort((e))
 end_define
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_421
-end_if
-
-begin_define
-define|#
-directive|define
-name|MILTER_SHUTDOWN
-define|\
-value|if (strncmp(response, "421 ", 4) == 0)		\ 			{						\ 				e->e_sendqueue = NULL;			\ 				goto doquit;				\ 			}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_MILTER_421 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MILTER_SHUTDOWN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER_421 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1457,7 +1508,7 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|{								\ 		int savelogusrerrs = LogUsrErrs;			\ 									\ 		switch (state)						\ 		{							\ 		  case SMFIR_REPLYCODE:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, response);		\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(response);				\ 			MILTER_SHUTDOWN					\ 			break;						\ 									\ 		  case SMFIR_REJECT:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=550 5.7.1 Command rejected", \ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr("550 5.7.1 Command rejected");		\ 			break;						\ 									\ 		  case SMFIR_DISCARD:					\ 			if (MilterLogLevel> 3)				\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, discard",	\ 					  str, addr);			\ 			e->e_flags |= EF_DISCARD;			\ 			break;						\ 									\ 		  case SMFIR_TEMPFAIL:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, MSG_TEMPFAIL);	\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(MSG_TEMPFAIL);				\ 			break;						\ 		}							\ 		LogUsrErrs = savelogusrerrs;				\ 		if (response != NULL)					\ 			sm_free(response);
+value|{								\ 		int savelogusrerrs = LogUsrErrs;			\ 									\ 		switch (state)						\ 		{							\ 		  case SMFIR_REPLYCODE:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, response);		\ 				LogUsrErrs = false;			\ 			}						\ 			if (strncmp(response, "421 ", 4) == 0)		\ 			{						\ 				bool tsave = QuickAbort;		\ 									\ 				QuickAbort = false;			\ 				usrerr(response);			\ 				QuickAbort = tsave;			\ 				e->e_sendqueue = NULL;			\ 				goto doquit;				\ 			}						\ 			else						\ 				usrerr(response);			\ 			break;						\ 									\ 		  case SMFIR_REJECT:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=550 5.7.1 Command rejected", \ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr("550 5.7.1 Command rejected");		\ 			break;						\ 									\ 		  case SMFIR_DISCARD:					\ 			if (MilterLogLevel> 3)				\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, discard",	\ 					  str, addr);			\ 			e->e_flags |= EF_DISCARD;			\ 			break;						\ 									\ 		  case SMFIR_TEMPFAIL:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, MSG_TEMPFAIL);	\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(MSG_TEMPFAIL);				\ 			break;						\ 		}							\ 		LogUsrErrs = savelogusrerrs;				\ 		if (response != NULL)					\ 			sm_free(response);
 comment|/* XXX */
 value|\ 	}
 end_define
@@ -1501,11 +1552,15 @@ parameter_list|(
 name|cmd
 parameter_list|)
 define|\
-value|{								\
+value|do								\ {								\
 comment|/* abort milter filters */
 value|\ 	MILTER_ABORT(e);					\ 								\ 	if (smtp.sm_nrcpts> 0)					\ 	{							\ 		logundelrcpts(e, cmd, 10, false);		\ 		smtp.sm_nrcpts = 0;				\ 		macdefine(&e->e_macro, A_PERM,			\ 			  macid("{nrcpts}"), "0");		\ 	}							\ 								\ 	e->e_sendqueue = NULL;					\ 	e->e_flags |= EF_CLRQUEUE;				\ 								\ 	if (LogLevel> 4&& bitset(EF_LOGSENDER, e->e_flags))	\ 		logsender(e, NULL);				\ 	e->e_flags&= ~EF_LOGSENDER;				\ 								\
 comment|/* clean up a bit */
-value|\ 	smtp.sm_gotmail = false;				\ 	SuprErrs = true;					\ 	dropenvelope(e, true, false);				\ 	sm_rpool_free(e->e_rpool);				\ 	e = newenvelope(e, CurEnv, sm_rpool_new_x(NULL));	\ 	CurEnv = e;						\ }
+value|\ 	smtp.sm_gotmail = false;				\ 	SuprErrs = true;					\ 	dropenvelope(e, true, false);				\ 	sm_rpool_free(e->e_rpool);				\ 	e = newenvelope(e, CurEnv, sm_rpool_new_x(NULL));	\ 	CurEnv = e;						\ 								\
+comment|/* put back discard bit */
+value|\ 	if (smtp.sm_discard)					\ 		e->e_flags |= EF_DISCARD;			\ 								\
+comment|/* restore connection quarantining */
+value|\ 	if (smtp.sm_quarmsg == NULL)				\ 	{							\ 		e->e_quarmsg = NULL;				\ 		macdefine(&e->e_macro, A_PERM,			\ 			macid("{quarantine}"), "");		\ 	}							\ 	else							\ 	{							\ 		e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool,	\ 						smtp.sm_quarmsg);	\ 		macdefine(&e->e_macro, A_PERM, macid("{quarantine}"),	\ 			  e->e_quarmsg);			\ 	}							\ } while (0)
 end_define
 
 begin_comment
@@ -1685,15 +1740,13 @@ decl_stmt|;
 if|#
 directive|if
 name|_FFR_BLOCK_PROXIES
-operator|||
-name|_FFR_ADAPTIVE_EOL
 specifier|volatile
 name|bool
 name|first
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_BLOCK_PROXIES || _FFR_ADAPTIVE_EOL */
+comment|/* _FFR_BLOCK_PROXIES */
 specifier|volatile
 name|bool
 name|tempfail
@@ -1897,11 +1950,14 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SASL */
+name|int
+name|r
+decl_stmt|;
 if|#
 directive|if
 name|STARTTLS
 name|int
-name|r
+name|fdfl
 decl_stmt|;
 name|int
 name|rfd
@@ -1914,18 +1970,17 @@ name|tls_active
 init|=
 name|false
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 specifier|volatile
 name|bool
 name|smtps
 init|=
-name|false
+name|bitnset
+argument_list|(
+name|D_SMTPS
+argument_list|,
+name|d_flags
+argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 name|bool
 name|saveQuickAbort
 decl_stmt|;
@@ -2235,6 +2290,19 @@ name|SRV_NONE
 else|:
 name|SRV_OFFER_AUTH
 operator|)
+operator||
+operator|(
+name|bitset
+argument_list|(
+name|SASL_SEC_NOPLAINTEXT
+argument_list|,
+name|SASLOpts
+argument_list|)
+condition|?
+name|SRV_REQ_SEC
+else|:
+name|SRV_NONE
+operator|)
 endif|#
 directive|endif
 comment|/* SASL */
@@ -2329,13 +2397,14 @@ operator|=
 literal|"450 4.3.0 Please try again later."
 expr_stmt|;
 block|}
+else|else
+block|{
 if|#
 directive|if
 name|PIPELINING
 if|#
 directive|if
 name|_FFR_NO_PIPE
-elseif|else
 if|if
 condition|(
 name|bitset
@@ -2359,6 +2428,56 @@ comment|/* _FFR_NO_PIPE */
 endif|#
 directive|endif
 comment|/* PIPELINING */
+if|#
+directive|if
+name|SASL
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SRV_REQ_SEC
+argument_list|,
+name|features
+argument_list|)
+condition|)
+name|SASLOpts
+operator||=
+name|SASL_SEC_NOPLAINTEXT
+expr_stmt|;
+else|else
+name|SASLOpts
+operator|&=
+operator|~
+name|SASL_SEC_NOPLAINTEXT
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SASL */
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|nullserver
+argument_list|,
+literal|"421 "
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|message
+argument_list|(
+name|nullserver
+argument_list|)
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
 block|}
 name|hostname
 operator|=
@@ -2372,6 +2491,16 @@ expr_stmt|;
 if|#
 directive|if
 name|SASL
+if|if
+condition|(
+name|AuthRealm
+operator|==
+name|NULL
+condition|)
+name|AuthRealm
+operator|=
+name|hostname
+expr_stmt|;
 name|sasl_ok
 operator|=
 name|bitset
@@ -2406,7 +2535,7 @@ name|sasl_server_new
 argument_list|(
 literal|"smtp"
 argument_list|,
-name|hostname
+name|AuthRealm
 argument_list|,
 name|NULL
 argument_list|,
@@ -2434,7 +2563,7 @@ name|sasl_server_new
 argument_list|(
 literal|"smtp"
 argument_list|,
-name|hostname
+name|AuthRealm
 argument_list|,
 literal|""
 argument_list|,
@@ -2456,7 +2585,7 @@ name|sasl_server_new
 argument_list|(
 literal|"smtp"
 argument_list|,
-name|hostname
+name|AuthRealm
 argument_list|,
 name|NULL
 argument_list|,
@@ -3253,9 +3382,6 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_MILTER_421
 case|case
 name|SMFIR_SHUTDOWN
 case|:
@@ -3311,9 +3437,6 @@ expr_stmt|;
 goto|goto
 name|doquit
 goto|;
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_421 */
 block|}
 if|if
 condition|(
@@ -3331,22 +3454,278 @@ block|}
 endif|#
 directive|endif
 comment|/* MILTER */
+comment|/* 	**  Broken proxies and SMTP slammers 	**  push data without waiting, catch them 	*/
+if|if
+condition|(
 if|#
 directive|if
 name|STARTTLS
-if|#
-directive|if
-name|_FFR_SMTP_SSL
-comment|/* If this an smtps connection, start TLS now */
+operator|!
 name|smtps
+operator|&&
+endif|#
+directive|endif
+comment|/* STARTTLS */
+operator|*
+name|greetcode
+operator|==
+literal|'2'
+condition|)
+block|{
+name|time_t
+name|msecs
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|pvp
+decl_stmt|;
+name|char
+name|pvpbuf
+index|[
+name|PSBUFSIZE
+index|]
+decl_stmt|;
+comment|/* Ask the rulesets how long to pause */
+name|pvp
 operator|=
-name|bitnset
+name|NULL
+expr_stmt|;
+name|r
+operator|=
+name|rscap
 argument_list|(
-name|D_SMTPS
+literal|"greet_pause"
 argument_list|,
-name|d_flags
+name|peerhostname
+argument_list|,
+name|anynet_ntoa
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|)
+argument_list|,
+name|e
+argument_list|,
+operator|&
+name|pvp
+argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pvpbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|EX_OK
+operator|&&
+name|pvp
+operator|!=
+name|NULL
+operator|&&
+name|pvp
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|pvp
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|&
+literal|0377
+operator|)
+operator|==
+name|CANONNET
+operator|&&
+name|pvp
+index|[
+literal|1
+index|]
+operator|!=
+name|NULL
+condition|)
+block|{
+name|msecs
+operator|=
+name|strtol
+argument_list|(
+name|pvp
+index|[
+literal|1
+index|]
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|msecs
+operator|>
+literal|0
+condition|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|fd_set
+name|readfds
+decl_stmt|;
+name|struct
+name|timeval
+name|timeout
+decl_stmt|;
+comment|/* pause for a moment */
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+name|msecs
+operator|/
+literal|1000
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+operator|(
+name|msecs
+operator|%
+literal|1000
+operator|)
+operator|*
+literal|1000
+expr_stmt|;
+comment|/* Obey RFC 2821: 4.3.5.2: 220 timeout of 5 minutes */
+if|if
+condition|(
+name|timeout
+operator|.
+name|tv_sec
+operator|>=
+literal|300
+condition|)
+block|{
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+literal|300
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* check if data is on the socket during the pause */
+name|fd
+operator|=
+name|sm_io_getinfo
+argument_list|(
+name|InChannel
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|FD_ZERO
+argument_list|(
+operator|&
+name|readfds
+argument_list|)
+expr_stmt|;
+name|SM_FD_SET
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|readfds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|select
+argument_list|(
+name|fd
+operator|+
+literal|1
+argument_list|,
+name|FDSET_CAST
+operator|&
+name|readfds
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|timeout
+argument_list|)
+operator|>
+literal|0
+operator|&&
+name|FD_ISSET
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|readfds
+argument_list|)
+condition|)
+block|{
+name|greetcode
+operator|=
+literal|"554"
+expr_stmt|;
+name|nullserver
+operator|=
+literal|"Command rejected"
+expr_stmt|;
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"rejecting commands from %s [%s] due to pre-greeting traffic"
+argument_list|,
+name|peerhostname
+argument_list|,
+name|anynet_ntoa
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|#
+directive|if
+name|STARTTLS
+comment|/* If this an smtps connection, start TLS now */
 if|if
 condition|(
 name|smtps
@@ -3362,9 +3741,6 @@ goto|;
 block|}
 name|greeting
 label|:
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 endif|#
 directive|endif
 comment|/* STARTTLS */
@@ -3641,9 +4017,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* If quarantining by a connect/ehlo action, save between messages */
 if|if
 condition|(
@@ -3671,9 +4044,6 @@ operator|->
 name|e_quarmsg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* sendinghost's storage must outlive the current envelope */
 if|if
 condition|(
@@ -3691,15 +4061,13 @@ expr_stmt|;
 if|#
 directive|if
 name|_FFR_BLOCK_PROXIES
-operator|||
-name|_FFR_ADAPTIVE_EOL
 name|first
 operator|=
 name|true
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_BLOCK_PROXIES || _FFR_ADAPTIVE_EOL */
+comment|/* _FFR_BLOCK_PROXIES */
 name|gothello
 operator|=
 name|false
@@ -3955,16 +4323,11 @@ block|}
 if|#
 directive|if
 name|_FFR_BLOCK_PROXIES
-operator|||
-name|_FFR_ADAPTIVE_EOL
 if|if
 condition|(
 name|first
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_BLOCK_PROXIES
 name|size_t
 name|inplen
 decl_stmt|,
@@ -4094,87 +4457,6 @@ name|doquit
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_BLOCK_PROXIES */
-if|#
-directive|if
-name|_FFR_ADAPTIVE_EOL
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|smtp
-operator|.
-name|sm_crlf
-operator|=
-name|true
-expr_stmt|;
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|inp
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-operator|||
-name|p
-operator|<=
-name|inp
-operator|||
-name|p
-index|[
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'\r'
-condition|)
-block|{
-name|smtp
-operator|.
-name|sm_crlf
-operator|=
-name|false
-expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|66
-argument_list|,
-literal|1
-argument_list|)
-operator|&&
-name|LogLevel
-operator|>
-literal|8
-condition|)
-block|{
-comment|/* how many bad guys are there? */
-name|sm_syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-name|NOQID
-argument_list|,
-literal|"%s did not use CRLF"
-argument_list|,
-name|CurSmtpClient
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
 name|first
 operator|=
 name|false
@@ -4182,7 +4464,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* _FFR_BLOCK_PROXIES || _FFR_ADAPTIVE_EOL */
+comment|/* _FFR_BLOCK_PROXIES */
 comment|/* clean up end of line */
 name|fixcrlf
 argument_list|(
@@ -4594,7 +4876,12 @@ argument_list|(
 literal|"{auth_authen}"
 argument_list|)
 argument_list|,
+name|xtextify
+argument_list|(
 name|user
+argument_list|,
+literal|"<>\")"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5484,7 +5771,7 @@ argument_list|)
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"454 4.7.1 Please try again later"
+literal|"454 4.3.0 Please try again later"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5494,9 +5781,8 @@ operator|=
 name|false
 expr_stmt|;
 comment|/* crude way to avoid crack attempts */
-operator|(
-name|void
-operator|)
+name|STOP_IF_ATTACK
+argument_list|(
 name|checksmtpattack
 argument_list|(
 operator|&
@@ -5511,6 +5797,7 @@ argument_list|,
 literal|"AUTH"
 argument_list|,
 name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* make sure mechanism (p) is a valid string */
@@ -6143,19 +6430,13 @@ argument_list|)
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"454 4.7.1 Please try again later"
+literal|"454 4.7.0 Please try again later"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 name|starttls
 label|:
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 if|#
 directive|if
 name|TLS_NO_RSA
@@ -6218,19 +6499,9 @@ argument_list|(
 literal|"server"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 goto|goto
 name|tls_done
 goto|;
-else|#
-directive|else
-comment|/* _FFR_SMTP_SSL */
-break|break;
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 block|}
 if|#
 directive|if
@@ -6308,31 +6579,15 @@ name|srv_ssl
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 goto|goto
 name|tls_done
 goto|;
-else|#
-directive|else
-comment|/* _FFR_SMTP_SSL */
-break|break;
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 block|}
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 if|if
 condition|(
 operator|!
 name|smtps
 condition|)
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 name|message
 argument_list|(
 literal|"220 2.0.0 Ready to start TLS"
@@ -6370,6 +6625,33 @@ name|tlsstart
 operator|=
 name|curtime
 argument_list|()
+expr_stmt|;
+name|fdfl
+operator|=
+name|fcntl
+argument_list|(
+name|rfd
+argument_list|,
+name|F_GETFL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fdfl
+operator|!=
+operator|-
+literal|1
+condition|)
+name|fcntl
+argument_list|(
+name|rfd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|fdfl
+operator||
+name|O_NONBLOCK
+argument_list|)
 expr_stmt|;
 name|ssl_retry
 label|:
@@ -6721,6 +7003,22 @@ goto|goto
 name|doquit
 goto|;
 block|}
+if|if
+condition|(
+name|fdfl
+operator|!=
+operator|-
+literal|1
+condition|)
+name|fcntl
+argument_list|(
+name|rfd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|fdfl
+argument_list|)
+expr_stmt|;
 comment|/* ignore return code for now, it's in {verify} */
 operator|(
 name|void
@@ -6858,9 +7156,21 @@ condition|(
 name|sasl_ok
 condition|)
 block|{
+name|int
+name|cipher_bits
+decl_stmt|;
+name|bool
+name|verified
+decl_stmt|;
 name|char
 modifier|*
 name|s
+decl_stmt|,
+modifier|*
+name|v
+decl_stmt|,
+modifier|*
+name|c
 decl_stmt|;
 name|s
 operator|=
@@ -6874,30 +7184,19 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SASL
-operator|>=
-literal|20000
-if|if
-condition|(
-name|s
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|ext_ssf
+name|v
 operator|=
-name|atoi
+name|macvalue
 argument_list|(
-name|s
+name|macid
+argument_list|(
+literal|"{verify}"
 argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-block|{
-name|auth_id
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|c
 operator|=
 name|macvalue
 argument_list|(
@@ -6908,6 +7207,58 @@ argument_list|)
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|verified
+operator|=
+operator|(
+name|v
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|v
+argument_list|,
+literal|"OK"
+argument_list|)
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|cipher_bits
+operator|=
+name|atoi
+argument_list|(
+name|s
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+name|ext_ssf
+operator|=
+name|cipher_bits
+expr_stmt|;
+name|auth_id
+operator|=
+name|verified
+condition|?
+name|c
+else|:
+name|NULL
 expr_stmt|;
 name|sasl_ok
 operator|=
@@ -6943,39 +7294,21 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* SASL>= 20000 */
-if|if
-condition|(
-name|s
-operator|!=
-name|NULL
-operator|&&
-operator|(
 name|ext_ssf
 operator|.
 name|ssf
 operator|=
-name|atoi
-argument_list|(
-name|s
-argument_list|)
-operator|)
-operator|>
-literal|0
-condition|)
-block|{
+name|cipher_bits
+expr_stmt|;
 name|ext_ssf
 operator|.
 name|auth_id
 operator|=
-name|macvalue
-argument_list|(
-name|macid
-argument_list|(
-literal|"{cert_subject}"
-argument_list|)
-argument_list|,
-name|e
-argument_list|)
+name|verified
+condition|?
+name|c
+else|:
+name|NULL
 expr_stmt|;
 name|sasl_ok
 operator|=
@@ -7068,9 +7401,6 @@ literal|"STARTTLS: can't switch to encrypted layer"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_SMTP_SSL
 name|tls_done
 label|:
 if|if
@@ -7090,9 +7420,6 @@ goto|goto
 name|doquit
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 break|break;
 endif|#
 directive|endif
@@ -7140,9 +7467,8 @@ literal|"server HELO"
 expr_stmt|;
 block|}
 comment|/* avoid denial-of-service */
-operator|(
-name|void
-operator|)
+name|STOP_IF_ATTACK
+argument_list|(
 name|checksmtpattack
 argument_list|(
 operator|&
@@ -7155,6 +7481,7 @@ argument_list|,
 literal|"HELO/EHLO"
 argument_list|,
 name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -7371,83 +7698,6 @@ argument_list|(
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
-comment|/* restore connection quarantining */
-if|if
-condition|(
-name|smtp
-operator|.
-name|sm_quarmsg
-operator|==
-name|NULL
-condition|)
-block|{
-name|e
-operator|->
-name|e_quarmsg
-operator|=
-name|NULL
-expr_stmt|;
-name|macdefine
-argument_list|(
-operator|&
-name|e
-operator|->
-name|e_macro
-argument_list|,
-name|A_PERM
-argument_list|,
-name|macid
-argument_list|(
-literal|"{quarantine}"
-argument_list|)
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|e
-operator|->
-name|e_quarmsg
-operator|=
-name|sm_rpool_strdup_x
-argument_list|(
-name|e
-operator|->
-name|e_rpool
-argument_list|,
-name|smtp
-operator|.
-name|sm_quarmsg
-argument_list|)
-expr_stmt|;
-name|macdefine
-argument_list|(
-operator|&
-name|e
-operator|->
-name|e_macro
-argument_list|,
-name|A_PERM
-argument_list|,
-name|macid
-argument_list|(
-literal|"{quarantine}"
-argument_list|)
-argument_list|,
-name|e
-operator|->
-name|e_quarmsg
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 if|#
 directive|if
@@ -7615,9 +7865,6 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* 				**  If quarantining by a connect/ehlo action, 				**  save between messages 				*/
 if|if
 condition|(
@@ -7644,9 +7891,6 @@ operator|->
 name|e_quarmsg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 endif|#
 directive|endif
@@ -8234,6 +8478,23 @@ argument_list|,
 name|macid
 argument_list|(
 literal|"{nrcpts}"
+argument_list|)
+argument_list|,
+literal|"0"
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{nbadrcpts}"
 argument_list|)
 argument_list|,
 literal|"0"
@@ -9257,6 +9518,8 @@ name|n_badrcpts
 operator|++
 expr_stmt|;
 block|}
+name|NBADRCPTS
+expr_stmt|;
 comment|/* 				**  Don't use exponential backoff for now. 				**  Some servers will open more connections 				**  and actually overload the receiver even 				**  more. 				*/
 operator|(
 name|void
@@ -10182,9 +10445,13 @@ name|Errors
 operator|>
 literal|0
 condition|)
+block|{
 operator|++
 name|n_badrcpts
 expr_stmt|;
+name|NBADRCPTS
+expr_stmt|;
+block|}
 block|}
 name|SM_EXCEPT
 argument_list|(
@@ -10208,6 +10475,8 @@ expr_stmt|;
 operator|++
 name|n_badrcpts
 expr_stmt|;
+name|NBADRCPTS
+expr_stmt|;
 block|}
 name|SM_END_TRY
 break|break;
@@ -10220,6 +10489,9 @@ argument_list|(
 literal|"DATA"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|smtp_data
 argument_list|(
 operator|&
@@ -10227,7 +10499,10 @@ name|smtp
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|doquit
+goto|;
 break|break;
 case|case
 name|CMDRSET
@@ -10258,83 +10533,6 @@ argument_list|(
 name|cmdbuf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
-comment|/* restore connection quarantining */
-if|if
-condition|(
-name|smtp
-operator|.
-name|sm_quarmsg
-operator|==
-name|NULL
-condition|)
-block|{
-name|e
-operator|->
-name|e_quarmsg
-operator|=
-name|NULL
-expr_stmt|;
-name|macdefine
-argument_list|(
-operator|&
-name|e
-operator|->
-name|e_macro
-argument_list|,
-name|A_PERM
-argument_list|,
-name|macid
-argument_list|(
-literal|"{quarantine}"
-argument_list|)
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|e
-operator|->
-name|e_quarmsg
-operator|=
-name|sm_rpool_strdup_x
-argument_list|(
-name|e
-operator|->
-name|e_rpool
-argument_list|,
-name|smtp
-operator|.
-name|sm_quarmsg
-argument_list|)
-expr_stmt|;
-name|macdefine
-argument_list|(
-operator|&
-name|e
-operator|->
-name|e_macro
-argument_list|,
-name|A_PERM
-argument_list|,
-name|macid
-argument_list|(
-literal|"{quarantine}"
-argument_list|)
-argument_list|,
-name|e
-operator|->
-name|e_quarmsg
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 break|break;
 case|case
 name|CMDVRFY
@@ -10419,6 +10617,11 @@ else|:
 literal|"EXPN"
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+name|STOP_IF_ATTACK
+argument_list|(
+name|wt
 argument_list|)
 expr_stmt|;
 name|previous
@@ -10951,9 +11154,8 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* crude way to avoid denial-of-service attacks */
-operator|(
-name|void
-operator|)
+name|STOP_IF_ATTACK
+argument_list|(
 name|checksmtpattack
 argument_list|(
 operator|&
@@ -10966,6 +11168,7 @@ argument_list|,
 literal|"ETRN"
 argument_list|,
 name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			**  Do config file checking of the parameter. 			**  Even though we have srv_features now, we still 			**  need this ruleset because the former is called 			**  when the connection has been established, while 			**  this ruleset is called when the command is 			**  actually issued and therefore has all information 			**  available to make a decision. 			*/
@@ -11275,9 +11478,8 @@ argument_list|(
 literal|"NOOP"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|STOP_IF_ATTACK
+argument_list|(
 name|checksmtpattack
 argument_list|(
 operator|&
@@ -11290,6 +11492,7 @@ argument_list|,
 literal|"NOOP"
 argument_list|,
 name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|message
@@ -11569,9 +11772,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
+name|STOP_IF_ATTACK
+argument_list|(
 name|checksmtpattack
 argument_list|(
 operator|&
@@ -11584,6 +11786,7 @@ argument_list|,
 literal|"VERB"
 argument_list|,
 name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Verbose
@@ -11624,6 +11827,8 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|smioout
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue
@@ -11727,6 +11932,8 @@ operator|>
 name|MAXBADCOMMANDS
 condition|)
 block|{
+name|stopattack
+label|:
 name|message
 argument_list|(
 literal|"421 4.7.0 %s Too many bad commands; closing connection"
@@ -11748,6 +11955,99 @@ block|}
 endif|#
 directive|endif
 comment|/* MAXBADCOMMANDS> 0 */
+if|#
+directive|if
+name|MILTER
+operator|&&
+name|SMFI_VERSION
+operator|>
+literal|2
+if|if
+condition|(
+name|smtp
+operator|.
+name|sm_milterlist
+operator|&&
+name|smtp
+operator|.
+name|sm_milterize
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+name|char
+name|state
+decl_stmt|;
+name|char
+modifier|*
+name|response
+decl_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Sending \"%s\" to Milter"
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+name|response
+operator|=
+name|milter_unknown
+argument_list|(
+name|inp
+argument_list|,
+name|e
+argument_list|,
+operator|&
+name|state
+argument_list|)
+expr_stmt|;
+name|MILTER_REPLY
+argument_list|(
+literal|"unknown"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|==
+name|SMFIR_REPLYCODE
+operator|||
+name|state
+operator|==
+name|SMFIR_REJECT
+operator|||
+name|state
+operator|==
+name|SMFIR_TEMPFAIL
+condition|)
+block|{
+comment|/* MILTER_REPLY already gave an error */
+break|break;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* MILTER&& SMFI_VERSION> 2 */
 name|usrerr
 argument_list|(
 literal|"500 5.5.1 Command unrecognized: \"%s\""
@@ -11811,27 +12111,35 @@ endif|#
 directive|endif
 comment|/* SASL */
 block|}
+end_function
+
+begin_macro
 name|SM_EXCEPT
 argument_list|(
 argument|exc
 argument_list|,
 literal|"[!F]*"
 argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* 		**  The only possible exception is "E:mta.quickabort". 		**  There is nothing to do except fall through and loop. 		*/
 block|}
+end_block
+
+begin_expr_stmt
 name|SM_END_TRY
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
-unit|}
-comment|/* **  SMTP_DATA -- implement the SMTP DATA command. ** **	Parameters: **		smtp -- status of SMTP connection. **		e -- envelope. ** **	Returns: **		none. ** **	Side Effects: **		possibly sends message. */
+unit|} }
+comment|/* **  SMTP_DATA -- implement the SMTP DATA command. ** **	Parameters: **		smtp -- status of SMTP connection. **		e -- envelope. ** **	Returns: **		true iff SMTP session can continue. ** **	Side Effects: **		possibly sends message. */
 end_comment
 
 begin_function
-unit|static
-name|void
+specifier|static
+name|bool
 name|smtp_data
 parameter_list|(
 name|smtp
@@ -11901,7 +12209,9 @@ argument_list|(
 literal|"503 5.0.0 Need MAIL command"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 elseif|else
 if|if
@@ -11918,7 +12228,9 @@ argument_list|(
 literal|"503 5.0.0 Need RCPT (recipient)"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 operator|(
 name|void
@@ -11966,7 +12278,242 @@ argument_list|)
 operator|!=
 name|EX_OK
 condition|)
-return|return;
+return|return
+name|true
+return|;
+if|#
+directive|if
+name|MILTER
+operator|&&
+name|SMFI_VERSION
+operator|>
+literal|3
+if|if
+condition|(
+name|smtp
+operator|->
+name|sm_milterlist
+operator|&&
+name|smtp
+operator|->
+name|sm_milterize
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+name|char
+name|state
+decl_stmt|;
+name|char
+modifier|*
+name|response
+decl_stmt|;
+name|int
+name|savelogusrerrs
+init|=
+name|LogUsrErrs
+decl_stmt|;
+name|response
+operator|=
+name|milter_data_cmd
+argument_list|(
+name|e
+argument_list|,
+operator|&
+name|state
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|SMFIR_REPLYCODE
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: cmd=data, reject=%s"
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
+name|LogUsrErrs
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|usrerr
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|response
+argument_list|,
+literal|"421 "
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+return|return
+name|true
+return|;
+case|case
+name|SMFIR_REJECT
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: cmd=data, reject=550 5.7.1 Command rejected"
+argument_list|)
+expr_stmt|;
+name|LogUsrErrs
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|usrerr
+argument_list|(
+literal|"550 5.7.1 Command rejected"
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+case|case
+name|SMFIR_DISCARD
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: cmd=data, discard"
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_DISCARD
+expr_stmt|;
+break|break;
+case|case
+name|SMFIR_TEMPFAIL
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: cmd=data, reject=%s"
+argument_list|,
+name|MSG_TEMPFAIL
+argument_list|)
+expr_stmt|;
+name|LogUsrErrs
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|usrerr
+argument_list|(
+name|MSG_TEMPFAIL
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|LogUsrErrs
+operator|=
+name|savelogusrerrs
+expr_stmt|;
+if|if
+condition|(
+name|response
+operator|!=
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+block|}
+endif|#
+directive|endif
+comment|/* MILTER&& SMFI_VERSION> 3 */
 comment|/* put back discard bit */
 if|if
 condition|(
@@ -12058,25 +12605,6 @@ expr_stmt|;
 name|buffer_errors
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_ADAPTIVE_EOL
-comment|/* triggers error in collect, disabled for now */
-if|if
-condition|(
-name|smtp
-operator|->
-name|sm_crlf
-condition|)
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_NL_NOT_EOL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
 name|collect
 argument_list|(
 name|InChannel
@@ -12422,12 +12950,344 @@ literal|"Milter accept: message"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	**  If SuperSafe is SAFE_REALLY_POSTMILTER, and we don't have milter or 	**  milter accepted message, sync it now 	** 	**  XXX This is almost a copy of the code in collect(): put it into 	**	a function that is called from both places? 	*/
+if|if
+condition|(
+name|milteraccept
+operator|&&
+name|SuperSafe
+operator|==
+name|SAFE_REALLY_POSTMILTER
+condition|)
+block|{
+name|int
+name|afd
+decl_stmt|;
+name|SM_FILE_T
+modifier|*
+specifier|volatile
+name|df
+decl_stmt|;
+name|char
+modifier|*
+name|dfname
+decl_stmt|;
+name|df
+operator|=
+name|e
+operator|->
+name|e_dfp
+expr_stmt|;
+name|dfname
+operator|=
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+name|DATAFL_LETTER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sm_io_setinfo
+argument_list|(
+name|df
+argument_list|,
+name|SM_BF_COMMIT
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|EINVAL
+condition|)
+block|{
+name|int
+name|save_errno
+decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+if|if
+condition|(
+name|save_errno
+operator|==
+name|EEXIST
+condition|)
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|int
+name|dfd
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|dfname
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|st
+operator|.
+name|st_size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|errno
+operator|=
+name|EEXIST
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"@collect: bfcommit(%s): already on disk, size=%ld"
+argument_list|,
+name|dfname
+argument_list|,
+operator|(
+name|long
+operator|)
+name|st
+operator|.
+name|st_size
+argument_list|)
+expr_stmt|;
+name|dfd
+operator|=
+name|sm_io_getinfo
+argument_list|(
+name|df
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dfd
+operator|>=
+literal|0
+condition|)
+name|dumpfd
+argument_list|(
+name|dfd
+argument_list|,
+name|true
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"bfcommit"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|save_errno
+operator|!=
+name|EEXIST
+argument_list|,
+name|true
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|afd
+operator|=
+name|sm_io_getinfo
+argument_list|(
+name|df
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"sm_io_getinfo"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|true
+argument_list|,
+name|true
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+elseif|else
+if|if
+condition|(
+name|fsync
+argument_list|(
+name|afd
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"fsync"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|true
+argument_list|,
+name|true
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+elseif|else
+if|if
+condition|(
+name|sm_io_close
+argument_list|(
+name|df
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"sm_io_close"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|true
+argument_list|,
+name|true
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+comment|/* Now reopen the df file */
+name|e
+operator|->
+name|e_dfp
+operator|=
+name|sm_io_open
+argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|dfname
+argument_list|,
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_dfp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* we haven't acked receipt yet, so just chuck this */
+name|syserr
+argument_list|(
+literal|"@Cannot reopen %s"
+argument_list|,
+name|dfname
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|true
+argument_list|,
+name|true
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+block|}
 endif|#
 directive|endif
 comment|/* MILTER */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* Check if quarantining stats should be updated */
 if|if
 condition|(
@@ -12446,9 +13306,6 @@ argument_list|,
 name|STATS_QUARANTINE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* 	**  If a header/body check (header checks or milter) 	**  set EF_DISCARD, don't queueup the message -- 	**  that would lose the EF_DISCARD bit and deliver 	**  the message. 	*/
 if|if
 condition|(
@@ -12487,9 +13344,6 @@ name|e_flags
 argument_list|)
 operator|)
 operator|&&
-if|#
-directive|if
-name|_FFR_QUARANTINE
 operator|(
 name|QueueMode
 operator|==
@@ -12502,9 +13356,6 @@ operator|==
 name|NULL
 operator|)
 operator|&&
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 operator|!
 name|split_by_recipient
 argument_list|(
@@ -12774,9 +13625,6 @@ name|SM_QUEUE
 expr_stmt|;
 continue|continue;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -12799,9 +13647,6 @@ name|SM_QUEUE
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|anything_to_send
 operator|=
 name|true
@@ -12962,9 +13807,6 @@ operator|->
 name|e_sibling
 control|)
 block|{
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 operator|!
@@ -12992,9 +13834,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|WILL_BE_QUEUED
@@ -13047,9 +13886,6 @@ name|BlankEnvelope
 operator|.
 name|e_flags
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* restore connection quarantining */
 if|if
 condition|(
@@ -13121,9 +13957,9 @@ name|e_quarmsg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
+return|return
+name|true
+return|;
 block|}
 end_function
 
@@ -13268,7 +14104,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		waitnow -- sleep now (in this routine)? **		cname -- command name for logging. **		e -- the current envelope. ** **	Returns: **		time to wait. ** **	Side Effects: **		Slows down if we seem to be under attack. */
+comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		waitnow -- sleep now (in this routine)? **		cname -- command name for logging. **		e -- the current envelope. ** **	Returns: **		time to wait, **		STOP_ATTACK if twice as many commands as allowed and **			MaxChildren> 0. ** **	Side Effects: **		Slows down if we seem to be under attack. */
 end_comment
 
 begin_function
@@ -13292,6 +14128,7 @@ name|int
 modifier|*
 name|pcounter
 decl_stmt|;
+name|unsigned
 name|int
 name|maxcount
 decl_stmt|;
@@ -13331,6 +14168,10 @@ operator|>=
 name|maxcount
 condition|)
 block|{
+name|unsigned
+name|int
+name|shift
+decl_stmt|;
 name|time_t
 name|s
 decl_stmt|;
@@ -13365,19 +14206,25 @@ name|pcounter
 argument_list|)
 expr_stmt|;
 block|}
-name|s
+name|shift
 operator|=
-literal|1
-operator|<<
-operator|(
 operator|*
 name|pcounter
 operator|-
 name|maxcount
-operator|)
+expr_stmt|;
+name|s
+operator|=
+literal|1
+operator|<<
+name|shift
 expr_stmt|;
 if|if
 condition|(
+name|shift
+operator|>
+name|MAXSHIFT
+operator|||
 name|s
 operator|>=
 name|MAXTIMEOUT
@@ -13390,6 +14237,13 @@ name|s
 operator|=
 name|MAXTIMEOUT
 expr_stmt|;
+define|#
+directive|define
+name|IS_ATTACK
+parameter_list|(
+name|s
+parameter_list|)
+value|((MaxChildren> 0&& *pcounter>= maxcount * 2)	\ 				? STOP_ATTACK : (time_t) s)
 comment|/* sleep at least 1 second before returning */
 operator|(
 name|void
@@ -13411,7 +14265,25 @@ name|maxcount
 expr_stmt|;
 if|if
 condition|(
+name|s
+operator|>=
+name|MAXTIMEOUT
+operator|||
+name|s
+operator|<
+literal|0
+condition|)
+name|s
+operator|=
+name|MAXTIMEOUT
+expr_stmt|;
+if|if
+condition|(
 name|waitnow
+operator|&&
+name|s
+operator|>
+literal|0
 condition|)
 block|{
 operator|(
@@ -13423,11 +14295,17 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+name|IS_ATTACK
+argument_list|(
 literal|0
+argument_list|)
 return|;
 block|}
 return|return
+name|IS_ATTACK
+argument_list|(
 name|s
+argument_list|)
 return|;
 block|}
 return|return
@@ -14385,12 +15263,6 @@ name|saveExitStat
 init|=
 name|ExitStat
 decl_stmt|;
-name|char
-name|pbuf
-index|[
-literal|256
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|vp
@@ -14490,24 +15362,6 @@ expr_stmt|;
 comment|/* just a warning? */
 comment|/* NOTREACHED */
 block|}
-comment|/* XXX this might be cut off */
-operator|(
-name|void
-operator|)
-name|sm_strlcpy
-argument_list|(
-name|pbuf
-argument_list|,
-name|xuntextify
-argument_list|(
-name|auth_param
-argument_list|)
-argument_list|,
-sizeof|sizeof
-name|pbuf
-argument_list|)
-expr_stmt|;
-comment|/* xalloc() the buffer instead? */
 comment|/* XXX define this always or only if trusted? */
 name|macdefine
 argument_list|(
@@ -14523,7 +15377,7 @@ argument_list|(
 literal|"{auth_author}"
 argument_list|)
 argument_list|,
-name|pbuf
+name|auth_param
 argument_list|)
 expr_stmt|;
 comment|/* 		**  call Strust_auth to find out whether 		**  auth_param is acceptable (trusted) 		**  we shouldn't trust it if not authenticated 		**  (required by RFC, leave it to ruleset?) 		*/
@@ -14551,7 +15405,7 @@ name|rscheck
 argument_list|(
 literal|"trust_auth"
 argument_list|,
-name|pbuf
+name|auth_param
 argument_list|,
 name|NULL
 argument_list|,
@@ -14594,7 +15448,7 @@ name|sm_dprintf
 argument_list|(
 literal|"auth=\"%.100s\" not trusted user=\"%.100s\"\n"
 argument_list|,
-name|pbuf
+name|auth_param
 argument_list|,
 operator|(
 name|q
@@ -14654,7 +15508,7 @@ name|sm_dprintf
 argument_list|(
 literal|"auth=\"%.100s\" trusted\n"
 argument_list|,
-name|pbuf
+name|auth_param
 argument_list|)
 expr_stmt|;
 name|e
@@ -16188,28 +17042,30 @@ block|,
 name|SRV_OFFER_VERB
 block|}
 block|,
-comment|/* FFR; not documented in 8.12 */
+block|{
+literal|'C'
+block|,
+name|SRV_REQ_SEC
+block|}
+block|,
 block|{
 literal|'D'
 block|,
 name|SRV_OFFER_DSN
 block|}
 block|,
-comment|/* FFR; not documented in 8.12 */
 block|{
 literal|'E'
 block|,
 name|SRV_OFFER_ETRN
 block|}
 block|,
-comment|/* FFR; not documented in 8.12 */
 block|{
 literal|'L'
 block|,
 name|SRV_REQ_AUTH
 block|}
 block|,
-comment|/* FFR; not documented in 8.12 */
 if|#
 directive|if
 name|PIPELINING
@@ -16240,7 +17096,7 @@ block|,
 name|SRV_VRFY_CLT
 block|}
 block|,
-comment|/* FFR; not documented in 8.12 */
+comment|/* same as V; not documented */
 block|{
 literal|'S'
 block|,
@@ -16260,7 +17116,6 @@ block|,
 name|SRV_OFFER_EXPN
 block|}
 block|,
-comment|/* FFR; not documented in 8.12 */
 comment|/*	{ 'Y',	SRV_OFFER_VRFY	},	*/
 block|{
 literal|'\0'

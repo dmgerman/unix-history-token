@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.863.2.67 2003/12/02 23:56:01 ca Exp $"
+literal|"@(#)$Id: queue.c,v 8.938 2004/06/03 19:02:10 ca Exp $"
 argument_list|)
 end_macro
 
@@ -122,104 +122,19 @@ comment|/* ! SM_OPEN_EXLOCK */
 end_comment
 
 begin_comment
-comment|/* **  Historical notes: **	QF_VERSION == 4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **	QF_VERSION == 5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY **	QF_VERSION == 6 is  sendmail 8.12      without _FFR_QUEUEDELAY **	QF_VERSION == 7 is  sendmail 8.12      with    _FFR_QUEUEDELAY */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-end_if
-
-begin_define
-define|#
-directive|define
-name|QF_VERSION
-value|7
-end_define
-
-begin_comment
-comment|/* version number of this queue format */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|time_t
-name|queuedelay
-name|__P
-argument_list|(
-operator|(
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|queuedelay_qfver_unsupported
-parameter_list|(
-name|qfver
-parameter_list|)
-value|false
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_QUEUEDELAY */
+comment|/* **  Historical notes: **	QF_VERSION == 4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **	QF_VERSION == 5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY **	QF_VERSION == 6 was sendmail 8.12      without _FFR_QUEUEDELAY **	QF_VERSION == 7 was sendmail 8.12      with    _FFR_QUEUEDELAY **	QF_VERSION == 8 is  sendmail 8.13 */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QF_VERSION
-value|6
+value|8
 end_define
 
 begin_comment
 comment|/* version number of this queue format */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|queuedelay
-parameter_list|(
-name|e
-parameter_list|)
-value|MinQueueAge
-end_define
-
-begin_define
-define|#
-directive|define
-name|queuedelay_qfver_unsupported
-parameter_list|(
-name|qfver
-parameter_list|)
-value|((qfver) == 5 || (qfver) == 7)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUEUEDELAY */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -257,15 +172,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 begin_comment
 comment|/* Naming convention: qgrp: index of queue group, qg: QUEUEGROUP */
@@ -1362,7 +1268,7 @@ value|FILE_SYS(i).fs_dev
 end_define
 
 begin_comment
-comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	d	data file directory name (added in 8.12) **	E	error recipient **	F	flag bits **	G	queue delay algorithm (_FFR_QUEUEDELAY) **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message **	N	number of delivery attempts **	P	message priority **	q	quarantine reason (_FFR_QUARANTINE) **	Q	original recipient (ORCPT=) **	r	final recipient (Final-Recipient: DSN field) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	free (was: character set if _FFR_SAVE_CHARSET) **	Y	current delay (_FFR_QUEUEDELAY) **	Z	original envelope id from ESMTP **	!	deliver by (added in 8.12) **	$	define macro **	.	terminate file */
+comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	d	data file directory name (added in 8.12) **	E	error recipient **	F	flag bits **	G	free (was: queue delay algorithm if _FFR_QUEUEDELAY) **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message **	N	number of delivery attempts **	P	message priority **	q	quarantine reason **	Q	original recipient (ORCPT=) **	r	final recipient (Final-Recipient: DSN field) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	free (was: character set if _FFR_SAVE_CHARSET) **	Y	free (was: current delay if _FFR_QUEUEDELAY) **	Z	original envelope id from ESMTP **	!	deliver by (added in 8.12) **	$	define macro **	.	terminate file */
 end_comment
 
 begin_comment
@@ -1575,7 +1481,7 @@ operator|)
 operator|&
 name|tfd
 argument_list|,
-name|SM_IO_WRONLY_B
+name|SM_IO_WRONLY
 argument_list|,
 name|NULL
 argument_list|)
@@ -1600,7 +1506,7 @@ name|save_errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create queue file %s, euid=%d"
+literal|"!queueup: cannot create queue file %s, euid=%d, fd=%d, fp=%p"
 argument_list|,
 name|tf
 argument_list|,
@@ -1609,6 +1515,10 @@ name|int
 operator|)
 name|geteuid
 argument_list|()
+argument_list|,
+name|tfd
+argument_list|,
+name|tfp
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -1982,6 +1892,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue
@@ -2101,6 +2014,10 @@ operator|&&
 name|SuperSafe
 operator|!=
 name|SAFE_REALLY
+operator|&&
+name|SuperSafe
+operator|!=
+name|SAFE_REALLY_POSTMILTER
 operator|&&
 name|sm_io_setinfo
 argument_list|(
@@ -2442,6 +2359,10 @@ name|SuperSafe
 operator|==
 name|SAFE_REALLY
 operator|||
+name|SuperSafe
+operator|==
+name|SAFE_REALLY_POSTMILTER
+operator|||
 operator|(
 name|SuperSafe
 operator|==
@@ -2577,9 +2498,6 @@ name|e_ctime
 argument_list|)
 expr_stmt|;
 comment|/* output last delivery time */
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
 operator|(
 name|void
 operator|)
@@ -2599,101 +2517,6 @@ operator|->
 name|e_dtime
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
-argument_list|(
-name|tfp
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
-literal|"G%d\n"
-argument_list|,
-name|e
-operator|->
-name|e_queuealg
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
-argument_list|(
-name|tfp
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
-literal|"Y%ld\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|e
-operator|->
-name|e_queuedelay
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|40
-argument_list|,
-literal|64
-argument_list|)
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"queue alg: %d delay %ld next: %ld (now: %ld)\n"
-argument_list|,
-name|e
-operator|->
-name|e_queuealg
-argument_list|,
-name|e
-operator|->
-name|e_queuedelay
-argument_list|,
-name|e
-operator|->
-name|e_dtime
-argument_list|,
-name|curtime
-argument_list|()
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* _FFR_QUEUEDELAY */
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
-argument_list|(
-name|tfp
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
-literal|"K%ld\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-name|e
-operator|->
-name|e_dtime
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 comment|/* output number of delivery attempts */
 operator|(
 name|void
@@ -2853,9 +2676,6 @@ name|false
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* quarantine reason */
 if|if
 condition|(
@@ -2888,9 +2708,6 @@ name|false
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* message from envelope, if it exists */
 if|if
 condition|(
@@ -3579,9 +3396,6 @@ name|tag
 init|=
 literal|"queued"
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|e
@@ -3594,9 +3408,6 @@ name|tag
 operator|=
 literal|"quarantined"
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|e
 operator|->
 name|e_to
@@ -3664,6 +3475,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|q
 argument_list|,
 name|false
@@ -4185,6 +3999,10 @@ name|SuperSafe
 operator|==
 name|SAFE_REALLY
 operator|||
+name|SuperSafe
+operator|==
+name|SAFE_REALLY_POSTMILTER
+operator|||
 operator|(
 name|SuperSafe
 operator|==
@@ -4241,9 +4059,6 @@ operator|!
 name|newid
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|char
 name|new
 init|=
@@ -4254,9 +4069,6 @@ argument_list|,
 name|ANYQFL_LETTER
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* rename (locked) tf to be (locked) [qh]f */
 operator|(
 name|void
@@ -4302,9 +4114,6 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 else|else
 block|{
 comment|/* 			**  Check if type has changed and only 			**  remove the old item if the rename above 			**  succeeded. 			*/
@@ -4403,9 +4212,6 @@ name|e_qfletter
 operator|=
 name|new
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* 		**  fsync() after renaming to make sure metadata is 		**  written to disk on filesystems in which renames are 		**  not guaranteed. 		*/
 if|if
 condition|(
@@ -4515,9 +4321,6 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|e
 operator|->
 name|e_qfletter
@@ -4529,9 +4332,6 @@ argument_list|,
 name|ANYQFL_LETTER
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 name|errno
 operator|=
@@ -6246,7 +6046,7 @@ operator|>
 name|MaxQueueChildren
 condition|)
 break|break;
-comment|/* 		**  Pick up where we left off (curnum), in case we 		**  used up all the children last time without finishing. 		**  This give a round-robin fairness to queue runs. 		** 		**  Increment CurRunners before calling run_work_group() 		**  to avoid a "race condition" with proc_list_drop() which 		**  decrements CurRunners if the queue runners terminate. 		**  This actually doesn't cause any harm, but CurRunners 		**  might become negative which is at least confusing. 		** 		**  Notice: CurRunners is an upper limit, in some cases 		**  (too few jobs in the queue) this value is larger than 		**  the actual number of queue runners. The discrepancy can 		**  increase if some queue runners "hang" for a long time. 		*/
+comment|/* 		**  Pick up where we left off (curnum), in case we 		**  used up all the children last time without finishing. 		**  This give a round-robin fairness to queue runs. 		** 		**  Increment CurRunners before calling run_work_group() 		**  to avoid a "race condition" with proc_list_drop() which 		**  decrements CurRunners if the queue runners terminate. 		**  Notice: CurRunners is an upper limit, in some cases 		**  (too few jobs in the queue) this value is larger than 		**  the actual number of queue runners. The discrepancy can 		**  increase if some queue runners "hang" for a long time. 		*/
 name|CurRunners
 operator|+=
 name|WorkGrp
@@ -6413,6 +6213,164 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|_FFR_SKIP_DOMAINS
+end_if
+
+begin_comment
+comment|/* **  SKIP_DOMAINS -- Skip 'skip' number of domains in the WorkQ. ** **  Added by Stephen Frost<sfrost@snowman.net> to support **  having each runner process every N'th domain instead of **  every N'th message. ** **	Parameters: **		skip -- number of domains in WorkQ to skip. ** **	Returns: **		total number of messages skipped. ** **	Side Effects: **		may change WorkQ */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|skip_domains
+parameter_list|(
+name|skip
+parameter_list|)
+name|int
+name|skip
+decl_stmt|;
+block|{
+name|int
+name|n
+decl_stmt|,
+name|seqjump
+decl_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+operator|,
+name|seqjump
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|skip
+operator|&&
+name|WorkQ
+operator|!=
+name|NULL
+condition|;
+name|seqjump
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|WorkQ
+operator|->
+name|w_next
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|WorkQ
+operator|->
+name|w_host
+operator|!=
+name|NULL
+operator|&&
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|WorkQ
+operator|->
+name|w_host
+argument_list|,
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|n
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|WorkQ
+operator|->
+name|w_host
+operator|!=
+name|NULL
+operator|&&
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|WorkQ
+operator|->
+name|w_host
+operator|==
+name|NULL
+operator|&&
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+operator|!=
+name|NULL
+operator|)
+condition|)
+name|n
+operator|++
+expr_stmt|;
+block|}
+block|}
+name|WorkQ
+operator|=
+name|WorkQ
+operator|->
+name|w_next
+expr_stmt|;
+block|}
+return|return
+name|seqjump
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SKIP_DOMAINS */
+end_comment
+
 begin_comment
 comment|/* **  RUNNER_WORK -- have a queue runner do its work ** **  Have a queue runner do its work a list of entries. **  When work isn't directly being done then this process can take a signal **  and terminate immediately (in a clean fashion of course). **  When work is directly being done, it's not to be interrupted **  immediately: the work should be allowed to finish at a clean point **  before termination (in a clean fashion of course). ** **	Parameters: **		e -- envelope. **		sequenceno -- 'th process to run WorkQ. **		didfork -- did the calling process fork()? **		skip -- process only each skip'th item. **		njobs -- number of jobs in WorkQ. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
@@ -6452,6 +6410,8 @@ decl_stmt|;
 block|{
 name|int
 name|n
+decl_stmt|,
+name|seqjump
 decl_stmt|;
 name|WORK
 modifier|*
@@ -6469,6 +6429,10 @@ comment|/* 	**  Here we temporarily block the second calling of the handlers. 	*
 name|BlockOldsh
 operator|=
 name|true
+expr_stmt|;
+name|seqjump
+operator|=
+name|skip
 expr_stmt|;
 comment|/* process them once at a time */
 while|while
@@ -6558,7 +6522,144 @@ operator|=
 name|WorkQ
 expr_stmt|;
 comment|/* assign current work item */
-comment|/* 		**  Set the head of the WorkQ to the next work item. 		**  It is set 'skip' ahead (the number of parallel queue 		**  runners working on WorkQ together) since each runner 		**  works on every 'skip'th (N-th) item. 		*/
+comment|/* 		**  Set the head of the WorkQ to the next work item. 		**  It is set 'skip' ahead (the number of parallel queue 		**  runners working on WorkQ together) since each runner 		**  works on every 'skip'th (N-th) item. #if _FFR_SKIP_DOMAINS 		**  In the case of the BYHOST Queue Sort Order, the 'item' 		**  is a domain, so we work on every 'skip'th (N-th) domain. #endif * _FFR_SKIP_DOMAINS * 		*/
+if|#
+directive|if
+name|_FFR_SKIP_DOMAINS
+if|if
+condition|(
+name|QueueSortOrder
+operator|==
+name|QSO_BYHOST
+condition|)
+block|{
+name|seqjump
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|WorkQ
+operator|->
+name|w_next
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|WorkQ
+operator|->
+name|w_host
+operator|!=
+name|NULL
+operator|&&
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|WorkQ
+operator|->
+name|w_host
+argument_list|,
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|seqjump
+operator|=
+name|skip_domains
+argument_list|(
+name|skip
+argument_list|)
+expr_stmt|;
+else|else
+name|WorkQ
+operator|=
+name|WorkQ
+operator|->
+name|w_next
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|WorkQ
+operator|->
+name|w_host
+operator|!=
+name|NULL
+operator|&&
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|WorkQ
+operator|->
+name|w_host
+operator|==
+name|NULL
+operator|&&
+name|WorkQ
+operator|->
+name|w_next
+operator|->
+name|w_host
+operator|!=
+name|NULL
+operator|)
+condition|)
+name|seqjump
+operator|=
+name|skip_domains
+argument_list|(
+name|skip
+argument_list|)
+expr_stmt|;
+else|else
+name|WorkQ
+operator|=
+name|WorkQ
+operator|->
+name|w_next
+expr_stmt|;
+block|}
+block|}
+else|else
+name|WorkQ
+operator|=
+name|WorkQ
+operator|->
+name|w_next
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_SKIP_DOMAINS */
+block|{
 for|for
 control|(
 name|n
@@ -6582,6 +6683,7 @@ name|WorkQ
 operator|->
 name|w_next
 expr_stmt|;
+block|}
 name|e
 operator|->
 name|e_to
@@ -6942,7 +7044,7 @@ expr_stmt|;
 comment|/* XXX */
 name|sequenceno
 operator|+=
-name|skip
+name|seqjump
 expr_stmt|;
 comment|/* next sequence number */
 if|#
@@ -7416,6 +7518,8 @@ name|wgrp
 else|:
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7461,6 +7565,9 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+name|close_sendmail_pid
+argument_list|()
+expr_stmt|;
 comment|/* 		**  Initialize exception stack and default exception 		**  handler for child process. 		*/
 name|sm_exc_newthread
 argument_list|(
@@ -7486,6 +7593,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7628,16 +7737,10 @@ name|QueueLimitSender
 operator|!=
 name|NULL
 operator|||
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|QueueLimitQuarantine
 operator|!=
 name|NULL
 operator|||
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|QueueLimitRecipient
 operator|!=
 name|NULL
@@ -8169,16 +8272,40 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_SKIP_DOMAINS
+if|if
+condition|(
+name|QueueSortOrder
+operator|==
+name|QSO_BYHOST
+condition|)
+block|{
+name|sequenceno
+operator|+=
+name|skip_domains
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_SKIP_DOMAINS */
+block|{
+comment|/* for the skip */
 name|WorkQ
 operator|=
 name|WorkQ
 operator|->
 name|w_next
 expr_stmt|;
-comment|/* for the skip */
 name|sequenceno
 operator|++
 expr_stmt|;
+block|}
 name|proc_list_add
 argument_list|(
 name|pid
@@ -8191,6 +8318,8 @@ literal|0
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* No additional work, no additional runners */
@@ -8224,6 +8353,9 @@ expr_stmt|;
 name|CurrentPid
 operator|=
 name|getpid
+argument_list|()
+expr_stmt|;
+name|close_sendmail_pid
 argument_list|()
 expr_stmt|;
 comment|/* 				**  Initialize exception stack and default 				**  exception handler for child process. 				**  When fork()'d the child now has a private 				**  copy of WorkQ at its current position. 				*/
@@ -8488,10 +8620,10 @@ expr_stmt|;
 if|#
 directive|if
 name|NAMED_BIND
-comment|/* Update MX records for FallBackMX. */
+comment|/* Update MX records for FallbackMX. */
 if|if
 condition|(
-name|FallBackMX
+name|FallbackMX
 operator|!=
 name|NULL
 condition|)
@@ -8500,7 +8632,7 @@ name|void
 operator|)
 name|getfallbackmxrr
 argument_list|(
-name|FallBackMX
+name|FallbackMX
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8874,12 +9006,6 @@ begin_comment
 comment|/* host */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_define
 define|#
 directive|define
@@ -8900,15 +9026,6 @@ end_define
 
 begin_comment
 comment|/* 'q': reason */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
 end_comment
 
 begin_decl_stmt
@@ -9226,9 +9343,6 @@ operator|->
 name|queue_next
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|QueueMode
@@ -9272,9 +9386,6 @@ name|queue_next
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 comment|/* open the queue directory */
 name|f
@@ -9390,9 +9501,6 @@ name|d_name
 argument_list|)
 expr_stmt|;
 comment|/* is this an interesting entry? */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 operator|!
@@ -9454,32 +9562,6 @@ operator|==
 literal|'f'
 operator|)
 condition|)
-else|#
-directive|else
-comment|/* _FFR_QUARANTINE */
-if|if
-condition|(
-name|d
-operator|->
-name|d_name
-index|[
-literal|0
-index|]
-operator|!=
-name|NORMQF_LETTER
-operator|||
-name|d
-operator|->
-name|d_name
-index|[
-literal|1
-index|]
-operator|!=
-literal|'f'
-condition|)
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|{
 if|if
 condition|(
@@ -9806,9 +9888,6 @@ index|]
 operator|==
 name|NORMQF_LETTER
 operator|||
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|d
 operator|->
 name|d_name
@@ -9827,9 +9906,6 @@ index|]
 operator|==
 name|LOSEQF_LETTER
 operator|||
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|d
 operator|->
 name|d_name
@@ -9897,16 +9973,10 @@ operator|==
 name|QSO_RANDOM
 operator|)
 operator|&&
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|QueueLimitQuarantine
 operator|==
 name|NULL
 operator|&&
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|QueueLimitSender
 operator|==
 name|NULL
@@ -10181,9 +10251,6 @@ name|i
 operator||=
 name|NEED_R
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|QueueLimitQuarantine
@@ -10194,9 +10261,6 @@ name|i
 operator||=
 name|NEED_QUARANTINE
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 while|while
 condition|(
 name|cf
@@ -10339,9 +10403,6 @@ operator|~
 name|NEED_T
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 literal|'q'
 case|:
@@ -10459,9 +10520,6 @@ name|NEED_QUARANTINE
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 literal|'R'
 case|:
@@ -10775,13 +10833,6 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-comment|/* 			  case 'G': 				queuealg = atoi(lbuf[1]); 				break; 			  case 'Y': 				queuedelay = (time_t) atol(&lbuf[1]); 				break; */
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 block|}
 block|}
 if|if
@@ -10818,9 +10869,6 @@ name|w_ctime
 argument_list|)
 operator|)
 operator|||
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|bitset
 argument_list|(
 name|HAS_QUARANTINE
@@ -10835,9 +10883,6 @@ argument_list|,
 name|i
 argument_list|)
 operator|||
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|bitset
 argument_list|(
 name|NEED_R
@@ -11015,6 +11060,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|WORK
+modifier|*
+name|nw
+decl_stmt|;
 comment|/* Clear out old WorkQ. */
 for|for
 control|(
@@ -11026,20 +11075,16 @@ name|w
 operator|!=
 name|NULL
 condition|;
+name|w
+operator|=
+name|nw
 control|)
 block|{
-specifier|register
-name|WORK
-modifier|*
 name|nw
-init|=
+operator|=
 name|w
 operator|->
 name|w_next
-decl_stmt|;
-name|WorkQ
-operator|=
-name|nw
 expr_stmt|;
 name|sm_free
 argument_list|(
@@ -11075,20 +11120,7 @@ name|w
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|w
-operator|=
-name|nw
-expr_stmt|;
 block|}
-name|sm_free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|WorkQ
-argument_list|)
-expr_stmt|;
 name|WorkQ
 operator|=
 name|NULL
@@ -11445,7 +11477,13 @@ block|}
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
-else|else
+elseif|else
+if|if
+condition|(
+name|QueueSortOrder
+operator|==
+name|QSO_BYPRIORITY
+condition|)
 block|{
 comment|/* 		**  Simple sort based on queue priority only. 		*/
 name|qsort
@@ -11466,6 +11504,7 @@ name|workcmpf0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* else don't sort at all */
 comment|/* 	**  Convert the work list into canonical form. 	**	Should be turning it into a list of envelopes here perhaps. 	**  Only take the most important items up to the per queue group 	**  maximum. 	*/
 for|for
 control|(
@@ -11601,6 +11640,52 @@ expr_stmt|;
 name|WorkQ
 operator|=
 name|w
+expr_stmt|;
+block|}
+comment|/* free the rest of the list */
+for|for
+control|(
+name|i
+operator|=
+name|WorkListCount
+init|;
+operator|--
+name|i
+operator|>=
+name|wc
+condition|;
+control|)
+block|{
+name|sm_free
+argument_list|(
+name|WorkList
+index|[
+name|i
+index|]
+operator|.
+name|w_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|WorkList
+index|[
+name|i
+index|]
+operator|.
+name|w_host
+operator|!=
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|WorkList
+index|[
+name|i
+index|]
+operator|.
+name|w_host
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -13809,9 +13894,6 @@ name|e_sendmode
 argument_list|)
 condition|)
 continue|continue;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -13826,9 +13908,6 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|rpool
 operator|=
 name|sm_rpool_new_x
@@ -15009,9 +15088,6 @@ name|ctladdr
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|e
 operator|->
 name|e_qfletter
@@ -15023,9 +15099,6 @@ argument_list|,
 name|ANYQFL_LETTER
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|e
 operator|->
 name|e_dfqgrp
@@ -15088,27 +15161,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-name|e
-operator|->
-name|e_queuealg
-operator|=
-name|QD_LINEAR
-expr_stmt|;
-name|e
-operator|->
-name|e_queuedelay
-operator|=
-operator|(
-name|time_t
-operator|)
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 while|while
 condition|(
 operator|(
@@ -15565,33 +15617,6 @@ break|break;
 block|}
 block|}
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-case|case
-literal|'G'
-case|:
-comment|/* queue delay algorithm */
-name|e
-operator|->
-name|e_queuealg
-operator|=
-name|atoi
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 literal|'q'
 case|:
@@ -15633,9 +15658,6 @@ name|e_quarmsg
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 literal|'H'
 case|:
@@ -15746,10 +15768,7 @@ name|e
 operator|->
 name|e_dtime
 operator|+
-name|queuedelay
-argument_list|(
-name|e
-argument_list|)
+name|MinQueueAge
 condition|)
 block|{
 name|char
@@ -16317,22 +16336,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|queuedelay_qfver_unsupported
-argument_list|(
-name|qfver
-argument_list|)
-condition|)
-name|syserr
-argument_list|(
-literal|"queue file version %d not supported: %s"
-argument_list|,
-name|qfver
-argument_list|,
-literal|"sendmail not compiled with _FFR_QUEUEDELAY"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|qfver
 operator|<=
 name|QF_VERSION
@@ -16356,33 +16359,6 @@ name|fail
 goto|;
 comment|/* NOTREACHED */
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-case|case
-literal|'Y'
-case|:
-comment|/* current delay */
-name|e
-operator|->
-name|e_queuedelay
-operator|=
-operator|(
-name|time_t
-operator|)
-name|atol
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 case|case
 literal|'Z'
 case|:
@@ -16522,6 +16498,32 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_QUEUEDELAY
+case|case
+literal|'G'
+case|:
+case|case
+literal|'Y'
+case|:
+comment|/* 			**  Maintain backward compatibility for 			**  users who defined _FFR_QUEUEDELAY in 			**  previous releases.  Remove this 			**  code in 8.14 or 8.15. 			*/
+if|if
+condition|(
+name|qfver
+operator|==
+literal|5
+operator|||
+name|qfver
+operator|==
+literal|7
+condition|)
+break|break;
+comment|/* If not qfver 5 or 7, then 'G' or 'Y' is invalid */
+comment|/* FALLTHROUGH */
+endif|#
+directive|endif
+comment|/* _FFR_QUEUEDELAY */
 default|default:
 name|syserr
 argument_list|(
@@ -17974,18 +17976,12 @@ decl_stmt|;
 name|int
 name|qfver
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|char
 name|quarmsg
 index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|char
 name|statmsg
 index|[
@@ -18338,9 +18334,6 @@ argument_list|,
 literal|"*"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -18360,9 +18353,6 @@ argument_list|,
 literal|"?"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 elseif|else
 if|if
 condition|(
@@ -18425,9 +18415,6 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|quarmsg
 index|[
 literal|0
@@ -18435,9 +18422,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|statmsg
 index|[
 literal|0
@@ -18568,9 +18552,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 literal|'q'
 case|:
@@ -18621,9 +18602,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 literal|'B'
 case|:
@@ -18766,9 +18744,6 @@ literal|39
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|quarmsg
@@ -18807,9 +18782,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|statmsg
@@ -19134,12 +19106,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_comment
 comment|/* **  QUEUE_LETTER -- get the proper queue letter for the current QueueMode. ** **	Parameters: **		e -- envelope to build it in/from. **		type -- the file type, used as the first character **			of the file name. ** **	Returns: **		the letter to use */
 end_comment
@@ -19227,15 +19193,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
-
 begin_comment
 comment|/* **  QUEUENAME -- build a file name in the queue directory for this envelope. ** **	Parameters: **		e -- envelope to build it in/from. **		type -- the file type, used as the first character **			of the file name. ** **	Returns: **		a pointer to the queue name (in a static buffer). ** **	Side Effects: **		If no id code is already assigned, queuename() will **		assign an id code with assign_queueid().  If no queue **		directory is assigned, one will be set with setnewqueue(). */
 end_comment
@@ -19296,9 +19253,6 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|type
 operator|=
 name|queue_letter
@@ -19308,9 +19262,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* begin of filename */
 name|pref
 index|[
@@ -19576,15 +19527,9 @@ operator|=
 literal|"/df/"
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 name|QUARQF_LETTER
 case|:
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 name|TEMPQF_LETTER
 case|:
@@ -19764,7 +19709,7 @@ value|62
 end_define
 
 begin_comment
-comment|/* **  Note: the length is "officially" 60 because minutes and seconds are **	usually only 0-59.  However (Linux): **       tm_sec The number of seconds after the minute, normally in **              the range 0 to 59, but can be up to 61 to allow for **              leap seconds. **	Hence the real length of the string is 62 to take this into account. **	Alternatively % QIC_LEN can (should) be used for access everywhere. */
+comment|/* **  Note: the length is "officially" 60 because minutes and seconds are **	usually only 0-59.  However (Linux): **       tm_sec The number of seconds after the minute, normally in **		the range 0 to 59, but can be up to 61 to allow for **		leap seconds. **	Hence the real length of the string is 62 to take this into account. **	Alternatively % QIC_LEN can (should) be used for access everywhere. */
 end_comment
 
 begin_define
@@ -20112,9 +20057,6 @@ block|e->e_qdir = NOQDIR; 	e->e_xfqgrp = NOQGRP;
 endif|#
 directive|endif
 comment|/* 0 */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 comment|/* New ID means it's not on disk yet */
 name|e
 operator|->
@@ -20122,9 +20064,6 @@ name|e_qfletter
 operator|=
 literal|'\0'
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|tTd
@@ -20831,9 +20770,6 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -20845,9 +20781,6 @@ name|loseit
 operator|=
 name|false
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* if already lost, no need to re-lose */
 if|if
 condition|(
@@ -26925,6 +26858,20 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
+case|case
+literal|'n'
+case|:
+comment|/* none */
+case|case
+literal|'N'
+case|:
+name|qg
+operator|->
+name|qg_sortorder
+operator|=
+name|QSO_NONE
+expr_stmt|;
+break|break;
 default|default:
 name|syserr
 argument_list|(
@@ -27246,104 +27193,6 @@ end_endif
 
 begin_comment
 comment|/* 0 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-end_if
-
-begin_comment
-comment|/* **  QUEUEDELAY -- compute queue delay time ** **	Parameters: **		e -- the envelope to queue up. ** **	Returns: **		queue delay time ** **	Side Effects: **		may change e_queuedelay */
-end_comment
-
-begin_function
-specifier|static
-name|time_t
-name|queuedelay
-parameter_list|(
-name|e
-parameter_list|)
-name|ENVELOPE
-modifier|*
-name|e
-decl_stmt|;
-block|{
-name|time_t
-name|qd
-decl_stmt|;
-if|if
-condition|(
-name|e
-operator|->
-name|e_queuealg
-operator|==
-name|QD_EXP
-condition|)
-block|{
-if|if
-condition|(
-name|e
-operator|->
-name|e_queuedelay
-operator|==
-literal|0
-condition|)
-name|e
-operator|->
-name|e_queuedelay
-operator|=
-name|QueueInitDelay
-expr_stmt|;
-else|else
-block|{
-name|e
-operator|->
-name|e_queuedelay
-operator|*=
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|e
-operator|->
-name|e_queuedelay
-operator|>
-name|QueueMaxDelay
-condition|)
-name|e
-operator|->
-name|e_queuedelay
-operator|=
-name|QueueMaxDelay
-expr_stmt|;
-block|}
-name|qd
-operator|=
-name|e
-operator|->
-name|e_queuedelay
-expr_stmt|;
-block|}
-else|else
-name|qd
-operator|=
-name|MinQueueAge
-expr_stmt|;
-return|return
-name|qd
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUEUEDELAY */
 end_comment
 
 begin_comment
@@ -28823,9 +28672,6 @@ name|e_statmsg
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|e
@@ -28849,9 +28695,6 @@ operator|->
 name|e_quarmsg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 comment|/* 	**  XXX Not sure if this copying is necessary. 	**  sendall() does this copying, but I (dm) don't know if that is 	**  because of the storage management discipline we were using 	**  before rpools were introduced, or if it is because these lists 	**  can be modified later. 	*/
 name|ee
 operator|->
@@ -31216,12 +31059,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_comment
 comment|/* **  QUARANTINE_QUEUE_ITEM -- {un,}quarantine a single envelope ** **	Add/remove quarantine reason and requeue appropriately. ** **	Parameters: **		qgrp -- queue group for the item **		qdir -- queue directory in the given queue group **		e -- envelope information for the item **		reason -- quarantine reason, NULL means unquarantine. ** **	Results: **		true if item changed, false otherwise ** **	Side Effects: **		Changes quarantine tag in queue file and renames it. */
 end_comment
@@ -32107,6 +31944,10 @@ name|SAFE_REALLY
 operator|||
 name|SuperSafe
 operator|==
+name|SAFE_REALLY_POSTMILTER
+operator|||
+name|SuperSafe
+operator|==
 name|SAFE_INTERACTIVE
 operator|)
 operator|&&
@@ -32957,15 +32798,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000, 2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: debug.c,v 1.28 2001/09/25 19:57:05 gshapiro Exp $"
+literal|"@(#)$Id: debug.c,v 1.29 2003/01/10 00:26:06 ca Exp $"
 argument_list|)
 end_macro
 
@@ -133,6 +133,41 @@ name|SmDebugOutput
 operator|=
 name|fp
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  SM_DEBUG_CLOSE -- Close debug file pointer. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Closes SmDebugOutput. */
+end_comment
+
+begin_function
+name|void
+name|sm_debug_close
+parameter_list|()
+block|{
+if|if
+condition|(
+name|SmDebugOutput
+operator|!=
+name|NULL
+operator|&&
+name|SmDebugOutput
+operator|!=
+name|smioout
+condition|)
+block|{
+name|sm_io_close
+argument_list|(
+name|SmDebugOutput
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+name|SmDebugOutput
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: savemail.c,v 8.299.2.1 2002/10/23 15:08:47 ca Exp $"
+literal|"@(#)$Id: savemail.c,v 8.303 2004/01/14 02:56:51 ca Exp $"
 argument_list|)
 end_macro
 
@@ -249,6 +249,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -506,11 +509,24 @@ case|case
 name|ESM_REPORT
 case|:
 comment|/* 			**  If the user is still logged in on the same terminal, 			**  then write the error messages back to hir (sic). 			*/
+if|#
+directive|if
+name|USE_TTYPATH
 name|p
 operator|=
 name|ttypath
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+comment|/* USE_TTYPATH */
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_TTYPATH */
 if|if
 condition|(
 name|p
@@ -1783,6 +1799,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|returnq
 argument_list|,
 name|true
@@ -1805,6 +1824,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue

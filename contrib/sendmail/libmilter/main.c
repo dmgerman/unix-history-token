@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.64.2.13 2003/10/20 22:27:13 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.79 2003/10/20 22:25:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -286,14 +286,8 @@ name|MI_SOMAXCONN
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_SMFI_OPENSOCKET
-end_if
-
 begin_comment
-comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **		able to start up ** **	Parameters: **		rmsocket -- if true, instructs libmilter to attempt **			to remove the socket before creating it; **			only applies for "local:" or "unix:" sockets ** **	Return: **		MI_SUCCESS/MI_FAILURE */
+comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **		       able to start up ** **	Parameters: **		rmsocket -- if true, instructs libmilter to attempt **			to remove the socket before creating it; **			only applies for "local:" or "unix:" sockets ** **	Return: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function
@@ -335,15 +329,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_SMFI_OPENSOCKET */
-end_comment
 
 begin_comment
 comment|/* **  SMFI_SETDBG -- set debug level. ** **	Parameters: **		odbg -- new debug level. ** **	Returns: **		MI_SUCCESS */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.607.2.12 2003/10/07 17:45:28 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.641 2004/07/23 20:45:02 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -711,6 +711,8 @@ condition|?
 name|TokTypeNoC
 else|:
 name|NULL
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 name|nfuzzy
@@ -998,6 +1000,8 @@ condition|?
 name|TokTypeNoC
 else|:
 name|NULL
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 if|if
@@ -3556,7 +3560,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"-k (&(objectClass=sendmailMTAClass)(sendmailMTAClassName=%s)(|(sendmailMTACluster=%s)(sendmailMTAHost=%s))) -v sendmailMTAClassValue"
+literal|"-k (&(objectClass=sendmailMTAClass)(sendmailMTAClassName=%s)(|(sendmailMTACluster=%s)(sendmailMTAHost=%s))) -v sendmailMTAClassValue,sendmailMTAClassSearch:FILTER:sendmailMTAClass,sendmailMTAClassURL:URL:sendmailMTAClass"
 argument_list|,
 name|mn
 argument_list|,
@@ -4412,6 +4416,18 @@ operator|->
 name|m_qgrp
 operator|=
 name|NOQGRP
+expr_stmt|;
+name|m
+operator|->
+name|m_uid
+operator|=
+name|NO_UID
+expr_stmt|;
+name|m
+operator|->
+name|m_gid
+operator|=
+name|NO_GID
 expr_stmt|;
 comment|/* now scan through and assign info from the fields */
 while|while
@@ -6916,15 +6932,8 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"\n----Rule Set %d:"
 argument_list|,
 name|ruleset
@@ -6950,39 +6959,31 @@ operator|->
 name|r_next
 control|)
 block|{
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"\nLHS:"
 argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rwp
 operator|->
 name|r_lhs
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sm_io_fprintf
+name|sm_dprintf
 argument_list|(
-name|smioout
-argument_list|,
-name|SM_TIME_DEFAULT
-argument_list|,
 literal|"RHS:"
 argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|rwp
 operator|->
 name|r_rhs
@@ -6994,15 +6995,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  PRINTMAILER -- print mailer structure (for debugging) ** **	Parameters: **		m -- the mailer to print ** **	Returns: **		none. */
+comment|/* **  PRINTMAILER -- print mailer structure (for debugging) ** **	Parameters: **		fp -- output file **		m -- the mailer to print ** **	Returns: **		none. */
 end_comment
 
 begin_function
 name|void
 name|printmailer
 parameter_list|(
+name|fp
+parameter_list|,
 name|m
 parameter_list|)
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 name|MAILER
 modifier|*
@@ -7017,7 +7024,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7052,7 +7059,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7069,7 +7076,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7099,7 +7106,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7116,7 +7123,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7146,7 +7153,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7163,7 +7170,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7193,7 +7200,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7210,7 +7217,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7229,7 +7236,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7283,7 +7290,7 @@ name|void
 operator|)
 name|sm_io_putc
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7295,7 +7302,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7308,6 +7315,8 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|fp
+argument_list|,
 name|m
 operator|->
 name|m_eol
@@ -7326,7 +7335,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7342,7 +7351,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7390,7 +7399,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7424,7 +7433,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7452,7 +7461,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -7461,6 +7470,8 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|fp
+argument_list|,
 operator|*
 name|a
 operator|++
@@ -7473,7 +7484,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -8697,24 +8708,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-define|#
-directive|define
-name|O_QUEUEDELAY
-value|0xb3
-block|{
-literal|"QueueDelay"
-block|,
-name|O_QUEUEDELAY
-block|,
-name|OI_NONE
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 define|#
 directive|define
 name|O_SRVCERTFILE
@@ -9081,9 +9074,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SELECT_SHM */
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 define|#
 directive|define
 name|O_REJECTLOGINTERVAL
@@ -9096,12 +9086,6 @@ block|,
 name|OI_NONE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
-if|#
-directive|if
-name|_FFR_REQ_DIR_FSYNC_OPT
 define|#
 directive|define
 name|O_REQUIRES_DIR_FSYNC
@@ -9114,9 +9098,90 @@ block|,
 name|OI_NONE
 block|}
 block|,
+define|#
+directive|define
+name|O_CONNECTION_RATE_WINDOW_SIZE
+value|0xd3
+block|{
+literal|"ConnectionRateWindowSize"
+block|,
+name|O_CONNECTION_RATE_WINDOW_SIZE
+block|,
+name|OI_NONE
+block|}
+block|,
+define|#
+directive|define
+name|O_CRLFILE
+value|0xd4
+block|{
+literal|"CRLFile"
+block|,
+name|O_CRLFILE
+block|,
+name|OI_NONE
+block|}
+block|,
+define|#
+directive|define
+name|O_FALLBACKSMARTHOST
+value|0xd5
+block|{
+literal|"FallbackSmartHost"
+block|,
+name|O_FALLBACKSMARTHOST
+block|,
+name|OI_NONE
+block|}
+block|,
+define|#
+directive|define
+name|O_SASLREALM
+value|0xd6
+block|{
+literal|"AuthRealm"
+block|,
+name|O_SASLREALM
+block|,
+name|OI_NONE
+block|}
+block|,
+if|#
+directive|if
+name|_FFR_CRLPATH
+define|#
+directive|define
+name|O_CRLPATH
+value|0xd7
+block|{
+literal|"CRLPath"
+block|,
+name|O_CRLPATH
+block|,
+name|OI_NONE
+block|}
+block|,
 endif|#
 directive|endif
-comment|/* _FFR_REQ_DIR_FSYNC_OPT */
+comment|/* _FFR_CRLPATH */
+if|#
+directive|if
+name|_FFR_HELONAME
+define|#
+directive|define
+name|O_HELONAME
+value|0xd8
+block|{
+literal|"HeloName"
+block|,
+name|O_HELONAME
+block|,
+name|OI_NONE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_HELONAME */
 block|{
 name|NULL
 block|,
@@ -9724,6 +9789,9 @@ argument_list|)
 expr_stmt|;
 name|xputs
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
@@ -10121,6 +10189,17 @@ case|case
 literal|'C'
 case|:
 comment|/* checkpoint every N addresses */
+if|if
+condition|(
+name|safe
+operator|||
+name|CheckpointInterval
+operator|>
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+condition|)
 name|CheckpointInterval
 operator|=
 name|atoi
@@ -11242,6 +11321,42 @@ name|SuperSafe
 operator|=
 name|SAFE_INTERACTIVE
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|tolower
+argument_list|(
+operator|*
+name|val
+argument_list|)
+operator|==
+literal|'p'
+condition|)
+if|#
+directive|if
+name|MILTER
+name|SuperSafe
+operator|=
+name|SAFE_REALLY_POSTMILTER
+expr_stmt|;
+else|#
+directive|else
+comment|/* MILTER */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Warning: SuperSafe=PostMilter requires Milter support (-DMILTER)\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MILTER */
 else|else
 name|SuperSafe
 operator|=
@@ -11538,7 +11653,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|FallBackMX
+name|FallbackMX
 operator|=
 name|newstr
 argument_list|(
@@ -11766,6 +11881,18 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
+case|case
+literal|'n'
+case|:
+comment|/* none */
+case|case
+literal|'N'
+case|:
+name|QueueSortOrder
+operator|=
+name|QSO_NONE
+expr_stmt|;
+break|break;
 default|default:
 name|syserr
 argument_list|(
@@ -11776,140 +11903,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-case|case
-name|O_QUEUEDELAY
-case|:
-comment|/* queue delay algorithm */
-switch|switch
-condition|(
-operator|*
-name|val
-condition|)
-block|{
-case|case
-literal|'e'
-case|:
-comment|/* exponential */
-case|case
-literal|'E'
-case|:
-name|QueueAlg
-operator|=
-name|QD_EXP
-expr_stmt|;
-name|QueueInitDelay
-operator|=
-literal|10
-name|MINUTES
-expr_stmt|;
-name|QueueMaxDelay
-operator|=
-literal|2
-name|HOURS
-expr_stmt|;
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|val
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-modifier|*
-name|q
-decl_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-name|q
-operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|q
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|q
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-name|QueueInitDelay
-operator|=
-name|convtime
-argument_list|(
-name|p
-argument_list|,
-literal|'s'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|q
-operator|!=
-name|NULL
-condition|)
-block|{
-name|QueueMaxDelay
-operator|=
-name|convtime
-argument_list|(
-name|q
-argument_list|,
-literal|'s'
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-break|break;
-case|case
-literal|'l'
-case|:
-comment|/* linear */
-case|case
-literal|'L'
-case|:
-name|QueueAlg
-operator|=
-name|QD_LINEAR
-expr_stmt|;
-break|break;
-default|default:
-name|syserr
-argument_list|(
-literal|"Invalid queue delay algorithm \"%s\""
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUEDELAY */
 case|case
 name|O_HOSTSFILE
 case|:
@@ -13824,6 +13817,40 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
+name|O_SASLREALM
+case|:
+if|if
+condition|(
+name|AuthRealm
+operator|!=
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|AuthRealm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|val
+operator|!=
+literal|'\0'
+condition|)
+name|AuthRealm
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+else|else
+name|AuthRealm
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+case|case
 name|O_SASLOPTS
 case|:
 while|while
@@ -13886,10 +13913,6 @@ expr_stmt|;
 break|break;
 if|#
 directive|if
-name|_FFR_SASL_OPT_M
-comment|/* to be activated in 8.13 */
-if|#
-directive|if
 name|SASL
 operator|>=
 literal|20101
@@ -13904,9 +13927,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* SASL>= 20101 */
-endif|#
-directive|endif
-comment|/* _FFR_SASL_OPT_M */
 case|case
 literal|'p'
 case|:
@@ -14016,6 +14036,9 @@ case|case
 name|O_SASLMECH
 case|:
 case|case
+name|O_SASLREALM
+case|:
+case|case
 name|O_SASLOPTS
 case|:
 case|case
@@ -14120,6 +14143,80 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_TLS_1 */
+case|case
+name|O_CRLFILE
+case|:
+if|#
+directive|if
+name|OPENSSL_VERSION_NUMBER
+operator|>
+literal|0x00907000L
+name|SET_STRING_EXP
+argument_list|(
+name|CRLFile
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* OPENSSL_VERSION_NUMBER> 0x00907000L */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Warning: Option: %s requires at least OpenSSL 0.9.7\n"
+argument_list|,
+name|OPTNAME
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* OPENSSL_VERSION_NUMBER> 0x00907000L */
+if|#
+directive|if
+name|_FFR_CRLPATH
+case|case
+name|O_CRLPATH
+case|:
+if|#
+directive|if
+name|OPENSSL_VERSION_NUMBER
+operator|>
+literal|0x00907000L
+name|SET_STRING_EXP
+argument_list|(
+name|CRLPath
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* OPENSSL_VERSION_NUMBER> 0x00907000L */
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
+argument_list|(
+name|smioout
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|"Warning: Option: %s requires at least OpenSSL 0.9.7\n"
+argument_list|,
+name|OPTNAME
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* OPENSSL_VERSION_NUMBER> 0x00907000L */
+endif|#
+directive|endif
+comment|/* _FFR_CRLPATH */
 comment|/* 	**  XXX How about options per daemon/client instead of globally? 	**  This doesn't work well for some options, e.g., no server cert, 	**  but fine for others. 	** 	**  XXX Some people may want different certs per server. 	** 	**  See also srvfeatures() 	*/
 case|case
 name|O_TLS_SRV_OPTS
@@ -14285,6 +14382,18 @@ case|:
 endif|#
 directive|endif
 comment|/* _FFR_TLS_1 */
+case|case
+name|O_CRLFILE
+case|:
+if|#
+directive|if
+name|_FFR_CRLPATH
+case|case
+name|O_CRLPATH
+case|:
+endif|#
+directive|endif
+comment|/* _FFR_CRLPATH */
 case|case
 name|O_RANDFILE
 case|:
@@ -14554,9 +14663,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* _FFR_SOFT_BOUNCE */
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 case|case
 name|O_REJECTLOGINTERVAL
 case|:
@@ -14571,12 +14677,6 @@ literal|'h'
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
-if|#
-directive|if
-name|_FFR_REQ_DIR_FSYNC_OPT
 case|case
 name|O_REQUIRES_DIR_FSYNC
 case|:
@@ -14598,9 +14698,57 @@ endif|#
 directive|endif
 comment|/* REQUIRES_DIR_FSYNC */
 break|break;
+case|case
+name|O_CONNECTION_RATE_WINDOW_SIZE
+case|:
+name|ConnectionRateWindowSize
+operator|=
+name|convtime
+argument_list|(
+name|val
+argument_list|,
+literal|'s'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_FALLBACKSMARTHOST
+case|:
+comment|/* fallback smart host */
+if|if
+condition|(
+name|val
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|FallbackSmartHost
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+if|#
+directive|if
+name|_FFR_HELONAME
+case|case
+name|O_HELONAME
+case|:
+name|HeloName
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
-comment|/* _FFR_REQ_DIR_FSYNC_OPT */
+comment|/* _FFR_HELONAME */
 default|default:
 if|if
 condition|(
@@ -16184,9 +16332,6 @@ block|,
 name|TO_ACONNECT
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_QUEUERETURN_DSN
 define|#
 directive|define
 name|TO_QUEUEWARN_DSN
@@ -16207,9 +16352,6 @@ block|,
 name|TO_QUEUERETURN_DSN
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_QUEUERETURN_DSN */
 block|{
 name|NULL
 block|,
@@ -16593,9 +16735,6 @@ index|]
 operator|=
 name|toval
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUEUERETURN_DSN
 name|TimeOuts
 operator|.
 name|to_q_warning
@@ -16605,9 +16744,6 @@ index|]
 operator|=
 name|toval
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUERETURN_DSN */
 name|addopts
 operator|=
 literal|2
@@ -16679,9 +16815,6 @@ operator|=
 name|toval
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUERETURN_DSN
 case|case
 name|TO_QUEUEWARN_DSN
 case|:
@@ -16704,9 +16837,6 @@ operator|=
 name|toval
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUERETURN_DSN */
 case|case
 name|TO_QUEUERETURN
 case|:
@@ -16746,9 +16876,6 @@ index|]
 operator|=
 name|toval
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUEUERETURN_DSN
 name|TimeOuts
 operator|.
 name|to_q_return
@@ -16758,9 +16885,6 @@ index|]
 operator|=
 name|toval
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUERETURN_DSN */
 name|addopts
 operator|=
 literal|2
@@ -16832,9 +16956,6 @@ operator|=
 name|toval
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_QUEUERETURN_DSN
 case|case
 name|TO_QUEUERETURN_DSN
 case|:
@@ -16857,9 +16978,6 @@ operator|=
 name|toval
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUEUERETURN_DSN */
 case|case
 name|TO_HOSTSTATUS
 case|:

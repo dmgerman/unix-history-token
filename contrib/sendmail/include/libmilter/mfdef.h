@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.11.2.1 2002/11/11 23:22:28 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.21 2004/07/07 21:41:31 ca Exp $  */
 end_comment
 
 begin_comment
@@ -57,6 +57,17 @@ begin_comment
 comment|/* body chunk size */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MILTER_MAX_DATA_SIZE
+value|65535
+end_define
+
+begin_comment
+comment|/* default milter command data limit */
+end_comment
+
 begin_comment
 comment|/* These apply to SMFIF_* flags */
 end_comment
@@ -72,12 +83,6 @@ begin_comment
 comment|/* The actions of V1 filter */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
-
 begin_define
 define|#
 directive|define
@@ -87,35 +92,6 @@ end_define
 
 begin_comment
 comment|/* The actions of V2 filter */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFI_V2_ACTS
-value|0x0000001FL
-end_define
-
-begin_comment
-comment|/* The actions of V2 filter */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
 end_comment
 
 begin_define
@@ -313,6 +289,62 @@ begin_comment
 comment|/* RCPT to */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFIC_DATA
+value|'T'
+end_define
+
+begin_comment
+comment|/* DATA */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_VERSION> 3 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SMFI_VERSION
+operator|>
+literal|2
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFIC_UNKNOWN
+value|'U'
+end_define
+
+begin_comment
+comment|/* Any unknown command */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SMFI_VERSION> 2 */
+end_comment
+
 begin_comment
 comment|/* actions (replies) */
 end_comment
@@ -427,12 +459,6 @@ begin_comment
 comment|/* tempfail */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_MILTER_421
-end_if
-
 begin_define
 define|#
 directive|define
@@ -442,15 +468,6 @@ end_define
 
 begin_comment
 comment|/* 421: shutdown (internal to MTA) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_MILTER_421 */
 end_comment
 
 begin_define
@@ -467,6 +484,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SMFIR_INSHEADER
+value|'i'
+end_define
+
+begin_comment
+comment|/* insert header */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMFIR_REPLYCODE
 value|'y'
 end_define
@@ -474,12 +502,6 @@ end_define
 begin_comment
 comment|/* reply code etc */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUARANTINE
-end_if
 
 begin_define
 define|#
@@ -490,15 +512,6 @@ end_define
 
 begin_comment
 comment|/* quarantine */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUARANTINE */
 end_comment
 
 begin_comment
@@ -582,6 +595,32 @@ begin_comment
 comment|/* MTA should not send EOH */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_NOHDR_RESP
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFIP_NOHREPL
+value|0x00000080L
+end_define
+
+begin_comment
+comment|/* No reply for headers */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER_NOHDR_RESP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -604,6 +643,32 @@ begin_comment
 comment|/* The protocol of V2 filter */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_NOHDR_RESP
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFI_CURR_PROT
+value|0x000000FFL
+end_define
+
+begin_comment
+comment|/* The current version */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_MILTER_NOHDR_RESP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -613,6 +678,15 @@ end_define
 
 begin_comment
 comment|/* The current version */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER_NOHDR_RESP */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2002, 2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 8.54.2.3 2003/09/03 19:58:26 ca Exp $"
+literal|"@(#)$Id: bf.c,v 8.60 2004/04/14 18:12:49 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2186,6 +2186,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_EXCL
+operator||
+name|QF_O_EXTRA
 argument_list|,
 name|bfp
 operator|->

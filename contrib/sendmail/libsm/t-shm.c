@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-shm.c,v 1.18 2002/01/31 04:11:41 ca Exp $"
+literal|"@(#)$Id: t-shm.c,v 1.19 2004/04/20 23:14:21 ca Exp $"
 argument_list|)
 end_macro
 
@@ -125,8 +125,6 @@ name|shmid
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|,
 name|t
 decl_stmt|;
@@ -244,10 +242,6 @@ name|i
 operator|++
 control|)
 block|{
-name|j
-operator|+=
-name|i
-expr_stmt|;
 operator|++
 operator|*
 name|shm

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.972.2.54 2004/01/08 21:54:55 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.1047 2004/07/14 21:54:23 ca Exp $"
 argument_list|)
 end_macro
 
@@ -252,6 +252,14 @@ block|}
 block|,
 block|{
 literal|"return-receipt-to"
+block|,
+name|H_RECEIPTTO
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"delivery-receipt-to"
 block|,
 name|H_RECEIPTTO
 block|,
@@ -1028,17 +1036,11 @@ operator|*
 literal|20
 expr_stmt|;
 comment|/* option q */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|QueueMode
 operator|=
 name|QM_NORMAL
 expr_stmt|;
 comment|/* what queue items to act upon */
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|FileMode
 operator|=
 operator|(
@@ -1472,6 +1474,10 @@ argument_list|(
 name|AUTH_MECHANISMS
 argument_list|)
 expr_stmt|;
+name|AuthRealm
+operator|=
+name|NULL
+expr_stmt|;
 name|MaxSLBits
 operator|=
 name|INT_MAX
@@ -1605,27 +1611,25 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MILTER */
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 name|RejectLogInterval
 operator|=
 literal|3
 name|HOURS
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
 if|#
 directive|if
-name|_FFR_REQ_DIR_FSYNC_OPT
+name|REQUIRES_DIR_FSYNC
 name|RequiresDirfsync
 operator|=
 name|true
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_REQ_DIR_FSYNC_OPT */
+comment|/* REQUIRES_DIR_FSYNC */
+name|ConnectionRateWindowSize
+operator|=
+literal|60
+expr_stmt|;
 name|setupmaps
 argument_list|()
 expr_stmt|;
@@ -2610,6 +2614,32 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|SOCKETMAP
+comment|/* arbitrary daemons */
+name|MAPDEF
+argument_list|(
+literal|"socket"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|socket_map_open
+argument_list|,
+name|socket_map_close
+argument_list|,
+name|socket_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SOCKETMAP */
 if|if
 condition|(
 name|tTd
@@ -5656,10 +5686,6 @@ endif|#
 directive|endif
 comment|/* LA_TYPE == LA_INT */
 specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|extern
 name|off_t
 name|lseek
 parameter_list|()
@@ -6339,10 +6365,6 @@ name|avenrun
 index|[
 literal|3
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|struct
 name|mioc_rksym
@@ -7494,6 +7516,50 @@ directive|include
 file|<sys/sysmp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_UNICOSMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CAST_SYSMP
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _UNICOSMP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAST_SYSMP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x7fffffff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _UNICOSMP */
+end_comment
+
 begin_macro
 unit|int
 name|getla
@@ -7646,16 +7712,15 @@ name|lseek
 argument_list|(
 name|kmem
 argument_list|,
-operator|(
+name|CAST_SYSMP
+argument_list|(
 name|sysmp
 argument_list|(
 name|MP_KERNADDR
 argument_list|,
 name|MPKA_AVENRUN
 argument_list|)
-operator|&
-literal|0x7fffffff
-operator|)
+argument_list|)
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -8954,9 +9019,6 @@ index|[
 name|MAXDAEMONS
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 specifier|static
 name|time_t
 name|firstrejtime
@@ -8971,9 +9033,6 @@ index|[
 name|MAXDAEMONS
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
 if|#
 directive|if
 name|XLA
@@ -8989,6 +9048,20 @@ return|;
 endif|#
 directive|endif
 comment|/* XLA */
+name|SM_ASSERT
+argument_list|(
+name|d
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|d
+operator|<
+name|MAXDAEMONS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ConnRateThrottle
@@ -9125,23 +9198,17 @@ operator|>=
 name|RefuseLA
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 name|time_t
 name|now
 decl_stmt|;
 define|#
 directive|define
-name|R2_MSG_LA
-value|"have been rejecting connections on daemon %s for %s"
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
-define|#
-directive|define
 name|R_MSG_LA
 value|"rejecting connections on daemon %s: load average: %d"
+define|#
+directive|define
+name|R2_MSG_LA
+value|"have been rejecting connections on daemon %s for %s"
 name|sm_setproctitle
 argument_list|(
 name|true
@@ -9174,9 +9241,6 @@ argument_list|,
 name|CurrentLA
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 name|now
 operator|=
 name|curtime
@@ -9253,16 +9317,10 @@ operator|+
 name|RejectLogInterval
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
 return|return
 name|true
 return|;
 block|}
-if|#
-directive|if
-name|_FFR_REJECT_LOG
 else|else
 name|firstrejtime
 index|[
@@ -9271,9 +9329,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
 if|if
 condition|(
 name|DelayLA
@@ -14998,6 +15053,13 @@ name|sap
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|connection_rate_check
+argument_list|(
+name|sap
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rscheck
@@ -19865,6 +19927,196 @@ return|return
 name|nproc
 return|;
 block|}
+comment|/* **  SM_CLOSEFROM -- close file descriptors ** **	Parameters: **		lowest -- first fd to close **		highest -- last fd + 1 to close ** **	Returns: **		none */
+name|void
+name|sm_closefrom
+parameter_list|(
+name|lowest
+parameter_list|,
+name|highest
+parameter_list|)
+name|int
+name|lowest
+decl_stmt|,
+name|highest
+decl_stmt|;
+block|{
+if|#
+directive|if
+name|HASCLOSEFROM
+name|closefrom
+argument_list|(
+name|lowest
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HASCLOSEFROM */
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|lowest
+init|;
+name|i
+operator|<
+name|highest
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HASCLOSEFROM */
+block|}
+if|#
+directive|if
+name|HASFDWALK
+comment|/* **  CLOSEFD_WALK -- walk fd's arranging to close them **	Callback for fdwalk() ** **	Parameters: **		lowest -- first fd to arrange to be closed **		fd -- fd to arrange to be closed ** **	Returns: **		zero */
+specifier|static
+name|int
+name|closefd_walk
+parameter_list|(
+name|lowest
+parameter_list|,
+name|fd
+parameter_list|)
+name|void
+modifier|*
+name|lowest
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|fd
+operator|>=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|lowest
+condition|)
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|FD_CLOEXEC
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* HASFDWALK */
+comment|/* **  SM_CLOSE_ON_EXEC -- arrange for file descriptors to be closed ** **	Parameters: **		lowest -- first fd to arrange to be closed **		highest -- last fd + 1 to arrange to be closed ** **	Returns: **		none */
+name|void
+name|sm_close_on_exec
+parameter_list|(
+name|highest
+parameter_list|,
+name|lowest
+parameter_list|)
+name|int
+name|highest
+decl_stmt|,
+name|lowest
+decl_stmt|;
+block|{
+if|#
+directive|if
+name|HASFDWALK
+operator|(
+name|void
+operator|)
+name|fdwalk
+argument_list|(
+name|closefd_walk
+argument_list|,
+operator|&
+name|lowest
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HASFDWALK */
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|lowest
+init|;
+name|i
+operator|<
+name|highest
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|j
+operator|=
+name|fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_GETFD
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|j
+operator||
+name|FD_CLOEXEC
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HASFDWALK */
+block|}
 comment|/* **  SEED_RANDOM -- seed the random number generator ** **	Parameters: **		none ** **	Returns: **		none */
 name|void
 name|seed_random
@@ -21189,6 +21441,14 @@ init|=
 block|{
 if|#
 directive|if
+name|ALLOW_255
+literal|"ALLOW_255"
+block|,
+endif|#
+directive|endif
+comment|/* ALLOW_255 */
+if|#
+directive|if
 name|NAMED_BIND
 if|#
 directive|if
@@ -21464,6 +21724,14 @@ directive|endif
 comment|/* SMTPDEBUG */
 if|#
 directive|if
+name|SOCKETMAP
+literal|"SOCKETMAP"
+block|,
+endif|#
+directive|endif
+comment|/* SOCKETMAP */
+if|#
+directive|if
 name|STARTTLS
 literal|"STARTTLS"
 block|,
@@ -21520,6 +21788,14 @@ directive|endif
 comment|/* USE_LDAP_INIT */
 if|#
 directive|if
+name|USE_TTYPATH
+literal|"USE_TTYPATH"
+block|,
+endif|#
+directive|endif
+comment|/* USE_TTYPATH */
+if|#
+directive|if
 name|XDEBUG
 literal|"XDEBUG"
 block|,
@@ -21552,14 +21828,6 @@ block|,
 endif|#
 directive|endif
 comment|/* ADDRCONFIG_IS_BROKEN */
-if|#
-directive|if
-name|ALLOW_255
-literal|"ALLOW_255"
-block|,
-endif|#
-directive|endif
-comment|/* ALLOW_255 */
 ifdef|#
 directive|ifdef
 name|AUTO_NETINFO_HOSTS
@@ -21618,6 +21886,14 @@ directive|endif
 comment|/* FAST_PID_RECYCLE */
 if|#
 directive|if
+name|HASCLOSEFROM
+literal|"HASCLOSEFROM"
+block|,
+endif|#
+directive|endif
+comment|/* HASCLOSEFROM */
+if|#
+directive|if
 name|HASFCHOWN
 literal|"HASFCHOWN"
 block|,
@@ -21632,6 +21908,14 @@ block|,
 endif|#
 directive|endif
 comment|/* HASFCHMOD */
+if|#
+directive|if
+name|HASFDWALK
+literal|"HASFDWALK"
+block|,
+endif|#
+directive|endif
+comment|/* HASFDWALK */
 if|#
 directive|if
 name|HASFLOCK
@@ -22097,33 +22381,14 @@ init|=
 block|{
 if|#
 directive|if
-name|_FFR_ADAPTIVE_EOL
-comment|/* tries to be smart about \r\n versus \n from broken clients */
-comment|/* known to be broken, do not use */
-literal|"_FFR_ADAPTIVE_EOL"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
-if|#
-directive|if
 name|_FFR_ALLOW_SASLINFO
 comment|/* DefaultAuthInfo can be specified by user. */
-comment|/* DefaultAuthInfo doesn't really work in 8.12 anymore. */
+comment|/* DefaultAuthInfo doesn't really work in 8.13 anymore. */
 literal|"_FFR_ALLOW_SASLINFO"
 block|,
 endif|#
 directive|endif
 comment|/* _FFR_ALLOW_SASLINFO */
-if|#
-directive|if
-name|_FFR_ALLOW_S0_ERROR_4XX
-comment|/* Allow for tempfail from S0 (ruleset 0). */
-literal|"_FFR_ALLOW_S0_ERROR_4XX"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_ALLOW_S0_ERROR_4XX */
 if|#
 directive|if
 name|_FFR_BESTMX_BETTER_TRUNCATION
@@ -22144,16 +22409,6 @@ directive|endif
 comment|/* _FFR_BLOCK_PROXIES */
 if|#
 directive|if
-name|_FFR_CACHE_LPC
-comment|/* Cache connections to LCP based mailers */
-comment|/* Christophe Wolfhugel of France Telecom Oleane */
-literal|"_FFR_CACHE_LPC"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_CACHE_LPC */
-if|#
-directive|if
 name|_FFR_CATCH_BROKEN_MTAS
 comment|/* Deal with MTAs that send a reply during the DATA phase. */
 literal|"_FFR_CATCH_BROKEN_MTAS"
@@ -22161,15 +22416,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_CATCH_BROKEN_MTAS */
-if|#
-directive|if
-name|_FFR_CATCH_LONG_STRINGS
-comment|/* Report long address strings instead of silently ignoring them. */
-literal|"_FFR_CATCH_LONG_STRINGS"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_CATCH_LONG_STRINGS */
 if|#
 directive|if
 name|_FFR_CHECK_EOM
@@ -22206,6 +22452,15 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_CONTROL_MSTAT */
+if|#
+directive|if
+name|_FFR_CRLPATH
+comment|/* CRLPath; needs documentation; Al Smith */
+literal|"_FFR_CRLPATH"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CRLPATH */
 if|#
 directive|if
 name|_FFR_DAEMON_NETUNIX
@@ -22291,16 +22546,6 @@ directive|endif
 comment|/* _FFR_DONTLOCKFILESFORREAD_OPTION */
 if|#
 directive|if
-name|_FFR_DONT_STOP_LOOKING
-comment|/* Continue with DNS lookups on ECONNREFUSED and TRY_AGAIN. */
-comment|/* Noted by Neil Rickert of Northern Illinois University */
-literal|"_FFR_DONT_STOP_LOOKING"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_DONT_STOP_LOOKING */
-if|#
-directive|if
 name|_FFR_DOTTED_USERNAMES
 comment|/* Allow usernames with '.' */
 literal|"_FFR_DOTTED_USERNAMES"
@@ -22383,6 +22628,15 @@ directive|endif
 comment|/* _FFR_HDR_TYPE */
 if|#
 directive|if
+name|_FFR_HELONAME
+comment|/* option to set heloname; Nik Clayton of FreeBSD */
+literal|"_FFR_HELONAME"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_HELONAME */
+if|#
+directive|if
 name|_FFR_HPUX_NSSWITCH
 comment|/* Use nsswitch on HP-UX */
 literal|"_FFR_HPUX_NSSWITCH"
@@ -22410,32 +22664,12 @@ directive|endif
 comment|/* _FFR_IGNORE_EXT_ON_HELO */
 if|#
 directive|if
-name|_FFR_LDAP_RECURSION
-comment|/* Support LDAP recursion in LDAP responses */
-comment|/* Andrew Baucom */
-literal|"_FFR_LDAP_RECURSION"
-block|,
+name|_FFR_MAXDATASIZE
+comment|/* 	**  It is possible that a header is larger than MILTER_CHUNK_SIZE, 	**  hence this shouldn't be used as limit for milter communication. 	**  see also libmilter/comm.c 	**  Gurusamy Sarathy of ActiveState 	*/
+literal|"_FFR_MAXDATASIZE"
 endif|#
 directive|endif
-comment|/* _FFR_LDAP_RECURSION */
-if|#
-directive|if
-name|_FFR_LDAP_SETVERSION
-comment|/* New LDAP map option for setting LDAP protocol version */
-literal|"_FFR_LDAP_SETVERSION"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_LDAP_SETVERSION */
-if|#
-directive|if
-name|_FFR_LDAP_URI
-comment|/* Support LDAP URI form of specifying host/port (and allows ldaps) */
-literal|"_FFR_LDAP_URI"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_LDAP_URI */
+comment|/* _FFR_MAXDATASIZE */
 if|#
 directive|if
 name|_FFR_MAX_FORWARD_ENTRIES
@@ -22458,46 +22692,33 @@ directive|endif
 comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
-name|_FFR_MESSAGEID_MACRO
-comment|/* stick the message ID header's value in a macro */
-literal|"_FFR_MESSAGEID_MACRO"
+name|_FFR_MILTER_NAGLE
+comment|/* milter: turn off Nagle ("cork" on Linux) */
+comment|/* John Gardiner Myers of Proofpoint */
+literal|"_FFR_MILTER_NAGLE "
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MESSAGEID_MACRO */
+comment|/* _FFR_MILTER_NAGLE */
 if|#
 directive|if
-name|MILTER
-if|#
-directive|if
-name|_FFR_MILTER_421
-comment|/* If a filter returns 421, close the SMTP connection */
-literal|"_FFR_MILTER_421"
+name|_FFR_MILTER_NOHDR_RESP
+comment|/* milter: no response expected when sending headers */
+comment|/* John Gardiner Myers of Proofpoint */
+literal|"_FFR_MILTER_NOHDR_RESP"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_421 */
+comment|/* _FFR_MILTER_NOHDR_RESP */
 if|#
 directive|if
-name|_FFR_MILTER_MACROS_EOM
-comment|/* Add an EOM macro set for milter */
-literal|"_FFR_MILTER_MACROS_EOM"
+name|_FFR_MIME7TO8_OLD
+comment|/* Old mime7to8 code, the new is broken for at least one example. */
+literal|"_FFR_MIME7TO8_OLD"
 block|,
 endif|#
 directive|endif
-comment|/* _FFR_MILTER_MACROS_EOM */
-if|#
-directive|if
-name|_FFR_MILTER_PERDAEMON
-comment|/* Per DaemonPortOptions InputMailFilter lists */
-literal|"_FFR_MILTER_PERDAEMON"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_PERDAEMON */
-endif|#
-directive|endif
-comment|/* MILTER */
+comment|/* _FFR_MAX_SLEEP_TIME */
 if|#
 directive|if
 name|_FFR_NODELAYDSN_ON_HOLD
@@ -22517,15 +22738,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_NO_PIPE */
-if|#
-directive|if
-name|_FFR_QUARANTINE
-comment|/* Quarantine items in the queue */
-literal|"_FFR_QUARANTINE"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|#
 directive|if
 name|_FFR_QUEUEDELAY
@@ -22556,15 +22768,6 @@ directive|endif
 comment|/* _FFR_QUEUE_MACRO */
 if|#
 directive|if
-name|_FFR_QUEUERETURN_DSN
-comment|/* 	**  Provide an option for different Timeout.queue{warn,return} for 	**  DSN messages.  These days, queues are filled with bounces for 	**  spam that will never make it to the sender and therefore slow 	**  down queue runs until they timeout. 	*/
-literal|"_FFR_QUEUERETURN_DSN"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_QUEUERETURN_DSN */
-if|#
-directive|if
 name|_FFR_QUEUE_RUN_PARANOIA
 comment|/* Additional checks when doing queue runs. */
 literal|"_FFR_QUEUE_RUN_PARANOIA"
@@ -22592,24 +22795,6 @@ directive|endif
 comment|/* _FFR_REDIRECTEMPTY */
 if|#
 directive|if
-name|_FFR_REJECT_LOG
-comment|/* Log when we start/stop rejecting connections due to load, etc */
-literal|"_FFR_REJECT_LOG"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_REJECT_LOG */
-if|#
-directive|if
-name|_FFR_REQ_DIR_FSYNC_OPT
-comment|/* Add cf option to fsync() directories */
-literal|"_FFR_REQ_DIR_FSYNC_OPT"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_REQ_DIR_FSYNC_OPT */
-if|#
-directive|if
 name|_FFR_RESET_MACRO_GLOBALS
 comment|/* Allow macro 'j' to be set dynamically via rulesets. */
 literal|"_FFR_RESET_MACRO_GLOBALS"
@@ -22619,15 +22804,6 @@ directive|endif
 comment|/* _FFR_RESET_MACRO_GLOBALS */
 if|#
 directive|if
-name|_FFR_RESPOND_ALL
-comment|/* in vacation: respond to every message, not just once per interval */
-literal|"_FFR_RESPOND_ALL"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_RESPOND_ALL */
-if|#
-directive|if
 name|_FFR_RHS
 comment|/* Random shuffle for queue sorting. */
 literal|"_FFR_RHS"
@@ -22635,15 +22811,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_RHS */
-if|#
-directive|if
-name|_FFR_SASL_OPT_M
-comment|/* Support SASL's SASL_SEC_MUTUAL_AUTH option */
-literal|"_FFR_SASL_OPT_M"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_SASL_OPT_M */
 if|#
 directive|if
 name|_FFR_SELECT_SHM
@@ -22664,6 +22831,14 @@ directive|endif
 comment|/* _FFR_SHM_STATUS */
 if|#
 directive|if
+name|_FFR_SKIP_DOMAINS
+comment|/* process every N'th domain instead of every N'th message */
+literal|"_FFR_SKIP_DOMAINS"
+endif|#
+directive|endif
+comment|/* _FFR_SKIP_DOMAINS */
+if|#
+directive|if
 name|_FFR_SLEEP_USE_SELECT
 comment|/* Use select(2) in libsm/clock.c to emulate sleep(2) */
 literal|"_FFR_SLEEP_USE_SELECT "
@@ -22671,24 +22846,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SLEEP_USE_SELECT */
-if|#
-directive|if
-name|_FFR_SMFI_OPENSOCKET
-comment|/* libmilter: smfi_opensocket() to force the socket open early */
-literal|"_FFR_SMFI_OPENSOCKET"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_SMFI_OPENSOCKET */
-if|#
-directive|if
-name|_FFR_SMTP_SSL
-comment|/* Support for smtps (SMTP over SSL) */
-literal|"_FFR_SMTP_SSL"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_SMTP_SSL */
 if|#
 directive|if
 name|_FFR_SOFT_BOUNCE
@@ -22708,15 +22865,6 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_SPT_ALIGN */
-if|#
-directive|if
-name|_FFR_STRIPBACKSL
-comment|/* 	**  Strip backslash from addresses (so sender doesn't 	**  decide to ignore forward) 	*/
-literal|"_FFR_STRIPBACKSL"
-block|,
-endif|#
-directive|endif
-comment|/* _FFR_STRIPBACKSL */
 if|#
 directive|if
 name|_FFR_TIMERS

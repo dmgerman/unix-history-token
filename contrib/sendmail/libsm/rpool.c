@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: rpool.c,v 1.24 2002/01/11 21:54:43 ca Exp $"
+literal|"@(#)$Id: rpool.c,v 1.27 2003/10/09 17:49:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1359,6 +1359,95 @@ name|a
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|DO_NOT_USE_STRCPY
+end_if
+
+begin_comment
+comment|/* **  SM_RPOOL_STRDUP_X -- Create a copy of a C string ** **	Parameters: **		rpool -- rpool to use. **		s -- the string to copy. ** **	Returns: **		pointer to newly allocated string. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|sm_rpool_strdup_x
+parameter_list|(
+name|rpool
+parameter_list|,
+name|s
+parameter_list|)
+name|SM_RPOOL_T
+modifier|*
+name|rpool
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|size_t
+name|l
+decl_stmt|;
+name|char
+modifier|*
+name|n
+decl_stmt|;
+name|l
+operator|=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|l
+operator|+
+literal|1
+operator|>
+name|l
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|sm_rpool_malloc_x
+argument_list|(
+name|rpool
+argument_list|,
+name|l
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|sm_strlcpy
+argument_list|(
+name|n
+argument_list|,
+name|s
+argument_list|,
+name|l
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+name|n
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DO_NOT_USE_STRCPY */
+end_comment
 
 end_unit
 

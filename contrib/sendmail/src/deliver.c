@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.940.2.20 2003/09/26 18:26:19 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.976 2004/07/23 20:45:01 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -554,6 +554,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -579,6 +582,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue
@@ -796,6 +802,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -952,6 +961,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue
@@ -1052,6 +1064,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|q
 argument_list|,
 name|false
@@ -1109,6 +1124,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|q
 argument_list|,
 name|false
@@ -1320,14 +1338,14 @@ decl_stmt|;
 comment|/* 				**  If we have temporary address failures 				**  (e.g., dns failure) and a fallback MX is 				**  set, send directly to the fallback MX host. 				*/
 if|if
 condition|(
-name|FallBackMX
+name|FallbackMX
 operator|!=
 name|NULL
 operator|&&
 operator|!
 name|wordinclass
 argument_list|(
-name|FallBackMX
+name|FallbackMX
 argument_list|,
 literal|'w'
 argument_list|)
@@ -1399,14 +1417,14 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"    ... FallBackMX\n"
+literal|"    ... FallbackMX\n"
 argument_list|)
 expr_stmt|;
 name|len
 operator|=
 name|strlen
 argument_list|(
-name|FallBackMX
+name|FallbackMX
 argument_list|)
 operator|+
 literal|1
@@ -1429,7 +1447,7 @@ name|sm_strlcpy
 argument_list|(
 name|p
 argument_list|,
-name|FallBackMX
+name|FallbackMX
 argument_list|,
 name|len
 argument_list|)
@@ -1563,9 +1581,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -1609,9 +1624,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 else|else
 block|{
 if|if
@@ -1817,6 +1829,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|ee
 operator|->
@@ -1886,9 +1901,6 @@ name|e_statmsg
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 name|e
@@ -1912,9 +1924,6 @@ operator|->
 name|e_quarmsg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|splitenv
 operator|=
 name|ee
@@ -2193,6 +2202,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 operator|&
 name|e
 operator|->
@@ -2342,9 +2354,15 @@ name|mode
 operator|!=
 name|SM_VERIFY
 operator|&&
+operator|(
 name|SuperSafe
 operator|==
 name|SAFE_REALLY
+operator|||
+name|SuperSafe
+operator|==
+name|SAFE_REALLY_POSTMILTER
+operator|)
 operator|)
 operator|)
 operator|&&
@@ -2494,6 +2512,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|e
 operator|->
 name|e_sendqueue
@@ -2535,6 +2556,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|ee
 operator|->
 name|e_sendqueue
@@ -3928,18 +3952,12 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_REQ_DIR_FSYNC_OPT
 if|if
 condition|(
 operator|!
 name|RequiresDirfsync
 condition|)
 return|return;
-endif|#
-directive|endif
-comment|/* _FFR_REQ_DIR_FSYNC_OPT */
 comment|/* filesystems which require the directory be synced */
 name|dirp
 operator|=
@@ -4591,51 +4609,115 @@ block|}
 end_function
 
 begin_comment
+comment|/* **  SHOULD_TRY_FBSH -- Should try FallbackSmartHost? ** **	Parameters: **		e -- envelope **		tried_fallbacksmarthost -- has been tried already? (in/out) **		hostbuf -- buffer for hostname (expand FallbackSmartHost) (out) **		hbsz -- size of hostbuf **		status -- current delivery status ** **	Returns: **		true iff FallbackSmartHost should be tried. */
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|should_try_fbsh
+parameter_list|(
+name|e
+parameter_list|,
+name|tried_fallbacksmarthost
+parameter_list|,
+name|hostbuf
+parameter_list|,
+name|hbsz
+parameter_list|,
+name|status
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+name|bool
+modifier|*
+name|tried_fallbacksmarthost
+decl_stmt|;
+name|char
+modifier|*
+name|hostbuf
+decl_stmt|;
+name|size_t
+name|hbsz
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+block|{
+comment|/* 	**  If the host was not found and a FallbackSmartHost is defined 	**  (and we have not yet tried it), then make one last try with 	**  it as the host. 	*/
+if|if
+condition|(
+name|status
+operator|==
+name|EX_NOHOST
+operator|&&
+name|FallbackSmartHost
+operator|!=
+name|NULL
+operator|&&
+operator|!
+operator|*
+name|tried_fallbacksmarthost
+condition|)
+block|{
+operator|*
+name|tried_fallbacksmarthost
+operator|=
+name|true
+expr_stmt|;
+name|expand
+argument_list|(
+name|FallbackSmartHost
+argument_list|,
+name|hostbuf
+argument_list|,
+name|hbsz
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|wordinclass
+argument_list|(
+name|hostbuf
+argument_list|,
+literal|'w'
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"one last try with FallbackSmartHost %s\n"
+argument_list|,
+name|hostbuf
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* **  DELIVER -- Deliver a message to a list of addresses. ** **	This routine delivers to everyone on the same host as the **	user on the head of the list.  It is clever about mailers **	that don't handle multiple users.  It is NOT guaranteed **	that it will deliver to all these addresses however -- so **	deliver should be called once for each address on the **	list. **	Deliver tries to be as opportunistic as possible about piggybacking **	messages. Some definitions to make understanding easier follow below. **	Piggybacking occurs when an existing connection to a mail host can **	be used to send the same message to more than one recipient at the **	same time. So "no piggybacking" means one message for one recipient **	per connection. "Intentional piggybacking" happens when the **	recipients' host address (not the mail host address) is used to **	attempt piggybacking. Recipients with the same host address **	have the same mail host. "Coincidental piggybacking" relies on **	piggybacking based on all the mail host addresses in the MX-RR. This **	is "coincidental" in the fact it could not be predicted until the **	MX Resource Records for the hosts were obtained and examined. For **	example (preference order and equivalence is important, not values): **		domain1 IN MX 10 mxhost-A **			IN MX 20 mxhost-B **		domain2 IN MX  4 mxhost-A **			IN MX  8 mxhost-B **	Domain1 and domain2 can piggyback the same message to mxhost-A or **	mxhost-B (if mxhost-A cannot be reached). **	"Coattail piggybacking" relaxes the strictness of "coincidental **	piggybacking" in the hope that most significant (lowest value) **	MX preference host(s) can create more piggybacking. For example **	(again, preference order and equivalence is important, not values): **		domain3 IN MX 100 mxhost-C **			IN MX 100 mxhost-D **			IN MX 200 mxhost-E **		domain4 IN MX  50 mxhost-C **			IN MX  50 mxhost-D **			IN MX  80 mxhost-F **	A message for domain3 and domain4 can piggyback to mxhost-C if mxhost-C **	is available. Same with mxhost-D because in both RR's the preference **	value is the same as mxhost-C, respectively. **	So deliver attempts coattail piggybacking when possible. If the **	first MX preference level hosts cannot be used then the piggybacking **	reverts to coincidental piggybacking. Using the above example you **	cannot deliver to mxhost-F for domain3 regardless of preference value. **	("Coattail" from "riding on the coattails of your predecessor" meaning **	gaining benefit from a predecessor effort with no or little addition **	effort. The predecessor here being the preceding MX RR). ** **	Parameters: **		e -- the envelope to deliver. **		firstto -- head of the address list to deliver to. ** **	Returns: **		zero -- successfully delivered. **		else -- some failure, see ExitStat for more info. ** **	Side Effects: **		The standard input is passed off to someone. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_UID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NO_UID
-value|-1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! NO_UID */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_GID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NO_GID
-value|-1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! NO_GID */
 end_comment
 
 begin_function
@@ -4824,15 +4906,9 @@ comment|/* at least one MX was OK */
 name|bool
 name|ovr
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|bool
 name|quarantine
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|int
 name|strsize
 decl_stmt|;
@@ -5046,6 +5122,23 @@ name|A_PERM
 argument_list|,
 name|macid
 argument_list|(
+literal|"{client_ptr}"
+argument_list|)
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
 literal|"{client_addr}"
 argument_list|)
 argument_list|,
@@ -5238,6 +5331,22 @@ name|m_argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+comment|/* ignore long term host status information if mailer flag W is set */
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_NOHOSTSTAT
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|IgnoreHostStatus
+operator|=
+name|true
 expr_stmt|;
 comment|/* insert -f or -r flag as appropriate */
 if|if
@@ -5694,6 +5803,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|to
 argument_list|,
 name|false
@@ -5756,6 +5868,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|ctladdr
 argument_list|,
 name|false
@@ -5894,9 +6009,6 @@ operator|=
 name|true
 expr_stmt|;
 comment|/* do config file checking of compatibility */
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|quarantine
 operator|=
 operator|(
@@ -5907,9 +6019,6 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|rcode
 operator|=
 name|rscheck
@@ -6020,9 +6129,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 if|if
 condition|(
 operator|!
@@ -6060,9 +6166,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|bitset
@@ -6092,6 +6195,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|to
 argument_list|,
 name|false
@@ -6140,9 +6246,6 @@ name|host
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_STRIPBACKSL
 comment|/* 		**  Strip one leading backslash if requested and the 		**  next character is alphanumerical (the latter can 		**  probably relaxed a bit, see RFC2821). 		*/
 if|if
 condition|(
@@ -6167,9 +6270,6 @@ argument_list|(
 name|user
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_STRIPBACKSL */
 comment|/* hack attack -- delivermail compatibility */
 if|if
 condition|(
@@ -7026,6 +7126,9 @@ argument_list|)
 expr_stmt|;
 name|printav
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|pv
 argument_list|)
 expr_stmt|;
@@ -7215,9 +7318,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_CACHE_LPC
 if|if
 condition|(
 name|clever
@@ -7356,49 +7456,6 @@ name|mci_state
 operator|=
 name|MCIS_OPEN
 expr_stmt|;
-else|#
-directive|else
-comment|/* _FFR_CACHE_LPC */
-name|mci
-operator|=
-name|mci_new
-argument_list|(
-name|e
-operator|->
-name|e_rpool
-argument_list|)
-expr_stmt|;
-name|mci
-operator|->
-name|mci_in
-operator|=
-name|smioin
-expr_stmt|;
-name|mci
-operator|->
-name|mci_out
-operator|=
-name|smioout
-expr_stmt|;
-name|mci
-operator|->
-name|mci_state
-operator|=
-name|clever
-condition|?
-name|MCIS_OPENING
-else|:
-name|MCIS_OPEN
-expr_stmt|;
-name|mci
-operator|->
-name|mci_mailer
-operator|=
-name|m
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_CACHE_LPC */
 block|}
 elseif|else
 if|if
@@ -7729,6 +7786,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|bool
+name|tried_fallbacksmarthost
+init|=
+name|false
+decl_stmt|;
 if|#
 directive|if
 name|NETINET6
@@ -7903,6 +7965,8 @@ name|endp
 operator|=
 name|sep
 expr_stmt|;
+name|one_last_try
+label|:
 comment|/* see if we already know that this host is fried */
 name|CurHostName
 operator|=
@@ -7947,6 +8011,9 @@ argument_list|)
 expr_stmt|;
 name|mci_dump
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|mci
 argument_list|,
 name|false
@@ -8042,6 +8109,29 @@ name|goodmxfound
 operator|=
 name|true
 expr_stmt|;
+comment|/* Try FallbackSmartHost? */
+if|if
+condition|(
+name|should_try_fbsh
+argument_list|(
+name|e
+argument_list|,
+operator|&
+name|tried_fallbacksmarthost
+argument_list|,
+name|hostbuf
+argument_list|,
+sizeof|sizeof
+name|hostbuf
+argument_list|,
+name|mci
+operator|->
+name|mci_exitstat
+argument_list|)
+condition|)
+goto|goto
+name|one_last_try
+goto|;
 continue|continue;
 block|}
 if|if
@@ -8239,14 +8329,14 @@ directive|if
 name|NAMED_BIND
 specifier|extern
 name|int
-name|NumFallBackMXHosts
+name|NumFallbackMXHosts
 decl_stmt|;
 else|#
 directive|else
 comment|/* NAMED_BIND */
 specifier|const
 name|int
-name|NumFallBackMXHosts
+name|NumFallbackMXHosts
 init|=
 literal|0
 decl_stmt|;
@@ -8277,7 +8367,7 @@ expr_stmt|;
 comment|/* turn off timeout if fallback available */
 if|if
 condition|(
-name|NumFallBackMXHosts
+name|NumFallbackMXHosts
 operator|>
 literal|0
 condition|)
@@ -8290,7 +8380,7 @@ name|h
 operator|=
 name|nummxhosts
 operator|-
-name|NumFallBackMXHosts
+name|NumFallbackMXHosts
 expr_stmt|;
 if|if
 condition|(
@@ -8363,6 +8453,27 @@ break|break;
 block|}
 else|else
 block|{
+comment|/* Try FallbackSmartHost? */
+if|if
+condition|(
+name|should_try_fbsh
+argument_list|(
+name|e
+argument_list|,
+operator|&
+name|tried_fallbacksmarthost
+argument_list|,
+name|hostbuf
+argument_list|,
+sizeof|sizeof
+name|hostbuf
+argument_list|,
+name|i
+argument_list|)
+condition|)
+goto|goto
+name|one_last_try
+goto|;
 if|if
 condition|(
 name|tTd
@@ -9169,9 +9280,6 @@ literal|0
 condition|)
 block|{
 name|int
-name|i
-decl_stmt|;
-name|int
 name|save_errno
 decl_stmt|;
 name|int
@@ -9487,12 +9595,27 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_gid
+operator|==
+name|NO_GID
+condition|)
+name|new_gid
+operator|=
+name|RunAsGid
+expr_stmt|;
+else|else
 name|new_gid
 operator|=
 name|m
 operator|->
 name|m_gid
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -9726,7 +9849,7 @@ name|m
 operator|->
 name|m_gid
 operator|==
-literal|0
+name|NO_GID
 condition|)
 name|new_gid
 operator|=
@@ -9940,6 +10063,19 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_uid
+operator|==
+name|NO_UID
+condition|)
+name|new_euid
+operator|=
+name|RunAsUid
+expr_stmt|;
+else|else
 name|new_euid
 operator|=
 name|m
@@ -10066,7 +10202,7 @@ name|m
 operator|->
 name|m_uid
 operator|!=
-literal|0
+name|NO_UID
 condition|)
 name|new_ruid
 operator|=
@@ -10763,57 +10899,15 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* arrange for all the files to be closed */
-for|for
-control|(
-name|i
-operator|=
-literal|3
-init|;
-name|i
-operator|<
-name|DtableSize
-condition|;
-name|i
-operator|++
-control|)
-block|{
-specifier|register
-name|int
-name|j
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|j
-operator|=
-name|fcntl
+name|sm_close_on_exec
 argument_list|(
-name|i
-argument_list|,
-name|F_GETFD
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|!=
-operator|-
+name|STDERR_FILENO
+operator|+
 literal|1
-condition|)
-operator|(
-name|void
-operator|)
-name|fcntl
-argument_list|(
-name|i
 argument_list|,
-name|F_SETFD
-argument_list|,
-name|j
-operator||
-name|FD_CLOEXEC
+name|DtableSize
 argument_list|)
 expr_stmt|;
-block|}
 if|#
 directive|if
 operator|!
@@ -10996,7 +11090,7 @@ literal|1
 index|]
 operator|)
 argument_list|,
-name|SM_IO_WRONLY
+name|SM_IO_WRONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -11094,7 +11188,7 @@ literal|0
 index|]
 operator|)
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -12470,7 +12564,7 @@ name|mci
 argument_list|,
 name|rcode
 argument_list|,
-literal|"4.7.1"
+literal|"4.3.0"
 argument_list|,
 name|p
 argument_list|)
@@ -12685,6 +12779,9 @@ argument_list|)
 expr_stmt|;
 name|mci_dump
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|mci
 argument_list|,
 name|false
@@ -12853,6 +12950,8 @@ argument_list|)
 expr_stmt|;
 name|mci_dump_all
 argument_list|(
+name|smioout
+argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
@@ -16797,9 +16896,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -16848,9 +16944,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 elseif|else
 if|if
 condition|(
@@ -17698,9 +17791,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|_FFR_QUARANTINE
 elseif|else
 if|if
 condition|(
@@ -17744,9 +17834,6 @@ name|e_quarmsg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 elseif|else
 if|if
 condition|(
@@ -20222,6 +20309,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|ctladdr
 argument_list|,
 name|false
@@ -21052,6 +21142,19 @@ name|RealUserName
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|mailer
+operator|->
+name|m_uid
+operator|==
+name|NO_UID
+condition|)
+name|RealUid
+operator|=
+name|RunAsUid
+expr_stmt|;
+else|else
 name|RealUid
 operator|=
 name|mailer
@@ -21167,7 +21270,7 @@ name|mailer
 operator|->
 name|m_uid
 operator|!=
-literal|0
+name|NO_UID
 condition|)
 block|{
 name|RealUserName
@@ -21205,6 +21308,19 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|mailer
+operator|->
+name|m_gid
+operator|==
+name|NO_GID
+condition|)
+name|RealGid
+operator|=
+name|RunAsGid
+expr_stmt|;
+else|else
 name|RealGid
 operator|=
 name|mailer
@@ -21341,7 +21457,7 @@ name|mailer
 operator|->
 name|m_gid
 operator|!=
-literal|0
+name|NO_GID
 condition|)
 name|RealGid
 operator|=
@@ -24266,6 +24382,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_STARTTLS
 argument_list|)
 expr_stmt|;
 comment|/* check return code from server */

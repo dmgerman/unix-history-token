@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: vasprintf.c,v 1.26.2.1 2003/06/03 02:14:09 ca Exp $"
+literal|"@(#)$Id: vasprintf.c,v 1.27 2003/06/03 02:14:24 ca Exp $"
 argument_list|)
 end_macro
 

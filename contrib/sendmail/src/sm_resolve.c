@@ -34,7 +34,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"$Id: sm_resolve.c,v 8.24.4.7 2003/03/22 22:55:37 ca Exp $"
+literal|"$Id: sm_resolve.c,v 8.32 2003/03/22 22:57:26 ca Exp $"
 argument_list|)
 end_macro
 
