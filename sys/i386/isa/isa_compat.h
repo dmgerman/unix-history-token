@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sr.h"
 end_include
 
@@ -450,6 +456,14 @@ specifier|extern
 name|struct
 name|isa_driver
 name|rdpdriver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|isa_driver
+name|sndriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1240,6 +1254,20 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|eldriver
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|NSN
+operator|>
+literal|0
+block|{
+name|INTR_TYPE_NET
+block|,
+operator|&
+name|sndriver
 block|}
 block|,
 endif|#
