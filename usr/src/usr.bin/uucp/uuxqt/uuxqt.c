@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuxqt.c	5.11	(Berkeley) %G%"
+literal|"@(#)uuxqt.c	5.12	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1416,6 +1416,20 @@ block|{
 case|case
 name|X_USER
 case|:
+block|{
+name|char
+name|ORmtname
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|ORmtname
+argument_list|,
+name|Rmtname
+argument_list|)
+expr_stmt|;
 name|sscanf
 argument_list|(
 operator|&
@@ -1440,7 +1454,22 @@ argument_list|,
 name|Rmtname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|ORmtname
+argument_list|,
+name|Rmtname
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|logcls
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 case|case
 name|X_RETURNTO
 case|:
