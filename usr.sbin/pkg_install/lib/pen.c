@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.7 1994/10/14 05:56:15 jkh Exp $"
+literal|"$Id: pen.c,v 1.8 1995/02/15 03:48:13 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ name|cp
 operator|=
 name|getenv
 argument_list|(
-literal|"TMPDIR"
+literal|"PKG_TMPDIR"
 argument_list|)
 operator|)
 operator|!=
@@ -250,7 +250,7 @@ argument_list|)
 expr_stmt|;
 name|barf
 argument_list|(
-literal|"%s doesn't have enough free space.  Please set your TMPDIR\nenvironment variable to a location with more space and\ntry the command again."
+literal|"%s doesn't have enough free space.  Please set your PKG_TMPDIR\nenvironment variable to a location with more space and\ntry the command again."
 argument_list|,
 name|Pen
 argument_list|)
