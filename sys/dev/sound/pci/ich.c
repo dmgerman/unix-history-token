@@ -3159,6 +3159,19 @@ return|return
 literal|0
 return|;
 case|case
+literal|0x008a10de
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Nvidia nForce2 400"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
 literal|0x00da10de
 case|:
 name|device_set_desc
