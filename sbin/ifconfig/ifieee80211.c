@@ -247,7 +247,7 @@ literal|0
 expr_stmt|;
 name|len
 operator|=
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|val
 argument_list|)
