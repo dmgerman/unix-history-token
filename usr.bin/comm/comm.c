@@ -34,13 +34,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "From: @(#)comm.c	8.4 (Berkeley) 5/4/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)comm.c	8.4 (Berkeley) 5/4/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +213,8 @@ decl_stmt|,
 name|flag2
 decl_stmt|,
 name|flag3
+decl_stmt|,
+name|iflag
 decl_stmt|;
 name|FILE
 modifier|*
@@ -241,6 +256,10 @@ name|flag3
 operator|=
 literal|1
 expr_stmt|;
+name|iflag
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -252,7 +271,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-123"
+literal|"-123i"
 argument_list|)
 operator|)
 operator|!=
@@ -295,6 +314,14 @@ case|:
 name|flag3
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|iflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -480,8 +507,18 @@ block|}
 comment|/* lines are the same */
 if|if
 condition|(
-operator|!
-operator|(
+name|iflag
+condition|)
+name|comp
+operator|=
+name|strcasecmp
+argument_list|(
+name|line1
+argument_list|,
+name|line2
+argument_list|)
+expr_stmt|;
+else|else
 name|comp
 operator|=
 name|strcmp
@@ -490,7 +527,11 @@ name|line1
 argument_list|,
 name|line2
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|comp
 condition|)
 block|{
 name|read1
@@ -719,7 +760,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: comm [-123] file1 file2\n"
+literal|"usage: comm [-123i] file1 file2\n"
 argument_list|)
 expr_stmt|;
 name|exit
