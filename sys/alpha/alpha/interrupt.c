@@ -326,6 +326,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMP
 block|{
 if|if
 condition|(
@@ -351,6 +354,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|framep
 operator|->
 name|tf_regs
@@ -419,37 +424,6 @@ argument_list|,
 literal|"clock interrupt"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|!=
-name|hwrpb
-operator|->
-name|rpb_primary_cpu_id
-condition|)
-block|{
-name|CTR0
-argument_list|(
-name|KTR_INTR
-argument_list|,
-literal|"ignoring clock on secondary"
-argument_list|)
-expr_stmt|;
-name|atomic_subtract_int
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_intr_nesting_level
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|alpha_clock_interrupt
 argument_list|(
 name|framep
