@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 8.646.2.2.2.23 2000/07/15 17:35:18 gshapiro Exp $"
+literal|"@(#)$Id: conf.c,v 8.646.2.2.2.32 2000/09/23 00:31:33 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -815,6 +815,36 @@ block|,
 endif|#
 directive|endif
 comment|/* _FFR_UNSAFE_SASL */
+if|#
+directive|if
+name|_FFR_UNSAFE_WRITABLE_INCLUDE
+block|{
+literal|"groupwritableforwardfile"
+block|,
+name|DBS_GROUPWRITABLEFORWARDFILE
+block|}
+block|,
+block|{
+literal|"groupwritableincludefile"
+block|,
+name|DBS_GROUPWRITABLEINCLUDEFILE
+block|}
+block|,
+block|{
+literal|"worldwritableforwardfile"
+block|,
+name|DBS_WORLDWRITABLEFORWARDFILE
+block|}
+block|,
+block|{
+literal|"worldwritableincludefile"
+block|,
+name|DBS_WORLDWRITABLEINCLUDEFILE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_UNSAFE_WRITABLE_INCLUDE */
 block|{
 name|NULL
 block|,
@@ -8603,7 +8633,7 @@ name|labuf
 argument_list|,
 literal|"%d"
 argument_list|,
-name|CurrentLA
+name|la
 argument_list|)
 expr_stmt|;
 name|define
@@ -11690,9 +11720,6 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|int
-operator|)
 name|TIOCNOTTY
 argument_list|,
 operator|(
@@ -18509,6 +18536,9 @@ name|ip_addr
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|ip_addr
 operator|-
@@ -18573,6 +18603,9 @@ name|ip_addr
 argument_list|,
 literal|"[%.*s]"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|ip_addr
 operator|-
@@ -18882,6 +18915,13 @@ operator|)
 name|close
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ifc
+operator|.
+name|ifc_buf
 argument_list|)
 expr_stmt|;
 return|return;
