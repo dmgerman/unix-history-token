@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: builtins.c,v 1.7 1999/07/23 15:49:14 green Exp $  *  */
+comment|/*-  * Copyright (c) 1983, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: builtins.c,v 1.8 1999/07/24 12:35:50 sheldonh Exp $  *  */
 end_comment
 
 begin_include
@@ -371,6 +371,10 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * RFC864 Character Generator Protocol. Generates character data without  * any regard for input.  */
+end_comment
 
 begin_function
 name|void
@@ -797,6 +801,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * RFC867 Daytime Protocol. Sends the current date and time as an ascii  * character string without any regard for input.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1019,6 +1027,10 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * RFC863 Discard Protocol. Any data received is thrown away and no response  * is sent.  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1149,6 +1161,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * RFC862 Echo Protocol. Any data received is sent back to the sender as  * received.  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1348,6 +1364,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * RFC1413 Identification Protocol. Given a TCP port number pair, return a  * character string which identifies the owner of that connection on the  * server's system. Extended to allow for ~/.fakeid support.  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2373,7 +2393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a machine readable date and time, in the form of the  * number of seconds since midnight, Jan 1, 1900.  Since gettimeofday  * returns the number of seconds since midnight, Jan 1, 1970,  * we must add 2208988800 seconds to this figure to make up for  * some seventy years Bell Labs was asleep.  */
+comment|/*  * RFC738 Time Server.  * Return a machine readable date and time, in the form of the  * number of seconds since midnight, Jan 1, 1900.  Since gettimeofday  * returns the number of seconds since midnight, Jan 1, 1970,  * we must add 2208988800 seconds to this figure to make up for  * some seventy years Bell Labs was asleep.  */
 end_comment
 
 begin_function
@@ -2628,7 +2648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Based on TCPMUX.C by Mark K. Lottor November 1988  *  sri-nic::ps:<mkl>tcpmux.c  */
+comment|/*  * RFC1078 TCP Port Service Multiplexer (TCPMUX). Service connections to  * services based on the service name sent.  *  *  Based on TCPMUX.C by Mark K. Lottor November 1988  *  sri-nic::ps:<mkl>tcpmux.c  */
 end_comment
 
 begin_define
