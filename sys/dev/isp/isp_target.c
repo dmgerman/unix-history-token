@@ -1623,7 +1623,7 @@ name|at_iid
 expr_stmt|;
 name|atun
 operator|.
-name|_atoi2
+name|_atio2
 operator|.
 name|at_rxid
 operator|=
