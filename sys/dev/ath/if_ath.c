@@ -8242,11 +8242,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|ds
@@ -8334,6 +8329,15 @@ name|ast_rx_phy
 index|[
 name|phyerr
 index|]
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 				 * NB: don't count PHY errors as input errors; 				 * we enable them on the 5212 to collect info 				 * about environmental noise and, in that 				 * setting, they don't really reflect tx/rx 				 * errors. 				 */
+name|ifp
+operator|->
+name|if_ierrors
 operator|++
 expr_stmt|;
 block|}
