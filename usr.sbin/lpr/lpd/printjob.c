@@ -1023,13 +1023,14 @@ decl_stmt|;
 name|int
 name|errcnt
 decl_stmt|,
-name|count
-init|=
-literal|0
-decl_stmt|;
-name|int
+name|jobcount
+decl_stmt|,
 name|tempfd
 decl_stmt|;
+name|jobcount
+operator|=
+literal|0
+expr_stmt|;
 name|init
 argument_list|(
 name|pp
@@ -1777,8 +1778,8 @@ name|i
 operator|==
 name|OK
 condition|)
-comment|/* file ok and printed */
-name|count
+comment|/* all files of this job printed */
+name|jobcount
 operator|++
 expr_stmt|;
 elseif|else
@@ -2034,12 +2035,12 @@ name|done
 label|:
 if|if
 condition|(
-name|count
+name|jobcount
 operator|>
 literal|0
 condition|)
 block|{
-comment|/* Files actually printed */
+comment|/* jobs actually printed */
 if|if
 condition|(
 operator|!
