@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.57 1996/04/29 21:15:44 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.58 1996/05/01 03:31:08 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -67,7 +67,9 @@ literal|"Are you sure you want to abort the installation?"
 argument_list|)
 condition|)
 name|systemShutdown
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -270,9 +272,23 @@ begin_function
 name|void
 name|systemShutdown
 parameter_list|(
-name|void
+name|int
+name|status
 parameter_list|)
 block|{
+comment|/* If some media is open, close it down */
+if|if
+condition|(
+name|mediaDevice
+condition|)
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
+comment|/* Shut down the dialog library */
 if|if
 condition|(
 name|DialogActive
@@ -286,6 +302,10 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+comment|/* Shut down curses */
+name|endwin
+argument_list|()
+expr_stmt|;
 comment|/* REALLY exit! */
 if|if
 condition|(
@@ -311,7 +331,7 @@ block|}
 else|else
 name|exit
 argument_list|(
-literal|1
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -572,6 +592,27 @@ argument_list|,
 name|FILENAME_MAX
 argument_list|,
 literal|"/stand/help/%s.hlp"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file_readable
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+return|return
+name|buf
+return|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|FILENAME_MAX
+argument_list|,
+literal|"/usr/src/release/sysinstall/help/%s.hlp"
 argument_list|,
 name|file
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.95 1996/04/30 06:02:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.96 1996/05/02 10:09:45 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1343,8 +1343,15 @@ name|i
 operator||=
 name|DITEM_LEAVE_MENU
 expr_stmt|;
-comment|/* Give user the option of one last configuration spree, then write changes */
+comment|/* Give user the option of one last configuration spree */
 name|installConfigure
+argument_list|()
+expr_stmt|;
+comment|/* Now write out any changes .. */
+name|configResolv
+argument_list|()
+expr_stmt|;
+name|configSysconfig
 argument_list|()
 expr_stmt|;
 block|}
@@ -1842,8 +1849,15 @@ name|self
 argument_list|)
 expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
-comment|/* Give user the option of one last configuration spree, then write changes */
+comment|/* Give user the option of one last configuration spree */
 name|installConfigure
+argument_list|()
+expr_stmt|;
+comment|/* Now write out any changes .. */
+name|configResolv
+argument_list|()
+expr_stmt|;
+name|configSysconfig
 argument_list|()
 expr_stmt|;
 return|return
@@ -1857,7 +1871,68 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * What happens when we finally "Commit" to going ahead with the installation.  *  * This is broken into multiple stages so that the user can do a full installation but come back here  * again to load more distributions, perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and then use ftp to load just the  * DES dist.  */
+comment|/* The version of commit we call from the Install Custom menu */
+end_comment
+
+begin_function
+name|int
+name|installCustomCommit
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|installCommit
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|i
+argument_list|)
+operator|==
+name|DITEM_SUCCESS
+condition|)
+block|{
+comment|/* Give user the option of one last configuration spree */
+name|installConfigure
+argument_list|()
+expr_stmt|;
+comment|/* Now write out any changes .. */
+name|configResolv
+argument_list|()
+expr_stmt|;
+name|configSysconfig
+argument_list|()
+expr_stmt|;
+return|return
+name|i
+return|;
+block|}
+else|else
+name|msgConfirm
+argument_list|(
+literal|"The commit operation completed with errors.  Not\n"
+literal|"updating /etc files."
+argument_list|)
+expr_stmt|;
+return|return
+name|i
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * What happens when we finally decide to going ahead with the installation.  *  * This is broken into multiple stages so that the user can do a full  * installation but come back here again to load more distributions,  * perhaps from a different media type.  This would allow, for  * example, the user to load the majority of the system from CDROM and  * then use ftp to load just the DES dist.  */
 end_comment
 
 begin_function
@@ -2103,13 +2178,6 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Write out any changes .. */
-name|configResolv
-argument_list|()
-expr_stmt|;
-name|configSysconfig
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
