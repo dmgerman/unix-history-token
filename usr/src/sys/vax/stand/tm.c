@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.1	%G%	*/
+comment|/*	tm.c	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WEOF
+name|WEOT
 value|06
 end_define
 
@@ -130,19 +130,12 @@ begin_define
 define|#
 directive|define
 name|DENS
-value|060000
+value|0
 end_define
 
 begin_comment
-comment|/* 9-channel */
+comment|/* 1600 bpi */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IENABLE
-value|0100
-end_define
 
 begin_define
 define|#
@@ -151,12 +144,9 @@ name|CRDY
 value|0200
 end_define
 
-begin_define
-define|#
-directive|define
-name|GAPSD
-value|010000
-end_define
+begin_comment
+comment|/* tmcs: control unit ready */
+end_comment
 
 begin_define
 define|#
@@ -165,12 +155,20 @@ name|TUR
 value|1
 end_define
 
+begin_comment
+comment|/* tmer: tape unit ready */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SDWN
 value|010
 end_define
+
+begin_comment
+comment|/* tmer: tape settle down */
+end_comment
 
 begin_define
 define|#
@@ -180,15 +178,19 @@ value|0102200
 end_define
 
 begin_comment
-comment|/* ILC, EOT, NXM */
+comment|/* tmer: ILC, EOT, NXM */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EOF
+name|EOT
 value|0040000
 end_define
+
+begin_comment
+comment|/* tmer: at end of tape */
+end_comment
 
 begin_define
 define|#
@@ -310,6 +312,9 @@ decl_stmt|,
 name|unit
 decl_stmt|,
 name|errcnt
+decl_stmt|;
+name|int
+name|word
 decl_stmt|;
 name|int
 name|info
@@ -438,31 +443,43 @@ name|func
 operator||
 name|GO
 expr_stmt|;
-while|while
-condition|(
-operator|(
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|word
+operator|=
 name|TMADDR
 operator|->
 name|tmcs
+expr_stmt|;
+if|if
+condition|(
+name|word
 operator|&
 name|CRDY
-operator|)
-operator|==
-literal|0
 condition|)
+break|break;
+block|}
 empty_stmt|;
 name|ubafree
 argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|word
+operator|=
 name|TMADDR
 operator|->
 name|tmer
+expr_stmt|;
+if|if
+condition|(
+name|word
 operator|&
-name|EOF
+name|EOT
 condition|)
 return|return
 operator|(
@@ -471,9 +488,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|TMADDR
-operator|->
-name|tmer
+name|word
 operator|<
 literal|0
 condition|)
@@ -556,45 +571,59 @@ end_macro
 
 begin_block
 block|{
-while|while
-condition|(
-operator|(
+specifier|register
+name|word
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|word
+operator|=
 name|TMADDR
 operator|->
 name|tmcs
+expr_stmt|;
+if|if
+condition|(
+name|word
 operator|&
 name|CRDY
-operator|)
-operator|==
-literal|0
 condition|)
-empty_stmt|;
-while|while
-condition|(
-operator|(
+break|break;
+block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|word
+operator|=
 name|TMADDR
 operator|->
 name|tmer
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|word
 operator|&
 name|TUR
 operator|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
-while|while
-condition|(
+operator|&&
 operator|(
-name|TMADDR
-operator|->
-name|tmer
+name|word
 operator|&
 name|SDWN
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-empty_stmt|;
+break|break;
+block|}
 block|}
 end_block
 
