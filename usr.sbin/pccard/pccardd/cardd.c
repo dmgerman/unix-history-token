@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.26 1998/02/27 08:40:53 hosokawa Exp $"
+literal|"$Id: cardd.c,v 1.27 1998/02/27 09:47:36 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1916,7 +1916,15 @@ name|sp
 operator|->
 name|io
 operator|.
+name|addr
+operator|+
+name|sp
+operator|->
+name|io
+operator|.
 name|size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Set up the size to take into account the decode lines. */
