@@ -43,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/acpica_machdep.h>
 end_include
 
@@ -225,12 +231,6 @@ directive|define
 name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_if
 if|#
