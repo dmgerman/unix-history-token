@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_tcreg.h 1.1 90/07/09$  *  *	@(#)grf_tcreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_tcreg.h 1.10 91/03/25$  *  *	@(#)grf_tcreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -451,12 +451,68 @@ name|vu_short
 name|wheight
 decl_stmt|;
 comment|/* block mover pixel height   0x4106 */
+comment|/* Catseye */
 name|u_char
 name|f19
 index|[
-literal|0x6002
+literal|0x4206
 operator|-
 literal|0x4106
+operator|-
+literal|2
+index|]
+decl_stmt|;
+name|vu_short
+name|rug_cmdstat
+decl_stmt|;
+comment|/* RUG Command/Staus	      0x4206 */
+name|u_char
+name|f20
+index|[
+literal|0x4510
+operator|-
+literal|0x4206
+operator|-
+literal|2
+index|]
+decl_stmt|;
+name|vu_short
+name|vb_select
+decl_stmt|;
+comment|/* Vector/BitBlt Select	      0x4510 */
+name|vu_short
+name|tcntrl
+decl_stmt|;
+comment|/* Three Operand Control      0x4512 */
+name|vu_short
+name|acntrl
+decl_stmt|;
+comment|/* BitBlt Mode		      0x4514 */
+name|vu_short
+name|pncntrl
+decl_stmt|;
+comment|/* Plane Control	      0x4516 */
+name|u_char
+name|f21
+index|[
+literal|0x4800
+operator|-
+literal|0x4516
+operator|-
+literal|2
+index|]
+decl_stmt|;
+name|vu_short
+name|catseye_status
+decl_stmt|;
+comment|/* Catseye Status	      0x4800 */
+comment|/* End of Catseye */
+name|u_char
+name|f22
+index|[
+literal|0x6002
+operator|-
+literal|0x4800
 operator|-
 literal|2
 index|]
@@ -466,7 +522,7 @@ name|cmap_busy
 decl_stmt|;
 comment|/* Color Ram busy	      0x6002 */
 name|u_char
-name|f20
+name|f23
 index|[
 literal|0x60b2
 operator|-
@@ -496,7 +552,7 @@ name|plane_mask
 decl_stmt|;
 comment|/* plane mask select	      0x60ba */
 name|u_char
-name|f21
+name|f24
 index|[
 literal|0x60f0
 operator|-
