@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.25 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -819,7 +819,9 @@ name|e
 operator|->
 name|e_message
 argument_list|,
-name|q
+name|e
+operator|->
+name|e_errorqueue
 argument_list|,
 operator|(
 name|e
