@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.41 (Berkeley) %G%"
+literal|"@(#)setup.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +226,11 @@ decl_stmt|;
 name|havesb
 operator|=
 literal|0
+expr_stmt|;
+name|fswritefd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(

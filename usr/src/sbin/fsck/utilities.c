@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.33 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1154,6 +1154,23 @@ name|cnt
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|fswritefd
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fsreadfd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|flush
 argument_list|(
 name|fswritefd
@@ -1228,6 +1245,8 @@ name|bufhead
 operator|.
 name|b_prev
 init|;
+name|bp
+operator|&&
 name|bp
 operator|!=
 operator|&
