@@ -5623,8 +5623,6 @@ name|len
 operator|+
 name|len2
 expr_stmt|;
-name|gotIndex
-label|:
 block|}
 else|else
 block|{
@@ -5768,6 +5766,8 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
+name|gotIndex
+label|:
 comment|/* Check array index */
 if|if
 condition|(

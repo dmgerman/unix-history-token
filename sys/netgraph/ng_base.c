@@ -11549,6 +11549,7 @@ expr_stmt|;
 case|case
 name|NGQF_UNDEF
 case|:
+break|break;
 block|}
 comment|/* If we still have a node or hook referenced... */
 name|_NGI_CLR_NODE
