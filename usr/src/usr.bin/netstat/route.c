@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.2 85/06/15"
+literal|"@(#)route.c	5.3 85/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -1560,7 +1560,7 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"%ld:"
+literal|"%lx:"
 argument_list|,
 name|net
 argument_list|)
@@ -1674,11 +1674,16 @@ name|p
 operator|++
 expr_stmt|;
 comment|/* find end of string */
-name|printf
+name|sprintf
 argument_list|(
-literal|":%d"
+name|p
 argument_list|,
+literal|":%x"
+argument_list|,
+name|ntohs
+argument_list|(
 name|port
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
