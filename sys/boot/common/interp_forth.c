@@ -106,6 +106,13 @@ comment|/*  * BootForth   Interface to Ficl Forth interpreter.  */
 end_comment
 
 begin_decl_stmt
+name|FICL_SYSTEM
+modifier|*
+name|bf_sys
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|FICL_VM
 modifier|*
 name|bf_vm
@@ -618,6 +625,8 @@ comment|/* 31 characters-long builtins */
 name|int
 name|fd
 decl_stmt|;
+name|bf_sys
+operator|=
 name|ficlInitSystem
 argument_list|(
 literal|10000
@@ -627,7 +636,9 @@ comment|/* Default dictionary ~4000 cells */
 name|bf_vm
 operator|=
 name|ficlNewVM
-argument_list|()
+argument_list|(
+name|bf_sys
+argument_list|)
 expr_stmt|;
 comment|/* Put all private definitions in a "builtins" vocabulary */
 name|ficlExec
@@ -655,6 +666,12 @@ argument_list|)
 block|{
 name|ficlBuild
 argument_list|(
+name|bf_sys
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|(
 operator|*
 name|cmdp
@@ -713,6 +730,8 @@ expr_stmt|;
 comment|/* Export some version numbers so that code can detect the loader/host version */
 name|ficlSetEnv
 argument_list|(
+name|bf_sys
+argument_list|,
 literal|"FreeBSD_version"
 argument_list|,
 name|__FreeBSD_version
@@ -720,6 +739,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|bf_sys
+argument_list|,
 literal|"loader_version"
 argument_list|,
 operator|(
@@ -782,6 +803,8 @@ name|pInterp
 operator|=
 name|ficlLookup
 argument_list|(
+name|bf_sys
+argument_list|,
 literal|"interpret"
 argument_list|)
 expr_stmt|;
