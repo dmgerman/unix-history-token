@@ -18,6 +18,16 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_comment
+comment|/* for struct label */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -277,6 +287,16 @@ modifier|*
 name|so_cred
 decl_stmt|;
 comment|/* user credentials */
+name|struct
+name|label
+name|so_label
+decl_stmt|;
+comment|/* MAC label for socket */
+name|struct
+name|label
+name|so_peerlabel
+decl_stmt|;
+comment|/* cached MAC label for socket peer */
 comment|/* NB: generation count must not be first; easiest to make it last. */
 name|so_gen_t
 name|so_gencnt
