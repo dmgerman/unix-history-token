@@ -262,11 +262,6 @@ modifier|*
 name|cf
 decl_stmt|;
 name|struct
-name|switchframe
-modifier|*
-name|sf
-decl_stmt|;
-name|struct
 name|pcb
 modifier|*
 name|pcb
