@@ -1265,14 +1265,14 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"Usage: %s [-D] [-d] [-p<port>] [-lf lease-file]"
+literal|"Usage: %s [-D] [-d] [-p<port>] [-cf conf-file]"
 argument_list|,
 name|appname
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"       [-pf pidfile] [-q] [-1] [interface]"
+literal|"       [-lf lease-file] [-pf pidfile] [-q] [-1] [interface]"
 argument_list|)
 expr_stmt|;
 block|}
