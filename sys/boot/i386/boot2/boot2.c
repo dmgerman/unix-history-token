@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.4 1998/10/13 22:17:05 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.5 1998/10/13 23:00:47 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -1157,14 +1157,16 @@ argument_list|(
 name|fname
 argument_list|)
 operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|ls
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"No `%s'\n"
+literal|"No %s\n"
 argument_list|,
 name|fname
 argument_list|)
@@ -4442,6 +4444,8 @@ name|v86
 operator|.
 name|edx
 operator|=
+literal|0x100
+operator||
 name|dsk
 operator|.
 name|drive
