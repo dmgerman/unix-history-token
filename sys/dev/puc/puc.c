@@ -303,6 +303,8 @@ decl_stmt|,
 name|irq_setup
 decl_stmt|,
 name|rid
+decl_stmt|,
+name|type
 decl_stmt|;
 name|struct
 name|puc_softc
@@ -627,13 +629,34 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
+name|type
+operator|=
+operator|(
+name|sc
+operator|->
+name|sc_desc
+operator|->
+name|ports
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator|&
+name|PUC_FLAGS_MEMORY
+operator|)
+condition|?
+name|SYS_RES_MEMORY
+else|:
+name|SYS_RES_IOPORT
+expr_stmt|;
 name|res
 operator|=
 name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|type
 argument_list|,
 operator|&
 name|rid
@@ -669,6 +692,17 @@ index|[
 name|bidx
 index|]
 operator|.
+name|type
+operator|=
+name|type
+expr_stmt|;
+name|sc
+operator|->
+name|sc_bar_mappings
+index|[
+name|bidx
+index|]
+operator|.
 name|res
 operator|=
 name|res
@@ -678,7 +712,17 @@ directive|ifdef
 name|PUC_DEBUG
 name|printf
 argument_list|(
-literal|"port rid %d bst %x, start %x, end %x\n"
+literal|"%s rid %d bst %x, start %x, end %x\n"
+argument_list|,
+operator|(
+name|type
+operator|==
+name|SYS_RES_MEMORY
+operator|)
+condition|?
+literal|"memory"
+else|:
+literal|"port"
 argument_list|,
 name|rid
 argument_list|,
@@ -916,7 +960,7 @@ name|sc
 operator|->
 name|irqres
 expr_stmt|;
-comment|/* Now fake an IOPORT resource */
+comment|/* Now fake an IOPORT or MEMORY resource */
 name|res
 operator|=
 name|sc
@@ -928,6 +972,17 @@ index|]
 operator|.
 name|res
 expr_stmt|;
+name|type
+operator|=
+name|sc
+operator|->
+name|sc_bar_mappings
+index|[
+name|bidx
+index|]
+operator|.
+name|type
+expr_stmt|;
 name|resource_list_add
 argument_list|(
 operator|&
@@ -935,7 +990,7 @@ name|pdev
 operator|->
 name|resources
 argument_list|,
-name|SYS_RES_IOPORT
+name|type
 argument_list|,
 literal|0
 argument_list|,
@@ -987,7 +1042,7 @@ name|pdev
 operator|->
 name|resources
 argument_list|,
-name|SYS_RES_IOPORT
+name|type
 argument_list|,
 literal|0
 argument_list|)

@@ -149,6 +149,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PUC_FLAGS_MEMORY
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Use memory mapped I/O. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PUC_PORT_VALID
 parameter_list|(
 name|desc
@@ -392,6 +403,10 @@ decl_stmt|;
 name|int
 name|bar
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+comment|/* SYS_RES_IOPORT or SYS_RES_MEMORY. */
 name|struct
 name|resource
 modifier|*
