@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.13 (Berkeley) 4/21/95  * $Id: ffs_inode.c,v 1.26 1997/03/22 06:53:29 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.13 (Berkeley) 4/21/95  * $Id: ffs_inode.c,v 1.27 1997/09/02 20:06:44 bde Exp $  */
 end_comment
 
 begin_include
@@ -541,13 +541,36 @@ begin_function
 name|int
 name|ffs_truncate
 parameter_list|(
-name|ap
+name|vp
+parameter_list|,
+name|length
+parameter_list|,
+name|flags
+parameter_list|,
+name|cred
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
-name|vop_truncate_args
-comment|/* { 		struct vnode *a_vp; 		off_t a_length; 		int a_flags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+name|vnode
 modifier|*
-name|ap
+name|vp
+decl_stmt|;
+name|off_t
+name|length
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -556,9 +579,7 @@ name|vnode
 modifier|*
 name|ovp
 init|=
-name|ap
-operator|->
-name|a_vp
+name|vp
 decl_stmt|;
 name|ufs_daddr_t
 name|lastblock
@@ -598,13 +619,6 @@ name|NDADDR
 operator|+
 name|NIADDR
 index|]
-decl_stmt|;
-name|off_t
-name|length
-init|=
-name|ap
-operator|->
-name|a_length
 decl_stmt|;
 specifier|register
 name|struct
@@ -888,9 +902,7 @@ name|B_CLRBUF
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_flags
+name|flags
 operator|&
 name|IO_SYNC
 condition|)
@@ -910,9 +922,7 @@ name|offset
 operator|+
 literal|1
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+name|cred
 argument_list|,
 operator|&
 name|bp
@@ -1041,9 +1051,7 @@ name|B_CLRBUF
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_flags
+name|flags
 operator|&
 name|IO_SYNC
 condition|)
@@ -1061,9 +1069,7 @@ name|lbn
 argument_list|,
 name|offset
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+name|cred
 argument_list|,
 operator|&
 name|bp
@@ -1442,13 +1448,9 @@ name|ovp
 argument_list|,
 name|vflags
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+name|cred
 argument_list|,
-name|ap
-operator|->
-name|a_p
+name|p
 argument_list|,
 literal|0
 argument_list|,

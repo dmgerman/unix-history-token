@@ -1398,7 +1398,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|VOP_TRUNCATE
+name|UFS_TRUNCATE
 argument_list|(
 name|vp
 argument_list|,

@@ -1191,7 +1191,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|VOP_BLKATOFF
+name|UFS_BLKATOFF
 argument_list|(
 name|vdp
 argument_list|,
@@ -1285,7 +1285,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_BLKATOFF
+name|UFS_BLKATOFF
 argument_list|(
 name|vdp
 argument_list|,
@@ -2993,7 +2993,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_BLKATOFF
+name|UFS_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
@@ -3279,7 +3279,7 @@ name|i_size
 condition|)
 name|error
 operator|=
-name|VOP_TRUNCATE
+name|UFS_TRUNCATE
 argument_list|(
 name|dvp
 argument_list|,
@@ -3372,7 +3372,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_BLKATOFF
+name|UFS_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
@@ -3432,7 +3432,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_BLKATOFF
+name|UFS_BLKATOFF
 argument_list|(
 name|dvp
 argument_list|,
@@ -3558,7 +3558,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_BLKATOFF
+name|UFS_BLKATOFF
 argument_list|(
 name|vdp
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.16 1997/10/15 09:20:50 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.17 1997/10/15 10:04:03 phk Exp $  */
 end_comment
 
 begin_include
@@ -93,20 +93,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|dead_create
-value|((int (*) __P((struct  vop_create_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))dead_badop)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -121,34 +107,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|dead_close
-value|((int (*) __P((struct  vop_close_args *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_access
-value|((int (*) __P((struct  vop_access_args *)))dead_ebadf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_getattr
-value|((int (*) __P((struct  vop_getattr_args *)))dead_ebadf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_setattr
-value|((int (*) __P((struct  vop_setattr_args *)))dead_ebadf)
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -195,111 +153,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|dead_poll
-value|vop_nopoll
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_mmap
-value|((int (*) __P((struct  vop_mmap_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_fsync
-value|((int (*) __P((struct  vop_fsync_args *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_seek
-value|((int (*) __P((struct  vop_seek_args *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_remove
-value|((int (*) __P((struct  vop_remove_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_link
-value|((int (*) __P((struct  vop_link_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_rename
-value|((int (*) __P((struct  vop_rename_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_symlink
-value|((int (*) __P((struct  vop_symlink_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_readdir
-value|((int (*) __P((struct  vop_readdir_args *)))dead_ebadf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_readlink
-value|((int (*) __P((struct  vop_readlink_args *)))dead_ebadf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_abortop
-value|((int (*) __P((struct  vop_abortop_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_inactive
-value|((int (*) __P((struct  vop_inactive_args *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_reclaim
-value|((int (*) __P((struct  vop_reclaim_args *)))nullop)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -315,13 +168,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|dead_unlock
-value|((int (*) __P((struct vop_unlock_args *)))vop_nounlock)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -331,21 +177,6 @@ argument_list|(
 operator|(
 expr|struct
 name|vop_bmap_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|dead_strategy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_strategy_args
 operator|*
 operator|)
 argument_list|)
@@ -366,69 +197,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|dead_islocked
-value|((int(*) __P((struct vop_islocked_args *)))vop_noislocked)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_pathconf
-value|((int (*) __P((struct  vop_pathconf_args *)))dead_ebadf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_advlock
-value|((int (*) __P((struct  vop_advlock_args *)))dead_ebadf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_blkatoff
-value|((int (*) __P((struct  vop_blkatoff_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_valloc
-value|((int (*) __P((struct  vop_valloc_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_vfree
-value|((int (*) __P((struct  vop_vfree_args *)))dead_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_truncate
-value|((int (*) __P((struct  vop_truncate_args *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_update
-value|((int (*) __P((struct  vop_update_args *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|dead_bwrite
-value|((int (*) __P((struct  vop_bwrite_args *)))nullop)
-end_define
 
 begin_decl_stmt
 name|vop_t
@@ -459,24 +227,13 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_abortop_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_abortop
-block|}
-block|,
-block|{
-operator|&
 name|vop_access_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_access
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -487,18 +244,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_advlock
-block|}
-block|,
-block|{
-operator|&
-name|vop_blkatoff_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_blkatoff
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -514,24 +260,13 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_bwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_bwrite
-block|}
-block|,
-block|{
-operator|&
 name|vop_close_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_close
+name|nullop
 block|}
 block|,
 block|{
@@ -542,7 +277,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_create
+name|dead_badop
 block|}
 block|,
 block|{
@@ -553,7 +288,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_fsync
+name|nullop
 block|}
 block|,
 block|{
@@ -564,7 +299,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_getattr
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -575,7 +310,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_inactive
+name|nullop
 block|}
 block|,
 block|{
@@ -597,7 +332,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_islocked
+name|vop_noislocked
 block|}
 block|,
 block|{
@@ -608,7 +343,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_link
+name|dead_badop
 block|}
 block|,
 block|{
@@ -641,7 +376,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_mkdir
+name|dead_badop
 block|}
 block|,
 block|{
@@ -652,7 +387,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_mknod
+name|dead_badop
 block|}
 block|,
 block|{
@@ -663,7 +398,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_mmap
+name|dead_badop
 block|}
 block|,
 block|{
@@ -685,18 +420,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_pathconf
-block|}
-block|,
-block|{
-operator|&
-name|vop_poll_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_poll
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -729,7 +453,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_readdir
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -740,7 +464,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_readlink
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -751,7 +475,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_reclaim
+name|nullop
 block|}
 block|,
 block|{
@@ -762,7 +486,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_remove
+name|dead_badop
 block|}
 block|,
 block|{
@@ -773,7 +497,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_rename
+name|dead_badop
 block|}
 block|,
 block|{
@@ -784,7 +508,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_rmdir
+name|dead_badop
 block|}
 block|,
 block|{
@@ -795,7 +519,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_seek
+name|nullop
 block|}
 block|,
 block|{
@@ -806,18 +530,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_setattr
-block|}
-block|,
-block|{
-operator|&
-name|vop_strategy_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_strategy
+name|dead_ebadf
 block|}
 block|,
 block|{
@@ -828,18 +541,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_symlink
-block|}
-block|,
-block|{
-operator|&
-name|vop_truncate_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_truncate
+name|dead_badop
 block|}
 block|,
 block|{
@@ -850,7 +552,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_unlock
+name|vop_nounlock
 block|}
 block|,
 block|{
@@ -861,29 +563,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_update
-block|}
-block|,
-block|{
-operator|&
-name|vop_valloc_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_valloc
-block|}
-block|,
-block|{
-operator|&
-name|vop_vfree_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_vfree
+name|nullop
 block|}
 block|,
 block|{
@@ -1161,79 +841,6 @@ name|vop_ioctl
 argument_list|)
 argument_list|,
 name|ap
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Just call the device strategy routine  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|dead_strategy
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_strategy_args
-comment|/* { 		struct buf *a_bp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|ap
-operator|->
-name|a_bp
-operator|->
-name|b_vp
-operator|==
-name|NULL
-operator|||
-operator|!
-name|chkvnlock
-argument_list|(
-name|ap
-operator|->
-name|a_bp
-operator|->
-name|b_vp
-argument_list|)
-condition|)
-block|{
-name|ap
-operator|->
-name|a_bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|biodone
-argument_list|(
-name|ap
-operator|->
-name|a_bp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|VOP_STRATEGY
-argument_list|(
-name|ap
-operator|->
-name|a_bp
 argument_list|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.18 (Berkeley) 5/21/95  *  *	$Id: procfs_vnops.c,v 1.34 1997/10/15 09:21:19 phk Exp $  */
+comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.18 (Berkeley) 5/21/95  *  *	$Id: procfs_vnops.c,v 1.35 1997/10/15 10:04:38 phk Exp $  */
 end_comment
 
 begin_comment
@@ -3353,182 +3353,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|procfs_create
-value|((int (*) __P((struct vop_create_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_mknod
-value|((int (*) __P((struct vop_mknod_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_read
-value|procfs_rw
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_write
-value|procfs_rw
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_mmap
-value|((int (*) __P((struct vop_mmap_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_poll
-value|vop_nopoll
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_revoke
-value|vop_revoke
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_fsync
-value|((int (*) __P((struct vop_fsync_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_seek
-value|((int (*) __P((struct vop_seek_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_remove
-value|((int (*) __P((struct vop_remove_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_link
-value|((int (*) __P((struct vop_link_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_rename
-value|((int (*) __P((struct vop_rename_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_mkdir
-value|((int (*) __P((struct vop_mkdir_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_rmdir
-value|((int (*) __P((struct vop_rmdir_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_symlink
-value|((int (*) __P((struct vop_symlink_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_lock
-value|((int (*) __P((struct vop_lock_args *)))vop_nolock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_unlock
-value|((int (*) __P((struct vop_unlock_args *)))vop_nounlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_strategy
-value|((int (*) __P((struct vop_strategy_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_islocked
-define|\
-value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_advlock
-value|((int (*) __P((struct vop_advlock_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_blkatoff
-value|((int (*) __P((struct vop_blkatoff_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_valloc
-value|((int (*) __P((struct vop_valloc_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_vfree
-value|((int (*) __P((struct vop_vfree_args *))) nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_truncate
-value|((int (*) __P((struct vop_truncate_args *))) procfs_badop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|procfs_update
-value|((int (*) __P((struct vop_update_args *))) nullop)
-end_define
-
 begin_comment
 comment|/*  * procfs vnode operations.  */
 end_comment
@@ -3590,18 +3414,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_advlock
-block|}
-block|,
-block|{
-operator|&
-name|vop_blkatoff_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_blkatoff
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3634,18 +3447,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_create
-block|}
-block|,
-block|{
-operator|&
-name|vop_fsync_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_fsync
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3689,7 +3491,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_islocked
+name|vop_noislocked
 block|}
 block|,
 block|{
@@ -3700,7 +3502,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_link
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3711,7 +3513,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_lock
+name|vop_nolock
 block|}
 block|,
 block|{
@@ -3733,7 +3535,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_mkdir
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3744,7 +3546,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_mknod
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3755,7 +3557,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_mmap
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3782,17 +3584,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_poll_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_poll
-block|}
-block|,
-block|{
-operator|&
 name|vop_print_desc
 block|,
 operator|(
@@ -3810,7 +3601,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_read
+name|procfs_rw
 block|}
 block|,
 block|{
@@ -3854,7 +3645,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_remove
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3865,18 +3656,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_rename
-block|}
-block|,
-block|{
-operator|&
-name|vop_revoke_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_revoke
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3887,7 +3667,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_rmdir
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3898,7 +3678,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_seek
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3914,35 +3694,13 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_strategy_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_strategy
-block|}
-block|,
-block|{
-operator|&
 name|vop_symlink_desc
 block|,
 operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_symlink
-block|}
-block|,
-block|{
-operator|&
-name|vop_truncate_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_truncate
+name|procfs_badop
 block|}
 block|,
 block|{
@@ -3953,7 +3711,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_unlock
+name|vop_nounlock
 block|}
 block|,
 block|{
@@ -3964,29 +3722,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_update
-block|}
-block|,
-block|{
-operator|&
-name|vop_valloc_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_valloc
-block|}
-block|,
-block|{
-operator|&
-name|vop_vfree_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|procfs_vfree
+name|nullop
 block|}
 block|,
 block|{
@@ -3997,7 +3733,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|procfs_write
+name|procfs_rw
 block|}
 block|,
 block|{

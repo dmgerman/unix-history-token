@@ -568,13 +568,36 @@ begin_function
 name|int
 name|ext2_truncate
 parameter_list|(
-name|ap
+name|vp
+parameter_list|,
+name|length
+parameter_list|,
+name|flags
+parameter_list|,
+name|cred
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
-name|vop_truncate_args
-comment|/* { 		struct vnode *a_vp; 		off_t a_length; 		int a_flags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+name|vnode
 modifier|*
-name|ap
+name|vp
+decl_stmt|;
+name|off_t
+name|length
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -583,9 +606,7 @@ name|vnode
 modifier|*
 name|ovp
 init|=
-name|ap
-operator|->
-name|a_vp
+name|vp
 decl_stmt|;
 specifier|register
 name|daddr_t
@@ -626,13 +647,6 @@ name|NDADDR
 operator|+
 name|NIADDR
 index|]
-decl_stmt|;
-name|off_t
-name|length
-init|=
-name|ap
-operator|->
-name|a_length
 decl_stmt|;
 specifier|register
 name|struct
@@ -681,7 +695,7 @@ decl_stmt|;
 name|off_t
 name|osize
 decl_stmt|;
-comment|/* printf("ext2_truncate called %d to %d\n", VTOI(ovp)->i_number, ap->a_length); */
+comment|/* printf("ext2_truncate called %d to %d\n", VTOI(ovp)->i_number, length); */
 comment|/*  	 * negative file sizes will totally break the code below and 	 * are not meaningful anyways. 	 */
 if|if
 condition|(
@@ -896,9 +910,7 @@ name|B_CLRBUF
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_flags
+name|flags
 operator|&
 name|IO_SYNC
 condition|)
@@ -927,9 +939,7 @@ name|offset
 operator|+
 literal|1
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+name|cred
 argument_list|,
 operator|&
 name|bp
@@ -1049,9 +1059,7 @@ name|B_CLRBUF
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_flags
+name|flags
 operator|&
 name|IO_SYNC
 condition|)
@@ -1071,9 +1079,7 @@ name|lbn
 argument_list|,
 name|offset
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+name|cred
 argument_list|,
 operator|&
 name|bp
@@ -1430,13 +1436,9 @@ name|ovp
 argument_list|,
 name|vflags
 argument_list|,
-name|ap
-operator|->
-name|a_cred
+name|cred
 argument_list|,
-name|ap
-operator|->
-name|a_p
+name|p
 argument_list|,
 literal|0
 argument_list|,

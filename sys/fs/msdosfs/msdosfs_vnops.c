@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.46 1997/10/15 09:21:39 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.47 1997/10/15 10:05:03 phk Exp $ */
 end_comment
 
 begin_comment
@@ -8381,17 +8381,6 @@ name|vop_t
 operator|*
 operator|)
 name|msdosfs_bmap
-block|}
-block|,
-block|{
-operator|&
-name|vop_bwrite_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vn_bwrite
 block|}
 block|,
 block|{
