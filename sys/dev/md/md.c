@@ -3590,6 +3590,14 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|type
+operator|!=
+name|MD_PRELOAD
+condition|)
 name|g_waitidle
 argument_list|()
 expr_stmt|;
