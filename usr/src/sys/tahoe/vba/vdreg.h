@@ -1,10 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.10	87/04/02	*/
+comment|/*	vdreg.h	1.11	87/06/30	*/
 end_comment
 
 begin_comment
 comment|/*  * Versabus VDDC/SMDE disk controller definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDDC_SECSIZE
+value|512
+end_define
+
+begin_comment
+comment|/* sector size for VDDC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VD_MAXSECSIZE
+value|1024
+end_define
+
+begin_comment
+comment|/* max sector size for SMD/E */
 end_comment
 
 begin_comment
@@ -703,6 +725,116 @@ end_define
 begin_comment
 comment|/* reset enable key */
 end_comment
+
+begin_comment
+comment|/*  * Hardware interface flags, in dcb.devselect and d_devflags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VD_ESDI
+value|0x10
+end_define
+
+begin_comment
+comment|/* drive is on ESDI interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|d_devflags
+value|d_drivedata[0]
+end_define
+
+begin_comment
+comment|/* in disk label */
+end_comment
+
+begin_comment
+comment|/*  * Error recovery flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_RTZ
+value|0x0001
+end_define
+
+begin_comment
+comment|/* return to zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_OCF
+value|0x0002
+end_define
+
+begin_comment
+comment|/* on cylinder false */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_OSP
+value|0x0004
+end_define
+
+begin_comment
+comment|/* offset plus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_OSM
+value|0x0008
+end_define
+
+begin_comment
+comment|/* offset minus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_DSE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* data strobe early */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_DSL
+value|0x0100
+end_define
+
+begin_comment
+comment|/* data strobe late */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDRF_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VDRF_NORMAL
+value|(VDRF_RTZ|VDRF_OCF|VDRF_OSP|VDRF_OSM|VDRF_DSE|VDRF_DSE)
+end_define
 
 begin_comment
 comment|/*  * Perform a reset on the controller.  */
