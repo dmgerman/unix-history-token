@@ -25,11 +25,11 @@ begin_define
 define|#
 directive|define
 name|_JBLEN
-value|22
+value|12
 end_define
 
 begin_comment
-comment|/* Size of the jmp_buf on x86. */
+comment|/* Size of the jmp_buf on AMD64. */
 end_comment
 
 begin_comment
@@ -51,12 +51,10 @@ typedef|typedef
 struct|struct
 name|_sigjmp_buf
 block|{
-name|int
+name|long
 name|_sjb
 index|[
 name|_JBLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 block|}
@@ -77,12 +75,10 @@ typedef|typedef
 struct|struct
 name|_jmp_buf
 block|{
-name|int
+name|long
 name|_jb
 index|[
 name|_JBLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 block|}
