@@ -274,6 +274,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|sigaltstack
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|sigaltstack
+operator|*
+operator|,
+expr|struct
+name|sigaltstack
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|sigblock
 name|__P
 argument_list|(
