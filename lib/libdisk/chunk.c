@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.11 1995/05/08 02:08:25 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.12 1995/05/11 05:22:49 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -587,6 +587,14 @@ argument_list|)
 expr_stmt|;
 name|ct
 operator|->
+name|disk
+operator|=
+name|c2
+operator|->
+name|disk
+expr_stmt|;
+name|ct
+operator|->
 name|offset
 operator|=
 name|offset
@@ -695,6 +703,14 @@ argument_list|)
 expr_stmt|;
 name|cs
 operator|->
+name|disk
+operator|=
+name|c2
+operator|->
+name|disk
+expr_stmt|;
+name|cs
+operator|->
 name|offset
 operator|=
 name|offset
@@ -771,6 +787,14 @@ name|cs
 operator|=
 operator|*
 name|c2
+expr_stmt|;
+name|cs
+operator|->
+name|disk
+operator|=
+name|c2
+operator|->
+name|disk
 expr_stmt|;
 name|cs
 operator|->
@@ -1086,6 +1110,16 @@ sizeof|sizeof
 expr|*
 name|c2
 argument_list|)
+expr_stmt|;
+name|c2
+operator|->
+name|disk
+operator|=
+name|c1
+operator|->
+name|disk
+operator|=
+name|d
 expr_stmt|;
 name|c2
 operator|->
@@ -2387,6 +2421,12 @@ operator|->
 name|next
 operator|=
 name|c2
+expr_stmt|;
+name|c1
+operator|->
+name|disk
+operator|=
+name|d
 expr_stmt|;
 name|c1
 operator|->
