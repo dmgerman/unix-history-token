@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.7 (Berkeley) %G%"
+literal|"@(#)trees.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2588,9 +2588,9 @@ argument|);  	case ANDAND: 	case OROR: 		if( (mt1& MSTR) || (mt2& MSTR) ) break;
 literal|0
 argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( TYMATCH+OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( (mt1&MENU)||(mt2&MENU) ) return( PTMATCH+PUN+NCVT ); 		if( mt12& MDBI ) return( TYMATCH+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+PTMATCH ); 		else if( mt12& MDBI ) return( TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 	case CAST: 		if(o==CAST&& mt1==
 literal|0
-argument|)return(TYPL+TYMATCH); 		if( mt12& MDBI ) return( TYPL+LVAL+TYMATCH ); 		else if( (mt1&MENU)||(mt2&MENU) ) return( LVAL+NCVT+TYPL+PTMATCH+PUN ); 		else if( mt12 ==
+argument|)return(TYPL+TYMATCH); 		if( mt12& MDBI ) return( TYPL+LVAL+TYMATCH ); 		else if( (mt1&MENU)||(mt2&MENU) ) return( LVAL+NCVT+TYPL+PTMATCH+PUN ); 		else if( mt2 ==
 literal|0
-argument|) break; 		else if( mt1& MPTR ) return( LVAL+PTMATCH+PUN ); 		else if( mt12& MPTI ) return( TYPL+LVAL+TYMATCH+PUN ); 		break;  	case ASG LS: 	case ASG RS: 		if( mt12& MINT ) return( TYPL+LVAL+OTHER ); 		break;  	case ASG MUL: 	case ASG DIV: 		if( mt12& MDBI ) return( LVAL+TYMATCH ); 		break;  	case ASG MOD: 	case ASG AND: 	case ASG OR: 	case ASG ER: 		if( mt12& MINT ) return( LVAL+TYMATCH ); 		break;  	case ASG PLUS: 	case ASG MINUS: 	case INCR: 	case DECR: 		if( mt12& MDBI ) return( TYMATCH+LVAL ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+LVAL+CVTR ); 		break;  	case MINUS: 		if( mt12& MPTR ) return( CVTO+PTMATCH+PUN ); 		if( mt2& MPTR ) break; 	case PLUS: 		if( mt12& MDBI ) return( TYMATCH ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+CVTR ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+CVTL );  		} 	uerror(
+argument|&& 		        ( p->in.right->in.op == CALL || 			  p->in.right->in.op == UNARY CALL)) break; 		else if( mt1& MPTR ) return( LVAL+PTMATCH+PUN ); 		else if( mt12& MPTI ) return( TYPL+LVAL+TYMATCH+PUN ); 		break;  	case ASG LS: 	case ASG RS: 		if( mt12& MINT ) return( TYPL+LVAL+OTHER ); 		break;  	case ASG MUL: 	case ASG DIV: 		if( mt12& MDBI ) return( LVAL+TYMATCH ); 		break;  	case ASG MOD: 	case ASG AND: 	case ASG OR: 	case ASG ER: 		if( mt12& MINT ) return( LVAL+TYMATCH ); 		break;  	case ASG PLUS: 	case ASG MINUS: 	case INCR: 	case DECR: 		if( mt12& MDBI ) return( TYMATCH+LVAL ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+LVAL+CVTR ); 		break;  	case MINUS: 		if( mt12& MPTR ) return( CVTO+PTMATCH+PUN ); 		if( mt2& MPTR ) break; 	case PLUS: 		if( mt12& MDBI ) return( TYMATCH ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+CVTR ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+CVTL );  		} 	uerror(
 literal|"operands of %s have incompatible types"
 argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return(
 literal|0
