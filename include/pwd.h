@@ -99,6 +99,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -172,8 +196,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PWD_VERSION_KEY
+value|"\xFF" "VERSION"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PWD_CURRENT_VERSION
+value|'\x04'
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PW_VERSION_MASK
+value|'0xF0'
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PW_VERSION
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned char)((x)<<4))
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PW_KEYBYNAME
-value|'1'
+value|'\x01'
 end_define
 
 begin_comment
@@ -184,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|_PW_KEYBYNUM
-value|'2'
+value|'\x02'
 end_define
 
 begin_comment
@@ -195,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|_PW_KEYBYUID
-value|'3'
+value|'\x03'
 end_define
 
 begin_comment
@@ -206,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|_PW_KEYYPENABLED
-value|'4'
+value|'\x04'
 end_define
 
 begin_comment
@@ -217,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|_PW_KEYYPBYNUM
-value|'5'
+value|'\x05'
 end_define
 
 begin_comment
@@ -388,6 +443,10 @@ name|_PWF_EXPIRE
 value|_PWF(9)
 end_define
 
+begin_comment
+comment|/* XXX These flags are bogus.  With nsswitch, there are many  * possible sources and they cannot be represented in a small integer.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -482,9 +541,53 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * XXX missing getpwnam_r() and getpwuid_r().  */
-end_comment
+begin_function_decl
+name|int
+name|getpwnam_r
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getpwuid_r
+parameter_list|(
+name|uid_t
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -496,6 +599,27 @@ if|#
 directive|if
 name|__BSD_VISIBLE
 end_if
+
+begin_function_decl
+name|int
+name|getpwent_r
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
