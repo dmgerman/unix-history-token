@@ -834,6 +834,12 @@ typedef|typedef
 struct|struct
 name|keyboard_driver
 block|{
+name|SLIST_ENTRY
+argument_list|(
+argument|keyboard_driver
+argument_list|)
+name|link
+expr_stmt|;
 name|char
 modifier|*
 name|name
@@ -875,7 +881,7 @@ parameter_list|,
 name|config
 parameter_list|)
 define|\
-value|static struct keyboard_driver name##_kbd_driver = { \ 		#name,&sw, config			\ 	};						\ 	DATA_SET(kbddriver_set, name##_kbd_driver);
+value|static struct keyboard_driver name##_kbd_driver = { \ 		{ NULL }, #name,&sw, config		\ 	};						\ 	DATA_SET(kbddriver_set, name##_kbd_driver);
 end_define
 
 begin_comment
@@ -902,6 +908,28 @@ end_decl_stmt
 begin_comment
 comment|/* functions for the keyboard driver */
 end_comment
+
+begin_function_decl
+name|int
+name|kbd_add_driver
+parameter_list|(
+name|keyboard_driver_t
+modifier|*
+name|driver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kbd_delete_driver
+parameter_list|(
+name|keyboard_driver_t
+modifier|*
+name|driver
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
