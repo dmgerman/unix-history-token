@@ -5389,7 +5389,11 @@ argument_list|(
 name|pcbinfo
 argument_list|)
 expr_stmt|;
-comment|/* XXX? INP_LOCK_ASSERT(inp); */
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
