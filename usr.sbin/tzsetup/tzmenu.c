@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzmenu.c,v 1.3 1996/03/22 22:22:40 joerg Exp $"
+literal|"$Id: tzmenu.c,v 1.4 1996/03/31 09:55:02 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,14 +212,6 @@ specifier|const
 name|char
 modifier|*
 name|res
-decl_stmt|;
-name|struct
-name|winsize
-name|win
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 while|while
 condition|(
@@ -566,11 +558,6 @@ name|int
 name|sc
 init|=
 literal|0
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|res
 decl_stmt|;
 name|snprintf
 argument_list|(

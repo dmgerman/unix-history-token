@@ -10,7 +10,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.7 1996/04/01 08:17:49 joerg Exp $"
+literal|"$Id: main.c,v 1.8 1996/07/03 01:17:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,29 +77,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tzsetup.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|PATH_LOCALTIME
-value|"/etc/localtime"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_WALL_CMOS_CLOCK
-value|"/etc/wall_cmos_clock"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PATH_ZONEINFO
-value|"/usr/share/zoneinfo"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_function_decl
 specifier|static
