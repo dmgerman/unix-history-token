@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.3 82/11/14"
+literal|"@(#)rlogin.c	4.4 82/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,8 @@ name|term
 index|[
 literal|64
 index|]
+init|=
+literal|"dumb"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,14 +472,22 @@ name|cc
 operator|=
 literal|0
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|term
-argument_list|,
+name|cp
+operator|=
 name|getenv
 argument_list|(
 literal|"TERM"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
+name|strcpy
+argument_list|(
+name|term
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
