@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_usrreq.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -784,7 +784,7 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
-comment|/* 			 * Don't look for additional matches if this one 			 * does not have the SO_REUSEADDR socket option set. 			 * This heuristic avoids searching through all pcbs 			 * in the common case of a non-shared port.  It 			 * assumes that an application will never clear 			 * the SO_REUSEADDR option after setting it. 			 */
+comment|/* 			 * Don't look for additional matches if this one 			 * does not have the SO_REUSEPORT socket option set. 			 * This heuristic avoids searching through all pcbs 			 * in the common case of a non-shared port.  It 			 * assumes that an application will never clear 			 * the SO_REUSEPORT option after setting it. 			 */
 if|if
 condition|(
 operator|(
@@ -792,7 +792,7 @@ name|last
 operator|->
 name|so_options
 operator|&
-name|SO_REUSEADDR
+name|SO_REUSEPORT
 operator|)
 operator|==
 literal|0
