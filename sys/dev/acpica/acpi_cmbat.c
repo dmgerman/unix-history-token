@@ -1348,6 +1348,9 @@ name|notify
 condition|)
 block|{
 case|case
+name|ACPI_NOTIFY_DEVICE_CHECK
+case|:
+case|case
 name|ACPI_BATTERY_BST_CHANGE
 case|:
 name|timespecclear
@@ -1359,6 +1362,9 @@ name|bst_lastupdated
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_NOTIFY_BUS_CHECK
+case|:
 case|case
 name|ACPI_BATTERY_BIF_CHANGE
 case|:
@@ -1481,6 +1487,18 @@ name|handle
 operator|=
 name|acpi_get_handle
 argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/*      * Install a system notify handler in addition to the device notify.      * Toshiba notebook uses this alternate notify for its battery.      */
+name|AcpiInstallNotifyHandler
+argument_list|(
+name|handle
+argument_list|,
+name|ACPI_SYSTEM_NOTIFY
+argument_list|,
+name|acpi_cmbat_notify_handler
+argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
