@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.26 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|XLA
+name|xla_zero
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(

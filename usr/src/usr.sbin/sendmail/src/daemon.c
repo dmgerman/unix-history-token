@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.40 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.41 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.40 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.41 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1455,6 +1455,16 @@ block|}
 comment|/* failure, decide if temporary or not */
 name|failure
 label|:
+ifdef|#
+directive|ifdef
+name|XLA
+name|xla_host_end
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|transienterror
@@ -1483,16 +1493,6 @@ name|sav_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XLA
-name|xla_host_end
-argument_list|(
-name|host
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|EX_UNAVAILABLE
