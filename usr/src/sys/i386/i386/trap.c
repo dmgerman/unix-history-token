@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -260,7 +260,9 @@ name|T_USER
 expr_stmt|;
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 operator|=
 operator|(
 name|int
@@ -1389,7 +1391,9 @@ name|sf_eax
 expr_stmt|;
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 operator|=
 operator|(
 name|int

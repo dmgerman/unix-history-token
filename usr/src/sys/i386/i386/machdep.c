@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1190,7 +1190,9 @@ name|regs
 operator|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 name|oonstack
 operator|=
@@ -1730,7 +1732,9 @@ name|regs
 init|=
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 decl_stmt|;
 name|fp
 operator|=
@@ -2638,7 +2642,9 @@ begin_block
 block|{
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|sEBP
 index|]
@@ -2648,7 +2654,9 @@ expr_stmt|;
 comment|/* bottom of the fp chain */
 name|p
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 index|[
 name|sEIP
 index|]
