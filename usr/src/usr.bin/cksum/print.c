@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,13 +71,33 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%lu %lu %s\n"
+literal|"%lu %lu"
 argument_list|,
 name|val
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fn
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %s"
 argument_list|,
 name|fn
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -108,7 +128,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%lu %lu %s\n"
+literal|"%lu %lu"
 argument_list|,
 name|val
 argument_list|,
@@ -119,8 +139,28 @@ literal|1023
 operator|)
 operator|/
 literal|1024
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fn
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %s"
 argument_list|,
 name|fn
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -151,7 +191,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%lu %lu %s\n"
+literal|"%lu %lu"
 argument_list|,
 name|val
 argument_list|,
@@ -162,8 +202,28 @@ literal|511
 operator|)
 operator|/
 literal|512
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fn
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %s"
 argument_list|,
 name|fn
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cksum.c	5.5 (Berkeley) %G%"
+literal|"@(#)cksum.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,7 +300,7 @@ name|STDIN_FILENO
 expr_stmt|;
 name|fn
 operator|=
-literal|"stdin"
+name|NULL
 expr_stmt|;
 name|rval
 operator|=
@@ -386,6 +386,10 @@ argument_list|,
 literal|"cksum: %s: %s\n"
 argument_list|,
 name|fn
+condition|?
+name|fn
+else|:
+literal|"stdin"
 argument_list|,
 name|strerror
 argument_list|(
