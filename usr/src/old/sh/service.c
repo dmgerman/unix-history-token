@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)service.c	4.5 %G%"
+literal|"@(#)service.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"errno.h"
 end_include
 
 begin_function_decl
@@ -67,45 +73,6 @@ name|INT
 name|num_sysmsg
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* fault handling */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENOMEM
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENOEXEC
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|E2BIG
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENOENT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETXTBSY
-value|26
-end_define
 
 begin_comment
 comment|/* service routines for `execute' */
