@@ -4,6 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|krb4_long_version
@@ -13,6 +14,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|krb4_version
@@ -27,7 +29,7 @@ name|char
 modifier|*
 name|heimdal_long_version
 init|=
-literal|"@(#)$Version: heimdal-0.3e (FreeBSD) $"
+literal|"@(#)$Version: heimdal-0.4e (FreeBSD) $"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +39,7 @@ name|char
 modifier|*
 name|heimdal_version
 init|=
-literal|"heimdal-0.3e"
+literal|"heimdal-0.4e"
 decl_stmt|;
 end_decl_stmt
 
