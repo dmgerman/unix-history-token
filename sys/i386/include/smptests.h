@@ -20,16 +20,6 @@ comment|/*  * Various 'tests in progress' and configuration parameters.  */
 end_comment
 
 begin_comment
-comment|/*  * Put FAST_INTR() ISRs at an APIC priority above the regular INTs.  * Allow the mp_lock() routines to handle FAST interrupts while spinning.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FAST_HI
-end_define
-
-begin_comment
 comment|/*  * These defines enable critical region locking of areas that were  * protected via cli/sti in the UP kernel.  *  * COMLOCK protects the sio/cy drivers.  * known to be incomplete:  *	joystick lkm  *	?  */
 end_comment
 
@@ -49,41 +39,8 @@ directive|define
 name|CPUSTOP_ON_DDBBREAK
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
-begin_comment
-comment|/*  * Don't assume that slow interrupt handler X is called from vector  * X + ICU_OFFSET.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|APIC_INTR_REORDER
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
-
 begin_comment
 comment|/*  * Misc. counters.  * #define COUNT_XINVLTLB_HITS  */
-end_comment
-
-begin_comment
-comment|/**  * Hack to "fake-out" kernel into thinking it is running on a 'default config'.  *  * value == default type #define TEST_DEFAULT_CONFIG	6  */
-end_comment
-
-begin_comment
-comment|/*  * Simple test code for IPI interaction, save for future...  * #define TEST_TEST1 #define IPI_TARGET_TEST1	1  */
 end_comment
 
 begin_comment

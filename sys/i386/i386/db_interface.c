@@ -1127,6 +1127,15 @@ parameter_list|)
 block|{
 name|db_printf
 argument_list|(
+literal|"APIC ID      = %d\n"
+argument_list|,
+name|pc
+operator|->
+name|pc_apic_id
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|"currentldt   = 0x%x\n"
 argument_list|,
 name|pc
