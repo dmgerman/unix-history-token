@@ -403,7 +403,7 @@ begin_define
 define|#
 directive|define
 name|UFM_CDEV_MAJOR
-value|200
+value|MAJOR_AUTO
 end_define
 
 begin_decl_stmt
