@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.22 (Berkeley) %G%"
+literal|"@(#)func.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4256,7 +4256,7 @@ name|globone
 argument_list|(
 name|lp
 argument_list|,
-name|G_ERROR
+name|G_APPEND
 argument_list|)
 argument_list|)
 expr_stmt|;
