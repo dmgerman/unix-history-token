@@ -1073,6 +1073,12 @@ name|i
 operator|++
 control|)
 block|{
+name|char
+name|ifbuf
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|ip6stat
@@ -1102,21 +1108,8 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t\t"
-ifdef|#
-directive|ifdef
-name|notyet
-literal|"%s"
-else|#
-directive|else
-literal|"if%d"
-endif|#
-directive|endif
-literal|"= %ld\n"
+literal|"\t\t\t%s= %ld\n"
 argument_list|,
-ifdef|#
-directive|ifdef
-name|notyet
 name|if_indextoname
 argument_list|(
 name|i
@@ -1124,12 +1117,6 @@ argument_list|,
 name|ifbuf
 argument_list|)
 argument_list|,
-else|#
-directive|else
-name|i
-argument_list|,
-endif|#
-directive|endif
 name|ip6stat
 operator|.
 name|ip6s_m2m

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -259,6 +265,56 @@ literal|72
 index|]
 decl_stmt|;
 comment|/* on an i386 this means 512b total */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* for INET6 */
+end_comment
+
+begin_comment
+comment|/*  * replacement of __res_state, separated to keep binary compatibility.  */
+end_comment
+
+begin_struct
+struct|struct
+name|__res_state_ext
+block|{
+name|struct
+name|sockaddr_storage
+name|nsaddr_list
+index|[
+name|MAXNS
+index|]
+decl_stmt|;
+struct|struct
+block|{
+name|int
+name|af
+decl_stmt|;
+comment|/* address family for addr, mask */
+union|union
+block|{
+name|struct
+name|in_addr
+name|ina
+decl_stmt|;
+name|struct
+name|in6_addr
+name|in6a
+decl_stmt|;
+block|}
+name|addr
+union|,
+name|mask
+union|;
+block|}
+name|sort_list
+index|[
+name|MAXRESOLVSORT
+index|]
+struct|;
 block|}
 struct|;
 end_struct
@@ -676,6 +732,18 @@ specifier|extern
 name|struct
 name|__res_state
 name|_res
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for INET6 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|__res_state_ext
+name|_res_ext
 decl_stmt|;
 end_decl_stmt
 

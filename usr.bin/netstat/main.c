@@ -428,9 +428,6 @@ block|{
 literal|"_icmp6stat"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notyet
 define|#
 directive|define
 name|N_IPSECSTAT
@@ -447,6 +444,9 @@ block|{
 literal|"_ipsec6stat"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|notyet
 define|#
 directive|define
 name|N_PIM6STAT

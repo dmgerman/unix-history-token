@@ -3760,7 +3760,7 @@ name|orap
 operator|->
 name|ra_addr
 operator|->
-name|ia_flags
+name|ia6_flags
 operator|&
 name|IN6_IFF_ANYCAST
 operator|)
