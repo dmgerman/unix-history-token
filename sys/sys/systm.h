@@ -574,6 +574,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|hashdestroy
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|malloc_type
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|hashinit
 parameter_list|(
