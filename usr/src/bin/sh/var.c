@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.4 (Berkeley) %G%"
+literal|"@(#)var.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -748,7 +748,7 @@ name|isbad
 condition|)
 name|error
 argument_list|(
-literal|"%.*s: is read only"
+literal|"%.*s: bad variable name"
 argument_list|,
 name|namelen
 argument_list|,
