@@ -382,6 +382,35 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/*  * init_screen()  *  * Initialize variables used by screen.  */
+end_comment
+
+begin_function
+name|void
+name|init_screen
+parameter_list|()
+block|{
+name|bellwinup
+operator|=
+literal|0
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SLOWSCREEN
+argument_list|)
+name|inHighlightMode
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(SLOWSCREEN) */
+block|}
+end_function
+
+begin_comment
 comment|/* OurExitString - designed to keep us from going through infinite recursion */
 end_comment
 
