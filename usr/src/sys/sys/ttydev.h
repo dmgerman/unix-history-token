@@ -1,11 +1,41 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ttydev.h	4.1	82/12/02	*/
+comment|/*	ttydev.h	4.2	82/12/05	*/
 end_comment
 
 begin_comment
 comment|/*  * Terminal definitions related to underlying hardware.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TTYDEV_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_TTYDEV_
+end_define
+
+begin_comment
+comment|/* hardware bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DONE
+value|0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IENABLE
+value|0100
+end_define
 
 begin_comment
 comment|/*  * Speeds  */
@@ -160,6 +190,11 @@ directive|define
 name|DMGET
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
