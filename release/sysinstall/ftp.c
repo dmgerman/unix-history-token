@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp.c,v 1.18.2.5 1997/01/16 01:19:19 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -159,6 +159,8 @@ block|}
 comment|/* If we can't initialize the network, bag it! */
 if|if
 condition|(
+name|netdev
+operator|&&
 operator|!
 name|netdev
 operator|->
@@ -208,9 +210,27 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to get proper FTP path.  FTP media not initialized."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|netdev
+condition|)
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 name|hostname
 operator|=
@@ -234,11 +254,27 @@ operator|||
 operator|!
 name|dir
 condition|)
-name|msgFatal
+block|{
+name|msgConfirm
 argument_list|(
-literal|"Missing FTP host or directory specification - something's wrong!"
+literal|"Missing FTP host or directory specification.  FTP media not initialized,"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|netdev
+condition|)
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|user
 operator|=
 name|variable_get
@@ -326,23 +362,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|variable_get
-argument_list|(
-name|VAR_NO_CONFIRM
-argument_list|)
-condition|)
-name|msgNotify
-argument_list|(
-literal|"Couldn't open FTP connection to %s, errcode = %d"
-argument_list|,
-name|hostname
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-else|else
 name|msgConfirm
 argument_list|(
 literal|"Couldn't open FTP connection to %s, errcode = %d"
@@ -563,6 +582,17 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|netdev
+condition|)
+name|netdev
+operator|->
+name|shutdown
+argument_list|(
+name|netdev
+argument_list|)
+expr_stmt|;
 name|variable_unset
 argument_list|(
 name|VAR_FTP_PATH
@@ -825,11 +855,6 @@ operator|!
 name|ftpInitted
 condition|)
 return|return;
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
 name|msgDebug
 argument_list|(
 literal|"FTP shutdown called.  OpenConn = %x\n"
@@ -854,7 +879,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* netdev->shutdown(netdev); */
+comment|/* if (netdev) netdev->shutdown(netdev); */
 name|ftpInitted
 operator|=
 name|FALSE

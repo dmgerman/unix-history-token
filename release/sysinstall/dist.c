@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.73.2.13 1997/01/15 07:31:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_decl_stmt
@@ -1716,8 +1722,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1810,8 +1814,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1870,8 +1872,6 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1948,9 +1948,45 @@ return|return
 name|i
 operator||
 name|DITEM_RECREATE
-operator||
-name|DITEM_RESTORE
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* timeout handler */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|media_timeout
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sig
+operator|!=
+name|SIGINT
+condition|)
+name|msgDebug
+argument_list|(
+literal|"A media timeout occurred.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|msgDebug
+argument_list|(
+literal|"User generated interrupt.\n"
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2023,6 +2059,12 @@ name|timeval
 name|start
 decl_stmt|,
 name|stop
+decl_stmt|;
+name|struct
+name|sigaction
+name|old
+decl_stmt|,
+name|new
 decl_stmt|;
 name|status
 operator|=
@@ -2242,6 +2284,9 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|status
+decl_stmt|;
 if|if
 condition|(
 name|isDebug
@@ -2266,16 +2311,73 @@ operator|*
 name|MAX_ATTRIBS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
+comment|/* Make ^C fake a sudden timeout */
+name|new
+operator|.
+name|sa_handler
+operator|=
+name|media_timeout
+expr_stmt|;
+name|new
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|new
+operator|.
+name|sa_mask
+operator|=
+literal|0
+expr_stmt|;
+name|sigaction
 argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|new
+argument_list|,
+operator|&
+name|old
+argument_list|)
+expr_stmt|;
+name|alarm_set
+argument_list|(
+name|mediaTimeout
+argument_list|()
+argument_list|,
+name|media_timeout
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
 name|attr_parse
 argument_list|(
 name|dist_attr
 argument_list|,
 name|fp
 argument_list|)
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|old
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Restore signal handler */
+if|if
+condition|(
+operator|!
+name|alarm_clear
+argument_list|()
+operator|||
+name|DITEM_STATUS
+argument_list|(
+name|status
 argument_list|)
 operator|==
 name|DITEM_FAILURE
@@ -2290,16 +2392,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-name|isDebug
-argument_list|()
-condition|)
-name|msgDebug
-argument_list|(
-literal|"Looking for attribute `pieces'\n"
-argument_list|)
-expr_stmt|;
 name|tmp
 operator|=
 name|attr_match
@@ -2519,7 +2611,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* We have one or more chunks, go pick them up */
+comment|/* We have one or more chunks, initialize unpackers... */
 name|mediaExtractDistBegin
 argument_list|(
 name|root_bias
@@ -2542,6 +2634,37 @@ operator|&
 name|cpid
 argument_list|)
 expr_stmt|;
+comment|/* Make ^C fake a sudden timeout */
+name|new
+operator|.
+name|sa_handler
+operator|=
+name|media_timeout
+expr_stmt|;
+name|new
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|new
+operator|.
+name|sa_mask
+operator|=
+literal|0
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|new
+argument_list|,
+operator|&
+name|old
+argument_list|)
+expr_stmt|;
+comment|/* And go for all the chunks */
 for|for
 control|(
 name|chunk
@@ -2720,6 +2843,14 @@ block|{
 name|int
 name|seconds
 decl_stmt|;
+name|alarm_set
+argument_list|(
+name|mediaTimeout
+argument_list|()
+argument_list|,
+name|media_timeout
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|fread
@@ -2733,6 +2864,21 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|alarm_clear
+argument_list|()
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Media read error:  Timeout or user abort."
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+elseif|else
 if|if
 condition|(
 name|n
@@ -2908,6 +3054,17 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|old
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Restore signal handler */
 name|close
 argument_list|(
 name|fd2
@@ -3015,6 +3172,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -3043,6 +3203,8 @@ operator|.
 name|my_bit
 operator|)
 expr_stmt|;
+else|else
+continue|continue;
 block|}
 name|restorescr
 argument_list|(
