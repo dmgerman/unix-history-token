@@ -472,7 +472,7 @@ name|model
 argument_list|,
 literal|"IOMEGA ZIP"
 argument_list|,
-literal|11
+literal|10
 argument_list|)
 condition|)
 name|fdp
@@ -1143,7 +1143,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"afd%d: %luMB floppy<%.40s> at ata%d-%s using %s\n"
+literal|"afd%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s using %s\n"
 argument_list|,
 name|fdp
 operator|->
@@ -1199,6 +1199,24 @@ name|unit
 argument_list|)
 operator|->
 name|model
+argument_list|,
+name|fdp
+operator|->
+name|cap
+operator|.
+name|cylinders
+argument_list|,
+name|fdp
+operator|->
+name|cap
+operator|.
+name|heads
+argument_list|,
+name|fdp
+operator|->
+name|cap
+operator|.
+name|sectors
 argument_list|,
 name|fdp
 operator|->
@@ -1717,7 +1735,7 @@ name|lba
 operator|=
 name|bp
 operator|->
-name|b_blkno
+name|b_pblkno
 operator|/
 operator|(
 name|fdp

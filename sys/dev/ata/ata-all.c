@@ -6994,6 +6994,13 @@ name|i
 operator|>>
 literal|1
 index|]
+operator|&&
+name|atadevices
+index|[
+name|i
+operator|>>
+literal|1
+index|]
 operator|->
 name|dev_softc
 index|[
@@ -7067,6 +7074,13 @@ condition|)
 block|{
 if|if
 condition|(
+name|atadevices
+index|[
+name|i
+operator|>>
+literal|1
+index|]
+operator|&&
 name|atadevices
 index|[
 name|i
