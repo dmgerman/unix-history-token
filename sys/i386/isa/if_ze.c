@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * I doubled delay loops in this file because it is not enough for some  * laptop machines' PCIC (especially, on my Chaplet ILFA 350 ^^;).   *                        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
 end_comment
 
+begin_comment
+comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad230Cs.  *			ETO, Toshihisa<eto@osl.fujitsu.co.jp>  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1610,6 +1614,17 @@ value|"IBM Corp.~Ethernet~0933495"
 end_define
 
 begin_comment
+comment|/*  * IBM Ethernet PCMCIA Card II returns following info.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD2_INFO
+value|"IBM Corp.~Ethernet~0934214"
+end_define
+
+begin_comment
 comment|/*  * scan the card information structure looking for the version/product info  * tuple.  when we find it, compare it to the string we are looking for.  * return 1 if we find it, 0 otherwise.  */
 end_comment
 
@@ -1735,7 +1750,14 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
+if|#
+directive|if
+literal|0
+block|return (memcmp (card_info, CARD_INFO, sizeof(CARD_INFO)-1) == 0);
+else|#
+directive|else
+if|if
+condition|(
 operator|(
 name|memcmp
 argument_list|(
@@ -1753,7 +1775,35 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+operator|||
+operator|(
+name|memcmp
+argument_list|(
+name|card_info
+argument_list|,
+name|CARD2_INFO
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|CARD2_INFO
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+return|return
+literal|1
 return|;
+block|}
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 name|i
 operator|+=
@@ -1806,6 +1856,7 @@ name|slot
 control|)
 block|{
 comment|/* 	 * see if there's a PCMCIA controller here 	 * Intel PCMCIA controllers use 0x82 and 0x83 	 * IBM clone chips use 0x88 and 0x89, apparently 	 */
+comment|/* 	 * IBM ThinkPad230Cs use 0x84. 	 */
 name|unsigned
 name|char
 name|idbyte
@@ -1827,6 +1878,11 @@ name|idbyte
 operator|!=
 literal|0x83
 operator|&&
+name|idbyte
+operator|!=
+literal|0x84
+operator|&&
+comment|/* for IBM ThinkPad 230Cs */
 name|idbyte
 operator|!=
 literal|0x88
