@@ -588,6 +588,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_Xrendezvous
+value|Xrendezvous
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Xmchk
 value|Xmchk
 end_define

@@ -206,6 +206,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* inter-CPU rendezvous */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XRENDEZVOUS_OFFSET
+value|(ICU_OFFSET + 114)
+end_define
+
+begin_comment
 comment|/* IPI to generate an additional software trap at the target CPU */
 end_comment
 
