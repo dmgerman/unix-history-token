@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.13 (Berkeley) %G%"
+literal|"@(#)slave.c	2.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1436,14 +1436,6 @@ name|from
 expr_stmt|;
 name|msg
 operator|->
-name|tsp_time
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|msg
-operator|->
 name|tsp_type
 operator|=
 name|TSP_SETDATEREQ
@@ -2730,29 +2722,6 @@ block|}
 else|else
 block|{
 comment|/* 			     * We should not have received this from a net 			     * we are master on.  There must be two masters 			     * in this case. 			     */
-if|if
-condition|(
-name|trace
-condition|)
-name|fprintf
-argument_list|(
-name|fd
-argument_list|,
-literal|"loop kill %x %x\n"
-argument_list|,
-name|fromnet
-operator|->
-name|my_addr
-operator|.
-name|s_addr
-argument_list|,
-name|from
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fromnet

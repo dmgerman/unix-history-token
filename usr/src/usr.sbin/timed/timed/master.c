@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.9 (Berkeley) %G%"
+literal|"@(#)master.c	2.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -512,14 +512,6 @@ name|saveaddr
 operator|=
 name|from
 expr_stmt|;
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 			 * the following line is necessary due to syslog 			 * calling ctime() which clobbers the static buffer 			 */
 operator|(
 name|void
@@ -731,14 +723,6 @@ operator|=
 name|msg
 operator|->
 name|tsp_seq
-expr_stmt|;
-name|msg
-operator|->
-name|tsp_time
-operator|.
-name|tv_usec
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 				 * the following line is necessary due to syslog 				 * calling ctime() which clobbers the static buffer 				 */
 operator|(
@@ -2362,9 +2346,6 @@ modifier|*
 name|readmsg
 argument_list|()
 decl_stmt|;
-name|int
-name|ind
-decl_stmt|;
 name|to
 operator|.
 name|tsp_type
@@ -2487,8 +2468,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ind
-operator|=
+operator|(
+name|void
+operator|)
 name|addmach
 argument_list|(
 name|msg
@@ -2529,10 +2511,6 @@ decl_stmt|,
 modifier|*
 name|acksend
 argument_list|()
-decl_stmt|;
-name|struct
-name|timeval
-name|mytime
 decl_stmt|;
 if|if
 condition|(
@@ -2590,21 +2568,15 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|to
-operator|.
-name|tsp_time
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|gettimeofday
 argument_list|(
 operator|&
-name|mytime
+name|to
+operator|.
+name|tsp_time
 argument_list|,
 operator|(
 expr|struct
@@ -2613,16 +2585,6 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-name|to
-operator|.
-name|tsp_time
-operator|.
-name|tv_sec
-operator|=
-name|mytime
-operator|.
-name|tv_sec
 expr_stmt|;
 name|answer
 operator|=
