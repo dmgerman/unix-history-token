@@ -214,6 +214,7 @@ comment|/*  * Busy wait spinning until we reach (or slightly pass) the desired t
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|wait_time
 parameter_list|(
@@ -355,6 +356,7 @@ comment|/*  * Calculate a second-aligned starting time for the packet stream.  B
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|timing_loop
 parameter_list|(
@@ -394,7 +396,7 @@ decl_stmt|;
 name|long
 name|finishtime
 decl_stmt|;
-name|int
+name|long
 name|send_errors
 decl_stmt|,
 name|send_calls
@@ -710,14 +712,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"send calls:        %d\n"
+literal|"send calls:        %ld\n"
 argument_list|,
 name|send_calls
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"send errors:       %d\n"
+literal|"send errors:       %ld\n"
 argument_list|,
 name|send_errors
 argument_list|)
@@ -737,7 +739,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"approx error rate: %d\n"
+literal|"approx error rate: %ld\n"
 argument_list|,
 operator|(
 name|send_errors
