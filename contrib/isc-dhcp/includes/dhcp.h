@@ -4,7 +4,7 @@ comment|/* dhcp.h     Protocol structures... */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996 The Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
+comment|/*  * Copyright (c) 1995-2001 The Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Vixie Enterprises.  To learn more  * about the Internet Software Consortium, see ``http://www.isc.org''.  * To learn more about Vixie Enterprises, see ``http://www.vix.com''.  */
 end_comment
 
 begin_define
@@ -89,51 +89,51 @@ block|{
 name|u_int8_t
 name|op
 decl_stmt|;
-comment|/* Message opcode/type */
+comment|/* 0: Message opcode/type */
 name|u_int8_t
 name|htype
 decl_stmt|;
-comment|/* Hardware addr type (see net/if_types.h) */
+comment|/* 1: Hardware addr type (net/if_types.h) */
 name|u_int8_t
 name|hlen
 decl_stmt|;
-comment|/* Hardware addr length */
+comment|/* 2: Hardware addr length */
 name|u_int8_t
 name|hops
 decl_stmt|;
-comment|/* Number of relay agent hops from client */
+comment|/* 3: Number of relay agent hops from client */
 name|u_int32_t
 name|xid
 decl_stmt|;
-comment|/* Transaction ID */
+comment|/* 4: Transaction ID */
 name|u_int16_t
 name|secs
 decl_stmt|;
-comment|/* Seconds since client started looking */
+comment|/* 8: Seconds since client started looking */
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/* Flag bits */
+comment|/* 10: Flag bits */
 name|struct
 name|in_addr
 name|ciaddr
 decl_stmt|;
-comment|/* Client IP address (if already in use) */
+comment|/* 12: Client IP address (if already in use) */
 name|struct
 name|in_addr
 name|yiaddr
 decl_stmt|;
-comment|/* Client IP address */
+comment|/* 16: Client IP address */
 name|struct
 name|in_addr
 name|siaddr
 decl_stmt|;
-comment|/* IP address of next server to talk to */
+comment|/* 18: IP address of next server to talk to */
 name|struct
 name|in_addr
 name|giaddr
 decl_stmt|;
-comment|/* DHCP relay agent IP address */
+comment|/* 20: DHCP relay agent IP address */
 name|unsigned
 name|char
 name|chaddr
@@ -141,21 +141,21 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* Client hardware address */
+comment|/* 24: Client hardware address */
 name|char
 name|sname
 index|[
 name|DHCP_SNAME_LEN
 index|]
 decl_stmt|;
-comment|/* Server name */
+comment|/* 40: Server name */
 name|char
 name|file
 index|[
 name|DHCP_FILE_LEN
 index|]
 decl_stmt|;
-comment|/* Boot filename */
+comment|/* 104: Boot filename */
 name|unsigned
 name|char
 name|options
@@ -163,7 +163,7 @@ index|[
 name|DHCP_OPTION_LEN
 index|]
 decl_stmt|;
-comment|/* Optional parameters 				   (actual length dependent on MTU). */
+comment|/* 212: Optional parameters 				   (actual length dependent on MTU). */
 block|}
 struct|;
 end_struct
@@ -672,7 +672,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DHO_DHCP_CLASS_IDENTIFIER
+name|DHO_VENDOR_CLASS_IDENTIFIER
 value|60
 end_define
 
@@ -686,8 +686,58 @@ end_define
 begin_define
 define|#
 directive|define
-name|DHO_DHCP_USER_CLASS_ID
+name|DHO_NWIP_DOMAIN_NAME
+value|62
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_NWIP_SUBOPTIONS
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_USER_CLASS
 value|77
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_FQDN
+value|81
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_DHCP_AGENT_OPTIONS
+value|82
+end_define
+
+begin_define
+define|#
+directive|define
+name|DHO_SUBNET_SELECTION
+value|118
+end_define
+
+begin_comment
+comment|/* RFC3011! */
+end_comment
+
+begin_comment
+comment|/* The DHO_AUTHENTICATE option is not a standard yet, so I've    allocated an option out of the "local" option space for it on a    temporary basis.  Once an option code number is assigned, I will    immediately and shamelessly break this, so don't count on it    continuing to work. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DHO_AUTHENTICATE
+value|210
 end_define
 
 begin_define
@@ -754,6 +804,98 @@ begin_define
 define|#
 directive|define
 name|DHCPINFORM
+value|8
+end_define
+
+begin_comment
+comment|/* Relay Agent Information option subtypes: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAI_CIRCUIT_ID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAI_REMOTE_ID
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAI_AGENT_ID
+value|3
+end_define
+
+begin_comment
+comment|/* FQDN suboptions: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FQDN_NO_CLIENT_UPDATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_SERVER_UPDATE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_ENCODED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_RCODE1
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_RCODE2
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_HOSTNAME
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_DOMAINNAME
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_FQDN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|FQDN_SUBOPTION_COUNT
 value|8
 end_define
 

@@ -26,42 +26,10 @@ begin_struct
 struct|struct
 name|ip
 block|{
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|u_int8_t
-name|ip_hl
-range|:
-literal|4
-decl_stmt|,
-comment|/* header length */
-name|ip_v
-range|:
-literal|4
+name|ip_fvhl
 decl_stmt|;
-comment|/* version */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int8_t
-name|ip_v
-range|:
-literal|4
-decl_stmt|,
-comment|/* version */
-name|ip_hl
-range|:
-literal|4
-decl_stmt|;
-comment|/* header length */
-endif|#
-directive|endif
+comment|/* header length, version */
 name|u_int8_t
 name|ip_tos
 decl_stmt|;
@@ -115,6 +83,50 @@ comment|/* source and dest address */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IP_V
+parameter_list|(
+name|iph
+parameter_list|)
+value|((iph)->ip_fvhl>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_HL
+parameter_list|(
+name|iph
+parameter_list|)
+value|(((iph)->ip_fvhl& 0x0F)<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_V_SET
+parameter_list|(
+name|iph
+parameter_list|,
+name|x
+parameter_list|)
+value|((iph)->ip_fvhl = ((iph)->ip_fvhl& 0x0F) | ((x)<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_HL_SET
+parameter_list|(
+name|iph
+parameter_list|,
+name|x
+parameter_list|)
+value|((iph)->ip_fvhl = \ 			  ((iph)->ip_fvhl& 0xF0) | (((x)>> 2)& 0x0F))
+end_define
 
 begin_define
 define|#
@@ -434,42 +446,10 @@ name|u_int8_t
 name|ipt_ptr
 decl_stmt|;
 comment|/* index of current entry */
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
 name|u_int8_t
-name|ipt_flg
-range|:
-literal|4
-decl_stmt|,
-comment|/* flags, see below */
-name|ipt_oflw
-range|:
-literal|4
+name|ipt_flg_oflw
 decl_stmt|;
-comment|/* overflow counter */
-endif|#
-directive|endif
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-name|u_int8_t
-name|ipt_oflw
-range|:
-literal|4
-decl_stmt|,
-comment|/* overflow counter */
-name|ipt_flg
-range|:
-literal|4
-decl_stmt|;
-comment|/* flags, see below */
-endif|#
-directive|endif
+comment|/* flags, see below, overflow counter */
 union|union
 name|ipt_timestamp
 block|{

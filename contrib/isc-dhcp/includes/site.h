@@ -40,12 +40,128 @@ comment|/* #define DEBUG_PACKET */
 end_comment
 
 begin_comment
-comment|/* Define this if you want to see dumps of tree evaluations.   The most    common reason for doing this is to watch what happens with DNS name    lookups. */
+comment|/* Define this if you want to see dumps of expression evaluation. */
 end_comment
 
 begin_comment
-comment|/* #define DEBUG_EVAL */
+comment|/* #define DEBUG_EXPRESSIONS */
 end_comment
+
+begin_comment
+comment|/* Define this if you want to see dumps of find_lease() in action. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_FIND_LEASE */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to see dumps of parsed expressions. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_EXPRESSION_PARSE */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to watch the class matching process. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_CLASS_MATCHING */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to track memory usage for the purpose of    noticing memory leaks quickly. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_MEMORY_LEAKAGE */
+end_comment
+
+begin_comment
+comment|/* Define this if you want exhaustive (and very slow) checking of the    malloc pool for corruption. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_MALLOC_POOL */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to see a message every time a lease's state    changes. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_LEASE_STATE_TRANSITIONS */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to maintain a history of the last N operations    that changed reference counts on objects.   This can be used to debug    cases where an object is dereferenced too often, or not often enough. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_RC_HISTORY */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to see the history every cycle. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_RC_HISTORY_EXHAUSTIVELY */
+end_comment
+
+begin_comment
+comment|/* This is the number of history entries to maintain - by default, 256. */
+end_comment
+
+begin_comment
+comment|/* #define RC_HISTORY_MAX 10240 */
+end_comment
+
+begin_comment
+comment|/* Define this if you want dhcpd to dump core when a non-fatal memory    allocation error is detected (i.e., something that would cause a    memory leak rather than a memory smash). */
+end_comment
+
+begin_comment
+comment|/* #define POINTER_DEBUG */
+end_comment
+
+begin_comment
+comment|/* Define this if you want debugging output for DHCP failover protocol    messages. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_FAILOVER_MESSAGES */
+end_comment
+
+begin_comment
+comment|/* Define this if you want debugging output for DHCP failover protocol    lease assignment timing. */
+end_comment
+
+begin_comment
+comment|/* #define DEBUG_FAILOVER_TIMING */
+end_comment
+
+begin_comment
+comment|/* Define this if you want DHCP failover protocol support in the DHCP    server. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAILOVER_PROTOCOL
+end_define
+
+begin_comment
+comment|/* Define this if you want DNS update functionality to be available. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSUPDATE
+end_define
 
 begin_comment
 comment|/* Define this if you want the dhcpd.pid file to go somewhere other than    the default (which varies from system to system, but is usually either    /etc or /var/run. */
@@ -114,6 +230,26 @@ end_comment
 begin_comment
 comment|/* #define DHCPD_LOG_FACILITY LOG_DAEMON */
 end_comment
+
+begin_comment
+comment|/* Define this if you aren't debugging and you want to save memory    (potentially a _lot_ of memory) by allocating leases in chunks rather    than one at a time. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPACT_LEASES
+end_define
+
+begin_comment
+comment|/* Define this if you want to be able to save and playback server operational    traces. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRACING
+end_define
 
 end_unit
 
