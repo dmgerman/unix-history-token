@@ -595,28 +595,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VI_OLOCK
-value|0x0008
-end_define
-
-begin_comment
-comment|/* vnode is locked waiting for an object */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VI_OWANT
-value|0x0010
-end_define
-
-begin_comment
-comment|/* a thread is waiting for VOLOCK */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VI_MOUNT
 value|0x0020
 end_define
