@@ -5410,6 +5410,11 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|mixer_hwinit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|data
