@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fil.c,v 2.0.2.41.2.3 1997/11/12 10:44:22 darrenr Exp $"
+literal|"@(#)$Id: fil.c,v 2.0.2.41.2.9 1997/12/02 13:56:06 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,7 +451,7 @@ name|ip
 parameter_list|,
 name|qif
 parameter_list|,
-define|if)		send_reset(ip, if)
+define|if, m)		send_reset(ip, if)
 end_define
 
 begin_define
@@ -705,6 +705,12 @@ parameter_list|)
 value|fr_newauth((mb_t *)m, fi, ip)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -714,8 +720,30 @@ name|ip
 parameter_list|,
 name|qif
 parameter_list|,
-define|if)	send_reset((struct tcpiphdr *)ip)
+define|if)		send_reset((tcpiphdr_t *)ip,\ 							   ifp)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SEND_RESET
+parameter_list|(
+name|ip
+parameter_list|,
+name|qif
+parameter_list|,
+define|if)		send_reset((tcpiphdr_t *)ip)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3591,6 +3619,10 @@ decl_stmt|,
 name|changed
 decl_stmt|,
 name|apass
+decl_stmt|,
+name|error
+init|=
+name|EHOSTUNREACH
 decl_stmt|;
 if|#
 directive|if
@@ -4793,6 +4825,9 @@ argument_list|,
 name|M_COPYALL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+empty_stmt|;
 endif|#
 directive|endif
 endif|#
@@ -5012,6 +5047,19 @@ block|}
 endif|#
 directive|endif
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|pass
+operator|&
+name|FR_RETRST
+condition|)
+name|error
+operator|=
+name|ECONNRESET
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * If we didn't drop off the bottom of the list of rules (and thus 	 * the 'current' rule fr is not NULL), then we may have some extra 	 * instructions about what to do with a packet. 	 * Once we're finished return to our caller, freeing the packet if 	 * we are dropping it (* BSD ONLY *). 	 */
 if|#
@@ -5159,8 +5207,7 @@ operator|)
 condition|?
 literal|0
 else|:
-operator|-
-literal|1
+name|error
 return|;
 else|#
 directive|else
@@ -5261,8 +5308,7 @@ operator|)
 condition|?
 name|changed
 else|:
-operator|-
-literal|1
+name|error
 return|;
 endif|#
 directive|endif
@@ -5309,7 +5355,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * ipf_cksum  * addr should be 16bit aligned and len is in bytes.  */
+comment|/*  * ipf_cksum  * addr should be 16bit aligned and len is in bytes.  * length is in bytes  */
 end_comment
 
 begin_function
@@ -5422,6 +5468,8 @@ parameter_list|,
 name|ip
 parameter_list|,
 name|tcp
+parameter_list|,
+name|len
 parameter_list|)
 name|mb_t
 modifier|*
@@ -5434,6 +5482,9 @@ decl_stmt|;
 name|tcphdr_t
 modifier|*
 name|tcp
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 union|union
@@ -5456,9 +5507,6 @@ decl_stmt|;
 name|u_short
 modifier|*
 name|sp
-decl_stmt|;
-name|int
-name|len
 decl_stmt|;
 if|#
 directive|if
@@ -5513,20 +5561,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Add up IP Header portion 	 */
-name|len
-operator|=
-name|ip
-operator|->
-name|ip_len
-operator|-
-operator|(
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
-operator|)
-expr_stmt|;
 name|bytes
 operator|.
 name|c
@@ -5544,6 +5578,16 @@ literal|1
 index|]
 operator|=
 name|IPPROTO_TCP
+expr_stmt|;
+name|len
+operator|-=
+operator|(
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+operator|)
 expr_stmt|;
 name|sum
 operator|=
@@ -5938,7 +5982,7 @@ block|{
 if|#
 directive|if
 name|SOLARIS
-if|if
+while|while
 condition|(
 operator|(
 name|caddr_t
@@ -5984,7 +6028,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-if|if
+while|while
 condition|(
 operator|(
 operator|(
@@ -6044,6 +6088,50 @@ operator|<
 literal|2
 condition|)
 break|break;
+if|if
+condition|(
+operator|(
+name|u_long
+operator|)
+name|sp
+operator|&
+literal|1
+condition|)
+block|{
+name|bcopy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|sp
+operator|++
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|bytes
+operator|.
+name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bytes
+operator|.
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sum
+operator|+=
+name|bytes
+operator|.
+name|s
+expr_stmt|;
+block|}
+else|else
 name|sum
 operator|+=
 operator|*
@@ -6162,7 +6250,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_mbuf.c	8.2 (Berkeley) 1/4/94  * $Id: fil.c,v 2.0.2.41.2.3 1997/11/12 10:44:22 darrenr Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_mbuf.c	8.2 (Berkeley) 1/4/94  * $Id: fil.c,v 2.0.2.41.2.9 1997/12/02 13:56:06 darrenr Exp $  */
 end_comment
 
 begin_comment
@@ -7112,24 +7200,21 @@ name|frflush
 parameter_list|(
 name|unit
 parameter_list|,
-name|data
+name|result
 parameter_list|)
 name|int
 name|unit
 decl_stmt|;
-name|caddr_t
-name|data
+name|int
+modifier|*
+name|result
 decl_stmt|;
 block|{
 name|int
 name|flags
 init|=
 operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
+name|result
 decl_stmt|,
 name|flushed
 init|=
@@ -7315,11 +7400,7 @@ expr_stmt|;
 block|}
 block|}
 operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
+name|result
 operator|=
 name|flushed
 expr_stmt|;

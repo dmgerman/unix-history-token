@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.31.2.4 1997/11/12 10:48:43 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.31.2.8 1997/12/02 13:42:52 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -276,24 +276,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IPFILTER_LKM
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPFILTER_LKM
+name|__STDC__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IPL_PRFX
-value|ipl
-end_define
 
 begin_define
 define|#
@@ -302,7 +304,7 @@ name|IPL_EXTERN
 parameter_list|(
 name|ep
 parameter_list|)
-value|ipl##ep
+value|ipfilter##ep
 end_define
 
 begin_else
@@ -313,18 +315,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|IPL_PRFX
-value|ipfilter
-end_define
-
-begin_define
-define|#
-directive|define
 name|IPL_EXTERN
 parameter_list|(
 name|ep
 parameter_list|)
-value|ipfilter##ep
+value|ipfilter
+comment|/**/
+value|ep
 end_define
 
 begin_endif
@@ -337,12 +334,11 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|IPL_PRFX
-value|ipl
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_define
 define|#
@@ -353,6 +349,28 @@ name|ep
 parameter_list|)
 value|ipl##ep
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IPL_EXTERN
+parameter_list|(
+name|ep
+parameter_list|)
+value|ipl
+comment|/**/
+value|ep
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -641,6 +659,12 @@ operator|||
 name|defined
 argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__sgi
 argument_list|)
 end_if
 
@@ -4188,6 +4212,14 @@ end_endif
 begin_comment
 comment|/* linux */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|tcpiphdr
+name|tcpiphdr_t
+typedef|;
+end_typedef
 
 begin_if
 if|#

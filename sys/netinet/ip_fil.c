@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.0.2.44.2.2 1997/11/12 10:49:25 darrenr Exp $"
+literal|"@(#)$Id: ip_fil.c,v 2.0.2.44.2.5 1997/11/24 10:02:02 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1650,9 +1650,6 @@ name|frflush
 argument_list|(
 name|IPL_LOGIPF
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|i
 argument_list|)
@@ -2074,6 +2071,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|_BSDI_VERSION
+operator|>=
+literal|199701
+operator|)
 end_if
 
 begin_decl_stmt
@@ -2143,6 +2146,8 @@ decl_stmt|,
 name|unit
 init|=
 literal|0
+decl_stmt|,
+name|tmp
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2775,13 +2780,48 @@ operator|=
 name|EPERM
 expr_stmt|;
 else|else
+block|{
+name|IRCOPY
+argument_list|(
+name|data
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|frflush
 argument_list|(
 name|unit
 argument_list|,
-name|data
+operator|&
+name|tmp
 argument_list|)
 expr_stmt|;
+name|IWCOPY
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|tmp
+argument_list|,
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 ifdef|#
 directive|ifdef
@@ -4525,6 +4565,8 @@ name|int
 name|tlen
 init|=
 literal|0
+decl_stmt|,
+name|err
 decl_stmt|;
 name|ip_t
 modifier|*
@@ -4939,9 +4981,8 @@ name|ro
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|ip_output
 argument_list|(
 name|m
@@ -4977,9 +5018,8 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* 	 * extra 0 in case of multicast 	 */
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|ip_output
 argument_list|(
 name|m
@@ -5001,7 +5041,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|err
 return|;
 block|}
 end_function
