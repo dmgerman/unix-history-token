@@ -1,17 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfscanf.c	4.3	(Berkeley)	85/02/13"
+literal|"@(#)vfscanf.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* @(#)doscan.c	4.1 (Berkeley) 12/21/80 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
