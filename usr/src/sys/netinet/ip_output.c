@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.48	83/05/15	*/
+comment|/*	ip_output.c	1.49	83/05/27	*/
 end_comment
 
 begin_include
@@ -85,14 +85,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|int
-name|ipnorouteprint
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|ip_output
@@ -459,7 +451,16 @@ if|if
 condition|(
 name|in_lnaof
 argument_list|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 name|dst
+operator|)
+operator|->
+name|sin_addr
 argument_list|)
 operator|==
 name|INADDR_ANY
