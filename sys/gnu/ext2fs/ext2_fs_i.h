@@ -54,8 +54,9 @@ name|__u32
 name|i_dtime
 decl_stmt|;
 name|__u32
-name|i_version
+name|not_used_1
 decl_stmt|;
+comment|/* FIX: not used/ 2.2 placeholder */
 name|__u32
 name|i_block_group
 decl_stmt|;
@@ -71,6 +72,15 @@ decl_stmt|;
 name|__u32
 name|i_prealloc_count
 decl_stmt|;
+name|__u32
+name|i_high_size
+decl_stmt|;
+name|int
+name|i_new_inode
+range|:
+literal|1
+decl_stmt|;
+comment|/* Is a freshly allocated inode */
 block|}
 struct|;
 end_struct

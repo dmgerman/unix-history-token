@@ -9,12 +9,6 @@ directive|include
 file|<linux/fs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<linux/ext2_fs.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|int
