@@ -4414,6 +4414,11 @@ argument_list|,
 name|acked
 argument_list|)
 expr_stmt|;
+comment|/* 				 * pull snd_wl2 up to prevent seq wrap relative 				 * to th_ack. 				 */
+name|tp
+operator|->
+name|snd_wl2
+operator|=
 name|tp
 operator|->
 name|snd_una
@@ -4572,6 +4577,24 @@ operator|->
 name|rcv_nxt
 operator|+=
 name|tlen
+expr_stmt|;
+comment|/* 			 * Pull snd_wl1 up to prevent seq wrap relative to 			 * th_seq. 			 */
+name|tp
+operator|->
+name|snd_wl1
+operator|=
+name|th
+operator|->
+name|th_seq
+expr_stmt|;
+comment|/* 			 * Pull rcv_up up to prevent seq wrap relative to 			 * rcv_nxt. 			 */
+name|tp
+operator|->
+name|rcv_up
+operator|=
+name|tp
+operator|->
+name|rcv_nxt
 expr_stmt|;
 name|tcpstat
 operator|.
