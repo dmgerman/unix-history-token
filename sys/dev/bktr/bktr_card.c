@@ -4927,7 +4927,7 @@ literal|1
 expr_stmt|;
 name|checkMSP
 label|:
-comment|/* If this is a Hauppauge Bt878 card, we need to enable the 	 * MSP 34xx audio chip.  	 * If this is a Hauppauge Bt848 card, reset the MSP device. 	 * The MSP reset line is wired to GPIO pin 5. On Bt878 cards a pulldown 	 * resistor holds the device in reset until we set GPIO pin 5.          */
+comment|/* If this is a Hauppauge Bt878 card, we need to enable the 	 * MSP 34xx audio chip.  	 * If this is a Hauppauge Bt848 card, reset the MSP device. 	 * The MSP reset line is wired to GPIO pin 5. On Bt878 cards a pulldown 	 * resistor holds the device in reset until we set GPIO pin 5. 	 */
 comment|/* Optionally skip the MSP reset. This is handy if you initialise the 	 * MSP audio in another operating system (eg Windows) first and then 	 * do a soft reboot. 	 */
 ifndef|#
 directive|ifndef
