@@ -935,6 +935,17 @@ comment|/* 	 * Indirection support.  The type of bus_space_handle_t is 	 * defin
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|SYS_RES_MEMORY
+operator|||
+name|type
+operator|==
+name|SYS_RES_IOPORT
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -997,6 +1008,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
