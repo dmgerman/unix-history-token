@@ -695,7 +695,9 @@ name|KTR_RUNQ
 argument_list|,
 literal|"runq_add: p=%p pri=%d %d rqh=%p"
 argument_list|,
-name|p
+name|ke
+operator|->
+name|ke_proc
 argument_list|,
 name|kg
 operator|->
