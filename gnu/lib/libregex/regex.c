@@ -502,7 +502,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"collate.h"
+file|<locale.h>
 end_include
 
 begin_endif
@@ -7660,7 +7660,7 @@ directive|ifdef
 name|__FreeBSD__
 if|if
 condition|(
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|range_start
 argument_list|,
@@ -7708,7 +7708,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|range_start
 argument_list|,
@@ -7717,7 +7717,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|this_char
 argument_list|,
