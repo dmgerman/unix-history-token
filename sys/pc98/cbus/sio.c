@@ -32,11 +32,11 @@ comment|/*  * Serial driver, based on 386BSD-0.1 com driver.  * Mostly rewritten
 end_comment
 
 begin_comment
-comment|/*===============================================================  * 386BSD(98),FreeBSD-1.1x(98) com driver.  * -----  * modified for PC9801 by M.Ishii   *			Kyoto University Microcomputer Club (KMC)  * Chou "TEFUTEFU" Hirotomi  *			Kyoto Univ.  the faculty of medicine  *===============================================================  * FreeBSD-2.0.1(98) sio driver.  * -----  * modified for pc98 Internal i8251 and MICRO CORE MC16550II  *			T.Koike(hfc01340@niftyserve.or.jp)  * implement kernel device configuration  *			aizu@orient.center.nitech.ac.jp  *  * Notes.  * -----  *  PC98 localization based on 386BSD(98) com driver. Using its PC98 local  *  functions.  *  This driver is under debugging,has bugs.  *  * 1) config  *  options COM_MULTIPORT  #if using MC16550II  *  device sio0 at nec? port 0x30  tty irq 4             #internal  *  device sio1 at nec? port 0xd2  tty irq 5 flags 0x101 #mc1  *  device sio2 at nec? port 0x8d2 tty flags 0x101       #mc2  *                         # ~~~~~iobase        ~~multi port flag  *                         #                   ~  master device is sio1  * 2) device  *  cd /dev; MAKEDEV ttyd0 ttyd1 ..  * 3) /etc/rc.serial  *  57600bps is too fast for sio0(internal8251)  *  my ex.  *    #set default speed 9600  *    modem()  *       :  *      stty</dev/ttyid$i crtscts 9600  *       :                 #       ~~~~ default speed(can change after init.)  *    modem 0 1 2  * 4) COMCONSOLE  *  not changed.  * 5) PC9861K,PIO9032B,B98_01  *  not tested.  */
+comment|/*===============================================================  * 386BSD(98),FreeBSD-1.1x(98) com driver.  * -----  * modified for PC9801 by M.Ishii   *			Kyoto University Microcomputer Club (KMC)  * Chou "TEFUTEFU" Hirotomi  *			Kyoto Univ.  the faculty of medicine  *===============================================================  * FreeBSD-2.0.1(98) sio driver.  * -----  * modified for pc98 Internal i8251 and MICRO CORE MC16550II  *			T.Koike(hfc01340@niftyserve.or.jp)  * implement kernel device configuration  *			aizu@orient.center.nitech.ac.jp  *  * Notes.  * -----  *  PC98 localization based on 386BSD(98) com driver. Using its PC98 local  *  functions.  *  This driver is under debugging,has bugs.  */
 end_comment
 
 begin_comment
-comment|/*  * modified for AIWA B98-01  * by T.Hatanou<hatanou@yasuda.comm.waseda.ac.jp>  last update: 15 Sep.1995   *  * How to configure...  *   # options COM_MULTIPORT         # support for MICROCORE MC16550II  *      ... comment-out this line, which will conflict with B98_01.  *   options "B98_01"                # support for AIWA B98-01  *   device  sio1 at nec? port 0x00d1 tty irq ?  *   device  sio2 at nec? port 0x00d5 tty irq ?  *      ... you can leave these lines `irq ?', irq will be autodetected.  */
+comment|/*  * modified for AIWA B98-01  * by T.Hatanou<hatanou@yasuda.comm.waseda.ac.jp>  last update: 15 Sep.1995   */
 end_comment
 
 begin_comment
@@ -360,6 +360,10 @@ parameter_list|)
 value|((((unit)& ~0x1fU)<< (8 + 3)) \ 				 | ((unit)& 0x1f))
 end_define
 
+begin_comment
+comment|/*  * Meaning of flags:  *  * 0x00000001	shared IRQs  * 0x00000002	disable FIFO  * 0x00000008	recover sooner from lost output interrupts  * 0x00000010	device is potential system console  * 0x00000020	device is forced to become system console  * 0x00000040	device is reserved for low-level IO  * 0x00000080	use this port for remote kernel debugging  * 0x0000??00	minor number of master port  * 0x00010000	PPS timestamping on CTS instead of DCD  * 0x00080000	IIR_TXRDY bug  * 0x00400000	If no comconsole found then mark as a comconsole  * 0x1?000000	interface type  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -390,6 +394,12 @@ parameter_list|)
 value|(((flags)>> 8)& 0x0ff)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -399,6 +409,11 @@ name|flags
 parameter_list|)
 value|((flags)& 0x04)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -451,6 +466,12 @@ parameter_list|)
 value|((flags)& 0x80)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -460,6 +481,11 @@ name|flags
 parameter_list|)
 value|(((flags)& 0xff000000)>> 24)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -511,15 +537,11 @@ parameter_list|)
 value|((flags)& 0x02)
 end_define
 
-begin_define
-define|#
-directive|define
-name|COM_NOPROBE
-parameter_list|(
-name|flags
-parameter_list|)
-value|((flags)& 0x40000)
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_define
 define|#
@@ -531,6 +553,11 @@ parameter_list|)
 value|((flags)& 0x100000)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -540,6 +567,12 @@ name|flags
 parameter_list|)
 value|((flags)& 0x10000)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
 
 begin_define
 define|#
@@ -560,6 +593,11 @@ name|flags
 parameter_list|)
 value|((flags)& 0x200000)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
