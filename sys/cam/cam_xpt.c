@@ -1506,6 +1506,29 @@ literal|255
 block|}
 block|,
 block|{
+comment|/* Veritas Storage Appliance */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"VERITAS"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_HILUNS
+block|,
+comment|/*mintags*/
+literal|2
+block|,
+comment|/*maxtags*/
+literal|1024
+block|}
+block|,
+block|{
 comment|/* 		 * Would respond to all LUNs.  Device type and removable 		 * flag are jumper-selectable. 		 */
 block|{
 name|T_ANY
