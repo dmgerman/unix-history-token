@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,31 +54,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/quota.h>
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufsmount.h>
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs.h>
+file|<ufs/lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs_extern.h>
+file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_comment
@@ -111,7 +111,8 @@ name|bnp
 decl_stmt|;
 block|{
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
