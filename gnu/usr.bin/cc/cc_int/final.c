@@ -3799,6 +3799,9 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|NO_PROFILE_DATA
 name|int
 name|align
 init|=
@@ -3809,6 +3812,9 @@ argument_list|,
 name|POINTER_SIZE
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* not NO_PROFILE_DATA */
 name|int
 name|sval
 init|=
@@ -3819,6 +3825,9 @@ name|cxt
 init|=
 name|current_function_needs_context
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PROFILE_DATA
 name|data_section
 argument_list|()
 expr_stmt|;
@@ -3854,6 +3863,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not NO_PROFILE_DATA */
 name|text_section
 argument_list|()
 expr_stmt|;

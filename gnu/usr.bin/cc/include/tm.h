@@ -4,21 +4,6 @@ comment|/* Definitions of target machine for GNU compiler for Intel 80386    run
 end_comment
 
 begin_comment
-comment|/* This goes away when the math-emulator is fixed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_CPU_DEFAULT
-value|0400
-end_define
-
-begin_comment
-comment|/* TARGET_NO_FANCY_MATH_387 */
-end_comment
-
-begin_comment
 comment|/* This is tested by i386gas.h.  */
 end_comment
 
@@ -64,6 +49,13 @@ name|INCLUDE_DEFAULTS
 value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
 end_define
 
+begin_define
+define|#
+directive|define
+name|ASM_SPEC
+value|" %| %{fpic:-k} %{fPIC:-k}"
+end_define
+
 begin_comment
 comment|/* Like the default, except no -lg.  */
 end_comment
@@ -74,6 +66,34 @@ directive|define
 name|LIB_SPEC
 value|"%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
 end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+define|\
+value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z}"
+end_define
+
+begin_comment
+comment|/* This goes away when the math emulator is fixed.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_DEFAULT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_DEFAULT
+value|(MASK_NO_FANCY_MATH_387 | 0301)
+end_define
+
+begin_escape
+end_escape
 
 begin_undef
 undef|#
@@ -111,14 +131,14 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"short unsigned int"
+value|"int"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WCHAR_UNSIGNED
-value|1
+value|0
 end_define
 
 begin_undef
@@ -131,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|16
+value|BITS_PER_WORD
 end_define
 
 begin_define
@@ -170,7 +190,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%eax\n",		\ 	     LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%eax\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
 end_define
 
 begin_if
@@ -445,21 +465,6 @@ name|DECL
 parameter_list|)
 define|\
 value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "\t%s\t ", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|" %| %{fpic:-k} %{fPIC:-k}"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
 end_define
 
 begin_comment
