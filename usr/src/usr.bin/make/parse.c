@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.16 (Berkeley) %G%"
+literal|"@(#)parse.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6175,7 +6175,7 @@ condition|)
 block|{
 name|Punt
 argument_list|(
-literal|"I don't know what to DO!\n"
+literal|"make: no target to make.\n"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
