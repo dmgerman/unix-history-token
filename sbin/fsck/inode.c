@@ -74,18 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -2606,11 +2594,6 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
 name|printf
 argument_list|(
 literal|" I=%lu "
