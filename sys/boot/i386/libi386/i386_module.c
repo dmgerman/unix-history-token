@@ -54,23 +54,6 @@ name|rv
 decl_stmt|;
 comment|/* XXX use PnP to locate stuff here */
 comment|/* autoload ACPI support */
-if|if
-condition|(
-name|file_findfile
-argument_list|(
-name|NULL
-argument_list|,
-literal|"elf64 kernel"
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* ACPI is mandatory */
 comment|/* XXX should be in 4th keyed off acpi_load */
 name|disabled
 operator|=
