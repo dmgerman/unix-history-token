@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|__GLIBCPP__
-value|20021119
+value|20030205
 end_define
 
 begin_comment
@@ -345,17 +345,6 @@ value|__GXX_WEAK__
 end_define
 
 begin_comment
-comment|// Define if gthr-default.h exists (meaning that threading support is enabled).
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_GLIBCPP_HAVE_GTHR_DEFAULT
-value|1
-end_define
-
-begin_comment
 comment|// Include I/O support for 'long long' and 'unsigned long long'.
 end_comment
 
@@ -465,6 +454,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// Define if gthr-default.h exists (meaning that threading support is enabled).
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_GTHR_DEFAULT
+value|1
+end_define
 
 begin_comment
 comment|// Define if mbstate_t exists in wchar.h.
@@ -676,9 +676,12 @@ begin_comment
 comment|/* Define if you have the __signbit function.  */
 end_comment
 
-begin_comment
-comment|/* #undef _GLIBCPP_HAVE___SIGNBIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE___SIGNBIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the __signbitf function.  */
@@ -1681,6 +1684,17 @@ end_comment
 begin_comment
 comment|/* #undef _GLIBCPP_HAVE_ICONV_OPEN */
 end_comment
+
+begin_comment
+comment|/* Define if you have the isatty function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_HAVE_ISATTY
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the isinf function.  */
@@ -2739,7 +2753,7 @@ begin_define
 define|#
 directive|define
 name|_GLIBCPP_VERSION
-value|"3.2.1"
+value|"3.2.2"
 end_define
 
 begin_comment
