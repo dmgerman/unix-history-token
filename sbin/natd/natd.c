@@ -406,9 +406,6 @@ specifier|const
 name|char
 modifier|*
 name|parms
-parameter_list|,
-name|int
-name|cmdLine
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -992,8 +989,6 @@ argument_list|(
 literal|"port"
 argument_list|,
 name|DEFAULT_SERVICE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/*  * Check if ignored packets should be dropped.  */
@@ -1960,8 +1955,6 @@ name|parmBuf
 else|:
 name|NULL
 operator|)
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4007,9 +4000,6 @@ specifier|const
 name|char
 modifier|*
 name|parms
-parameter_list|,
-name|int
-name|cmdLine
 parameter_list|)
 block|{
 name|int
@@ -4826,8 +4816,6 @@ condition|?
 name|ptr
 else|:
 name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
