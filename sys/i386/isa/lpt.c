@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by   *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.5 1993/10/16 13:46:10 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by   *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	$Id: lpt.c,v 1.6 1993/11/25 01:31:41 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -154,14 +154,6 @@ name|lprintf
 value|if (lptflag) printf
 end_define
 
-begin_decl_stmt
-name|int
-name|lptflag
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -232,7 +224,7 @@ name|LPTUNIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(((s)>>6)&0x3)
+value|((s)&0x03)
 end_define
 
 begin_define
@@ -242,7 +234,7 @@ name|LPTFLAGS
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)&0x3f)
+value|((s)&0xfc)
 end_define
 
 begin_struct
@@ -259,38 +251,38 @@ comment|/* default case: negative prime, negative ack, handshake strobe, 	   pri
 name|u_char
 name|sc_control
 decl_stmt|;
-name|char
+name|u_char
 name|sc_flags
 decl_stmt|;
 define|#
 directive|define
 name|LP_POS_INIT
-value|0x01
+value|0x04
 comment|/* if we are a postive init signal */
 define|#
 directive|define
 name|LP_POS_ACK
-value|0x02
+value|0x08
 comment|/* if we are a positive going ack */
 define|#
 directive|define
 name|LP_NO_PRIME
-value|0x04
+value|0x10
 comment|/* don't prime the printer at all */
 define|#
 directive|define
 name|LP_PRIMEOPEN
-value|0x08
+value|0x20
 comment|/* prime on every open */
 define|#
 directive|define
 name|LP_AUTOLF
-value|0x10
+value|0x40
 comment|/* tell printer to do an automatic lf */
 define|#
 directive|define
 name|LP_BYPASS
-value|0x20
+value|0x80
 comment|/* bypass  printer ready checks */
 name|struct
 name|buf
@@ -1607,6 +1599,15 @@ name|pl
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_state
+operator|&
+name|OBUSY
+condition|)
+block|{
 name|lprintf
 argument_list|(
 literal|"W "
@@ -1637,6 +1638,7 @@ operator|(
 name|err
 operator|)
 return|;
+block|}
 block|}
 block|}
 return|return
@@ -1678,12 +1680,19 @@ operator|->
 name|sc_port
 decl_stmt|,
 name|sts
+decl_stmt|,
+name|lpc
 decl_stmt|;
-comment|/* is printer online and ready for output */
-if|if
-condition|(
-operator|(
-operator|(
+name|u_char
+name|ctrl
+init|=
+name|sc
+operator|->
+name|sc_control
+operator|&
+operator|~
+name|LPC_ENA
+decl_stmt|;
 name|sts
 operator|=
 name|inb
@@ -1692,7 +1701,47 @@ name|port
 operator|+
 name|lpt_status
 argument_list|)
-operator|)
+expr_stmt|;
+comment|/* disable interupts */
+name|outb
+argument_list|(
+name|port
+operator|+
+name|lpt_control
+argument_list|,
+name|ctrl
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_state
+operator||=
+name|OBUSY
+expr_stmt|;
+while|while
+condition|(
+name|sc
+operator|->
+name|sc_xfercnt
+operator|>
+literal|0
+condition|)
+block|{
+name|lpc
+operator|=
+literal|50
+expr_stmt|;
+comment|/* wait for printer ready for output */
+while|while
+condition|(
+operator|(
+operator|(
+name|inb
+argument_list|(
+name|port
+operator|+
+name|lpt_status
+argument_list|)
 operator|&
 operator|(
 name|LPS_SEL
@@ -1702,10 +1751,9 @@ operator||
 name|LPS_NBSY
 operator||
 name|LPS_NERR
-comment|/*|LPS_NACK*/
 operator|)
 operator|)
-operator|==
+operator|!=
 operator|(
 name|LPS_SEL
 operator||
@@ -1713,50 +1761,20 @@ name|LPS_NBSY
 operator||
 name|LPS_NERR
 operator|)
-condition|)
-block|{
-comment|/* is this a false interrupt ? */
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_state
-operator|&
-name|OBUSY
 operator|)
 operator|&&
-operator|(
-name|sts
-operator|&
-name|LPS_NACK
-operator|)
+operator|--
+name|lpc
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|lpc
 operator|==
 literal|0
 condition|)
-return|return;
-name|sc
-operator|->
-name|sc_state
-operator||=
-name|OBUSY
-expr_stmt|;
-name|sc
-operator|->
-name|sc_state
-operator|&=
-operator|~
-name|ERROR
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_xfercnt
-condition|)
-block|{
+break|break;
 comment|/* send char */
-comment|/*lprintf("%x ", *sc->sc_cp); */
 name|outb
 argument_list|(
 name|port
@@ -1781,23 +1799,18 @@ name|port
 operator|+
 name|lpt_control
 argument_list|,
-name|sc
-operator|->
-name|sc_control
+name|ctrl
 operator||
 name|LPC_STB
 argument_list|)
 expr_stmt|;
-comment|/* DELAY(X) */
 name|outb
 argument_list|(
 name|port
 operator|+
 name|lpt_control
 argument_list|,
-name|sc
-operator|->
-name|sc_control
+name|ctrl
 argument_list|)
 expr_stmt|;
 block|}
@@ -1807,10 +1820,10 @@ condition|(
 name|sc
 operator|->
 name|sc_xfercnt
-operator|>
+operator|==
 literal|0
 condition|)
-return|return;
+block|{
 comment|/* none, wake up the top half to get more */
 name|sc
 operator|->
@@ -1827,25 +1840,17 @@ operator|)
 name|sc
 argument_list|)
 expr_stmt|;
-name|lprintf
-argument_list|(
-literal|"w "
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
-else|else
+comment|/* reenable interupts */
+name|outb
+argument_list|(
+name|port
+operator|+
+name|lpt_control
+argument_list|,
 name|sc
 operator|->
-name|sc_state
-operator||=
-name|ERROR
-expr_stmt|;
-name|lprintf
-argument_list|(
-literal|"sts %x "
-argument_list|,
-name|sts
+name|sc_control
 argument_list|)
 expr_stmt|;
 block|}
