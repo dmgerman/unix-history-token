@@ -3597,6 +3597,13 @@ name|DC_64BIT_HASH
 value|0x00002000
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_TULIP_LEDS
+value|0x00004000
+end_define
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
