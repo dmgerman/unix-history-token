@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.9	83/03/07	*/
+comment|/*	lpr.c	4.10	83/03/09	*/
 end_comment
 
 begin_comment
@@ -996,6 +996,13 @@ argument_list|()
 operator|)
 operator|==
 name|NULL
+operator|||
+name|strlen
+argument_list|(
+name|person
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
