@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)who.c	4.4 (Berkeley) %G%"
+literal|"@(#)who.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * who  */
@@ -49,6 +60,13 @@ define|#
 directive|define
 name|LMAX
 value|sizeof(utmp.ut_line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HMAX
+value|sizeof(utmp.ut_host)
 end_define
 
 begin_decl_stmt
@@ -408,11 +426,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%.12s\n"
+literal|"%.12s"
 argument_list|,
 name|cbuf
 operator|+
 literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|utmp
+operator|.
+name|ut_host
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"\t(%.*s)"
+argument_list|,
+name|HMAX
+argument_list|,
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
