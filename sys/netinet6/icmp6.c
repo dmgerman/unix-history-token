@@ -1809,15 +1809,6 @@ argument_list|,
 name|ifs6_in_pkttoobig
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|badcode
-goto|;
 comment|/* validation is made in icmp6_mtudisc_update */
 name|code
 operator|=
