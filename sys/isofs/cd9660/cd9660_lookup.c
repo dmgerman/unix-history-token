@@ -1105,12 +1105,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|isonum_711
-argument_list|(
-name|ep
-operator|->
-name|flags
-argument_list|)
+name|isoflags
 operator|&
 literal|2
 condition|)
