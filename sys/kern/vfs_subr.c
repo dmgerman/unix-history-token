@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sleepqueue.h>
 end_include
 
@@ -7724,6 +7730,13 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+if|if
+condition|(
+name|howto
+operator|&
+name|RB_NOSYNC
+condition|)
+return|return;
 name|td
 operator|=
 name|FIRST_THREAD_IN_PROC
