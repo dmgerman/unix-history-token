@@ -426,7 +426,7 @@ modifier|*
 name|devstat_new_entry
 parameter_list|(
 specifier|const
-name|char
+name|void
 modifier|*
 name|dev_name
 parameter_list|,

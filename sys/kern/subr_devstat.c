@@ -136,7 +136,7 @@ modifier|*
 name|ds
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 name|dev_name
 parameter_list|,
@@ -169,7 +169,7 @@ modifier|*
 name|devstat_new_entry
 parameter_list|(
 specifier|const
-name|char
+name|void
 modifier|*
 name|dev_name
 parameter_list|,
@@ -239,7 +239,7 @@ modifier|*
 name|ds
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 name|dev_name
 parameter_list|,
@@ -428,7 +428,7 @@ name|printf
 argument_list|(
 literal|"devstat_add_entry: HELP! "
 literal|"sorting problem detected "
-literal|"for %s%d\n"
+literal|"for name %p unit %d\n"
 argument_list|,
 name|dev_name
 argument_list|,
