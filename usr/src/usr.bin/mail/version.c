@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|SccsID
 init|=
-literal|"@(#)UCB Mail Version 2.8 (%G%)"
+literal|"@(#)UCB Mail Version 2.9 (%G%)"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,7 +18,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"2.8 %G%"
+literal|"2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
