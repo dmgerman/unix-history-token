@@ -3901,6 +3901,10 @@ name|th
 operator|->
 name|th_seq
 expr_stmt|;
+if|if
+condition|(
+name|tcp_syncookies
+condition|)
 name|sc
 operator|->
 name|sc_iss
@@ -3909,6 +3913,14 @@ name|syncookie_generate
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_iss
+operator|=
+name|arc4random
+argument_list|()
 expr_stmt|;
 comment|/* Initial receive window: clip sbspace to [0 .. TCP_MAXWIN] */
 name|win
