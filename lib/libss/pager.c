@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Pager: Routines to create a "more" running out of a particular file  * descriptor.  *  * Copyright 1987, 1988 by MIT Student Information Processing Board  *  * For copyright information, see copyright.h.  */
 end_comment
 
@@ -13,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"copyright.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -65,13 +75,6 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * this needs a *lot* of work....  *  * run in same process  * handle SIGINT sensibly  * allow finer control -- put-page-break-here  */
