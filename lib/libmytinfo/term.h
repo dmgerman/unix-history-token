@@ -4170,7 +4170,7 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|char
+name|int
 argument_list|)
 operator|)
 argument_list|)

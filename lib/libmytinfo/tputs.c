@@ -119,7 +119,7 @@ name|PUTCHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|(outc == (int (*)(char)) 0 ? (putchar(c)):(*outc)(c))
+value|(outc == (int (*)(int)) NULL ? (putchar(c)):(*outc)(c))
 end_define
 
 begin_else
@@ -134,7 +134,7 @@ name|PUTCHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|(outc == (int (*)()) 0 ? (putchar(c)):(*outc)(c))
+value|(outc == (int (*)()) NULL ? (putchar(c)):(*outc)(c))
 end_define
 
 begin_endif
@@ -152,7 +152,7 @@ name|count
 argument_list|,
 name|outc
 argument_list|)
-decl|register
+decl|register const
 name|char
 modifier|*
 name|sp
@@ -179,7 +179,7 @@ modifier|*
 name|outc
 function_decl|)
 parameter_list|(
-name|char
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -967,10 +967,10 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
-name|char
+name|int
 argument_list|)
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -991,7 +991,7 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|)
 return|;
