@@ -665,7 +665,7 @@ name|a
 argument_list|,
 literal|0
 argument_list|,
-literal|"Can't add archive to itself."
+literal|"Can't add archive to itself"
 argument_list|)
 expr_stmt|;
 return|return
