@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	5.4 (Berkeley) %G%"
+literal|"@(#)compat.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,12 +369,6 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|noWarnings
-condition|)
-block|{
 name|Error
 argument_list|(
 literal|"%s expands to empty string"
@@ -382,7 +376,6 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.9 (Berkeley) %G%"
+literal|"@(#)parse.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,15 +732,6 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|PARSE_WARNING
-operator|&&
-name|noWarnings
-condition|)
-return|return;
 operator|(
 name|void
 operator|)
@@ -768,7 +759,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: "
+literal|"warning: "
 argument_list|)
 expr_stmt|;
 name|va_start
