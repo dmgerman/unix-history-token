@@ -126,23 +126,20 @@ begin_comment
 comment|/* end address */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|inline
 name|void
 name|print
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|PR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

@@ -109,30 +109,24 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|doalarm
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * leave [[+]hhmm]  *  * Reminds you when you have to leave.  * Leave prompts for input and goes away if you hit return.  * It nags you like a mother hen.  */

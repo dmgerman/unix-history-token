@@ -100,24 +100,21 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_char
 modifier|*
 name|remmap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|off_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
