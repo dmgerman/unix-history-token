@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_out.c	VT220 Terminal Emulator  *	---------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:43:40 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_out.c	VT220 Terminal Emulator  *	---------------------------------------  *  *	Last Edit-Date: [Tue Jun  5 17:27:48 2001]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -7433,7 +7433,19 @@ operator||
 operator|(
 name|current_video_screen
 operator|+
+operator|(
+name|current_video_screen
+operator|<
+literal|10
+condition|?
 literal|'0'
+else|:
+operator|(
+literal|'a'
+operator|-
+literal|10
+operator|)
+operator|)
 operator|)
 expr_stmt|;
 operator|*
