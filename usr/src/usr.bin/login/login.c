@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.71 (Berkeley) %G%"
+literal|"@(#)login.c	5.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2071,6 +2071,20 @@ argument_list|,
 name|term
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setenv
+argument_list|(
+literal|"LOGNAME"
+argument_list|,
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
