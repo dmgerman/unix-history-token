@@ -47,6 +47,10 @@ literal|"_isa_devtab_bio"
 block|}
 block|,
 block|{
+literal|"_isa_devtab_cam"
+block|}
+block|,
+block|{
 literal|"_isa_devtab_tty"
 block|}
 block|,
