@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.11 (Berkeley) %G%"
+literal|"@(#)file.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -710,11 +710,13 @@ name|printf
 argument_list|(
 literal|"%s special (%d/%d)\n"
 argument_list|,
+operator|(
 name|mbuf
 operator|.
 name|st_mode
 operator|&
 name|S_IFMT
+operator|)
 operator|==
 name|S_IFCHR
 condition|?
