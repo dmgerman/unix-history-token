@@ -1810,13 +1810,9 @@ literal|4
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
+name|warnx
 argument_list|(
-literal|"%s fails original MD5 checksum - %s\n"
+literal|"`%s' fails original MD5 checksum - %s"
 argument_list|,
 name|tmp
 argument_list|,
