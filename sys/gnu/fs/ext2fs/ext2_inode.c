@@ -1146,9 +1146,7 @@ name|IN_CHANGE
 operator||
 name|IN_UPDATE
 expr_stmt|;
-if|if
-condition|(
-name|error
+name|allerror
 operator|=
 name|UFS_UPDATE
 argument_list|(
@@ -1162,10 +1160,6 @@ name|tv
 argument_list|,
 name|MNT_WAIT
 argument_list|)
-condition|)
-name|allerror
-operator|=
-name|error
 expr_stmt|;
 comment|/* 	 * Having written the new inode to disk, save its new configuration 	 * and put back the old block pointers long enough to process them. 	 * Note that we save the new block configuration so we can check it 	 * when we are done. 	 */
 name|bcopy
