@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997 John D. Polstra.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JOHN D. POLSTRA AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JOHN D. POLSTRA OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (C) 1997 John D. Polstra.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JOHN D. POLSTRA AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JOHN D. POLSTRA OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lockf.c,v 1.1.1.1 1997/01/08 20:12:59 jdp Exp $  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -256,7 +262,7 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"invalid timeout \"%s\""
 argument_list|,
@@ -408,12 +414,12 @@ name|silent
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-literal|1
+name|EX_TEMPFAIL
 argument_list|,
 literal|"%s: already locked"
 argument_list|,
@@ -434,7 +440,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"atexit failed"
 argument_list|)
@@ -453,7 +459,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"cannot fork"
 argument_list|)
@@ -534,7 +540,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"waitpid failed"
 argument_list|)
@@ -614,7 +620,7 @@ literal|1
 return|;
 name|err
 argument_list|(
-literal|1
+name|EX_CANTCREAT
 argument_list|,
 literal|"cannot open %s"
 argument_list|,
@@ -640,26 +646,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
 name|unlink
 argument_list|(
-name|lockname
-argument_list|)
-operator|==
-operator|-
-literal|1
-operator|&&
-name|errno
-operator|!=
-name|ENOENT
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"cannot unlink %s"
-argument_list|,
 name|lockname
 argument_list|)
 expr_stmt|;
@@ -704,7 +692,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"kill failed"
 argument_list|)
@@ -742,7 +730,7 @@ parameter_list|)
 block|{
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"usage: lockf [-s] [-t seconds] file command [arguments]"
 argument_list|)
@@ -800,7 +788,7 @@ condition|)
 return|return;
 name|err
 argument_list|(
-literal|1
+name|EX_CANTCREAT
 argument_list|,
 literal|"cannot open %s"
 argument_list|,
