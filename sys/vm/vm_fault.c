@@ -2915,8 +2915,6 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|pmap
 operator|=
 name|vm_map_pmap
@@ -3100,6 +3098,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Inform the physical mapping system that the range of addresses may 	 * fault, so that page tables and such may be unwired themselves. 	 */
 name|pmap_pageable
 argument_list|(
@@ -3110,12 +3114,6 @@ argument_list|,
 name|end
 argument_list|,
 name|TRUE
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
