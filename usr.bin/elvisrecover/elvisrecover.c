@@ -29,6 +29,38 @@ directive|include
 file|"vi.h"
 end_include
 
+begin_decl_stmt
+name|void
+name|recover
+name|P_
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+decl|main
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|recover
@@ -532,6 +564,7 @@ block|}
 end_function
 
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -569,7 +602,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
