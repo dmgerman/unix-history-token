@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)timedc.h	1.2	(Berkeley)	%G%	*/
+comment|/*	@(#)timedc.h	1.3	(Berkeley)	%G%	*/
 end_comment
 
 begin_include
@@ -80,14 +80,14 @@ begin_define
 define|#
 directive|define
 name|MSGS
-value|4
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|TRIALS
-value|8
+value|5
 end_define
 
 begin_define
