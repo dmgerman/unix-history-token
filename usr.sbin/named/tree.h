@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tree.h - declare structures used by tree library  *  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 27jun86 [broken out of tree.c]  *  * $Id: tree.h,v 1.1 1994/04/09 04:05:46 vixie Exp $  */
+comment|/* tree.h - declare structures used by tree library  *  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 27jun86 [broken out of tree.c]  *  * $Id: tree.h,v 8.1 1994/12/15 06:24:14 vixie Exp $  */
 end_comment
 
 begin_ifndef
