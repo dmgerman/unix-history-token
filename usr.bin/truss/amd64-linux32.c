@@ -120,12 +120,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"syscall.h"
 end_include
 
@@ -183,7 +177,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* See the comment in i386-fbsd.c about this structure. */
+comment|/*  * This is what this particular file uses to keep track of a system call.  * It is probably not quite sufficient -- I can probably use the same  * structure for the various syscall personalities, and I also probably  * need to nest system calls (for signal handlers).  *  * 'struct syscall' describes the system call; it may be NULL, however,  * if we don't know about this particular system call yet.  */
 end_comment
 
 begin_struct
@@ -221,20 +215,24 @@ name|s_args
 decl_stmt|;
 comment|/* the printable arguments */
 block|}
-name|lsc
+name|fsc
 struct|;
 end_struct
+
+begin_comment
+comment|/* Clear up and free parts of the fsc structure. */
+end_comment
 
 begin_function
 specifier|static
 name|__inline
 name|void
-name|clear_lsc
+name|clear_fsc
 parameter_list|()
 block|{
 if|if
 condition|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 condition|)
@@ -250,7 +248,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|lsc
+name|fsc
 operator|.
 name|nargs
 condition|;
@@ -259,7 +257,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -268,7 +266,7 @@ index|]
 condition|)
 name|free
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -278,7 +276,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 argument_list|)
@@ -287,18 +285,22 @@ block|}
 name|memset
 argument_list|(
 operator|&
-name|lsc
+name|fsc
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|lsc
+name|fsc
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Called when a process has entered a system call.  nargs is the  * number of words, not number of arguments (a necessary distinction  * in some cases).  Note that if the STOPEVENT() code in i386/i386/trap.c  * is ever changed these functions need to keep up.  */
+end_comment
 
 begin_function
 name|void
@@ -398,7 +400,7 @@ operator|->
 name|pid
 expr_stmt|;
 block|}
-name|clear_lsc
+name|clear_fsc
 argument_list|()
 expr_stmt|;
 name|lseek
@@ -431,13 +433,13 @@ name|regs
 operator|.
 name|r_eax
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|number
 operator|=
 name|syscall
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|name
 operator|=
@@ -461,7 +463,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|lsc
+name|fsc
 operator|.
 name|name
 condition|)
@@ -472,7 +474,7 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"-- UNKNOWN SYSCALL %d\n"
+literal|"-- UNKNOWN SYSCALL %d --\n"
 argument_list|,
 name|syscall
 argument_list|)
@@ -480,7 +482,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lsc
+name|fsc
 operator|.
 name|name
 operator|&&
@@ -497,7 +499,7 @@ operator|(
 operator|!
 name|strcmp
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
@@ -507,7 +509,7 @@ operator|||
 operator|!
 name|strcmp
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
@@ -532,7 +534,7 @@ literal|0
 condition|)
 return|return;
 comment|/*    * Linux passes syscall arguments in registers, not    * on the stack.  Fortunately, we've got access to the    * register set.  Note that we don't bother checking the    * number of arguments.  And what does linux do for syscalls    * that have more than five arguments?    */
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -543,7 +545,7 @@ name|regs
 operator|.
 name|r_ebx
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -554,7 +556,7 @@ name|regs
 operator|.
 name|r_ecx
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -565,7 +567,7 @@ name|regs
 operator|.
 name|r_edx
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -576,7 +578,7 @@ name|regs
 operator|.
 name|r_esi
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -591,7 +593,7 @@ name|sc
 operator|=
 name|get_syscall
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|)
@@ -601,7 +603,7 @@ condition|(
 name|sc
 condition|)
 block|{
-name|lsc
+name|fsc
 operator|.
 name|nargs
 operator|=
@@ -612,8 +614,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DEBUG
 name|fprintf
 argument_list|(
@@ -623,7 +625,7 @@ name|outfile
 argument_list|,
 literal|"unknown syscall %s -- setting args to %d\n"
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
@@ -632,14 +634,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|lsc
+name|fsc
 operator|.
 name|nargs
 operator|=
 name|nargs
 expr_stmt|;
 block|}
-name|lsc
+name|fsc
 operator|.
 name|s_args
 operator|=
@@ -648,7 +650,7 @@ argument_list|(
 operator|(
 literal|1
 operator|+
-name|lsc
+name|fsc
 operator|.
 name|nargs
 operator|)
@@ -662,13 +664,13 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 argument_list|,
 literal|0
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|nargs
 operator|*
@@ -679,21 +681,22 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|sc
 operator|=
 name|sc
 expr_stmt|;
+comment|/*    * At this point, we set up the system call arguments.    * We ignore any OUT ones, however -- those are arguments that    * are set by the system call, and so are probably meaningless    * now.  This doesn't currently support arguments that are    * passed in *and* out, however.    */
 if|if
 condition|(
-name|lsc
+name|fsc
 operator|.
 name|name
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DEBUG
 name|fprintf
 argument_list|(
@@ -701,7 +704,7 @@ name|stderr
 argument_list|,
 literal|"syscall %s("
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|)
@@ -716,7 +719,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|lsc
+name|fsc
 operator|.
 name|nargs
 condition|;
@@ -724,8 +727,8 @@ name|i
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DEBUG
 name|fprintf
 argument_list|(
@@ -735,7 +738,7 @@ literal|"0x%x%s"
 argument_list|,
 name|sc
 condition|?
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -749,7 +752,7 @@ operator|.
 name|offset
 index|]
 else|:
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -759,7 +762,7 @@ argument_list|,
 name|i
 operator|<
 operator|(
-name|lsc
+name|fsc
 operator|.
 name|nargs
 operator|-
@@ -792,7 +795,7 @@ name|OUT
 operator|)
 condition|)
 block|{
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -811,15 +814,15 @@ index|[
 name|i
 index|]
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|args
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|DEBUG
 name|fprintf
 argument_list|(
@@ -831,12 +834,27 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+if|#
+directive|if
+name|DEBUG
+name|fprintf
+argument_list|(
+name|trussinfo
+operator|->
+name|outfile
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*    * Some system calls should be printed out before they are done --    * execve() and exit(), for example, never return.  Possibly change    * this to work for any system call that doesn't have an OUT    * parameter?    */
 if|if
 condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
@@ -846,7 +864,7 @@ operator|||
 operator|!
 name|strcmp
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
@@ -860,7 +878,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
@@ -882,7 +900,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -892,7 +910,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -900,7 +918,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -924,7 +942,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -934,7 +952,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -942,7 +960,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -957,15 +975,15 @@ name|print_syscall
 argument_list|(
 name|trussinfo
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|nargs
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|s_args
 argument_list|)
@@ -1397,9 +1415,10 @@ operator|&
 name|PSL_C
 operator|)
 expr_stmt|;
+comment|/*    * This code, while simpler than the initial versions I used, could    * stand some significant cleaning.    */
 name|sc
 operator|=
-name|lsc
+name|fsc
 operator|.
 name|sc
 expr_stmt|;
@@ -1417,7 +1436,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|lsc
+name|fsc
 operator|.
 name|nargs
 condition|;
@@ -1425,7 +1444,7 @@ name|i
 operator|++
 control|)
 block|{
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -1439,7 +1458,7 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -1448,7 +1467,7 @@ index|]
 argument_list|,
 literal|"0x%lx"
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -1460,6 +1479,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/*      * Here, we only look for arguments that have OUT masked in --      * otherwise, they were handled in the syscall_entry function.      */
 for|for
 control|(
 name|i
@@ -1494,6 +1514,7 @@ operator|&
 name|OUT
 condition|)
 block|{
+comment|/* 	 * If an error occurred, than don't bothe getting the data; 	 * it may not be valid. 	 */
 if|if
 condition|(
 name|errorp
@@ -1512,7 +1533,7 @@ name|temp
 argument_list|,
 literal|"0x%lx"
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|args
 index|[
@@ -1544,13 +1565,13 @@ index|[
 name|i
 index|]
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|args
 argument_list|)
 expr_stmt|;
 block|}
-name|lsc
+name|fsc
 operator|.
 name|s_args
 index|[
@@ -1562,6 +1583,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/*    * It would probably be a good idea to merge the error handling,    * but that complicates things considerably.    */
 if|if
 condition|(
 name|errorp
@@ -1603,15 +1625,15 @@ name|print_syscall_ret
 argument_list|(
 name|trussinfo
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|name
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|nargs
 argument_list|,
-name|lsc
+name|fsc
 operator|.
 name|s_args
 argument_list|,
@@ -1624,7 +1646,7 @@ else|:
 name|retval
 argument_list|)
 expr_stmt|;
-name|clear_lsc
+name|clear_fsc
 argument_list|()
 expr_stmt|;
 return|return
