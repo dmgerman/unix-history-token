@@ -490,7 +490,13 @@ parameter_list|)
 value|mtx_unlock(&(object)->mtx)
 end_define
 
-begin_function_decl
+begin_comment
+comment|/*  *	The object must be locked or thread private.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
 name|void
 name|vm_object_set_flag
 parameter_list|(
@@ -500,8 +506,15 @@ parameter_list|,
 name|u_short
 name|bits
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|object
+operator|->
+name|flags
+operator||=
+name|bits
+expr_stmt|;
+block|}
+end_function
 
 begin_function_decl
 name|void

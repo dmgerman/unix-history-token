@@ -869,26 +869,6 @@ end_function
 
 begin_function
 name|void
-name|vm_object_set_flag
-parameter_list|(
-name|vm_object_t
-name|object
-parameter_list|,
-name|u_short
-name|bits
-parameter_list|)
-block|{
-name|object
-operator|->
-name|flags
-operator||=
-name|bits
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|vm_object_clear_flag
 parameter_list|(
 name|vm_object_t
