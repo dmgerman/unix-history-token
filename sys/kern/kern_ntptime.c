@@ -359,17 +359,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|long
-name|time_tick
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nanoseconds per tick (ns) */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|l_fp
 name|time_offset
 decl_stmt|;
@@ -2182,13 +2171,6 @@ name|void
 name|ntp_init
 parameter_list|()
 block|{
-comment|/* 	 * The following variable must be initialized any time the 	 * kernel variable hz is changed. 	 */
-name|time_tick
-operator|=
-name|NANOSECOND
-operator|/
-name|hz
-expr_stmt|;
 comment|/* 	 * The following variables are initialized only at startup. Only 	 * those structures not cleared by the compiler need to be 	 * initialized, and these only in the simulator. In the actual 	 * kernel, any nonzero values here will quickly evaporate. 	 */
 name|L_CLR
 argument_list|(
