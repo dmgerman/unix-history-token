@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.5 (Berkeley) %G%"
+literal|"@(#)getopt.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -173,11 +176,6 @@ index|]
 operator|)
 operator|!=
 literal|'-'
-operator|||
-operator|!
-operator|*
-operator|++
-name|place
 condition|)
 return|return
 operator|(
@@ -186,7 +184,13 @@ operator|)
 return|;
 if|if
 condition|(
+name|place
+index|[
+literal|1
+index|]
+operator|&&
 operator|*
+operator|++
 name|place
 operator|==
 literal|'-'
