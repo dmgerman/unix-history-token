@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.9 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2564,6 +2564,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fflush
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
