@@ -841,6 +841,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_OSF1_ENABLE
+value|"osf1_enable"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_NTPDATE_FLAGS
 value|"ntpdate_flags"
 end_define
@@ -2919,6 +2926,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_LINUX
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|int
@@ -2931,6 +2944,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|int
@@ -2942,6 +2960,29 @@ name|self
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|configOSF1
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
