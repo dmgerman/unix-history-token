@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftp.c	4.8 (Berkeley) %G%"
+literal|"@(#)tftp.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2028,6 +2028,13 @@ argument_list|,
 name|tp
 operator|->
 name|th_msg
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 break|break;
