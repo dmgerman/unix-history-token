@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.6		%G%"
+literal|"@(#)sendmail.h	4.7		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,17 @@ endif|#
 directive|endif
 endif|LOG
 end_endif
+
+begin_define
+define|#
+directive|define
+name|PSBUFSIZE
+value|(MAXNAME + MAXATOM)
+end_define
+
+begin_comment
+comment|/* size of prescan buffer */
+end_comment
 
 begin_comment
 comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 128 possible bits, or 12 8-bit bytes. */
