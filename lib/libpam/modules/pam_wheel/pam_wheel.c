@@ -86,7 +86,7 @@ name|PAM_OPT_GROUP
 block|,
 name|PAM_OPT_TRUST
 block|,
-name|PAM_OPT_USE_UID
+name|PAM_OPT_AUTH_AS_SELF
 block|}
 enum|;
 end_enum
@@ -118,9 +118,9 @@ name|PAM_OPT_TRUST
 block|}
 block|,
 block|{
-literal|"use_uid"
+literal|"auth_as_self"
 block|,
-name|PAM_OPT_USE_UID
+name|PAM_OPT_AUTH_AS_SELF
 block|}
 block|,
 block|{
@@ -325,7 +325,7 @@ argument_list|(
 operator|&
 name|options
 argument_list|,
-name|PAM_OPT_USE_UID
+name|PAM_OPT_AUTH_AS_SELF
 argument_list|,
 name|NULL
 argument_list|)
@@ -333,9 +333,9 @@ condition|)
 block|{
 name|temppwd
 operator|=
-name|getpwuid
+name|getpwnam
 argument_list|(
-name|getuid
+name|getlogin
 argument_list|()
 argument_list|)
 expr_stmt|;
