@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 3.1 %G%"
+literal|"@(#)cc.c 3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,11 +199,17 @@ name|sflag
 decl_stmt|,
 name|wflag
 decl_stmt|,
-name|cps8
+name|Rflag
 decl_stmt|,
 name|exflag
 decl_stmt|,
 name|proflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cps8
 decl_stmt|;
 end_decl_stmt
 
@@ -487,6 +493,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+continue|continue;
+case|case
+literal|'R'
+case|:
+name|Rflag
+operator|++
+expr_stmt|;
 continue|continue;
 case|case
 literal|'O'
@@ -1385,16 +1398,21 @@ argument_list|,
 literal|'o'
 argument_list|)
 expr_stmt|;
-name|av
-index|[
-literal|3
-index|]
-operator|=
-name|assource
-expr_stmt|;
 name|na
 operator|=
-literal|4
+literal|3
+expr_stmt|;
+if|if
+condition|(
+name|Rflag
+condition|)
+name|av
+index|[
+name|na
+operator|++
+index|]
+operator|=
+literal|"-R"
 expr_stmt|;
 if|if
 condition|(
@@ -1407,6 +1425,14 @@ operator|++
 index|]
 operator|=
 name|dflag
+expr_stmt|;
+name|av
+index|[
+name|na
+operator|++
+index|]
+operator|=
+name|assource
 expr_stmt|;
 name|av
 index|[
