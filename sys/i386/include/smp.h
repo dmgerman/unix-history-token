@@ -244,18 +244,6 @@ comment|/* functions in apic_ipl.s */
 end_comment
 
 begin_decl_stmt
-name|void
-name|apic_eoi
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|io_apic_read
 name|__P
