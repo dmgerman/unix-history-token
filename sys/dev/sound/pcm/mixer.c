@@ -460,7 +460,13 @@ index|[
 name|dev
 index|]
 operator|=
-name|v
+name|l
+operator||
+operator|(
+name|r
+operator|<<
+literal|8
+operator|)
 expr_stmt|;
 return|return
 literal|0
