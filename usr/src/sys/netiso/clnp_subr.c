@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_subr.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_subr.c	7.11 (Berkeley) %G% */
+comment|/*	@(#)clnp_subr.c	7.12 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -299,7 +299,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ndef
+name|notdef
 end_ifdef
 
 begin_comment
@@ -488,7 +488,7 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|ndef
+endif|notdef
 end_endif
 
 begin_comment
@@ -1232,6 +1232,10 @@ operator|<=
 name|SN_MTU
 argument_list|(
 name|ifp
+argument_list|,
+name|route
+operator|.
+name|ro_rt
 argument_list|)
 condition|)
 block|{
@@ -1323,7 +1327,7 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ndef
+name|notdef
 end_ifdef
 
 begin_comment
@@ -1430,7 +1434,7 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|ndef
+endif|notdef
 end_endif
 
 begin_comment
@@ -2212,6 +2216,107 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * FUNCTION:		clnp_badmtu  *  * PURPOSE:			print notice of route with mtu not initialized.  *  * RETURNS:			mtu of ifp.  *  * SIDE EFFECTS:	prints notice, slows down system.  */
+end_comment
+
+begin_macro
+name|clnp_badmtu
+argument_list|(
+argument|ifp
+argument_list|,
+argument|rt
+argument_list|,
+argument|line
+argument_list|,
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* outgoing interface */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|rtentry
+modifier|*
+name|rt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dst route */
+end_comment
+
+begin_decl_stmt
+name|int
+name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where the dirty deed occured */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where the dirty deed occured */
+end_comment
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"sending on route %x with no mtu, line %s of file %s\n"
+argument_list|,
+name|rt
+argument_list|,
+name|line
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARGO_DEBUG
+name|printf
+argument_list|(
+literal|"route dst is"
+argument_list|)
+expr_stmt|;
+name|dump_isoaddr
+argument_list|(
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|ifp
+operator|->
+name|if_mtu
+return|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * FUNCTION:		clnp_ypocb - backwards bcopy  *  * PURPOSE:			bcopy starting at end of src rather than beginning.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			No attempt has been made to make this efficient  */
 end_comment
 
@@ -2277,70 +2382,6 @@ operator|+
 name|len
 operator|)
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * FUNCTION:		clnp_hdrsize  *  * PURPOSE:			Return the size of a typical clnp hdr.  *  * RETURNS:			Size of hdr in bytes.  *  * SIDE EFFECTS:	  *  * NOTES:			Assumes segmenting subset. If addrlen is  *					zero, default to largest nsap address size.  */
-end_comment
-
-begin_macro
-name|clnp_hdrsize
-argument_list|(
-argument|addrlen
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|u_char
-name|addrlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* length of nsap address */
-end_comment
-
-begin_block
-block|{
-if|if
-condition|(
-name|addrlen
-operator|==
-literal|0
-condition|)
-name|addrlen
-operator|=
-literal|20
-expr_stmt|;
-name|addrlen
-operator|++
-expr_stmt|;
-comment|/* length of address byte */
-name|addrlen
-operator|*=
-literal|2
-expr_stmt|;
-comment|/* src and dst addresses */
-name|addrlen
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|clnp_fixed
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|clnp_segment
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|addrlen
-operator|)
-return|;
 block|}
 end_block
 
