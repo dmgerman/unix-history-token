@@ -549,26 +549,15 @@ comment|/* sum of all times, for doing average */
 end_comment
 
 begin_function_decl
-name|u_long
-name|inet_addr
+name|char
+modifier|*
+name|pr_addr
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|char
-modifier|*
-name|inet_ntoa
-argument_list|()
-decl_stmt|,
-modifier|*
-name|pr_addr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+name|void
 name|catcher
 argument_list|()
 decl_stmt|,
@@ -1791,12 +1780,10 @@ begin_comment
 comment|/*  * catcher --  *	This routine causes another PING to be transmitted, and then  * schedules another SIGALRM for 1 second from now.  *   * bug --  *	Our sense of time will slowly skew (i.e., packets will not be  * launched exactly at 1-second intervals).  This does not affect the  * quality of the delay and loss statistics.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|catcher
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|waittime
@@ -1884,7 +1871,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pinger --  * 	Compose and transmit an ICMP ECHO REQUEST packet.  The IP packet  * will be added on by the kernel.  The ID field is our UNIX process ID,  * and the sequence number is an ascending integer.  The first 8 bytes  * of the data portion are used to hold a UNIX "timeval" struct in VAX  * byte-order, to compute the round-trip time.  */
@@ -3395,12 +3382,10 @@ begin_comment
 comment|/*  * finish --  *	Print out statistics, and give up.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|finish
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -3556,7 +3541,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

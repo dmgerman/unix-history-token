@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.15 (Berkeley) %G%"
+literal|"@(#)umount.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,26 +52,10 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * umount  */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
 end_include
 
 begin_include
@@ -145,9 +129,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* NFS */
-end_comment
+begin_include
+include|#
+directive|include
+file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -155,24 +153,9 @@ directive|ifdef
 name|NFS
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|xdr_dir
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|index
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -188,10 +171,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* NFS */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -213,17 +192,13 @@ name|MNT_NOFORCE
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
 name|getmntname
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -690,11 +665,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 name|new
 operator|=
 operator|(
@@ -716,6 +686,10 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -748,6 +722,10 @@ name|cp
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -780,6 +758,10 @@ name|cp
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1744,11 +1726,6 @@ name|av
 decl_stmt|,
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|fslist

@@ -52,10 +52,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * Reboot  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -523,16 +519,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|dingdong
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* RRRIIINNNGGG RRRIIINNNGGG */
 block|}
-end_block
+end_function
 
 begin_macro
 name|setalarm

@@ -52,10 +52,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * savecore  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -3014,6 +3010,9 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|,
+modifier|*
+name|s
 decl_stmt|;
 end_decl_stmt
 
