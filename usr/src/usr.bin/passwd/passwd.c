@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	5.4 (Berkeley) %G%"
+literal|"@(#)passwd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +234,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"passwd: must kinit to change another's password\n"
+literal|"passwd: %s\n\t%s\n%s\n"
+argument_list|,
+literal|"to change another user's Kerberos password, do"
+argument_list|,
+literal|"\"kinit user; passwd; kdestroy\";"
+argument_list|,
+literal|"to change a user's local passwd, use \"passwd -l user\""
 argument_list|)
 expr_stmt|;
 name|exit
