@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mille.c	5.5 (Berkeley) %G%"
+literal|"@(#)mille.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,7 +598,9 @@ name|REALLYPROMPT
 argument_list|)
 condition|)
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -619,8 +621,16 @@ end_comment
 
 begin_macro
 name|die
-argument_list|()
+argument_list|(
+argument|code
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|code
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -663,7 +673,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|code
 argument_list|)
 expr_stmt|;
 block|}
