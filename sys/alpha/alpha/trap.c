@@ -2542,12 +2542,6 @@ block|}
 return|return;
 name|dopanic
 label|:
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|printtrap
 argument_list|(
 name|a0
@@ -2587,12 +2581,6 @@ directive|endif
 name|panic
 argument_list|(
 literal|"trap"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
