@@ -13378,7 +13378,7 @@ name|ciss_notify
 modifier|*
 name|cn
 parameter_list|)
-block|{      }
+block|{   }
 end_function
 
 begin_comment
