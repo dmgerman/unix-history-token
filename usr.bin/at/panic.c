@@ -174,13 +174,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: at [-V] [-q x] [-f file] [-m] time\n"
-literal|"       at [-V] -c job [job ...]\n"
-literal|"       at [-V] [-f file] -t [[CC]YY]MMDDhhmm[.SS]\n"
-literal|"       at [-V] -r job [job ...]\n"
-literal|"       atq [-V] [-q x] [-v]\n"
-literal|"       atrm [-V] job [job ...]\n"
-literal|"       batch [-V] [-f file] [-m]\n"
+literal|"usage: at [-q x] [-f file] [-m] time\n"
+literal|"       at -c job [job ...]\n"
+literal|"       at [-f file] -t [[CC]YY]MMDDhhmm[.SS]\n"
+literal|"       at -r job [job ...]\n"
+literal|"       atq [-q x] [-v]\n"
+literal|"       atrm job [job ...]\n"
+literal|"       batch [-f file] [-m]\n"
 argument_list|)
 expr_stmt|;
 name|exit

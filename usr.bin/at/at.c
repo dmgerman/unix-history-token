@@ -2948,14 +2948,9 @@ name|char
 modifier|*
 name|options
 init|=
-literal|"q:f:t:rmvldbVc"
+literal|"q:f:t:rmvldbc"
 decl_stmt|;
 comment|/* default options for at */
-name|int
-name|disp_version
-init|=
-literal|0
-decl_stmt|;
 name|time_t
 name|timer
 decl_stmt|;
@@ -3018,7 +3013,7 @@ name|ATQ
 expr_stmt|;
 name|options
 operator|=
-literal|"q:vV"
+literal|"q:v"
 expr_stmt|;
 block|}
 elseif|else
@@ -3040,7 +3035,7 @@ name|ATRM
 expr_stmt|;
 name|options
 operator|=
-literal|"V"
+literal|""
 expr_stmt|;
 block|}
 elseif|else
@@ -3062,7 +3057,7 @@ name|BATCH
 expr_stmt|;
 name|options
 operator|=
-literal|"f:q:mvV"
+literal|"f:q:mv"
 expr_stmt|;
 block|}
 comment|/* process whatever options we can process      */
@@ -3192,7 +3187,7 @@ name|ATRM
 expr_stmt|;
 name|options
 operator|=
-literal|"V"
+literal|""
 expr_stmt|;
 break|break;
 case|case
@@ -3233,7 +3228,7 @@ name|ATQ
 expr_stmt|;
 name|options
 operator|=
-literal|"q:vV"
+literal|"q:v"
 expr_stmt|;
 break|break;
 case|case
@@ -3254,15 +3249,7 @@ name|BATCH
 expr_stmt|;
 name|options
 operator|=
-literal|"f:q:mvV"
-expr_stmt|;
-break|break;
-case|case
-literal|'V'
-case|:
-name|disp_version
-operator|=
-literal|1
+literal|"f:q:mv"
 expr_stmt|;
 break|break;
 case|case
@@ -3284,21 +3271,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* end of options eating      */
-if|if
-condition|(
-name|disp_version
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s version "
-name|VERSION
-literal|"\n"
-argument_list|,
-name|namep
-argument_list|)
-expr_stmt|;
 comment|/* select our program      */
 if|if
 condition|(
