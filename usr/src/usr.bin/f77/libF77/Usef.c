@@ -1,18 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Usef.c	1.1	%G%	*/
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Usef.c	1.2	%G%  */
 end_comment
 
-begin_expr_stmt
-operator|*
-operator|/
+begin_comment
 comment|/*		returns '-f' if need to use -f to bypass C bug		*/
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
-operator|*
+modifier|*
 name|needs_f
 index|[]
-operator|=
+init|=
 block|{
 literal|"besj0_"
 block|,
@@ -74,8 +75,8 @@ literal|"random_"
 block|,
 literal|0
 block|, 	}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
