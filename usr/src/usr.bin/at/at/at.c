@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	4.11	(Berkeley)	%G%"
+literal|"@(#)at.c	4.12	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -536,9 +542,9 @@ comment|/* input file ("stdin" or "filename") */
 end_comment
 
 begin_function_decl
-name|FILE
+name|char
 modifier|*
-name|popen
+name|getwd
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -626,7 +632,7 @@ comment|/* a line from input file */
 name|char
 name|pwbuf
 index|[
-literal|100
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* the current working directory */
@@ -643,11 +649,6 @@ name|getname
 parameter_list|()
 function_decl|;
 comment|/* get the login name of a user */
-name|FILE
-modifier|*
-name|pwfil
-decl_stmt|;
-comment|/* "pwd" process (used to get the 					   current working directory */
 name|argv
 operator|++
 expr_stmt|;
@@ -1235,16 +1236,10 @@ expr_stmt|;
 comment|/* 	 * Get the current working directory so we know what directory to  	 * run the job from. 	 */
 if|if
 condition|(
-operator|(
-name|pwfil
-operator|=
-name|popen
+name|getwd
 argument_list|(
-literal|"pwd"
-argument_list|,
-literal|"r"
+name|pwbuf
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -1253,7 +1248,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"at: can't execute pwd\n"
+literal|"at: can't get working directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1262,15 +1257,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|fgets
-argument_list|(
-name|pwbuf
-argument_list|,
-literal|100
-argument_list|,
-name|pwfil
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|spoolfile
@@ -1278,11 +1264,6 @@ argument_list|,
 literal|"cd %s\n"
 argument_list|,
 name|pwbuf
-argument_list|)
-expr_stmt|;
-name|pclose
-argument_list|(
-name|pwfil
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the user's environment to the spoolfile. 	 */
