@@ -736,7 +736,7 @@ parameter_list|(
 name|_name_
 parameter_list|)
 define|\
-value|ESETUP(_name_);						\ 	ERSAVE()
+value|ESETUP(_name_);						\ 	ERSAVE();						\ 	br	pv, _name_##lgp;				\ _name_##lgp:;							\ 	LDGP(pv)
 end_define
 
 begin_define
