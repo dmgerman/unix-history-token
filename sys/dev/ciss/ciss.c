@@ -8366,13 +8366,13 @@ operator|->
 name|ciss_dev
 argument_list|)
 argument_list|,
-literal|1
-argument_list|,
 name|sc
 operator|->
 name|ciss_cfg
 operator|->
 name|max_outstanding_commands
+argument_list|,
+literal|1
 argument_list|,
 name|sc
 operator|->
