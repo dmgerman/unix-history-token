@@ -5438,11 +5438,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_LOCK
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
+comment|/* RADIX_NODE_HEAD_LOCK(rnh); */
 name|error
 operator|=
 name|rnh
@@ -5457,11 +5453,8 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
+comment|/* could sleep XXX */
+comment|/* RADIX_NODE_HEAD_UNLOCK(rnh); */
 block|}
 else|else
 name|error
@@ -5498,11 +5491,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RADIX_NODE_HEAD_LOCK
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
+comment|/* RADIX_NODE_HEAD_LOCK(rnh); */
 name|error
 operator|=
 name|rnh
@@ -5517,11 +5506,7 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
-name|RADIX_NODE_HEAD_UNLOCK
-argument_list|(
-name|rnh
-argument_list|)
-expr_stmt|;
+comment|/* RADIX_NODE_HEAD_UNLOCK(rnh); */
 if|if
 condition|(
 name|error
