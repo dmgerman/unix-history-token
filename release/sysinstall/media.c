@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.8 1995/10/09 11:14:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.9 1995/10/16 15:14:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -797,21 +797,6 @@ name|MenuMediaFTP
 argument_list|)
 condition|)
 return|return
-literal|0
-return|;
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-literal|"ftp"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp
-condition|)
-return|return
 name|RET_FAIL
 return|;
 if|if
@@ -820,26 +805,52 @@ operator|!
 name|strcmp
 argument_list|(
 name|cp
+operator|=
+name|variable_get
+argument_list|(
+literal|"ftp"
+argument_list|)
 argument_list|,
 literal|"other"
 argument_list|)
 condition|)
 block|{
-name|cp
-operator|=
-name|msgGetInput
+name|variable_set2
 argument_list|(
+literal|"ftp"
+argument_list|,
 literal|"ftp://"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|variable_get_value
+argument_list|(
+literal|"ftp"
 argument_list|,
 literal|"Please specify the URL of a FreeBSD distribution on a\n"
 literal|"remote ftp site.  This site must accept either anonymous\n"
 literal|"ftp or you should have set an ftp username and password\n"
-literal|"in the Options screen.\n"
+literal|"in the Options screen.\n\n"
 literal|"A URL looks like this:  ftp://<hostname>/<path>\n"
 literal|"Where<path> is relative to the anonymous ftp directory or the\n"
 literal|"home directory of the user being logged in as."
 argument_list|)
+operator|==
+name|RET_SUCCESS
+condition|)
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+literal|"ftp"
+argument_list|)
 expr_stmt|;
+else|else
+return|return
+name|RET_FAIL
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -857,15 +868,6 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
-else|else
-name|variable_set2
-argument_list|(
-literal|"ftp"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|ftpDevice
@@ -2138,10 +2140,6 @@ argument_list|)
 operator|==
 name|RET_SUCCESS
 condition|)
-block|{
-name|noecho
-argument_list|()
-expr_stmt|;
 name|i
 operator|=
 name|variable_get_value
@@ -2151,10 +2149,6 @@ argument_list|,
 literal|"Please enter the password for this user."
 argument_list|)
 expr_stmt|;
-name|echo
-argument_list|()
-expr_stmt|;
-block|}
 else|else
 name|i
 operator|=
@@ -2182,10 +2176,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|bsize
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.33 1995/10/16 07:31:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.34 1995/10/16 15:14:06 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -640,6 +640,22 @@ return|return
 name|FALSE
 return|;
 block|}
+comment|/* If it's labelled, assume it's also partitioned */
+if|if
+condition|(
+operator|!
+name|variable_get
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+condition|)
+name|variable_set2
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|,
+literal|"yes"
+argument_list|)
+expr_stmt|;
 comment|/* If we refuse to proceed, bail. */
 if|if
 condition|(
@@ -1355,11 +1371,11 @@ parameter_list|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\")\n"
-literal|"partitioning scheme for your hard disk.  If you simply wish to devote all\n"
-literal|"disk space to FreeBSD (overwritting anything else that might be on the disk(s)\n"
-literal|"selected), use the (A)ll command to select the default partitioning scheme and\n"
-literal|"then (Q)uit.  If you wish to allocate only free space to FreeBSD, move to a\n"
+literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
+literal|"scheme for your hard disk.  If you simply wish to devote all disk space\n"
+literal|"to FreeBSD (overwritting anything else that might be on the disk(s) selected)\n"
+literal|"then use the (A)ll command to select the default partitioning scheme followed\n"
+literal|"by a (Q)uit.  If you wish to allocate only free space to FreeBSD, move to a\n"
 literal|"partition marked \"unused\" and use the (C)reate command."
 argument_list|)
 expr_stmt|;
@@ -1380,7 +1396,7 @@ argument_list|(
 literal|"Next, you need to create BSD partitions inside of the fdisk partition(s)\n"
 literal|"just created.  If you have a reasonable amount of disk space (200MB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
-literal|"allocate space automatically.  If you have more specific needs, or don't\n"
+literal|"allocate space automatically.  If you have more specific needs or just don't\n"
 literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"
 literal|"manual layout."
 argument_list|)

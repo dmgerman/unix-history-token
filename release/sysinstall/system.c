@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.6 1995/10/16 10:33:46 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.7 1995/10/16 15:14:26 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -1356,7 +1356,7 @@ name|variable_get_value
 argument_list|(
 name|BROWSER_PACKAGE
 argument_list|,
-literal|"Please specify the name of the browser package"
+literal|"Please specify the name of the HTML browser package:"
 argument_list|)
 return|;
 block|}
@@ -1380,7 +1380,7 @@ name|variable_get_value
 argument_list|(
 name|BROWSER_BINARY
 argument_list|,
-literal|"Please specify the full pathname of the browser binary"
+literal|"Please specify a full pathname to the HTML browser binary:"
 argument_list|)
 return|;
 block|}
