@@ -1753,6 +1753,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|nmbcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|nmbufs
 decl_stmt|;
 end_decl_stmt

@@ -2202,6 +2202,14 @@ name|nmbclusters
 operator|*
 name|MCLBYTES
 operator|+
+name|nmbcnt
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|union
+name|mext_refcnt
+argument_list|)
+operator|+
 name|vm_kmem_size
 operator|)
 operator|/

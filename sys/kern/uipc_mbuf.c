@@ -560,12 +560,17 @@ parameter_list|)
 block|{
 name|vm_offset_t
 name|maxaddr
-decl_stmt|,
+decl_stmt|;
+name|vm_size_t
 name|mb_map_size
 decl_stmt|;
 comment|/* 	 * Setup the mb_map, allocate requested VM space. 	 */
 name|mb_map_size
 operator|=
+call|(
+name|vm_size_t
+call|)
+argument_list|(
 name|nmbufs
 operator|*
 name|MSIZE
@@ -581,10 +586,11 @@ argument_list|(
 expr|union
 name|mext_refcnt
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|mb_map_size
 operator|=
-name|roundup2
+name|rounddown
 argument_list|(
 name|mb_map_size
 argument_list|,
