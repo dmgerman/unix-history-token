@@ -4,11 +4,15 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.4 2000/03/25 04:04:24 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.5 2000/08/24 07:01:12 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.85 2000/03/22 21:39:57 mycroft Exp $  /*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Christos Zoulas.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/* $NetBSD: pcmciadevs,v 1.97 2000/07/26 07:24:15 onoe Exp $ */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Christos Zoulas.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -56,7 +60,7 @@ value|0x0057
 end_define
 
 begin_comment
-comment|/* NewMedia Corporation */
+comment|/* New Media Corporation */
 end_comment
 
 begin_define
@@ -67,7 +71,7 @@ value|0x0089
 end_define
 
 begin_comment
-comment|/* Intel Corporation */
+comment|/* Intel */
 end_comment
 
 begin_define
@@ -178,6 +182,17 @@ end_define
 
 begin_comment
 comment|/* Megahertz Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_OLICOM
+value|0x0121
+end_define
+
+begin_comment
+comment|/* Olicom */
 end_comment
 
 begin_define
@@ -304,12 +319,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_FARALLON
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Farallon Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_NOKIA
 value|0x023d
 end_define
 
 begin_comment
 comment|/* Nokia Communications */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_SAMSUNG
+value|0x0250
+end_define
+
+begin_comment
+comment|/* Samsung */
 end_comment
 
 begin_define
@@ -422,48 +459,69 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ADAPTEC_APA1460_1
+name|PCCARD_CIS_ADAPTEC_APA1460
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ADAPTEC_APA1460_1
+name|PCCARD_PRODUCT_ADAPTEC_APA1460
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ADAPTEC_APA1460_1
-value|"Adaptec APA-1460/A SCSI Host Adapter"
+name|PCCARD_STR_ADAPTEC_APA1460
+value|"Adaptec APA-1460 SlimSCSI"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ADAPTEC_APA1460_2
+name|PCCARD_CIS_ADAPTEC_APA1460A
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ADAPTEC_APA1460_2
+name|PCCARD_PRODUCT_ADAPTEC_APA1460A
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ADAPTEC_APA1460_2
-value|"Adaptec APA-1460/B SCSI Host Adapter"
+name|PCCARD_STR_ADAPTEC_APA1460A
+value|"Adaptec APA-1460A SlimSCSI"
 end_define
 
 begin_comment
 comment|/* 3COM Products */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_3COM_3CRWE737A
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_3COM_3CRWE737A
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_3COM_3CRWE737A
+value|"3Com AirConnect Wireless LAN"
+end_define
 
 begin_define
 define|#
@@ -631,6 +689,31 @@ define|#
 directive|define
 name|PCCARD_STR_3COM_3CCFEM556BI
 value|"3Com/Megahertz 3CCFEM556BI Ethernet/Modem"
+end_define
+
+begin_comment
+comment|/* Compaq Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_COMPAQ2_CPQ_10_100
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COMPAQ2_CPQ_10_100
+value|0x010a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COMPAQ2_CPQ_10_100
+value|"Compaq Netelligent 10/100 Ethernet"
 end_define
 
 begin_comment
@@ -893,7 +976,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_IBM_3270
-value|"3270 Emulation"
+value|"IBM 3270 Emulation"
 end_define
 
 begin_define
@@ -914,7 +997,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_IBM_INFOMOVER
-value|"National Semiconductor InfoMover"
+value|"IBM InfoMover"
 end_define
 
 begin_define
@@ -935,7 +1018,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_IBM_5250
-value|"5250 Emulation"
+value|"IBM 5250 Emulation"
 end_define
 
 begin_define
@@ -956,7 +1039,28 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_IBM_TROPIC
-value|"Token Ring 4/16"
+value|"IBM Token Ring 4/16"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IBM_PORTABLE_CDROM
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM
+value|0x002d
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IBM_PORTABLE_CDROM
+value|"IBM PCMCIA Portable CD-ROM Drive"
 end_define
 
 begin_define
@@ -998,28 +1102,7 @@ begin_define
 define|#
 directive|define
 name|PCCARD_STR_IBM_WIRELESS_LAN_ENTRY
-value|"Wireless LAN Entry"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_CIS_IBM_PORTABLE_CDROM
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM
-value|0x002d
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_STR_IBM_PORTABLE_CDROM
-value|"PCMCIA Portable CD-ROM Drive"
+value|"IBM Wireless LAN Entry"
 end_define
 
 begin_define
@@ -1041,6 +1124,31 @@ define|#
 directive|define
 name|PCCARD_STR_IBM_ETHERJET
 value|"IBM EtherJet Ethernet"
+end_define
+
+begin_comment
+comment|/* Intel Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_INTEL_EEPRO100
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_INTEL_EEPRO100
+value|0x010a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_INTEL_EEPRO100
+value|"Intel EtherExpress PRO/100"
 end_define
 
 begin_comment
@@ -1066,6 +1174,31 @@ define|#
 directive|define
 name|PCCARD_STR_IODATA_PCLATE
 value|"I-O DATA PCLA/TE"
+end_define
+
+begin_comment
+comment|/* Farallon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_FARALLON_SKYLINE
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_FARALLON_SKYLINE
+value|0x0a01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_FARALLON_SKYLINE
+value|"SkyLINE Wireless"
 end_define
 
 begin_comment
@@ -1341,6 +1474,31 @@ value|"Nokia C020 WLAN Card"
 end_define
 
 begin_comment
+comment|/* Olicom Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_OLICOM_TR
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_OLICOM_TR
+value|0x2132
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_OLICOM_TR
+value|"GoCard Token Ring 16/4"
+end_define
+
+begin_comment
 comment|/* Panasonic Products */
 end_comment
 
@@ -1363,6 +1521,27 @@ define|#
 directive|define
 name|PCCARD_STR_PANASONIC_KXLC002
 value|"Panasonic 4X CD-ROM Interface Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_PANASONIC_KXLC003
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_PANASONIC_KXLC003
+value|0x0504
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_PANASONIC_KXLC003
+value|"Panasonic 8X CD-ROM Interface Card"
 end_define
 
 begin_comment
@@ -1600,157 +1779,216 @@ value|"TDK LAC-CF010"
 end_define
 
 begin_comment
-comment|/* TDK Vendor ID also used by Xircom! */
+comment|/* Xircom Products */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CE_10
+name|PCCARD_CIS_XIRCOM_CE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CE_10
+name|PCCARD_PRODUCT_XIRCOM_CE
 value|0x0108
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_CE_10
+name|PCCARD_STR_XIRCOM_CE
 value|"Xircom CreditCard Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CEM_10
+name|PCCARD_CIS_XIRCOM_CE2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CEM_10
-value|0x110a
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_STR_TDK_XIR_CEM_10
-value|"Xircom CreditCard Ethernet + Modem"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_CIS_TDK_XIR_CEM_28
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CEM_28
-value|0x110b
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_STR_TDK_XIR_CEM_28
-value|"Xircom CreditCard Ethernet + Modem 28.8"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_CIS_TDK_XIR_PS_CE2_10
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCCARD_PRODUCT_TDK_XIR_PS_CE2_10
+name|PCCARD_PRODUCT_XIRCOM_CE2
 value|0x010b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_PS_CE2_10
-value|"Xircom CreditCard CE2 Ethernet"
+name|PCCARD_STR_XIRCOM_CE2
+value|"Xircom CreditCard Ethernet II"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CE3_10_100
+name|PCCARD_CIS_XIRCOM_CE3
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CE3_10_100
+name|PCCARD_PRODUCT_XIRCOM_CE3
 value|0x010a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_CE3_10_100
-value|"Xircom CreditCard CE3 10/100 Ethernet"
+name|PCCARD_STR_XIRCOM_CE3
+value|"Xircom CreditCard 10/100 Ethernet"
 end_define
-
-begin_comment
-comment|/* conflicts with above  * product TDK XIR_CFE_10	0x010a Xircom CompactCard CFE-10  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CNW_801
+name|PCCARD_CIS_XIRCOM_CEM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CNW_801
+name|PCCARD_PRODUCT_XIRCOM_CEM
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_CEM
+value|"Xircom CreditCard Ethernet + Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_CEM28
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_CEM28
+value|0x110b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_CEM28
+value|"Xircom CreditCard Ethernet + Modem 28"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_CEM33
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_CEM33
+value|0x110b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_CEM33
+value|"Xircom CreditCard Ethernet + Modem 33"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_CEM56
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_CEM56
+value|0x110b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_CEM56
+value|"Xircom CreditCard Ethernet + Modem 56"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_REM56
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_REM56
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_XIRCOM_REM56
+value|"Xircom RealPort Ethernet 10/100 + Modem 56"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_XIRCOM_CNW_801
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_XIRCOM_CNW_801
 value|0x0801
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_CNW_801
+name|PCCARD_STR_XIRCOM_CNW_801
 value|"Xircom CreditCard Netwave (Canada)"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_XIR_CNW_802
+name|PCCARD_CIS_XIRCOM_CNW_802
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_XIR_CNW_802
+name|PCCARD_PRODUCT_XIRCOM_CNW_802
 value|0x0802
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_XIR_CNW_802
+name|PCCARD_STR_XIRCOM_CNW_802
 value|"Xircom CreditCard Netwave (US)"
 end_define
 
@@ -2085,6 +2323,56 @@ value|"WLAN Adapter"
 end_define
 
 begin_comment
+comment|/* RATOC System Inc. Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_RATOC_REX_R280
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_RATOC_REX_R280
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_RATOC_REX_R280
+value|"RATOC REX-R280"
+end_define
+
+begin_comment
+comment|/* Samsung */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SAMSUNG_SWL_2000N
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SAMSUNG_SWL_2000N
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SAMSUNG_SWL_2000N
+value|"Samsung MagicLAN SWL-2000N"
+end_define
+
+begin_comment
 comment|/* Cards we know only by their cis */
 end_comment
 
@@ -2273,6 +2561,17 @@ end_define
 
 begin_comment
 comment|/* AMD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_INTERSIL
+value|-1
+end_define
+
+begin_comment
+comment|/* Intersil */
 end_comment
 
 begin_define
@@ -2639,6 +2938,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCCARD_CIS_COREGA_WIRELESS_LAN_PCC_11
+value|{ "corega K.K.", "Wireless LAN PCC-11", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_COREGA_WIRELESS_LAN_PCC_11
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_COREGA_WIRELESS_LAN_PCC_11
+value|"Corega Wireless LAN PCC-11"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_SVEC_COMBOCARD
 value|{ "Ethernet", "Adapter", NULL, NULL }
 end_define
@@ -2722,6 +3042,48 @@ define|#
 directive|define
 name|PCCARD_STR_NAKAGAWAMETAL_LNT10TN
 value|"NAKAGAWA METAL LNT-10TN NE2000 Compatible Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_AMBICOM_AMB8002T
+value|{ "AmbiCom Inc", "AMB8002T", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_AMBICOM_AMB8002T
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_AMBICOM_AMB8002T
+value|"AmbiCom AMB8002T"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_IODATA_PCLAT
+value|{ "I-O DATA", "PCLA", "ETHERNET", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_IODATA_PCLAT
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_IODATA_PCLAT
+value|"IO-DATA PCLA/T"
 end_define
 
 begin_define
@@ -2853,43 +3215,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_AMBICOM_AMB8002T
-value|{ "AmbiCom Inc", "AMB8002T", NULL, NULL }
+name|PCCARD_CIS_NDC_ND5100_E
+value|{ "NDC", "Ethernet", "A", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_AMBICOM_AMB8002T
+name|PCCARD_PRODUCT_NDC_ND5100_E
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_AMBICOM_AMB8002T
-value|"AmbiCom AMB8002T"
+name|PCCARD_STR_NDC_ND5100_E
+value|"Sohoware ND5100E NE2000 Compatible Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IODATA_PCLAT
-value|{ "I-O DATA", "PCLA", "ETHERNET", NULL }
+name|PCCARD_CIS_INTERSIL_PRISM2
+value|{ "INTERSIL", "HFA384x/IEEE", "Version 01.02", NULL}
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IODATA_PCLAT
+name|PCCARD_PRODUCT_INTERSIL_PRISM2
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IODATA_PCLAT
-value|"IO-DATA PCLA/T"
+name|PCCARD_STR_INTERSIL_PRISM2
+value|"Intersil Prism II"
 end_define
 
 end_unit
