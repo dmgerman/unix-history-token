@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -54,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/prom.h>
 end_include
 
@@ -66,19 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/setjmp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
+file|<ddb/ddb.h>
 end_include
 
 begin_comment

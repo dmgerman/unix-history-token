@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_dev_sc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -72,13 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/rpb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpuconf.h>
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -90,7 +90,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
+file|<machine/cpuconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
 end_include
 
 begin_include
@@ -109,12 +121,6 @@ begin_include
 include|#
 directive|include
 file|<pci/pcivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_dev_sc.h"
 end_include
 
 begin_ifndef

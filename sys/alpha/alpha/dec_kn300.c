@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_dev_sc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -62,19 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/termios.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/rpb.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -86,7 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
 end_include
 
 begin_include
@@ -111,41 +123,6 @@ begin_include
 include|#
 directive|include
 file|<alpha/mcbus/mcbusvar.h>
-end_include
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<alpha/mcbus/mcpciareg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<alpha/mcbsu/mcpciavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<alpha/pci/pci_kn300.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"opt_dev_sc.h"
 end_include
 
 begin_ifndef

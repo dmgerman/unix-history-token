@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<alpha/pci/t2reg.h>
 end_include
 
@@ -114,13 +120,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/intr.h>
+file|<machine/cpuconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/resource.h>
+file|<machine/intr.h>
 end_include
 
 begin_include
@@ -132,13 +138,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpuconf.h>
+file|<machine/md_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/swiz.h>
+file|<machine/resource.h>
 end_include
 
 begin_include
@@ -150,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<machine/swiz.h>
 end_include
 
 begin_include

@@ -120,13 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
+file|<machine/bwx.h>
 end_include
 
 begin_include
@@ -138,13 +132,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bwx.h>
+file|<machine/frame.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/reg.h>
 end_include
 
 begin_include

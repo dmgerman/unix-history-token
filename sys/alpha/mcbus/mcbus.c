@@ -60,13 +60,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/rpb.h>
+file|<machine/cpuconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpuconf.h>
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
 end_include
 
 begin_include

@@ -633,6 +633,15 @@ directive|ifdef
 name|__alpha__
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rpb
+modifier|*
+name|hwrpb
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Filler function for proc/cpuinfo (Alpha version)  */
 end_comment

@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_dev_sc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -64,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/rpb.h>
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -76,7 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
 end_include
 
 begin_include
@@ -101,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|<alpha/pci/apecsvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_dev_sc.h"
 end_include
 
 begin_ifndef

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -122,25 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/atomic.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/rpb.h>
 end_include
 
 begin_include
@@ -152,7 +140,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/prom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/rpb.h>
 end_include
 
 begin_include

@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpuconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -114,13 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/isareg.h>
+file|<machine/cpuconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<alpha/alpha/timerreg.h>
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -132,6 +126,18 @@ end_include
 begin_comment
 comment|/* for CPU definitions, etc */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<isa/isareg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<alpha/alpha/timerreg.h>
+end_include
 
 begin_define
 define|#

@@ -86,25 +86,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/intr.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cpuconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/swiz.h>
+file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/sgmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/swiz.h>
 end_include
 
 begin_include
