@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -612,20 +612,20 @@ comment|/* number of cycles discovered */
 end_comment
 
 begin_comment
-comment|/*      * The header on the gmon.out file.      * gmon.out consists of one of these headers,      * and then an array of ncnt samples      * representing the discretized program counter values.      *	this should be a struct phdr, but since everything is done      *	as UNITs, this is in UNITs too.      */
+comment|/*      * The header on the gmon.out file.      * gmon.out consists of a struct phdr (defined in gmon.h)      * and then an array of ncnt samples representing the      * discretized program counter values.      *      *	Backward compatible old style header      */
 end_comment
 
 begin_struct
 struct|struct
-name|hdr
+name|ophdr
 block|{
 name|UNIT
 modifier|*
-name|lowpc
+name|lpc
 decl_stmt|;
 name|UNIT
 modifier|*
-name|highpc
+name|hpc
 decl_stmt|;
 name|int
 name|ncnt
@@ -633,13 +633,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-name|struct
-name|hdr
-name|h
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
