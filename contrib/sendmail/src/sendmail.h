@@ -1794,6 +1794,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
