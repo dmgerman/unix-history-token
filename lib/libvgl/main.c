@@ -126,7 +126,14 @@ operator|!
 name|VGLInitDone
 condition|)
 return|return;
-comment|/*   while (!VGLOnDisplay) pause();    VGLCheckSwitch();; */
+if|if
+condition|(
+name|VGLOnDisplay
+operator|&&
+operator|!
+name|VGLSwitchPending
+condition|)
+block|{
 name|outb
 argument_list|(
 literal|0x3c4
@@ -150,6 +157,7 @@ operator|*
 literal|1024
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|VGLOldMode
@@ -366,6 +374,13 @@ expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
+argument_list|,
+name|VGLAbort
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
 argument_list|,
 name|VGLAbort
 argument_list|)
@@ -764,7 +779,7 @@ name|void
 name|VGLCheckSwitch
 parameter_list|()
 block|{
-if|if
+while|while
 condition|(
 name|VGLSwitchPending
 condition|)
@@ -1030,8 +1045,6 @@ name|Type
 operator|=
 name|MEMBUF
 expr_stmt|;
-block|}
-block|}
 while|while
 condition|(
 operator|!
@@ -1040,6 +1053,8 @@ condition|)
 name|pause
 argument_list|()
 expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
