@@ -1017,6 +1017,12 @@ name|int
 name|howto
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|first_buf_printf
+init|=
+literal|1
+decl_stmt|;
 comment|/* collect extra flags that shutdown_nice might have set */
 name|howto
 operator||=
@@ -1094,90 +1100,9 @@ name|subiter
 decl_stmt|;
 endif|#
 directive|endif
-for|for
-control|(
-name|nbusy
-operator|=
-literal|0
-operator|,
-name|bp
-operator|=
-operator|&
-name|buf
-index|[
-name|nbuf
-index|]
-init|;
-operator|--
-name|bp
-operator|>=
-name|buf
-condition|;
-control|)
-if|if
-condition|(
-operator|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_INVAL
-operator|)
-operator|==
-literal|0
-operator|&&
-name|BUF_REFCNT
-argument_list|(
-name|bp
-argument_list|)
-operator|>
-literal|0
-operator|)
-operator|||
-operator|(
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-operator|(
-name|B_DELWRI
-operator||
-name|B_INVAL
-operator|)
-operator|)
-operator|==
-name|B_DELWRI
-operator|)
-condition|)
-name|nbusy
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|nbusy
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Skipping final sync, no buffers remaining\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|unmountall
-goto|;
-block|}
 name|waittime
 operator|=
 literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Syncing disks, buffers remaining... "
-argument_list|)
 expr_stmt|;
 name|sync
 argument_list|(
@@ -1279,7 +1204,33 @@ name|nbusy
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|first_buf_printf
+condition|)
+name|printf
+argument_list|(
+literal|"No buffers busy after final sync"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|first_buf_printf
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Syncing disks, buffers remaining... "
+argument_list|)
+expr_stmt|;
+name|first_buf_printf
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%d "
@@ -1525,7 +1476,7 @@ block|{
 comment|/* 			 * Failed to sync all blocks. Indicate this and don't 			 * unmount filesystems (thus forcing an fsck on reboot). 			 */
 name|printf
 argument_list|(
-literal|"giving up on %d buffers\n"
+literal|"Giving up on %d buffers\n"
 argument_list|,
 name|nbusy
 argument_list|)
@@ -1539,9 +1490,17 @@ comment|/* 5 seconds */
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|first_buf_printf
+condition|)
+name|printf
+argument_list|(
+literal|"Final sync complete\n"
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Unmount filesystems 			 */
-name|unmountall
-label|:
 if|if
 condition|(
 name|panicstr
