@@ -4955,7 +4955,7 @@ name|rt_flags
 operator|&
 name|RTF_WASCLONED
 operator|)
-operator|!=
+operator|==
 name|RTF_WASCLONED
 condition|)
 block|{
