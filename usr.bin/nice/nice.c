@@ -314,7 +314,13 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|1
+name|errno
+operator|==
+name|ENOENT
+condition|?
+literal|127
+else|:
+literal|126
 argument_list|,
 literal|"%s"
 argument_list|,
