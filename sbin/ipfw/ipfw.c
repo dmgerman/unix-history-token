@@ -14069,7 +14069,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * this is a nasty check on the last argument!!! 	 * If there happens to be a filename matching a keyword in the current 	 * directory, things will fail miserably. 	 */
+comment|/* 	 * Only interpret the last command line argument as a file to 	 * be preprocessed if it is specified as an absolute pathname. 	 */
 if|if
 condition|(
 name|ac
