@@ -1248,6 +1248,7 @@ name|EAFNOSUPPORT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Add LLC header. 	 */
 if|if
 condition|(
 name|type
@@ -2448,12 +2449,6 @@ name|IFF_NOTRAILERS
 expr_stmt|;
 endif|#
 directive|endif
-name|ifp
-operator|->
-name|if_broadcastaddr
-operator|=
-name|fddibroadcastaddr
-expr_stmt|;
 name|ifa
 operator|=
 name|ifaddr_byindex
@@ -2487,15 +2482,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ifa
-operator|=
-name|ifaddr_byindex
-argument_list|(
-name|ifp
-operator|->
-name|if_index
-argument_list|)
-expr_stmt|;
 name|sdl
 operator|=
 operator|(
