@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.11 (Berkeley) %G%"
+literal|"@(#)tip.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,9 @@ name|sbuf
 expr_stmt|;
 name|notnumber
 label|:
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -518,6 +521,9 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -525,6 +531,9 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -532,6 +541,9 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -854,6 +866,9 @@ argument_list|(
 name|repdes
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1226,7 +1241,7 @@ argument_list|,
 name|intprompt
 argument_list|)
 expr_stmt|;
-name|oint
+name|oquit
 operator|=
 name|signal
 argument_list|(
@@ -1282,6 +1297,9 @@ expr_stmt|;
 name|raw
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1289,11 +1307,14 @@ argument_list|,
 name|oint
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|oint
+name|oquit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1317,6 +1338,9 @@ name|void
 name|intprompt
 parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
