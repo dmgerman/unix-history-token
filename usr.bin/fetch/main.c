@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.48 1998/11/08 23:18:48 des Exp $ */
+comment|/* $Id: main.c,v 1.49 1998/12/08 13:00:49 cracauer Exp $ */
 end_comment
 
 begin_include
@@ -136,16 +136,16 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
-argument_list|,
-literal|"usage: fetch [-DHILMNPRTVablmnpqrstv] [-o outputfile] [-S bytes]"
-argument_list|,
+literal|"usage: fetch [-ADHILMNPRTVablmnpqrstv] [-o outputfile] "
+literal|"[-S bytes]\n"
 literal|"             [-f file -h host [-c dir] | URL]"
 argument_list|)
 expr_stmt|;
@@ -236,6 +236,10 @@ name|hostname
 operator|=
 literal|0
 expr_stmt|;
+define|#
+directive|define
+name|OPT_STRING
+value|"Aabc:D:f:h:HIlLmMnNo:pPqRrS:stT:vV:"
 while|while
 condition|(
 operator|(
@@ -247,7 +251,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abc:D:f:h:HIlLmMnNo:pPqRrS:stT:vV:"
+name|OPT_STRING
 argument_list|)
 operator|)
 operator|!=
@@ -260,6 +264,17 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|fs
+operator|.
+name|fs_auto_retry
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'D'
 case|:
