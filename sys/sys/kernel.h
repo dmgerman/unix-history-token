@@ -301,6 +301,11 @@ init|=
 literal|0x21C0000
 block|,
 comment|/* TrustedBSD MAC policies */
+name|SI_SUB_MAC_LATE
+init|=
+literal|0x21D0000
+block|,
+comment|/* TrustedBSD MAC subsystem */
 name|SI_SUB_INTRINSIC
 init|=
 literal|0x2200000
