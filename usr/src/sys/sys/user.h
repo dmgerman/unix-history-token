@@ -1,54 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.14 (Berkeley) %G%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"machine/pcb.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"time.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"resource.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"namei.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ucred.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -85,11 +38,6 @@ include|#
 directive|include
 file|<sys/ucred.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
