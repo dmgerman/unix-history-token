@@ -150,15 +150,13 @@ block|}
 struct|;
 end_struct
 
-begin_extern
-extern|extern LIST_HEAD(cargs
-operator|,
-extern|carg
-end_extern
-
 begin_expr_stmt
-unit|)
-name|arglist
+name|LIST_HEAD
+argument_list|(
+name|cargs
+argument_list|,
+name|carg
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
