@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	5.7 (Berkeley) %G%"
+literal|"@(#)ping.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2707,12 +2707,14 @@ expr|struct
 name|ip
 argument_list|)
 expr_stmt|;
-comment|/* ANSI C will force hlen to unsigned! */
 for|for
 control|(
 init|;
 name|hlen
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
