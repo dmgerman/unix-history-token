@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.8 1998/07/27 16:08:58 des Exp $"
+literal|"$Id: time.c,v 1.9 1998/07/27 16:54:05 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -196,15 +190,13 @@ name|int
 name|pid
 decl_stmt|;
 name|int
-name|ch
+name|aflag
 decl_stmt|,
-name|status
+name|ch
 decl_stmt|,
 name|lflag
 decl_stmt|,
-name|aflag
-init|=
-literal|0
+name|status
 decl_stmt|;
 name|struct
 name|timeval
@@ -228,6 +220,8 @@ name|ofn
 init|=
 name|NULL
 decl_stmt|;
+name|aflag
+operator|=
 name|lflag
 operator|=
 literal|0
@@ -243,7 +237,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lao:"
+literal|"alo:"
 argument_list|)
 operator|)
 operator|!=
@@ -267,19 +261,19 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'o'
-case|:
-name|ofn
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
 literal|'l'
 case|:
 name|lflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|ofn
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -315,22 +309,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|ofn
-argument_list|,
-literal|"-"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|out
-operator|=
-name|stdout
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 operator|(
 name|out
 operator|=
@@ -350,9 +328,29 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|EX_IOERR
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|ofn
+argument_list|)
+expr_stmt|;
+name|setvbuf
+argument_list|(
+name|out
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|_IONBF
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -851,12 +849,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: time [-l] [-a] [-o file] command\n"
+literal|"usage: time [-al] [-o file] command\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
