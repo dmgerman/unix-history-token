@@ -76,6 +76,7 @@ name|error
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -207,6 +208,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|tname

@@ -875,7 +875,7 @@ modifier|*
 name|sb
 decl_stmt|;
 block|{
-name|int
+name|size_t
 name|lname
 decl_stmt|;
 name|char
@@ -1182,6 +1182,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|write
 argument_list|(
 name|cfp

@@ -119,6 +119,7 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tname
@@ -473,6 +474,7 @@ name|error
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

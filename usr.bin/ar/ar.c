@@ -151,13 +151,18 @@ modifier|*
 name|archive
 decl_stmt|,
 modifier|*
-name|envtmp
-decl_stmt|,
-modifier|*
 name|posarg
 decl_stmt|,
 modifier|*
 name|posname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|envtmp
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +173,7 @@ name|badoptions
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -857,6 +863,7 @@ name|badoptions
 parameter_list|(
 name|arg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|arg

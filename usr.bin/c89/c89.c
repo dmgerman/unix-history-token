@@ -83,6 +83,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|args_prepended
@@ -128,16 +129,33 @@ name|Argc
 decl_stmt|,
 name|i
 decl_stmt|;
+name|size_t
+name|j
+decl_stmt|;
+union|union
+block|{
+specifier|const
 name|char
 modifier|*
 modifier|*
-name|Argv
+name|a
 decl_stmt|;
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|b
+decl_stmt|;
+block|}
+name|Argv
+union|;
 name|Argc
 operator|=
 literal|0
 expr_stmt|;
 name|Argv
+operator|.
+name|a
 operator|=
 name|malloc
 argument_list|(
@@ -152,11 +170,15 @@ operator|*
 sizeof|sizeof
 expr|*
 name|Argv
+operator|.
+name|a
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|Argv
+operator|.
+name|a
 operator|==
 name|NULL
 condition|)
@@ -168,6 +190,8 @@ literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|Argv
+operator|.
+name|a
 index|[
 name|Argc
 operator|++
@@ -180,18 +204,20 @@ index|]
 expr_stmt|;
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|N_ARGS_PREPENDED
 condition|;
 operator|++
-name|i
+name|j
 control|)
 name|Argv
+operator|.
+name|a
 index|[
 name|Argc
 operator|++
@@ -199,7 +225,7 @@ index|]
 operator|=
 name|args_prepended
 index|[
-name|i
+name|j
 index|]
 expr_stmt|;
 while|while
@@ -282,7 +308,7 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Append argv[1..] at the end of Argv[]. */
+comment|/* Append argv[1..] at the end of Argv[].a. */
 for|for
 control|(
 name|i
@@ -297,6 +323,8 @@ operator|++
 name|i
 control|)
 name|Argv
+operator|.
+name|a
 index|[
 name|Argc
 operator|++
@@ -315,6 +343,8 @@ argument_list|(
 name|CC
 argument_list|,
 name|Argv
+operator|.
+name|b
 argument_list|)
 expr_stmt|;
 name|err
