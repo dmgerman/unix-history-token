@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.7 1994/10/21 01:19:07 wollman Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.8 1994/10/23 21:27:31 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Driver for the Logitech and ATI Inport Bus mice for use with 386bs
 end_comment
 
 begin_comment
-comment|/*  * Modification history:  *  * Oct 19, 1992 -- E. Stark (stark@cs.sunysb.edu)  *   fixes to make it work with Microsoft InPort busmouse  *  * Jan, 1993 -- E. Stark (stark@cs.sunysb.edu)  *   added patches for new "select" interface  *  * May 4, 1993 -- E. Stark (stark@cs.sunysb.edu)  *   changed position of some spl()'s in mseread  *  * October 8, 1993 -- E. Stark (stark@cs.sunysb.edu)  *   limit maximum negative x/y value to -127 to work around XFree problem  *   that causes spurious button pushes.  */
+comment|/*  * Modification history:  * Sep 6, 1994 -- Lars Fredriksen(fredriks@mcs.com)  *   improved probe based on input from Logitech.  *  * Oct 19, 1992 -- E. Stark (stark@cs.sunysb.edu)  *   fixes to make it work with Microsoft InPort busmouse  *  * Jan, 1993 -- E. Stark (stark@cs.sunysb.edu)  *   added patches for new "select" interface  *  * May 4, 1993 -- E. Stark (stark@cs.sunysb.edu)  *   changed position of some spl()'s in mseread  *  * October 8, 1993 -- E. Stark (stark@cs.sunysb.edu)  *   limit maximum negative x/y value to -127 to work around XFree problem  *   that causes spurious button pushes.  */
 end_comment
 
 begin_include
@@ -262,6 +262,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MSE_LOGI_SIG
+value|0xA5
+end_define
+
+begin_define
+define|#
+directive|define
 name|MSE_PORTA
 value|0
 end_define
@@ -320,6 +327,98 @@ end_define
 
 begin_comment
 comment|/* What does this mean? */
+end_comment
+
+begin_comment
+comment|/* The definition for the control port */
+end_comment
+
+begin_comment
+comment|/* is as follows: */
+end_comment
+
+begin_comment
+comment|/* D7 	 =  Mode set flag (1 = active) 	*/
+end_comment
+
+begin_comment
+comment|/* D6,D5 =  Mode selection (port A) 	*/
+end_comment
+
+begin_comment
+comment|/* 	    00 = Mode 0 = Basic I/O 	*/
+end_comment
+
+begin_comment
+comment|/* 	    01 = Mode 1 = Strobed I/O 	*/
+end_comment
+
+begin_comment
+comment|/* 	    10 = Mode 2 = Bi-dir bus 	*/
+end_comment
+
+begin_comment
+comment|/* D4	 =  Port A direction (1 = input)*/
+end_comment
+
+begin_comment
+comment|/* D3	 =  Port C (upper 4 bits) 	*/
+end_comment
+
+begin_comment
+comment|/*	    direction. (1 = input)	*/
+end_comment
+
+begin_comment
+comment|/* D2	 =  Mode selection (port B& C) */
+end_comment
+
+begin_comment
+comment|/*	    0 = Mode 0 = Basic I/O	*/
+end_comment
+
+begin_comment
+comment|/*	    1 = Mode 1 = Strobed I/O	*/
+end_comment
+
+begin_comment
+comment|/* D1	 =  Port B direction (1 = input)*/
+end_comment
+
+begin_comment
+comment|/* D0	 =  Port C (lower 4 bits)	*/
+end_comment
+
+begin_comment
+comment|/*	    direction. (1 = input)	*/
+end_comment
+
+begin_comment
+comment|/* So 91 means Basic I/O on all 3 ports,*/
+end_comment
+
+begin_comment
+comment|/* Port A is an input port, B is an 	*/
+end_comment
+
+begin_comment
+comment|/* output port, C is split with upper	*/
+end_comment
+
+begin_comment
+comment|/* 4 bits being an output port and lower*/
+end_comment
+
+begin_comment
+comment|/* 4 bits an input port, and enable the */
+end_comment
+
+begin_comment
+comment|/* sucker.				*/
+end_comment
+
+begin_comment
+comment|/* Courtesy Intel 8255 databook. Lars   */
 end_comment
 
 begin_define
@@ -1706,6 +1805,21 @@ modifier|*
 name|idp
 decl_stmt|;
 block|{
+name|int
+name|sig
+decl_stmt|;
+name|outb
+argument_list|(
+name|idp
+operator|->
+name|id_iobase
+operator|+
+name|MSE_PORTD
+argument_list|,
+name|MSE_SETUP
+argument_list|)
+expr_stmt|;
+comment|/* set the signature port */
 name|outb
 argument_list|(
 name|idp
@@ -1714,11 +1828,17 @@ name|id_iobase
 operator|+
 name|MSE_PORTB
 argument_list|,
-literal|0x55
+name|MSE_LOGI_SIG
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|DELAY
+argument_list|(
+literal|30000
+argument_list|)
+expr_stmt|;
+comment|/* 30 ms delay */
+name|sig
+operator|=
 name|inb
 argument_list|(
 name|idp
@@ -1727,8 +1847,14 @@ name|id_iobase
 operator|+
 name|MSE_PORTB
 argument_list|)
+operator|&
+literal|0xFF
+expr_stmt|;
+if|if
+condition|(
+name|sig
 operator|==
-literal|0x55
+name|MSE_LOGI_SIG
 condition|)
 block|{
 name|outb
@@ -1737,35 +1863,36 @@ name|idp
 operator|->
 name|id_iobase
 operator|+
-name|MSE_PORTB
+name|MSE_PORTC
 argument_list|,
-literal|0xaa
+name|MSE_DISINTR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|inb
-argument_list|(
-name|idp
-operator|->
-name|id_iobase
-operator|+
-name|MSE_PORTB
-argument_list|)
-operator|==
-literal|0xaa
-condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"mse%d: wrong signature %x\n"
+argument_list|,
+name|idp
+operator|->
+name|id_unit
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 end_function
 
