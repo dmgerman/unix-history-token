@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.3	(Berkeley)	83/02/27"
+literal|"@(#)symtab.c	3.4	(Berkeley)	83/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -2295,52 +2295,6 @@ case|case
 literal|'R'
 case|:
 comment|/* 		 * For restart, insure that we are using the same tape 		 */
-if|if
-condition|(
-name|hdr
-operator|.
-name|volno
-operator|==
-literal|1
-condition|)
-block|{
-name|setup
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|dumptime
-operator|!=
-name|hdr
-operator|.
-name|dumptime
-operator|||
-name|dumpdate
-operator|!=
-name|hdr
-operator|.
-name|dumpdate
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Wrong dump tape\n"
-argument_list|)
-expr_stmt|;
-name|done
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|extractdirs
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
 name|curfile
 operator|.
 name|action
@@ -2366,7 +2320,6 @@ operator|.
 name|volno
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|panic

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.4	(Berkeley)	83/02/27"
+literal|"@(#)tape.c	3.5	(Berkeley)	83/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,15 +97,6 @@ specifier|static
 name|char
 modifier|*
 name|magtape
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|insetup
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -371,10 +362,6 @@ name|stdout
 argument_list|,
 literal|"Verify tape and initialize maps\n"
 argument_list|)
-expr_stmt|;
-name|insetup
-operator|=
-literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -982,10 +969,6 @@ name|dumpmap
 operator|=
 name|map
 expr_stmt|;
-name|insetup
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_block
 
@@ -1051,10 +1034,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|volno
-operator|!=
-literal|1
-operator|||
 name|nextvol
 operator|!=
 literal|1
@@ -1064,7 +1043,16 @@ argument_list|(
 literal|"Changing volumes on pipe input?\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|volno
+operator|==
+literal|1
+condition|)
 return|return;
+goto|goto
+name|gethdr
+goto|;
 block|}
 name|savecnt
 operator|=
@@ -1072,6 +1060,16 @@ name|blksread
 expr_stmt|;
 name|again
 label|:
+if|if
+condition|(
+name|pipein
+condition|)
+name|done
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* pipes do not get a second chance */
 if|if
 condition|(
 name|command
@@ -1222,6 +1220,8 @@ goto|goto
 name|again
 goto|;
 block|}
+name|gethdr
+label|:
 name|volno
 operator|=
 name|newvol
@@ -1350,6 +1350,21 @@ name|savecnt
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|readhdr
+argument_list|(
+operator|&
+name|spcl
+argument_list|)
+operator|==
+name|FAIL
+condition|)
+name|panic
+argument_list|(
+literal|"no header after volume mark!\n"
+argument_list|)
+expr_stmt|;
 name|findinode
 argument_list|(
 operator|&
@@ -1842,6 +1857,49 @@ comment|/* NOTREACHED */
 block|}
 end_block
 
+begin_comment
+comment|/*  * skip over bit maps on the tape  */
+end_comment
+
+begin_macro
+name|skipmaps
+argument_list|()
+end_macro
+
+begin_block
+block|{
+while|while
+condition|(
+name|checktype
+argument_list|(
+operator|&
+name|spcl
+argument_list|,
+name|TS_CLRI
+argument_list|)
+operator|==
+name|GOOD
+operator|||
+name|checktype
+argument_list|(
+operator|&
+name|spcl
+argument_list|,
+name|TS_BITS
+argument_list|)
+operator|==
+name|GOOD
+condition|)
+name|skipfile
+argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * skip over a file on the tape  */
+end_comment
+
 begin_macro
 name|skipfile
 argument_list|()
@@ -1956,15 +2014,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|insetup
-operator|&&
-name|checktype
+name|ishead
 argument_list|(
 operator|&
 name|spcl
-argument_list|,
-name|TS_INODE
 argument_list|)
 operator|==
 name|FAIL
@@ -1976,6 +2029,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|gettingfile
+operator|&&
 name|setjmp
 argument_list|(
 name|restart
@@ -4076,14 +4132,7 @@ name|i
 index|]
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|insetup
-condition|)
 break|break;
-name|skipfile
-argument_list|()
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4138,14 +4187,7 @@ name|i
 index|]
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|insetup
-condition|)
 break|break;
-name|skipfile
-argument_list|()
-expr_stmt|;
 block|}
 while|while
 condition|(
