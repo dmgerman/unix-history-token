@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.23 1999/01/18 02:09:15 fenner Exp $"
+literal|"$Id: main.c,v 1.24 1999/02/06 19:12:48 jhay Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,25 @@ block|,
 literal|"igmp"
 block|,
 name|IPPROTO_IGMP
+block|}
+block|,
+block|{
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|1
+block|,
+name|protopr
+block|,
+name|bdg_stats
+block|,
+literal|"bdg"
+block|,
+literal|1
+comment|/* bridging... */
 block|}
 block|,
 block|{
