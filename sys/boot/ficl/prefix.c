@@ -204,6 +204,9 @@ name|pFW
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|int
+operator|)
 name|FICL_TRUE
 return|;
 block|}
