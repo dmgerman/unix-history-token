@@ -752,11 +752,6 @@ operator|+
 name|curpos
 argument_list|)
 expr_stmt|;
-name|wrefresh
-argument_list|(
-name|window
-argument_list|)
-expr_stmt|;
 name|field
 index|[
 name|len
@@ -764,13 +759,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|delwin
+name|wrefresh
 argument_list|(
 name|window
 argument_list|)
-expr_stmt|;
-name|refresh
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
