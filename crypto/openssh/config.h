@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.166 2003/09/16 01:52:19 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.173 2004/02/06 05:24:31 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -64,6 +64,22 @@ comment|/* #undef BROKEN_SETREGID */
 end_comment
 
 begin_comment
+comment|/* Define if your setresuid() is broken */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_SETRESUID */
+end_comment
+
+begin_comment
+comment|/* Define if your setresgid() is broken */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_SETRESGID */
+end_comment
+
+begin_comment
 comment|/* Define to a Set Process Title type if your system is */
 end_comment
 
@@ -116,6 +132,17 @@ define|#
 directive|define
 name|LOGIN_PROGRAM_FALLBACK
 value|"/usr/bin/login"
+end_define
+
+begin_comment
+comment|/* Full path of your "passwd" program */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_PASSWD_PROG
+value|"/usr/bin/passwd"
 end_define
 
 begin_comment
@@ -215,6 +242,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_GETUSERATTR */
 end_comment
+
+begin_comment
+comment|/* Define if you have the basename function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_BASENAME
+value|1
+end_define
 
 begin_comment
 comment|/* Work around problematic Linux PAM modules handling of PAM_TTY */
@@ -696,6 +734,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HEIMDAL */
+end_comment
+
+begin_comment
+comment|/* Define this if you want to use libkafs' AFS support */
+end_comment
+
+begin_comment
+comment|/* #undef USE_AFS */
 end_comment
 
 begin_comment
@@ -1270,14 +1316,6 @@ comment|/* #undef LOCKED_PASSWD_SUBSTR */
 end_comment
 
 begin_comment
-comment|/* Define if DNS support is to be activated */
-end_comment
-
-begin_comment
-comment|/* #undef DNS */
-end_comment
-
-begin_comment
 comment|/* Define if getrrsetbyname() exists */
 end_comment
 
@@ -1289,8 +1327,19 @@ begin_comment
 comment|/* Define if HEADER.ad exists in arpa/nameser.h */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_HEADER_AD
+value|1
+end_define
+
 begin_comment
-comment|/* #undef HAVE_HEADER_AD */
+comment|/* Define if your resolver libs need this for getrrsetbyname */
+end_comment
+
+begin_comment
+comment|/* #undef BIND_8_COMPAT */
 end_comment
 
 begin_comment
@@ -1330,17 +1379,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_B64_PTON */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `basename' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_BASENAME
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `bcopy' function. */
@@ -1713,11 +1751,51 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<gssapi_generic.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GENERIC_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi/gssapi_generic.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_GENERIC_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi/gssapi.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi/gssapi_krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_KRB5_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<gssapi.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_GSSAPI_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi_krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_KRB5_H */
 end_comment
 
 begin_comment
@@ -2089,6 +2167,14 @@ directive|define
 name|HAVE_PAM_GETENVLIST
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<pam/pam_appl.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PAM_PAM_APPL_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `pam_putenv' function. */
@@ -2624,6 +2710,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `strtoul' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTOUL
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if `st_blksize' is member of `struct stat'. */
 end_comment
 
@@ -2711,6 +2808,14 @@ comment|/* #undef HAVE_SYS_PSTAT_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/ptms.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_PTMS_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/select.h> header file. */
 end_comment
 
@@ -2731,6 +2836,14 @@ directive|define
 name|HAVE_SYS_STAT_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<sys/stream.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_STREAM_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<sys/stropts.h> header file. */
@@ -2894,6 +3007,14 @@ comment|/* #undef HAVE_UPDWTMP */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `updwtmpx' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_UPDWTMPX */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<usersec.h> header file. */
 end_comment
 
@@ -3011,9 +3132,12 @@ begin_comment
 comment|/* Define to 1 if you have the `_getlong' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE__GETLONG */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE__GETLONG
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `_getpty' function. */
@@ -3027,9 +3151,12 @@ begin_comment
 comment|/* Define to 1 if you have the `_getshort' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE__GETSHORT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE__GETSHORT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `__b64_ntop' function. */
