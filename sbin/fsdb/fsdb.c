@@ -4164,13 +4164,13 @@ return|;
 block|}
 name|rts
 operator|->
-name|ts_sec
+name|tv_sec
 operator|=
 name|sec
 expr_stmt|;
 name|rts
 operator|->
-name|ts_nsec
+name|tv_nsec
 operator|=
 name|nsec
 expr_stmt|;

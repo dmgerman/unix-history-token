@@ -3578,7 +3578,7 @@ name|dip
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|node
 operator|.
@@ -3593,7 +3593,7 @@ name|dip
 operator|->
 name|di_atime
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|/
 literal|1000
 expr_stmt|;
@@ -3610,7 +3610,7 @@ name|dip
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|node
 operator|.
@@ -3625,7 +3625,7 @@ name|dip
 operator|->
 name|di_mtime
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|/
 literal|1000
 expr_stmt|;

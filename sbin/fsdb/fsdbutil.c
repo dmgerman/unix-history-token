@@ -549,7 +549,7 @@ name|dp
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -572,7 +572,7 @@ name|dp
 operator|->
 name|di_mtime
 operator|.
-name|ts_nsec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 name|p
@@ -584,7 +584,7 @@ name|dp
 operator|->
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -607,7 +607,7 @@ name|dp
 operator|->
 name|di_ctime
 operator|.
-name|ts_nsec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 name|p
@@ -619,7 +619,7 @@ name|dp
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -642,7 +642,7 @@ name|dp
 operator|->
 name|di_atime
 operator|.
-name|ts_nsec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 if|if

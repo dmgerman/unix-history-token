@@ -2613,7 +2613,7 @@ name|dip
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|timep
 index|[
@@ -2628,7 +2628,7 @@ name|dip
 operator|->
 name|di_atime
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|/
 literal|1000
 expr_stmt|;
@@ -2645,7 +2645,7 @@ name|dip
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 name|timep
 index|[
@@ -2660,7 +2660,7 @@ name|dip
 operator|->
 name|di_mtime
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|/
 literal|1000
 expr_stmt|;
@@ -5172,7 +5172,7 @@ name|c_dinode
 operator|.
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5188,7 +5188,7 @@ name|c_dinode
 operator|.
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|u_ospcl
 operator|.
@@ -5204,7 +5204,7 @@ name|c_dinode
 operator|.
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|u_ospcl
 operator|.
