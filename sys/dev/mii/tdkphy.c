@@ -262,6 +262,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tdkphy_service
 name|__P
@@ -282,6 +283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|tdkphy_status
 name|__P
