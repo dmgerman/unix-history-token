@@ -2836,7 +2836,7 @@ name|NULL
 argument_list|,
 name|SWI_VM
 argument_list|,
-literal|0
+name|INTR_MPSAFE
 argument_list|,
 operator|&
 name|vm_ih
