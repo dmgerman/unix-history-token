@@ -1489,10 +1489,17 @@ condition|(
 operator|!
 name|n
 condition|)
+block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 comment|/* got it */
+block|}
 break|break;
 default|default:
 name|log_Printf
@@ -1578,9 +1585,16 @@ name|how
 operator|==
 name|SYSTEM_EXISTS
 condition|)
+block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 while|while
 condition|(
 operator|(
