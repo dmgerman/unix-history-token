@@ -5938,6 +5938,24 @@ decl_stmt|;
 name|fdc_p
 name|fdc
 decl_stmt|;
+name|dev
+operator|->
+name|si_bsize_phys
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_best
+operator|=
+name|BLKDEV_IOSIZE
+expr_stmt|;
+name|dev
+operator|->
+name|si_bsize_max
+operator|=
+name|MAXBSIZE
+expr_stmt|;
 comment|/* check bounds */
 if|if
 condition|(
