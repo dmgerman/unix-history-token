@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -1107,6 +1107,14 @@ literal|'x'
 argument_list|,
 literal|"Mail Delivery Subsystem"
 argument_list|,
+name|ee
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|eatheader
+argument_list|(
 name|ee
 argument_list|)
 expr_stmt|;

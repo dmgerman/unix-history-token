@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.57
+literal|3.58
 operator|%
 name|G
 operator|%
@@ -862,45 +862,6 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
-comment|/* 	**  Log collection information. 	*/
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|1
-condition|)
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"%s: from=%s, size=%ld, class=%d\n"
-argument_list|,
-name|CurEnv
-operator|->
-name|e_id
-argument_list|,
-name|CurEnv
-operator|->
-name|e_from
-operator|.
-name|q_paddr
-argument_list|,
-name|CurEnv
-operator|->
-name|e_msgsize
-argument_list|,
-name|CurEnv
-operator|->
-name|e_class
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|LOG
-return|return;
 block|}
 end_block
 
