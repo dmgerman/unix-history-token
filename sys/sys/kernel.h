@@ -291,6 +291,11 @@ init|=
 literal|0x1A80000
 block|,
 comment|/* witness initialization */
+name|SI_SUB_MUTEX
+init|=
+literal|0x1AC0000
+block|,
+comment|/* mutex pool */
 name|SI_SUB_LOCK
 init|=
 literal|0x1B00000

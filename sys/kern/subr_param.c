@@ -291,36 +291,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Total number of shared mutexes to protect all lockmgr locks.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCKMUTEX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOCKMUTEX
-value|10
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|int
-name|lock_nmtx
-init|=
-name|LOCKMUTEX
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Boot time overrides  */
 end_comment
 

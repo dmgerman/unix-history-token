@@ -178,20 +178,13 @@ name|LO_SLEEPABLE
 operator||
 name|LO_UPGRADABLE
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
-argument_list|,
-literal|"sx backing lock"
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_NOWITNESS
-operator||
-name|MTX_QUIET
+operator|=
+name|mtx_pool_find
+argument_list|(
+name|sx
 argument_list|)
 expr_stmt|;
 name|sx
@@ -308,13 +301,11 @@ name|lo_name
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
-argument_list|)
+operator|=
+name|NULL
 expr_stmt|;
 name|cv_destroy
 argument_list|(
@@ -363,7 +354,6 @@ parameter_list|)
 block|{
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -416,7 +406,6 @@ name|sx
 operator|->
 name|sx_shrd_cv
 argument_list|,
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -468,7 +457,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -497,7 +485,6 @@ parameter_list|)
 block|{
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -551,7 +538,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -585,7 +571,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -620,7 +605,6 @@ parameter_list|)
 block|{
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -674,7 +658,6 @@ name|sx
 operator|->
 name|sx_excl_cv
 argument_list|,
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -741,7 +724,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -770,7 +752,6 @@ parameter_list|)
 block|{
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -832,7 +813,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -866,7 +846,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -912,7 +891,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1002,7 +980,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1042,7 +1019,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1138,7 +1114,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1178,7 +1153,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1242,7 +1216,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1276,7 +1249,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1322,7 +1294,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1400,7 +1371,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1489,7 +1459,6 @@ else|#
 directive|else
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1542,7 +1511,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1556,7 +1524,6 @@ name|SX_XLOCKED
 case|:
 name|mtx_lock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock
@@ -1587,7 +1554,6 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|&
 name|sx
 operator|->
 name|sx_lock

@@ -54,6 +54,7 @@ decl_stmt|;
 comment|/* Common lock properties. */
 name|struct
 name|mtx
+modifier|*
 name|sx_lock
 decl_stmt|;
 comment|/* General protection lock. */
