@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -208,7 +208,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s"
+literal|"%s: SYSERR: %s"
 argument_list|,
 name|CurEnv
 operator|->
