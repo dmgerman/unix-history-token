@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.7 (Berkeley) %G%"
+literal|"@(#)pk1.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1125,6 +1125,7 @@ argument_list|)
 operator|==
 name|SUCCESS
 condition|)
+block|{
 name|pkdata
 argument_list|(
 name|h
@@ -1145,6 +1146,27 @@ operator|)
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|bp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|pk
+operator|->
+name|p_ipool
+expr_stmt|;
+name|pk
+operator|->
+name|p_ipool
+operator|=
+name|bp
+expr_stmt|;
+block|}
 block|}
 end_block
 
