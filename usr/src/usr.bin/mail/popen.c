@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	1.7 (Berkeley) %G%"
+literal|"@(#)popen.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,26 +74,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|VMUNIX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<<((s)-1))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_define
 define|#
@@ -340,17 +325,17 @@ name|omask
 operator|=
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGINT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGQUIT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGHUP
 argument_list|)

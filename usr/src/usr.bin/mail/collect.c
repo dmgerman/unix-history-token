@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	2.17 (Berkeley) %G%"
+literal|"@(#)collect.c	2.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ argument_list|)
 operator|,
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGINT
 argument_list|)
@@ -350,7 +350,7 @@ argument_list|)
 operator|,
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGHUP
 argument_list|)
@@ -640,12 +640,12 @@ argument_list|)
 operator|&
 operator|~
 operator|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGINT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGHUP
 argument_list|)

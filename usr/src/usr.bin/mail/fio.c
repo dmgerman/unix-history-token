@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	2.17 (Berkeley) %G%"
+literal|"@(#)fio.c	2.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2057,7 +2057,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|sigmask
+name|omask
 init|=
 literal|0
 decl_stmt|;
@@ -2085,21 +2085,21 @@ operator|++
 operator|==
 literal|0
 condition|)
-name|sigmask
+name|omask
 operator|=
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGHUP
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGINT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGQUIT
 argument_list|)
@@ -2132,7 +2132,7 @@ literal|0
 condition|)
 name|sigsetmask
 argument_list|(
-name|sigmask
+name|omask
 argument_list|)
 expr_stmt|;
 block|}
