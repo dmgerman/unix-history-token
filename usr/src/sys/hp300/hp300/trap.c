@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.37 92/12/20$  *  *	@(#)trap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.37 92/12/20$  *  *	@(#)trap.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4158,7 +4158,7 @@ name|code
 condition|)
 block|{
 case|case
-name|SYS_indir
+name|SYS_syscall
 case|:
 comment|/* 		 * Code is first argument, followed by actual args. 		 */
 name|code
@@ -4188,9 +4188,9 @@ name|numsys
 expr_stmt|;
 break|break;
 case|case
-name|SYS___indir
+name|SYS___syscall
 case|:
-comment|/* 		 * Like indir, but code is a quad, so as to maintain 		 * quad alignment for the rest of the arguments. 		 */
+comment|/* 		 * Like syscall, but code is a quad, so as to maintain 		 * quad alignment for the rest of the arguments. 		 */
 ifdef|#
 directive|ifdef
 name|HPUXCOMPAT
@@ -4246,7 +4246,7 @@ expr_stmt|;
 else|else
 name|callp
 operator|+=
-name|SYS_indir
+name|SYS_syscall
 expr_stmt|;
 comment|/* => nosys */
 name|argsize
