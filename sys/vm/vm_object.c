@@ -2260,11 +2260,6 @@ operator|&
 name|vm_object_list_mtx
 argument_list|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Free the space for the object. 	 */
 name|uma_zfree
 argument_list|(
