@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.c,v 1.4 1998/09/02 01:09:34 jdp Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.c,v 1.5 1998/09/02 02:00:20 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -6343,6 +6343,46 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|needed
+operator|->
+name|obj
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|needed
+operator|->
+name|obj
+operator|->
+name|traced
+condition|)
+continue|continue;
+name|needed
+operator|->
+name|obj
+operator|->
+name|traced
+operator|=
+name|true
+expr_stmt|;
+name|path
+operator|=
+name|needed
+operator|->
+name|obj
+operator|->
+name|path
+expr_stmt|;
+block|}
+else|else
+name|path
+operator|=
+literal|"not found"
+expr_stmt|;
 name|name
 operator|=
 operator|(
@@ -6357,9 +6397,8 @@ name|needed
 operator|->
 name|name
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|is_lib
+operator|=
 name|strncmp
 argument_list|(
 name|name
@@ -6368,42 +6407,10 @@ literal|"lib"
 argument_list|,
 literal|3
 argument_list|)
-condition|)
-block|{
-name|is_lib
-operator|=
-name|true
-expr_stmt|;
-comment|/* XXX bogus */
-block|}
-else|else
-block|{
-name|is_lib
-operator|=
-name|false
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|needed
-operator|->
-name|obj
 operator|==
-name|NULL
-condition|)
-name|path
-operator|=
-literal|"not found"
+literal|0
 expr_stmt|;
-else|else
-name|path
-operator|=
-name|needed
-operator|->
-name|obj
-operator|->
-name|path
-expr_stmt|;
+comment|/* XXX - bogus */
 name|fmt
 operator|=
 name|is_lib
