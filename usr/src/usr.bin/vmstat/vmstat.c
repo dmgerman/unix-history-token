@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.9 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3668,59 +3668,61 @@ init|=
 block|{
 literal|"free"
 block|,
-comment|/* M_FREE */
+comment|/* 0 M_FREE */
 literal|"mbuf"
 block|,
-comment|/* M_MBUF */
+comment|/* 1 M_MBUF */
 literal|"devbuf"
 block|,
-comment|/* M_DEVBUF */
+comment|/* 2 M_DEVBUF */
 literal|"socket"
 block|,
-comment|/* M_SOCKET */
+comment|/* 3 M_SOCKET */
 literal|"pcb"
 block|,
-comment|/* M_PCB */
+comment|/* 4 M_PCB */
 literal|"routetbl"
 block|,
-comment|/* M_RTABLE */
+comment|/* 5 M_RTABLE */
 literal|"hosttbl"
 block|,
-comment|/* M_HTABLE */
+comment|/* 6 M_HTABLE */
 literal|"fragtbl"
 block|,
-comment|/* M_FTABLE */
+comment|/* 7 M_FTABLE */
 literal|"zombie"
 block|,
-comment|/* M_ZOMBIE */
+comment|/* 8 M_ZOMBIE */
 literal|"ifaddr"
 block|,
-comment|/* M_IFADDR */
+comment|/* 9 M_IFADDR */
 literal|"soopts"
 block|,
-comment|/* M_SOOPTS */
+comment|/* 10 M_SOOPTS */
 literal|"soname"
 block|,
-comment|/* M_SONAME */
+comment|/* 11 M_SONAME */
 literal|"namei"
 block|,
-comment|/* M_NAMEI */
+comment|/* 12 M_NAMEI */
 literal|"gprof"
 block|,
-comment|/* M_GPROF */
+comment|/* 13 M_GPROF */
 literal|"ioctlops"
 block|,
-comment|/* M_IOCTLOPS */
+comment|/* 14 M_IOCTLOPS */
 literal|"superblk"
 block|,
-comment|/* M_SUPERBLK */
+comment|/* 15 M_SUPERBLK */
 literal|"cred"
 block|,
-comment|/* M_CRED */
-literal|0
+comment|/* 16 M_CRED */
+literal|"pgrp"
 block|,
-literal|0
+comment|/* 17 M_PGRP */
+literal|"session"
 block|,
+comment|/* 18 M_SESSION */
 literal|0
 block|,
 literal|0
@@ -3783,7 +3785,7 @@ literal|0
 block|,
 literal|"temp"
 block|,
-comment|/* M_TEMP */
+comment|/* 49 M_TEMP */
 block|}
 decl_stmt|;
 end_decl_stmt
