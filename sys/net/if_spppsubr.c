@@ -3288,8 +3288,18 @@ name|PPP_IPCP
 block|,
 name|IDX_IPCP
 block|,
+ifdef|#
+directive|ifdef
+name|INET
+comment|/* don't run IPCP if there's no IPv4 support */
 name|CP_NCP
 block|,
+else|#
+directive|else
+literal|0
+block|,
+endif|#
+directive|endif
 literal|"ipcp"
 block|,
 name|sppp_ipcp_up
