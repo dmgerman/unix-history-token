@@ -1732,6 +1732,11 @@ argument_list|(
 name|pname
 argument_list|)
 expr_stmt|;
+name|ps
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|psptr
@@ -1763,11 +1768,6 @@ name|PNAMELEN
 index|]
 operator|=
 name|NULL
-expr_stmt|;
-name|ps
-argument_list|(
-literal|"\n"
-argument_list|)
 expr_stmt|;
 name|plstack
 index|[
