@@ -1599,8 +1599,14 @@ name|fallback
 init|=
 name|NULL
 decl_stmt|;
+name|socklen_t
+name|socklen
+decl_stmt|;
+name|ssize_t
+name|ssize
+decl_stmt|;
 name|size_t
-name|len
+name|size
 decl_stmt|;
 name|int
 name|c
@@ -1630,13 +1636,11 @@ name|gflag
 init|=
 literal|0
 decl_stmt|,
-name|Rflag
-init|=
-literal|0
-decl_stmt|,
 name|getcredfail
 init|=
 literal|0
+decl_stmt|,
+name|onreadlen
 decl_stmt|;
 name|u_short
 name|lport
@@ -1845,14 +1849,6 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|'R'
-case|:
-name|Rflag
-operator|=
-literal|2
-expr_stmt|;
-break|break;
-case|case
 literal|'r'
 case|:
 name|rflag
@@ -1951,7 +1947,7 @@ operator|.
 name|sysname
 expr_stmt|;
 block|}
-name|len
+name|socklen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1979,7 +1975,7 @@ literal|0
 index|]
 argument_list|,
 operator|&
-name|len
+name|socklen
 argument_list|)
 operator|==
 operator|-
@@ -1996,7 +1992,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|len
+name|socklen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -2024,7 +2020,7 @@ literal|1
 index|]
 argument_list|,
 operator|&
-name|len
+name|socklen
 argument_list|)
 operator|==
 operator|-
@@ -2098,7 +2094,7 @@ argument_list|,
 name|FIONREAD
 argument_list|,
 operator|&
-name|len
+name|onreadlen
 argument_list|)
 operator|==
 operator|-
@@ -2117,14 +2113,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|onreadlen
 operator|>=
 sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
 condition|)
-name|len
+name|onreadlen
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -2133,7 +2129,7 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|len
+name|ssize
 operator|=
 name|read
 argument_list|(
@@ -2141,12 +2137,15 @@ name|s
 argument_list|,
 name|buf
 argument_list|,
-name|len
+operator|(
+name|size_t
+operator|)
+name|onreadlen
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|ssize
 operator|==
 operator|-
 literal|1
@@ -2164,7 +2163,7 @@ argument_list|)
 expr_stmt|;
 name|buf
 index|[
-name|len
+name|ssize
 index|]
 operator|=
 literal|'\0'
@@ -2274,7 +2273,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|len
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -2362,7 +2361,7 @@ operator|&
 name|uc
 argument_list|,
 operator|&
-name|len
+name|size
 argument_list|,
 name|sin
 argument_list|,
@@ -2454,7 +2453,7 @@ operator|&
 name|uc
 argument_list|,
 operator|&
-name|len
+name|size
 argument_list|,
 name|sin6
 argument_list|,
@@ -2771,26 +2770,14 @@ name|fakeid
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Usually, the file will have the desired identity 			 * in the form "identity\n", so we use strtok() to 			 * end the string (which fgets() doesn't do.) 			 */
-name|strtok
+name|buf
+index|[
+name|strcspn
 argument_list|(
 name|buf
 argument_list|,
 literal|"\r\n"
 argument_list|)
-expr_stmt|;
-comment|/* User names of>16 characters are invalid */
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|>
-literal|16
-condition|)
-name|buf
-index|[
-literal|16
 index|]
 operator|=
 literal|'\0'
@@ -2812,12 +2799,34 @@ name|cp
 operator|++
 expr_stmt|;
 comment|/* ...and ending white space. */
-name|strtok
+name|cp
+index|[
+name|strcspn
 argument_list|(
 name|cp
 argument_list|,
 literal|" \t"
 argument_list|)
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* User names of>16 characters are invalid */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|>
+literal|16
+condition|)
+name|cp
+index|[
+literal|16
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 			 * If the name is a zero-length string or matches 			 * the name of another user, it's invalid, so 			 * we will return their real identity instead. 			 */
 if|if
