@@ -870,11 +870,9 @@ goto|goto
 name|out
 goto|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500005
+ifndef|#
+directive|ifndef
+name|INTR_ENTROPY
 define|#
 directive|define
 name|INTR_ENTROPY
