@@ -214,9 +214,8 @@ expr_stmt|;
 name|column
 operator|+=
 name|ul_width
-operator|+
-literal|1
 expr_stmt|;
+comment|/* +1; XXX */
 break|break;
 case|case
 name|UE_CHAR
@@ -238,9 +237,8 @@ expr_stmt|;
 name|column
 operator|+=
 name|bo_width
-operator|+
-literal|1
 expr_stmt|;
+comment|/*  +1; XXX */
 break|break;
 case|case
 name|BE_CHAR
