@@ -14,7 +14,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)configttys.c	4.1 Berkeley %G%"
+literal|"@(#)configttys.c	4.2 Berkeley %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -752,11 +752,11 @@ name|conformat
 argument_list|,
 literal|"port"
 argument_list|,
-literal|"active"
+literal|"login"
 argument_list|,
 literal|"speed\t"
 argument_list|,
-literal|"terminal name"
+literal|"terminal type"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -767,7 +767,7 @@ name|conformat
 argument_list|,
 literal|"----"
 argument_list|,
-literal|"------"
+literal|"-----"
 argument_list|,
 literal|"-----\t"
 argument_list|,
@@ -2469,94 +2469,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* DELETE this for 4.2bsd */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_macro
-name|rename
-argument_list|(
-argument|from
-argument_list|,
-argument|to
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|from
-decl_stmt|,
-modifier|*
-name|to
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-if|if
-condition|(
-name|unlink
-argument_list|(
-name|to
-argument_list|)
-operator|<
-literal|0
-condition|)
-if|if
-condition|(
-name|errno
-operator|!=
-name|ENOENT
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|link
-argument_list|(
-name|from
-argument_list|,
-name|to
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|unlink
-argument_list|(
-name|from
-argument_list|)
-operator|)
-return|;
-else|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_block
 
 end_unit
 
