@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_csreg.h,v 1.7 1998/07/19 16:13:39 root Exp root $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_define

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: process.c,v 1.8 1998/12/07 05:33:39 archie Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

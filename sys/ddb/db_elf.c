@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: db_elf.c,v 1.5 1999/01/27 19:00:49 dillon Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tsunamireg.h,v 1.1 1999/05/26 23:22:03 gallatin Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

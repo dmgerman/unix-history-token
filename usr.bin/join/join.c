@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: join.c,v 1.8 1997/08/19 15:58:15 jlemon Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

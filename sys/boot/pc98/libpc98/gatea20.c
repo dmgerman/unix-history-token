@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: gatea20.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: gatea20.c,v 1.2 1997/10/29 00:32:49 fvdl Exp $  */
+comment|/*  * $FreeBSD$  * From: $NetBSD: gatea20.c,v 1.2 1997/10/29 00:32:49 fvdl Exp $  */
 end_comment
 
 begin_comment

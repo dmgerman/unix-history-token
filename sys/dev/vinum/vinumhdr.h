@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $Id: vinumhdr.h,v 1.12 1999/01/28 08:58:33 grog Exp grog $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

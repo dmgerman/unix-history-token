@@ -126,7 +126,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tconv.c,v 1.3 1997/08/13 06:58:45 charnier Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: paste.c,v 1.4 1997/08/05 03:40:04 asami Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

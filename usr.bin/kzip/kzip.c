@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kzip.c,v 1.11 1998/06/01 18:34:19 jhay Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

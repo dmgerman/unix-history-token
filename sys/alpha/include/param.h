@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.10 1999/04/11 12:19:02 simokawa Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

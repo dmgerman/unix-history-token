@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wc.c,v 1.9 1999/08/06 14:37:13 sheldonh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id: ioctl_bt848.h,v 1.22 1999/02/15 11:04:36 roger Exp $  */
+comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

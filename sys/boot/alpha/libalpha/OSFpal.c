@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * From	$NetBSD: OSFpal.c,v 1.5 1998/06/24 01:33:19 ross Exp $   */
+comment|/*  * $FreeBSD$  * From	$NetBSD: OSFpal.c,v 1.5 1998/06/24 01:33:19 ross Exp $   */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.48 1999/08/23 21:07:13 bde Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

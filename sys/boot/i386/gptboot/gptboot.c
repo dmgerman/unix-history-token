@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.23 1999/04/05 07:36:30 rnordier Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

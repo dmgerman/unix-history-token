@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nfsstat.c,v 1.11 1998/10/24 19:36:52 msmith Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

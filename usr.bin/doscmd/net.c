@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** No copyright! ** ** $Id: net.c,v 1.3 1996/09/22 15:42:58 miff Exp $ ** ** NetBIOS etc. hooks. */
+comment|/* ** No copyright! ** ** $FreeBSD$ ** ** NetBIOS etc. hooks. */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.17 1999/07/05 20:42:08 mjacob Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

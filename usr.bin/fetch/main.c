@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.51 1999/03/08 19:16:14 wollman Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

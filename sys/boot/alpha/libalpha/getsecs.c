@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * From:	$NetBSD: getsecs.c,v 1.5 1998/01/05 07:02:49 perry Exp $	  */
+comment|/*  * $FreeBSD$  * From:	$NetBSD: getsecs.c,v 1.5 1998/01/05 07:02:49 perry Exp $	  */
 end_comment
 
 begin_include

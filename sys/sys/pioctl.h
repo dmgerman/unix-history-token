@@ -4,7 +4,7 @@ comment|/*  * Copryight 1997 Sean Eric Fagan  *  * Redistribution and use in sou
 end_comment
 
 begin_comment
-comment|/*  * procfs ioctl definitions.  *  * $Id: pioctl.h,v 1.6 1997/12/20 03:05:35 sef Exp $  */
+comment|/*  * procfs ioctl definitions.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.c,v 1.1 1997/03/17 02:55:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.c,v 1.7 1999/04/16 21:22:45 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

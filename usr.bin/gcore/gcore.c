@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.13 1998/11/01 06:35:36 jdp Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

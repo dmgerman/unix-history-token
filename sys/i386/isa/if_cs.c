@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.10 1999/04/16 21:22:20 peter Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $FreeBSD$  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cksum.c,v 1.8 1997/11/09 05:47:55 obrien Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

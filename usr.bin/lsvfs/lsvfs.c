@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsvfs - list loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id: lsvfs.c,v 1.11 1998/08/29 13:53:22 bde Exp $  */
+comment|/*  * lsvfs - list loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $FreeBSD$  */
 end_comment
 
 begin_define

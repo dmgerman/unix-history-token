@@ -4,7 +4,7 @@ comment|/*  * See i386-fbsd.c for copyright and license terms.  *  * System call
 end_comment
 
 begin_comment
-comment|/*  * $Id: syscall.h,v 1.3 1997/12/20 18:40:41 sef Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_enum

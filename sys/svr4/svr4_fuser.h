@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id$  *	Derived from:  *	$NetBSD: svr4_fuser.h,v 1.4 1998/09/04 19:54:38 christos Exp $	 */
+comment|/*  * $FreeBSD$  *	Derived from:  *	$NetBSD: svr4_fuser.h,v 1.4 1998/09/04 19:54:38 christos Exp $	 */
 end_comment
 
 begin_comment

@@ -90,7 +90,7 @@ literal|"#ifndef lint"
 block|,
 literal|"static char const "
 block|,
-literal|"yyrcsid[] = \"$Id: skeleton.c,v 1.19 1999/07/30 06:40:00 obrien Exp $\";"
+literal|"yyrcsid[] = \"$FreeBSD$\";"
 block|,
 literal|"#endif"
 block|,

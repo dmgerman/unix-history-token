@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_kn8ae.c,v 1.2 1998/06/14 13:44:42 dfr Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

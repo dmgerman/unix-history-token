@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** No copyright?! ** ** $Id: int.c,v 1.4 1997/03/18 02:36:56 msmith Exp $ */
+comment|/* ** No copyright?! ** ** $FreeBSD$ */
 end_comment
 
 begin_include

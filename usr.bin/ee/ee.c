@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ee.c,v 1.11 1998/10/01 21:18:18 obrien Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.3  $Revision: 1.11 $"
+literal|"@(#) ee, version 1.3  $Revision: 1.12 $"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: swap.c,v 1.10 1999/02/06 06:43:56 dillon Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

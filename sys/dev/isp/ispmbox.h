@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispmbox.h,v 1.12 1999/07/05 20:42:07 mjacob Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

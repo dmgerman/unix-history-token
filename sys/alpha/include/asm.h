@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: asm.h,v 1.2 1998/06/10 10:54:23 dfr Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

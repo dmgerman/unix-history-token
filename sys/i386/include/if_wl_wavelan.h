@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl_wavelan.h,v 1.2 1997/08/01 03:33:43 msmith Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

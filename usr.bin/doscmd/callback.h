@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  ** No copyright?! ** ** $Id: callback.h,v 1.4 1996/09/22 15:42:48 miff Exp $ */
+comment|/*  ** No copyright?! ** ** $FreeBSD$ */
 end_comment
 
 begin_typedef

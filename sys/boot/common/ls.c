@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: ls.c,v 1.6 1998/10/11 10:28:51 peter Exp $  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
+comment|/*  * $FreeBSD$  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.89 1999/07/12 15:51:48 roger Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

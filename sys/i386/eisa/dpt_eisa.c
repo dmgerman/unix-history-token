@@ -8,7 +8,7 @@ comment|/*  * Credits:  Based on and part of the DPT driver for FreeBSD written 
 end_comment
 
 begin_comment
-comment|/*  * $Id: dpt_eisa.c,v 1.7 1999/08/01 22:57:09 mdodd Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.25 1999/08/21 06:24:02 msmith Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_define

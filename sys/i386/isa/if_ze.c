@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.60 1999/08/18 06:12:00 mdodd Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment
