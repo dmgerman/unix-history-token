@@ -533,31 +533,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|GEM_CDTXSYNC
+name|GEM_CDSYNC
 parameter_list|(
 name|sc
-parameter_list|,
-name|x
-parameter_list|,
-name|n
 parameter_list|,
 name|ops
 parameter_list|)
 define|\
-value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));	\  #define	GEM_CDRXSYNC(sc, x, ops)					\ 	bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_INIT_RXDESC
-parameter_list|(
-name|sc
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<<GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ 	GEM_CDRXSYNC((sc), (x), BUS_DMASYNC_PREREAD|BUS_DMASYNC_PREWRITE); \ } while (0)
+value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));	\  #define	GEM_INIT_RXDESC(sc, x)						\ do {									\ 	struct gem_rxsoft *__rxs =&sc->sc_rxsoft[(x)];			\ 	struct gem_desc *__rxd =&sc->sc_rxdescs[(x)];			\ 	struct mbuf *__m = __rxs->rxs_mbuf;				\ 									\ 	__m->m_data = __m->m_ext.ext_buf;				\ 	__rxd->gd_addr =						\ 	    GEM_DMA_WRITE((sc), __rxs->rxs_paddr);			\ 	__rxd->gd_flags =						\ 	    GEM_DMA_WRITE((sc),						\ 			(((__m->m_ext.ext_size)<<GEM_RD_BUFSHIFT)	\& GEM_RD_BUFSIZE) | GEM_RD_OWN);	\ } while (0)
 end_define
 
 begin_ifdef
