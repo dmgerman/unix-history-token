@@ -1145,9 +1145,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_flags
+name|td_pflags
 operator|&
-name|TDF_SA
+name|TDP_SA
 condition|)
 name|thread_user_enter
 argument_list|(

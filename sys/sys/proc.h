@@ -923,17 +923,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_SA
-value|0x040000
-end_define
-
-begin_comment
-comment|/* A scheduler activation based thread. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_UMTXWAKEUP
 value|0x080000
 end_define
@@ -1032,6 +1021,17 @@ end_define
 
 begin_comment
 comment|/* Have alternate signal stack. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_SA
+value|0x0080
+end_define
+
+begin_comment
+comment|/* A scheduler activation based thread. */
 end_comment
 
 begin_define
