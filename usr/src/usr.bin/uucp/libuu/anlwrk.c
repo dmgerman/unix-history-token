@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)anlwrk.c	5.7	(Berkeley) %G%"
+literal|"@(#)anlwrk.c	5.8	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,16 +106,6 @@ index|]
 index|[
 name|NAMESIZE
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|fseek
-argument_list|()
-decl_stmt|,
-name|ftell
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
