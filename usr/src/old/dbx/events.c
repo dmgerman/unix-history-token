@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)events.c	1.5 (Berkeley) %G%"
+literal|"@(#)events.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3470,6 +3470,21 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|cast
+parameter_list|(
+name|size
+parameter_list|,
+name|loc
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|switch (size) { \ 	case sizeof (char): *(char *)(loc) = (val); break; \ 	case sizeof (short): *(short *)(loc) = (val); break; \ 	default: *(int *)(loc) = (val); break; \     }
+end_define
+
 begin_comment
 comment|/*  * Print out the value of a variable if it has changed since the  * last time we checked.  */
 end_comment
@@ -3518,6 +3533,49 @@ operator|->
 name|nodetype
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|op
+operator|==
+name|O_SYM
+name|and
+name|isreg
+argument_list|(
+name|p
+operator|->
+name|value
+operator|.
+name|sym
+argument_list|)
+condition|)
+block|{
+name|int
+name|regval
+init|=
+name|address
+argument_list|(
+name|p
+operator|->
+name|value
+operator|.
+name|sym
+argument_list|,
+name|nil
+argument_list|)
+decl_stmt|;
+name|cast
+argument_list|(
+name|n
+argument_list|,
+name|buff
+argument_list|,
+name|regval
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|dread
 argument_list|(
 name|buff
