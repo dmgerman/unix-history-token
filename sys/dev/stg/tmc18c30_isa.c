@@ -1155,16 +1155,6 @@ name|sc_ih
 operator|=
 name|stgintr
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"stg%d"
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|devi
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|STGIOSZ
