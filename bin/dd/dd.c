@@ -357,6 +357,7 @@ name|argv
 parameter_list|)
 name|int
 name|argc
+name|__unused
 decl_stmt|;
 name|char
 modifier|*

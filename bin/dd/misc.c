@@ -367,6 +367,7 @@ name|notused
 parameter_list|)
 name|int
 name|notused
+name|__unused
 decl_stmt|;
 block|{
 name|int
