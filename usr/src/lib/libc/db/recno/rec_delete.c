@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_delete.c	5.3 (Berkeley) %G%"
+literal|"@(#)rec_delete.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -158,17 +158,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|(
-name|RET_ERROR
-operator|)
-return|;
-block|}
+goto|goto
+name|einval
+goto|;
 if|if
 condition|(
 name|nrec
@@ -200,12 +192,24 @@ name|R_CURSOR
 case|:
 if|if
 condition|(
+operator|!
 name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|BTF_SEQINIT
 argument_list|)
+condition|)
+goto|goto
+name|einval
+goto|;
+if|if
+condition|(
+name|t
+operator|->
+name|bt_nrecs
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -231,22 +235,15 @@ name|status
 operator|==
 name|RET_SUCCESS
 condition|)
-block|{
 operator|--
 name|t
 operator|->
 name|bt_rcursor
 expr_stmt|;
-name|SET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_DELCRSR
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 default|default:
+name|einval
+label|:
 name|errno
 operator|=
 name|EINVAL
