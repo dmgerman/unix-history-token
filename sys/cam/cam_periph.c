@@ -6139,7 +6139,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Command timed out"
+literal|"Command timed out\n"
 argument_list|)
 expr_stmt|;
 name|printed
@@ -6169,7 +6169,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Unexpected Bus Free"
+literal|"Unexpected Bus Free\n"
 argument_list|)
 expr_stmt|;
 name|printed
@@ -6199,7 +6199,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Uncorrected Parity Error"
+literal|"Uncorrected Parity Error\n"
 argument_list|)
 expr_stmt|;
 name|printed
@@ -6229,7 +6229,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Data Overrun"
+literal|"Data Overrun\n"
 argument_list|)
 expr_stmt|;
 name|printed
@@ -6354,7 +6354,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Selection Timeout"
+literal|"Selection Timeout\n"
 argument_list|)
 expr_stmt|;
 name|printed
