@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.23 1997/02/22 09:43:37 peter Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.24 1997/03/24 12:29:26 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1724,18 +1724,6 @@ name|PC98
 comment|/* 	 * XXX 	 * MELCO LPC-TJ, LPC-TS 	 * PLANET SMART COM CREDITCARD/2000 PCMCIA 	 * IO-DATA PCLA/T 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -1744,7 +1732,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_LPC
-operator|)
 condition|)
 block|{
 name|ed_softc
@@ -1874,18 +1861,6 @@ block|}
 comment|/* 	 * Allied Telesis SIC-98 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -1894,7 +1869,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_SIC
-operator|)
 condition|)
 block|{
 name|ed_softc
@@ -1937,18 +1911,6 @@ block|}
 comment|/* 	 * ELECOM LANEED LD-BDN 	 * PLANET SMART COM 98 EN-2298 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -1957,7 +1919,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_BDN
-operator|)
 condition|)
 block|{
 comment|/* LD-BDN */
@@ -2001,18 +1962,6 @@ block|}
 comment|/* 	 * MELCO LGY-98, IND-SP, IND-SS 	 * MACNICA NE2098 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2021,7 +1970,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_LGY
-operator|)
 condition|)
 block|{
 comment|/* LGY-98 */
@@ -2065,18 +2013,6 @@ block|}
 comment|/* 	 * ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET 	 * D-Link DE-298P, DE-298 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2085,7 +2021,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_ICM
-operator|)
 condition|)
 block|{
 comment|/* ICM */
@@ -2129,18 +2064,6 @@ block|}
 comment|/* 	 * MELCO EGY-98 	 * Contec C-NET(98)E-A, C-NET(98)L-A 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2149,7 +2072,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_EGY
-operator|)
 condition|)
 block|{
 comment|/* EGY-98 */
@@ -2193,18 +2115,6 @@ block|}
 comment|/* 	 * IO-DATA LA/T-98 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2213,7 +2123,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_LA98
-operator|)
 condition|)
 block|{
 comment|/* LA-98 */
@@ -2257,18 +2166,6 @@ block|}
 comment|/* 	 * NEC PC-9801-108 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2277,7 +2174,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_108
-operator|)
 condition|)
 block|{
 comment|/* PC-9801-108 */
@@ -2321,18 +2217,6 @@ block|}
 comment|/* 	 * Contec C-NET(98)E/L 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2341,7 +2225,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_CNET98EL
-operator|)
 condition|)
 block|{
 comment|/* C-NET(98)E/L */
@@ -2385,18 +2268,6 @@ block|}
 comment|/* 	 * Contec C-NET(98) 	 */
 if|if
 condition|(
-operator|(
-name|ED_TYPE98
-argument_list|(
-name|isa_dev
-operator|->
-name|id_flags
-argument_list|)
-operator|==
-name|ED_TYPE98_GENERIC
-operator|)
-operator|||
-operator|(
 name|ED_TYPE98
 argument_list|(
 name|isa_dev
@@ -2405,7 +2276,6 @@ name|id_flags
 argument_list|)
 operator|==
 name|ED_TYPE98_CNET98
-operator|)
 condition|)
 block|{
 comment|/* C-NET(98) */
