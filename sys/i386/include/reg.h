@@ -372,7 +372,7 @@ name|d
 parameter_list|,
 name|x
 parameter_list|)
-value|((&d->dr0)[x])
+value|((&(d)->dr0)[x])
 end_define
 
 begin_comment
