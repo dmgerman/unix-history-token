@@ -511,9 +511,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -888,9 +885,6 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 block|}
 name|_thread_leave_cancellation_point
 argument_list|()
@@ -987,9 +981,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 comment|/* Lock the condition variable structure: */
 name|_SPINLOCK
 argument_list|(
@@ -1407,9 +1398,6 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 block|}
 name|_thread_leave_cancellation_point
 argument_list|()
@@ -1771,6 +1759,104 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|_cond_wait_backout
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|pthread_cond_t
+name|cond
+decl_stmt|;
+name|cond
+operator|=
+name|pthread
+operator|->
+name|data
+operator|.
+name|cond
+expr_stmt|;
+if|if
+condition|(
+name|cond
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Defer signals to protect the scheduling queues 		 * from access by the signal handler: 		 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* Lock the condition variable structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* Process according to condition variable type: */
+switch|switch
+condition|(
+name|cond
+operator|->
+name|c_type
+condition|)
+block|{
+comment|/* Fast condition variable: */
+case|case
+name|COND_TYPE_FAST
+case|:
+name|cond_queue_remove
+argument_list|(
+name|cond
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+comment|/* Check for no more waiters: */
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|c_queue
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|cond
+operator|->
+name|c_mutex
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+comment|/* Unlock the condition variable structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|cond
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * Dequeue a waiting thread from the head of a condition queue in  * descending priority order.  */
 end_comment
@@ -1814,7 +1900,7 @@ name|c_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|pthread
@@ -1889,7 +1975,7 @@ name|c_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|pthread
@@ -1933,6 +2019,11 @@ argument_list|,
 name|cond_head
 argument_list|)
 decl_stmt|;
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For the common case of all threads having equal priority, 	 * we perform a quick check against the priority of the thread 	 * at the tail of the queue. 	 */
 if|if
 condition|(
@@ -1961,7 +2052,7 @@ name|c_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 else|else
@@ -1992,7 +2083,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|tid
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_BEFORE
@@ -2001,7 +2092,7 @@ name|tid
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 block|}
@@ -2010,6 +2101,14 @@ operator|->
 name|flags
 operator||=
 name|PTHREAD_FLAGS_IN_CONDQ
+expr_stmt|;
+name|pthread
+operator|->
+name|data
+operator|.
+name|cond
+operator|=
+name|cond
 expr_stmt|;
 block|}
 end_function

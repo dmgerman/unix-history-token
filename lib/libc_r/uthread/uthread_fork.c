@@ -517,10 +517,6 @@ name|_queue_signals
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Initialize signal handling: */
-name|_thread_sig_init
-argument_list|()
-expr_stmt|;
 comment|/* Initialize the scheduling switch hook routine: */
 name|_sched_switch_hook
 operator|=

@@ -140,9 +140,12 @@ name|param
 operator|->
 name|sched_priority
 operator|!=
+name|PTHREAD_BASE_PRIORITY
+argument_list|(
 name|pthread
 operator|->
 name|base_priority
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * Remove the thread from its current priority 			 * queue before any adjustments are made to its 			 * active priority: 			 */
@@ -176,6 +179,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Set the thread base priority: */
+name|pthread
+operator|->
+name|base_priority
+operator|&=
+operator|(
+name|PTHREAD_SIGNAL_PRIORITY
+operator||
+name|PTHREAD_RT_PRIORITY
+operator|)
+expr_stmt|;
 name|pthread
 operator|->
 name|base_priority

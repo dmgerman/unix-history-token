@@ -76,8 +76,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Nothing to return. */
-return|return;
 block|}
 end_function
 

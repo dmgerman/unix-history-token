@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -1401,7 +1407,6 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 

@@ -68,6 +68,9 @@ modifier|*
 name|oset
 parameter_list|)
 block|{
+name|sigset_t
+name|sigset
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -163,8 +166,38 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Dispatch signals to the running thread that are pending 		 * and now unblocked: 		 */
-name|_dispatch_signals
+comment|/* 		 * Check if there are pending signals for the running 		 * thread or process that aren't blocked: 		 */
+name|sigset
+operator|=
+name|_thread_run
+operator|->
+name|sigpend
+expr_stmt|;
+name|SIGSETOR
+argument_list|(
+name|sigset
+argument_list|,
+name|_process_sigpending
+argument_list|)
+expr_stmt|;
+name|SIGSETNAND
+argument_list|(
+name|sigset
+argument_list|,
+name|_thread_run
+operator|->
+name|sigmask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SIGNOTEMPTY
+argument_list|(
+name|sigset
+argument_list|)
+condition|)
+comment|/* 			 * Call the kernel scheduler which will safely 			 * install a signal frame for the running thread: 			 */
+name|_thread_kern_sched_sig
 argument_list|()
 expr_stmt|;
 block|}

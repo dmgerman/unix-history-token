@@ -121,6 +121,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|wvret
 operator|=
 name|writev
@@ -135,6 +136,7 @@ name|hdtr
 operator|->
 name|hdr_cnt
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1
@@ -477,6 +479,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|wvret
 operator|=
 name|writev
@@ -491,6 +494,7 @@ name|hdtr
 operator|->
 name|trl_cnt
 argument_list|)
+operator|)
 operator|==
 operator|-
 literal|1

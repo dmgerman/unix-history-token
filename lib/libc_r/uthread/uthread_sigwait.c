@@ -98,23 +98,16 @@ operator|.
 name|sa_flags
 operator|=
 name|SA_RESTART
+operator||
+name|SA_SIGINFO
 expr_stmt|;
-name|act
-operator|.
-name|sa_mask
-operator|=
-operator|*
-name|set
-expr_stmt|;
-comment|/* Ensure the scheduling signal is masked: */
-name|sigaddset
+comment|/* Ensure the signal handler cannot be interrupted by other signals: */
+name|sigfillset
 argument_list|(
 operator|&
 name|act
 operator|.
 name|sa_mask
-argument_list|,
-name|_SCHED_SIGNAL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the set of signals that will be waited on: 	 */

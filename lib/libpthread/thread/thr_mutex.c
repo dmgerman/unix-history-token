@@ -2085,7 +2085,6 @@ name|interrupted
 operator|!=
 literal|0
 condition|)
-block|{
 name|mutex_queue_remove
 argument_list|(
 operator|*
@@ -2094,7 +2093,6 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Unlock the mutex structure: */
 name|_SPINUNLOCK
 argument_list|(
@@ -4150,6 +4148,84 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|_mutex_lock_backout
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|struct
+name|pthread_mutex
+modifier|*
+name|mutex
+decl_stmt|;
+comment|/* 	 * Defer signals to protect the scheduling queues from 	 * access by the signal handler: 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_MUTEX_WAIT
+condition|)
+block|{
+name|mutex
+operator|=
+name|pthread
+operator|->
+name|data
+operator|.
+name|mutex
+expr_stmt|;
+comment|/* Lock the mutex structure: */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|mutex
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|mutex_queue_remove
+argument_list|(
+name|mutex
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+comment|/* This thread is no longer waiting for the mutex: */
+name|mutex
+operator|->
+name|m_owner
+operator|->
+name|data
+operator|.
+name|mutex
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Unlock the mutex structure: */
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|mutex
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Undefer and handle pending signals, yielding if 	 * necessary: 	 */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Dequeue a waiting thread from the head of a mutex queue in descending  * priority order.  */
 end_comment
@@ -4193,7 +4269,7 @@ name|m_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|pthread
@@ -4261,7 +4337,7 @@ name|m_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|pthread
@@ -4305,6 +4381,11 @@ argument_list|,
 name|mutex_head
 argument_list|)
 decl_stmt|;
+name|PTHREAD_ASSERT_NOT_IN_SYNCQ
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
 comment|/* 	 * For the common case of all threads having equal priority, 	 * we perform a quick check against the priority of the thread 	 * at the tail of the queue. 	 */
 if|if
 condition|(
@@ -4333,7 +4414,7 @@ name|m_queue
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 else|else
@@ -4364,7 +4445,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|tid
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_BEFORE
@@ -4373,7 +4454,7 @@ name|tid
 argument_list|,
 name|pthread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
 block|}

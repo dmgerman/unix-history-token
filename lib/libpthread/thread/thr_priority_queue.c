@@ -152,7 +152,18 @@ name|thrd
 parameter_list|,
 name|msg
 parameter_list|)
-value|do {		\ 	if ((thrd)->flags& _PQ_IN_SCHEDQ)		\ 		PANIC(msg);				\ } while (0)
+value|do {		\ 	if (((thrd)->flags& _PQ_IN_SCHEDQ) != 0)	\ 		PANIC(msg);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PQ_ASSERT_PROTECTED
+parameter_list|(
+name|msg
+parameter_list|)
+define|\
+value|PTHREAD_ASSERT((_thread_kern_in_sched != 0) ||	\ 	    (_thread_run->sig_defer_count> 0) ||	\ 	    (_sig_in_handler != 0), msg);
 end_define
 
 begin_else
@@ -228,8 +239,10 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PQ_CHECK_PRIO
-parameter_list|()
+name|_PQ_ASSERT_PROTECTED
+parameter_list|(
+name|msg
+parameter_list|)
 end_define
 
 begin_endif
@@ -481,6 +494,11 @@ argument_list|,
 literal|"_pq_remove: Not in priority queue"
 argument_list|)
 expr_stmt|;
+name|_PQ_ASSERT_PROTECTED
+argument_list|(
+literal|"_pq_remove: prioq not protected!"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove this thread from priority list.  Note that if 	 * the priority list becomes empty, it is not removed 	 * from the priority queue because another thread may be 	 * added to the priority list (resulting in a needless 	 * removal/insertion).  Priority lists are only removed 	 * from the priority queue when _pq_first is called. 	 */
 name|TAILQ_REMOVE
 argument_list|(
@@ -546,6 +564,11 @@ argument_list|(
 name|pthread
 argument_list|,
 literal|"_pq_insert_head: Already in priority queue"
+argument_list|)
+expr_stmt|;
+name|_PQ_ASSERT_PROTECTED
+argument_list|(
+literal|"_pq_insert_head: prioq not protected!"
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
@@ -634,6 +657,11 @@ argument_list|,
 literal|"_pq_insert_tail: Already in priority queue"
 argument_list|)
 expr_stmt|;
+name|_PQ_ASSERT_PROTECTED
+argument_list|(
+literal|"_pq_insert_tail: prioq not protected!"
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -711,6 +739,11 @@ argument_list|)
 expr_stmt|;
 name|_PQ_SET_ACTIVE
 argument_list|()
+expr_stmt|;
+name|_PQ_ASSERT_PROTECTED
+argument_list|(
+literal|"_pq_first: prioq not protected!"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -810,6 +843,11 @@ argument_list|(
 literal|"pq_insert_prio_list: pq_active"
 argument_list|)
 expr_stmt|;
+name|_PQ_ASSERT_PROTECTED
+argument_list|(
+literal|"_pq_insert_prio_list: prioq not protected!"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The priority queue is in descending priority order.  Start at 	 * the beginning of the queue and find the list before which the 	 * new list should be inserted. 	 */
 name|pql
 operator|=
@@ -901,15 +939,6 @@ literal|1
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_PTHREADS_INVARIANTS
-argument_list|)
-end_if
 
 begin_function
 name|void
@@ -1164,11 +1193,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

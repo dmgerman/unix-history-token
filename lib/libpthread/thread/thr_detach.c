@@ -119,10 +119,17 @@ name|join_queue
 argument_list|,
 name|next_thread
 argument_list|,
-name|qe
+name|sqe
 argument_list|)
 expr_stmt|;
-comment|/* Make the thread run: */
+name|pthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PTHREAD_FLAGS_IN_JOINQ
+expr_stmt|;
+comment|/* Make the thread runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|next_thread

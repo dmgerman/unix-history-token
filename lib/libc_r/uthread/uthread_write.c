@@ -330,7 +330,7 @@ name|_FD_UNLOCK
 argument_list|(
 name|fd
 argument_list|,
-name|FD_RDWR
+name|FD_WRITE
 argument_list|)
 expr_stmt|;
 block|}
