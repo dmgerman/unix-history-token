@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ETHER_COOKIE
-value|1108206947
+value|917786906
 end_define
 
 begin_comment
