@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pcwhoami.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pcwhoami.h 1.2 %G%"; */
 end_comment
 
 begin_comment
@@ -44,6 +44,12 @@ undef|#
 directive|undef
 name|PDP11
 end_undef
+
+begin_define
+define|#
+directive|define
+name|DEC11
+end_define
 
 begin_comment
 comment|/*  *	am i pi or pxp?  */
