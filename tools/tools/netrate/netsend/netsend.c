@@ -627,16 +627,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"send"
-argument_list|)
-expr_stmt|;
 name|send_errors
 operator|++
 expr_stmt|;
-block|}
 name|send_calls
 operator|++
 expr_stmt|;
