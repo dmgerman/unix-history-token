@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth19.c	3.14 %G%"
+literal|"@(#)tth19.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,12 +211,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|h19_setinsert
+name|H19_SETINSERT
 parameter_list|(
 name|m
 parameter_list|)
 value|(esc(), (tt.tt_insert = (m)) ? pc(@) : pc(O))
 end_define
+
+begin_macro
+name|h19_setinsert
+argument_list|(
+argument|new
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|H19_SETINSERT
+argument_list|(
+name|new
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_expr_stmt
 name|h19_setmodes
@@ -371,7 +388,12 @@ name|tt
 operator|.
 name|tt_modes
 condition|)
-name|h19_setmodes
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_setmodes
+call|)
 argument_list|(
 name|tt
 operator|.
@@ -388,7 +410,7 @@ name|tt
 operator|.
 name|tt_insert
 condition|)
-name|h19_setinsert
+name|H19_SETINSERT
 argument_list|(
 name|tt
 operator|.
@@ -461,7 +483,12 @@ name|tt
 operator|.
 name|tt_modes
 condition|)
-name|h19_setmodes
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_setmodes
+call|)
 argument_list|(
 name|tt
 operator|.
@@ -478,7 +505,7 @@ name|tt
 operator|.
 name|tt_insert
 condition|)
-name|h19_setinsert
+name|H19_SETINSERT
 argument_list|(
 name|tt
 operator|.
@@ -829,16 +856,6 @@ end_macro
 
 begin_block
 block|{
-name|h19_setmodes
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|h19_setinsert
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|gen_VE
@@ -1035,6 +1052,18 @@ operator|.
 name|tt_putc
 operator|=
 name|h19_putc
+expr_stmt|;
+name|tt
+operator|.
+name|tt_setinsert
+operator|=
+name|h19_setinsert
+expr_stmt|;
+name|tt
+operator|.
+name|tt_setmodes
+operator|=
+name|h19_setmodes
 expr_stmt|;
 name|tt
 operator|.

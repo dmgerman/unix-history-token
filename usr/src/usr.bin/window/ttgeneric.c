@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.25 %G%"
+literal|"@(#)ttgeneric.c	3.26 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1342,16 +1342,6 @@ end_macro
 
 begin_block
 block|{
-name|gen_setmodes
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|gen_setinsert
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|gen_TE
@@ -2004,6 +1994,18 @@ operator|.
 name|tt_move
 operator|=
 name|gen_move
+expr_stmt|;
+name|tt
+operator|.
+name|tt_setinsert
+operator|=
+name|gen_setinsert
+expr_stmt|;
+name|tt
+operator|.
+name|tt_setmodes
+operator|=
+name|gen_setmodes
 expr_stmt|;
 if|if
 condition|(

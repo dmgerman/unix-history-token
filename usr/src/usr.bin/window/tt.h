@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)tt.h	3.13 %G%  */
+comment|/*  * @(#)tt.h	3.14 %G%  */
 end_comment
 
 begin_comment
@@ -96,6 +96,22 @@ name|tt_clear
 function_decl|)
 parameter_list|()
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|tt_setinsert
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* set insert mode */
+name|int
+function_decl|(
+modifier|*
+name|tt_setmodes
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* set display modes */
 comment|/* internal variables */
 name|char
 name|tt_modes
