@@ -1763,10 +1763,10 @@ operator|<
 name|ENTROPYSOURCE
 condition|)
 block|{
-comment|/* The reseed task must not be jumped on */
+comment|/* Called inside irq handlers; protect from interference */
 name|mask
 operator|=
-name|splsofttq
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|which
