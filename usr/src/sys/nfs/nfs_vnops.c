@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -205,6 +205,9 @@ decl_stmt|,
 name|nfs_create
 argument_list|()
 decl_stmt|,
+name|nfs_mknod
+argument_list|()
+decl_stmt|,
 name|nfs_open
 argument_list|()
 decl_stmt|,
@@ -292,7 +295,7 @@ name|nfs_lookup
 block|,
 name|nfs_create
 block|,
-name|vfs_noop
+name|nfs_mknod
 block|,
 name|nfs_open
 block|,
@@ -316,7 +319,7 @@ name|vfs_noop
 block|,
 name|nfs_fsync
 block|,
-name|vfs_noop
+name|vfs_nullop
 block|,
 name|nfs_remove
 block|,
@@ -1947,6 +1950,7 @@ name|error
 operator|=
 name|nfs_loadattrcache
 argument_list|(
+operator|&
 name|newvp
 argument_list|,
 operator|&
@@ -2110,6 +2114,7 @@ name|error
 operator|=
 name|nfs_loadattrcache
 argument_list|(
+operator|&
 name|newvp
 argument_list|,
 operator|&
@@ -2308,6 +2313,7 @@ name|error
 operator|=
 name|nfs_loadattrcache
 argument_list|(
+operator|&
 name|newvp
 argument_list|,
 operator|&
@@ -2956,6 +2962,64 @@ label|:
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * nfs mknod call  * This call is currently not supported.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_macro
+name|nfs_mknod
+argument_list|(
+argument|ndp
+argument_list|,
+argument|vap
+argument_list|,
+argument|cred
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|nameidata
+modifier|*
+name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vattr
+modifier|*
+name|vap
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|nfs_abortop
+argument_list|(
+name|ndp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
