@@ -632,6 +632,19 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|ExcludeFrom
+condition|)
+name|sprintf
+argument_list|(
+name|args
+argument_list|,
+literal|"-X %s "
+argument_list|,
+name|ExcludeFrom
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|tball
@@ -655,7 +668,7 @@ literal|'z'
 argument_list|)
 condition|)
 comment|/* Compress/gzip? */
-name|strcpy
+name|strcat
 argument_list|(
 name|args
 argument_list|,

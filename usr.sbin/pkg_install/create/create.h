@@ -83,6 +83,14 @@ name|PlayPen
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ExcludeFrom
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|check_list
