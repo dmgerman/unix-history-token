@@ -259,7 +259,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s [-rsi] [-p proto] [-w wait]\n"
+literal|"\n%s [-nrsi] [-p proto] [-w wait]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -3977,7 +3977,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"irsp:w:"
+literal|"inrsp:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -4001,6 +4001,10 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'n'
+comment|/* ignored, just for compatibility with std netstat */
+break|break ;
 case|case
 literal|'r'
 case|:
