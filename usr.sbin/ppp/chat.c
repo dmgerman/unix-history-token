@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: chat.c,v 1.54 1999/02/12 00:52:29 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: chat.c,v 1.55 1999/05/08 11:06:18 brian Exp $  */
 end_comment
 
 begin_include
@@ -1057,6 +1057,7 @@ argument_list|,
 name|needcr
 argument_list|)
 expr_stmt|;
+comment|/*        * Now read our string.  If it's not a special string, we unset        * ``special'' to break out of the loop.        */
 if|if
 condition|(
 name|gotabort
@@ -2843,6 +2844,7 @@ name|physical
 argument_list|)
 condition|)
 block|{
+comment|/*        * XXX: Fix me        * This data should be stuffed down through the link layers        */
 comment|/* There's always room for the HDLC header */
 name|c
 operator|->
@@ -3337,13 +3339,11 @@ name|int
 name|reslen
 parameter_list|,
 name|int
-name|sendmode
+name|cr
 parameter_list|)
 block|{
 name|int
-name|addcr
-init|=
-literal|0
+name|len
 decl_stmt|;
 name|result
 index|[
@@ -3352,14 +3352,6 @@ name|reslen
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|sendmode
-condition|)
-name|addcr
-operator|=
-literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -3392,11 +3384,7 @@ block|{
 case|case
 literal|'c'
 case|:
-if|if
-condition|(
-name|sendmode
-condition|)
-name|addcr
+name|cr
 operator|=
 literal|0
 expr_stmt|;
@@ -3428,7 +3416,7 @@ literal|4
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Pause 0.25 sec */
+comment|/* Delay 0.25 seconds */
 case|case
 literal|'n'
 case|:
@@ -3505,19 +3493,20 @@ argument_list|,
 name|reslen
 argument_list|)
 expr_stmt|;
-name|reslen
-operator|-=
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|result
 argument_list|)
 expr_stmt|;
+name|reslen
+operator|-=
+name|len
+expr_stmt|;
 name|result
 operator|+=
-name|strlen
-argument_list|(
-name|result
-argument_list|)
+name|len
 expr_stmt|;
 break|break;
 case|case
@@ -3541,19 +3530,20 @@ argument_list|,
 name|reslen
 argument_list|)
 expr_stmt|;
-name|reslen
-operator|-=
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|result
 argument_list|)
 expr_stmt|;
+name|reslen
+operator|-=
+name|len
+expr_stmt|;
 name|result
 operator|+=
-name|strlen
-argument_list|(
-name|result
-argument_list|)
+name|len
 expr_stmt|;
 block|}
 break|break;
@@ -3581,19 +3571,20 @@ argument_list|,
 name|reslen
 argument_list|)
 expr_stmt|;
-name|reslen
-operator|-=
+name|len
+operator|=
 name|strlen
 argument_list|(
 name|result
 argument_list|)
 expr_stmt|;
+name|reslen
+operator|-=
+name|len
+expr_stmt|;
 name|result
 operator|+=
-name|strlen
-argument_list|(
-name|result
-argument_list|)
+name|len
 expr_stmt|;
 break|break;
 default|default:
@@ -3670,7 +3661,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|addcr
+name|cr
 condition|)
 operator|*
 name|result
