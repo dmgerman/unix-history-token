@@ -128,7 +128,7 @@ literal|1
 condition|)
 return|return
 operator|(
-literal|"/kernel"
+literal|"/boot/kernel/kernel"
 operator|)
 return|;
 return|return
