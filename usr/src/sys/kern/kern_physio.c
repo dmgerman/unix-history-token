@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.37	82/12/17	*/
+comment|/*	kern_physio.c	4.38	83/01/17	*/
 end_comment
 
 begin_include
@@ -1155,11 +1155,13 @@ name|bp
 operator|->
 name|b_resid
 operator|||
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_ERROR
+operator|)
 condition|)
 break|break;
 block|}
@@ -1213,6 +1215,43 @@ goto|;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|MAXPHYS
+value|(63 * 1024)
+end_define
+
+begin_comment
+comment|/* network disk brain damage */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"nd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NND
+operator|>
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXPHYS
+value|(32 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|unsigned
 name|minphys
@@ -1231,17 +1270,13 @@ name|bp
 operator|->
 name|b_bcount
 operator|>
-literal|63
-operator|*
-literal|1024
+name|MAXPHYS
 condition|)
 name|bp
 operator|->
 name|b_bcount
 operator|=
-literal|63
-operator|*
-literal|1024
+name|MAXPHYS
 expr_stmt|;
 block|}
 end_function
