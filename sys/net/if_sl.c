@@ -1724,6 +1724,17 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|sl_compress_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_comp
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 goto|goto
 name|slfound
 goto|;
