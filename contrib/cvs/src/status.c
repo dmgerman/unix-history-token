@@ -276,6 +276,11 @@ argument_list|(
 literal|"-l"
 argument_list|)
 expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
+argument_list|)
+expr_stmt|;
 comment|/* For a while, we tried setting SEND_NO_CONTENTS here so this 	   could be a fast operation.  That prevents the 	   server from updating our timestamp if the timestamp is 	   changed but the file is unmodified.  Worse, it is user-visible 	   (shows "locally modified" instead of "up to date" if 	   timestamp is changed but file is not).  And there is no good 	   workaround (you might not want to run "cvs update"; "cvs -n 	   update" doesn't update CVS/Entries; "cvs diff --brief" or 	   something perhaps could be made to work but somehow that 	   seems nonintuitive to me even if so).  Given that timestamps 	   seem to have the potential to get munged for any number of 	   reasons, it seems better to not rely too much on them.  */
 name|send_files
 argument_list|(
@@ -348,7 +353,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+name|LOCK_READ
 argument_list|,
 operator|(
 name|char

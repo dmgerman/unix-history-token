@@ -9,12 +9,6 @@ directive|include
 file|"cvs.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"version.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -183,7 +177,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-name|version_string
+name|PACKAGE_STRING
 argument_list|,
 name|stdout
 argument_list|)

@@ -391,6 +391,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|FILE
+modifier|*
+name|stdio_buffer_get_file
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|buffer
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|buffer
 modifier|*

@@ -517,6 +517,11 @@ argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
+argument_list|)
+expr_stmt|;
 comment|/* If !found_slash, refrain from sending "Directory", for 	   CVS 1.9 compatibility.  If we only tried to deal with servers 	   which are at least CVS 1.9.26 or so, we wouldn't have to 	   special-case this.  */
 if|if
 condition|(

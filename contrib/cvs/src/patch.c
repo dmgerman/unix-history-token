@@ -1616,7 +1616,7 @@ name|which
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+name|LOCK_READ
 argument_list|,
 name|where
 argument_list|,

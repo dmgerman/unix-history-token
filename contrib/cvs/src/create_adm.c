@@ -88,7 +88,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s-> Create_Admin (%s, %s, %s, %s, %s, %d, %d)\n"
+literal|"%s-> Create_Admin (%s, %s, %s, %s, %s, %d, %d, %d)\n"
 argument_list|,
 name|CLIENT_SERVER_STR
 argument_list|,
@@ -113,6 +113,8 @@ argument_list|,
 name|nonbranch
 argument_list|,
 name|warn
+argument_list|,
+name|dotemplate
 argument_list|)
 expr_stmt|;
 block|}
@@ -135,12 +137,6 @@ operator|+
 literal|100
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dir
-operator|!=
-name|NULL
-condition|)
 operator|(
 name|void
 operator|)
@@ -151,17 +147,6 @@ argument_list|,
 literal|"%s/%s"
 argument_list|,
 name|dir
-argument_list|,
-name|CVSADM
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|tmp
 argument_list|,
 name|CVSADM
 argument_list|)
@@ -385,9 +370,6 @@ name|cp
 operator|=
 name|reposcopy
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RELATIVE_REPOS
 comment|/*      * If the Repository file is to hold a relative path, try to strip off      * the leading CVSroot argument.      */
 block|{
 name|char
@@ -449,8 +431,6 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|fprintf

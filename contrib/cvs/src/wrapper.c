@@ -333,38 +333,14 @@ block|{
 name|char
 modifier|*
 name|file
+init|=
+name|strcat_filename_onto_homedir
+argument_list|(
+name|homedir
+argument_list|,
+name|CVSDOTWRAPPER
+argument_list|)
 decl_stmt|;
-name|file
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|homedir
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-name|CVSDOTWRAPPER
-argument_list|)
-operator|+
-literal|10
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|file
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|homedir
-argument_list|,
-name|CVSDOTWRAPPER
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|isfile
@@ -1349,7 +1325,7 @@ block|{
 case|case
 literal|'f'
 case|:
-comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cyclic.com/cvs/dev-wrap.txt).  */
+comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cvshome.org/docs/infowrapper.html).  */
 name|error
 argument_list|(
 literal|1
@@ -1406,7 +1382,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cyclic.com/cvs/dev-wrap.txt).  */
+comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cvshome.org/docs/infowrapper.html).  */
 name|error
 argument_list|(
 literal|1
