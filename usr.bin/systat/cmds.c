@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cmds.c	8.2 (Berkeley) 4/29/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmds.c	8.2 (Berkeley) 4/29/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,7 +789,7 @@ block|}
 if|if
 condition|(
 name|nmatches
-operator|!=
+operator|>
 literal|1
 condition|)
 return|return
