@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	8.1 (Berkeley) %G%"
+literal|"@(#)quit.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1112,12 +1112,12 @@ argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
+block|}
 name|fflush
 argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-block|}
 name|trunc
 argument_list|(
 name|obuf
