@@ -1149,6 +1149,9 @@ case|:
 case|case
 literal|0x5275105a
 case|:
+case|case
+literal|0x6269105a
+case|:
 return|return
 literal|"Promise TX2 ATA133 controller"
 return|;
@@ -2547,6 +2550,10 @@ case|:
 comment|/* Promise TX2 ATA133 */
 case|case
 literal|0x5275105a
+case|:
+comment|/* Promise TX2 ATA133 */
+case|case
+literal|0x6269105a
 case|:
 comment|/* Promise TX2 ATA133 */
 name|ATA_OUTB

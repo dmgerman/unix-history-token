@@ -610,6 +610,9 @@ case|:
 case|case
 literal|0x6268105a
 case|:
+case|case
+literal|0x6269105a
+case|:
 comment|/* test RAID bit in PCI reg XXX */
 return|return
 operator|(
