@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.1 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,13 +167,6 @@ end_endif
 begin_comment
 comment|/* ndef TRUE */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* libc */
@@ -753,32 +746,6 @@ end_define
 
 begin_comment
 comment|/* doing a delete operation */
-end_comment
-
-begin_comment
-comment|/* magic number for identifying btree files */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BTREEMAGIC
-value|053162L
-end_define
-
-begin_comment
-comment|/* magic */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BTREEVERSION
-value|2
-end_define
-
-begin_comment
-comment|/* last changed 6 jan 1991 */
 end_comment
 
 begin_comment
