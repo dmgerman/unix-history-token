@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c	5.2 (Berkeley) %G%"
+literal|"@(#)savenl.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * savenl - routines for saving namelist and line number information  *  * This module contains the routines that make pi dump a namelist  * at the end of the object file.  We do this by first creating  * four temporary files in "startnlfile".  One temp file contains  * the string table, one the symbol table, one the file name  * information and one the line number information.  *  * Prior to generation of the code for a statement the "lineno"  * routine is called to dump the line number and current object  * address.  At the end of each block "savenl" is called to dump  * the strings and symbol structures.  *  * At the end of execution "copynlfile" is called and it copies  * the temp files onto the end of the obj file.  *  * In case of error, "removenlfile" is called to destroy the temp files.  *  * The only other changes to pi are in calling these routines from  *  * 	"main"		(main.c)  *	"yymain"	(yymain.c)  *	"funcend"	(fend.c)  *	"yyget"		(yyget.c)  *	"putline"	(stat.c)  */
