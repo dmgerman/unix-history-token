@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 2.1 %G%"
+literal|"@(#)rval.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,7 +232,7 @@ endif|PC
 end_endif
 
 begin_comment
-comment|/*  * Rvalue - an expression.  *  * Contype is the type that the caller would prefer, nand is important  * if constant sets or constant strings are involved, the latter  * because of string padding.  * required is a flag whether an lvalue or an rvalue is required.  * only VARs and structured things can have gt their lvalue this way.  */
+comment|/*  * Rvalue - an expression.  *  * Contype is the type that the caller would prefer, nand is important  * if constant strings are involved, because of string padding.  * required is a flag whether an lvalue or an rvalue is required.  * only VARs and structured things can have gt their lvalue this way.  */
 end_comment
 
 begin_comment
@@ -2695,18 +2695,11 @@ case|:
 ifdef|#
 directive|ifdef
 name|OBJ
-comment|/* 		     * If the context hasn't told us the type 		     * and a constant set is present 		     * we need to infer the type  		     * before generating code. 		     */
-if|if
-condition|(
-name|contype
-operator|==
-name|NLNIL
-condition|)
-block|{
+comment|/* 		     * get the type of the right hand side. 		     * if it turns out to be a set, 		     * use that type when getting 		     * the type of the left hand side. 		     * and then use the type of the left hand side 		     * when generating code. 		     * this will correctly decide the type of any 		     * empty sets in the tree, since if the empty set  		     * is on the left hand side it will inherit 		     * the type of the right hand side, 		     * and if it's on the right hand side, its type (intset) 		     * will be overridden by the type of the left hand side. 		     * this is an awful lot of tree traversing,  		     * but it works. 		     */
 name|codeoff
 argument_list|()
 expr_stmt|;
-name|contype
+name|p1
 operator|=
 name|rvalue
 argument_list|(
@@ -2724,7 +2717,48 @@ expr_stmt|;
 name|codeon
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|==
+name|NLNIL
+condition|)
+block|{
+return|return
+name|NLNIL
+return|;
 block|}
+if|if
+condition|(
+name|isa
+argument_list|(
+name|p1
+argument_list|,
+literal|"t"
+argument_list|)
+condition|)
+block|{
+name|codeoff
+argument_list|()
+expr_stmt|;
+name|contype
+operator|=
+name|rvalue
+argument_list|(
+name|r
+operator|->
+name|expr_node
+operator|.
+name|lhs
+argument_list|,
+name|p1
+argument_list|,
+name|RREQ
+argument_list|)
+expr_stmt|;
+name|codeon
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|contype
@@ -2735,6 +2769,7 @@ block|{
 return|return
 name|NLNIL
 return|;
+block|}
 block|}
 name|p
 operator|=
@@ -2885,7 +2920,7 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
-comment|/* 			 * the second pass can't do 			 *	long op double  or  double op long 			 * so we have to know the type of both operands 			 * also, it gets tricky for sets, which are done 			 * by function calls. 			 */
+comment|/* 			 * the second pass can't do 			 *	long op double  or  double op long 			 * so we have to know the type of both operands. 			 * also, see the note for obj above on determining 			 * the type of empty sets. 			 */
 name|codeoff
 argument_list|()
 expr_stmt|;
@@ -2899,7 +2934,7 @@ name|expr_node
 operator|.
 name|rhs
 argument_list|,
-name|contype
+name|NLNIL
 argument_list|,
 name|RREQ
 argument_list|)
@@ -3102,14 +3137,6 @@ expr_stmt|;
 name|codeon
 argument_list|()
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|contype
-operator|==
-name|NLNIL
-condition|)
-block|{
 return|return
 name|NLNIL
 return|;
@@ -3620,7 +3647,7 @@ case|:
 case|case
 name|T_GE
 case|:
-comment|/* 		 * Since there can be no, a priori, knowledge 		 * of the context type should a constant string 		 * or set arise, we must poke around to find such 		 * a type if possible.  Since constant strings can 		 * always masquerade as identifiers, this is always 		 * necessary. 		 */
+comment|/* 		 * Since there can be no, a priori, knowledge 		 * of the context type should a constant string 		 * or set arise, we must poke around to find such 		 * a type if possible.  Since constant strings can 		 * always masquerade as identifiers, this is always 		 * necessary. 		 * see the note in the obj section of case T_MULT above 		 * for the determination of the base type of empty sets. 		 */
 name|codeoff
 argument_list|()
 expr_stmt|;
@@ -3718,6 +3745,49 @@ name|contype
 operator|=
 name|p
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|isa
+argument_list|(
+name|p1
+argument_list|,
+literal|"t"
+argument_list|)
+condition|)
+block|{
+name|codeoff
+argument_list|()
+expr_stmt|;
+name|contype
+operator|=
+name|rvalue
+argument_list|(
+name|r
+operator|->
+name|expr_node
+operator|.
+name|lhs
+argument_list|,
+name|p1
+argument_list|,
+name|RREQ
+argument_list|)
+expr_stmt|;
+name|codeon
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|contype
+operator|==
+name|NLNIL
+condition|)
+block|{
+return|return
+name|NLNIL
+return|;
+block|}
 block|}
 comment|/* 		     * Now we generate code for 		     * the operands of the relational 		     * operation. 		     */
 name|p
@@ -3910,7 +3980,7 @@ block|{
 name|codeoff
 argument_list|()
 expr_stmt|;
-name|p
+name|contype
 operator|=
 name|rvalue
 argument_list|(
@@ -3920,7 +3990,7 @@ name|expr_node
 operator|.
 name|lhs
 argument_list|,
-name|contype
+name|p1
 argument_list|,
 name|LREQ
 argument_list|)
@@ -3930,7 +4000,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|contype
 operator|==
 name|NLNIL
 condition|)
@@ -3939,10 +4009,6 @@ return|return
 name|NLNIL
 return|;
 block|}
-name|contype
-operator|=
-name|p
-expr_stmt|;
 block|}
 comment|/* 			     *	put out the width of the comparison. 			     */
 name|putleaf
