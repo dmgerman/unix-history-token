@@ -700,6 +700,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|int
+name|fd
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGALRM
@@ -726,7 +729,7 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-name|LogFile
+name|fd
 operator|=
 name|open
 argument_list|(
@@ -760,7 +763,7 @@ literal|1
 expr_stmt|;
 name|write
 argument_list|(
-name|LogFile
+name|fd
 argument_list|,
 name|o
 argument_list|,
@@ -777,10 +780,10 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|LogFile
+name|fd
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
