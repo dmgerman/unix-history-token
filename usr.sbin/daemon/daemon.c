@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -76,12 +82,27 @@ decl_stmt|,
 name|nochdir
 decl_stmt|,
 name|noclose
+decl_stmt|,
+name|errcode
+decl_stmt|;
+name|FILE
+modifier|*
+name|pidf
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pidfile
 decl_stmt|;
 name|nochdir
 operator|=
 name|noclose
 operator|=
 literal|1
+expr_stmt|;
+name|pidfile
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -94,7 +115,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-cf"
+literal|"-cfp:"
 argument_list|)
 operator|)
 operator|!=
@@ -124,8 +145,13 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-literal|'?'
+literal|'p'
 case|:
+name|pidfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -149,6 +175,37 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Try to open the pidfile before calling daemon(3), 	 * to be able to report the error intelligently 	 */
+if|if
+condition|(
+name|pidfile
+condition|)
+block|{
+name|pidf
+operator|=
+name|fopen
+argument_list|(
+name|pidfile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pidf
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"pidfile ``%s''"
+argument_list|,
+name|pidfile
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|daemon
@@ -168,6 +225,32 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Now that we are the child, write out the pid */
+if|if
+condition|(
+name|pidfile
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%lu\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pidf
+argument_list|)
+expr_stmt|;
+block|}
 name|execvp
 argument_list|(
 name|argv
@@ -178,10 +261,27 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/* 	 * execvp() failed -- unlink pidfile if any, and 	 * report the error 	 */
+name|errcode
+operator|=
+name|errno
+expr_stmt|;
+comment|/* Preserve errcode -- unlink may reset it */
+if|if
+condition|(
+name|pidfile
+condition|)
+name|unlink
+argument_list|(
+name|pidfile
+argument_list|)
+expr_stmt|;
 comment|/* The child is now running, so the exit status doesn't matter. */
-name|err
+name|errc
 argument_list|(
 literal|1
+argument_list|,
+name|errcode
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -209,7 +309,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: daemon [-cf] command arguments ...\n"
+literal|"usage: daemon [-cf] [-p pidfile] command arguments ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
