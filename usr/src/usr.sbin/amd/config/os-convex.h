@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-convex.h	5.4 (Berkeley) %G%  *  * $Id: os-convex.h,v 5.2.2.1 1992/02/09 15:10:16 jsp beta $  *  * Convex C220, version 7.1 definitions for Amd (automounter)  *         from Eitan Mizrotsky<eitan@shum.huji.ac.il>  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-convex.h	8.1 (Berkeley) %G%  *  * $Id: os-convex.h,v 5.2.2.1 1992/02/09 15:10:16 jsp beta $  *  * Convex C220, version 7.1 definitions for Amd (automounter)  *         from Eitan Mizrotsky<eitan@shum.huji.ac.il>  */
 end_comment
 
 begin_comment

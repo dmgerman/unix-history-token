@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-sos4.h	5.4 (Berkeley) %G%  *  * $Id: os-sos4.h,v 5.2.2.1 1992/02/09 15:10:41 jsp beta $  *  * SunOS 4.0 definitions for Amd (automounter)  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-sos4.h	8.1 (Berkeley) %G%  *  * $Id: os-sos4.h,v 5.2.2.1 1992/02/09 15:10:41 jsp beta $  *  * SunOS 4.0 definitions for Amd (automounter)  */
 end_comment
 
 begin_comment
