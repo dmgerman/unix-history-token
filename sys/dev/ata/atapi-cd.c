@@ -1644,14 +1644,6 @@ literal|2048
 expr_stmt|;
 name|cdp
 operator|->
-name|disk_size
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* hack for GEOM SOS */
-name|cdp
-operator|->
 name|slot
 operator|=
 operator|-
@@ -7389,6 +7381,14 @@ operator|&=
 operator|~
 name|ATA_D_MEDIA_CHANGED
 expr_stmt|;
+name|cdp
+operator|->
+name|disk_size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* hack for GEOM SOS */
 name|len
 operator|=
 sizeof|sizeof
