@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -40,6 +40,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* routine to call when operation complete */
+name|void
+function_decl|(
+modifier|*
+name|d_intr
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* routine to call when interrupt is seen */
 block|}
 struct|;
 end_struct
@@ -67,6 +75,10 @@ modifier|*
 name|pmax_addr
 decl_stmt|;
 comment|/* address of controller */
+name|int
+name|pmax_pri
+decl_stmt|;
+comment|/* interrupt priority */
 name|int
 name|pmax_flags
 decl_stmt|;
