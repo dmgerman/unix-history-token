@@ -127,7 +127,7 @@ end_if
 begin_macro
 name|sscanf
 argument_list|(
-argument|char *str
+argument|const char *str
 argument_list|,
 argument|char const *fmt
 argument_list|,
@@ -143,7 +143,7 @@ end_else
 begin_macro
 name|sscanf
 argument_list|(
-argument|str
+argument|const str
 argument_list|,
 argument|fmt
 argument_list|,
