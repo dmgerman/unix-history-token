@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.9 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.10 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -119,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tty.h"
 end_include
 
 begin_include
@@ -366,12 +360,11 @@ name|short
 name|tms_format
 decl_stmt|;
 comment|/* the unit's current format (density) */
-name|struct
-name|tty
+name|caddr_t
 modifier|*
-name|tms_ttyp
+name|tms_ctty
 decl_stmt|;
-comment|/* record user's tty for errors */
+comment|/* user's controlling tty (vnode) */
 block|}
 name|tms_info
 index|[
@@ -2964,11 +2957,30 @@ literal|1
 expr_stmt|;
 name|tms
 operator|->
-name|tms_ttyp
+name|tms_ctty
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|u
 operator|.
-name|u_ttyp
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|?
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+else|:
+literal|0
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -3545,6 +3557,11 @@ name|tms_openf
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -4439,7 +4456,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ttyp
+name|tms_ctty
 argument_list|,
 literal|"tms%d: hard error bn%d\n"
 argument_list|,
@@ -6189,7 +6206,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ttyp
+name|tms_ctty
 argument_list|,
 literal|"tms%d: hard error bn%d: OFFLINE\n"
 argument_list|,
@@ -6212,7 +6229,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ttyp
+name|tms_ctty
 argument_list|,
 literal|"tms%d: hard error: OFFLINE\n"
 argument_list|,
@@ -6799,7 +6816,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ttyp
+name|tms_ctty
 argument_list|,
 literal|"tms%d: hard error bn%d\n"
 argument_list|,

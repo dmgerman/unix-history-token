@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -354,12 +354,10 @@ name|short
 name|sc_density
 decl_stmt|;
 comment|/* value |'ed into char_mode for TC13 density */
-name|struct
-name|tty
-modifier|*
-name|sc_ttyp
+name|caddr_t
+name|sc_ctty
 decl_stmt|;
-comment|/* record user's tty for errors */
+comment|/* user's controlling tty (vnode) */
 name|int
 name|sc_blks
 decl_stmt|;
@@ -1226,11 +1224,30 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|u
 operator|.
-name|u_ttyp
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|?
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_session
+operator|->
+name|s_ttyvp
+else|:
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1393,6 +1410,11 @@ name|sc_openf
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -3096,7 +3118,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"ts%d: write locked\n"
 argument_list|,
@@ -3123,7 +3145,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"ts%d: offline\n"
 argument_list|,
@@ -3137,7 +3159,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"ts%d: hard error bn%d tssr=%b xs0=%b"
 argument_list|,
@@ -3178,7 +3200,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|" xs1=%b"
 argument_list|,
@@ -3207,7 +3229,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|" xs2=%b"
 argument_list|,
@@ -3236,7 +3258,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|" xs3=%b"
 argument_list|,
@@ -3255,7 +3277,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"\n"
 argument_list|)
