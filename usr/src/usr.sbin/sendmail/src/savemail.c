@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.40 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1792,6 +1792,15 @@ condition|(
 name|SendMIMEErrors
 condition|)
 block|{
+name|addheader
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+literal|"1.0"
+argument_list|,
+name|ee
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2584,7 +2593,7 @@ expr_stmt|;
 else|else
 name|putline
 argument_list|(
-literal|"  ----- Message header follows -----\n"
+literal|"   ----- Message header follows -----\n"
 argument_list|,
 name|fp
 argument_list|,
@@ -2640,25 +2649,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"Content-Type: %s/rfc822"
-argument_list|,
-name|SendBody
-condition|?
-literal|"message"
-else|:
-literal|"X-message-header"
-argument_list|)
-expr_stmt|;
 name|putline
 argument_list|(
-name|buf
+literal|"Content-Type: message/rfc822"
 argument_list|,
 name|fp
 argument_list|,
@@ -2714,6 +2707,16 @@ operator|->
 name|e_msgboundary
 argument_list|)
 expr_stmt|;
+else|else
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -2723,6 +2726,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
