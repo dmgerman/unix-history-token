@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	map.h	3.2	%G%	*/
+comment|/*	map.h	3.3	%G%	*/
 end_comment
 
 begin_comment
@@ -40,6 +40,23 @@ end_decl_stmt
 begin_comment
 comment|/* space for swap allocation */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AMAPSIZ
+value|25
+end_define
+
+begin_decl_stmt
+name|struct
+name|map
+name|argmap
+index|[
+name|AMAPSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct

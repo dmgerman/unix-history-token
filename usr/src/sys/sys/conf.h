@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	3.6	%G%	*/
+comment|/*	conf.h	3.7	%G%	*/
 end_comment
 
 begin_comment
@@ -195,6 +195,27 @@ parameter_list|()
 function_decl|;
 block|}
 name|linesw
+index|[]
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Swap device information  */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|swdevt
+block|{
+name|dev_t
+name|sw_dev
+decl_stmt|;
+name|int
+name|sw_freed
+decl_stmt|;
+block|}
+name|swdevt
 index|[]
 struct|;
 end_struct

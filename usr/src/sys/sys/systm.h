@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	3.3	%G%	*/
+comment|/*	systm.h	3.4	%G%	*/
 end_comment
 
 begin_comment
@@ -103,6 +103,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|nswdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of swap devices */
+end_comment
+
+begin_decl_stmt
+name|int
 name|mpid
 decl_stmt|;
 end_decl_stmt
@@ -182,16 +192,6 @@ comment|/* physical memory on this CPU */
 end_comment
 
 begin_decl_stmt
-name|daddr_t
-name|swplo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* block number of swap space */
-end_comment
-
-begin_decl_stmt
 name|int
 name|nswap
 decl_stmt|;
@@ -266,6 +266,12 @@ end_decl_stmt
 begin_comment
 comment|/* swapping device */
 end_comment
+
+begin_decl_stmt
+name|dev_t
+name|argdev
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|dev_t
@@ -377,55 +383,6 @@ name|vtod
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Instrumentation  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dk_busy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|dk_time
-index|[
-literal|32
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|dk_numb
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|dk_wds
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|tk_nin
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|tk_nout
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Structure of the system-entry table  */

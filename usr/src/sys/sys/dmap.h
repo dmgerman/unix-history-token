@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmap.h	3.2	%G%	*/
+comment|/*	dmap.h	3.3	%G%	*/
 end_comment
 
 begin_comment
@@ -38,6 +38,17 @@ end_define
 
 begin_comment
 comment|/* max block size alloc on drum = .5M byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMTEXT
+value|1024
+end_define
+
+begin_comment
+comment|/* size of blocks of pure text = .5M byte */
 end_comment
 
 begin_struct
