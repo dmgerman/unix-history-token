@@ -1826,6 +1826,12 @@ name|nm_setch
 argument_list|(
 name|ch
 argument_list|)
+condition|?
+literal|0
+else|:
+name|ch
+operator|->
+name|spd
 return|;
 block|}
 end_function
