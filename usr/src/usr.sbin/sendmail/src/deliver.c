@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.1 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2785,9 +2785,32 @@ name|mci_state
 operator|!=
 name|MCIS_CLOSED
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"openmailer: "
+argument_list|)
+expr_stmt|;
+name|mci_dump
+argument_list|(
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|mci
 return|;
+block|}
 name|mci
 operator|->
 name|mci_mailer
@@ -2931,6 +2954,20 @@ argument_list|(
 literal|"openmailer: no IPC"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"openmailer: NULL\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -2954,6 +2991,20 @@ block|{
 name|syserr
 argument_list|(
 literal|"openmailer: pipe (to mailer)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"openmailer: NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2998,6 +3049,20 @@ name|mpvect
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"openmailer: NULL\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3117,6 +3182,20 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"openmailer: NULL\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -3684,6 +3763,27 @@ argument_list|,
 name|mci
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|11
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"openmailer: "
+argument_list|)
+expr_stmt|;
+name|mci_dump
+argument_list|(
+name|mci
 argument_list|)
 expr_stmt|;
 block|}
