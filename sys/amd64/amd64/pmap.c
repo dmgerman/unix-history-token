@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.17 1994/02/08 03:07:58 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.18 1994/02/10 03:03:44 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -3877,12 +3877,24 @@ if|if
 condition|(
 name|va
 operator|<
+name|UPT_MIN_ADDRESS
+condition|)
+name|i386prot
+operator||=
+name|PG_u
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|va
+operator|<
 name|UPT_MAX_ADDRESS
 condition|)
 name|i386prot
 operator||=
+name|PG_u
+operator||
 name|PG_RW
-comment|/*PG_u*/
 expr_stmt|;
 if|if
 condition|(
@@ -3908,6 +3920,10 @@ block|}
 block|}
 name|endofloop
 label|:
+if|if
+condition|(
+name|reqactivate
+condition|)
 name|tlbflush
 argument_list|()
 expr_stmt|;
@@ -4220,6 +4236,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|cacheable
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 name|pmap_use_pt
 argument_list|(
 name|pmap
@@ -4229,19 +4252,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Assumption: if it is not part of our managed memory 	 * then it must be device memory which may be volitile. 	 */
-if|if
-condition|(
-name|pmap_initialized
-condition|)
-block|{
-name|checkpv
-operator|=
-name|cacheable
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
 comment|/* 	 * Increment counters 	 */
 name|pmap
 operator|->
@@ -4281,6 +4291,17 @@ argument_list|)
 operator||
 name|PG_V
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cacheable
+condition|)
+block|{
+name|npte
+operator||=
+name|PG_N
+expr_stmt|;
+block|}
 comment|/* 	 * When forking (copy-on-write, etc): 	 * A process will turn off write permissions for any of its writable 	 * pages.  If the data (object) is only referred to by one process, the 	 * processes map is modified directly as opposed to using the 	 * object manipulation routine.  When using pmap_protect, the 	 * modified bits are not kept in the vm_page_t data structure.   	 * Therefore, when using pmap_enter in vm_fault to bring back 	 * writability of a page, there has been no memory of the 	 * modified or referenced bits except at the pte level.   	 * this clause supports the carryover of the modified and 	 * used (referenced) bits. 	 */
 if|if
 condition|(
@@ -5139,9 +5160,14 @@ expr_stmt|;
 comment|/*                          * XXX don't write protect pager mappings                          */
 if|if
 condition|(
+operator|!
+name|setem
+operator|&&
+operator|(
 name|bit
 operator|==
-name|PG_RO
+name|PG_RW
+operator|)
 condition|)
 block|{
 specifier|extern
@@ -5348,9 +5374,9 @@ name|pmap_changebit
 argument_list|(
 name|pa
 argument_list|,
-name|PG_RO
+name|PG_RW
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
