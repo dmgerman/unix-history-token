@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	6.2	83/10/06	*/
+comment|/*	udp_usrreq.c	6.2	83/10/13	*/
 end_comment
 
 begin_include
@@ -139,6 +139,8 @@ end_block
 begin_decl_stmt
 name|int
 name|udpcksum
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -901,12 +903,18 @@ name|ui
 operator|->
 name|ui_len
 operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|len
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|udphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ui
@@ -945,15 +953,9 @@ name|ui
 operator|->
 name|ui_ulen
 operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
 name|ui
 operator|->
 name|ui_len
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Stuff checksum and output datagram. 	 */
 name|ui
