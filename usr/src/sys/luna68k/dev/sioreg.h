@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sioreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sioreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -139,20 +139,6 @@ define|#
 directive|define
 name|WR7
 value|0x07
-end_define
-
-begin_define
-define|#
-directive|define
-name|WR2A
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|WR2B
-value|0x12
 end_define
 
 begin_define
@@ -526,6 +512,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WR4_PARENAB
+value|0x01
+end_define
+
+begin_comment
+comment|/* Parity Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WR4_OPARITY
 value|0x01
 end_define
@@ -625,12 +622,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WR5_REQSND
+name|WR5_RTS
 value|0x02
 end_define
 
 begin_comment
-comment|/* Request To Send (LOW) */
+comment|/* Request To Send     [RTS] */
 end_comment
 
 begin_define
@@ -652,7 +649,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Send Break */
+comment|/* Send Break          [BRK] */
 end_comment
 
 begin_define
@@ -702,6 +699,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WR5_DTR
+value|0x80
+end_define
+
+begin_comment
+comment|/* Data Terminal Ready [DTR] */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RR0_RXAVAIL
 value|0x01
 end_define
@@ -735,12 +743,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RR0_DCD
+value|0x08
+end_define
+
+begin_comment
+comment|/* Data Carrier Detect [DCD] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RR0_SYNC
+value|0x10
+end_define
+
+begin_comment
+comment|/* Synchronization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RR0_CTS
+value|0x20
+end_define
+
+begin_comment
+comment|/* Clear To Send       [CTS] */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RR0_BREAK
 value|0x80
 end_define
 
 begin_comment
-comment|/* Break Detected */
+comment|/* Break Detected      [BRK] */
 end_comment
 
 begin_define
@@ -812,6 +853,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RR_DCD
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Data Carrier Detect [DCD] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RR_SYNC
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Synchronization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RR_CTS
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Clear To Send       [CTS] */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RR_BREAK
 value|0x8000
 end_define
@@ -851,6 +925,17 @@ end_define
 
 begin_comment
 comment|/* Framing Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIO_HARDADDR
+value|0x51000000
+end_define
+
+begin_comment
+comment|/* build-in serial-interface address */
 end_comment
 
 end_unit
