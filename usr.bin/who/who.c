@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: who.c,v 1.5 1997/08/26 11:14:57 charnier Exp $"
+literal|"$Id: who.c,v 1.6 1998/04/26 19:10:51 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -197,6 +203,23 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
+if|if
+condition|(
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|""
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
