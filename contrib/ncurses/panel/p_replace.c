@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_replace.c,v 1.2 1998/02/11 12:14:01 tom Exp $"
+literal|"$Id: p_replace.c,v 1.3 1999/09/29 15:22:32 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -54,11 +54,15 @@ argument_list|(
 name|pan
 argument_list|)
 condition|)
-name|_nc_override
+name|PANEL_UPDATE
 argument_list|(
 name|pan
 argument_list|,
-name|P_TOUCH
+operator|(
+name|PANEL
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|pan
@@ -66,16 +70,6 @@ operator|->
 name|win
 operator|=
 name|win
-expr_stmt|;
-if|if
-condition|(
-name|_nc_panel_is_linked
-argument_list|(
-name|pan
-argument_list|)
-condition|)
-name|_nc_calculate_obscure
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

@@ -40,7 +40,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_termcap.c,v 1.28 1999/02/27 22:12:58 tom Exp $"
+literal|"$Id: lib_termcap.c,v 1.29 1999/09/05 01:06:43 tom Exp $"
 argument_list|)
 end_macro
 
@@ -436,7 +436,6 @@ name|char
 modifier|*
 modifier|*
 name|area
-name|GCC_UNUSED
 parameter_list|)
 block|{
 name|int
@@ -535,6 +534,56 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* setupterm forces cancelled strings to null */
+if|if
+condition|(
+name|area
+operator|!=
+literal|0
+operator|&&
+operator|*
+name|area
+operator|!=
+literal|0
+operator|&&
+name|VALID_STRING
+argument_list|(
+name|tp
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+operator|*
+name|area
+argument_list|,
+name|tp
+operator|->
+name|Strings
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+operator|*
+name|area
+operator|+=
+name|strlen
+argument_list|(
+operator|*
+name|area
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+block|}
 name|returnPtr
 argument_list|(
 name|tp

@@ -30,7 +30,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_flash.c,v 1.3 1998/06/29 19:34:16 Alexander.V.Lukyanov Exp $"
+literal|"$Id: lib_flash.c,v 1.4 1999/10/22 21:39:06 tom Exp $"
 argument_list|)
 end_macro
 
@@ -78,12 +78,8 @@ argument_list|(
 name|flash_screen
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -104,12 +100,8 @@ argument_list|(
 name|bell
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 name|returnCode

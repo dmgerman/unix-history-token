@@ -16,7 +16,7 @@ name|_CURSESW_H
 end_define
 
 begin_comment
-comment|// $Id: cursesw.h,v 1.16 1999/07/31 09:46:43 juergen Exp $
+comment|// $Id: cursesw.h,v 1.18 1999/10/23 15:16:53 tom Exp $
 end_comment
 
 begin_include
@@ -6477,6 +6477,9 @@ name|y
 argument_list|,
 name|x
 argument_list|,
+operator|(
+name|char
+operator|)
 name|ch
 argument_list|)
 return|;
@@ -6670,6 +6673,9 @@ name|wattroff
 argument_list|(
 name|w
 argument_list|,
+operator|(
+name|int
+operator|)
 name|at
 argument_list|)
 return|;
@@ -6694,6 +6700,9 @@ name|wattrset
 argument_list|(
 name|w
 argument_list|,
+operator|(
+name|int
+operator|)
 name|at
 argument_list|)
 return|;
@@ -8492,6 +8501,64 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// These enum definitions really belong inside the NCursesPad class, but only
+end_comment
+
+begin_comment
+comment|// recent compilers support that feature.
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|REQ_PAD_REFRESH
+init|=
+name|KEY_MAX
+operator|+
+literal|1
+block|,
+name|REQ_PAD_UP
+block|,
+name|REQ_PAD_DOWN
+block|,
+name|REQ_PAD_LEFT
+block|,
+name|REQ_PAD_RIGHT
+block|,
+name|REQ_PAD_EXIT
+block|}
+name|Pad_Request
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|const
+name|Pad_Request
+name|PAD_LOW
+init|=
+name|REQ_PAD_REFRESH
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// lowest  op-code
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|Pad_Request
+name|PAD_HIGH
+init|=
+name|REQ_PAD_EXIT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// highest op-code
+end_comment
+
+begin_comment
 comment|// -------------------------------------------------------------------------
 end_comment
 
@@ -8559,70 +8626,42 @@ name|viewWin
 operator|?
 name|viewWin
 operator|:
-name|NULL
+literal|0
 operator|)
 operator|)
 return|;
 block|}
-typedef|typedef
-enum|enum
-block|{
-name|REQ_PAD_REFRESH
-init|=
-name|KEY_MAX
-operator|+
-literal|1
-block|,
-name|REQ_PAD_UP
-block|,
-name|REQ_PAD_DOWN
-block|,
-name|REQ_PAD_LEFT
-block|,
-name|REQ_PAD_RIGHT
-block|,
-name|REQ_PAD_EXIT
-decl|}
-name|Pad_Request
-empty_stmt|;
-specifier|static
-specifier|const
-name|Pad_Request
-name|PAD_LOW
-init|=
-name|REQ_PAD_REFRESH
-block|;
-comment|// lowest  op-code
-specifier|static
-specifier|const
-name|Pad_Request
-name|PAD_HIGH
-init|=
-name|REQ_PAD_EXIT
-block|;
-comment|// highest op-code
 name|NCursesWindow
-modifier|*
+operator|*
 name|getWindow
-block|(
-name|void
-block|) const
+argument_list|(
+argument|void
+argument_list|)
+specifier|const
 block|{
 return|return
 name|viewWin
 return|;
 block|}
 name|NCursesWindow
-modifier|*
+operator|*
 name|getSubWindow
-block|(void) const
+argument_list|(
+argument|void
+argument_list|)
+specifier|const
 block|{
 return|return
 name|viewSub
 return|;
 block|}
-block|virtual int driver (int key)
-enum|;
+name|virtual
+name|int
+name|driver
+argument_list|(
+argument|int key
+argument_list|)
+block|;
 comment|// Virtualize keystroke key
 comment|// The driver translates the keystroke c into an Pad_Request
 name|virtual
@@ -8656,40 +8695,19 @@ argument_list|(
 argument|int pad_req
 argument_list|)
 block|{   }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// OnOperation is called if a Pad_Operation was executed and just before
-end_comment
-
-begin_comment
 comment|// the refresh() operation is done.
-end_comment
-
-begin_label
 name|public
-label|:
-end_label
-
-begin_macro
+operator|:
 name|NCursesPad
 argument_list|(
 argument|int lines
 argument_list|,
 argument|int cols
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+block|;
 comment|// create a pad with the given size
-end_comment
-
-begin_expr_stmt
 name|virtual
 operator|~
 name|NCursesPad
@@ -8711,53 +8729,29 @@ name|ch
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Put the attributed character onto the pad and immediately do a
-end_comment
-
-begin_comment
 comment|// prefresh().
-end_comment
-
-begin_function_decl
 name|int
 name|refresh
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|// If a viewport is defined the pad is displayed in this window, otherwise
-end_comment
-
-begin_comment
 comment|// this is a noop.
-end_comment
-
-begin_function
 name|int
 name|refresh
-parameter_list|(
-name|int
-name|pminrow
-parameter_list|,
-name|int
-name|pmincol
-parameter_list|,
-name|int
-name|sminrow
-parameter_list|,
-name|int
-name|smincol
-parameter_list|,
-name|int
-name|smaxrow
-parameter_list|,
-name|int
-name|smaxcol
-parameter_list|)
+argument_list|(
+argument|int pminrow
+argument_list|,
+argument|int pmincol
+argument_list|,
+argument|int sminrow
+argument_list|,
+argument|int smincol
+argument_list|,
+argument|int smaxrow
+argument_list|,
+argument|int smaxcol
+argument_list|)
 block|{
 return|return
 operator|::
@@ -8779,57 +8773,30 @@ name|smaxcol
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// The coordinates sminrow,smincol,smaxrow,smaxcol describe a rectangle
-end_comment
-
-begin_comment
 comment|// on the screen.<b>refresh</b> copies a rectangle of this size beginning
-end_comment
-
-begin_comment
 comment|// with top left corner pminrow,pmincol onto the screen and calls doupdate().
-end_comment
-
-begin_function_decl
 name|int
 name|noutrefresh
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|// If a viewport is defined the pad is displayed in this window, otherwise
-end_comment
-
-begin_comment
 comment|// this is a noop.
-end_comment
-
-begin_function
 name|int
 name|noutrefresh
-parameter_list|(
-name|int
-name|pminrow
-parameter_list|,
-name|int
-name|pmincol
-parameter_list|,
-name|int
-name|sminrow
-parameter_list|,
-name|int
-name|smincol
-parameter_list|,
-name|int
-name|smaxrow
-parameter_list|,
-name|int
-name|smaxcol
-parameter_list|)
+argument_list|(
+argument|int pminrow
+argument_list|,
+argument|int pmincol
+argument_list|,
+argument|int sminrow
+argument_list|,
+argument|int smincol
+argument_list|,
+argument|int smaxrow
+argument_list|,
+argument|int smaxcol
+argument_list|)
 block|{
 return|return
 operator|::
@@ -8851,63 +8818,33 @@ name|smaxcol
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Does the same like refresh() but without calling doupdate().
-end_comment
-
-begin_function_decl
 name|virtual
 name|void
 name|setWindow
-parameter_list|(
-name|NCursesWindow
-modifier|&
-name|view
-parameter_list|,
-name|int
-name|v_grid
-init|=
+argument_list|(
+argument|NCursesWindow& view
+argument_list|,
+argument|int v_grid =
 literal|1
-parameter_list|,
-name|int
-name|h_grid
-init|=
+argument_list|,
+argument|int h_grid =
 literal|1
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|// Add the window "view" as viewing window to the pad.
-end_comment
-
-begin_function_decl
 name|virtual
 name|void
 name|setSubWindow
-parameter_list|(
+argument_list|(
 name|NCursesWindow
-modifier|&
+operator|&
 name|sub
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|// Use the subwindow "sub" of the viewport window for the actual viewing.
-end_comment
-
-begin_comment
 comment|// The full viewport window is usually used to provide some decorations
-end_comment
-
-begin_comment
 comment|// like frames, titles etc.
-end_comment
-
-begin_expr_stmt
 name|virtual
 name|void
 name|operator
@@ -8915,15 +8852,13 @@ argument_list|()
 argument_list|(
 name|void
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|// Perform Pad's operation
-end_comment
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-unit|};
 comment|// A FramedPad is constructed always with a viewport window. This viewport
 end_comment
 
@@ -8942,17 +8877,6 @@ range|:
 name|public
 name|NCursesPad
 block|{
-name|private
-operator|:
-specifier|static
-specifier|const
-name|char
-operator|*
-specifier|const
-name|msg
-operator|=
-literal|"Operation not allowed"
-block|;
 name|protected
 operator|:
 name|virtual
@@ -9035,7 +8959,7 @@ argument_list|)
 block|{
 name|err_handler
 argument_list|(
-name|msg
+literal|"Operation not allowed"
 argument_list|)
 block|;   }
 comment|// Disable this call; the viewport is already defined
@@ -9047,7 +8971,7 @@ argument_list|)
 block|{
 name|err_handler
 argument_list|(
-name|msg
+literal|"Operation not allowed"
 argument_list|)
 block|;   }
 comment|// Disable this call; the viewport subwindow is already defined

@@ -114,7 +114,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_napms.c,v 1.5 1999/06/06 00:42:47 R.Lindsay.Todd Exp $"
+literal|"$Id: lib_napms.c,v 1.6 1999/10/21 23:01:41 tom Exp $"
 argument_list|)
 end_macro
 
@@ -175,19 +175,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-elif|#
-directive|elif
-name|HAVE_USLEEP
-name|usleep
-argument_list|(
-literal|1000
-operator|*
-operator|(
-name|unsigned
-operator|)
-name|ms
-argument_list|)
-expr_stmt|;
 elif|#
 directive|elif
 name|USE_FUNC_POLL

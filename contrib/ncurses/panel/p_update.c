@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_update.c,v 1.2 1998/02/11 12:14:01 tom Exp $"
+literal|"$Id: p_update.c,v 1.3 1999/09/29 15:22:32 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -49,13 +49,19 @@ expr_stmt|;
 while|while
 condition|(
 name|pan
+operator|&&
+name|pan
+operator|->
+name|above
 condition|)
 block|{
-name|_nc_override
+name|PANEL_UPDATE
 argument_list|(
 name|pan
 argument_list|,
-name|P_UPDATE
+name|pan
+operator|->
+name|above
 argument_list|)
 expr_stmt|;
 name|pan

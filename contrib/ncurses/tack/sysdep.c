@@ -7,6 +7,26 @@ begin_comment
 comment|/*  * Operating system dependant functions.  We assume the POSIX API.  * Note: on strict-POSIX systems (including BSD/OS) the select_delay_type  * global has no effect.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BEOS__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<OS.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -81,7 +101,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sysdep.c,v 1.5 1999/08/21 21:42:25 tom Exp $"
+literal|"$Id: sysdep.c,v 1.6 1999/09/04 13:45:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -797,9 +817,17 @@ name|void
 parameter_list|)
 block|{
 comment|/* ATT terminal init */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|F_GETFL
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|O_NDELAY
+argument_list|)
 name|int
 name|flags
 decl_stmt|;
@@ -1337,6 +1365,59 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BEOS__
+argument_list|)
+end_if
+
+begin_function
+name|int
+name|char_ready
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|howmany
+init|=
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+literal|'ichr'
+argument_list|,
+operator|&
+name|n
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|howmany
+operator|>=
+literal|0
+operator|&&
+name|n
+operator|>
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1344,6 +1425,11 @@ name|char_ready
 parameter_list|()
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

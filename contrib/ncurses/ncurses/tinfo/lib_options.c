@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_options.c,v 1.35 1999/07/04 00:18:28 tom Exp $"
+literal|"$Id: lib_options.c,v 1.36 1999/10/22 21:38:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -640,15 +640,8 @@ name|_cursor
 operator|=
 name|vis
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 name|returnCode
 argument_list|(
@@ -846,15 +839,8 @@ argument_list|(
 name|keypad_xmit
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -876,15 +862,8 @@ argument_list|(
 name|keypad_local
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 if|if

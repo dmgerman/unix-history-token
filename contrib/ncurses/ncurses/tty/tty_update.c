@@ -11,6 +11,23 @@ begin_comment
 comment|/*-----------------------------------------------------------------  *  *	lib_doupdate.c  *  *	The routine doupdate() and its dependents.  Also _nc_outstr(),  *	so all physical output is concentrated here (except _nc_outch()  *	in lib_tputs.c).  *  *-----------------------------------------------------------------*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BEOS__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<OS.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -136,34 +153,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__BEOS__
-end_ifdef
-
-begin_comment
-comment|/* BeOS select() only works on sockets.  Use the tty hack instead */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<socket.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|select
-value|check_select
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -173,7 +162,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tty_update.c,v 1.111 1999/02/27 20:07:56 tom Exp $"
+literal|"$Id: tty_update.c,v 1.117 1999/10/22 23:28:46 tom Exp $"
 argument_list|)
 end_macro
 
@@ -222,21 +211,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|InsStr
-parameter_list|(
-name|chtype
-modifier|*
-name|line
-parameter_list|,
-name|int
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|ClearScreen
 parameter_list|(
@@ -270,6 +244,21 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|InsStr
+parameter_list|(
+name|chtype
+modifier|*
+name|line
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|TransformLine
 parameter_list|(
 name|int
@@ -290,6 +279,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|position_check
 parameter_list|(
@@ -305,11 +295,10 @@ name|legend
 parameter_list|)
 comment|/* check to see if the real cursor position matches the virtual */
 block|{
-specifier|static
 name|char
 name|buf
 index|[
-literal|9
+literal|20
 index|]
 decl_stmt|;
 name|int
@@ -319,7 +308,18 @@ name|x
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|_nc_tracing
+operator|||
+operator|(
+name|expected_y
+operator|<
+literal|0
+operator|&&
+name|expected_x
+operator|<
+literal|0
+operator|)
 condition|)
 return|return;
 name|memset
@@ -334,19 +334,15 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|write
+name|putp
 argument_list|(
-literal|1
-argument_list|,
 literal|"\033[6n"
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 comment|/* only works on ANSI-compatibles */
+name|_nc_flush
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -354,13 +350,14 @@ name|read
 argument_list|(
 literal|0
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|buf
 argument_list|,
-literal|8
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|_tracef
@@ -391,6 +388,7 @@ argument_list|)
 operator|!=
 literal|2
 condition|)
+block|{
 name|_tracef
 argument_list|(
 literal|"position probe failed in %s"
@@ -398,7 +396,33 @@ argument_list|,
 name|legend
 argument_list|)
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|expected_x
+operator|<
+literal|0
+condition|)
+name|expected_x
+operator|=
+name|x
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|expected_y
+operator|<
+literal|0
+condition|)
+name|expected_y
+operator|=
+name|y
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|y
@@ -413,6 +437,10 @@ literal|1
 operator|!=
 name|expected_x
 condition|)
+block|{
+name|beep
+argument_list|()
+expr_stmt|;
 name|_tracef
 argument_list|(
 literal|"position seen (%d, %d) doesn't match expected one (%d, %d) in %s"
@@ -432,7 +460,9 @@ argument_list|,
 name|legend
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|_tracef
 argument_list|(
 literal|"position matches OK in %s"
@@ -441,7 +471,31 @@ name|legend
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|position_check
+parameter_list|(
+name|expected_y
+parameter_list|,
+name|expected_x
+parameter_list|,
+name|legend
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_endif
 endif|#
@@ -499,9 +553,6 @@ name|_curscol
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|POSITION_DEBUG
 name|position_check
 argument_list|(
 name|SP
@@ -515,9 +566,6 @@ argument_list|,
 literal|"GoTo"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* POSITION_DEBUG */
 comment|/* 	 * Force restore even if msgr is on when we're in an alternate 	 * character set -- these have a strong tendency to screw up the 	 * CR& LF used for local character motions! 	 */
 if|if
 condition|(
@@ -584,6 +632,19 @@ name|_curscol
 operator|=
 name|col
 expr_stmt|;
+name|position_check
+argument_list|(
+name|SP
+operator|->
+name|_cursrow
+argument_list|,
+name|SP
+operator|->
+name|_curscol
+argument_list|,
+literal|"GoTo2"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -648,6 +709,27 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|->
+name|_cleanup
+condition|)
+block|{
+name|_nc_outch
+argument_list|(
+operator|(
+name|int
+operator|)
+name|TextOf
+argument_list|(
+name|ch
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|putc
 argument_list|(
 operator|(
@@ -663,6 +745,7 @@ operator|->
 name|_ofp
 argument_list|)
 expr_stmt|;
+comment|/* macro's fastest... */
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -672,6 +755,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TRACE */
+block|}
 name|SP
 operator|->
 name|_curscol
@@ -782,6 +866,47 @@ expr_stmt|;
 block|}
 elif|#
 directive|elif
+name|defined
+argument_list|(
+name|__BEOS__
+argument_list|)
+comment|/* 		 * BeOS's select() is declared in socket.h, so the configure script does 		 * not see it.  That's just as well, since that function works only for 		 * sockets.  This (using snooze and ioctl) was distilled from Be's patch 		 * for ncurses which uses a separate thread to simulate select(). 		 * 		 * FIXME: the return values from the ioctl aren't very clear if we get 		 * interrupted. 		 */
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|howmany
+init|=
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+literal|'ichr'
+argument_list|,
+operator|&
+name|n
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|howmany
+operator|>=
+literal|0
+operator|&&
+name|n
+operator|>
+literal|0
+condition|)
+block|{
+name|have_pending
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+elif|#
+directive|elif
 name|HAVE_SELECT
 name|fd_set
 name|fdset
@@ -859,12 +984,8 @@ name|_fifohold
 operator|=
 literal|5
 expr_stmt|;
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 block|}
 return|return
@@ -980,6 +1101,24 @@ expr_stmt|;
 name|PutAttrChar
 argument_list|(
 name|ch
+argument_list|)
+expr_stmt|;
+name|SP
+operator|->
+name|_curscol
+operator|--
+expr_stmt|;
+name|position_check
+argument_list|(
+name|SP
+operator|->
+name|_cursrow
+argument_list|,
+name|SP
+operator|->
+name|_curscol
+argument_list|,
+literal|"exit_am_mode"
 argument_list|)
 expr_stmt|;
 name|TPUTS_TRACE
@@ -1113,6 +1252,19 @@ name|_curscol
 operator|--
 expr_stmt|;
 block|}
+name|position_check
+argument_list|(
+name|SP
+operator|->
+name|_cursrow
+argument_list|,
+name|SP
+operator|->
+name|_curscol
+argument_list|,
+literal|"wrap_cursor"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1168,9 +1320,6 @@ condition|)
 name|wrap_cursor
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|POSITION_DEBUG
 name|position_check
 argument_list|(
 name|SP
@@ -1184,9 +1333,6 @@ argument_list|,
 literal|"PutChar"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* POSITION_DEBUG */
 block|}
 end_function
 
@@ -2844,12 +2990,8 @@ argument_list|(
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|SP
-operator|->
-name|_ofp
-argument_list|)
+name|_nc_flush
+argument_list|()
 expr_stmt|;
 name|curscr
 operator|->
@@ -3435,7 +3577,6 @@ argument_list|,
 name|tstLine
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|tstLine
@@ -3467,6 +3608,15 @@ index|]
 operator|=
 name|blank
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|tstLine
+operator|!=
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|row
@@ -4871,9 +5021,6 @@ name|_curscol
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|POSITION_DEBUG
 name|position_check
 argument_list|(
 name|SP
@@ -4887,9 +5034,6 @@ argument_list|,
 literal|"ClearScreen"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* POSITION_DEBUG */
 block|}
 elseif|else
 if|if
@@ -5062,7 +5206,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|InsStr
 parameter_list|(
 name|chtype
@@ -5128,11 +5272,6 @@ name|count
 operator|--
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|OK
-operator|)
-return|;
 block|}
 elseif|else
 if|if
@@ -5196,11 +5335,6 @@ argument_list|(
 name|exit_insert_mode
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|OK
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -5248,12 +5382,20 @@ name|count
 operator|--
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|OK
-operator|)
-return|;
 block|}
+name|position_check
+argument_list|(
+name|SP
+operator|->
+name|_cursrow
+argument_list|,
+name|SP
+operator|->
+name|_curscol
+argument_list|,
+literal|"InsStr"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5349,49 +5491,17 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|ofp
-init|=
-name|SP
-condition|?
-name|SP
-operator|->
-name|_ofp
-else|:
-name|stdout
-decl_stmt|;
 operator|(
 name|void
 operator|)
-name|fputs
-argument_list|(
-name|str
-argument_list|,
-name|ofp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|ofp
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-name|_nc_outchars
-operator|+=
-name|strlen
+name|putp
 argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TRACE */
+name|_nc_flush
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
