@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.20 1998/02/18 04:15:04 eivind Exp $"
+literal|"$Id: main.c,v 1.21 1998/02/19 00:45:33 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,13 @@ case|case
 literal|'n'
 case|:
 comment|/* no_config_clobber is now true by default, no-op */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"*** Using obsolete config option '-n' ***\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
