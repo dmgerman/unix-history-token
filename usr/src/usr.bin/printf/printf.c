@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.2 (Berkeley) %G%"
+literal|"@(#)printf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,6 +474,9 @@ break|break;
 block|}
 case|case
 literal|'d'
+case|:
+case|case
+literal|'i'
 case|:
 case|case
 literal|'o'
