@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.6 %G%"
+literal|"@(#)ascode.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,8 +442,10 @@ name|ap_type
 operator|&
 name|AMASK
 expr_stmt|;
+comment|/* 		 *	The switch value is>> by 3 so that the switch 		 *	code is dense, not implemented as a sequence 		 *	of branches but implemented as a casel. 		 *	In addition, cases ACCI and ACCR are added to force 		 *	dense switch code. 		 */
 switch|switch
 condition|(
+operator|(
 operator|(
 name|fetcharg
 argument_list|(
@@ -456,11 +458,27 @@ argument_list|)
 operator|)
 operator|&
 name|ACCESSMASK
+operator|)
+operator|>>
+literal|3
 condition|)
 block|{
 comment|/* type of fp */
 case|case
+name|ACCI
+operator|>>
+literal|3
+case|:
+case|case
+name|ACCR
+operator|>>
+literal|3
+case|:
+break|break;
+case|case
 name|ACCB
+operator|>>
+literal|3
 case|:
 if|if
 condition|(
@@ -492,6 +510,8 @@ block|}
 break|break;
 case|case
 name|ACCA
+operator|>>
+literal|3
 case|:
 switch|switch
 condition|(
@@ -535,9 +555,13 @@ block|}
 break|break;
 case|case
 name|ACCM
+operator|>>
+literal|3
 case|:
 case|case
 name|ACCW
+operator|>>
+literal|3
 case|:
 switch|switch
 condition|(
@@ -790,6 +814,7 @@ operator|->
 name|e_xvalue
 operator|++
 expr_stmt|;
+comment|/* 	     *	This switch has been fixed by enumerating the no action 	     *	alternatives (those that have 1 one byte of code) 	     *	so that a casel instruction is emitted. 	     */
 switch|switch
 condition|(
 name|argtype
@@ -802,6 +827,19 @@ name|ASTAR
 operator|)
 condition|)
 block|{
+case|case
+name|AREG
+case|:
+case|case
+name|ABASE
+case|:
+case|case
+name|ADECR
+case|:
+case|case
+name|AINCR
+case|:
+break|break;
 case|case
 name|AEXP
 case|:
