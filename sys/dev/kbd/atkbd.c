@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: atkbd.c,v 1.2 1999/01/13 11:19:19 yokota Exp $  */
+comment|/*-  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: atkbd.c,v 1.4 1999/01/28 10:55:55 yokota Exp $  */
 end_comment
 
 begin_include
@@ -3222,6 +3222,15 @@ literal|0x5D
 expr_stmt|;
 break|break;
 case|case
+literal|0x46
+case|:
+comment|/* ctrl-pause/break on AT 101 (see below) */
+name|keycode
+operator|=
+literal|0x68
+expr_stmt|;
+break|break;
+case|case
 literal|0x47
 case|:
 comment|/* grey home key */
@@ -3350,6 +3359,7 @@ case|case
 literal|0xE1
 case|:
 comment|/* 0xE1 prefix */
+comment|/*  		 * The pause/break key on the 101 keyboard produces: 		 * E1-1D-45 E1-9D-C5 		 * Ctrl-pause/break produces: 		 * E0-46 E0-C6 (See above.) 		 */
 name|state
 operator|->
 name|ks_prefix
@@ -3396,6 +3406,129 @@ operator|=
 literal|0x68
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|kbd
+operator|->
+name|kb_type
+operator|==
+name|KB_84
+condition|)
+block|{
+switch|switch
+condition|(
+name|keycode
+condition|)
+block|{
+case|case
+literal|0x37
+case|:
+comment|/* *(numpad)/print screen */
+if|if
+condition|(
+name|state
+operator|->
+name|ks_flags
+operator|&
+name|SHIFTS
+condition|)
+name|keycode
+operator|=
+literal|0x5c
+expr_stmt|;
+comment|/* print screen */
+break|break;
+case|case
+literal|0x45
+case|:
+comment|/* num lock/pause */
+if|if
+condition|(
+name|state
+operator|->
+name|ks_flags
+operator|&
+name|CTLS
+condition|)
+name|keycode
+operator|=
+literal|0x68
+expr_stmt|;
+comment|/* pause */
+break|break;
+case|case
+literal|0x46
+case|:
+comment|/* scroll lock/break */
+if|if
+condition|(
+name|state
+operator|->
+name|ks_flags
+operator|&
+name|CTLS
+condition|)
+name|keycode
+operator|=
+literal|0x6c
+expr_stmt|;
+comment|/* break */
+break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|kbd
+operator|->
+name|kb_type
+operator|==
+name|KB_101
+condition|)
+block|{
+switch|switch
+condition|(
+name|keycode
+condition|)
+block|{
+case|case
+literal|0x5c
+case|:
+comment|/* print screen */
+if|if
+condition|(
+name|state
+operator|->
+name|ks_flags
+operator|&
+name|ALTS
+condition|)
+name|keycode
+operator|=
+literal|0x54
+expr_stmt|;
+comment|/* sysrq */
+break|break;
+case|case
+literal|0x68
+case|:
+comment|/* pause/break */
+if|if
+condition|(
+name|state
+operator|->
+name|ks_flags
+operator|&
+name|CTLS
+condition|)
+name|keycode
+operator|=
+literal|0x6c
+expr_stmt|;
+comment|/* break */
+break|break;
+block|}
 block|}
 comment|/* return the key code in the K_CODE mode */
 if|if
