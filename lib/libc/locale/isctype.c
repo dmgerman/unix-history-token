@@ -490,7 +490,7 @@ end_undef
 
 begin_function
 name|int
-name|tolower
+name|toupper
 parameter_list|(
 name|c
 parameter_list|)
@@ -530,7 +530,7 @@ end_undef
 
 begin_function
 name|int
-name|toupper
+name|tolower
 parameter_list|(
 name|c
 parameter_list|)
