@@ -21,6 +21,32 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_comment
+comment|/*  * Modes for dlopen().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LAZY
+value|1
+end_define
+
+begin_comment
+comment|/* Bind function calls lazily */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_NOW
+value|2
+end_define
+
+begin_comment
+comment|/* Bind function calls immediately */
+end_comment
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|void
