@@ -259,7 +259,8 @@ decl_stmt|,
 name|nlsopt
 decl_stmt|,
 name|wall_clock
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|;
 name|int
