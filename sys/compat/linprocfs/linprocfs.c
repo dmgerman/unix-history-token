@@ -523,6 +523,12 @@ name|memshared
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|object
@@ -544,6 +550,12 @@ operator|+=
 name|object
 operator|->
 name|resident_page_count
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
 expr_stmt|;
 name|memshared
 operator|*=
