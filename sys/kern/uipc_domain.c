@@ -356,6 +356,13 @@ argument_list|,
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|socket_zone
+argument_list|,
+name|maxsockets
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|max_linkhdr
