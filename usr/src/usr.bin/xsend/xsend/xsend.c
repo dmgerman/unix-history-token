@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xsend.c	4.6 %G%"
+literal|"@(#)xsend.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,6 @@ decl_stmt|,
 modifier|*
 name|dest
 decl_stmt|,
-modifier|*
 name|keyfile
 index|[
 literal|128
