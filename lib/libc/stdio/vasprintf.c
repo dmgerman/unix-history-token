@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vasprintf.c,v 1.1 1996/05/27 10:49:43 peter Exp $"
+literal|"$Id: vasprintf.c,v 1.2 1996/06/22 10:34:01 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,10 +97,10 @@ modifier|*
 name|base
 decl_stmt|;
 comment|/* start of buffer */
-name|int
+name|size_t
 name|size
 decl_stmt|;
-name|int
+name|size_t
 name|left
 decl_stmt|;
 block|}
@@ -164,6 +164,10 @@ operator|*
 operator|)
 name|cookie
 decl_stmt|;
+name|char
+modifier|*
+name|newbuf
+decl_stmt|;
 if|if
 condition|(
 name|len
@@ -183,6 +187,7 @@ name|left
 condition|)
 block|{
 comment|/* grow malloc region */
+comment|/* 		 * XXX this is linearly expanded, which is slow for obscenely 		 * large strings. 		 */
 name|h
 operator|->
 name|left
@@ -207,9 +212,7 @@ name|len
 operator|+
 name|CHUNK_SPARE
 expr_stmt|;
-name|h
-operator|->
-name|base
+name|newbuf
 operator|=
 name|realloc
 argument_list|(
@@ -217,9 +220,6 @@ name|h
 operator|->
 name|base
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|h
 operator|->
 name|size
@@ -227,18 +227,38 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|h
-operator|->
-name|base
+name|newbuf
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|h
+operator|->
+name|base
+argument_list|)
+expr_stmt|;
+name|h
+operator|->
+name|base
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
+else|else
+name|h
+operator|->
+name|base
+operator|=
+name|newbuf
+expr_stmt|;
 block|}
 comment|/* "write" it */
 operator|(
@@ -274,7 +294,7 @@ name|len
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|len
 operator|)
 return|;
 block|}
@@ -487,10 +507,14 @@ operator|==
 name|NULL
 condition|)
 comment|/* failed to realloc it to actual size */
-return|return
-operator|-
-literal|1
-return|;
+operator|*
+name|str
+operator|=
+name|h
+operator|.
+name|base
+expr_stmt|;
+comment|/* return oversize buffer */
 return|return
 operator|(
 name|ret
