@@ -46,6 +46,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IH_SHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|IQE_SHIFT
 value|5
 end_define
