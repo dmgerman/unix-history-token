@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	8.4 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_fault.c,v 1.73 1998/01/06 05:25:54 dyson Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	8.4 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_fault.c,v 1.74 1998/01/12 01:44:25 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -147,14 +147,14 @@ begin_define
 define|#
 directive|define
 name|VM_FAULT_READ_AHEAD
-value|4
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_FAULT_READ_BEHIND
-value|3
+value|7
 end_define
 
 begin_define
@@ -275,7 +275,7 @@ name|RELEASE_PAGE
 parameter_list|(
 name|m
 parameter_list|)
-value|{				\ 	PAGE_WAKEUP(m);					\ 	if (m->queue != PQ_ACTIVE) vm_page_activate(m);		\ }
+value|{				\ 	PAGE_WAKEUP(m);					\ 	if (m->queue != PQ_ACTIVE) { \ 		vm_page_activate(m);		\ 		m->act_count = 0; \ 	} \ }
 define|#
 directive|define
 name|UNLOCK_MAP
@@ -283,7 +283,7 @@ value|{				\ 	if (lookup_still_valid) {			\ 		vm_map_lookup_done(map, entry);		\
 define|#
 directive|define
 name|UNLOCK_THINGS
-value|{				\ 	vm_object_pip_wakeup(object); \ 	if (object != first_object) {			\ 		FREE_PAGE(first_m);			\ 		vm_object_pip_wakeup(first_object); \ 	}						\ 	UNLOCK_MAP;					\ 	if (vp != NULL) VOP_UNLOCK(vp, 0, p);		\ }
+value|{				\ 	vm_object_pip_wakeup(object); \ 	if (object != first_object) {			\ 		FREE_PAGE(first_m);			\ 		vm_object_pip_wakeup(first_object); \ 	}						\ 	UNLOCK_MAP;					\ 	if (vp != NULL) { \ 		vput(vp);		\ 		vp = NULL; \ 	} \ }
 define|#
 directive|define
 name|UNLOCK_AND_DEALLOCATE
@@ -329,71 +329,31 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
-return|return
+if|if
+condition|(
 operator|(
 name|result
+operator|!=
+name|KERN_PROTECTION_FAILURE
 operator|)
-return|;
-block|}
-if|if
-condition|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NOFAULT
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"vm_fault: fault on nofault entry, addr: %lx"
-argument_list|,
-name|vaddr
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * If we are user-wiring a r/w segment, and it is COW, then 	 * we need to do the COW operation.  Note that we don't COW 	 * currently RO sections now, because it is NOT desirable 	 * to COW .text.  We simply keep .text from ever being COW'ed 	 * and take the heat that one cannot debug wired .text sections. 	 */
-if|if
-condition|(
+operator|||
 operator|(
 operator|(
 name|fault_flags
 operator|&
 name|VM_FAULT_WIRE_MASK
 operator|)
-operator|==
+operator|!=
 name|VM_FAULT_USER_WIRE
 operator|)
-operator|&&
-operator|(
-name|entry
-operator|->
-name|eflags
-operator|&
-name|MAP_ENTRY_NEEDS_COPY
-operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|entry
-operator|->
-name|protection
-operator|&
-name|VM_PROT_WRITE
-condition|)
-block|{
-name|int
-name|tresult
-decl_stmt|;
-name|vm_map_lookup_done
-argument_list|(
-name|map
-argument_list|,
-name|entry
-argument_list|)
-expr_stmt|;
-name|tresult
+return|return
+name|result
+return|;
+block|}
+comment|/*    		 * If we are user-wiring a r/w segment, and it is COW, then    		 * we need to do the COW operation.  Note that we don't COW    		 * currently RO sections now, because it is NOT desirable    		 * to COW .text.  We simply keep .text from ever being COW'ed    		 * and take the heat that one cannot debug wired .text sections.    		 */
+name|result
 operator|=
 name|vm_map_lookup
 argument_list|(
@@ -405,6 +365,8 @@ argument_list|,
 name|VM_PROT_READ
 operator||
 name|VM_PROT_WRITE
+operator||
+name|VM_PROT_OVERRIDE_WRITE
 argument_list|,
 operator|&
 name|entry
@@ -427,17 +389,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tresult
+name|result
 operator|!=
 name|KERN_SUCCESS
 condition|)
+block|{
 return|return
-name|tresult
+name|result
 return|;
 block|}
-else|else
-block|{
-comment|/* 			 * If we don't COW now, on a user wire, the user will never 			 * be able to write to the mapping.  If we don't make this 			 * restriction, the bookkeeping would be nearly impossible. 			 */
+comment|/* 		 * If we don't COW now, on a user wire, the user will never 		 * be able to write to the mapping.  If we don't make this 		 * restriction, the bookkeeping would be nearly impossible. 		 */
+if|if
+condition|(
+operator|(
+name|entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|==
+literal|0
+condition|)
 name|entry
 operator|->
 name|max_protection
@@ -446,6 +419,22 @@ operator|~
 name|VM_PROT_WRITE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|entry
+operator|->
+name|eflags
+operator|&
+name|MAP_ENTRY_NOFAULT
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"vm_fault: fault on nofault entry, addr: %lx"
+argument_list|,
+name|vaddr
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 */
 name|vm_object_reference
@@ -526,6 +515,23 @@ condition|(
 name|TRUE
 condition|)
 block|{
+if|if
+condition|(
+name|object
+operator|->
+name|flags
+operator|&
+name|OBJ_DEAD
+condition|)
+block|{
+name|UNLOCK_AND_DEALLOCATE
+expr_stmt|;
+return|return
+operator|(
+name|KERN_PROTECTION_FAILURE
+operator|)
+return|;
+block|}
 name|m
 operator|=
 name|vm_page_lookup
@@ -689,7 +695,6 @@ name|PG_BUSY
 expr_stmt|;
 if|if
 condition|(
-comment|/*m->valid&& */
 operator|(
 operator|(
 name|m

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.122 1998/01/12 01:46:30 dyson Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.123 1998/01/12 03:15:01 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vnode_pager.h>
 end_include
 
@@ -208,21 +214,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|void
-name|vbusy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -505,7 +496,7 @@ begin_decl_stmt
 name|int
 name|vfs_ioopt
 init|=
-literal|2
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1902,7 +1893,7 @@ expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
-name|vnode_tmp_list
+name|vnode_free_list
 argument_list|,
 name|vp
 argument_list|,
@@ -1915,6 +1906,23 @@ name|v_flag
 operator|&=
 operator|~
 name|VTBFREE
+expr_stmt|;
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VFREE
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+condition|)
+name|panic
+argument_list|(
+literal|"tobe free vnode isn't"
+argument_list|)
 expr_stmt|;
 name|freevnodes
 operator|++
@@ -5300,22 +5308,6 @@ operator|->
 name|v_usecount
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_object
-condition|)
-block|{
-name|vp
-operator|->
-name|v_object
-operator|->
-name|flags
-operator||=
-name|OBJ_DEAD
-expr_stmt|;
-block|}
 comment|/* 	 * Prevent the vnode from being recycled or brought into use while we 	 * clean it out. 	 */
 if|if
 condition|(
@@ -5349,20 +5341,6 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clean out any buffers associated with the vnode. 	 */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_object
-condition|)
-name|vm_object_terminate
-argument_list|(
-name|vp
-operator|->
-name|v_object
-argument_list|)
-expr_stmt|;
-else|else
 name|vinvalbuf
 argument_list|(
 name|vp
@@ -5378,6 +5356,45 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_object
+condition|)
+block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_object
+operator|->
+name|ref_count
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * This is a normal way of shutting down the object/vnode 			 * association. 			 */
+name|vm_object_terminate
+argument_list|(
+name|vp
+operator|->
+name|v_object
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * Woe to the process that tries to page now :-). 			 */
+name|vm_pager_deallocate
+argument_list|(
+name|vp
+operator|->
+name|v_object
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * If purging an active vnode, it must be closed and 	 * deactivated before being reclaimed. Note that the 	 * VOP_INACTIVE will unlock the vnode. 	 */
 if|if
 condition|(
@@ -9793,7 +9810,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vbusy
 parameter_list|(
