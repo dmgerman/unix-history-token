@@ -19,12 +19,6 @@ directive|include
 file|<sys/capability.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
 begin_function
 name|int
 name|cap_set_fd
@@ -36,9 +30,6 @@ name|cap_t
 name|cap_p
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 return|return
 operator|(
 name|__cap_set_fd

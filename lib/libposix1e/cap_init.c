@@ -70,15 +70,9 @@ name|NULL
 operator|)
 return|;
 block|}
-name|bzero
+name|cap_clear
 argument_list|(
 name|cap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|cap
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

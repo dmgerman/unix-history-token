@@ -33,9 +33,6 @@ name|cap_t
 name|cap_p
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 return|return
 operator|(
 name|__cap_set_proc
