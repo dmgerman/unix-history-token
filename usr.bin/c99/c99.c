@@ -347,7 +347,7 @@ condition|(
 name|nargs
 operator|+
 literal|1
-operator|>
+operator|>=
 name|cargs
 condition|)
 block|{
