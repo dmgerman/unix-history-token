@@ -5421,9 +5421,9 @@ expr_stmt|;
 name|lockinit
 argument_list|(
 operator|&
-name|ip
+name|vp
 operator|->
-name|i_lock
+name|v_lock
 argument_list|,
 name|PINOD
 argument_list|,
