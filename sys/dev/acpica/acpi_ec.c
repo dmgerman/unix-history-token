@@ -303,8 +303,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEV_ECDT_FLAG
-value|0x80000000
+name|DEV_ECDT
+parameter_list|(
+name|x
+parameter_list|)
+value|(acpi_get_private(x) ==&acpi_ec_devclass)
 end_define
 
 begin_comment
@@ -992,10 +995,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Store values for the probe/attach routines to use.  Store the      * ECDT GPE bit and set the global lock flag (just to be safe).      * We'll determine whether we really want to use the global lock      * in a later call to attach.      */
+name|acpi_set_private
+argument_list|(
+name|child
+argument_list|,
+operator|&
+name|acpi_ec_devclass
+argument_list|)
+expr_stmt|;
 name|magic
 operator|=
-name|DEV_ECDT_FLAG
-operator||
 name|DEV_GLK_FLAG
 expr_stmt|;
 name|DEV_SET_GPEBIT
@@ -1071,7 +1080,7 @@ name|ret
 init|=
 name|ENXIO
 decl_stmt|;
-comment|/* Check that this is an EC device and it's not disabled. */
+comment|/* Check that this is a device and that EC is not disabled. */
 if|if
 condition|(
 name|acpi_get_type
@@ -1085,22 +1094,12 @@ name|acpi_disabled
 argument_list|(
 literal|"ec"
 argument_list|)
-operator|||
-operator|!
-name|acpi_MatchHid
-argument_list|(
-name|dev
-argument_list|,
-literal|"PNP0C09"
-argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 comment|/*      * If probed via ECDT, set description and continue.  Otherwise,      * we can access the namespace and make sure this is not a      * duplicate probe.      */
 name|magic
 operator|=
@@ -1111,13 +1110,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|magic
-operator|&
-name|DEV_ECDT_FLAG
-operator|)
-operator|!=
-literal|0
+name|DEV_ECDT
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 name|snprintf
@@ -1149,7 +1145,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|acpi_MatchHid
+argument_list|(
+name|dev
+argument_list|,
+literal|"PNP0C09"
+argument_list|)
+condition|)
 block|{
 name|h
 operator|=
