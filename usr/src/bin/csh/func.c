@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.4 %G%"
+literal|"@(#)func.c 4.5 81/06/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,6 +822,19 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|chkstop
+operator|==
+literal|0
+operator|&&
+name|setintr
+condition|)
+name|panystop
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
