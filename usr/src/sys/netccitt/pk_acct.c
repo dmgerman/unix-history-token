@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_acct.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_acct.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -153,17 +153,21 @@ condition|)
 goto|goto
 name|close
 goto|;
+name|NDINIT
+argument_list|(
+operator|&
 name|nd
-operator|.
-name|ni_segflg
-operator|=
+argument_list|,
+name|LOOKUP
+argument_list|,
+name|FOLLOW
+argument_list|,
 name|UIO_USERSPACE
-expr_stmt|;
-name|nd
-operator|.
-name|ni_dirp
-operator|=
+argument_list|,
 name|path
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -173,8 +177,6 @@ name|vn_open
 argument_list|(
 operator|&
 name|nd
-argument_list|,
-name|p
 argument_list|,
 name|FWRITE
 argument_list|,
