@@ -8,11 +8,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translator.  *  * Issues to be discussed:  * - Thread safe-ness must be checked.  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  *   current code - SEGV on freeaddrinfo(NULL)  * Note:  * - We use getipnodebyname() just for thread-safeness.  There's no intent  *   to let it do PF_UNSPEC (actually we never pass PF_UNSPEC to  *   getipnodebyname().  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  * - To avoid search order issue, we have a big amount of code duplicate  *   from gethnamaddr.c and some other places.  The issues that there's no  *   lower layer function to lookup "IPv4 or IPv6" record.  Calling  *   gethostbyname2 from getaddrinfo will end up in wrong search order, as  *   follows:  *	- The code makes use of following calls when asked to resolver with  *	  ai_family  = PF_UNSPEC:  *		getipnodebyname(host, AF_INET6);  *		getipnodebyname(host, AF_INET);  *	  This will result in the following queries if the node is configure to  *	  prefer /etc/hosts than DNS:  *		lookup /etc/hosts for IPv6 address  *		lookup DNS for IPv6 address  *		lookup /etc/hosts for IPv4 address  *		lookup DNS for IPv4 address  *	  which may not meet people's requirement.  *	  The right thing to happen is to have underlying layer which does  *	  PF_UNSPEC lookup (lookup both) and return chain of addrinfos.  *	  This would result in a bit of code duplicate with _dns_ghbyname() and  *	  friends.  */
-end_comment
-
-begin_comment
-comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - AI_ADDRCONFIG support is supplied  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
+comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translator.  *  * Issues to be discussed:  * - Thread safe-ness must be checked.  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * - freeaddrinfo(NULL).  RFC2553 is silent about it.  XNET 5.2 says it is  *   invalid.  current code - SEGV on freeaddrinfo(NULL)  *  * Note:  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  * - (post-2553) semantics of AI_ADDRCONFIG itself is too vague.  *   (1) what should we do against numeric hostname (2) what should we do  *   against NULL hostname (3) what is AI_ADDRCONFIG itself.  AF not ready?  *   non-loopback address configured?  global address configured?  *  * OS specific notes for netbsd/openbsd/freebsd4/bsdi4:  * - To avoid search order issue, we have a big amount of code duplicate  *   from gethnamaddr.c and some other places.  The issues that there's no  *   lower layer function to lookup "IPv4 or IPv6" record.  Calling  *   gethostbyname2 from getaddrinfo will end up in wrong search order, as  *   presented above.  *  * OS specific notes for freebsd4:  * - FreeBSD supported $GAI.  The code does not.  * - FreeBSD allowed classful IPv4 numeric (127.1), the code does not.  */
 end_comment
 
 begin_include
@@ -266,6 +262,31 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
+name|in_loopback
+index|[]
+init|=
+block|{
+literal|127
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
 name|in6_addrany
 index|[]
 init|=
@@ -301,25 +322,6 @@ block|,
 literal|0
 block|,
 literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|in_loopback
-index|[]
-init|=
-block|{
-literal|127
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -366,6 +368,11 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 specifier|static
@@ -1083,22 +1090,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|_dns_getaddrinfo
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|va_list
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|_sethtent
 parameter_list|(
@@ -1113,6 +1104,22 @@ name|void
 name|_endhtent
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|_dns_getaddrinfo
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|va_list
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1959,7 +1966,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 	 * post-2553: AI_ALL and AI_V4MAPPED are effective only against 	 * AF_INET6 query.  They needs to be ignored if specified in other 	 * occassions. 	 */
+comment|/* 	 * post-2553: AI_ALL and AI_V4MAPPED are effective only against 	 * AF_INET6 query.  They need to be ignored if specified in other 	 * occassions. 	 */
 switch|switch
 condition|(
 name|pai
@@ -3376,7 +3383,7 @@ argument_list|(
 name|EAI_FAMILY
 argument_list|)
 expr_stmt|;
-comment|/*xxx*/
+comment|/* XXX */
 block|}
 break|break;
 block|}
@@ -3813,13 +3820,20 @@ condition|)
 return|return
 name|EAI_MEMORY
 return|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ai
 operator|->
 name|ai_canonname
 argument_list|,
 name|str
+argument_list|,
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4360,12 +4374,9 @@ name|EAI_SERVICE
 return|;
 name|port
 operator|=
-name|htons
-argument_list|(
 name|atoi
 argument_list|(
 name|servname
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4381,6 +4392,13 @@ condition|)
 return|return
 name|EAI_SERVICE
 return|;
+name|port
+operator|=
+name|htons
+argument_list|(
+name|port
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -5402,13 +5420,14 @@ decl_stmt|;
 name|char
 modifier|*
 name|bp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|int
 name|type
 decl_stmt|,
 name|class
-decl_stmt|,
-name|buflen
 decl_stmt|,
 name|ancount
 decl_stmt|,
@@ -5532,8 +5551,10 @@ name|bp
 operator|=
 name|hostbuf
 expr_stmt|;
-name|buflen
+name|ep
 operator|=
+name|hostbuf
+operator|+
 sizeof|sizeof
 name|hostbuf
 expr_stmt|;
@@ -5576,7 +5597,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5664,10 +5687,6 @@ name|bp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
 comment|/* The qname can be abbreviated, but h_name is now absolute. */
 name|qname
 operator|=
@@ -5711,7 +5730,9 @@ name|cp
 argument_list|,
 name|bp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -5876,7 +5897,9 @@ if|if
 condition|(
 name|n
 operator|>
-name|buflen
+name|ep
+operator|-
+name|bp
 operator|||
 name|n
 operator|>=
@@ -5888,11 +5911,15 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-name|strcpy
+name|strlcpy
 argument_list|(
 name|bp
 argument_list|,
 name|tbuf
+argument_list|,
+name|ep
+operator|-
+name|bp
 argument_list|)
 expr_stmt|;
 name|canonname
@@ -5901,10 +5928,6 @@ name|bp
 expr_stmt|;
 name|bp
 operator|+=
-name|n
-expr_stmt|;
-name|buflen
-operator|-=
 name|n
 expr_stmt|;
 continue|continue;
@@ -6145,10 +6168,6 @@ expr_stmt|;
 comment|/* for the \0 */
 name|bp
 operator|+=
-name|nn
-expr_stmt|;
-name|buflen
-operator|-=
 name|nn
 expr_stmt|;
 block|}
@@ -6561,6 +6580,12 @@ case|:
 comment|/* prefer IPv6 */
 name|q
 operator|.
+name|name
+operator|=
+name|name
+expr_stmt|;
+name|q
+operator|.
 name|qclass
 operator|=
 name|C_IN
@@ -6634,6 +6659,12 @@ name|AF_INET
 case|:
 name|q
 operator|.
+name|name
+operator|=
+name|name
+expr_stmt|;
+name|q
+operator|.
 name|qclass
 operator|=
 name|C_IN
@@ -6667,6 +6698,12 @@ break|break;
 case|case
 name|AF_INET6
 case|:
+name|q
+operator|.
+name|name
+operator|=
+name|name
+expr_stmt|;
 name|q
 operator|.
 name|qclass
@@ -7198,10 +7235,39 @@ name|again
 goto|;
 name|found
 label|:
+comment|/* we should not glob socktype/protocol here */
+name|memset
+argument_list|(
+operator|&
 name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
 operator|=
-operator|*
 name|pai
+operator|->
+name|ai_family
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_DGRAM
+expr_stmt|;
+name|hints
+operator|.
+name|ai_protocol
+operator|=
+literal|0
 expr_stmt|;
 name|hints
 operator|.
@@ -7215,7 +7281,7 @@ name|getaddrinfo
 argument_list|(
 name|addr
 argument_list|,
-name|NULL
+literal|"0"
 argument_list|,
 operator|&
 name|hints
@@ -7295,6 +7361,22 @@ operator|=
 name|pai
 operator|->
 name|ai_flags
+expr_stmt|;
+name|res
+operator|->
+name|ai_socktype
+operator|=
+name|pai
+operator|->
+name|ai_socktype
+expr_stmt|;
+name|res
+operator|->
+name|ai_protocol
+operator|=
+name|pai
+operator|->
+name|ai_protocol
 expr_stmt|;
 if|if
 condition|(
@@ -8621,7 +8703,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|";; rcode = %d, ancount=%d\n"
+literal|";; rcode = %u, ancount=%u\n"
 argument_list|,
 name|hp
 operator|->
@@ -9420,9 +9502,14 @@ literal|1
 operator|)
 return|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|nbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
 argument_list|,
 literal|"%s.%s"
 argument_list|,
