@@ -1129,7 +1129,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-comment|/* 					 * If this string is not zero 					 * length, append a space for 					 * seperation before the next 					 * argument. 					 */
+comment|/* 					 * If this string is not zero 					 * length, append a space for 					 * separation before the next 					 * argument. 					 */
 if|if
 condition|(
 operator|(
@@ -1643,7 +1643,7 @@ argument_list|,
 literal|"strdup failed"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For each argument to utility, if we have not used up 	 * the number of replacements we are allowed to do, and 	 * if the argument contains at least one occurance of 	 * replstr, call strnsubst(), else just save the string. 	 * Iterations over elements of avj and tmp are done 	 * where appropriate. 	 */
+comment|/* 	 * For each argument to utility, if we have not used up 	 * the number of replacements we are allowed to do, and 	 * if the argument contains at least one occurrence of 	 * replstr, call strnsubst(), else just save the string. 	 * Iterations over elements of avj and tmp are done 	 * where appropriate. 	 */
 while|while
 condition|(
 operator|--
