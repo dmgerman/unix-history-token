@@ -402,6 +402,12 @@ decl_stmt|;
 name|u_int8_t
 name|saved_lattimer
 decl_stmt|;
+name|u_int8_t
+name|rfa_size
+decl_stmt|;
+name|u_int32_t
+name|tx_cmd
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -514,6 +520,17 @@ end_define
 
 begin_comment
 comment|/* DEVICE_POLLING deferred RNR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_EXT_RFA
+value|0x0400
+end_define
+
+begin_comment
+comment|/* extended RFDs for csum offload */
 end_comment
 
 begin_comment
