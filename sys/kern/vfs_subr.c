@@ -2284,7 +2284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a mount option by its name.  *  * Return 0 if the option was found.  * Return ENOENT if the option wasn't found.  * If len is a non-NULL pointer and *len  * a integer different from 0, then the size  * of the option will be compared with *len and  * if they doesn't match, EINVAL is returned.  * If len is non-NULL and *len == 0, it will  * be filled with the length of the option.  * Finally, if buf is non-NULL, it will be  * filled with the address of the option.  */
+comment|/*  * Get a mount option by its name.  *  * Return 0 if the option was found, ENOENT otherwise.  * If len is non-NULL it will be filled with the length  * of the option. If buf is non-NULL, it will be filled  * with the address of the option.  */
 end_comment
 
 begin_function
@@ -2367,30 +2367,6 @@ name|len
 operator|!=
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|len
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|*
-name|len
-operator|!=
-name|opt
-operator|->
-name|len
-operator|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 operator|*
 name|len
 operator|=
@@ -2398,7 +2374,6 @@ name|opt
 operator|->
 name|len
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|buf
@@ -2529,11 +2504,11 @@ operator|)
 return|;
 name|bcopy
 argument_list|(
-name|dest
-argument_list|,
 name|opt
 operator|->
 name|value
+argument_list|,
+name|dest
 argument_list|,
 name|opt
 operator|->
