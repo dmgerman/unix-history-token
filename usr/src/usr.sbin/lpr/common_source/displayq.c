@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	displayq.c	4.4	83/05/27	*/
+comment|/*	displayq.c	4.5	83/06/02	*/
 end_comment
 
 begin_comment
@@ -33,6 +33,17 @@ end_define
 
 begin_comment
 comment|/* start of Owner column in normal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZCOL
+value|62
+end_define
+
+begin_comment
+comment|/* start of Size column in normal */
 end_comment
 
 begin_comment
@@ -87,6 +98,7 @@ comment|/* # of spool requests */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lflag
 decl_stmt|;
@@ -97,6 +109,7 @@ comment|/* long output option */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|current
 index|[
@@ -110,6 +123,7 @@ comment|/* current file being printed */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|garbage
 decl_stmt|;
@@ -120,6 +134,7 @@ comment|/* # of garbage cf files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rank
 decl_stmt|;
@@ -130,6 +145,7 @@ comment|/* order to be printed (-1=none, 0=active) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|totsize
 decl_stmt|;
@@ -140,6 +156,7 @@ comment|/* total print job size in bytes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|first
 decl_stmt|;
@@ -150,6 +167,7 @@ comment|/* first file in ``files'' column? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|col
 decl_stmt|;
@@ -160,18 +178,7 @@ comment|/* column on screen */
 end_comment
 
 begin_decl_stmt
-name|int
-name|SIZCOL
-init|=
-literal|62
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* start of Size column in normal */
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|int
 name|sendtorem
 decl_stmt|;
@@ -182,6 +189,7 @@ comment|/* are we sending to a remote? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|file
 index|[
@@ -195,6 +203,7 @@ comment|/* print file name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|head0
@@ -204,6 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|head1
@@ -1034,18 +1044,16 @@ begin_comment
 comment|/*  * Print the header for the short listing format  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|header
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|printf
 argument_list|(
 name|head0
 argument_list|)
-expr_stmt|;
+block|;
 name|col
 operator|=
 name|strlen
@@ -1054,33 +1062,27 @@ name|head0
 argument_list|)
 operator|+
 literal|1
-expr_stmt|;
+block|;
 name|blankfill
 argument_list|(
 name|SIZCOL
 argument_list|)
-expr_stmt|;
+block|;
 name|printf
 argument_list|(
 name|head1
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
+block|; }
+specifier|static
 name|inform
 argument_list|(
 argument|cf
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|cf
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1380,24 +1382,22 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|inlist
 argument_list|(
 argument|name
 argument_list|,
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|name
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1546,6 +1546,7 @@ block|}
 end_block
 
 begin_expr_stmt
+specifier|static
 name|show
 argument_list|(
 name|nfile
@@ -1612,6 +1613,7 @@ comment|/*  * Fill the line with blanks to the specified column  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|blankfill
 argument_list|(
 name|n
@@ -1643,7 +1645,8 @@ begin_comment
 comment|/*  * Give the abbreviated dump of the file names  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|dump
 argument_list|(
 argument|nfile
@@ -1652,17 +1655,14 @@ argument|file
 argument_list|,
 argument|copies
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|nfile
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1790,7 +1790,8 @@ begin_comment
 comment|/*  * Print the long info about the file  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|ldump
 argument_list|(
 argument|nfile
@@ -1799,17 +1800,14 @@ argument|file
 argument_list|,
 argument|copies
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|nfile
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1886,27 +1884,25 @@ begin_comment
 comment|/*  * Print the job's rank in the queue,  *   update col for screen management  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|prank
 argument_list|(
 argument|n
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|char
 name|line
 index|[
 literal|100
 index|]
-decl_stmt|;
+block|;
 specifier|static
 name|char
-modifier|*
+operator|*
 name|r
 index|[]
-init|=
+operator|=
 block|{
 literal|"th"
 block|,
@@ -1928,7 +1924,7 @@ literal|"th"
 block|,
 literal|"th"
 block|}
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|n
@@ -1947,6 +1943,9 @@ literal|6
 expr_stmt|;
 return|return;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -1989,6 +1988,9 @@ literal|10
 index|]
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|col
 operator|+=
 name|strlen
@@ -1996,6 +1998,9 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"%s"
@@ -2003,8 +2008,8 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
+unit|}
 end_unit
 

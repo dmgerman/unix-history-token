@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	startdaemon.c	4.4	83/05/27	*/
+comment|/*	startdaemon.c	4.5	83/06/02	*/
 end_comment
 
 begin_comment
@@ -15,8 +15,17 @@ end_include
 
 begin_macro
 name|startdaemon
-argument_list|()
+argument_list|(
+argument|ahost
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ahost
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -40,7 +49,7 @@ name|rem
 operator|=
 name|getport
 argument_list|(
-name|host
+name|ahost
 argument_list|)
 expr_stmt|;
 if|if

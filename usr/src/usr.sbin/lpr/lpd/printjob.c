@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	printjob.c	4.5	83/05/23	*/
+comment|/*	printjob.c	4.6	83/06/02	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,7 @@ comment|/* abort if dofork fails */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|title
 index|[
@@ -49,6 +50,7 @@ comment|/* ``pr'' title */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|cfp
@@ -60,6 +62,7 @@ comment|/* control file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pfd
 decl_stmt|;
@@ -70,6 +73,7 @@ comment|/* printer file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ofd
 decl_stmt|;
@@ -80,6 +84,7 @@ comment|/* output filter file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfd
 decl_stmt|;
@@ -90,6 +95,7 @@ comment|/* lock file descriptor */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pid
 decl_stmt|;
@@ -100,6 +106,7 @@ comment|/* pid of lpd process */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prchild
 decl_stmt|;
@@ -110,6 +117,7 @@ comment|/* id of pr process */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|child
 decl_stmt|;
@@ -120,6 +128,7 @@ comment|/* id of any filters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ofilter
 decl_stmt|;
@@ -130,6 +139,7 @@ comment|/* id of output filter, if any */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tof
 decl_stmt|;
@@ -140,29 +150,18 @@ comment|/* true if at top of form */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|remote
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* non zero if sending files to remote */
-end_comment
-
-begin_extern
-extern|extern	banner(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/* big character printer */
+comment|/* true if sending files to remote */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|logname
 index|[
@@ -176,6 +175,7 @@ comment|/* user's login name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|jobname
 index|[
@@ -189,6 +189,7 @@ comment|/* job or file name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|class
 index|[
@@ -202,6 +203,7 @@ comment|/* classification field */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|width
 index|[
@@ -217,6 +219,7 @@ comment|/* page width in characters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|length
 index|[
@@ -232,6 +235,7 @@ comment|/* page length in lines */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|pxwidth
 index|[
@@ -247,6 +251,7 @@ comment|/* page width in pixels */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|pxlength
 index|[
@@ -262,6 +267,7 @@ comment|/* page length in pixels */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|indent
 index|[
@@ -326,13 +332,20 @@ name|void
 operator|)
 name|close
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* set up log file */
 operator|(
 name|void
 operator|)
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|open
 argument_list|(
 name|LF
@@ -343,15 +356,24 @@ name|FAPPEND
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|dup2
+operator|<
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|open
 argument_list|(
-literal|2
+literal|"/dev/null"
 argument_list|,
+name|FWRONLY
+argument_list|)
+expr_stmt|;
+name|dup
+argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* closes original connection */
 name|pid
 operator|=
 name|getpid
@@ -965,19 +987,17 @@ begin_comment
 comment|/*  * The remaining part is the reading of the control file (cf)  * and performing the various actions.  * Returns 0 if everthing was OK, 1 if we should try to reprint the job and  * -1 if a non-recoverable error occured.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|printit
 argument_list|(
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1475,20 +1495,18 @@ begin_comment
 comment|/*  * Print a file.  * Set up the chain [ PR [ | {IF, OF} ] ] or {IF, TF, CF, VF}.  * Return -1 if a non-recoverable error occured, 1 if a recoverable error and  * 0 if all is well.  * Note: all filters take stdin as the file, stdout as the printer,  * stderr as the log file, and must not ignore SIGINT.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|print
 argument_list|(
 argument|format
 argument_list|,
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|format
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -2654,19 +2672,17 @@ begin_comment
 comment|/*  * Send the daemon control file (cf) and any data files.  * Return -1 if a non-recoverable error occured, 1 if a recoverable error and  * 0 if all is well.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|sendit
 argument_list|(
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2913,23 +2929,21 @@ begin_comment
 comment|/*  * Send a data file to the remote machine and spool it.  * Return positive if we should try resending.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|sendfile
 argument_list|(
 argument|type
 argument_list|,
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 name|type
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -3297,21 +3311,25 @@ unit|}
 comment|/*  * Banner printing stuff  */
 end_comment
 
-begin_expr_stmt
-unit|banner
-operator|(
-name|name1
-operator|,
-name|name2
-operator|)
+begin_macro
+unit|static
+name|banner
+argument_list|(
+argument|name1
+argument_list|,
+argument|name2
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|name1
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|name2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3649,6 +3667,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|scnline
@@ -3725,7 +3744,8 @@ parameter_list|)
 value|(((q)-' ')&0177)
 end_define
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|scan_out
 argument_list|(
 argument|scfd
@@ -3734,13 +3754,10 @@ argument|scsp
 argument_list|,
 argument|dlm
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|scfd
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -3980,18 +3997,16 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|dropit
 argument_list|(
 argument|c
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 name|c
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4067,18 +4082,16 @@ begin_comment
 comment|/*  * sendmail ---  *   tell people about job completion  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|sendmail
 argument_list|(
 argument|bombed
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|bombed
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4346,18 +4359,16 @@ begin_comment
 comment|/*  * dofork - fork with retries on failure  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|dofork
 argument_list|(
 argument|action
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|action
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4470,12 +4481,10 @@ begin_comment
 comment|/*  * Cleanup child processes when a SIGINT is caught.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|onintr
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|kill
 argument_list|(
@@ -4483,7 +4492,7 @@ literal|0
 argument_list|,
 name|SIGINT
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|ofilter
@@ -4497,6 +4506,9 @@ argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|wait
@@ -4507,15 +4519,18 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+end_while
+
+begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
 begin_macro
+unit|}  static
 name|init
 argument_list|()
 end_macro
@@ -5083,19 +5098,17 @@ begin_comment
 comment|/*  * Acquire line printer or remote connection.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|openpr
 argument_list|()
-end_macro
-
-begin_block
 block|{
 specifier|register
 name|int
 name|i
-decl_stmt|,
+block|,
 name|n
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|*
@@ -5164,6 +5177,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|i
@@ -5177,22 +5193,30 @@ argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|sleep
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 		if
+operator|(
 name|isatty
 argument_list|(
 name|pfd
 argument_list|)
-condition|)
+operator|)
 name|setty
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|status
 argument_list|(
 literal|"%s is ready and printing"
@@ -5200,8 +5224,10 @@ argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
+end_expr_stmt
+
+begin_if
+unit|} else
 if|if
 condition|(
 name|RM
@@ -5336,7 +5362,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
 comment|/* 	 * Start up an output filter, if needed. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|OF
@@ -5493,12 +5525,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
-end_block
+end_if
 
-begin_struct
-struct|struct
+begin_macro
+unit|}  struct
 name|bauds
+end_macro
+
+begin_block
 block|{
 name|int
 name|baud
@@ -5507,9 +5541,12 @@ name|int
 name|speed
 decl_stmt|;
 block|}
+end_block
+
+begin_expr_stmt
 name|bauds
 index|[]
-init|=
+operator|=
 block|{
 literal|50
 block|,
@@ -5575,30 +5612,27 @@ literal|0
 block|,
 literal|0
 block|}
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * setup tty lines.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|setty
 argument_list|()
-end_macro
-
-begin_block
-block|{
-name|struct
+block|{ 	struct
 name|sgttyb
 name|ttybuf
-decl_stmt|;
+block|;
 specifier|register
-name|struct
+expr|struct
 name|bauds
-modifier|*
+operator|*
 name|bp
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|ioctl
@@ -5628,6 +5662,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ioctl
@@ -5658,6 +5695,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|BR
@@ -5721,6 +5761,9 @@ operator|->
 name|speed
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|FC
@@ -5732,6 +5775,9 @@ operator|&=
 operator|~
 name|FC
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|FS
@@ -5742,6 +5788,9 @@ name|sg_flags
 operator||=
 name|FS
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|ioctl
@@ -5772,6 +5821,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|XC
@@ -5804,6 +5856,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|XS
@@ -5836,15 +5891,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-end_block
+end_if
 
 begin_comment
+unit|}
 comment|/*VARARGS1*/
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
+unit|static
 name|status
 argument_list|(
 argument|msg
@@ -5855,11 +5910,14 @@ argument|a2
 argument_list|,
 argument|a3
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|msg
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.17	83/05/18	*/
+comment|/*	lpr.c	4.19	83/06/02	*/
 end_comment
 
 begin_comment
@@ -1457,7 +1457,9 @@ if|if
 condition|(
 operator|!
 name|startdaemon
-argument_list|()
+argument_list|(
+name|host
+argument_list|)
 condition|)
 name|printf
 argument_list|(

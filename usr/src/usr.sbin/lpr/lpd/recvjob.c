@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	recvjob.c	4.2	83/05/16	*/
+comment|/*	recvjob.c	4.3	83/06/02	*/
 end_comment
 
 begin_comment
@@ -14,6 +14,7 @@ file|"lp.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
 name|tfname
 index|[
@@ -27,6 +28,7 @@ comment|/* tmp copy of cf before linking */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|dfname
@@ -254,19 +256,17 @@ begin_comment
 comment|/*  * Read printer jobs sent by lpd and copy them to the spooling directory.  * Return the number of jobs successfully transfered.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|readjob
 argument_list|(
 argument|printer
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|printer
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -551,21 +551,19 @@ begin_comment
 comment|/*  * Read files send by lpd and copy them to the spooling directory.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|readfile
 argument_list|(
 argument|file
 argument_list|,
 argument|size
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rmjob.c	4.3	83/05/18	*/
+comment|/*	rmjob.c	4.4	83/06/02	*/
 end_comment
 
 begin_comment
@@ -65,6 +65,7 @@ comment|/* # of spool requests */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|person
@@ -76,6 +77,7 @@ comment|/* name of person doing lprm */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|root
 index|[]
@@ -85,6 +87,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|all
 init|=
@@ -97,6 +100,7 @@ comment|/* eliminate all files (root only) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cur_daemon
 decl_stmt|;
@@ -107,6 +111,7 @@ comment|/* daemon's pid */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|current
 index|[
@@ -454,7 +459,9 @@ name|assasinated
 operator|&&
 operator|!
 name|startdaemon
-argument_list|()
+argument_list|(
+name|host
+argument_list|)
 condition|)
 name|fatal
 argument_list|(
@@ -473,19 +480,17 @@ begin_comment
 comment|/*  * Process a lock file: collect the pid of the active  *  daemon and the file name of the active spool entry.  * Return boolean indicating existence of a lock file.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|lockchk
 argument_list|(
 argument|s
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|s
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -658,19 +663,17 @@ begin_comment
 comment|/*  * Process a control file.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|process
 argument_list|(
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -802,19 +805,17 @@ begin_comment
 comment|/*  * Do the dirty work in checking  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|chk
 argument_list|(
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1084,24 +1085,22 @@ begin_comment
 comment|/*  * If root is removing a file on the local machine, allow it.  * If root is removing a file from a remote machine, only allow  * files sent from the remote machine to be removed.  * Normal users can only remove the file from where it was sent.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|isowner
 argument_list|(
 argument|owner
 argument_list|,
 argument|file
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|owner
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|file
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1193,30 +1192,28 @@ begin_comment
 comment|/*  * Check to see if we are sending files to a remote machine. If we are,  * then try removing files on the remote machine.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|chkremote
 argument_list|()
-end_macro
-
-begin_block
 block|{
 specifier|register
 name|char
-modifier|*
+operator|*
 name|cp
-decl_stmt|;
+block|;
 specifier|register
 name|int
 name|i
-decl_stmt|,
+block|,
 name|rem
-decl_stmt|;
+block|;
 name|char
 name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|*
@@ -1234,6 +1231,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sprintf
 argument_list|(
 name|buf
@@ -1249,10 +1249,16 @@ else|:
 name|person
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cp
 operator|=
 name|buf
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|i
@@ -1291,6 +1297,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_for
 for|for
 control|(
 name|i
@@ -1328,6 +1337,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_expr_stmt
 name|strcat
 argument_list|(
 name|cp
@@ -1335,6 +1347,9 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|rem
 operator|=
 name|getport
@@ -1342,6 +1357,9 @@ argument_list|(
 name|RM
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|rem
@@ -1440,14 +1458,15 @@ name|rem
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
+end_if
 
 begin_comment
+unit|}
 comment|/*  * Return 1 if the filename begins with 'cf'  */
 end_comment
 
 begin_macro
+unit|static
 name|iscf
 argument_list|(
 argument|d

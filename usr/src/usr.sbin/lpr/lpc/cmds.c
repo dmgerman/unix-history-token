@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.2 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2096,10 +2096,6 @@ name|LO
 operator|=
 name|DEFLOCK
 expr_stmt|;
-name|RM
-operator|=
-name|host
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2168,7 +2164,9 @@ if|if
 condition|(
 operator|!
 name|startdaemon
-argument_list|()
+argument_list|(
+name|host
+argument_list|)
 condition|)
 name|printf
 argument_list|(

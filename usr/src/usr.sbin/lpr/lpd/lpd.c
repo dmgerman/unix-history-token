@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpd.c	4.3	83/05/26	*/
+comment|/*	lpd.c	4.4	83/06/02	*/
 end_comment
 
 begin_comment
@@ -14,6 +14,7 @@ file|"lp.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lflag
 decl_stmt|;
@@ -24,6 +25,7 @@ comment|/* log requests flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|logfile
@@ -33,6 +35,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in
 name|sin
@@ -395,6 +398,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Restart all the printers. 	 */
+name|startup
+argument_list|()
+expr_stmt|;
 name|f
 operator|=
 name|socket
@@ -490,10 +497,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Restart all the printers and tell everyone that we are 	 * up and running. 	 */
-name|startup
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Main loop: listen, accept, do a request, continue. 	 */
 name|sigset
 argument_list|(
@@ -614,17 +617,15 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|reapchild
 argument_list|()
-end_macro
-
-begin_block
 block|{
-name|union
+expr|union
 name|wait
 name|status
-decl_stmt|;
+block|;
 while|while
 condition|(
 name|wait3
@@ -641,7 +642,7 @@ literal|0
 condition|)
 empty_stmt|;
 block|}
-end_block
+end_expr_stmt
 
 begin_comment
 comment|/*  * Stuff for handling job specifications  */
@@ -696,6 +697,18 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|person
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of person doing lprm */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
 name|fromb
 index|[
 literal|32
@@ -708,6 +721,7 @@ comment|/* buffer for client's machine name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|cbuf
 index|[
@@ -721,6 +735,7 @@ comment|/* command line buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|cmdnames
@@ -742,20 +757,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|doit
 argument_list|(
 argument|f
 argument_list|,
 argument|fromaddr
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|f
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -781,11 +794,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|n
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|person
 decl_stmt|;
 name|char
 name|c
@@ -1340,31 +1348,29 @@ begin_comment
 comment|/*  * Make a pass through the printcap database and start printing any  * files left from the last time the machine went down.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|startup
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|char
 name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
+block|;
 specifier|register
 name|char
-modifier|*
+operator|*
 name|cp
-decl_stmt|;
+block|;
 name|int
 name|pid
-decl_stmt|;
+block|;
 name|printer
 operator|=
 name|buf
-expr_stmt|;
+block|;
 comment|/* 	 * Restart the daemons. 	 */
 while|while
 condition|(
@@ -1408,6 +1414,9 @@ literal|'\0'
 expr_stmt|;
 break|break;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -1431,6 +1440,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -1444,37 +1456,34 @@ name|printjob
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-block|}
-end_block
+end_if
 
 begin_comment
+unit|} }
 comment|/*  * Check to see if the from host has access to the line printer.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|chkhost
 argument_list|()
-end_macro
-
-begin_block
 block|{
 specifier|register
 name|FILE
-modifier|*
+operator|*
 name|hostf
-decl_stmt|;
+block|;
 specifier|register
 name|char
-modifier|*
+operator|*
 name|cp
-decl_stmt|;
+block|;
 name|char
 name|ahost
 index|[
 literal|50
 index|]
-decl_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -1499,6 +1508,9 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_while
 while|while
 condition|(
 name|fgets
@@ -1569,6 +1581,9 @@ operator|)
 return|;
 block|}
 block|}
+end_while
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1577,20 +1592,24 @@ argument_list|(
 name|hostf
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Convert network-format internet address  * to base 256 d.d.d.d representation.  */
 end_comment
 
 begin_function
+unit|static
 name|char
 modifier|*
 name|ntoa
@@ -1779,19 +1798,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|logerror
 argument_list|(
 argument|msg
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|msg
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

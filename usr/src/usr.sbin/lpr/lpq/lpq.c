@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpq.c	4.3	83/05/26	*/
+comment|/*	lpq.c	4.4	83/06/02	*/
 end_comment
 
 begin_comment
@@ -61,6 +61,7 @@ comment|/* # of spool requests */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|repeat
 decl_stmt|;
@@ -71,6 +72,7 @@ comment|/* + flag indicator */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|slptime
 init|=
@@ -83,6 +85,7 @@ comment|/* pause between screen refereshes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lflag
 decl_stmt|;
@@ -110,12 +113,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|ospeed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dumb
 decl_stmt|;
@@ -126,6 +131,7 @@ comment|/* whether to use capabilities */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|PC
 decl_stmt|;
@@ -136,6 +142,7 @@ comment|/* pad character for output */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|UP
@@ -147,6 +154,7 @@ comment|/* up one line */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|BC
@@ -158,6 +166,7 @@ comment|/* backspace character, other than \b */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|CM
@@ -169,6 +178,7 @@ comment|/* cursor motion */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|CL
@@ -180,6 +190,7 @@ comment|/* clear display */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|TI
@@ -191,6 +202,7 @@ comment|/* terminal init for CM */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|TE
@@ -202,6 +214,7 @@ comment|/* terminal clear for CM */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|SO
@@ -213,6 +226,7 @@ comment|/* stand out start */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|SE
@@ -640,31 +654,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|usage
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|printf
 argument_list|(
 literal|"usage: lpq [-Pprinter] [-l] [+[n]] [user...] [job...]\n"
 argument_list|)
-expr_stmt|;
+block|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
+block|; }
 comment|/*  * If we have the capability, print this in standout mode  */
-end_comment
-
-begin_macro
+specifier|static
 name|standout
 argument_list|(
 argument|f
@@ -675,14 +681,11 @@ argument|a1
 argument_list|,
 argument|a2
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|FILE
-modifier|*
+operator|*
 name|f
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|char
@@ -760,6 +763,7 @@ name|TERMCAP
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|capstrings
@@ -788,6 +792,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -826,22 +831,20 @@ begin_comment
 comment|/*  * All we need from termcap is to clear screen and  *   position cursor at the top; if these aren't available  *   we say the terminal is dumb and let things scroll  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|termcap
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|char
-modifier|*
+operator|*
 name|term
-decl_stmt|,
+block|,
 name|tbuf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
+block|;
 specifier|static
 name|char
 name|buf
@@ -850,35 +853,31 @@ name|BUFSIZ
 operator|/
 literal|2
 index|]
-decl_stmt|;
+block|;
 specifier|register
 name|short
 name|columns
-decl_stmt|;
+block|;
 name|char
-modifier|*
+operator|*
 name|bp
-init|=
+operator|=
 name|buf
-decl_stmt|;
+block|;
 specifier|register
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|p
-decl_stmt|,
-modifier|*
-modifier|*
-modifier|*
+block|,
+operator|*
+operator|*
+operator|*
 name|q
-decl_stmt|,
-modifier|*
+block|,
+operator|*
 name|cp
-decl_stmt|;
-specifier|extern
-name|int
-name|SIZCOL
-decl_stmt|;
+block|;
 name|ioctl
 argument_list|(
 literal|0
@@ -892,13 +891,13 @@ operator|)
 operator|&
 name|sbuf
 argument_list|)
-expr_stmt|;
+block|;
 name|ospeed
 operator|=
 name|sbuf
 operator|.
 name|sg_ospeed
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|(
@@ -977,26 +976,10 @@ operator|=
 operator|*
 name|cp
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|columns
-operator|=
-name|tgetnum
-argument_list|(
-literal|"co"
-argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|)
-name|SIZCOL
-operator|=
-name|columns
-operator|-
-literal|18
-expr_stmt|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|CL
@@ -1008,14 +991,15 @@ operator|==
 name|NULL
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Putchar writearound for tputs  */
 end_comment
 
 begin_macro
+unit|static
 name|putch
 argument_list|(
 argument|c

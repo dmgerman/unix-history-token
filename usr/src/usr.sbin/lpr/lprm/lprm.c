@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lprm.c	4.3	83/05/26	*/
+comment|/*	lprm.c	4.4	83/06/02	*/
 end_comment
 
 begin_comment
@@ -65,7 +65,6 @@ comment|/* # of spool requests */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|person
@@ -77,6 +76,7 @@ comment|/* name of person doing lprm */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|luser
 index|[
@@ -134,10 +134,6 @@ name|assasinated
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|select
-parameter_list|()
-function_decl|;
 name|name
 operator|=
 name|argv
@@ -389,25 +385,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|usage
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|printf
 argument_list|(
 literal|"usage: lprm [-] [-Pprinter] [[job #] [user] ...]\n"
 argument_list|)
-expr_stmt|;
+block|;
 name|exit
 argument_list|(
 literal|2
 argument_list|)
-expr_stmt|;
-block|}
-end_block
+block|; }
+end_expr_stmt
 
 end_unit
 
