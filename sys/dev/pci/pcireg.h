@@ -1920,7 +1920,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIR_MSI_DATA_HIGH
+name|PCIR_MSI_DATA_64BIT
 value|0xc
 end_define
 

@@ -145,6 +145,58 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Interesting values for PCI power management */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_pp
+block|{
+name|uint16_t
+name|pp_cap
+decl_stmt|;
+comment|/* PCI power management capabilities */
+name|uint8_t
+name|pp_status
+decl_stmt|;
+comment|/* config space address of PCI power status reg */
+name|uint8_t
+name|pp_pmcsr
+decl_stmt|;
+comment|/* config space address of PMCSR reg */
+name|uint8_t
+name|pp_data
+decl_stmt|;
+comment|/* config space address of PCI power data reg */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Interesting values for PCI MSI */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_msi
+block|{
+name|uint16_t
+name|msi_ctrl
+decl_stmt|;
+comment|/* Message Control */
+name|uint8_t
+name|msi_msgnum
+decl_stmt|;
+comment|/* Number of messages */
+name|uint16_t
+name|msi_data
+decl_stmt|;
+comment|/* Location of MSI data word */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* config header information common to all header types */
 end_comment
 
@@ -247,22 +299,16 @@ name|uint8_t
 name|func
 decl_stmt|;
 comment|/* config space function number */
-name|uint16_t
-name|pp_cap
+name|struct
+name|pcicfg_pp
+name|pp
 decl_stmt|;
-comment|/* PCI power management capabilities */
-name|uint8_t
-name|pp_status
+comment|/* pci power management */
+name|struct
+name|pcicfg_msi
+name|msi
 decl_stmt|;
-comment|/* config space address of PCI power status reg */
-name|uint8_t
-name|pp_pmcsr
-decl_stmt|;
-comment|/* config space address of PMCSR reg */
-name|uint8_t
-name|pp_data
-decl_stmt|;
-comment|/* config space address of PCI power data reg */
+comment|/* pci msi */
 block|}
 name|pcicfgregs
 typedef|;
