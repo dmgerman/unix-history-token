@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.20 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,6 +1163,13 @@ name|d_type
 operator|=
 name|DT_DIR
 expr_stmt|;
+else|else
+name|proto
+operator|.
+name|d_type
+operator|=
+literal|0
+expr_stmt|;
 name|proto
 operator|.
 name|d_namlen
@@ -1434,6 +1441,13 @@ operator|.
 name|d_type
 operator|=
 name|DT_DIR
+expr_stmt|;
+else|else
+name|proto
+operator|.
+name|d_type
+operator|=
+literal|0
 expr_stmt|;
 name|proto
 operator|.

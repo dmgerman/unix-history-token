@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.22 (Berkeley) %G%"
+literal|"@(#)dir.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1867,6 +1867,13 @@ operator|->
 name|id_parent
 index|]
 expr_stmt|;
+else|else
+name|dirp
+operator|->
+name|d_type
+operator|=
+literal|0
+expr_stmt|;
 name|dirp
 operator|->
 name|d_reclen
@@ -1989,6 +1996,13 @@ name|idesc
 operator|->
 name|id_parent
 index|]
+expr_stmt|;
+else|else
+name|dirp
+operator|->
+name|d_type
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
