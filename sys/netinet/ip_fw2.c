@@ -5547,6 +5547,9 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|pktlen
+decl_stmt|;
+name|int
 name|dyn_dir
 init|=
 name|MATCH_UNKNOWN
@@ -5570,6 +5573,14 @@ literal|0
 return|;
 comment|/* accept */
 comment|/* 	 * dyn_dir = MATCH_UNKNOWN when rules unchecked, 	 * 	MATCH_NONE when checked and not matched (q = NULL), 	 *	MATCH_FORWARD or MATCH_REVERSE otherwise (q != NULL) 	 */
+name|pktlen
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 if|if
 condition|(
 name|args
@@ -5708,6 +5719,16 @@ operator|->
 name|ip_len
 expr_stmt|;
 block|}
+name|pktlen
+operator|=
+name|ip_len
+operator|<
+name|pktlen
+condition|?
+name|ip_len
+else|:
+name|pktlen
+expr_stmt|;
 define|#
 directive|define
 name|PULLUP_TO
@@ -7635,7 +7656,7 @@ name|q
 operator|->
 name|bcnt
 operator|+=
-name|ip_len
+name|pktlen
 expr_stmt|;
 name|f
 operator|=
@@ -7777,7 +7798,7 @@ name|f
 operator|->
 name|bcnt
 operator|+=
-name|ip_len
+name|pktlen
 expr_stmt|;
 name|f
 operator|->
@@ -8025,7 +8046,7 @@ name|f
 operator|->
 name|bcnt
 operator|+=
-name|ip_len
+name|pktlen
 expr_stmt|;
 name|f
 operator|->
