@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"1.9.0 (December 22, 1994)"
+value|"1.9.1 (January 1, 1995)"
 end_define
 
 begin_comment
