@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.9 1994/10/04 16:07:43 jkh Exp $"
+literal|"$Id: perform.c,v 1.10 1994/10/14 05:34:04 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,12 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|char
+name|home
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
 name|FILE
 modifier|*
 name|cfile
@@ -282,12 +288,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|char
-name|home
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 if|if
 condition|(
 operator|!
