@@ -273,7 +273,7 @@ value|(bus_space_write_ ## width(rman_get_bustag((reg)), 			\ 		       rman_get_
 end_define
 
 begin_comment
-comment|/*   * Speeds are stored in counts, from 1 - CPU_MAX_SPEED, and  * reported to the user in tenths of a percent.  */
+comment|/*  * Speeds are stored in counts, from 1 - CPU_MAX_SPEED, and  * reported to the user in tenths of a percent.  */
 end_comment
 
 begin_decl_stmt
@@ -4366,7 +4366,7 @@ name|acpi_dev
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * Disable throttling control on PIIX4 A and B-step. 	 * See specification changes #13 ("Manual Throttle Duty Cycle") 	 * and #14 ("Enabling and Disabling Manual Throttle"), plus 	 * erratum #5 ("STPCLK# Deassertion Time") from the January  	 * 2002 PIIX4 specification update.  Note that few (if any) 	 * mobile systems ever used this part. 	 */
+comment|/* 	 * Disable throttling control on PIIX4 A and B-step. 	 * See specification changes #13 ("Manual Throttle Duty Cycle") 	 * and #14 ("Enabling and Disabling Manual Throttle"), plus 	 * erratum #5 ("STPCLK# Deassertion Time") from the January 	 * 2002 PIIX4 specification update.  Note that few (if any) 	 * mobile systems ever used this part. 	 */
 case|case
 name|PCI_REVISION_A_STEP
 case|:
@@ -4378,7 +4378,7 @@ operator||=
 name|CPU_QUIRK_NO_THROTTLE
 expr_stmt|;
 comment|/* FALLTHROUGH */
-comment|/* 	 * Disable C3 support for all PIIX4 chipsets.  Some of these parts 	 * do not report the BMIDE status to the BM status register and 	 * others have a livelock bug if Type-F DMA is enabled.  Linux 	 * works around the BMIDE bug by reading the BM status directly 	 * but we take the simpler approach of disabling C3 for these 	 * parts. 	 * 	 * See erratum #18 ("C3 Power State/BMIDE and Type-F DMA  	 * Livelock") from the January 2002 PIIX4 specification update. 	 * Applies to all PIIX4 models. 	 */
+comment|/* 	 * Disable C3 support for all PIIX4 chipsets.  Some of these parts 	 * do not report the BMIDE status to the BM status register and 	 * others have a livelock bug if Type-F DMA is enabled.  Linux 	 * works around the BMIDE bug by reading the BM status directly 	 * but we take the simpler approach of disabling C3 for these 	 * parts. 	 * 	 * See erratum #18 ("C3 Power State/BMIDE and Type-F DMA 	 * Livelock") from the January 2002 PIIX4 specification update. 	 * Applies to all PIIX4 models. 	 */
 case|case
 name|PCI_REVISION_4E
 case|:
