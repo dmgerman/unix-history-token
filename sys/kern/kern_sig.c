@@ -1053,6 +1053,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|SIGSETEQ
 argument_list|(
 name|saved
@@ -1062,8 +1063,6 @@ operator|->
 name|p_siglist
 argument_list|)
 condition|)
-return|return;
-else|else
 block|{
 comment|/* pending set changed */
 name|p
@@ -8220,6 +8219,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|SIGSETEQ
 argument_list|(
 name|saved
@@ -8229,8 +8229,6 @@ operator|->
 name|p_siglist
 argument_list|)
 condition|)
-return|return;
-else|else
 block|{
 comment|/* pending set changed */
 name|p
