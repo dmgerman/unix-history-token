@@ -1312,6 +1312,11 @@ operator|==
 name|NOTE_EXIT
 condition|)
 block|{
+name|filt_procdetach
+argument_list|(
+name|kn
+argument_list|)
+expr_stmt|;
 name|kn
 operator|->
 name|kn_status
