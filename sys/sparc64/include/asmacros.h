@@ -65,6 +65,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCPU_ADDR
+parameter_list|(
+name|member
+parameter_list|,
+name|reg
+parameter_list|)
+value|add %g7, GD_ ## member, reg
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEBUGGER
 parameter_list|()
 value|ta %xcc, 1
@@ -113,7 +125,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.text ; \ 	.align	4 ; \ 	.globl	name ; \ 	.type	name, @function ; \ name ## :
+value|.text ; \ 	.align	16 ; \ 	.globl	name ; \ 	.type	name, @function ; \ name ## :
 end_define
 
 begin_define
