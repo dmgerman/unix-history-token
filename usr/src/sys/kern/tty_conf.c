@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_conf.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_conf.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -164,6 +164,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"sl.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSL
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|slopen
+argument_list|()
+decl_stmt|,
+name|slclose
+argument_list|()
+decl_stmt|,
+name|slinput
+argument_list|()
+decl_stmt|,
+name|sltioctl
+argument_list|()
+decl_stmt|,
+name|slstart
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|linesw
@@ -181,6 +219,7 @@ name|ttwrite
 block|,
 name|nullioctl
 block|,
+comment|/* 0- OTTYDISC */
 name|ttyinput
 block|,
 name|nodev
@@ -206,6 +245,7 @@ name|ttwrite
 block|,
 name|bkioctl
 block|,
+comment|/* 1- NETLDISC */
 name|bkinput
 block|,
 name|nodev
@@ -250,6 +290,7 @@ name|ttwrite
 block|,
 name|nullioctl
 block|,
+comment|/* 2- NTTYDISC */
 name|ttyinput
 block|,
 name|nodev
@@ -285,7 +326,57 @@ name|ttstart
 block|,
 name|nullmodem
 block|,
-comment|/* 3 */
+comment|/* 3- TABLDISC */
+else|#
+directive|else
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|NSL
+operator|>
+literal|0
+name|slopen
+block|,
+name|slclose
+block|,
+name|nodev
+block|,
+name|nodev
+block|,
+name|sltioctl
+block|,
+name|slinput
+block|,
+name|nodev
+block|,
+name|nulldev
+block|,
+name|slstart
+block|,
+name|nulldev
+block|,
+comment|/* 4- SLIPDISC */
 else|#
 directive|else
 name|nodev
