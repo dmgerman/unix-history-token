@@ -48,7 +48,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"setextattr [namespace] [attrname] [filename] "
+literal|"setextattr [attrnamespace] [attrname] [filename] "
 literal|"[attrvalue]\n"
 argument_list|)
 expr_stmt|;
@@ -81,7 +81,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|namespace
+name|attrnamespace
 decl_stmt|;
 if|if
 condition|(
@@ -102,7 +102,7 @@ literal|1
 index|]
 argument_list|,
 operator|&
-name|namespace
+name|attrnamespace
 argument_list|)
 expr_stmt|;
 if|if
@@ -155,7 +155,7 @@ index|[
 literal|3
 index|]
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|argv
 index|[

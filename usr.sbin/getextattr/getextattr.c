@@ -60,7 +60,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"getextattr [-s] [namespace] [attrname] "
+literal|"getextattr [-s] [attrnamespace] [attrname] "
 literal|"[filename ...]\n"
 argument_list|)
 expr_stmt|;
@@ -137,7 +137,7 @@ name|i
 decl_stmt|,
 name|arg_counter
 decl_stmt|,
-name|namespace
+name|attrnamespace
 decl_stmt|;
 name|int
 name|ch
@@ -227,7 +227,7 @@ literal|0
 index|]
 argument_list|,
 operator|&
-name|namespace
+name|attrnamespace
 argument_list|)
 expr_stmt|;
 if|if
@@ -298,7 +298,7 @@ index|[
 name|arg_counter
 index|]
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|attrname
 argument_list|,
