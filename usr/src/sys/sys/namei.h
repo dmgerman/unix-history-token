@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -391,14 +391,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
+comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei. NCHNAMLEN is sized to make structure  * size a power of two to optimize malloc's. Minimum reasonable  * size is 15.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCHNAMLEN
-value|15
+value|31
 end_define
 
 begin_comment
@@ -474,20 +474,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_decl_stmt
-name|struct
-name|namecache
-modifier|*
-name|namecache
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nchsize
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|u_long
