@@ -758,7 +758,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD
+name|__FreeBSD__
 name|memcopy
 argument_list|(
 name|ti
@@ -848,7 +848,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD
+name|__FreeBSD__
 name|memcopy
 argument_list|(
 name|data
@@ -919,7 +919,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FreeBSD
+name|__FreeBSD__
 name|memcopy
 argument_list|(
 name|data
