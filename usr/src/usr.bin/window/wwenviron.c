@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.13 %G%"
+literal|"@(#)wwenviron.c	3.14 %G%"
 decl_stmt|;
 end_decl_stmt
 

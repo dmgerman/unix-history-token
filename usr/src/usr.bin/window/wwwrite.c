@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwwrite.c	3.22 %G%"
+literal|"@(#)wwwrite.c	3.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
