@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	7.9 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -52,13 +58,7 @@ name|ADDDOMAIN
 parameter_list|(
 name|x
 parameter_list|)
-value|{ \ 	extern struct domain x
-comment|/**/
-value|domain; \ 	x
-comment|/**/
-value|domain.dom_next = domains; \ 	domains =&x
-comment|/**/
-value|domain; \ }
+value|{ \ 	extern struct domain __CONCAT(x,domain); \ 	__CONCAT(x,domain.dom_next) = domains; \ 	domains =&__CONCAT(x,domain); \ }
 end_define
 
 begin_macro
@@ -80,6 +80,9 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
+undef|#
+directive|undef
+name|unix
 ifndef|#
 directive|ifndef
 name|lint
