@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.1 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.2 %G%";  */
 end_comment
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|LINESIZE
-value|512
+value|BUFSIZ
 end_define
 
 begin_comment
