@@ -228,6 +228,12 @@ name|USB_PRODUCT_MELCO_LUATX1
 block|}
 block|,
 block|{
+name|USB_VENDOR_MELCO
+block|,
+name|USB_PRODUCT_MELCO_LUATX5
+block|}
+block|,
+block|{
 name|USB_VENDOR_DLINK
 block|,
 name|USB_PRODUCT_DLINK_DSB650
