@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.15 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3056,6 +3056,12 @@ operator|.
 name|fnum
 operator|=
 name|ino
+expr_stmt|;
+name|single
+operator|.
+name|finotype
+operator|=
+name|DT_UNKNOWN
 expr_stmt|;
 name|single
 operator|.
