@@ -296,10 +296,6 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|this
 argument_list|,
 literal|0
