@@ -1624,7 +1624,8 @@ break|break;
 case|case
 name|SND_CB_STOP
 case|:
-comment|/* sb_cmd(d->io_base, DSP_CMD_SPKOFF); /* speaker off */
+comment|/* XXX ??? sb_cmd(d->io_base, DSP_CMD_SPKOFF);*/
+comment|/* speaker off */
 break|break ;
 block|}
 return|return
