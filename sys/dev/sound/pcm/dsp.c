@@ -1066,13 +1066,7 @@ name|si_drv2
 operator|=
 name|wrch
 expr_stmt|;
-name|pcm_unlock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-comment|/* finished with snddev, new channels still locked */
-comment|/* bump refcounts, reset and unlock any channels that we just opened */
+comment|/* Bump refcounts, reset and unlock any channels that we just opened, 	 * and then release device lock. 	 */
 if|if
 condition|(
 name|flags
@@ -1090,11 +1084,6 @@ name|fmt
 argument_list|)
 condition|)
 block|{
-name|pcm_lock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|pcm_chnrelease
 argument_list|(
 name|rdch
@@ -1185,11 +1174,6 @@ name|fmt
 argument_list|)
 condition|)
 block|{
-name|pcm_lock
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|pcm_chnrelease
 argument_list|(
 name|wrch
@@ -1272,6 +1256,11 @@ name|wrch
 argument_list|)
 expr_stmt|;
 block|}
+name|pcm_unlock
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
