@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys_term.c,v 1.4 1998/01/22 00:04:57 imp Exp $"
+literal|"$Id: sys_term.c,v 1.6 1999/04/07 10:17:24 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,14 +125,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|int
-name|utmp_len
-init|=
-name|MAXHOSTNAMELEN
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
