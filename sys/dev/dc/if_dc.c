@@ -8882,7 +8882,7 @@ case|case
 name|DC_DEVICEID_AN985
 case|:
 case|case
-name|DE_DEVICEID_FE2500
+name|DC_DEVICEID_FE2500
 case|:
 name|sc
 operator|->
