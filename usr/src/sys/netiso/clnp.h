@@ -8,15 +8,15 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp.h,v 4.3 88/09/12 13:34:40 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp.h,v 5.1 89/02/09 16:17:22 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp.h,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp.h	7.2 (Berkeley) %G% */
+comment|/*	@(#)clnp.h	7.3 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -101,6 +101,16 @@ endif|#
 directive|endif
 endif|BYTE_ORDER
 end_endif
+
+begin_comment
+comment|/* should be config option but cpp breaks with too many #defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECBIT
+end_define
 
 begin_comment
 comment|/*  *	Return true if the mbuf is a cluster mbuf  */
@@ -463,6 +473,40 @@ comment|/* code for invalid ER pdu discard reason */
 end_comment
 
 begin_comment
+comment|/* given an mbuf and addr of option, return offset from data of mbuf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNP_OPTTOOFF
+parameter_list|(
+name|m
+parameter_list|,
+name|opt
+parameter_list|)
+define|\
+value|((u_short) (opts - mtod(m, caddr_t)))
+end_define
+
+begin_comment
+comment|/* given an mbuf and offset of option, return address of option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNP_OFFTOOPT
+parameter_list|(
+name|m
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|((caddr_t) (mtod(m, caddr_t) + off))
+end_define
+
+begin_comment
 comment|/*	return true iff src route is valid */
 end_comment
 
@@ -491,7 +535,7 @@ parameter_list|,
 name|options
 parameter_list|)
 define|\
-value|(*((u_char *)((caddr_t)options + oidx->cni_srcrt_s + 1)))
+value|(*((u_char *)(CLNP_OFFTOOPT(options, oidx->cni_srcrt_s) + 1)))
 end_define
 
 begin_comment
@@ -508,7 +552,7 @@ parameter_list|,
 name|options
 parameter_list|)
 define|\
-value|((u_char)(*((caddr_t)options + oidx->cni_srcrt_s)))
+value|((u_char)(*(CLNP_OFFTOOPT(options, oidx->cni_srcrt_s))))
 end_define
 
 begin_comment
@@ -525,7 +569,7 @@ parameter_list|,
 name|options
 parameter_list|)
 define|\
-value|((u_char)(*((caddr_t)options + oidx->cni_srcrt_s + CLNPSRCRT_OFF(oidx, options) - 1)))
+value|((u_char)(*(CLNP_OFFTOOPT(options, oidx->cni_srcrt_s) + CLNPSRCRT_OFF(oidx, options) - 1)))
 end_define
 
 begin_comment
@@ -542,7 +586,7 @@ parameter_list|,
 name|options
 parameter_list|)
 define|\
-value|((caddr_t)((caddr_t)options + oidx->cni_srcrt_s + CLNPSRCRT_OFF(oidx, options)))
+value|((caddr_t)(CLNP_OFFTOOPT(options, oidx->cni_srcrt_s) + CLNPSRCRT_OFF(oidx, options)))
 end_define
 
 begin_comment
@@ -700,6 +744,43 @@ end_define
 
 begin_comment
 comment|/* globally unique */
+end_comment
+
+begin_comment
+comment|/* Globally Unique QOS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNPOVAL_SEQUENCING
+value|0x10
+end_define
+
+begin_comment
+comment|/* sequencing preferred */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNPOVAL_CONGESTED
+value|0x08
+end_define
+
+begin_comment
+comment|/* congestion experienced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLNPOVAL_LOWDELAY
+value|0x04
+end_define
+
+begin_comment
+comment|/* low transit delay */
 end_comment
 
 begin_define

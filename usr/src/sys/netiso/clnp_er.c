@@ -8,11 +8,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_er.c,v 4.4 88/09/10 18:31:10 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_er.c,v 5.1 89/02/09 16:20:18 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_er.c,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_er.c,v $ */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: clnp_er.c,v 4.4 88/09/10 18:31:10 hagens Exp $"
+literal|"$Header: /var/src/sys/netiso/RCS/clnp_er.c,v 5.1 89/02/09 16:20:18 hagens Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,29 +487,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 *	tpclnp_ctlinput1 is called directly so that we don't 	 *	have to build an iso_sockaddr out of src. 	 */
 if|if
 condition|(
 name|cmd
 operator|>=
 literal|0
 condition|)
-operator|(
-operator|*
-name|isosw
-index|[
-name|clnp_protox
-index|[
-name|ISOPROTO_TP
-index|]
-index|]
-operator|.
-name|pr_ctlinput
-operator|)
-operator|(
+name|tpclnp_ctlinput1
+argument_list|(
 name|cmd
-operator|,
+argument_list|,
 name|src
-operator|)
+argument_list|)
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -737,7 +727,6 @@ modifier|*
 name|m0
 decl_stmt|;
 comment|/* contains er pdu hdr */
-comment|/*	struct clnp_optidx			*oidx;	 index for options on orig pkt */
 name|IFDEBUG
 argument_list|(
 argument|D_DISCARD
