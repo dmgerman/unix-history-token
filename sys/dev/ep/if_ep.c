@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.77 1998/10/22 05:58:39 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.78 1999/01/19 00:21:39 peter Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -254,6 +254,24 @@ include|#
 directive|include
 file|<i386/isa/elink.h>
 end_include
+
+begin_comment
+comment|/* DELAY_MULTIPLE: How much to boost "base" delays, except  * for the inter-bit delays in get_eeprom_data.  A cyrix Media GX needed this.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY_MULTIPLE
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIT_DELAY_MULTIPLE
+value|10
+end_define
 
 begin_comment
 comment|/* Exported variables */
@@ -1361,6 +1379,8 @@ argument_list|()
 expr_stmt|;
 name|DELAY
 argument_list|(
+name|DELAY_MULTIPLE
+operator|*
 literal|10000
 argument_list|)
 expr_stmt|;
@@ -3259,6 +3279,8 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
+name|DELAY_MULTIPLE
+operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
@@ -6103,11 +6125,6 @@ operator|+
 name|offset
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -6121,6 +6138,14 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+name|DELAY
+argument_list|(
+name|BIT_DELAY_MULTIPLE
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
 name|data
 operator|=
 operator|(
@@ -6138,6 +6163,7 @@ operator|&
 literal|1
 operator|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|data
