@@ -871,6 +871,10 @@ name|passwd_dir
 argument_list|,
 name|tempname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -893,6 +897,10 @@ name|user
 argument_list|,
 name|tempname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1193,6 +1201,10 @@ argument_list|)
 argument_list|,
 name|tempname
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
