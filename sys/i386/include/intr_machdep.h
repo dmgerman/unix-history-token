@@ -261,6 +261,13 @@ name|icu_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|elcr_found
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* XXX: The elcr_* prototypes probably belong somewhere else. */
 end_comment

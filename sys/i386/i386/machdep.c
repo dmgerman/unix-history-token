@@ -9852,6 +9852,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_ISA
+name|elcr_probe
+argument_list|()
+expr_stmt|;
 name|atpic_startup
 argument_list|()
 expr_stmt|;
