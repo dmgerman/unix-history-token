@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_eon.c	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_eon.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1266,6 +1266,8 @@ operator|->
 name|el_iproute
 operator|.
 name|ro_rt
+operator|->
+name|rt_rmx_mtu
 operator|-
 sizeof|sizeof
 argument_list|(
