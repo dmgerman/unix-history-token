@@ -28,17 +28,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|LOGIN_NAME_MAX
-value|MAXLOGNAME
-end_define
-
-begin_comment
-comment|/*<sys/param.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|_DIAGASSERT
 parameter_list|(
 name|x
