@@ -1163,9 +1163,42 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+operator|&&
+operator|(
+name|imo
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|imo
+operator|->
+name|imo_multicast_ifp
+operator|!=
+name|NULL
+operator|)
+condition|)
+block|{
+comment|/* 		 * bypass the normal routing lookup for 		 * multicast packets if the interface is 		 * specified 		 */
+comment|/* No Operation */
+block|}
 else|else
 block|{
-comment|/* 		 * If this is the case, we probably don't want to allocate 		 * a protocol-cloned route since we didn't get one from the 		 * ULP.  This lets TCP do its thing, while not burdening 		 * forwarding or ICMP with the overhead of cloning a route. 		 * Of course, we still want to do any cloning requested by 		 * the link layer, as this is probably required in all cases 		 * for correct operation (as it is for ARP). 		 */
+comment|/* 		 * If this is the case, we probably don't want 		 * to allocate a protocol-cloned route since we 		 * didn't get one from the ULP.  This lets TCP 		 * do its thing, while not burdening forwarding 		 * or ICMP with the overhead of cloning a route. 		 * Of course, we still want to do any cloning 		 * requested by the link layer, as this is 		 * probably required in all cases for correct 		 * operation (as it is for ARP). 		 */
 if|if
 condition|(
 name|ro
