@@ -2855,16 +2855,6 @@ literal|"first_sector not a proper number"
 argument_list|)
 expr_stmt|;
 block|}
-name|gl
-operator|->
-name|sector0
-operator|=
-name|first_sector
-operator|*
-name|gl
-operator|->
-name|sectorsize
-expr_stmt|;
 comment|/*<last_sector> */
 name|p
 operator|=
@@ -3028,6 +3018,16 @@ operator||=
 literal|1
 expr_stmt|;
 block|}
+name|gl
+operator|->
+name|sector0
+operator|=
+name|first_sector
+operator|*
+name|gl
+operator|->
+name|sectorsize
+expr_stmt|;
 if|if
 condition|(
 name|total_sectors
