@@ -442,44 +442,9 @@ name|f_list
 expr_stmt|;
 comment|/* (fl) list of active files */
 name|short
-name|f_gcflag
-decl_stmt|;
-comment|/* used by thread doing fd garbage collection */
-name|short
 name|f_type
 decl_stmt|;
 comment|/* descriptor type */
-name|int
-name|f_count
-decl_stmt|;
-comment|/* (f) reference count */
-name|int
-name|f_msgcount
-decl_stmt|;
-comment|/* (f) references from message queue */
-name|struct
-name|ucred
-modifier|*
-name|f_cred
-decl_stmt|;
-comment|/* credentials associated with descriptor */
-name|struct
-name|fileops
-modifier|*
-name|f_ops
-decl_stmt|;
-comment|/* File operations */
-name|int
-name|f_seqcount
-decl_stmt|;
-comment|/* 				 * count of sequential accesses -- cleared 				 * by most seek operations. 				 */
-name|off_t
-name|f_nextoff
-decl_stmt|;
-comment|/* 				 * offset of next expected read or write 				 */
-name|off_t
-name|f_offset
-decl_stmt|;
 name|void
 modifier|*
 name|f_data
@@ -495,6 +460,54 @@ modifier|*
 name|f_mtxp
 decl_stmt|;
 comment|/* mutex to protect data */
+name|struct
+name|fileops
+modifier|*
+name|f_ops
+decl_stmt|;
+comment|/* File operations */
+name|struct
+name|ucred
+modifier|*
+name|f_cred
+decl_stmt|;
+comment|/* credentials associated with descriptor */
+name|int
+name|f_count
+decl_stmt|;
+comment|/* (f) reference count */
+comment|/* DFLAG_SEEKABLE specific fields */
+name|off_t
+name|f_offset
+decl_stmt|;
+comment|/* DTYPE_SOCKET specific fields */
+name|short
+name|f_gcflag
+decl_stmt|;
+comment|/* used by thread doing fd garbage collection */
+define|#
+directive|define
+name|FMARK
+value|0x1
+comment|/* mark during gc() */
+define|#
+directive|define
+name|FDEFER
+value|0x2
+comment|/* defer for next gc pass */
+name|int
+name|f_msgcount
+decl_stmt|;
+comment|/* (f) references from message queue */
+comment|/* DTYPE_VNODE specific fields */
+name|int
+name|f_seqcount
+decl_stmt|;
+comment|/* 				 * count of sequential accesses -- cleared 				 * by most seek operations. 				 */
+name|off_t
+name|f_nextoff
+decl_stmt|;
+comment|/* 				 * offset of next expected read or write 				 */
 block|}
 struct|;
 end_struct

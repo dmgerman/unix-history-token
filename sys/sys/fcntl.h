@@ -333,32 +333,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/* FMARK/FDEFER kept in f_gcflags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FMARK
-value|0x1
-end_define
-
-begin_comment
-comment|/* mark during gc() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDEFER
-value|0x2
-end_define
-
-begin_comment
-comment|/* defer for next gc pass */
-end_comment
-
 begin_define
 define|#
 directive|define
