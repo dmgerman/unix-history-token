@@ -332,7 +332,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|u_int
-name|smc_crc
+name|sn_crc
 parameter_list|(
 name|u_char
 modifier|*
@@ -980,7 +980,6 @@ modifier|*
 name|xsc
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sn_softc
 modifier|*
@@ -988,7 +987,6 @@ name|sc
 init|=
 name|xsc
 decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -1261,7 +1259,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sn_softc
 modifier|*
@@ -1271,11 +1268,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-specifier|register
 name|u_int
 name|len
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -1980,7 +1975,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|sn_softc
 modifier|*
@@ -1990,11 +1984,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
-specifier|register
 name|u_int
 name|len
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -2595,7 +2587,6 @@ name|status
 decl_stmt|,
 name|interrupts
 decl_stmt|;
-specifier|register
 name|struct
 name|sn_softc
 modifier|*
@@ -3191,7 +3182,6 @@ begin_function
 name|void
 name|snread
 parameter_list|(
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -3572,7 +3562,6 @@ specifier|static
 name|int
 name|snioctl
 parameter_list|(
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -4721,13 +4710,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|u_int
 name|index
 decl_stmt|,
 name|index2
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|af
@@ -4774,7 +4761,7 @@ literal|0
 return|;
 name|index
 operator|=
-name|smc_crc
+name|sn_crc
 argument_list|(
 name|LLADDR
 argument_list|(
@@ -4852,7 +4839,7 @@ end_function
 begin_function
 specifier|static
 name|u_int
-name|smc_crc
+name|sn_crc
 parameter_list|(
 name|u_char
 modifier|*
