@@ -326,8 +326,6 @@ operator|->
 name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
-operator|-
-name|USPACE
 decl_stmt|;
 name|pcb1
 operator|=
@@ -1206,8 +1204,6 @@ operator|->
 name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
-operator|-
-name|USPACE
 operator|+
 name|USPACE_UNDEF_STACK_TOP
 expr_stmt|;
@@ -1370,8 +1366,6 @@ operator|->
 name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
-operator|-
-name|USPACE
 operator|+
 name|USPACE_SVC_STACK_TOP
 operator|-
