@@ -157,7 +157,7 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * We provide a machine specific single page allocator through the tuse  * of the direct mapped segment.  This uses 2MB pages for reduced  * TLB pressure.  */
+comment|/*  * We provide a machine specific single page allocator through the use  * of the direct mapped segment.  This uses 2MB pages for reduced  * TLB pressure.  */
 end_comment
 
 begin_define
