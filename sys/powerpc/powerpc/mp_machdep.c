@@ -924,17 +924,6 @@ name|smp_rv_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* only 1 CPU can panic at a time :) */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mtx
-name|panic_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -951,16 +940,6 @@ argument_list|,
 literal|"smp rendezvous"
 argument_list|,
 name|MTX_SPIN
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|panic_mtx
-argument_list|,
-literal|"panic"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
