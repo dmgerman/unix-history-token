@@ -281,10 +281,16 @@ modifier|*
 name|imgp
 parameter_list|)
 block|{
+name|long
+modifier|*
+name|pos
+decl_stmt|;
 name|Elf64_Auxargs
 modifier|*
 name|args
-init|=
+decl_stmt|;
+name|args
+operator|=
 operator|(
 name|Elf64_Auxargs
 operator|*
@@ -292,11 +298,7 @@ operator|)
 name|imgp
 operator|->
 name|auxargs
-decl_stmt|;
-name|long
-modifier|*
-name|pos
-decl_stmt|;
+expr_stmt|;
 name|pos
 operator|=
 operator|*
@@ -622,7 +624,12 @@ specifier|const
 name|char
 modifier|*
 name|head
-init|=
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|head
+operator|=
 operator|(
 specifier|const
 name|char
@@ -631,14 +638,13 @@ operator|)
 name|imgp
 operator|->
 name|image_header
-decl_stmt|;
-name|int
+expr_stmt|;
 name|error
-init|=
+operator|=
 operator|-
 literal|1
-decl_stmt|;
-comment|/*      * The interpreter for shell scripts run from a linux binary needs      * to be located in /compat/linux if possible in order to recursively      * maintain linux path emulation.      */
+expr_stmt|;
+comment|/* 	 * The interpreter for shell scripts run from a linux binary needs 	 * to be located in /compat/linux if possible in order to recursively 	 * maintain linux path emulation. 	 */
 if|if
 condition|(
 operator|(
@@ -656,7 +662,7 @@ operator|==
 name|SHELLMAGIC
 condition|)
 block|{
-comment|/* 	     * Run our normal shell image activator.  If it succeeds attempt 	     * to use the alternate path for the interpreter.  If an alternate 	     * path is found, use our stringspace to store it. 	     */
+comment|/* 		 * Run our normal shell image activator.  If it succeeds 		 * attempt to use the alternate path for the interpreter.  If 		 * an alternate path is found, use our stringspace to store it. 		 */
 if|if
 condition|(
 operator|(
