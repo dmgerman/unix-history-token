@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.3 (Berkeley) %G%"
+literal|"@(#)display.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,18 +342,26 @@ condition|(
 name|endfu
 condition|)
 block|{
-comment|/* 		 * if eaddress not set, file size was multiple of blocksize, 		 * and no partial block ever found. 		 */
+comment|/* 		 * if eaddress not set, error or file size was multiple of 		 * blocksize, and no partial block ever found. 		 */
 if|if
 condition|(
 operator|!
 name|eaddress
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|address
+condition|)
+return|return;
 name|eaddress
 operator|=
 name|address
 operator|+
 name|blocksize
 expr_stmt|;
+block|}
 for|for
 control|(
 name|pr
