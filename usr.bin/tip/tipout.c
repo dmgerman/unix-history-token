@@ -458,6 +458,7 @@ block|{
 comment|/* lost carrier */
 if|if
 condition|(
+operator|(
 name|cnt
 operator|<
 literal|0
@@ -465,6 +466,13 @@ operator|&&
 name|errno
 operator|==
 name|EIO
+operator|)
+operator|||
+operator|(
+name|cnt
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|sigblock

@@ -935,6 +935,8 @@ operator|=
 name|baud_msg
 init|;
 name|bm
+operator|->
+name|msg
 condition|;
 name|bm
 operator|++

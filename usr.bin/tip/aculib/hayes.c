@@ -240,16 +240,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* get rid of garbage */
+ifdef|#
+directive|ifdef
+name|ATX5
 name|write
 argument_list|(
 name|FD
 argument_list|,
-literal|"ATv0\r"
+literal|"ATm0x5v0\r"
 argument_list|,
-literal|5
+literal|9
 argument_list|)
 expr_stmt|;
-comment|/* tell modem to use short status codes */
+comment|/* mute speaker; short status codes */
+else|#
+directive|else
+comment|/* ATX5 */
+name|write
+argument_list|(
+name|FD
+argument_list|,
+literal|"ATx0v0\r"
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+comment|/* short status codes */
+endif|#
+directive|endif
+comment|/* ATX5 */
 name|gobble
 argument_list|(
 literal|"\r"
@@ -260,16 +279,35 @@ argument_list|(
 literal|"\r"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PULSE_DIAL
 name|write
 argument_list|(
 name|FD
 argument_list|,
-literal|"ATTD"
+literal|"ATD"
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|/* send dial command */
+else|#
+directive|else
+comment|/* PULSE_DIAL */
+name|write
+argument_list|(
+name|FD
+argument_list|,
+literal|"ATDT"
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 comment|/* send dial command */
+endif|#
+directive|endif
+comment|/* PULSE_DIAL */
 name|write
 argument_list|(
 name|FD
@@ -314,7 +352,7 @@ name|dummy
 operator|=
 name|gobble
 argument_list|(
-literal|"01234"
+literal|"012345678"
 argument_list|)
 operator|)
 operator|!=
@@ -608,6 +646,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|read
 argument_list|(
 name|FD
@@ -617,7 +657,8 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|alarm
 argument_list|(
 literal|0
@@ -670,6 +711,16 @@ name|status
 operator|=
 name|c
 expr_stmt|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+operator|*
+name|match
+expr_stmt|;
+comment|/* a hack to make some things work */
+block|}
 block|}
 do|while
 condition|(
@@ -777,6 +828,33 @@ case|:
 name|printf
 argument_list|(
 literal|"CONNECT 1200"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|printf
+argument_list|(
+literal|"NO DIALTONE"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'7'
+case|:
+name|printf
+argument_list|(
+literal|"BUSY"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'8'
+case|:
+name|printf
+argument_list|(
+literal|"NO ANSWER"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1181,6 +1259,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+else|else
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|ioctl
 argument_list|(
 name|FD
