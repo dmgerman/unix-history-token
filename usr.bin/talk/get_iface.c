@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: get_iface.c,v 1.5 1998/01/14 07:21:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
