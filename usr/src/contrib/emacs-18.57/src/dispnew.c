@@ -298,25 +298,6 @@ parameter_list|)
 value|((FILE)->__bp - (FILE)->__buf)
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|BSD4_4
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|PENDING_OUTPUT_COUNT
-parameter_list|(
-name|FILE
-parameter_list|)
-value|((FILE)->_w - (FILE)->_bf._size)
-end_define
-
 begin_else
 else|#
 directive|else

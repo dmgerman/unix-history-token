@@ -280,6 +280,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|filepos
 argument_list|,
 literal|0

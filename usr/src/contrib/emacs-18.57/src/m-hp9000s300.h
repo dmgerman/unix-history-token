@@ -60,11 +60,22 @@ begin_comment
 comment|/* Define BIG_ENDIAN iff lowest-numbered byte in a word    is the most significant byte.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIG_ENDIAN
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|BIG_ENDIAN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define NO_ARG_ARRAY if you cannot take the address of the first of a  * group of arguments and treat it as an array of the arguments.  */
@@ -152,12 +163,6 @@ name|LOAD_AVE_TYPE
 value|double
 end_define
 
-begin_define
-define|#
-directive|define
-name|HAVE_GETLOADAVG
-end_define
-
 begin_comment
 comment|/* Convert that into an integer that is 100 for a load average of 1.0  */
 end_comment
@@ -192,7 +197,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* For University of Utah 4.3bsd implemetation on HP300s.    The #ifndef __GNUC__ definitions are required for the "standard" cc,    a very old, brain-dead version of PCC. */
+comment|/* For University of Utah 4.3bsd and standard 4.4bsd on HP300s.  */
 end_comment
 
 begin_ifdef
@@ -224,47 +229,10 @@ directive|define
 name|HAVE_ALLOCA
 end_define
 
-begin_define
-define|#
-directive|define
-name|DKSTAT_HEADER_FILE
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LIBS_DEBUG
-end_define
-
-begin_comment
-comment|/* don't have -lg that works */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|C_DEBUG_SWITCH
-end_define
-
-begin_comment
-comment|/* don't support -g */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD4_4
+name|HAVE_GETLOADAVG
 end_ifndef
 
 begin_undef

@@ -193,6 +193,12 @@ directive|ifndef
 name|VMS
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_4
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -201,6 +207,11 @@ name|sys_errlist
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

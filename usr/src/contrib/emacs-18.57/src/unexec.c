@@ -2027,6 +2027,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|f_hdr
@@ -2521,6 +2524,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2595,7 +2601,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|text_scnptr
 argument_list|,
@@ -2649,7 +2655,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|data_scnptr
 argument_list|,
@@ -2714,6 +2720,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|1
@@ -2723,6 +2732,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|scntemp
 operator|.
 name|s_scnptr
@@ -2800,6 +2812,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|old_a_out_ptr
 argument_list|,
 literal|0
@@ -2815,7 +2830,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|text_scnptr
 argument_list|,
@@ -2854,7 +2869,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|data_scnptr
 argument_list|,
@@ -2903,7 +2918,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|A_TEXT_SEEK
 argument_list|(
@@ -2925,7 +2940,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|N_TXTOFF
 argument_list|(
@@ -2947,7 +2962,7 @@ argument_list|(
 name|new
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|N_TXTOFF
 argument_list|(
@@ -3005,7 +3020,7 @@ operator|.
 name|a_data
 expr_stmt|;
 comment|/*  This lseek is certainly incorrect when A_TEXT_OFFSET     and I believe it is a no-op otherwise.     Let's see if its absence ever fails.  */
-comment|/*  lseek (new, (long) N_TXTOFF (hdr) + hdr.a_text, 0); */
+comment|/*  lseek (new, (off_t) N_TXTOFF (hdr) + hdr.a_text, 0); */
 name|write_segment
 argument_list|(
 name|new
@@ -3291,6 +3306,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|lnnoptr
 argument_list|,
 literal|0
@@ -3305,6 +3323,9 @@ name|lseek
 argument_list|(
 name|a_out
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|SYMS_START
 argument_list|,
 literal|0
@@ -3588,6 +3609,9 @@ name|lseek
 argument_list|(
 name|new
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|f_hdr
 operator|.
 name|f_symptr
@@ -3667,6 +3691,9 @@ name|lseek
 argument_list|(
 name|new
 argument_list|,
+operator|(
+name|off_t
+operator|)
 operator|-
 name|AUXESZ
 argument_list|,

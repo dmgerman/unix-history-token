@@ -4,6 +4,27 @@ comment|/* Definitions file for GNU Emacs running on bsd 4.3    Copyright (C) 19
 end_comment
 
 begin_comment
+comment|/* This is brutal but we must get BIG_ENDIAN/LITTLE_ENDIAN defined now    so we can be careful not to override the value in the m- file.    Defining BIG_ENDIAN/LITTLE_ENDIAN with no value in that file will    break, e.g. sys/wait.h.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YMAKEFILE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  *	Define symbols to identify the version of Unix this is.  *	Define all the symbols that apply correctly.  */
 end_comment
 
@@ -17,6 +38,7 @@ begin_define
 define|#
 directive|define
 name|BSD4_4
+value|1
 end_define
 
 begin_endif
@@ -236,6 +258,71 @@ define|#
 directive|define
 name|LDAV_SYMBOL
 value|"_avenrun"
+end_define
+
+begin_comment
+comment|/* This macro determines the number of bytes waiting to be written    in a FILE buffer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PENDING_OUTPUT_COUNT
+parameter_list|(
+name|FILE
+parameter_list|)
+value|((FILE)->_w - (FILE)->_bf._size)
+end_define
+
+begin_comment
+comment|/* Have POSIX setsid().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETSID
+end_define
+
+begin_comment
+comment|/* Have BSD getloadavg() library routine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETLOADAVG
+end_define
+
+begin_comment
+comment|/* Use dkstat.h in loadst.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DKSTAT_HEADER_FILE
+end_define
+
+begin_comment
+comment|/* No special libg for debugging.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIBS_DEBUG
+end_define
+
+begin_comment
+comment|/* Debugging unexec()ed code is hard enough as is, so why    not make it a little harder.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_DEBUG_SWITCH
+value|-g -traditional -O2
 end_define
 
 end_unit

@@ -8037,6 +8037,9 @@ name|st_size
 condition|)
 name|make_gap
 argument_list|(
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_size
@@ -8767,6 +8770,9 @@ name|lseek
 argument_list|(
 name|desc
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 literal|2

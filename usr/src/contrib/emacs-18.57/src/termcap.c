@@ -7,6 +7,12 @@ begin_comment
 comment|/* BUFSIZE is the initial size allocated for the buffer    for reading the termcap file.    It is not a limit.    Make it large normally for speed.    Make it variable when debugging, so can exercise    increasing the space dynamically.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1868,7 +1874,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
 argument_list|)
