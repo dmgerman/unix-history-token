@@ -3709,9 +3709,6 @@ block|}
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|__i386__
 comment|/* 	 * This is a kludge.  Probably none of this 	 * should be here. 	 */
 if|if
 condition|(
@@ -3837,8 +3834,6 @@ block|}
 block|}
 block|}
 block|}
-endif|#
-directive|endif
 block|}
 name|Free
 argument_list|(
