@@ -4354,6 +4354,24 @@ operator|=
 name|tx_threshold
 expr_stmt|;
 comment|/* 		 * Advance the end of list forward. 		 */
+ifdef|#
+directive|ifdef
+name|__alpha__
+comment|/* 		 * On platforms which can't access memory in 16-bit 		 * granularities, we must prevent the card from DMA'ing 		 * up the status while we update the command field. 		 * This could cause us to overwrite the completion status. 		 */
+name|atomic_clear_short
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cbl_last
+operator|->
+name|cb_command
+argument_list|,
+name|FXP_CB_COMMAND_S
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sc
 operator|->
 name|cbl_last
@@ -4363,6 +4381,9 @@ operator|&=
 operator|~
 name|FXP_CB_COMMAND_S
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*__alpha__*/
 name|sc
 operator|->
 name|cbl_last
