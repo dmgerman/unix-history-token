@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.10 (Berkeley) %G%"
+literal|"@(#)ls.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,6 +776,16 @@ block|}
 name|fp0
 operator|=
 name|fp
+expr_stmt|;
+name|setpassent
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|setgroupent
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
