@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	6.2	83/12/15	*/
+comment|/*	in_proto.c	6.3	84/02/15	*/
 end_comment
 
 begin_include
@@ -256,36 +256,6 @@ name|ip_drain
 block|, }
 block|,
 block|{
-name|SOCK_RAW
-block|,
-name|PF_INET
-block|,
-name|IPPROTO_ICMP
-block|,
-name|PR_ATOMIC
-operator||
-name|PR_ADDR
-block|,
-name|icmp_input
-block|,
-name|rip_output
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|raw_usrreq
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|, }
-block|,
-block|{
 name|SOCK_DGRAM
 block|,
 name|PF_INET
@@ -357,6 +327,36 @@ operator||
 name|PR_ADDR
 block|,
 name|rip_input
+block|,
+name|rip_output
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|raw_usrreq
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+block|{
+name|SOCK_RAW
+block|,
+name|PF_INET
+block|,
+name|IPPROTO_ICMP
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|icmp_input
 block|,
 name|rip_output
 block|,
