@@ -1806,17 +1806,28 @@ argument_list|(
 name|ESRCH
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are adding a host route then we don't want to put 	 * a netmask in the tree 	 */
+comment|/* 	 * If we are adding a host route then we don't want to put 	 * a netmask in the tree, nor do we want to clone it. 	 */
 if|if
 condition|(
 name|flags
 operator|&
 name|RTF_HOST
 condition|)
+block|{
 name|netmask
 operator|=
 literal|0
 expr_stmt|;
+name|flags
+operator|&=
+operator|~
+operator|(
+name|RTF_CLONING
+operator||
+name|RTF_PRCLONING
+operator|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|req
