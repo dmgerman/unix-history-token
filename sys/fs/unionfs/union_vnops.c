@@ -6695,29 +6695,12 @@ directive|endif
 name|int
 name|error
 decl_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|un
-operator|->
-name|un_uppervp
-operator|==
-name|NULL
-operator|||
-name|un
-operator|->
-name|un_uppervp
-operator|->
-name|v_usecount
-operator|>
+if|#
+directive|if
 literal|0
-operator|)
-argument_list|,
-operator|(
-literal|"uppervp usecount is 0"
-operator|)
-argument_list|)
-expr_stmt|;
+block|KASSERT((un->un_uppervp == NULL || un->un_uppervp->v_usecount> 0), ("uppervp usecount is 0"));
+endif|#
+directive|endif
 name|error
 operator|=
 name|vop_stdunlock
