@@ -2154,6 +2154,16 @@ name|inp_vflag
 operator||=
 name|INP_IPV6
 expr_stmt|;
+if|if
+condition|(
+name|ip6_mapped_addr_on
+condition|)
+name|inp
+operator|->
+name|inp_vflag
+operator||=
+name|INP_IPV4
+expr_stmt|;
 name|inp
 operator|->
 name|in6p_hops
