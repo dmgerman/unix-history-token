@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_unix.c,v 1.4 1995/05/30 05:41:12 rgrimes Exp $"
+literal|"$Id: auth_unix.c,v 1.5 1995/10/22 14:51:08 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,22 @@ include|#
 directive|include
 file|<rpc/auth_unix.h>
 end_include
+
+begin_function_decl
+name|bool_t
+name|xdr_opaque_auth
+parameter_list|(
+name|XDR
+modifier|*
+name|xdrs
+parameter_list|,
+name|struct
+name|opaque_auth
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Unix authenticator operations vector  */
@@ -732,11 +748,17 @@ literal|0
 expr_stmt|;
 name|uid
 operator|=
+operator|(
+name|int
+operator|)
 name|geteuid
 argument_list|()
 expr_stmt|;
 name|gid
 operator|=
+operator|(
+name|int
+operator|)
 name|getegid
 argument_list|()
 expr_stmt|;
@@ -788,6 +810,9 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|real_gids
 index|[
 name|i

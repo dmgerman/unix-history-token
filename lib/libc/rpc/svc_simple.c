@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_simple.c,v 1.2 1995/05/30 05:41:37 rgrimes Exp $"
+literal|"$Id: svc_simple.c,v 1.3 1995/10/22 14:51:37 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,17 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
+
+begin_function_decl
+name|bool_t
+name|pmap_unset
+parameter_list|(
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 specifier|static
@@ -140,33 +151,43 @@ name|pl
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|registerrpc
-argument_list|(
-argument|prognum
-argument_list|,
-argument|versnum
-argument_list|,
-argument|procnum
-argument_list|,
-argument|progname
-argument_list|,
-argument|inproc
-argument_list|,
-argument|outproc
-argument_list|)
-end_macro
-
-begin_function_decl
-name|char
-modifier|*
-function_decl|(
-modifier|*
+parameter_list|(
+name|prognum
+parameter_list|,
+name|versnum
+parameter_list|,
+name|procnum
+parameter_list|,
 name|progname
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+parameter_list|,
+name|inproc
+parameter_list|,
+name|outproc
+parameter_list|)
+function|char *
+parameter_list|(
+function|*progname
+end_function
+
+begin_expr_stmt
+unit|)
+operator|(
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|prognum
+decl_stmt|,
+name|versnum
+decl_stmt|,
+name|procnum
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|xdrproc_t
@@ -192,7 +213,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't reassign procedure number %d\n"
+literal|"can't reassign procedure number %ld\n"
 argument_list|,
 name|NULLPROC
 argument_list|)

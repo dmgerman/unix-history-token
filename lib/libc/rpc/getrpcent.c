@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcent.c,v 1.2 1995/05/30 05:41:21 rgrimes Exp $"
+literal|"$Id: getrpcent.c,v 1.3 1995/10/22 14:51:24 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,18 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|_yp_check
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -454,10 +466,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getrpcent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -511,10 +525,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|rpc
 operator|=
 name|getrpcent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_perror.c,v 1.3 1995/10/22 14:51:14 phk Exp $"
+literal|"$Id: clnt_perror.c,v 1.4 1995/12/10 17:40:18 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -961,6 +961,8 @@ operator|.
 name|re_errno
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 operator|(

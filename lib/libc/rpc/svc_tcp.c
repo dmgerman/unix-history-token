@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.4 1995/12/07 12:50:56 bde Exp $"
+literal|"$Id: svc_tcp.c,v 1.5 1996/06/08 22:54:57 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,10 +217,31 @@ name|rendezvous_request
 block|,
 name|rendezvous_stat
 block|,
+operator|(
+name|bool_t
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|abort
 block|,
+operator|(
+name|bool_t
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|abort
 block|,
+operator|(
+name|bool_t
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|abort
 block|,
 name|svctcp_destroy

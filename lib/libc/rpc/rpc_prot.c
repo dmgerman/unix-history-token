@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_prot.c,v 1.1 1994/08/07 18:36:03 wollman Exp $"
+literal|"$Id: rpc_prot.c,v 1.2 1995/05/30 05:41:31 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,6 +326,8 @@ operator|)
 argument_list|)
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 operator|(
@@ -907,6 +909,8 @@ operator|=
 name|RPC_AUTHERROR
 expr_stmt|;
 return|return;
+default|default:
+break|break;
 block|}
 comment|/* something's wrong, but we don't know what ... */
 name|error
@@ -1135,6 +1139,8 @@ name|ar_vers
 operator|.
 name|high
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}
