@@ -1908,7 +1908,7 @@ name|lu
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our struct cdev *is 32-bits whereas Linux only has a 16-bits 	 * struct cdev *. The struct cdev *that is used now may as well be a truncated 	 * struct cdev *returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 */
+comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our struct cdev *is 32-bits whereas Linux only has a 16-bits 	 * struct cdev *. The struct cdev *that is used now may as well be a truncated 	 * struct cdev *returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 * 	 * XXX: findcdev() SHALL not be used this way.  Somebody (TM) will 	 *	have to find a better way.  It may be that we should stick 	 *	a dev_t into struct mount, and walk the mountlist for a 	 *	perfect match and failing that try again looking for a 	 *	minor-truncated match. 	 */
 name|dev
 operator|=
 name|findcdev
