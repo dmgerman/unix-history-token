@@ -2202,6 +2202,11 @@ directive|if
 name|NMPU
 operator|>
 literal|0
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_MIDI
+argument_list|)
 if|if
 condition|(
 name|strcmp
