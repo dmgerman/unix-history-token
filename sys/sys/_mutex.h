@@ -53,6 +53,13 @@ decl_stmt|;
 name|int
 name|mtx_lineno
 decl_stmt|;
+comment|/* 	 * Fields relating to measuring contention on mutexes. 	 * holding must be accessed atomically since it's 	 * modified by threads that don't yet hold the mutex. 	 * locking is only modified and referenced while 	 * the mutex is held. 	 */
+name|u_int
+name|mtx_contest_holding
+decl_stmt|;
+name|u_int
+name|mtx_contest_locking
+decl_stmt|;
 endif|#
 directive|endif
 block|}
