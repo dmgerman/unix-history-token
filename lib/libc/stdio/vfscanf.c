@@ -135,17 +135,11 @@ directive|include
 file|"local.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|FLOATING_POINT
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
 
 begin_include
 include|#
@@ -1093,9 +1087,9 @@ operator|=
 literal|16
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 literal|'A'
 case|:
@@ -3482,9 +3476,9 @@ name|nconversions
 operator|++
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 name|CT_FLOAT
 case|:
@@ -3659,7 +3653,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* FLOATING_POINT */
+comment|/* !NO_FLOATING_POINT */
 block|}
 block|}
 name|input_failure
@@ -4006,11 +4000,11 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
 
 begin_function
 specifier|static
