@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stdint.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -383,15 +389,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|g_trace
-argument_list|(
-name|G_T_BIO
-argument_list|,
-literal|"g_new_bio() = %p"
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
+comment|/* g_trace(G_T_BIO, "g_new_bio() = %p", bp); */
 return|return
 operator|(
 name|bp
@@ -410,15 +408,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|g_trace
-argument_list|(
-name|G_T_BIO
-argument_list|,
-literal|"g_destroy_bio(%p)"
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
+comment|/* g_trace(G_T_BIO, "g_destroy_bio(%p)", bp); */
 name|bzero
 argument_list|(
 name|bp
@@ -521,17 +511,7 @@ operator|++
 expr_stmt|;
 comment|/* XXX: atomic ? */
 block|}
-name|g_trace
-argument_list|(
-name|G_T_BIO
-argument_list|,
-literal|"g_clone_bio(%p) = %p"
-argument_list|,
-name|bp
-argument_list|,
-name|bp2
-argument_list|)
-expr_stmt|;
+comment|/* g_trace(G_T_BIO, "g_clone_bio(%p) = %p", bp, bp2); */
 return|return
 operator|(
 name|bp2
@@ -1262,7 +1242,7 @@ name|g_trace
 argument_list|(
 name|G_T_BIO
 argument_list|,
-literal|"g_io_deliver(%p) from %p(%s) to %p(%s) cmd %d error %d"
+literal|"g_io_deliver(%p) from %p(%s) to %p(%s) cmd %d error %d off %jd len %jd"
 argument_list|,
 name|bp
 argument_list|,
@@ -1293,6 +1273,20 @@ operator|->
 name|bio_cmd
 argument_list|,
 name|error
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|bp
+operator|->
+name|bio_offset
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|bp
+operator|->
+name|bio_length
 argument_list|)
 expr_stmt|;
 comment|/* finish_stats(&bp->stats); */
