@@ -344,18 +344,6 @@ comment|/* cookies to pass to intr handlers */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|ithd
-name|softinterrupt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* soft interrupt thread */
-end_comment
-
-begin_decl_stmt
 name|inthand_t
 name|IDTVEC
 argument_list|(
