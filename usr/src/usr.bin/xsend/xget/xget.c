@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xget.c	4.2 %G%"
+literal|"@(#)xget.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -463,14 +463,14 @@ case|:
 case|case
 literal|'\n'
 case|:
-name|unlink
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|mf
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|line
 argument_list|)
 expr_stmt|;
 break|break;
@@ -531,20 +531,8 @@ control|(
 name|p
 operator|=
 name|buf
-init|;
-operator|!
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
-for|for
-control|(
+operator|+
+literal|1
 init|;
 name|isspace
 argument_list|(
@@ -589,7 +577,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|cmnd
+goto|;
 block|}
 name|decipher
 argument_list|(
@@ -614,6 +604,55 @@ name|line
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Commands are:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"q	quit, leaving unread messages\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"n	delete current message and goto next\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"d	same as above\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\\n	same as above\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"!	execute shell command\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"s	save message in the named file or mbox\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"w	same as above\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"?	prints this list\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cmnd
+goto|;
 block|}
 block|}
 name|exit
