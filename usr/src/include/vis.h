@@ -1,83 +1,119 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vis.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vis.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * cencode flags  */
+comment|/*  * vis flags  */
+end_comment
+
+begin_comment
+comment|/*  * to select alternate encoding format  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CENC_CSTYLE
-value|1
+name|VIS_OCTAL
+value|0x01
 end_define
 
 begin_comment
-comment|/* use C-style backslash sequences */
+comment|/* use octal \ddd format */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CENC_GRAPH
-value|2
+name|VIS_CSTYLE
+value|0x02
 end_define
 
 begin_comment
-comment|/* encode as ^? and M- sequences */
+comment|/* use \[nrft...] where appropiate */
+end_comment
+
+begin_comment
+comment|/*  * to alter set of characters encoded  * (default is to encode all non-graphic except space, tab, and newline)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CENC_OCTAL
-value|4
+name|VIS_TAB
+value|0x04
 end_define
 
 begin_comment
-comment|/* encode as octal sequences */
+comment|/* also encode tab */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CENC_ALL
-value|(CENC_CSTYLE|CENC_GRAPH|CENC_OCTAL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CENC_WHITE
-value|8
+name|VIS_WHITE
+value|0x08
 end_define
 
 begin_comment
-comment|/* encode white-space chars (sp-tb-nl) */
+comment|/* also encode space, tab, and newline */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CENC_RACHAR
+name|VIS_SAFE
 value|0x10
 end_define
 
 begin_comment
-comment|/* look at read-ahead char */
+comment|/* only encode "unsafe" characters */
 end_comment
 
 begin_comment
-comment|/*  * cdecode flags  */
+comment|/*  * other  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CDEC_HAT
-value|1
+name|VIS_NOSLASH
+value|0x20
+end_define
+
+begin_comment
+comment|/* inhibit printing '\' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIS_NEXTC
+value|0x40
+end_define
+
+begin_comment
+comment|/* nextc character is valid */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|cvis
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * unvis flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNVIS_HAT
+value|0x01
 end_define
 
 begin_comment
@@ -87,8 +123,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEC_END
-value|2
+name|UNVIS_END
+value|0x02
 end_define
 
 begin_comment
@@ -96,13 +132,13 @@ comment|/* reset decode machine */
 end_comment
 
 begin_comment
-comment|/*  * cdecode return codes  */
+comment|/*  * return codes  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CDEC_NEEDMORE
+name|UNVIS_NEEDMORE
 value|0
 end_define
 
@@ -113,7 +149,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEC_OK
+name|UNVIS_OK
 value|1
 end_define
 
@@ -124,7 +160,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEC_OKPUSH
+name|UNVIS_OKPUSH
 value|2
 end_define
 
@@ -135,7 +171,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEC_NOCHAR
+name|UNVIS_NOCHAR
 value|3
 end_define
 
@@ -146,22 +182,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEC_SYNBAD
+name|UNVIS_SYNBAD
 value|-1
 end_define
 
 begin_comment
 comment|/* unrecognized escape sequence */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|cencode
-parameter_list|()
-function_decl|;
-end_function_decl
 
 end_unit
 
