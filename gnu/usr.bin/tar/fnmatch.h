@@ -28,6 +28,14 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+include|#
+directive|include
+file|<sys/cdefs.h>
+else|#
+directive|else
 if|#
 directive|if
 name|defined
@@ -75,6 +83,8 @@ name|const
 endif|#
 directive|endif
 comment|/* C++ or ANSI C.  */
+endif|#
+directive|endif
 comment|/* Bits set in the FLAGS argument to `fnmatch'.  */
 ifdef|#
 directive|ifdef
