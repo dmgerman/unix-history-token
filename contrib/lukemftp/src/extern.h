@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.59 2000/08/06 08:51:22 lukem Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.60 2000/10/11 14:46:03 is Exp $	*/
 end_comment
 
 begin_comment

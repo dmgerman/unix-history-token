@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cmdtab.c,v 1.38 2000/09/14 13:48:33 lukem Exp $	*/
+comment|/*	$NetBSD: cmdtab.c,v 1.39 2000/11/15 00:10:59 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -303,6 +303,15 @@ name|mgethelp
 index|[]
 init|=
 literal|"get multiple files"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mregethelp
+index|[]
+init|=
+literal|"get multiple files restarting at end of local file"
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,6 +1650,24 @@ argument_list|(
 argument|L
 argument_list|)
 name|mput
+block|}
+block|,
+block|{
+literal|"mreget"
+block|,
+name|mregethelp
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+name|CMPL
+argument_list|(
+argument|R
+argument_list|)
+name|mget
 block|}
 block|,
 block|{
