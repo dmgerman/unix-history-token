@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cset.c 1.1 %G%"
+literal|"@(#)cset.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,14 +216,72 @@ operator|==
 name|NIL
 condition|)
 block|{
-comment|/* 		     *	tentative for [] 		     */
+comment|/* 		     *	tentative for [], return type of `intset' 		     */
+name|settype
+operator|=
+name|lookup
+argument_list|(
+name|intset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|settype
+operator|==
+name|NIL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"empty set"
+argument_list|)
+expr_stmt|;
+block|}
+name|settype
+operator|=
+name|settype
+operator|->
+name|type
+expr_stmt|;
+if|if
+condition|(
+name|settype
+operator|==
+name|NIL
+condition|)
+block|{
+return|return
+name|csetp
+operator|->
+name|comptime
+return|;
+block|}
+if|if
+condition|(
+name|isnta
+argument_list|(
+name|settype
+argument_list|,
+literal|"t"
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Set default type \"intset\" is not a set"
+argument_list|)
+expr_stmt|;
+return|return
+name|csetp
+operator|->
+name|comptime
+return|;
+block|}
 name|csetp
 operator|->
 name|csettype
 operator|=
-name|nl
-operator|+
-name|TSET
+name|settype
 expr_stmt|;
 return|return
 name|csetp
@@ -1403,19 +1461,6 @@ operator|->
 name|comptime
 condition|)
 block|{
-if|if
-condition|(
-name|csetp
-operator|->
-name|csettype
-operator|==
-name|nl
-operator|+
-name|TSET
-condition|)
-block|{
-return|return;
-block|}
 name|setran
 argument_list|(
 operator|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c 1.2 %G%"
+literal|"@(#)func.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,14 +46,6 @@ include|#
 directive|include
 file|"opcode.h"
 end_include
-
-begin_decl_stmt
-name|bool
-name|cardempty
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Funccod generates code for  * built in function calls and calls  * call to generate calls to user  * defined functions and procedures.  */
@@ -1035,15 +1027,6 @@ name|O_CARD
 case|:
 if|if
 condition|(
-name|p1
-operator|!=
-name|nl
-operator|+
-name|TSET
-condition|)
-block|{
-if|if
-condition|(
 name|isnta
 argument_list|(
 name|p1
@@ -1078,38 +1061,6 @@ name|p1
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|!
-name|cardempty
-condition|)
-block|{
-name|warning
-argument_list|()
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Cardinality of the empty set is 0."
-argument_list|)
-expr_stmt|;
-name|cardempty
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-name|put
-argument_list|(
-literal|1
-argument_list|,
-name|O_CON1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|nl
