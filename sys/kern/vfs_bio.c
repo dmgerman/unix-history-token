@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.94 1996/06/30 05:17:08 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.95 1996/08/04 20:13:08 phk Exp $  */
 end_comment
 
 begin_comment
@@ -410,6 +410,10 @@ directive|define
 name|BUF_MAXUSE
 value|8
 end_define
+
+begin_comment
+comment|/* #define NO_B_MALLOC */
+end_comment
 
 begin_comment
 comment|/*  * Initialize buffer headers and related structures.  */
@@ -3914,7 +3918,7 @@ name|bp
 operator|->
 name|b_usecount
 operator|=
-literal|2
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -5056,6 +5060,13 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_B_MALLOC
+argument_list|)
 if|if
 condition|(
 name|bp
@@ -5069,6 +5080,8 @@ operator|=
 name|mbsize
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|newbsize
 operator|=
 name|round_page
@@ -5085,6 +5098,13 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_B_MALLOC
+argument_list|)
 comment|/* 			 * malloced buffers are not shrunk 			 */
 if|if
 condition|(
@@ -5171,6 +5191,8 @@ return|return
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 name|vm_hold_free_pages
 argument_list|(
 name|bp
@@ -5207,6 +5229,13 @@ operator|->
 name|b_bufsize
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_B_MALLOC
+argument_list|)
 comment|/* 			 * We only use malloced memory on the first allocation. 			 * and revert to page-allocated memory when the buffer grows. 			 */
 if|if
 condition|(
@@ -5276,6 +5305,8 @@ return|return
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 name|origbuf
 operator|=
 name|NULL
@@ -5284,6 +5315,13 @@ name|origbufsize
 operator|=
 literal|0
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_B_MALLOC
+argument_list|)
 comment|/* 			 * If the buffer is growing on it's other-than-first allocation, 			 * then we revert to the page-allocation scheme. 			 */
 if|if
 condition|(
@@ -5356,6 +5394,8 @@ name|newbsize
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|vm_hold_load_pages
 argument_list|(
 name|bp
@@ -5381,6 +5421,13 @@ operator|+
 name|newbsize
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_B_MALLOC
+argument_list|)
 if|if
 condition|(
 name|origbuf
@@ -5405,6 +5452,8 @@ name|M_BIOBUF
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 else|else
@@ -5443,6 +5492,13 @@ operator|>>
 name|PAGE_SHIFT
 operator|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_B_MALLOC
+argument_list|)
 if|if
 condition|(
 name|bp
@@ -5456,6 +5512,8 @@ argument_list|(
 literal|"allocbuf: VMIO buffer can't be malloced"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|newbsize
