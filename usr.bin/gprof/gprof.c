@@ -79,13 +79,6 @@ directive|include
 file|"gprof.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|UNITS_TO_CODE
-value|(OFFSET_OF_CODE / sizeof(UNIT))
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -1134,10 +1127,7 @@ name|gmonhdr
 operator|.
 name|lpc
 operator|/
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|HISTORICAL_SCALE_2
 expr_stmt|;
 name|highpc
 operator|=
@@ -1149,10 +1139,7 @@ name|gmonhdr
 operator|.
 name|hpc
 operator|/
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|HISTORICAL_SCALE_2
 expr_stmt|;
 name|sampbytes
 operator|=
@@ -2090,10 +2077,7 @@ index|]
 operator|.
 name|value
 operator|/
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|HISTORICAL_SCALE_2
 argument_list|,
 name|svalue0
 argument_list|,
@@ -2276,10 +2260,7 @@ name|nlp
 operator|->
 name|value
 operator|/
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|HISTORICAL_SCALE_2
 expr_stmt|;
 name|bucket_of_entry
 operator|=
@@ -2300,7 +2281,9 @@ name|nlp
 operator|->
 name|svalue
 operator|+
-name|UNITS_TO_CODE
+name|OFFSET_OF_CODE
+operator|/
+name|HISTORICAL_SCALE_2
 operator|-
 name|lowpc
 operator|)
@@ -2336,7 +2319,9 @@ name|nlp
 operator|->
 name|svalue
 operator|+
-name|UNITS_TO_CODE
+name|OFFSET_OF_CODE
+operator|/
+name|HISTORICAL_SCALE_2
 argument_list|)
 expr_stmt|;
 block|}
@@ -2347,7 +2332,9 @@ name|nlp
 operator|->
 name|svalue
 operator|+=
-name|UNITS_TO_CODE
+name|OFFSET_OF_CODE
+operator|/
+name|HISTORICAL_SCALE_2
 expr_stmt|;
 block|}
 block|}

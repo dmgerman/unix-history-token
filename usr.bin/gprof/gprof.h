@@ -212,6 +212,17 @@ value|1
 end_define
 
 begin_comment
+comment|/*      *	Historical scale factor in profil(2)'s algorithm for converting      *	pc addresses to bucket numbers.  This now just complicates the      *	scaling and makes bucket:pc densities of more than 1/2 useless.      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HISTORICAL_SCALE_2
+value|2
+end_define
+
+begin_comment
 comment|/*      *	ticks per second      */
 end_comment
 
@@ -254,13 +265,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|UNITS_TO_CODE
-value|(OFFSET_OF_CODE / sizeof(UNIT))
-end_define
 
 begin_decl_stmt
 name|char

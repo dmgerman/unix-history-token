@@ -365,10 +365,7 @@ literal|"\ngranularity: each sample hit covers %g byte(s)"
 argument_list|,
 name|scale
 operator|*
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|HISTORICAL_SCALE_2
 argument_list|)
 expr_stmt|;
 if|if
@@ -756,10 +753,7 @@ literal|"\ngranularity: each sample hit covers %g byte(s)"
 argument_list|,
 name|scale
 operator|*
-sizeof|sizeof
-argument_list|(
-name|UNIT
-argument_list|)
+name|HISTORICAL_SCALE_2
 argument_list|)
 expr_stmt|;
 if|if
