@@ -272,6 +272,9 @@ literal|0
 condition|?
 name|mask
 else|:
+operator|(
+name|int
+operator|)
 name|bsfl
 argument_list|(
 operator|(
@@ -310,6 +313,9 @@ literal|0
 condition|?
 name|mask
 else|:
+operator|(
+name|int
+operator|)
 name|bsrl
 argument_list|(
 operator|(
