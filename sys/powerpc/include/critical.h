@@ -122,22 +122,36 @@ begin_comment
 comment|/* !__GNUC__ */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|cpu_critical_enter
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|cpu_critical_exit
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __GNUC__ */
+end_comment
+
+begin_macro
 name|__END_DECLS
-end_decl_stmt
+end_macro
 
 begin_endif
 endif|#

@@ -1920,6 +1920,7 @@ parameter_list|(
 name|u_int
 name|port
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|addr
@@ -1937,6 +1938,7 @@ parameter_list|(
 name|u_int
 name|port
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|addr
@@ -1954,6 +1956,7 @@ parameter_list|(
 name|u_int
 name|port
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|addr
