@@ -197,7 +197,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipft_ef.c,v 2.0.1.1 1997/01/09 15:14:43 darrenr Exp $"
+literal|"$Id: ipft_ef.c,v 2.0.2.3 1997/03/10 08:10:24 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,13 +210,49 @@ begin_decl_stmt
 specifier|static
 name|int
 name|etherf_open
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|etherf_close
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|etherf_readip
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

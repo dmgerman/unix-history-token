@@ -111,6 +111,30 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipsend.h"
+end_include
+
 begin_comment
 comment|/*  * lookup host and return  * its IP address in address  * (4 bytes)  */
 end_comment

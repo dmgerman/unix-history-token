@@ -51,6 +51,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -135,36 +141,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip_fil.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip_nat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip_frag.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip_state.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -183,7 +159,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ip_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_fil.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_nat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_frag.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_state.h"
 end_include
 
 begin_include
@@ -240,7 +246,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fils.c,v 2.0.1.2 1997/01/30 10:21:48 darrenr Exp $"
+literal|"$Id: fils.c,v 2.0.2.7 1997/04/02 12:23:16 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,13 +358,51 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|showstats
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|friostat_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|showfrstates
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ipfrstat_t
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -366,14 +410,48 @@ begin_decl_stmt
 specifier|static
 name|void
 name|showlist
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|friostat_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|showipstates
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ips_stat_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|Usage
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|Usage
 parameter_list|(
@@ -1530,6 +1608,17 @@ index|[
 name|set
 index|]
 expr_stmt|;
+else|else
+block|{
+name|FPRINTF
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No -i or -o given with -a\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 elseif|else
 if|if
@@ -1724,6 +1813,20 @@ operator||
 name|OPT_VERBOSE
 operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|USE_QUAD_T
+name|PRINTF
+argument_list|(
+literal|"%qd "
+argument_list|,
+name|fp
+operator|->
+name|fr_hits
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|PRINTF
 argument_list|(
 literal|"%ld "
@@ -1733,6 +1836,8 @@ operator|->
 name|fr_hits
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|opts
@@ -1743,6 +1848,20 @@ operator||
 name|OPT_VERBOSE
 operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|USE_QUAD_T
+name|PRINTF
+argument_list|(
+literal|"%qd "
+argument_list|,
+name|fp
+operator|->
+name|fr_bytes
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|PRINTF
 argument_list|(
 literal|"%ld "
@@ -1752,6 +1871,8 @@ operator|->
 name|fr_bytes
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|opts
@@ -1929,9 +2050,16 @@ if|if
 condition|(
 name|kmemcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ips
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|istab
 index|[
 name|i
@@ -1961,7 +2089,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|"%s age %d pass %d pr %d state %d/%d\n"
+literal|"%s age %ld pass %d pr %d state %d/%d\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1995,6 +2123,19 @@ name|is_state
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|"\tpkts %ld bytes %ld"
+argument_list|,
+name|ips
+operator|.
+name|is_pkts
+argument_list|,
+name|ips
+operator|.
+name|is_bytes
 argument_list|)
 expr_stmt|;
 if|if
@@ -2051,7 +2192,7 @@ name|IPPROTO_UDP
 condition|)
 name|PRINTF
 argument_list|(
-literal|"\t%hu -> %hu\n"
+literal|" %hu -> %hu\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -2079,7 +2220,7 @@ name|IPPROTO_ICMP
 condition|)
 name|PRINTF
 argument_list|(
-literal|"\t%hu %hu %d\n"
+literal|" %hu %hu %d\n"
 argument_list|,
 name|ips
 operator|.
@@ -2231,6 +2372,10 @@ if|if
 condition|(
 name|kmemcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifr
 argument_list|,

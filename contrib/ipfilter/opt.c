@@ -118,7 +118,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: opt.c,v 2.0.1.1 1997/01/09 15:14:44 darrenr Exp $"
+literal|"$Id: opt.c,v 2.0.2.3 1997/03/10 08:10:40 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,6 +461,20 @@ name|NULL
 block|}
 comment|/* must be last */
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_char
+name|seclevel
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
