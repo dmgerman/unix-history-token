@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|<machine/cpufunc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpufunc.h>
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -208,7 +208,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  mask=0x%x maxtl=%d maxwin=%d\n"
+literal|"  mask=0x%lx maxtl=%ld maxwin=%ld\n"
 argument_list|,
 name|VER_MASK
 argument_list|(
