@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_subr.c,v 1.99 2002/07/11 21:14:34 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also already have from NetBSD:  *	$NetBSD: usb_subr.c,v 1.102 2003/01/01 16:21:50 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.103 2003/01/10 11:19:13 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.111 2004/03/15 10:35:04 augustss Exp $  */
+comment|/* Also already have from NetBSD:  *	$NetBSD: usb_subr.c,v 1.102 2003/01/01 16:21:50 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.103 2003/01/10 11:19:13 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.111 2004/03/15 10:35:04 augustss Exp $  *	$NetBSD: usb_subr.c,v 1.114 2004/06/23 02:30:52 mycroft Exp $  *	$NetBSD: usb_subr.c,v 1.115 2004/06/23 05:23:19 mycroft Exp $  *	$NetBSD: usb_subr.c,v 1.116 2004/06/23 06:27:54 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -1541,6 +1541,9 @@ name|dev
 operator|->
 name|ddesc
 decl_stmt|;
+name|usbd_interface_handle
+name|iface
+decl_stmt|;
 name|char
 name|vendor
 index|[
@@ -1557,6 +1560,10 @@ name|int
 name|bcdDevice
 decl_stmt|,
 name|bcdUSB
+decl_stmt|;
+name|usb_interface_descriptor_t
+modifier|*
+name|id
 decl_stmt|;
 name|usbd_devinfo_vp
 argument_list|(
@@ -1585,6 +1592,8 @@ expr_stmt|;
 if|if
 condition|(
 name|showclass
+operator|&
+name|USBD_SHOW_DEVICE_CLASS
 condition|)
 name|cp
 operator|+=
@@ -1667,6 +1676,52 @@ operator|->
 name|address
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|showclass
+operator|&
+name|USBD_SHOW_INTERFACE_CLASS
+condition|)
+block|{
+comment|/* fetch the interface handle for the first interface */
+operator|(
+name|void
+operator|)
+name|usbd_device2interface_handle
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|iface
+argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|usbd_get_interface_descriptor
+argument_list|(
+name|iface
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|sprintf
+argument_list|(
+name|cp
+argument_list|,
+literal|", iclass %d/%d"
+argument_list|,
+name|id
+operator|->
+name|bInterfaceClass
+argument_list|,
+name|id
+operator|->
+name|bInterfaceSubClass
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|cp
 operator|=
@@ -3167,7 +3222,6 @@ name|index
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX check that all interfaces are idle */
 if|if
 condition|(
 name|dev
@@ -3177,14 +3231,6 @@ operator|!=
 name|USB_UNCONFIG_NO
 condition|)
 block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"usbd_set_config_index: free old config\n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Free all configuration data structures. */
 name|nifc
 operator|=
 name|dev
@@ -3193,6 +3239,58 @@ name|cdesc
 operator|->
 name|bNumInterface
 expr_stmt|;
+comment|/* Check that all interfaces are idle */
+for|for
+control|(
+name|ifcidx
+operator|=
+literal|0
+init|;
+name|ifcidx
+operator|<
+name|nifc
+condition|;
+name|ifcidx
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|ifaces
+index|[
+name|ifcidx
+index|]
+operator|.
+name|pipes
+argument_list|)
+condition|)
+continue|continue;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: open pipes exist\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USBD_IN_USE
+operator|)
+return|;
+block|}
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_set_config_index: free old config\n"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Free all configuration data structures. */
 for|for
 control|(
 name|ifcidx
@@ -7007,7 +7105,19 @@ name|i
 operator|++
 control|)
 block|{
-name|strncpy
+if|if
+condition|(
+name|device_is_attached
+argument_list|(
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+name|strlcpy
 argument_list|(
 name|di
 operator|->
@@ -7029,6 +7139,7 @@ argument_list|,
 name|USB_MAX_DEVNAMELEN
 argument_list|)
 expr_stmt|;
+else|else
 name|di
 operator|->
 name|udi_devnames
@@ -7036,12 +7147,10 @@ index|[
 name|i
 index|]
 index|[
-name|USB_MAX_DEVNAMELEN
-operator|-
-literal|1
+literal|0
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -7334,6 +7443,23 @@ argument_list|(
 name|dev
 operator|->
 name|subdevs
+argument_list|,
+name|M_USB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|ifacenums
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|dev
+operator|->
+name|ifacenums
 argument_list|,
 name|M_USB
 argument_list|)
