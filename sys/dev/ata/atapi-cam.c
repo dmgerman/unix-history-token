@@ -142,7 +142,7 @@ name|CAM_MAX_CDBLEN
 index|]
 decl_stmt|;
 name|int
-name|lags
+name|flags
 decl_stmt|;
 define|#
 directive|define
