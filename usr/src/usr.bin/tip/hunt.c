@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hunt.c	4.2	81/06/16	*/
+comment|/*	hunt.c	4.3	81/10/02	*/
 end_comment
 
 begin_include
@@ -169,9 +169,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|deadfl
 condition|)
-continue|continue;
+block|{
 name|ioctl
 argument_list|(
 name|FD
@@ -181,7 +182,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-break|break;
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|int
+operator|)
+name|cp
+operator|)
+return|;
+block|}
 block|}
 name|alarm
 argument_list|(
@@ -195,12 +211,12 @@ argument_list|,
 name|dead
 argument_list|)
 expr_stmt|;
-block|}
-name|alarm
+name|delock
 argument_list|(
-literal|0
+name|uucplock
 argument_list|)
 expr_stmt|;
+block|}
 name|signal
 argument_list|(
 name|SIGALRM
@@ -208,18 +224,13 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|deadfl
-condition|)
 return|return
 operator|(
+name|deadfl
+condition|?
 operator|-
 literal|1
-operator|)
-return|;
-return|return
-operator|(
+else|:
 operator|(
 name|int
 operator|)
