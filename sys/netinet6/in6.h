@@ -65,6 +65,12 @@ begin_comment
 comment|/*  * Local port number conventions:  *  * Ports< IPPORT_RESERVED are reserved for privileged processes (e.g. root),  * unless a kernel is compiled with IPNOPRIVPORTS defined.  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  *  * The default range is IPPORT_ANONMIN to IPPORT_ANONMAX, although  * that is settable by sysctl(3); net.inet.ip.anonportmin and  * net.inet.ip.anonportmax respectively.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH is the same as IP_PORTRANGE_DEFAULT,  * and exists only for FreeBSD compatibility purposes.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  * This convention is based on "vouchsafe" principles only.  * It is only secure if you trust the remote host to restrict these ports.  * The range is IPPORT_RESERVEDMIN to IPPORT_RESERVEDMAX.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -100,6 +106,11 @@ name|IPV6PORT_RESERVEDMAX
 value|(IPV6PORT_RESERVED-1)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * IPv6 address  */
 end_comment
@@ -110,19 +121,19 @@ name|in6_addr
 block|{
 union|union
 block|{
-name|u_int8_t
+name|uint8_t
 name|__u6_addr8
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|__u6_addr16
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|__u6_addr32
 index|[
 literal|4
@@ -187,14 +198,18 @@ value|46
 end_define
 
 begin_comment
+comment|/*  * XXX missing POSIX.1-2001 macro IPPROTO_IPV6.  */
+end_comment
+
+begin_comment
 comment|/*  * Socket address for IPv6  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_XOPEN_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -211,19 +226,19 @@ begin_struct
 struct|struct
 name|sockaddr_in6
 block|{
-name|u_int8_t
+name|sa_family_t
 name|sin6_len
 decl_stmt|;
-comment|/* length of this struct(sa_family_t)*/
-name|u_int8_t
+comment|/* length of this struct */
+name|sa_family_t
 name|sin6_family
 decl_stmt|;
-comment|/* AF_INET6 (sa_family_t) */
-name|u_int16_t
+comment|/* AF_INET6 */
+name|in_port_t
 name|sin6_port
 decl_stmt|;
-comment|/* Transport layer port # (in_port_t)*/
-name|u_int32_t
+comment|/* Transport layer port # */
+name|uint32_t
 name|sin6_flowinfo
 decl_stmt|;
 comment|/* IP6 flow information */
@@ -232,7 +247,7 @@ name|in6_addr
 name|sin6_addr
 decl_stmt|;
 comment|/* IP6 address */
-name|u_int32_t
+name|uint32_t
 name|sin6_scope_id
 decl_stmt|;
 comment|/* scope zone index */
@@ -380,9 +395,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|BIG_ENDIAN
+name|_BIG_ENDIAN
 end_if
 
 begin_define
@@ -444,9 +459,9 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|BYTE_ORDER
+name|_BYTE_ORDER
 operator|==
-name|LITTLE_ENDIAN
+name|_LITTLE_ENDIAN
 end_elif
 
 begin_define
@@ -519,6 +534,12 @@ begin_comment
 comment|/*  * Definition of some useful macros to handle IP6 addresses  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -559,6 +580,11 @@ define|\
 value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -576,6 +602,12 @@ name|in6_addr
 name|in6addr_loopback
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -603,6 +635,11 @@ name|in6_addr
 name|in6addr_linklocal_allrouters
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Equality  * NOTE: Some of kernel programming environment (for example, openbsd/sparc)  * does not supply memcmp().  For userland memcmp() is preferred as it is  * in ANSI standard.  */
@@ -632,6 +669,12 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -644,6 +687,11 @@ parameter_list|)
 define|\
 value|(memcmp(&(a)->s6_addr[0],&(b)->s6_addr[0], sizeof(struct in6_addr)) == 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1118,11 +1166,11 @@ begin_comment
 comment|/*  * IP6 route structure  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_XOPEN_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_struct
 struct|struct
@@ -1149,6 +1197,89 @@ end_endif
 begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IPV6 level.  * First word of comment is data type; bool is stored in int.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_JOIN_GROUP
+value|12
+end_define
+
+begin_comment
+comment|/* ip6_mreq; join a group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_LEAVE_GROUP
+value|13
+end_define
+
+begin_comment
+comment|/* ip6_mreq; leave a group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MULTICAST_HOPS
+value|10
+end_define
+
+begin_comment
+comment|/* u_char; set/get IP6 multicast hops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MULTICAST_IF
+value|9
+end_define
+
+begin_comment
+comment|/* u_char; set/get IP6 multicast i/f  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_MULTICAST_LOOP
+value|11
+end_define
+
+begin_comment
+comment|/* u_char; set/get IP6 multicast loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_UNICAST_HOPS
+value|4
+end_define
+
+begin_comment
+comment|/* int; IP6 hops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_V6ONLY
+value|27
+end_define
+
+begin_comment
+comment|/* bool; only bind INET6 at wildcard bind */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/* no hdrincl */
@@ -1233,72 +1364,6 @@ end_define
 
 begin_comment
 comment|/* reserved for future use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_UNICAST_HOPS
-value|4
-end_define
-
-begin_comment
-comment|/* int; IP6 hops */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_MULTICAST_IF
-value|9
-end_define
-
-begin_comment
-comment|/* u_char; set/get IP6 multicast i/f  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_MULTICAST_HOPS
-value|10
-end_define
-
-begin_comment
-comment|/* u_char; set/get IP6 multicast hops */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_MULTICAST_LOOP
-value|11
-end_define
-
-begin_comment
-comment|/* u_char; set/get IP6 multicast loopback */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_JOIN_GROUP
-value|12
-end_define
-
-begin_comment
-comment|/* ip6_mreq; join a group membership */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_LEAVE_GROUP
-value|13
-end_define
-
-begin_comment
-comment|/* ip6_mreq; leave a group membership */
 end_comment
 
 begin_define
@@ -1413,17 +1478,6 @@ end_define
 
 begin_comment
 comment|/* int; checksum offset for raw socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6_V6ONLY
-value|27
-end_define
-
-begin_comment
-comment|/* bool; only bind INET6 at wildcard bind */
 end_comment
 
 begin_ifndef
@@ -1692,12 +1746,6 @@ end_define
 begin_comment
 comment|/* "low" - vouchsafe security */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_XOPEN_SOURCE
-end_ifndef
 
 begin_comment
 comment|/*  * Definitions for inet6 sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
@@ -2078,15 +2126,6 @@ name|IPV6CTL_MAXID
 value|37
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_XOPEN_SOURCE */
-end_comment
-
 begin_comment
 comment|/*  * Redefinition of mbuf flags  */
 end_comment
@@ -2373,6 +2412,30 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SIZE_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_SIZE_T_
+name|size_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__BEGIN_DECLS
 end_macro
@@ -2429,7 +2492,7 @@ name|cmsghdr
 operator|*
 operator|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|,
 name|int
@@ -2442,7 +2505,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|inet6_option_alloc
 name|__P
@@ -2474,7 +2537,7 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|)
@@ -2494,7 +2557,7 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|*
 operator|,
@@ -2677,11 +2740,11 @@ name|size_t
 operator|,
 name|int
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|,
 name|size_t
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|,
 name|void
 operator|*
@@ -2744,7 +2807,7 @@ name|size_t
 operator|,
 name|int
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|,
 name|size_t
@@ -2772,7 +2835,7 @@ name|size_t
 operator|,
 name|int
 operator|,
-name|u_int8_t
+name|uint8_t
 operator|,
 name|size_t
 operator|*
@@ -2916,6 +2979,15 @@ end_decl_stmt
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
 
 begin_endif
 endif|#
