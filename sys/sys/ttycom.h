@@ -587,17 +587,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TIOCREMOTE
-value|_IOW('t', 105, int)
-end_define
-
-begin_comment
-comment|/* remote input editing */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TIOCGWINSZ
 value|_IOR('t', 104, struct winsize)
 end_define
