@@ -523,7 +523,7 @@ name|ARGS
 argument_list|(
 name|clone
 argument_list|,
-literal|"flags %x, stack %x"
+literal|"flags %x, stack %p"
 argument_list|)
 argument_list|,
 operator|(
@@ -534,10 +534,6 @@ name|args
 operator|->
 name|flags
 argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
 name|args
 operator|->
 name|stack
@@ -845,7 +841,7 @@ name|ARGS
 argument_list|(
 name|mmap
 argument_list|,
-literal|"%p, 0x%lx, 0x%x, 0x%x, 0x%x, 0x%lx"
+literal|"%p, 0x%lx, 0x%lx, 0x%lx, 0x%lx, 0x%lx"
 argument_list|)
 argument_list|,
 operator|(
@@ -1285,7 +1281,7 @@ name|ARGS
 argument_list|(
 name|rt_sigsuspend
 argument_list|,
-literal|"%p, %d"
+literal|"%p, %zd"
 argument_list|)
 argument_list|,
 operator|(
@@ -1421,7 +1417,7 @@ name|ARGS
 argument_list|(
 name|mprotect
 argument_list|,
-literal|"%p, 0x%lx, 0x%x"
+literal|"%p, 0x%zx, 0x%lx"
 argument_list|)
 argument_list|,
 operator|(
