@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.3	85/02/13	*/
+comment|/*	defs.h	4.4	85/03/19	*/
 end_comment
 
 begin_empty
@@ -634,7 +634,7 @@ end_function_decl
 
 begin_function_decl
 name|VOID
-name|getenv
+name|setupenv
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1330,7 +1330,7 @@ begin_define
 define|#
 directive|define
 name|MAXTRAP
-value|17
+value|32
 end_define
 
 begin_define
