@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -249,7 +249,7 @@ comment|/* routine to putc on virtual console */
 end_comment
 
 begin_comment
-comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=3<BITTWO,BITONE>  */
+comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=3<BITTWO,BITONE>  *  * Another additional format: %r is used to pass an additional format string  * and argument list recursively.  Usage is typically:  *  * fn(otherstuff, fmt [, arg1, ... ] )  *	char *fmt;  *	u_int arg1, ...;  *  *	printf("prefix: %r, other stuff\n", fmt,&arg1);  */
 end_comment
 
 begin_if
@@ -1275,6 +1275,10 @@ name|prf
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|u_int
+operator|*
+operator|)
 operator|*
 name|adx
 argument_list|,
