@@ -1952,7 +1952,7 @@ directive|endif
 continue|continue;
 name|printf
 argument_list|(
-literal|"%4d: %11lu %11lu 0x%02xn"
+literal|"%4d: %11lu %11lu 0x%02x\n"
 argument_list|,
 name|i
 operator|+
