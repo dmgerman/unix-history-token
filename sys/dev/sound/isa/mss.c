@@ -815,50 +815,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MD_CS4248
+name|MD_CS42XX
 value|0xA1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_CS4231
-value|0xA2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_CS4231A
-value|0xA3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_CS4232
-value|0xA4
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_CS4232A
-value|0xA5
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_CS4236
-value|0xA6
-end_define
-
-begin_define
-define|#
-directive|define
-name|MD_CS4237
-value|0xA7
 end_define
 
 begin_define
@@ -3753,7 +3711,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4231
+name|MD_CS42XX
 expr_stmt|;
 comment|/* 		* It could be an AD1845 or CS4231A as well. 		* CS4231 and AD1845 report the same revision info in I25 		* while the CS4231A reports different. 		*/
 name|id
@@ -3784,7 +3742,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4231A
+name|MD_CS42XX
 expr_stmt|;
 break|break;
 case|case
@@ -3798,7 +3756,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4232
+name|MD_CS42XX
 expr_stmt|;
 break|break;
 case|case
@@ -3813,7 +3771,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4232A
+name|MD_CS42XX
 expr_stmt|;
 break|break;
 case|case
@@ -3915,7 +3873,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4236
+name|MD_CS42XX
 expr_stmt|;
 break|break;
 default|default:
@@ -3930,7 +3888,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4231
+name|MD_CS42XX
 expr_stmt|;
 block|}
 block|}
@@ -6919,6 +6877,70 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_pnp_id
+name|pnpmss_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x0000630e
+block|,
+literal|"CS423x"
+block|}
+block|,
+comment|/* CSC0000 */
+block|{
+literal|0x01000000
+block|,
+literal|"CMI8330"
+block|}
+block|,
+comment|/* @@@0001 */
+block|{
+literal|0x2100a865
+block|,
+literal|"Yamaha OPL-SAx"
+block|}
+block|,
+comment|/* YMH0021 */
+block|{
+literal|0x1110d315
+block|,
+literal|"ENSONIQ SoundscapeVIVO"
+block|}
+block|,
+comment|/* ENS1011 */
+block|{
+literal|0x1093143e
+block|,
+literal|"OPTi931"
+block|}
+block|,
+comment|/* OPT9310 */
+block|{
+literal|0x5092143e
+block|,
+literal|"OPTi925"
+block|}
+block|,
+comment|/* OPT9250 XXX guess */
+if|#
+directive|if
+literal|0
+block|{0x0000561e, "GusPnP"},
+comment|/* GRV0000 */
+endif|#
+directive|endif
+block|{
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -6928,212 +6950,18 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|s
-init|=
-name|NULL
-decl_stmt|;
-name|u_int32_t
-name|logical_id
-init|=
-name|isa_get_logicalid
+return|return
+name|ISA_PNP_PROBE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|u_int32_t
-name|vend_id
-init|=
-name|isa_get_vendorid
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|u_int32_t
-name|id
-init|=
-name|vend_id
-operator|&
-literal|0xff00ffff
-decl_stmt|;
-switch|switch
-condition|(
-name|logical_id
-condition|)
-block|{
-case|case
-literal|0x0000630e
-case|:
-comment|/* CSC0000 */
-if|if
-condition|(
-name|id
-operator|==
-literal|0x3700630e
-condition|)
-name|s
-operator|=
-literal|"CS4237"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|id
-operator|==
-literal|0x2500630e
-condition|)
-name|s
-operator|=
-literal|"CS4235"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|id
-operator|==
-literal|0x3600630e
-condition|)
-name|s
-operator|=
-literal|"CS4236"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|id
-operator|==
-literal|0x3500630e
-condition|)
-name|s
-operator|=
-literal|"CS4236B"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|id
-operator|==
-literal|0x3200630e
-condition|)
-name|s
-operator|=
-literal|"CS4232"
-expr_stmt|;
-else|else
-name|s
-operator|=
-literal|"Unknown CS"
-expr_stmt|;
-break|break;
-case|case
-literal|0x2100a865
-case|:
-comment|/* YMH0021 */
-if|if
-condition|(
-name|id
-operator|==
-literal|0x2000a865
-condition|)
-name|s
-operator|=
-literal|"Yamaha SA2"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|id
-operator|==
-literal|0x3000a865
-condition|)
-name|s
-operator|=
-literal|"Yamaha SA3"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|id
-operator|==
-literal|0x0000a865
-condition|)
-name|s
-operator|=
-literal|"Yamaha YMF719 OPL-SA3"
-expr_stmt|;
-else|else
-name|s
-operator|=
-literal|"Yamaha OPL-SAx"
-expr_stmt|;
-break|break;
-case|case
-literal|0x1110d315
-case|:
-comment|/* ENS1011 */
-name|s
-operator|=
-literal|"ENSONIQ SoundscapeVIVO"
-expr_stmt|;
-break|break;
-case|case
-literal|0x1093143e
-case|:
-comment|/* OPT9310 */
-name|s
-operator|=
-literal|"OPTi931"
-expr_stmt|;
-break|break;
-case|case
-literal|0x5092143e
-case|:
-comment|/* OPT9250 XXX guessing */
-name|s
-operator|=
-literal|"OPTi925"
-expr_stmt|;
-break|break;
-if|#
-directive|if
-literal|0
-block|case 0x0000561e:  		s = "GusPnP";  		break;
-endif|#
-directive|endif
-case|case
-literal|0x01000000
-case|:
-if|if
-condition|(
-name|vend_id
-operator|==
-literal|0x0100a90d
-condition|)
-name|s
-operator|=
-literal|"CMI8330"
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|s
-condition|)
-block|{
-name|device_set_desc
-argument_list|(
+argument_list|,
 name|dev
 argument_list|,
-name|s
+name|pnpmss_ids
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-return|return
-name|ENXIO
 return|;
 block|}
 end_function
@@ -7151,14 +6979,6 @@ name|struct
 name|mss_info
 modifier|*
 name|mss
-decl_stmt|;
-name|u_int32_t
-name|vend_id
-init|=
-name|isa_get_vendorid
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|mss
 operator|=
@@ -7228,27 +7048,33 @@ literal|1
 expr_stmt|;
 switch|switch
 condition|(
-name|vend_id
-operator|&
-literal|0xff00ffff
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 case|case
-literal|0x2000a865
+literal|0x0000630e
 case|:
-comment|/* Yamaha SA2 */
-case|case
-literal|0x3000a865
-case|:
-comment|/* Yamaha SA3 */
-case|case
-literal|0x0000a865
-case|:
-comment|/* Yamaha YMF719 SA3 */
+comment|/* CSC0000 */
+name|mss
+operator|->
+name|bd_flags
+operator||=
+name|BD_F_MSS_OFFSET
+expr_stmt|;
+name|mss
+operator|->
+name|bd_id
+operator|=
+name|MD_CS42XX
+expr_stmt|;
+break|break;
 case|case
 literal|0x2100a865
 case|:
-comment|/* pnpbios sets vendor=logical */
+comment|/* YHM0021 */
 name|mss
 operator|->
 name|io_rid
@@ -7269,9 +7095,9 @@ name|MD_YM0020
 expr_stmt|;
 break|break;
 case|case
-literal|0x8100d315
+literal|0x1110d315
 case|:
-comment|/* ENSONIQ SoundscapeVIVO */
+comment|/* ENS1011 */
 name|mss
 operator|->
 name|io_rid
@@ -7286,51 +7112,9 @@ name|MD_VIVO
 expr_stmt|;
 break|break;
 case|case
-literal|0x3700630e
+literal|0x1093143e
 case|:
-comment|/* CS4237 */
-case|case
-literal|0x2500630e
-case|:
-comment|/* AOpen AW37, CS4235 */
-name|mss
-operator|->
-name|bd_flags
-operator||=
-name|BD_F_MSS_OFFSET
-expr_stmt|;
-name|mss
-operator|->
-name|bd_id
-operator|=
-name|MD_CS4237
-expr_stmt|;
-break|break;
-case|case
-literal|0x3500630e
-case|:
-comment|/* CS4236B */
-case|case
-literal|0x3600630e
-case|:
-comment|/* CS4236 */
-name|mss
-operator|->
-name|bd_flags
-operator||=
-name|BD_F_MSS_OFFSET
-expr_stmt|;
-name|mss
-operator|->
-name|bd_id
-operator|=
-name|MD_CS4236
-expr_stmt|;
-break|break;
-case|case
-literal|0x3100143e
-case|:
-comment|/* opti931 */
+comment|/* OPT9310 */
 name|mss
 operator|->
 name|bd_flags
@@ -7351,9 +7135,9 @@ name|MD_OPTI931
 expr_stmt|;
 break|break;
 case|case
-literal|0x2500143e
+literal|0x5092143e
 case|:
-comment|/* opti925 */
+comment|/* OPT9250 XXX guess */
 name|mss
 operator|->
 name|io_rid
@@ -7376,11 +7160,12 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case 0x0100561e:
-comment|/* guspnp */
+block|case 0x0000561e:
+comment|/* GRV0000 */
 block|mss->bd_flags |= BD_F_MSS_OFFSET;             mss->io_rid = 2;             mss->conf_rid = 1; 	    mss->drq1_rid = 1; 	    mss->drq2_rid = 0;             mss->bd_id = MD_GUSPNP; 	    break;
 endif|#
 directive|endif
+comment|/* Unknown MSS default.  We could let the CSC0000 stuff match too */
 default|default:
 name|mss
 operator|->
@@ -7392,7 +7177,7 @@ name|mss
 operator|->
 name|bd_id
 operator|=
-name|MD_CS4232
+name|MD_CS42XX
 expr_stmt|;
 break|break;
 block|}
