@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wtreg.h,v 1.4 1993/12/13 18:38:44 alm Exp $  *  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wtreg.h,v 1.6 1996/01/08 12:46:15 joerg Exp $  *  */
 end_comment
 
 begin_comment
@@ -8,18 +8,7 @@ comment|/*  * Copyright (c) 1989 Carnegie-Mellon University.  * All rights reser
 end_comment
 
 begin_comment
-comment|/* ioctl for direct QIC commands */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WTQICMD
-value|_IO('W', 0)
-end_define
-
-begin_comment
-comment|/* QIC-02 commands allowed for WTQICMD */
+comment|/* internal QIC-02 commands */
 end_comment
 
 begin_define
@@ -42,10 +31,6 @@ end_define
 
 begin_comment
 comment|/* retension the tape */
-end_comment
-
-begin_comment
-comment|/* internal QIC-02 commands */
 end_comment
 
 begin_define
