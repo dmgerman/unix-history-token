@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mountd.c,v 1.32 1998/07/15 06:21:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2890,8 +2890,6 @@ name|inet_ntoa
 argument_list|(
 name|saddrin
 argument_list|)
-argument_list|,
-name|dirpath
 argument_list|)
 expr_stmt|;
 return|return;

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: conf.c,v 1.6 1998/07/06 07:19:24 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,7 +807,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s:%s: regcomp %s: %s"
+literal|"%s:%d: regcomp %s: %s"
 argument_list|,
 name|conf_file
 argument_list|,

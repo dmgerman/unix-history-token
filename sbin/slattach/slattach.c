@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.31 1998/02/20 07:28:50 jb Exp $"
+literal|"$Id: slattach.c,v 1.32 1998/06/28 20:33:36 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2207,6 +2207,10 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"slip unit changed from sl%d to sl%d, but no -u CMD was specified!"
+argument_list|,
+name|unit
+argument_list|,
+name|new_unit
 argument_list|)
 expr_stmt|;
 name|exit_handler

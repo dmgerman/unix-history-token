@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ldconfig.c,v 1.23 1998/07/06 07:02:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1799,6 +1799,9 @@ literal|"Totals: entries %d, buckets %ld, string size %d\n"
 argument_list|,
 name|nhints
 argument_list|,
+operator|(
+name|long
+operator|)
 name|hdr
 operator|.
 name|hh_nbucket
@@ -2519,6 +2522,10 @@ literal|"%s: bad magic: %lo"
 argument_list|,
 name|hints_file
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|hdr
 operator|->
 name|hh_magic
@@ -2548,6 +2555,9 @@ name|warnx
 argument_list|(
 literal|"unsupported version: %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|hdr
 operator|->
 name|hh_version

@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: nos-tun.c,v 1.3 1998/07/15 06:38:53 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,7 +439,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"can't open socket - %M"
+literal|"can't open socket - %m"
 argument_list|)
 expr_stmt|;
 goto|goto
