@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n3.c	4.3 %G%"
+literal|"@(#)n3.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2645,33 +2645,41 @@ modifier|*
 name|sbrk
 parameter_list|()
 function_decl|;
-comment|/* ought to be rounded up by sizeof(int) */
-if|if
-condition|(
 name|x
-operator|%
-literal|2
-operator|==
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|-
 literal|1
-condition|)
+expr_stmt|;
 name|x
-operator|++
+operator|&=
+operator|~
+operator|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 name|i
 operator|=
 name|sbrk
 argument_list|(
 name|x
 argument_list|)
-operator|)
-operator|>=
-operator|(
-name|char
-operator|*
-operator|)
+argument_list|)
+operator|==
 operator|-
 literal|1
 condition|)
