@@ -1732,8 +1732,7 @@ index|]
 operator|!=
 literal|0
 condition|)
-block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kp
 operator|->
@@ -1746,16 +1745,6 @@ argument_list|,
 name|MAXCOMLEN
 argument_list|)
 expr_stmt|;
-name|kp
-operator|->
-name|ki_comm
-index|[
-name|MAXCOMLEN
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
