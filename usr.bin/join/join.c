@@ -1764,7 +1764,7 @@ condition|(
 name|lp1
 operator|->
 name|fieldcnt
-operator|<
+operator|<=
 name|fieldno1
 condition|)
 return|return
@@ -1785,7 +1785,7 @@ condition|(
 name|lp2
 operator|->
 name|fieldcnt
-operator|<
+operator|<=
 name|fieldno2
 condition|)
 return|return
@@ -2319,7 +2319,7 @@ condition|(
 name|lp
 operator|->
 name|fieldcnt
-operator|<
+operator|<=
 name|fieldno
 operator|||
 name|out_empty
