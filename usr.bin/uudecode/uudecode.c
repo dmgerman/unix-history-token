@@ -1352,7 +1352,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|rflag
 condition|)
 return|return
