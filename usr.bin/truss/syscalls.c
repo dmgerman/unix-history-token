@@ -3336,7 +3336,7 @@ name|POLLKNOWN_EVENTS
 define|\
 value|(POLLIN | POLLPRI | POLLOUT | POLLERR | POLLHUP | POLLNVAL | \ 	 POLLRDNORM |POLLRDBAND | POLLWRBAND | POLLINIGNEOF)
 name|u
-operator|+=
+operator|=
 name|snprintf
 argument_list|(
 name|tmp
