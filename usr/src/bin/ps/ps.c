@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.10 (Berkeley) %G%"
+literal|"@(#)ps.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1429,6 +1429,30 @@ condition|)
 name|printf
 argument_list|(
 literal|" pagedaemon"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sp
+operator|->
+name|ap
+operator|->
+name|a_pid
+operator|==
+literal|3
+operator|&&
+name|sp
+operator|->
+name|ap
+operator|->
+name|a_flag
+operator|&
+name|SSYS
+condition|)
+name|printf
+argument_list|(
+literal|" net input"
 argument_list|)
 expr_stmt|;
 else|else
