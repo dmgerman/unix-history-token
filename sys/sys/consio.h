@@ -500,6 +500,10 @@ define|#
 directive|define
 name|MOUSE_BUTTON_EVENT
 value|0x09
+define|#
+directive|define
+name|MOUSE_MOUSECHAR
+value|0x0a
 union|union
 block|{
 name|mouse_data_t
@@ -510,6 +514,9 @@ name|mode
 decl_stmt|;
 name|mouse_event_t
 name|event
+decl_stmt|;
+name|int
+name|mouse_char
 decl_stmt|;
 block|}
 name|u

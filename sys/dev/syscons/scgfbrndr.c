@@ -96,24 +96,6 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SC_MOUSE_CHAR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SC_MOUSE_CHAR
-value|(0xd0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|SC_RENDER_DEBUG
 end_ifndef
 
@@ -1468,6 +1450,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|u_char
+name|c
+decl_stmt|;
 name|int
 name|pos
 decl_stmt|;
@@ -1890,6 +1875,14 @@ comment|/* idle */
 empty_stmt|;
 endif|#
 directive|endif
+name|c
+operator|=
+name|scp
+operator|->
+name|sc
+operator|->
+name|mouse_char
+expr_stmt|;
 operator|(
 operator|*
 name|vidsw
@@ -1916,7 +1909,7 @@ literal|32
 operator|,
 name|font_buf
 operator|,
-name|SC_MOUSE_CHAR
+name|c
 operator|,
 literal|4
 operator|)
@@ -1930,7 +1923,7 @@ name|scr
 argument_list|,
 name|pos
 argument_list|,
-name|SC_MOUSE_CHAR
+name|c
 argument_list|,
 name|sc_vtb_geta
 argument_list|(
@@ -1957,7 +1950,7 @@ name|scp
 operator|->
 name|xsize
 argument_list|,
-name|SC_MOUSE_CHAR
+name|c
 operator|+
 literal|2
 argument_list|,
@@ -2002,7 +1995,7 @@ name|pos
 operator|+
 literal|1
 argument_list|,
-name|SC_MOUSE_CHAR
+name|c
 operator|+
 literal|1
 argument_list|,
@@ -2034,7 +2027,7 @@ name|xsize
 operator|+
 literal|1
 argument_list|,
-name|SC_MOUSE_CHAR
+name|c
 operator|+
 literal|3
 argument_list|,

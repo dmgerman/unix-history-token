@@ -128,6 +128,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|SC_MOUSE_CHAR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SC_MOUSE_CHAR
+value|(0xd0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SC_DEBUG_LEVEL
 end_ifndef
 
@@ -903,6 +921,9 @@ name|font_16
 decl_stmt|;
 endif|#
 directive|endif
+name|u_char
+name|mouse_char
+decl_stmt|;
 block|}
 name|sc_softc_t
 typedef|;

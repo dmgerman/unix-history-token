@@ -261,24 +261,6 @@ begin_decl_stmt
 specifier|static
 name|sc_softc_t
 name|main_softc
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-operator|-
-literal|1
-block|,
-name|NULL
-block|,
-operator|-
-literal|1
-block|,
-name|NULL
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -432,16 +414,11 @@ name|SC_KERNEL_CONSOLE
 condition|)
 block|{
 comment|/* FIXME: clear if it is wired to another unit! */
-name|main_softc
-operator|.
-name|unit
+name|sc
 operator|=
-name|unit
-expr_stmt|;
-return|return
 operator|&
 name|main_softc
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -461,6 +438,13 @@ name|unit
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+name|sc
+operator|->
+name|unit
+operator|=
+name|unit
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -475,12 +459,6 @@ condition|)
 block|{
 name|sc
 operator|->
-name|unit
-operator|=
-name|unit
-expr_stmt|;
-name|sc
-operator|->
 name|keyboard
 operator|=
 operator|-
@@ -493,11 +471,16 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|sc
+operator|->
+name|mouse_char
+operator|=
+name|SC_MOUSE_CHAR
+expr_stmt|;
 block|}
 return|return
 name|sc
 return|;
-block|}
 block|}
 end_function
 
