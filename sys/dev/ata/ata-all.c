@@ -6654,7 +6654,7 @@ if|if
 condition|(
 operator|(
 name|lba
-operator|>
+operator|>=
 literal|268435455
 operator|||
 name|count
