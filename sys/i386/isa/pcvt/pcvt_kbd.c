@@ -37,6 +37,13 @@ begin_comment
 comment|/* global include */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LEDSTATE_UPDATE_PENDING
+value|(1<< 3)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -402,7 +409,7 @@ specifier|static
 name|int
 name|ledstate
 init|=
-literal|0
+name|LEDSTATE_UPDATE_PENDING
 decl_stmt|;
 end_decl_stmt
 
@@ -673,7 +680,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*  * The two commands to change the LEDs generate two KEYB_R_ACK responses  * from the keyboard, which aren't explicitly checked for (maybe they  * should be?).  However, when a lot of other I/O is happening, one of  * the interrupts sometimes gets lost (I'm not sure of the details of  * how and why and what hardware this happens with).  *  * This is a real problem, because normally the keyboard is only polled  * by pcrint(), and no more interrupts will be generated until the ACK  * has been read.  So the keyboard is hung.  This code polls a little  * while after changing the LEDs to make sure that this hasn't happened.  *  * XXX Quite possibly we should poll the kbd on a regular basis anyway,  * in the interest of robustness.  It may be possible that interrupts  * get lost other times as well.  */
+comment|/*  * The two commands to change the LEDs generate two KEYB_R_ACK responses  * from the keyboard, which aren't explicitly checked for (maybe they  * should be?).  However, when a lot of other I/O is happening, one of  * the interrupts sometimes gets lost (I'm not sure of the details of  * how and why and what hardware this happens with).  *  * This may have had something to do with spltty() previously not being  * called before the kbd_cmd() calls in update_led().  *  * This is a real problem, because normally the keyboard is only polled  * by pcrint(), and no more interrupts will be generated until the ACK  * has been read.  So the keyboard is hung.  This code polls a little  * while after changing the LEDs to make sure that this hasn't happened.  *  * XXX Quite possibly we should poll the kbd on a regular basis anyway,  * in the interest of robustness.  It may be possible that interrupts  * get lost other times as well.  */
 end_comment
 
 begin_decl_stmt
@@ -753,9 +760,21 @@ operator|!
 name|PCVT_NO_LED_UPDATE
 comment|/* Don't update LED's unless necessary. */
 name|int
+name|opri
+decl_stmt|,
 name|new_ledstate
-init|=
-operator|(
+decl_stmt|,
+name|response1
+decl_stmt|,
+name|response2
+decl_stmt|;
+name|opri
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+name|new_ledstate
+operator|=
 operator|(
 name|vsp
 operator|->
@@ -777,8 +796,7 @@ name|caps_lock
 operator|*
 literal|4
 operator|)
-operator|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|new_ledstate
@@ -786,6 +804,10 @@ operator|!=
 name|ledstate
 condition|)
 block|{
+name|ledstate
+operator|=
+name|LEDSTATE_UPDATE_PENDING
+expr_stmt|;
 if|if
 condition|(
 name|kbd_cmd
@@ -801,8 +823,19 @@ argument_list|(
 literal|"Keyboard LED command timeout\n"
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|opri
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+comment|/* 		 * For some keyboards or keyboard controllers, it is an 		 * error to issue a command without waiting long enough 		 * for an ACK for the previous command.  The keyboard 		 * gets confused, and responds with KEYB_R_RESEND, but 		 * we ignore that.  Wait for the ACK here.  The busy 		 * waiting doesn't matter much, since we lose anyway by 		 * busy waiting to send the command. 		 * 		 * XXX actually wait for any response, since we can't 		 * handle normal scancodes here. 		 * 		 * XXX all this should be interrupt driven.  Issue only 		 * one command at a time wait for a ACK before proceeding. 		 * Retry after a timeout or on receipt of a KEYB_R_RESEND. 		 * KEYB_R_RESENDs seem to be guaranteed by working 		 * keyboard controllers with broken (or disconnected) 		 * keyboards.  There is another code for keyboard 		 * reconnects.  The keyboard hardware is very simple and 		 * well designed :-). 		 */
+name|response1
+operator|=
+name|kbd_response
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|kbd_cmd
@@ -818,11 +851,41 @@ argument_list|(
 literal|"Keyboard LED data timeout\n"
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|opri
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|response2
+operator|=
+name|kbd_response
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|response1
+operator|==
+name|KEYB_R_ACK
+operator|&&
+name|response2
+operator|==
+name|KEYB_R_ACK
+condition|)
 name|ledstate
 operator|=
 name|new_ledstate
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Keyboard LED command not ACKed (responses %#x %#x)\n"
+argument_list|,
+name|response1
+argument_list|,
+name|response2
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -863,6 +926,11 @@ endif|#
 directive|endif
 comment|/* PCVT_UPDLED_LOSES_INTR */
 block|}
+name|splx
+argument_list|(
+name|opri
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* !PCVT_NO_LED_UPDATE */
@@ -1349,8 +1417,13 @@ argument_list|(
 literal|"pcvt: doreset() - timeout writing keyboard init command\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Discard any stale keyboard activity.  The 0.1 boot code isn't 	 * very careful and sometimes leaves a KEYB_R_RESEND. 	 */
+comment|/* 	 * Discard any stale keyboard activity.  The 0.1 boot code isn't 	 * very careful and sometimes leaves a KEYB_R_RESEND.  Versions 	 * between 1992 and Oct 1996 didn't have the delay and sometimes 	 * left a KEYB_R_RESEND. 	 */
 while|while
+condition|(
+literal|1
+condition|)
+block|{
+if|if
 condition|(
 name|inb
 argument_list|(
@@ -1362,6 +1435,28 @@ condition|)
 name|kbd_response
 argument_list|()
 expr_stmt|;
+else|else
+block|{
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+name|CONTROLLER_CTRL
+argument_list|)
+operator|&
+name|STATUS_OUTPBF
+operator|)
+condition|)
+break|break;
+block|}
+block|}
 comment|/* Start keyboard reset */
 name|opri
 operator|=
@@ -1377,11 +1472,21 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"pcvt: doreset() - timeout for keyboard reset command\n"
 argument_list|)
 expr_stmt|;
+name|outb
+argument_list|(
+name|CONTROLLER_DATA
+argument_list|,
+name|KEYB_C_RESET
+argument_list|)
+expr_stmt|;
+comment|/* force */
+block|}
 comment|/* Wait for the first response to reset and handle retries */
 while|while
 condition|(
@@ -1418,6 +1523,7 @@ operator|=
 name|KEYB_R_RESEND
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|response
@@ -1436,6 +1542,14 @@ argument_list|(
 literal|"pcvt: doreset() - got KEYB_R_RESEND response ... [one time only msg]\n"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|response
+operator|==
+name|KEYB_R_RESEND
+condition|)
+block|{
 if|if
 condition|(
 operator|++
@@ -1487,6 +1601,14 @@ argument_list|(
 literal|"pcvt: doreset() - timeout for loop keyboard reset command [one time only msg]\n"
 argument_list|)
 expr_stmt|;
+name|outb
+argument_list|(
+name|CONTROLLER_DATA
+argument_list|,
+name|KEYB_C_RESET
+argument_list|)
+expr_stmt|;
+comment|/* force */
 block|}
 block|}
 block|}
