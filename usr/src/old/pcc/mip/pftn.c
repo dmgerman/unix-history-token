@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.11 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3565,6 +3565,10 @@ argument|;  int ibseen =
 literal|0
 argument|;
 comment|/* the number of } constructions which have been filled */
+argument|int ifull =
+literal|0
+argument|;
+comment|/* 1 if all initializers have been seen */
 argument|int iclass;
 comment|/* storage class of thing being initialized */
 argument|int ilocctr =
@@ -3587,6 +3591,8 @@ directive|endif
 argument|p =&stab[curid];  	iclass = p->sclass; 	if( curclass == EXTERN || curclass == FORTRAN ) iclass = EXTERN; 	switch( iclass ){  	case UNAME: 	case EXTERN: 		return; 	case AUTO: 	case REGISTER: 		break; 	case EXTDEF: 	case STATIC: 		ilocctr = ISARY(p->stype)?ADATA:DATA; 		locctr( ilocctr ); 		defalign( talign( p->stype, p->sizoff ) ); 		defnam( p );  		}  	inoff =
 literal|0
 argument|; 	ibseen =
+literal|0
+argument|; 	ifull =
 literal|0
 argument|;  	pstk =
 literal|0
@@ -3741,7 +3747,11 @@ argument|; 		goto leave; 		}  	if( iclass == AUTO || iclass == REGISTER ){
 comment|/* do the initialization and get out, without regard  		    for filing out the variable with zeros, etc. */
 argument|bccode(); 		idname = pstk->in_id; 		p = buildtree( ASSIGN, buildtree( NAME, NIL, NIL ), p ); 		ecomp(p); 		return; 		}  	if( p == NIL ) return;
 comment|/* for throwing away strings that have been turned into lists */
-argument|if( ibseen ){ 		uerror(
+argument|if( ifull ){ 		uerror(
+literal|"too many initializers"
+argument|); 		iclass = -
+literal|1
+argument|; 		goto leave; 		} 	if( ibseen ){ 		uerror(
 literal|"} expected"
 argument|); 		goto leave; 		}
 ifndef|#
@@ -3778,7 +3788,9 @@ argument|p =&stab[id]; 			instk( id, p->stype, p->dimoff, p->sizoff, p->offset+p
 comment|/* put the new element onto the stack */
 argument|temp = pstk->in_sz; 			instk( pstk->in_id, (TWORD)DECREF(pstk->in_t), pstk->in_d+
 literal|1
-argument|, pstk->in_s, 				pstk->in_off+n*temp ); 			return; 			}  		}  	}  ilbrace(){
+argument|, pstk->in_s, 				pstk->in_off+n*temp ); 			return; 			}  		} 	ifull =
+literal|1
+argument|; 	}  ilbrace(){
 comment|/* process an initializer's left brace */
 argument|register t; 	struct instk *temp;  	temp = pstk;  	for( ; pstk> instack; --pstk ){  		t = pstk->in_t; 		if( t != STRTY&& !ISARY(t) ) continue;
 comment|/* not an aggregate */
@@ -3813,7 +3825,9 @@ argument|gotscal();
 comment|/* take it away... */
 argument|return; 		}
 comment|/* these right braces match ignored left braces: throw out */
-argument|}  upoff( size, alignment, poff ) register alignment
+argument|ifull =
+literal|1
+argument|;  	}  upoff( size, alignment, poff ) register alignment
 argument_list|,
 argument|*poff; {
 comment|/* update the offset pointed to by poff; return the 	/* offset of a value of size `size', alignment `alignment', 	/* given that off is increasing */
@@ -4323,7 +4337,9 @@ endif|#
 directive|endif
 argument|if( p->sflags& SHIDES )unhide( p ); 			p->stype = TNULL; 			p->snext = clist; 			clist = p; 			} 		}
 comment|/* step 2: fix any mishashed entries */
-argument|p = clist; 	while( p ){ 		register struct symtab *r;  		q = p; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) { 				*r = *q; 				q->stype = TNULL; 				} 			} 		p = p->snext; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
+argument|p = clist; 	while( p ){ 		register struct symtab *r
+argument_list|,
+argument|*next;  		q = p; 		next = p->snext; 		for(;;){ 			if( ++q>=&stab[SYMTSZ] )q = stab; 			if( q == p || q->stype == TNULL )break; 			if( (r = relook(q)) != q ) { 				*r = *q; 				q->stype = TNULL; 				} 			} 		p = next; 		}  	lineno = temp; 	aoend(); 	}  hide( p ) register struct symtab *p; { 	register struct symtab *q; 	for( q=p+
 literal|1
 argument|; ; ++q ){ 		if( q>=&stab[SYMTSZ] ) q = stab; 		if( q == p ) cerror(
 literal|"symbol table full"
