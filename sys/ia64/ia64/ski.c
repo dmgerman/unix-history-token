@@ -137,6 +137,14 @@ block|)
 function|;
 end_function
 
+begin_comment
+comment|/* 	 * Ugh... Work around a bug in the Linux version of ski for 	 * SSC_GET_RTC. The PSR.dt register is not preserved properly 	 * and causes further memory references to be done without 	 * translation. All we need to do is set PSR.dt again. Note 	 * that dependency violations do not exist in ski, so we 	 * don't have to serialize. 	 */
+end_comment
+
+begin_asm
+asm|__asm __volatile("ssm	psr.dt");
+end_asm
+
 begin_return
 return|return
 name|ret0
