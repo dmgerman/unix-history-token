@@ -1656,13 +1656,6 @@ index|[
 literal|3
 index|]
 operator|=
-name|nmp
-operator|->
-name|nm_srtt
-index|[
-literal|4
-index|]
-operator|=
 operator|(
 name|NFS_TIMEO
 operator|<<
@@ -1695,13 +1688,6 @@ operator|->
 name|nm_sdrtt
 index|[
 literal|3
-index|]
-operator|=
-name|nmp
-operator|->
-name|nm_sdrtt
-index|[
-literal|4
 index|]
 operator|=
 literal|0
