@@ -1782,6 +1782,10 @@ condition|(
 name|rl_point
 operator|==
 name|end
+operator|&&
+name|found_quote
+operator|==
+literal|0
 condition|)
 block|{
 name|int
@@ -2513,7 +2517,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|"#$`?*["
+literal|"#$`?*[!"
 argument_list|)
 operator|!=
 literal|0

@@ -705,10 +705,14 @@ return|;
 block|}
 name|l
 operator|=
+name|pmt
+condition|?
 name|strlen
 argument_list|(
 name|pmt
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|r
 operator|=
