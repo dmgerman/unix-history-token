@@ -1324,6 +1324,15 @@ literal|'/'
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+name|strchr
+argument_list|(
+name|URL
+argument_list|,
+literal|':'
+argument_list|)
+operator|==
+name|NULL
 operator|)
 condition|)
 goto|goto
