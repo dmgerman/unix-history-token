@@ -14,6 +14,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DDB_NOKLDSYM
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -348,6 +360,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !DDB_NOKLDSYM */
+end_comment
 
 end_unit
 
