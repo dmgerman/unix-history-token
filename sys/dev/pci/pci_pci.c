@@ -1433,7 +1433,7 @@ name|iobase
 condition|)
 name|printf
 argument_list|(
-literal|"start (%x)< sc->iobase (%x)\n"
+literal|"start (%lx)< sc->iobase (%x)\n"
 argument_list|,
 name|start
 argument_list|,
@@ -1452,7 +1452,7 @@ name|iolimit
 condition|)
 name|printf
 argument_list|(
-literal|"end (%x)> sc->iolimit (%x)\n"
+literal|"end (%lx)> sc->iolimit (%x)\n"
 argument_list|,
 name|end
 argument_list|,
@@ -1469,7 +1469,7 @@ name|start
 condition|)
 name|printf
 argument_list|(
-literal|"end (%x)< start (%x)\n"
+literal|"end (%lx)< start (%lx)\n"
 argument_list|,
 name|end
 argument_list|,
@@ -1648,7 +1648,7 @@ name|membase
 condition|)
 name|printf
 argument_list|(
-literal|"start (%x)< sc->membase (%x)\n"
+literal|"start (%lx)< sc->membase (%x)\n"
 argument_list|,
 name|start
 argument_list|,
@@ -1667,7 +1667,7 @@ name|memlimit
 condition|)
 name|printf
 argument_list|(
-literal|"end (%x)> sc->memlimit (%x)\n"
+literal|"end (%lx)> sc->memlimit (%x)\n"
 argument_list|,
 name|end
 argument_list|,
@@ -1684,7 +1684,7 @@ name|start
 condition|)
 name|printf
 argument_list|(
-literal|"end (%x)< start (%x)\n"
+literal|"end (%lx)< start (%lx)\n"
 argument_list|,
 name|end
 argument_list|,
