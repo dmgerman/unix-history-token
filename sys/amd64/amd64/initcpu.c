@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) KATO Takenori, 1997, 1998.  *   * All rights reserved.  Unpublished rights reserved under the copyright  * laws of Japan.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *		$Id: initcpu.c,v 1.16 1998/12/27 23:23:26 msmith Exp $  */
+comment|/*  * Copyright (c) KATO Takenori, 1997, 1998.  *   * All rights reserved.  Unpublished rights reserved under the copyright  * laws of Japan.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *		$Id: initcpu.c,v 1.17 1999/01/16 13:41:33 kato Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_failsafe.h"
 end_include
 
 begin_include
@@ -1054,9 +1048,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|FAILSAFE
 name|write_cyrix_reg
 argument_list|(
 name|CCR1
@@ -1070,8 +1061,6 @@ operator|~
 name|CCR1_NO_LOCK
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* Initialize CCR2. */
@@ -1379,9 +1368,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|FAILSAFE
 name|write_cyrix_reg
 argument_list|(
 name|CCR1
@@ -1395,8 +1381,6 @@ operator|~
 name|CCR1_NO_LOCK
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* Initialize CCR2. */
