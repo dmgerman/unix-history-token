@@ -2150,13 +2150,10 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint8_t
-name|reg
-decl_stmt|;
 if|#
 directive|if
 literal|0
-block|reg = (exca_getb(&sc->exca, EXCA_INTR)& ~EXCA_INTR_IRQ_MASK) |  	    EXCA_INTR_IRQ_RESERVED1; 	exca_putb(&sc->exca, EXCA_INTR, reg);
+block|uint8_t reg;  	reg = (exca_getb(&sc->exca, EXCA_INTR)& ~EXCA_INTR_IRQ_MASK) |  	    EXCA_INTR_IRQ_RESERVED1; 	exca_putb(&sc->exca, EXCA_INTR, reg);
 endif|#
 directive|endif
 block|}
