@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: head.c,v 1.7 1997/07/10 06:46:13 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -402,6 +402,10 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|eval
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
