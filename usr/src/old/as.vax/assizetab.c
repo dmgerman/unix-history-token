@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assizetab.c 4.1 %G%"
+literal|"@(#)assizetab.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
