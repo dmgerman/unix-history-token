@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -84,13 +84,19 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|kinfo_meter
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|kinfo_loadavg
+argument_list|()
+decl_stmt|,
+name|kinfo_clockrate
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -223,6 +229,22 @@ case|:
 name|server
 operator|=
 name|kinfo_meter
+expr_stmt|;
+break|break;
+case|case
+name|KINFO_LOADAVG
+case|:
+name|server
+operator|=
+name|kinfo_loadavg
+expr_stmt|;
+break|break;
+case|case
+name|KINFO_CLOCKRATE
+case|:
+name|server
+operator|=
+name|kinfo_clockrate
 expr_stmt|;
 break|break;
 default|default:
