@@ -5082,15 +5082,7 @@ operator|!
 name|sc
 operator|->
 name|aue_link
-condition|)
-block|{
-name|mii_pollstat
-argument_list|(
-name|mii
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|mii
 operator|->
 name|mii_media_status
@@ -5106,6 +5098,7 @@ argument_list|)
 operator|!=
 name|IFM_NONE
 condition|)
+block|{
 name|sc
 operator|->
 name|aue_link

@@ -9324,15 +9324,7 @@ operator|!
 name|sc
 operator|->
 name|bge_link
-condition|)
-block|{
-name|mii_pollstat
-argument_list|(
-name|mii
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|mii
 operator|->
 name|mii_media_status
@@ -9398,7 +9390,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|splx
 argument_list|(

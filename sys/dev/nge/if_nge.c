@@ -6349,11 +6349,6 @@ operator|->
 name|nge_link
 condition|)
 block|{
-name|mii_pollstat
-argument_list|(
-name|mii
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mii
