@@ -3,6 +3,18 @@ begin_comment
 comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -20,11 +32,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcasecmp.c	5.7 (Berkeley) %G%"
+literal|"@(#)strcasecmp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,11 +50,13 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|u_char
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * This array is designed for mapping upper and lower case letter  * together for a case independent comparison.  The mappings are  * based upon ascii character sequences.  */
@@ -49,6 +64,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|charmap
 index|[]
@@ -569,28 +585,28 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|strcasecmp
-argument_list|(
-argument|s1
-argument_list|,
-argument|s2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s1
 decl_stmt|,
-modifier|*
+decl|*
 name|s2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cm
@@ -601,6 +617,7 @@ modifier|*
 name|us1
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -610,6 +627,7 @@ modifier|*
 name|us2
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -662,37 +680,44 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|strncasecmp
-argument_list|(
-argument|s1
-argument_list|,
-argument|s2
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|,
+name|n
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s1
 decl_stmt|,
-modifier|*
+decl|*
 name|s2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 specifier|register
-name|int
+name|size_t
 name|n
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|n
+operator|!=
+literal|0
+condition|)
+block|{
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cm
@@ -703,6 +728,7 @@ modifier|*
 name|us1
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -712,24 +738,22 @@ modifier|*
 name|us2
 init|=
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
 name|s2
 decl_stmt|;
-while|while
+do|do
+block|{
+if|if
 condition|(
-operator|--
-name|n
-operator|>=
-literal|0
-operator|&&
 name|cm
 index|[
 operator|*
 name|us1
 index|]
-operator|==
+operator|!=
 name|cm
 index|[
 operator|*
@@ -737,27 +761,8 @@ name|us2
 operator|++
 index|]
 condition|)
-if|if
-condition|(
-operator|*
-name|us1
-operator|++
-operator|==
-literal|'\0'
-condition|)
 return|return
 operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-name|n
-operator|<
-literal|0
-condition|?
-literal|0
-else|:
 name|cm
 index|[
 operator|*
@@ -770,6 +775,30 @@ operator|*
 operator|--
 name|us2
 index|]
+operator|)
+return|;
+if|if
+condition|(
+operator|*
+name|us1
+operator|++
+operator|==
+literal|'\0'
+condition|)
+break|break;
+block|}
+do|while
+condition|(
+operator|--
+name|n
+operator|!=
+literal|0
+condition|)
+do|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
