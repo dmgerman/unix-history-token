@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.8 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,18 @@ name|y
 operator|++
 control|)
 block|{
+name|win
+operator|->
+name|lines
+index|[
+name|y
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
+expr_stmt|;
 if|if
 condition|(
 name|win
