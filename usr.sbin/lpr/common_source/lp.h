@@ -9,6 +9,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_comment
 comment|/*  * All this information used to be in global static variables shared  * mysteriously by various parts of the lpr/lpd suite.  * This structure attempts to centralize all these declarations in the  * hope that they can later be made more dynamic.  */
 end_comment
@@ -189,6 +195,16 @@ decl_stmt|;
 comment|/* SH: suppress header page */
 name|char
 modifier|*
+name|stat_recv
+decl_stmt|;
+comment|/* SR: statistics file, receiving jobs */
+name|char
+modifier|*
+name|stat_send
+decl_stmt|;
+comment|/* SS: statistics file, sending jobs */
+name|char
+modifier|*
 name|status_file
 decl_stmt|;
 comment|/* ST: status file name */
@@ -202,6 +218,48 @@ modifier|*
 name|mode_set
 decl_stmt|;
 comment|/* MS: mode set, a la stty */
+comment|/* variables used by trstat*() to keep statistics on file transfers */
+define|#
+directive|define
+name|JOBNUM_SIZE
+value|8
+name|char
+name|jobnum
+index|[
+name|JOBNUM_SIZE
+index|]
+decl_stmt|;
+name|long
+name|jobdfnum
+decl_stmt|;
+comment|/* current datafile number within job */
+name|struct
+name|timespec
+name|tr_start
+decl_stmt|,
+name|tr_done
+decl_stmt|;
+define|#
+directive|define
+name|TIMESTR_SIZE
+value|40
+comment|/* holds result from LPD_TIMESTAMP_PATTERN */
+name|char
+name|tr_timestr
+index|[
+name|TIMESTR_SIZE
+index|]
+decl_stmt|;
+define|#
+directive|define
+name|DIFFTIME_TS
+parameter_list|(
+name|endTS
+parameter_list|,
+name|startTS
+parameter_list|)
+define|\
+value|((double)(endTS.tv_sec - startTS.tv_sec) \ 		+ (endTS.tv_nsec - startTS.tv_nsec) * 1.0e-9)
 block|}
 struct|;
 end_struct
@@ -452,6 +510,31 @@ begin_comment
 comment|/* client's machine name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXIPSTRLEN
+value|32
+end_define
+
+begin_comment
+comment|/* maxlen of an IP-address as a string */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|from_ip
+index|[
+name|MAXIPSTRLEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* client machine's IP address */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -535,6 +618,35 @@ comment|/* control file name */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* lpr/lpd generates readable timestamps for logfiles, etc.  Have all those  * timestamps be in the same format wrt strftime().  This is ISO 8601 format,  * with the addition of an easy-readable day-of-the-week field.  Note that  * '%T' = '%H:%M:%S', and that '%z' is not available on all platforms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LPD_TIMESTAMP_PATTERN
+value|"%Y-%m-%dT%T%z %a"
+end_define
+
+begin_comment
+comment|/*  * Codes to indicate which statistic records trstat_write should write.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|TR_SENDING
+block|,
+name|TR_RECVING
+block|,
+name|TR_PRINTING
+block|}
+name|tr_sendrecv
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Error codes for our mini printcap library.  */
@@ -1116,6 +1228,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|lpd_gettime
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timespec
+operator|*
+name|_tsp
+operator|,
+name|char
+operator|*
+name|_strp
+operator|,
+name|int
+name|_strsize
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|nextprinter
 name|__P
@@ -1278,6 +1412,65 @@ name|buf
 operator|,
 name|size_t
 name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|trstat_init
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|printer
+operator|*
+name|pp
+operator|,
+specifier|const
+name|char
+operator|*
+name|fname
+operator|,
+name|int
+name|filenum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|trstat_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|printer
+operator|*
+name|pp
+operator|,
+name|tr_sendrecv
+name|sendrecv
+operator|,
+name|size_t
+name|bytecnt
+operator|,
+specifier|const
+name|char
+operator|*
+name|userid
+operator|,
+specifier|const
+name|char
+operator|*
+name|otherhost
+operator|,
+specifier|const
+name|char
+operator|*
+name|orighost
 operator|)
 argument_list|)
 decl_stmt|;
