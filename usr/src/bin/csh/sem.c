@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.19 (Berkeley) %G%"
+literal|"@(#)sem.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,11 +401,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|noexec
-condition|)
-break|break;
 name|set
 argument_list|(
 name|STRstatus
@@ -626,7 +621,7 @@ else|else
 break|break;
 else|else
 break|break;
-comment|/* is t a command */
+comment|/* is it a command */
 if|if
 condition|(
 name|t
@@ -644,6 +639,88 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|noexec
+condition|)
+block|{
+comment|/* 		 * Continue for builtins that are part of the scripting language 		 */
+if|if
+condition|(
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|dobreak
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|docontin
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|doelse
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|doend
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|doforeach
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|dogoto
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|doif
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|dorepeat
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|doswbrk
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|doswitch
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|dowhile
+operator|&&
+name|bifunc
+operator|->
+name|bfunct
+operator|!=
+name|dozip
+condition|)
+break|break;
+block|}
 block|}
 else|else
 block|{
@@ -652,6 +729,11 @@ name|bifunc
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|noexec
+condition|)
+break|break;
 block|}
 comment|/* 	 * We fork only if we are timed, or are not the end of a parenthesized 	 * list and not a simple builtin function. Simple meaning one that is 	 * not pipedout, niced, nohupped, or&'d. It would be nice(?) to not 	 * fork in some of these cases. 	 */
 comment|/* 	 * Prevent forking cd, pushd, popd, chdir cause this will cause the 	 * shell not to change dir! 	 */
