@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpa.c	4.6	82/10/10	*/
+comment|/*	lpa.c	4.7	82/10/10	*/
 end_comment
 
 begin_include
@@ -66,24 +66,26 @@ file|"../vaxuba/ubavar.h"
 end_include
 
 begin_comment
-comment|/*  *	LPA driver for 4.1BSD  *	Asa Romberger  * method of usage:  *	open  *	write microcode  *	write dedicated mode dispatch table  *	ioctl TIOCSETP to set parameters  *		struct iocb {  *			short *baddr;	buffer address  *			short rate;	- 1,000,000 / frequency in Hz  *			short wc;	15-13 = number of buffers - 1  *					12-0 = buffer size in words  *		} iocb;  *	read - 1 character indicating buffer index  *		fill or empty buffer  * minor device number = DDCCCCCC where:  *	DD	= 00 for analog input  *		= 01 for analog output  *	CCCCCC	= channel number  */
+comment|/*  * LPA driver for -- Asa Romberger  *  *	open  *	write microcode  *	write dedicated mode dispatch table  *	ioctl TIOCSETP to set parameters  *		struct iocb {  *			short *baddr;	buffer address  *			short rate;	- 1,000,000 / frequency in Hz  *			short wc;	15-13 = number of buffers - 1  *					12-0 = buffer size in words  *		} iocb;  *	read - 1 character indicating buffer index  *		fill or empty buffer  * minor device number = DDCCCCCC where:  *	DD	= 00 for analog input  *		= 01 for analog output  *	CCCCCC	= channel number  */
 end_comment
 
-begin_comment
-comment|/*  *	define TRACELPA to get trace printouts on the console  *	define NOMCODE to eliminate the microcode download check  */
-end_comment
-
-begin_comment
-comment|/*	#define	NOMCODE		*/
-end_comment
-
-begin_ifdef
+begin_expr_stmt
+operator|*
+name|define
+name|NOMCODE
+name|to
+name|eliminate
+name|the
+name|microcode
+name|download
+name|check
+operator|*
+operator|/
+comment|/* #define TRACELPA */
+comment|/* #define NOMCODE */
 ifdef|#
 directive|ifdef
 name|TRACELPA
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|TRACER
@@ -91,9 +93,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|printf(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|TRACERN
@@ -103,23 +102,14 @@ parameter_list|,
 name|d
 parameter_list|)
 value|printf(x, d)
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|TRACER
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_define
 define|#
 directive|define
 name|TRACERN
@@ -128,44 +118,14 @@ name|x
 parameter_list|,
 name|d
 parameter_list|)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* PRIORITY AT WHICH PROGRAM SHOULD RUN */
-end_comment
-
-begin_comment
 comment|/* THIS SHOULD EVENTUALLY  TELL UNIX THIS IS A REAL-TIME DEVICE */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NICE
 value|0
-end_define
-
-begin_comment
-comment|/* WAKEUP PRIORITY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LPAPRI
-value|(PZERO + 0)
-end_define
-
-begin_comment
-comment|/* MACRO DEFINITIONS */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|inc
@@ -173,9 +133,10 @@ parameter_list|(
 name|v
 parameter_list|)
 value|(sc->v = ((sc->v + 1) % sc->sc_nbuf))
-end_define
-
-begin_define
+define|#
+directive|define
+name|LPAPRI
+value|(PZERO + 0)
 define|#
 directive|define
 name|LPAUNIT
@@ -183,9 +144,6 @@ parameter_list|(
 name|dev
 parameter_list|)
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|LPADEVICE
@@ -193,9 +151,6 @@ parameter_list|(
 name|dev
 parameter_list|)
 value|(((dev)>> 6)& 03)
-end_define
-
-begin_define
 define|#
 directive|define
 name|LPACHANNEL
@@ -203,33 +158,20 @@ parameter_list|(
 name|dev
 parameter_list|)
 value|((dev)& 077)
-end_define
-
-begin_comment
-comment|/* DEFINITIONS FOR INTERACTION WITH UNIX I/O */
-end_comment
-
-begin_decl_stmt
 name|int
 name|lpaprobe
 argument_list|()
-decl_stmt|,
-comment|/*lpaslave(),*/
+operator|,
 name|lpaattach
 argument_list|()
-comment|/*,lpadgo()*/
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+operator|,
 name|lpaiintr
 argument_list|()
-decl_stmt|,
+operator|,
 name|lpaointr
 argument_list|()
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|u_short
@@ -255,10 +197,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*struct uba_ctlr *lpaminfo[Ndevice name];*/
-end_comment
-
 begin_decl_stmt
 name|struct
 name|uba_driver
@@ -268,12 +206,10 @@ block|{
 name|lpaprobe
 block|,
 literal|0
-comment|/*lpaslave*/
 block|,
 name|lpaattach
 block|,
 literal|0
-comment|/*lpadgo*/
 block|,
 name|lpastd
 block|,
@@ -282,20 +218,13 @@ block|,
 name|lpadinfo
 block|,
 literal|0
-comment|/*"device name"*/
 block|,
 literal|0
-comment|/*lpaminfo*/
 block|,
 literal|0
-comment|/*exclusive use*/
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* LPA SOFTWARE OPERATION FLAGS */
-end_comment
 
 begin_struct
 struct|struct
@@ -374,7 +303,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* flag bits */
+comment|/* flags for sc_flag */
 end_comment
 
 begin_define
@@ -433,7 +362,7 @@ comment|/* sleeping */
 end_comment
 
 begin_comment
-comment|/* ustat bits */
+comment|/* bits for ustat */
 end_comment
 
 begin_define
@@ -478,10 +407,6 @@ end_define
 
 begin_comment
 comment|/* last buffer index */
-end_comment
-
-begin_comment
-comment|/* DEVICE REGISTER DESCRIPTION AREA */
 end_comment
 
 begin_struct
@@ -1085,14 +1010,6 @@ begin_comment
 comment|/* single channel */
 end_comment
 
-begin_comment
-comment|/* THE ROUTINES THEMSELVES */
-end_comment
-
-begin_comment
-comment|/*  *	probe lpa to get br level and interrupt vector  */
-end_comment
-
 begin_macro
 name|lpaprobe
 argument_list|(
@@ -1114,7 +1031,7 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
-comment|/* value result (required for UNIX) */
+comment|/* value result */
 specifier|register
 name|struct
 name|lpadevice
@@ -1171,10 +1088,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  *	attach the specified controller  */
-end_comment
-
 begin_expr_stmt
 name|lpaattach
 argument_list|(
@@ -1189,14 +1102,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_block
-block|{
-comment|/* any stuff necessary for initialization can go here */
-block|}
+block|{  }
 end_block
-
-begin_comment
-comment|/*  *	open the device  */
-end_comment
 
 begin_macro
 name|lpaopen
@@ -1414,10 +1321,6 @@ name|NICE
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  *	close the device  */
-end_comment
 
 begin_macro
 name|lpaclose
@@ -1736,10 +1639,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  *	write  *		first write is the microcode  *		second write is the dispatch table  */
-end_comment
-
 begin_macro
 name|lpawrite
 argument_list|(
@@ -1837,15 +1736,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1856,7 +1751,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
+comment|/* first write is the microcode */
+return|return
+operator|(
 name|lpamcode
 argument_list|(
 name|lpaaddr
@@ -1865,9 +1762,8 @@ name|sc
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1878,7 +1774,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
+comment|/* second write is the dispatch table */
+return|return
+operator|(
 name|lpadmdt
 argument_list|(
 name|lpaaddr
@@ -1891,16 +1789,13 @@ name|ui_ubanum
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* writes are only for microcode and dedicated mode dispatch table */
-name|u
-operator|.
-name|u_error
-operator|=
+operator|)
+return|;
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2046,13 +1941,11 @@ argument_list|,
 name|r
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 name|mcaddr
 operator|++
@@ -2085,6 +1978,11 @@ name|lcos
 operator||=
 name|OIE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|TRACER
 argument_list|(
 literal|"MCODE\n"
@@ -2146,6 +2044,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|n
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|p
 operator|=
@@ -2248,6 +2149,8 @@ literal|256
 argument_list|)
 expr_stmt|;
 comment|/* dedicated mode dispatch table */
+name|error
+operator|=
 name|uiomove
 argument_list|(
 operator|(
@@ -2263,6 +2166,15 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|n
 operator|>>=
 literal|1
@@ -2303,6 +2215,11 @@ name|sc_flag
 operator||=
 name|DMDT
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|TRACER
 argument_list|(
 literal|"DMDT\n"
@@ -3028,10 +2945,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * Lparead reads 1 character only -- the next available buffer number.  */
-end_comment
-
 begin_macro
 name|lparead
 argument_list|(
@@ -3121,15 +3034,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 name|sc
@@ -3138,15 +3047,11 @@ name|sc_flag
 operator|&
 name|ERROR
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 name|sc
@@ -3223,15 +3128,11 @@ name|sc_flag
 operator|&
 name|ERROR
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|TRACER
 argument_list|(
 literal|"SLEEP\n"
@@ -3267,6 +3168,8 @@ operator|->
 name|sc_ubufn
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|uiomove
 argument_list|(
 operator|&
@@ -3280,13 +3183,10 @@ name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Execute a lpa command and wait for completion.  */
-end_comment
 
 begin_expr_stmt
 name|lpacmd
@@ -3342,7 +3242,6 @@ argument_list|(
 literal|"CMD\n"
 argument_list|)
 expr_stmt|;
-comment|/*	bp->b_flags |= B_BUSY|B_WRITE;		*/
 name|ubareg
 operator|=
 name|ubasetup
@@ -3409,13 +3308,8 @@ operator|&
 name|ubareg
 argument_list|)
 expr_stmt|;
-comment|/*	bp->b_flags&= ~(B_BUSY|B_WRITE);		*/
 block|}
 end_block
-
-begin_comment
-comment|/*  *	wait for completion (ready input)  */
-end_comment
 
 begin_expr_stmt
 name|lpawait
@@ -3493,10 +3387,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  *	lpaiintr  *		in interrupt  *		LPA is now ready to accept a user request  */
-end_comment
-
 begin_macro
 name|lpaiintr
 argument_list|(
@@ -3566,10 +3456,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  *	lpaointr  *		out interrupt  *		LPA has status information  */
-end_comment
 
 begin_macro
 name|lpaointr
@@ -3877,10 +3763,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  *	reset called for a unibus reset  */
-end_comment
 
 begin_macro
 name|lpareset

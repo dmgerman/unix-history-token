@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.7	82/10/10	*/
+comment|/*	dn.c	4.8	82/10/10	*/
 end_comment
 
 begin_include
@@ -692,6 +692,9 @@ modifier|*
 name|cp
 decl_stmt|;
 extern|extern lbolt;
+name|int
+name|error
+decl_stmt|;
 name|dp
 operator|=
 operator|(
@@ -739,9 +742,7 @@ name|cp
 operator|=
 name|buf
 expr_stmt|;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -759,11 +760,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 while|while
 condition|(
 operator|(
@@ -997,12 +1000,16 @@ operator||
 name|ACR
 operator|)
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EIO
-expr_stmt|;
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

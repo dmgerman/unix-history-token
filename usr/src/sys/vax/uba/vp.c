@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.19	82/10/10	*/
+comment|/*	vp.c	4.20	82/10/10	*/
 end_comment
 
 begin_include
@@ -981,20 +981,20 @@ name|sc_bp
 operator|=
 literal|0
 expr_stmt|;
-name|iodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|e
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EIO
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|iodone
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1216,7 +1216,7 @@ name|VPPRI
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* I wish i could tell whether an error indicated an npr timeout */
+comment|/* I WISH I COULD TELL WHETHER AN ERROR INDICATED AN NPR TIMEOUT */
 return|return
 operator|(
 name|e

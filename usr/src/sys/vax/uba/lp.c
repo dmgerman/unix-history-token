@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.28	82/10/10	*/
+comment|/*	lp.c	4.29	82/10/10	*/
 end_comment
 
 begin_include
@@ -811,6 +811,9 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 while|while
 condition|(
 name|n
@@ -835,9 +838,7 @@ name|b_un
 operator|.
 name|b_addr
 expr_stmt|;
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|uiomove
 argument_list|(
@@ -852,11 +853,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
-break|break;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 do|do
 name|lpcanon
 argument_list|(
@@ -874,6 +877,11 @@ name|n
 condition|)
 do|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

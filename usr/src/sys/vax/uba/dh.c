@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.51	82/10/10	*/
+comment|/*	dh.c	4.52	82/10/10	*/
 end_comment
 
 begin_include
@@ -1810,9 +1810,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|dh11
 index|[
@@ -1821,7 +1819,7 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
-expr_stmt|;
+decl_stmt|;
 return|return
 operator|(
 operator|(
@@ -1875,9 +1873,7 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|tp
-operator|=
+init|=
 operator|&
 name|dh11
 index|[
@@ -1886,7 +1882,9 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
-expr_stmt|;
+decl_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -1903,7 +1901,8 @@ name|tp
 operator|,
 name|uio
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
