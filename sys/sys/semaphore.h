@@ -25,6 +25,12 @@ directive|include
 file|<sys/_posix.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -48,12 +54,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Opaque type definition. */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|sem
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
-name|int
+name|struct
+name|sem
+modifier|*
 name|sem_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|SEM_FAILED
+value|((sem_t *)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEM_VALUE_MAX
+value|UINT_MAX
+end_define
 
 begin_ifndef
 ifndef|#
@@ -101,6 +133,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|sem_t
+modifier|*
 name|sem_open
 name|__P
 argument_list|(
