@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -62,6 +62,16 @@ include|#
 directive|include
 file|"stat.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"buf.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_comment
 comment|/*  * Read system call.  */
@@ -841,13 +851,27 @@ specifier|register
 name|u_int
 name|size
 decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|bp
+init|=
+literal|0
+decl_stmt|;
+define|#
+directive|define
+name|STK_PARAMS
+value|128
 name|char
-name|data
+name|buf
 index|[
-name|IOCPARM_MASK
-operator|+
-literal|1
+name|STK_PARAMS
 index|]
+decl_stmt|;
+name|caddr_t
+name|data
+init|=
+name|buf
 decl_stmt|;
 name|uap
 operator|=
@@ -993,27 +1017,16 @@ block|}
 comment|/* 	 * Interpret high order word to find 	 * amount of data to be copied to/from the 	 * user's address space. 	 */
 name|size
 operator|=
-operator|(
+name|IOCPARM_LEN
+argument_list|(
 name|com
-operator|&
-operator|~
-operator|(
-name|IOC_INOUT
-operator||
-name|IOC_VOID
-operator|)
-operator|)
-operator|>>
-literal|16
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|size
 operator|>
-sizeof|sizeof
-argument_list|(
-name|data
-argument_list|)
+name|IOCPARM_MAX
 condition|)
 block|{
 name|u
@@ -1023,6 +1036,33 @@ operator|=
 name|EFAULT
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|size
+operator|>
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+name|bp
+operator|=
+name|geteblk
+argument_list|(
+name|IOCPARM_MAX
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|data
+operator|=
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1046,9 +1086,6 @@ name|uap
 operator|->
 name|cmarg
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|data
 argument_list|,
 operator|(
@@ -1092,9 +1129,6 @@ condition|)
 comment|/* 		 * Zero the buffer on the stack so the user 		 * always gets back something deterministic. 		 */
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|data
 argument_list|,
 name|size
@@ -1144,7 +1178,7 @@ operator|)
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|FIOASYNC
 case|:
@@ -1166,7 +1200,7 @@ operator|)
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|FIOSETOWN
 case|:
@@ -1186,7 +1220,7 @@ operator|)
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|FIOGETOWN
 case|:
@@ -1205,8 +1239,25 @@ operator|)
 name|data
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+break|break;
+default|default:
+if|if
+condition|(
+name|setjmp
+argument_list|(
+operator|&
+name|u
+operator|.
+name|u_qsave
+argument_list|)
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|EINTR
+expr_stmt|;
+else|else
 name|u
 operator|.
 name|u_error
@@ -1227,7 +1278,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Copy any data to user, size was 	 * already set and checked above. 	 */
+comment|/* 		 * Copy any data to user, size was 		 * already set and checked above. 		 */
 if|if
 condition|(
 name|u
@@ -1260,6 +1311,17 @@ operator|(
 name|u_int
 operator|)
 name|size
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|bp
+condition|)
+name|brelse
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 block|}
