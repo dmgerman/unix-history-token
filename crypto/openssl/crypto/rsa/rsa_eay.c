@@ -37,6 +37,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSA_NULL
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -1308,7 +1314,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* This check was for equallity but PGP does evil things 	 * and chops off the top '0' bytes */
+comment|/* This check was for equality but PGP does evil things 	 * and chops off the top '0' bytes */
 if|if
 condition|(
 name|flen
@@ -1846,7 +1852,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* This check was for equallity but PGP does evil things 	 * and chops off the top '0' bytes */
+comment|/* This check was for equality but PGP does evil things 	 * and chops off the top '0' bytes */
 if|if
 condition|(
 name|flen
@@ -2622,6 +2628,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

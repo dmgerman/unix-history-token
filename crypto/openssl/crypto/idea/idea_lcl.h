@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* The new form of this macro (check if the a*b == 0) was sugested by   * Colin Plumb<colin@nyx10.cs.du.edu> */
+comment|/* The new form of this macro (check if the a*b == 0) was suggested by   * Colin Plumb<colin@nyx10.cs.du.edu> */
 end_comment
 
 begin_comment
