@@ -4,11 +4,11 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 2.8 1993/10/15 10:59:56 davidg Exp davidg $  */
+comment|/*  * $Id: if_ed.c,v 2.11 1993/10/23 04:21:03 davidg Exp davidg $  */
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * Revision 2.8  1993/10/15  10:59:56  davidg  * increase maximum time to wait for transmit DMA to complete to 120us.  * call ed_reset() if the time limit is reached instead of trying  * to abort the remote DMA.  *  * Revision 2.7  1993/10/15  10:49:10  davidg  * minor change to way the mbuf pointer temp variable is assigned in  * ed_start (slightly improves code readability)  *  * Revision 2.6  93/10/02  01:12:20  davidg  * use ETHER_ADDR_LEN in NE probe rather than '6'.  *   * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
+comment|/*  * Modification history  *  * Revision 2.11  1993/10/23  04:21:03  davidg  * Novell probe changed to be invasive because of too many complaints  * about some clone boards not being reset properly and thus not  * found on a warmboot. Yuck.  *  * Revision 2.10  1993/10/23  04:07:12  davidg  * increment output errors if the device times out (done via watchdog)  *  * Revision 2.9  1993/10/23  04:01:45  davidg  * increment input error counter if a packet with a bad length is  * detected.  *  * Revision 2.8  1993/10/15  10:59:56  davidg  * increase maximum time to wait for transmit DMA to complete to 120us.  * call ed_reset() if the time limit is reached instead of trying  * to abort the remote DMA.  *  * Revision 2.7  1993/10/15  10:49:10  davidg  * minor change to way the mbuf pointer temp variable is assigned in  * ed_start (slightly improves code readability)  *  * Revision 2.6  93/10/02  01:12:20  davidg  * use ETHER_ADDR_LEN in NE probe rather than '6'.  *   * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
 end_comment
 
 begin_include
@@ -2753,12 +2753,42 @@ operator|+
 name|ED_NOVELL_RESET
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* 	 * This total and completely screwy thing is to work around braindamage 	 *	in some NE compatible boards. Why it works, I have *no* idea. 	 *	It appears that the boards watch the ISA bus for an outb, and 	 *	will lock up the ISA bus if they see an inb first. Weird. 	 */
+block|outb(0x84, 0);
+endif|#
+directive|endif
+comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 *	Clarkson packet driver code. Doesn't do a thing on the boards 	 *	I've tested. -DG [note that a outb(0x84, 0) seems to work 	 *	here, and is non-invasive...but some boards don't seem to reset 	 *	and I don't have complete documentation on what the 'right' 	 *	thing to do is...so we do the invasive thing for now. Yuck.] 	 */
 name|outb
 argument_list|(
-literal|0x84
+name|sc
+operator|->
+name|asic_addr
+operator|+
+name|ED_NOVELL_RESET
 argument_list|,
-literal|0
+name|tmp
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5000
+argument_list|)
+expr_stmt|;
+comment|/* 	 * This is needed because some NE clones apparently don't reset the 	 *	NIC properly (or the NIC chip doesn't reset fully on power-up) 	 * XXX - this makes the probe invasive! ...Done against my better 	 *	judgement. -DLG 	 */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_CR
+argument_list|,
+name|ED_CR_RD2
+operator||
+name|ED_CR_STP
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2780,27 +2810,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 *	Clarkson packet driver code. Doesn't do a thing on the boards 	 *	I've tested. -DG 	 */
-block|outb(sc->asic_addr + ED_NOVELL_RESET, tmp); 	DELAY(5000);
-endif|#
-directive|endif
-comment|/* 	 * This is needed because some NE clones apparently don't reset the 	 *	NIC properly (or the NIC chip doesn't reset fully on power-up) 	 */
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
-operator||
-name|ED_CR_STP
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|vendor
@@ -3759,6 +3768,17 @@ name|int
 name|unit
 decl_stmt|;
 block|{
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|ed_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
@@ -3767,6 +3787,15 @@ literal|"ed%d: device timeout\n"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+operator|++
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_oerrors
 expr_stmt|;
 name|ed_reset
 argument_list|(
@@ -5253,6 +5282,15 @@ name|unit
 argument_list|,
 name|len
 argument_list|)
+expr_stmt|;
+operator|++
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_ierrors
 expr_stmt|;
 name|ed_reset
 argument_list|(
