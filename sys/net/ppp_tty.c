@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.5 1996/01/24 21:09:25 phk Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.6 1996/06/10 23:07:36 gpalmer Exp $ */
 end_comment
 
 begin_comment
@@ -969,13 +969,15 @@ name|if_flags
 operator||=
 name|IFF_RUNNING
 expr_stmt|;
+name|microtime
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_if
 operator|.
 name|if_lastchange
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
