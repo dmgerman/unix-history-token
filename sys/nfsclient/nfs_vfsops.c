@@ -4671,15 +4671,6 @@ name|nm_mountp
 operator|=
 name|mp
 expr_stmt|;
-name|nmp
-operator|->
-name|nm_cred
-operator|=
-name|crhold
-argument_list|(
-name|cred
-argument_list|)
-expr_stmt|;
 comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, nfs_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 * XXX Our "safe" limit on the client is what we can store in our 	 * buffer cache using signed(!) block numbers. 	 */
 if|if
 condition|(
@@ -4958,13 +4949,6 @@ argument_list|(
 name|nmp
 argument_list|)
 expr_stmt|;
-name|crfree
-argument_list|(
-name|nmp
-operator|->
-name|nm_cred
-argument_list|)
-expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|nfsmount_zone
@@ -5099,13 +5083,6 @@ operator|->
 name|nm_nam
 argument_list|,
 name|M_SONAME
-argument_list|)
-expr_stmt|;
-name|crfree
-argument_list|(
-name|nmp
-operator|->
-name|nm_cred
 argument_list|)
 expr_stmt|;
 name|uma_zfree

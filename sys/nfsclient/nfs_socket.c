@@ -651,7 +651,9 @@ name|nm_soproto
 argument_list|,
 name|nmp
 operator|->
-name|nm_cred
+name|nm_mountp
+operator|->
+name|mnt_cred
 argument_list|,
 name|td
 argument_list|)
