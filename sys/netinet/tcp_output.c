@@ -3334,7 +3334,7 @@ name|tp
 operator|->
 name|snd_nxt
 operator|+
-name|len
+name|xlen
 argument_list|,
 name|tp
 operator|->
