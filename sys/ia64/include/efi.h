@@ -51,6 +51,12 @@ directive|include
 file|<boot/efi/include/efiapi.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<boot/efi/include/efifpswa.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|EFI_SYSTEM_TABLE

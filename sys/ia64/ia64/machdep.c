@@ -448,6 +448,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|FPSWA_INTERFACE
+modifier|*
+name|fpswa_interface
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_int64_t
 name|ia64_port_base
 decl_stmt|;
@@ -1116,6 +1123,35 @@ name|v_free_count
 argument_list|)
 operator|/
 literal|1024
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fpswa_interface
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"Warning: no FPSWA package supplied\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"FPSWA Revision = 0x%lx, Entry = %p\n"
+argument_list|,
+name|fpswa_interface
+operator|->
+name|Revision
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|fpswa_interface
+operator|->
+name|Fpswa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
@@ -2446,6 +2482,20 @@ operator|)
 name|bootinfo
 operator|.
 name|bi_envp
+expr_stmt|;
+comment|/* get fpswa interface */
+name|fpswa_interface
+operator|=
+operator|(
+name|FPSWA_INTERFACE
+operator|*
+operator|)
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|bootinfo
+operator|.
+name|bi_fpswa
+argument_list|)
 expr_stmt|;
 comment|/* Init basic tunables, including hz */
 name|init_param
