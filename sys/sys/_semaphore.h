@@ -132,6 +132,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ksem_timedwait
+parameter_list|(
+name|semid_t
+name|id
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|abstime
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ksem_init
 parameter_list|(
 name|semid_t
