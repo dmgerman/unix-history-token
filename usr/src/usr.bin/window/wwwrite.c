@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.11 83/09/15"
+literal|"@(#)wwwrite.c	3.12 83/09/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -912,6 +912,22 @@ break|break;
 case|case
 literal|'E'
 case|:
+name|w
+operator|->
+name|ww_buf
+operator|-=
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
+operator|-
+name|w
+operator|->
+name|ww_b
+operator|.
+name|t
+expr_stmt|;
 name|w
 operator|->
 name|ww_b
