@@ -1869,6 +1869,12 @@ name|vinumconf
 operator|=
 name|sc
 expr_stmt|;
+name|p
+operator|->
+name|flags
+operator||=
+name|GV_PLEX_NEWBORN
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
