@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.18	81/03/11	*/
+comment|/*	vfs_bio.c	4.19	81/04/23	*/
 end_comment
 
 begin_include
@@ -3460,9 +3460,13 @@ name|u_count
 operator|!=
 literal|0
 operator|&&
+operator|(
 name|bp
 operator|->
-name|b_error
+name|b_flags
+operator|&
+name|B_ERROR
+operator|)
 operator|==
 literal|0
 condition|)
