@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.24 (Berkeley) %G%"
+literal|"@(#)date.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,16 +398,14 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"settimeofday"
+literal|"date: settimeofday"
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
+name|exit
+argument_list|(
 literal|1
+argument_list|)
 expr_stmt|;
-goto|goto
-name|display
-goto|;
 block|}
 if|if
 condition|(
@@ -423,7 +421,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"gettimeofday"
+literal|"date: gettimeofday"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -452,13 +450,11 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|retval
-operator|=
+name|exit
+argument_list|(
 literal|1
+argument_list|)
 expr_stmt|;
-goto|goto
-name|display
-goto|;
 block|}
 if|if
 condition|(
@@ -478,7 +474,7 @@ name|tz
 operator|.
 name|tz_minuteswest
 operator|*
-name|SECS_PER_MIN
+name|SECSPERMIN
 expr_stmt|;
 comment|/* now fix up local daylight time */
 if|if
@@ -501,7 +497,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|-=
-name|SECS_PER_HOUR
+name|SECSPERHOUR
 expr_stmt|;
 block|}
 if|if
@@ -542,16 +538,14 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"settimeofday"
+literal|"date: settimeofday"
 argument_list|)
 expr_stmt|;
-name|retval
-operator|=
+name|exit
+argument_list|(
 literal|1
+argument_list|)
 expr_stmt|;
-goto|goto
-name|display
-goto|;
 block|}
 name|logwtmp
 argument_list|(
@@ -614,7 +608,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"gettimeofday"
+literal|"date: gettimeofday"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1039,9 +1033,9 @@ argument_list|(
 name|year
 argument_list|)
 condition|?
-name|DAYS_PER_LYEAR
+name|DAYSPERLYEAR
 else|:
-name|DAYS_PER_NYEAR
+name|DAYSPERNYEAR
 expr_stmt|;
 while|while
 condition|(
@@ -1069,7 +1063,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-name|HOURS_PER_DAY
+name|HOURSPERDAY
 operator|*
 name|tv
 operator|.
@@ -1081,7 +1075,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-name|MINS_PER_HOUR
+name|MINSPERHOUR
 operator|*
 name|tv
 operator|.
@@ -1093,7 +1087,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-name|SECS_PER_MIN
+name|SECSPERMIN
 operator|*
 name|tv
 operator|.
@@ -1472,7 +1466,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"gethostname"
+literal|"date: gethostname"
 argument_list|)
 expr_stmt|;
 goto|goto
