@@ -1743,11 +1743,11 @@ condition|)
 block|{
 name|col
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|row
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|OF_interpret
 argument_list|(
@@ -1766,11 +1766,11 @@ if|if
 condition|(
 name|col
 operator|!=
-name|NULL
+literal|0
 operator|&&
 name|row
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|sc
