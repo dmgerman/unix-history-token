@@ -43,18 +43,6 @@ directive|include
 file|<machine/globals.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
-end_include
-
 begin_comment
 comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
 end_comment
@@ -382,19 +370,18 @@ name|defined
 argument_list|(
 name|I486_CPU
 argument_list|)
+specifier|extern
+name|u_int
+name|tsc_present
+decl_stmt|;
 name|struct
 name|timespec
 name|tv
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|cpu_feature
-operator|&
-name|CPUID_TSC
-operator|)
-operator|==
-literal|0
+operator|!
+name|tsc_present
 condition|)
 block|{
 name|nanotime
