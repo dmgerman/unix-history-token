@@ -169,10 +169,26 @@ name|PlistOnly
 decl_stmt|;
 end_decl_stmt
 
+begin_enum
+enum|enum
+name|zipper
+block|{
+name|NONE
+block|,
+name|GZIP
+block|,
+name|BZIP
+block|,
+name|BZIP2
+block|}
+enum|;
+end_enum
+
 begin_decl_stmt
 specifier|extern
-name|int
-name|UseBzip2
+name|enum
+name|zipper
+name|Zipper
 decl_stmt|;
 end_decl_stmt
 

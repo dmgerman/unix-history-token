@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvyf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:b:"
+literal|"YNOhjvyzf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,10 +215,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|UseBzip2
+name|enum
+name|zipper
+name|Zipper
 init|=
-name|FALSE
+name|GZIP
 decl_stmt|;
 end_decl_stmt
 
@@ -471,9 +472,20 @@ break|break;
 case|case
 literal|'y'
 case|:
-name|UseBzip2
+case|case
+literal|'j'
+case|:
+name|Zipper
 operator|=
-name|TRUE
+name|BZIP2
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|Zipper
+operator|=
+name|GZIP
 expr_stmt|;
 break|break;
 case|case
