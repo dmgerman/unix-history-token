@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.h	4.7	82/07/29	*/
+comment|/*	tip.h	4.8	82/12/24	*/
 end_comment
 
 begin_comment
@@ -461,16 +461,6 @@ end_define
 begin_comment
 comment|/* A nice function to string compare */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CTRL
-parameter_list|(
-name|c
-parameter_list|)
-value|('c'&037)
-end_define
 
 begin_comment
 comment|/*  * variable manipulation stuff --  *   if we defined the value entry in value_t, then we couldn't  *   initialize it in vars.c, so we cast it as needed to keep lint  *   happy.  */
