@@ -69,6 +69,19 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
+begin_function_decl
+name|int
+name|setfault
+parameter_list|(
+name|faultbuf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* defined in locore.S */
+end_comment
+
 begin_comment
 comment|/*  * Makes sure that the right segment of userspace is mapped in.  */
 end_comment
@@ -153,19 +166,6 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_pmap
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"copyout: called with %p, %p, %d (td=%p)\n"
-argument_list|,
-name|kaddr
-argument_list|,
-name|udaddr
-argument_list|,
-name|len
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -359,19 +359,6 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_pmap
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"copyin: called with %p, %p, %d (td=%p)\n"
-argument_list|,
-name|udaddr
-argument_list|,
-name|kaddr
-argument_list|,
-name|len
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
