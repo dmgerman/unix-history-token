@@ -612,6 +612,9 @@ decl_stmt|;
 name|struct
 name|m_tag
 modifier|*
+name|mtag
+decl_stmt|,
+modifier|*
 name|dummytag
 decl_stmt|;
 ifdef|#
@@ -629,11 +632,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
-name|struct
-name|m_tag
-modifier|*
-name|mtag
-decl_stmt|;
 name|struct
 name|secpolicy
 modifier|*
@@ -3227,11 +3225,8 @@ name|ia
 condition|)
 block|{
 comment|/* tell ip_input "dont filter" */
-name|struct
-name|m_tag
-modifier|*
 name|mtag
-init|=
+operator|=
 name|m_tag_get
 argument_list|(
 name|PACKET_TAG_IPFORWARD
@@ -3245,7 +3240,7 @@ argument_list|)
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|mtag
