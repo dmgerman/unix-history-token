@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.13 1995/12/10 20:54:21 bde Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.14 1995/12/17 21:14:29 phk Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -2040,8 +2040,15 @@ name|kdc_dgb
 index|[
 name|NDGB
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_dgb_init
 init|=
-block|{
 block|{
 literal|0
 block|,
@@ -2080,8 +2087,9 @@ comment|/* parentdata */
 name|DC_UNCONFIGURED
 block|,
 literal|"DigiBoard multiport card"
-block|}
-block|}
+block|,
+name|DC_CLS_SERIAL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2107,21 +2115,12 @@ name|id
 operator|->
 name|id_unit
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|!=
-literal|0
-condition|)
 name|kdc_dgb
 index|[
 name|unit
 index|]
 operator|=
-name|kdc_dgb
-index|[
-literal|0
-index|]
+name|kdc_dgb_init
 expr_stmt|;
 name|kdc_dgb
 index|[
@@ -2141,7 +2140,7 @@ name|kdc_isa
 operator|=
 name|id
 expr_stmt|;
-comment|/* now we assume that multiport is always 'open' for simplicity */
+comment|/* no ports are open yet */
 name|kdc_dgb
 index|[
 name|unit
@@ -2149,7 +2148,7 @@ index|]
 operator|.
 name|kdc_state
 operator|=
-name|DC_BUSY
+name|DC_IDLE
 expr_stmt|;
 name|dev_attach
 argument_list|(
@@ -4844,6 +4843,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|dgbregisterdev
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* register the polling function */
 name|timeout
 argument_list|(
@@ -5572,6 +5576,16 @@ name|used
 operator|=
 literal|1
 expr_stmt|;
+comment|/* If any port is open (i.e. the open() call is completed for it)  	 * the device is busy 	 */
+name|kdc_dgb
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 name|out
 label|:
 name|splx
@@ -5675,6 +5689,9 @@ name|port
 decl_stmt|;
 name|int
 name|s
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|mynor
 operator|=
@@ -5800,6 +5817,51 @@ operator|->
 name|used
 operator|=
 literal|0
+expr_stmt|;
+comment|/* mark the card idle when all ports are closed */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sc
+operator|->
+name|numports
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|sc
+operator|->
+name|ports
+index|[
+name|i
+index|]
+operator|.
+name|used
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|>=
+name|sc
+operator|->
+name|numports
+condition|)
+name|kdc_dgb
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 name|splx
 argument_list|(
@@ -6455,12 +6517,6 @@ index|[
 name|pnum
 index|]
 expr_stmt|;
-name|bc
-operator|=
-name|port
-operator|->
-name|brdchan
-expr_stmt|;
 name|tp
 operator|=
 operator|&
@@ -6510,6 +6566,12 @@ operator|>
 literal|0
 condition|)
 block|{
+name|bc
+operator|=
+name|port
+operator|->
+name|brdchan
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7258,9 +7320,21 @@ directive|endif
 name|end_of_buffer
 label|:
 block|}
+name|bc
+operator|->
+name|idata
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
+name|bc
+operator|=
+name|port
+operator|->
+name|brdchan
+expr_stmt|;
 name|DPRINT4
 argument_list|(
 literal|"dgb%d: port %d: got event 0x%x on closed port\n"
@@ -7295,12 +7369,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|bc
-operator|->
-name|idata
-operator|=
-literal|1
-expr_stmt|;
 name|tail
 operator|=
 operator|(
@@ -10225,6 +10293,20 @@ expr_stmt|;
 name|head
 operator|+=
 name|ocount
+expr_stmt|;
+if|if
+condition|(
+name|head
+operator|>=
+name|port
+operator|->
+name|txbufsize
+condition|)
+name|head
+operator|-=
+name|port
+operator|->
+name|txbufsize
 expr_stmt|;
 name|setwin
 argument_list|(
