@@ -249,21 +249,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|ed_stop
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ed_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|ds_getmcaf
 name|__P
 argument_list|(
@@ -6944,7 +6929,6 @@ comment|/*  * Take interface offline.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ed_stop
 parameter_list|(

@@ -341,6 +341,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|ed_stop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|driver_intr_t
 name|edintr
 decl_stmt|;
