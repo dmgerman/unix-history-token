@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 1.3 1998/03/27 18:03:13 peter Exp $"
+literal|"@(#)$Id: ip_fil.c,v 1.4 1998/06/08 06:04:12 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1209,6 +1209,12 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+operator|(
+name|_BSDI_VERSION
+operator|>=
+literal|199701
+operator|)
 end_if
 
 begin_include
@@ -5544,6 +5550,12 @@ operator|->
 name|rt_gateway
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
 name|ro
 operator|->
 name|ro_rt
