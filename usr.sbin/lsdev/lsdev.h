@@ -63,7 +63,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|void
-name|print
+name|print_config
 parameter_list|(
 name|struct
 name|devconf
@@ -74,6 +74,20 @@ end_function_decl
 
 begin_comment
 comment|/* machine-specific print routine */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|hprint_config
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* machine-specific header printer */
 end_comment
 
 begin_decl_stmt
