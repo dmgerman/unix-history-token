@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.2 82/11/14"
+literal|"@(#)rsh.c	4.3 82/12/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_comment
@@ -225,6 +231,11 @@ name|int
 name|one
 init|=
 literal|1
+decl_stmt|;
+name|struct
+name|servent
+modifier|*
+name|sp
 decl_stmt|;
 name|host
 operator|=
@@ -544,6 +555,35 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+name|sp
+operator|=
+name|getservbyname
+argument_list|(
+literal|"shell"
+argument_list|,
+literal|"tcp"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rsh: shell/tcp: unknown service\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|rem
 operator|=
 name|rcmd
@@ -551,7 +591,9 @@ argument_list|(
 operator|&
 name|host
 argument_list|,
-name|IPPORT_CMDSERVER
+name|sp
+operator|->
+name|s_port
 argument_list|,
 name|pwd
 operator|->
