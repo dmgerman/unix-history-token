@@ -1037,7 +1037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is called after a fork().  * No locks need to be taken here since we are guaranteed to be  * single threaded.  *   * XXX  * POSIX says for threaded process, fork() function is used  * only to run new programs, and the effects of calling functions  * that require certain resources between the call to fork() and  * the call to an exec function are undefined.  *  * Here it is not safe to reinitialize the library after fork().  * Because memory management may be corrupted, further calling  * malloc()/free() may cause undefined behavior.  */
+comment|/*  * This is called after a fork().  * No locks need to be taken here since we are guaranteed to be  * single threaded.  *   * XXX  * POSIX says for threaded process, fork() function is used  * only to run new programs, and the effects of calling functions  * that require certain resources between the call to fork() and  * the call to an exec function are undefined.  *  * It is not safe to free memory after fork(), because these data  * structures may be in inconsistent state.  */
 end_comment
 
 begin_function
