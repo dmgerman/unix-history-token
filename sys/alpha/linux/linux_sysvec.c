@@ -1079,6 +1079,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|DUMMY
+argument_list|(
+name|rt_sigreturn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
 name|linuxelf
