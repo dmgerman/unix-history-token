@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.8 (Berkeley) %G%"
+literal|"@(#)move.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,11 +32,33 @@ begin_comment
 comment|/*************************************************************************  *  *	MOVE LIBRARY  *  *	This set of subroutines moves a cursor to a predefined  *	location, independent of the terminal type.  If the  *	terminal has an addressable cursor, it uses it.  If  *	not, it optimizes for tabs (currently) even if you don't  *      have them.  *  *	At all times the current address of the cursor must be maintained,  *	and that is available as structure cursor.  *  *	The following calls are allowed:  *		move(sp)	move to point sp.  *		up()		move up one line.  *		down()		move down one line.  *		bs()		move left one space (except column 0).  *		nd()		move right one space(no write).  *		clear()		clear screen.  *		home()		home.  *		ll()		move to lower left corner of screen.  *		cr()		carriage return (no line feed).  *		pr()		just like standard printf, but keeps track  *				of cursor position. (Uses pstring).  *		apr()		same as printf, but first argument is&point.  *				(Uses pstring).  *		pstring(s)	output the string of printing characters.  *				However, '\r' is interpreted to mean return  *				to column of origination AND do linefeed.  *				'\n' causes<cr><lf>.  *		putpad(str)	calls tputs to output character with proper  *					padding.  *		outch()		the output routine for a character used by  *					tputs. It just calls putchar.  *		pch(ch)		output character to screen and update  *					cursor address (must be a standard  *					printing character). WILL SCROLL.  *		pchar(ps,ch)	prints one character if it is on the  *					screen at the specified location;  *					otherwise, dumps it.(no wrap-around).  *  *		getcap()	initializes strings for later calls.  *		cap(string)	outputs the string designated in the termcap  *					data base. (Should not move the cursor.)  *		done()		returns the terminal to intial state and exits.  *  *		point(&p,x,y)	return point set to x,y.  *  *		baudrate(x)	returns the baudrate of the terminal.  *		delay(t)	causes an approximately constant delay  *					independent of baudrate.  *					Duration is ~ t/20 seconds.  *  ******************************************************************************/
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1605,12 +1627,36 @@ block|}
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_macro
+name|apr
+argument_list|(
+argument|struct point *ps
+argument_list|,
+argument|char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|apr
 argument_list|(
 argument|ps
 argument_list|,
 argument|fmt
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -1628,6 +1674,15 @@ modifier|*
 name|fmt
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -1664,6 +1719,9 @@ operator|&
 name|p
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1671,6 +1729,15 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1696,10 +1763,32 @@ expr_stmt|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_macro
+name|pr
+argument_list|(
+argument|char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|pr
 argument_list|(
 argument|fmt
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -1710,11 +1799,23 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 name|va_list
 name|ap
 decl_stmt|;
+if|#
+directive|if
+name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -1722,6 +1823,15 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)

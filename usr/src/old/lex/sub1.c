@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub1.c	4.5 (Berkeley) %G%"
+literal|"@(#)sub1.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,11 +26,33 @@ directive|include
 file|"ldefs.c"
 end_include
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|char
@@ -183,19 +205,43 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_expr_stmt
+name|error
+argument_list|(
+name|char
+operator|*
+name|s
+argument_list|,
+operator|...
+argument_list|)
+else|#
+directive|else
 name|error
 argument_list|(
 argument|s
+argument_list|,
+argument|va_alist
 argument_list|)
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|va_dcl
 end_macro
 
-begin_decl_stmt
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -222,6 +268,9 @@ argument_list|,
 name|yyline
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -229,6 +278,15 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vfprintf
 argument_list|(
 name|errorf
@@ -296,19 +354,43 @@ comment|/* error return code */
 block|}
 end_block
 
-begin_macro
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_expr_stmt
+name|warning
+argument_list|(
+name|char
+operator|*
+name|s
+argument_list|,
+operator|...
+argument_list|)
+else|#
+directive|else
 name|warning
 argument_list|(
 argument|s
+argument_list|,
+argument|va_alist
 argument_list|)
+name|char
+operator|*
+name|s
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|va_dcl
 end_macro
 
-begin_decl_stmt
-name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -335,6 +417,9 @@ argument_list|,
 name|yyline
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -342,6 +427,15 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vfprintf
 argument_list|(
 name|errorf
