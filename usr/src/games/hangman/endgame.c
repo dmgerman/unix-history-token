@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)endgame.c	5.3 (Berkeley) %G%"
+literal|"@(#)endgame.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,10 +171,14 @@ argument_list|,
 name|MESGX
 argument_list|)
 expr_stmt|;
-name|addstr
-argument_list|(
-literal|"\n\n\n"
-argument_list|)
+name|deleteln
+argument_list|()
+expr_stmt|;
+name|deleteln
+argument_list|()
+expr_stmt|;
+name|deleteln
+argument_list|()
 expr_stmt|;
 block|}
 end_block
