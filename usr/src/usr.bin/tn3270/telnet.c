@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	6.1 (Berkeley) %G%"
+literal|"@(#)telnet.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3904,6 +3904,65 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|MODE_LOCAL_CHARS
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|setmode
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|,
+name|O_TEXT
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|ExitPerror
+argument_list|(
+literal|"setmode (text)"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|setmode
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|,
+name|O_TEXT
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|ExitPerror
+argument_list|(
+literal|"setmode (text)"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|setmode
 argument_list|(
 name|fileno
@@ -3949,6 +4008,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
