@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.c,v 1.14 1999/03/25 22:52:44 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.c,v 1.15 1999/04/04 01:35:03 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -4045,7 +4045,6 @@ name|MAX_TARGETS
 operator|-
 literal|1
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -4058,6 +4057,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Prepare the scsibus_data area for the upperlevel scsi code. 	 */
 name|scbus
 operator|->
