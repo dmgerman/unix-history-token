@@ -4201,12 +4201,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AR_DEBUG */
-name|ath_init
+name|ath_reset
 argument_list|(
-name|ifp
+name|sc
 argument_list|)
 expr_stmt|;
-comment|/* XXX ath_reset??? */
 name|ifp
 operator|->
 name|if_oerrors
