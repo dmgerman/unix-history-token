@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mbuf.h	7.8.1.3 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mbuf.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -21,122 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Constants related to network buffer management.  * Mbufs are of a single size, MSIZE, which includes overhead.  * An mbuf may add a single "mbuf cluster" of size MCLBYTES,  * which has no additional overhead and is used instead of the internal  * data area; this is done when at least MINCLSIZE of data must be stored.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
-end_comment
-
-begin_comment
-comment|/* BEGIN SHOULD MOVE TO MACHINE-SPECIFIC FILE (machparam.h) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSIZE
-value|128
-end_define
-
-begin_comment
-comment|/* size of an mbuf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAPPED_MBUFS
-end_define
-
-begin_if
-if|#
-directive|if
-name|CLBYTES
-operator|>
-literal|1024
-end_if
-
-begin_define
-define|#
-directive|define
-name|MCLBYTES
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCLSHIFT
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCLOFSET
-value|(MCLBYTES - 1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MCLBYTES
-value|CLBYTES
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCLSHIFT
-value|CLSHIFT
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCLOFSET
-value|CLOFSET
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GATEWAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NMBCLUSTERS
-value|512
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NMBCLUSTERS
-value|256
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* END SHOULD MOVE TO MACHINE-SPECIFIC FILE (machparam.h) */
+comment|/*  * Mbufs are of a single size, MSIZE (machine/machparam.h), which  * includes overhead.  An mbuf may add a single "mbuf cluster" of size  * MCLBYTES (also in machine/machparam.h), which has no additional overhead  * and is used instead of the internal data area; this is done when  * at least MINCLSIZE of data must be stored.  */
 end_comment
 
 begin_define
@@ -977,6 +862,24 @@ value|1000000000
 end_define
 
 begin_comment
+comment|/* compatiblity with 4.3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|m_copy
+parameter_list|(
+name|m
+parameter_list|,
+name|o
+parameter_list|,
+name|l
+parameter_list|)
+value|m_copym((m), (o), (l), M_DONTWAIT)
+end_define
+
+begin_comment
 comment|/*  * Mbuf statistics.  */
 end_comment
 
@@ -1067,14 +970,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nmbclusters
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|mfree
 decl_stmt|;
 end_decl_stmt
 
@@ -1172,7 +1067,7 @@ name|m_free
 argument_list|()
 decl_stmt|,
 modifier|*
-name|m_copy
+name|m_copym
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -1216,6 +1111,7 @@ name|mbtypes
 index|[]
 init|=
 block|{
+comment|/* XXX */
 name|M_FREE
 block|,
 comment|/* MT_FREE	0	/* should be on free list */
@@ -1243,6 +1139,9 @@ comment|/* MT_ATABLE	7	/* address resolution tables */
 name|M_MBUF
 block|,
 comment|/* MT_SONAME	8	/* socket name */
+literal|0
+block|,
+comment|/* 		9 */
 name|M_SOOPTS
 block|,
 comment|/* MT_SOOPTS	10	/* socket options */
@@ -1261,6 +1160,27 @@ comment|/* MT_CONTROL	14	/* extra-data protocol message */
 name|M_MBUF
 block|,
 comment|/* MT_OOBDATA	15	/* expedited data  */
+ifdef|#
+directive|ifdef
+name|DATAKIT
+literal|25
+block|,
+literal|26
+block|,
+literal|27
+block|,
+literal|28
+block|,
+literal|29
+block|,
+literal|30
+block|,
+literal|31
+block|,
+literal|32
+comment|/* datakit ugliness */
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
