@@ -445,7 +445,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"void setconf(void) {};\n"
+literal|"void\nsetconf()\n{\n}\n"
 argument_list|)
 expr_stmt|;
 name|fclose
