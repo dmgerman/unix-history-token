@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	6.1 (Berkeley) %G%"
+literal|"@(#)clock.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +110,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"setevent: intvl=%ld\n"
+literal|"554 setevent: intvl=%ld\n"
 argument_list|,
 name|intvl
 argument_list|)

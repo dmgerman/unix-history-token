@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.11 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -612,7 +612,7 @@ directive|else
 comment|/* QUEUE */
 name|syserr
 argument_list|(
-literal|"dropenvelope: queueup"
+literal|"554 dropenvelope: queueup"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1646,7 +1646,7 @@ literal|0
 condition|)
 block|{
 comment|/* network sends -r regardless (why why why?) */
-comment|/* syserr("%s, you cannot use the -f flag", realname); */
+comment|/* syserr("501 %s, you cannot use the -f flag", realname); */
 name|from
 operator|=
 name|NULL
@@ -1793,7 +1793,7 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"setsender: can't even parse postmaster!"
+literal|"553 setsender: can't even parse postmaster!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2180,7 +2180,7 @@ endif|#
 directive|endif
 name|usrerr
 argument_list|(
-literal|"cannot prescan from (%s)"
+literal|"553 cannot prescan from (%s)"
 argument_list|,
 name|from
 argument_list|)

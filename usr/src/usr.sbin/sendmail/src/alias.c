@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.15 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.16 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.15 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.16 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.15 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.16 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.15 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.16 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,8 +465,6 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"aliased to %s"
 argument_list|,
 name|p
@@ -1007,7 +1005,7 @@ name|init
 condition|)
 name|syserr
 argument_list|(
-literal|"Cannot open %s"
+literal|"554 Cannot open %s"
 argument_list|,
 name|aliasfile
 argument_list|)
@@ -1476,8 +1474,6 @@ name|TRUE
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"rebuilding alias database"
 argument_list|)
 expr_stmt|;
@@ -1524,8 +1520,6 @@ directive|endif
 comment|/* LOG */
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"Warning: alias database out of date"
 argument_list|)
 expr_stmt|;
@@ -1742,7 +1736,7 @@ name|init
 condition|)
 name|syserr
 argument_list|(
-literal|"Can't open %s"
+literal|"554 Can't open %s"
 argument_list|,
 name|aliasfile
 argument_list|)
@@ -1853,8 +1847,6 @@ block|{
 comment|/* yes, they are -- wait until done and then return */
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"Alias file is already being rebuilt"
 argument_list|)
 expr_stmt|;
@@ -2169,7 +2161,7 @@ name|skipping
 condition|)
 name|syserr
 argument_list|(
-literal|"Non-continuation line starts with space"
+literal|"554 Non-continuation line starts with space"
 argument_list|)
 expr_stmt|;
 name|skipping
@@ -2510,7 +2502,7 @@ name|NULL
 condition|)
 name|usrerr
 argument_list|(
-literal|"%s... bad address"
+literal|"553 %s... bad address"
 argument_list|,
 name|p
 argument_list|)
@@ -2628,7 +2620,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"alias too long"
+literal|"554 alias too long"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3134,8 +3126,6 @@ name|NULL
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"%d aliases, longest %d bytes, %d bytes total"
 argument_list|,
 name|naliases
@@ -3474,7 +3464,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"forward: no home"
+literal|"554 forward: no home"
 argument_list|)
 expr_stmt|;
 name|user

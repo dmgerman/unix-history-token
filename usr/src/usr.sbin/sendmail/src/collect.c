@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.7 (Berkeley) %G%"
+literal|"@(#)collect.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,9 +182,7 @@ name|smtpmode
 condition|)
 name|message
 argument_list|(
-literal|"354"
-argument_list|,
-literal|"Enter mail, end with \".\" on a line by itself"
+literal|"354 Enter mail, end with \".\" on a line by itself"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to read a UNIX-style From line 	*/
@@ -917,7 +915,7 @@ else|:
 name|syserr
 operator|)
 operator|(
-literal|"collect: unexpected close on connection, from=%s"
+literal|"451 collect: unexpected close on connection, from=%s"
 operator|,
 name|e
 operator|->
@@ -1156,7 +1154,7 @@ name|printmsg
 condition|)
 name|usrerr
 argument_list|(
-literal|"header line too long"
+literal|"553 header line too long"
 argument_list|)
 expr_stmt|;
 name|printmsg

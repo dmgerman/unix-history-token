@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.16 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.17 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.16 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.17 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1057,8 +1057,6 @@ name|q_paddr
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"queued"
 argument_list|)
 expr_stmt|;

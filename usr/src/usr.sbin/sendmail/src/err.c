@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.5 (Berkeley) %G%"
+literal|"@(#)err.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,16 +161,6 @@ init|=
 name|errno
 decl_stmt|;
 name|VA_LOCAL_DECL
-specifier|extern
-name|char
-name|Arpa_PSyserr
-index|[]
-decl_stmt|;
-specifier|extern
-name|char
-name|Arpa_TSyserr
-index|[]
-decl_stmt|;
 comment|/* format and output the error message */
 if|if
 condition|(
@@ -180,12 +170,12 @@ literal|0
 condition|)
 name|p
 operator|=
-name|Arpa_PSyserr
+literal|"554"
 expr_stmt|;
 else|else
 name|p
 operator|=
-name|Arpa_TSyserr
+literal|"451"
 expr_stmt|;
 name|VA_START
 argument_list|(
@@ -361,11 +351,6 @@ name|char
 name|SuprErrs
 decl_stmt|;
 specifier|extern
-name|char
-name|Arpa_Usrerr
-index|[]
-decl_stmt|;
-specifier|extern
 name|int
 name|errno
 decl_stmt|;
@@ -387,7 +372,7 @@ name|CurEnv
 operator|->
 name|e_to
 argument_list|,
-name|Arpa_Usrerr
+literal|"501"
 argument_list|,
 name|errno
 argument_list|,
@@ -476,8 +461,6 @@ end_ifdef
 begin_macro
 name|message
 argument_list|(
-argument|char *num
-argument_list|,
 argument|char *msg
 argument_list|,
 argument|...
@@ -492,20 +475,11 @@ end_else
 begin_macro
 name|message
 argument_list|(
-argument|num
-argument_list|,
 argument|msg
 argument_list|,
 argument|va_alist
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|num
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -543,7 +517,7 @@ name|CurEnv
 operator|->
 name|e_to
 argument_list|,
-name|num
+literal|"050"
 argument_list|,
 literal|0
 argument_list|,
@@ -584,8 +558,6 @@ end_ifdef
 begin_macro
 name|nmessage
 argument_list|(
-argument|char *num
-argument_list|,
 argument|char *msg
 argument_list|,
 argument|...
@@ -600,20 +572,11 @@ end_else
 begin_macro
 name|nmessage
 argument_list|(
-argument|num
-argument_list|,
 argument|msg
 argument_list|,
 argument|va_alist
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|num
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -653,7 +616,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|num
+literal|"050"
 argument_list|,
 literal|0
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.10 (Berkeley) %G%"
+literal|"@(#)headers.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ block|}
 else|else
 name|usrerr
 argument_list|(
-literal|"chompheader: syntax error, line \"%s\""
+literal|"553 header syntax error, line \"%s\""
 argument_list|,
 name|line
 argument_list|)
@@ -240,7 +240,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"chompheader: syntax error, line \"%s\""
+literal|"553 header syntax error, line \"%s\""
 argument_list|,
 name|line
 argument_list|)

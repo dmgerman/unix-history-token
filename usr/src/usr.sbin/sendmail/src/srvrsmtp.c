@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.15 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.16 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.15 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.16 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,9 +523,7 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"220"
-argument_list|,
-literal|"%s"
+literal|"220 %s"
 argument_list|,
 name|inp
 argument_list|)
@@ -629,9 +627,7 @@ block|{
 comment|/* end of file, just die */
 name|message
 argument_list|(
-literal|"421"
-argument_list|,
-literal|"%s Lost input channel from %s"
+literal|"421 %s Lost input channel from %s"
 argument_list|,
 name|MyHostName
 argument_list|,
@@ -865,9 +861,7 @@ block|{
 comment|/* 				**  Didn't know about alias or MX, 				**  or connected to an echo server 				*/
 name|message
 argument_list|(
-literal|"553"
-argument_list|,
-literal|"%s config error: mail loops back to myself"
+literal|"553 %s config error: mail loops back to myself"
 argument_list|,
 name|MyHostName
 argument_list|)
@@ -982,9 +976,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"503"
-argument_list|,
-literal|"Polite people say HELO first"
+literal|"503 Polite people say HELO first"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -996,9 +988,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"503"
-argument_list|,
-literal|"Sender already specified"
+literal|"503 Sender already specified"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1014,7 +1004,7 @@ literal|0
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"Nested MAIL command: MAIL %s"
+literal|"503 Nested MAIL command: MAIL %s"
 argument_list|,
 name|p
 argument_list|)
@@ -1032,9 +1022,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"452"
-argument_list|,
-literal|"Insufficient disk space; try again later"
+literal|"452 Insufficient disk space; try again later"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1144,9 +1132,7 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"250"
-argument_list|,
-literal|"Sender ok"
+literal|"250 Sender ok"
 argument_list|)
 expr_stmt|;
 name|gotmail
@@ -1295,9 +1281,7 @@ argument_list|)
 condition|)
 name|message
 argument_list|(
-literal|"250"
-argument_list|,
-literal|"Recipient ok"
+literal|"250 Recipient ok"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1305,9 +1289,7 @@ block|{
 comment|/* punt -- should keep message in ADDRESS.... */
 name|message
 argument_list|(
-literal|"550"
-argument_list|,
-literal|"Addressee unknown"
+literal|"550 Addressee unknown"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1334,9 +1316,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"503"
-argument_list|,
-literal|"Need MAIL command"
+literal|"503 Need MAIL command"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1353,9 +1333,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"503"
-argument_list|,
-literal|"Need RCPT (recipient)"
+literal|"503 Need RCPT (recipient)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1479,9 +1457,7 @@ name|HoldErrs
 condition|)
 name|message
 argument_list|(
-literal|"250"
-argument_list|,
-literal|"Ok"
+literal|"250 Ok"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1534,9 +1510,7 @@ case|:
 comment|/* rset -- reset state */
 name|message
 argument_list|(
-literal|"250"
-argument_list|,
-literal|"Reset state"
+literal|"250 Reset state"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1598,9 +1572,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"502"
-argument_list|,
-literal|"That's none of your business"
+literal|"502 That's none of your business"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1625,9 +1597,7 @@ condition|)
 block|{
 name|message
 argument_list|(
-literal|"503"
-argument_list|,
-literal|"I demand that you introduce yourself first"
+literal|"503 I demand that you introduce yourself first"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1701,9 +1671,7 @@ case|:
 comment|/* noop -- do nothing */
 name|message
 argument_list|(
-literal|"200"
-argument_list|,
-literal|"OK"
+literal|"200 OK"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1713,9 +1681,7 @@ case|:
 comment|/* quit -- leave mail */
 name|message
 argument_list|(
-literal|"221"
-argument_list|,
-literal|"%s closing connection"
+literal|"221 %s closing connection"
 argument_list|,
 name|MyHostName
 argument_list|)
@@ -1745,9 +1711,7 @@ name|SM_DELIVER
 expr_stmt|;
 name|message
 argument_list|(
-literal|"200"
-argument_list|,
-literal|"Verbose mode"
+literal|"200 Verbose mode"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1761,9 +1725,7 @@ name|TRUE
 expr_stmt|;
 name|message
 argument_list|(
-literal|"200"
-argument_list|,
-literal|"Only one transaction"
+literal|"200 Only one transaction"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1810,9 +1772,7 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"200"
-argument_list|,
-literal|"Debug set"
+literal|"200 Debug set"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1872,9 +1832,7 @@ case|:
 comment|/* unknown command */
 name|message
 argument_list|(
-literal|"500"
-argument_list|,
-literal|"Command unrecognized"
+literal|"500 Command unrecognized"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1885,7 +1843,7 @@ literal|0
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"smtp: unknown code %d"
+literal|"500 smtp: unknown code %d"
 argument_list|,
 name|c
 operator|->
@@ -2015,9 +1973,7 @@ name|syntax
 label|:
 name|message
 argument_list|(
-literal|"501"
-argument_list|,
-literal|"Syntax error"
+literal|"501 Syntax error"
 argument_list|)
 expr_stmt|;
 name|Errors
@@ -2072,6 +2028,143 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  PRINTVRFYADDR -- print an entry in the verify queue ** **	Parameters: **		a -- the address to print **		last -- set if this is the last one. ** **	Returns: **		none. ** **	Side Effects: **		Prints the appropriate 250 codes. */
+end_comment
+
+begin_expr_stmt
+name|printvrfyaddr
+argument_list|(
+name|a
+argument_list|,
+name|last
+argument_list|)
+specifier|register
+name|ADDRESS
+operator|*
+name|a
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|last
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+name|fmtbuf
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|fmtbuf
+argument_list|,
+literal|"250"
+argument_list|)
+expr_stmt|;
+name|fmtbuf
+index|[
+literal|3
+index|]
+operator|=
+name|last
+condition|?
+literal|' '
+else|:
+literal|'-'
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|a
+operator|->
+name|q_paddr
+argument_list|,
+literal|'<'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|strcpy
+argument_list|(
+operator|&
+name|fmtbuf
+index|[
+literal|4
+index|]
+argument_list|,
+literal|"%s"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|a
+operator|->
+name|q_fullname
+operator|==
+name|NULL
+condition|)
+name|strcpy
+argument_list|(
+operator|&
+name|fmtbuf
+index|[
+literal|4
+index|]
+argument_list|,
+literal|"<%s>"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|strcpy
+argument_list|(
+operator|&
+name|fmtbuf
+index|[
+literal|4
+index|]
+argument_list|,
+literal|"%s<%s>"
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+name|fmtbuf
+argument_list|,
+name|a
+operator|->
+name|q_fullname
+argument_list|,
+name|a
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|message
+argument_list|(
+name|fmtbuf
+argument_list|,
+name|a
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_escape
 end_escape
@@ -2140,9 +2233,7 @@ literal|0
 expr_stmt|;
 name|message
 argument_list|(
-literal|"502"
-argument_list|,
-literal|"HELP not implemented"
+literal|"502 HELP not implemented"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2245,7 +2336,7 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"214-"
+literal|"214-%s"
 argument_list|,
 name|p
 argument_list|)
@@ -2262,17 +2353,13 @@ name|noinfo
 condition|)
 name|message
 argument_list|(
-literal|"504"
-argument_list|,
-literal|"HELP topic unknown"
+literal|"504 HELP topic unknown"
 argument_list|)
 expr_stmt|;
 else|else
 name|message
 argument_list|(
-literal|"214"
-argument_list|,
-literal|"End of HELP info"
+literal|"214 End of HELP info"
 argument_list|)
 expr_stmt|;
 operator|(

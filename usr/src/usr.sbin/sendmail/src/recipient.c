@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.15 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,7 +802,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"aliasing/forwarding loop broken"
+literal|"554 aliasing/forwarding loop broken"
 argument_list|)
 expr_stmt|;
 return|return
@@ -905,7 +905,7 @@ name|QBADADDR
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Cannot mail directly to programs"
+literal|"550 Cannot mail directly to programs"
 argument_list|,
 name|m
 operator|->
@@ -1004,8 +1004,6 @@ argument_list|)
 condition|)
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"duplicate suppressed"
 argument_list|)
 expr_stmt|;
@@ -1123,7 +1121,7 @@ name|QBADADDR
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Cannot mail directly to :include:s"
+literal|"550 Cannot mail directly to :include:s"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1131,8 +1129,6 @@ else|else
 block|{
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"including file %s"
 argument_list|,
 name|a
@@ -1209,7 +1205,7 @@ name|QBADADDR
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Cannot mail directly to files"
+literal|"550 Cannot mail directly to files"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1400,8 +1396,6 @@ endif|#
 directive|endif
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"queued (user database error)"
 argument_list|)
 expr_stmt|;
@@ -1601,7 +1595,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"aliasing/forwarding loop for %s broken"
+literal|"554 aliasing/forwarding loop for %s broken"
 argument_list|,
 name|pw
 operator|->
@@ -2454,7 +2448,7 @@ argument_list|)
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Cannot open %s"
+literal|"550 Cannot open %s"
 argument_list|,
 name|fname
 argument_list|)
@@ -2650,8 +2644,6 @@ name|NULL
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"%s to %s"
 argument_list|,
 name|forwarding
@@ -2889,7 +2881,7 @@ name|nbuf
 condition|)
 name|usrerr
 argument_list|(
-literal|"address overflow"
+literal|"554 address overflow"
 argument_list|)
 expr_stmt|;
 else|else

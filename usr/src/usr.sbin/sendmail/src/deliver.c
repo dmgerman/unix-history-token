@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.22 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,8 +418,6 @@ name|q_paddr
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"queued"
 argument_list|)
 expr_stmt|;
@@ -750,7 +748,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Too many parameters to %s before $u"
+literal|"554 Too many parameters to %s before $u"
 argument_list|,
 name|pv
 index|[
@@ -794,7 +792,7 @@ comment|/* SMTP */
 comment|/* oops!  we don't implement SMTP */
 name|syserr
 argument_list|(
-literal|"SMTP style mailer"
+literal|"554 SMTP style mailer"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1044,7 +1042,7 @@ name|TRUE
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Message is too large; %ld bytes max"
+literal|"552 Message is too large; %ld bytes max"
 argument_list|,
 name|m
 operator|->
@@ -1411,7 +1409,7 @@ index|]
 condition|)
 name|syserr
 argument_list|(
-literal|"deliver: pv overflow after $u for %s"
+literal|"554 deliver: pv overflow after $u for %s"
 argument_list|,
 name|pv
 index|[
@@ -1527,7 +1525,7 @@ block|{
 comment|/* shouldn't happen */
 name|syserr
 argument_list|(
-literal|"deliver: rcode=%d, mci_state=%d, sig=%s"
+literal|"554 deliver: rcode=%d, mci_state=%d, sig=%s"
 argument_list|,
 name|rcode
 argument_list|,
@@ -1847,7 +1845,7 @@ comment|/* not SMTP */
 block|{
 name|syserr
 argument_list|(
-literal|"deliver: need SMTP compiled to use clever mailer"
+literal|"554 deliver: need SMTP compiled to use clever mailer"
 argument_list|)
 expr_stmt|;
 name|rcode
@@ -2163,8 +2161,6 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -2712,7 +2708,7 @@ name|clever
 condition|)
 name|syserr
 argument_list|(
-literal|"non-clever IPC"
+literal|"554 non-clever IPC"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2904,8 +2900,6 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"Connecting to %s (%s)..."
 argument_list|,
 name|hostbuf
@@ -3004,7 +2998,7 @@ directive|else
 comment|/* no DAEMON */
 name|syserr
 argument_list|(
-literal|"openmailer: no IPC"
+literal|"554 openmailer: no IPC"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4182,8 +4176,6 @@ name|EX_TEMPFAIL
 condition|)
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 operator|&
 name|statmsg
 index|[
@@ -4507,7 +4499,7 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"No ! in UUCP! (%s)"
+literal|"554 No ! in UUCP! (%s)"
 argument_list|,
 name|buf
 argument_list|)
@@ -5246,16 +5238,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-specifier|extern
-name|char
-name|Arpa_PSyserr
-index|[]
-decl_stmt|;
 name|message
 argument_list|(
-name|Arpa_PSyserr
-argument_list|,
-literal|"cannot open"
+literal|"554 cannot open"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5327,16 +5312,9 @@ name|f
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|char
-name|Arpa_TSyserr
-index|[]
-decl_stmt|;
 name|message
 argument_list|(
-name|Arpa_TSyserr
-argument_list|,
-literal|"I/O error"
+literal|"451 I/O error"
 argument_list|)
 expr_stmt|;
 name|setstat
@@ -5566,7 +5544,7 @@ literal|0
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"sendall: too many hops %d (%d max): from %s, to %s"
+literal|"554 too many hops %d (%d max): from %s, to %s"
 argument_list|,
 name|e
 operator|->
@@ -6092,8 +6070,6 @@ argument_list|)
 condition|)
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"deliverable"
 argument_list|)
 expr_stmt|;

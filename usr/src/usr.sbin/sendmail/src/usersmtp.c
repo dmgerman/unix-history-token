@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.13 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.14 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.13 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.14 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,7 @@ name|MCIS_CLOSED
 case|:
 name|syserr
 argument_list|(
-literal|"smtpinit: state CLOSED"
+literal|"451 smtpinit: state CLOSED"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1387,8 +1387,6 @@ name|Verbose
 condition|)
 name|nmessage
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|">>> ."
 argument_list|)
 expr_stmt|;
@@ -1646,7 +1644,7 @@ name|EX_OK
 condition|)
 name|syserr
 argument_list|(
-literal|"smtpquit %s: stat %d"
+literal|"451 smtpquit %s: stat %d"
 argument_list|,
 name|m
 operator|->
@@ -2033,12 +2031,6 @@ name|MsgBuf
 index|[]
 decl_stmt|;
 comment|/* err.c */
-specifier|extern
-name|char
-name|Arpa_TSyserr
-index|[]
-decl_stmt|;
-comment|/* conf.c */
 comment|/* if the remote end closed early, fake an error */
 if|if
 condition|(
@@ -2077,9 +2069,7 @@ name|EX_TEMPFAIL
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_TSyserr
-argument_list|,
-literal|"%s: reply: read error from %s"
+literal|"451 %s: reply: read error from %s"
 argument_list|,
 name|e
 operator|->
@@ -2234,8 +2224,6 @@ name|Verbose
 condition|)
 name|nmessage
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"%s"
 argument_list|,
 name|SmtpReplyBuffer
@@ -2467,8 +2455,6 @@ name|Verbose
 condition|)
 name|nmessage
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|">>> %s"
 argument_list|,
 name|SmtpMsgBuffer

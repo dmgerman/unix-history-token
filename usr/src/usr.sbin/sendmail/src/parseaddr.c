@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.18 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,9 +430,9 @@ argument_list|(
 name|EX_USAGE
 argument_list|)
 expr_stmt|;
-name|usrerr
+name|syserr
 argument_list|(
-literal|"cannot resolve name"
+literal|"554 cannot resolve name"
 argument_list|)
 expr_stmt|;
 return|return
@@ -554,7 +554,7 @@ argument_list|)
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Address contained invalid control characters"
+literal|"553 Address contained invalid control characters"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1304,7 +1304,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Address too long"
+literal|"553 Address too long"
 argument_list|)
 expr_stmt|;
 name|DelimChar
@@ -1349,7 +1349,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Unbalanced '\"'"
+literal|"553 Unbalanced '\"'"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1367,7 +1367,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Unbalanced '('"
+literal|"553 Unbalanced '('"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1389,7 +1389,7 @@ literal|'>'
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"Unbalanced '<'"
+literal|"553 Unbalanced '<'"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1547,7 +1547,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Unbalanced ')'"
+literal|"553 Unbalanced ')'"
 argument_list|)
 expr_stmt|;
 name|DelimChar
@@ -1603,7 +1603,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Unbalanced '>'"
+literal|"553 Unbalanced '>'"
 argument_list|)
 expr_stmt|;
 name|DelimChar
@@ -1841,7 +1841,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"prescan: too many tokens"
+literal|"553 prescan: too many tokens"
 argument_list|)
 expr_stmt|;
 name|DelimChar
@@ -2457,7 +2457,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"rewrite: illegal ruleset number %d"
+literal|"554 rewrite: illegal ruleset number %d"
 argument_list|,
 name|ruleset
 argument_list|)
@@ -2771,7 +2771,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Infinite loop in ruleset %d"
+literal|"554 Infinite loop in ruleset %d"
 argument_list|,
 name|ruleset
 argument_list|)
@@ -4230,7 +4230,7 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"rewrite: map %s not found"
+literal|"554 rewrite: map %s not found"
 argument_list|,
 name|mapname
 argument_list|)
@@ -5062,7 +5062,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"buildaddr: no net"
+literal|"554 buildaddr: no net"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5252,7 +5252,7 @@ name|CANONUSER
 condition|)
 name|syserr
 argument_list|(
-literal|"buildaddr: error: no user"
+literal|"554 buildaddr: error: no user"
 argument_list|)
 expr_stmt|;
 name|cataddr
@@ -5351,7 +5351,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"buildaddr: unknown mailer %s"
+literal|"554 buildaddr: unknown mailer %s"
 argument_list|,
 operator|*
 name|tv
@@ -5395,7 +5395,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"buildaddr: no host"
+literal|"554 buildaddr: no host"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5479,7 +5479,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"buildaddr: no user"
+literal|"554 buildaddr: no user"
 argument_list|)
 expr_stmt|;
 return|return

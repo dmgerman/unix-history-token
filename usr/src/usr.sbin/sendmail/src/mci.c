@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.4 (Berkeley) %G%"
+literal|"@(#)mci.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,8 +420,6 @@ condition|)
 block|{
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"Closing connection to %s"
 argument_list|,
 name|mci

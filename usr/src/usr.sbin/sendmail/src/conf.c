@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.24 (Berkeley) %G%"
+literal|"@(#)conf.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,62 +212,6 @@ literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* **  ARPANET error message numbers. */
-end_comment
-
-begin_decl_stmt
-name|char
-name|Arpa_Info
-index|[]
-init|=
-literal|"050"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* arbitrary info */
-end_comment
-
-begin_decl_stmt
-name|char
-name|Arpa_TSyserr
-index|[]
-init|=
-literal|"451"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* some (transient) system error */
-end_comment
-
-begin_decl_stmt
-name|char
-name|Arpa_PSyserr
-index|[]
-init|=
-literal|"554"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* some (permanent) system error */
-end_comment
-
-begin_decl_stmt
-name|char
-name|Arpa_Usrerr
-index|[]
-init|=
-literal|"501"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* some (fatal) user error */
-end_comment
 
 begin_comment
 comment|/* **  Location of system files/databases/etc. */
@@ -1302,7 +1246,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Who are you?"
+literal|"554 Who are you?"
 argument_list|)
 expr_stmt|;
 name|myname
@@ -1553,7 +1497,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"No ARPA mail through this machine: see your system administration"
+literal|"553 No ARPA mail through this machine: see your system administration"
 argument_list|)
 expr_stmt|;
 comment|/* NoReturn = TRUE; to supress return copy */

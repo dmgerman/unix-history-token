@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.10 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -286,7 +286,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot parse root!"
+literal|"553 Cannot parse root!"
 argument_list|)
 expr_stmt|;
 name|ExitStat
@@ -355,7 +355,7 @@ return|return;
 default|default:
 name|syserr
 argument_list|(
-literal|"savemail: ErrorMode x%x\n"
+literal|"554 savemail: ErrorMode x%x\n"
 argument_list|)
 expr_stmt|;
 name|state
@@ -726,7 +726,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"cannot parse postmaster!"
+literal|"553 cannot parse postmaster!"
 argument_list|)
 expr_stmt|;
 name|ExitStat
@@ -860,7 +860,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Can't return mail to %s"
+literal|"554 Can't return mail to %s"
 argument_list|,
 name|e
 operator|->
@@ -928,8 +928,6 @@ name|TRUE
 expr_stmt|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"Saving message in %s"
 argument_list|,
 name|buf
@@ -1124,7 +1122,7 @@ break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"savemail: unknown state %d"
+literal|"554 savemail: unknown state %d"
 argument_list|,
 name|state
 argument_list|)
@@ -1136,7 +1134,7 @@ case|:
 comment|/* leave the locked queue& transcript files around */
 name|syserr
 argument_list|(
-literal|"savemail: cannot save rejected email anywhere"
+literal|"554 savemail: cannot save rejected email anywhere"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1329,7 +1327,7 @@ name|MAXRETURNS
 condition|)
 name|syserr
 argument_list|(
-literal|"returntosender: infinite recursion on %s"
+literal|"554 returntosender: infinite recursion on %s"
 argument_list|,
 name|returnq
 operator|->
@@ -1683,7 +1681,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Can't parse myself!"
+literal|"553 Can't parse myself!"
 argument_list|)
 expr_stmt|;
 name|ExitStat

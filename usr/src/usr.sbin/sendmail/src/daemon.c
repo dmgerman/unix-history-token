@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.7 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.8 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.7 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.8 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +198,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"server \"smtp\" unknown"
+literal|"554 server \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -629,7 +629,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Invalid numeric domain spec \"%s\""
+literal|"553 Invalid numeric domain spec \"%s\""
 argument_list|,
 name|host
 argument_list|)
@@ -770,7 +770,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"makeconnection: server \"smtp\" unknown"
+literal|"554 makeconnection: server \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1139,8 +1139,6 @@ parameter_list|()
 function_decl|;
 name|message
 argument_list|(
-name|Arpa_Info
-argument_list|,
 literal|"%s"
 argument_list|,
 name|errstring
