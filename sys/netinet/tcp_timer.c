@@ -1436,6 +1436,8 @@ name|TCPDEBUG
 if|if
 condition|(
 name|tp
+operator|&&
+name|tp
 operator|->
 name|t_inpcb
 operator|->
