@@ -5001,6 +5001,8 @@ index|]
 decl_stmt|,
 modifier|*
 name|wmsg
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
