@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sincos.c	1.1	1.1 (ucb.elefunt) %G%"
+literal|"@(#)sincos.c	5.1	5.1 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 

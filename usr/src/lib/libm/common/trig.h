@@ -4,7 +4,7 @@ comment|/*   * Copyright (c) 1987 Regents of the University of California.  *   
 end_comment
 
 begin_comment
-comment|/* @(#)trig.h	1.1	1.1 (ucb.elefunt) %G% */
+comment|/* @(#)trig.h	5.1	5.1 (ucb.elefunt) %G% */
 end_comment
 
 begin_if
