@@ -603,7 +603,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* We've been given an existing URL (that's known-good) and now we need 	   to construct a composite one out of that and the basename we were 	   handed as a dependency. */
+comment|/* 	 * We've been given an existing URL (that's known-good) and now we need 	 * to construct a composite one out of that and the basename we were 	 * handed as a dependency. 	 */
 if|if
 condition|(
 name|base
@@ -616,7 +616,7 @@ argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
-comment|/* Advance back two slashes to get to the root of the package hierarchy */
+comment|/* 	     * Advance back two slashes to get to the root of the package 	     * hierarchy 	     */
 name|cp
 operator|=
 name|strrchr
@@ -690,7 +690,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* Otherwise, we've been given an environment variable hinting at the right location from sysinstall */
+comment|/* 	     * Otherwise, we've been given an environment variable hinting 	     * at the right location from sysinstall 	     */
 name|strcpy
 argument_list|(
 name|fname
@@ -1483,7 +1483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Takes a filename and package name, returning (in "try") the canonical "preserve"  * name for it.  */
+comment|/*  * Takes a filename and package name, returning (in "try") the  * canonical "preserve" name for it.  */
 end_comment
 
 begin_function
@@ -2278,7 +2278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Using fmt, replace all instances of:  *  * %F	With the parameter "name"  * %D	With the parameter "dir"  * %B	Return the directory part ("base") of %D/%F  * %f	Return the filename part of %D/%F  *  * Does not check for overflow - caution!  *  */
+comment|/*  * Using fmt, replace all instances of:  *  * %F	With the parameter "name"  * %D	With the parameter "dir"  * %B	Return the directory part ("base") of %D/%F  * %f	Return the filename part of %D/%F  *  * Does not check for overflow - caution!  *  */
 end_comment
 
 begin_function

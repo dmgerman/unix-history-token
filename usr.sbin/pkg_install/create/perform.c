@@ -770,7 +770,7 @@ argument_list|(
 literal|022
 argument_list|)
 expr_stmt|;
-comment|/* make sure gen'ed directories, files don't have 			   group or other write bits. */
+comment|/* 			 * Make sure gen'ed directories, files don't have 			 * group or other write bits. 			 */
 comment|/* copy_plist(home,&plist); */
 comment|/* mark_plist(&plist); */
 comment|/* Now put the release specific items in */

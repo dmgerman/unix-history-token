@@ -44,7 +44,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* meaningful fields in a gzip header, see gzip proper for details.    This structure should not be fiddled with outside of gzip_read_header    and gzip_write_header   */
+comment|/*  * Meaningful fields in a gzip header, see gzip proper for details.  * This structure should not be fiddled with outside of gzip_read_header  * and gzip_write_header   */
 end_comment
 
 begin_struct
@@ -243,7 +243,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* writing header to memory. Returns size needed, or 0 if buffer too small    buffer must be at least 14 characters */
+comment|/*  * Writing header to memory. Returns size needed, or 0 if buffer too small  * buffer must be at least 14 characters  */
 end_comment
 
 begin_decl_stmt

@@ -754,7 +754,7 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* Test whether to use the old method of passing tokens to deinstallation      * scripts, and set appropriate variables..      */
+comment|/*      * Test whether to use the old method of passing tokens to deinstallation      * scripts, and set appropriate variables..      */
 if|if
 condition|(
 name|fexists
@@ -912,7 +912,7 @@ name|home
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Some packages aren't packed right, so we need to just ignore        delete_package()'s status.  Ugh! :-( */
+comment|/*      * Some packages aren't packed right, so we need to just ignore      * delete_package()'s status.  Ugh! :-(      */
 if|if
 condition|(
 name|delete_package

@@ -449,7 +449,7 @@ name|maxargs
 operator|-=
 literal|64
 expr_stmt|;
-comment|/* some slop for the tar cmd text, 					   and sh -c */
+comment|/* 					 * Some slop for the tar cmd text, 					 * and sh -c 					 */
 name|where_args
 operator|=
 name|malloc
@@ -533,7 +533,7 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* It's ok if this is a valid dev_t; 					   this is just a hint for an 					   optimization. */
+comment|/* 					 * It's ok if this is a valid dev_t; 					 * this is just a hint for an 					 * optimization. 					 */
 while|while
 condition|(
 name|p
@@ -652,7 +652,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-comment|/* if we can link it to the playpen, that avoids a copy 		       and saves time. */
+comment|/* 		     * If we can link it to the playpen, that avoids a copy 		     * and saves time. 		     */
 if|if
 condition|(
 name|p
@@ -665,7 +665,7 @@ operator|!=
 literal|'/'
 condition|)
 block|{
-comment|/* don't link abspn stuff--it doesn't come from 			   local dir! */
+comment|/* 			 * Don't link abspn stuff--it doesn't come from 			 * local dir! 			 */
 if|if
 condition|(
 name|trylink
@@ -886,7 +886,7 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-comment|/* if we can link it to the playpen, that avoids a copy 		       and saves time. */
+comment|/* 		     * If we can link it to the playpen, that avoids a copy 		     * and saves time. 		     */
 if|if
 condition|(
 name|trylink

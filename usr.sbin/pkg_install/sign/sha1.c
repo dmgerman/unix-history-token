@@ -105,7 +105,7 @@ value|(MAXID+sizeof(SHA1_TEMPLATE)+2*SHA_DIGEST_LENGTH+1)
 end_define
 
 begin_comment
-comment|/* Finalize SHA1 checksum for our sha1_context into result  	(size at least BUFSIZE).  Returns the length of the checksum    marker, e.g.,   SHA1 (id) = xxxxxxxxx                                ^here  	Return 0 for errors.  */
+comment|/*  * Finalize SHA1 checksum for our sha1_context into result   * (size at least BUFSIZE).  Returns the length of the checksum  * marker, e.g.,   SHA1 (id) = xxxxxxxxx  *                             ^here   * Return 0 for errors.  */
 end_comment
 
 begin_function

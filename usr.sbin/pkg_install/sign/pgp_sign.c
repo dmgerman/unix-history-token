@@ -1163,7 +1163,7 @@ argument_list|(
 literal|"Enter passphrase:"
 argument_list|)
 expr_stmt|;
-comment|/* somewhat kludgy code to get the passphrase to pgp, see  		   pgp documentation for the gore 		 */
+comment|/* 		 * Somewhat kludgy code to get the passphrase to pgp, see  		 * pgp documentation for the gore 		 */
 if|if
 condition|(
 name|pipe
@@ -1222,7 +1222,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* the child fills the pipe with copies of the passphrase. 				   Expect violent death when father exits. 				 */
+comment|/* 				 * The child fills the pipe with copies of the passphrase. 				 * Expect violent death when father exits. 				 */
 name|printf
 argument_list|(
 literal|"Child process %d stuffing passphrase in pipe:\n"
