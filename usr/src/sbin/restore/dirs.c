@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.3 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,7 +822,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|dp
 operator|=
 name|rst_readdir
@@ -831,40 +830,16 @@ name|dirp
 argument_list|)
 expr_stmt|;
 comment|/* ".." */
-block|}
 else|else
-block|{
-name|np
-operator|=
-name|lookupino
-argument_list|(
-name|ino
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|np
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"corrupted symbol table\n"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|". missing from directory %s\n"
+literal|"Warning: `.' missing from directory %s\n"
 argument_list|,
-name|myname
-argument_list|(
-name|np
-argument_list|)
+name|pname
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|dp
@@ -882,7 +857,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|dp
 operator|=
 name|rst_readdir
@@ -891,40 +865,16 @@ name|dirp
 argument_list|)
 expr_stmt|;
 comment|/* first real entry */
-block|}
 else|else
-block|{
-name|np
-operator|=
-name|lookupino
-argument_list|(
-name|ino
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|np
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"corrupted symbol table\n"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|".. missing from directory %s\n"
+literal|"Warning: `..' missing from directory %s\n"
 argument_list|,
-name|myname
-argument_list|(
-name|np
-argument_list|)
+name|pname
 argument_list|)
 expr_stmt|;
-block|}
 name|bpt
 operator|=
 name|telldir

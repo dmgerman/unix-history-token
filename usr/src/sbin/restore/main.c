@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -875,6 +875,15 @@ argument_list|()
 expr_stmt|;
 name|extractdirs
 argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|initsymtable
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
