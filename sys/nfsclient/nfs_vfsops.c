@@ -5170,6 +5170,31 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Goes something like this.. 	 * - Call vflush() to clear out vnodes for this file system 	 * - Close the socket 	 * - Free up the data structures 	 */
+comment|/* In the forced case, cancel any outstanding requests. */
+if|if
+condition|(
+name|flags
+operator|&
+name|FORCECLOSE
+condition|)
+block|{
+name|error
+operator|=
+name|nfs_nmcancelreqs
+argument_list|(
+name|nmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 comment|/* We hold 1 extra ref on the root vnode; see comment in mountnfs(). */
 name|error
 operator|=

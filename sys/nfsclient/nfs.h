@@ -1423,6 +1423,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|nfs_nmcancelreqs
+parameter_list|(
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|nfs_timer
 parameter_list|(
