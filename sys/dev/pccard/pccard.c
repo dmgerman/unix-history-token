@@ -1461,6 +1461,14 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+name|resource_list_init
+argument_list|(
+operator|&
+name|ivar
+operator|->
+name|resources
+argument_list|)
+expr_stmt|;
 name|child
 operator|=
 name|device_add_child
