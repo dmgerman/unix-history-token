@@ -4645,13 +4645,6 @@ operator|)
 return|;
 block|}
 block|}
-name|VREF
-argument_list|(
-name|ip
-operator|->
-name|i_devvp
-argument_list|)
-expr_stmt|;
 operator|*
 name|vpp
 operator|=
