@@ -95,7 +95,7 @@ name|ASM_FINAL_SPEC
 end_undef
 
 begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg. */
+comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg.  */
 end_comment
 
 begin_undef
@@ -114,7 +114,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|fputs ("\tjsr $28,_mcount\n", (FILE));
+value|fputs ("\tjsr $28,_mcount\n", (FILE))
 end_define
 
 begin_comment
@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_VERSION
-value|fprintf (stderr, " (FreeBSD/alpha ELF)");
+value|fprintf (stderr, " (FreeBSD/Alpha ELF)");
 end_define
 
 begin_comment
@@ -191,11 +191,11 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64alpha					\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}		\   %{Wl,*:%*}							\   %{assert*} %{R*} %{rpath*} %{defsym*}				\   %{shared:-Bshareable %{h*} %{soname*}}			\   %{symbolic:-Bsymbolic}					\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}}"
+value|"-m elf64alpha					\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}			\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}}	\     %{static:-Bstatic}}"
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC for FreeBSD that is compatible with the    non-aout version used on i386. */
+comment|/* Provide a STARTFILE_SPEC for FreeBSD that is compatible with the    non-aout version used on i386.  */
 end_comment
 
 begin_undef
@@ -209,11 +209,11 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \     %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}	\      %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
 begin_comment
-comment|/* Provide a ENDFILE_SPEC appropriate for FreeBSD.  Here we tack on    the file which provides part of the support for getting C++    file-scope static object deconstructed after exiting `main' */
+comment|/* Provide a ENDFILE_SPEC appropriate for ELF.  Here we tack on the    magical crtend.o file which provides part of the support for    getting C++ file-scope static object constructed before entering    `main', followed by a normal ELF "finalizer" file, `crtn.o'.  */
 end_comment
 
 begin_undef
