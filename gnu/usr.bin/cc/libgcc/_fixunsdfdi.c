@@ -484,9 +484,11 @@ begin_function
 name|DItype
 name|__fixunsdfdi
 parameter_list|(
-name|DFtype
 name|a
 parameter_list|)
+name|DFtype
+name|a
+decl_stmt|;
 block|{
 name|DFtype
 name|b

@@ -1517,7 +1517,7 @@ end_function_decl
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|int
 name|__sputc
 parameter_list|(
