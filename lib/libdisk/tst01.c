@@ -2242,7 +2242,6 @@ argument_list|(
 name|device
 argument_list|,
 name|_PATH_DEV
-literal|"r"
 argument_list|)
 expr_stmt|;
 name|strcat

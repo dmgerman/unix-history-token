@@ -271,7 +271,6 @@ argument_list|(
 name|device
 argument_list|,
 name|_PATH_DEV
-literal|"r"
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1199,7 +1198,6 @@ argument_list|(
 name|pname
 argument_list|,
 name|_PATH_DEV
-literal|"r"
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1541,7 +1539,6 @@ argument_list|(
 name|pname
 argument_list|,
 name|_PATH_DEV
-literal|"r"
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -2475,7 +2472,7 @@ argument_list|(
 name|disk
 argument_list|,
 name|_PATH_DEV
-literal|"r%s"
+literal|"%s"
 argument_list|,
 name|diskname
 argument_list|)
