@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -86,7 +86,31 @@ comment|/* VAX_750 */
 block|}
 name|cpu750
 struct|;
-comment|/* need structure for 730 */
+struct|struct
+name|cpu730
+block|{
+name|u_int
+label|:
+literal|8
+operator|,
+comment|/* reserved */
+name|cp_urev
+operator|:
+literal|8
+operator|,
+comment|/* ucode rev level */
+operator|:
+literal|8
+operator|,
+comment|/* reserved */
+name|cp_type
+operator|:
+literal|8
+expr_stmt|;
+comment|/* VAX_730 */
+block|}
+name|cpu730
+struct|;
 block|}
 union|;
 end_union
