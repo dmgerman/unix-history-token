@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.85 2000/04/01 09:27:35 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.88 2000/04/25 14:28:13 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -7230,6 +7230,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Pick out CHANGE bits from the status reg. */
 if|if
 condition|(
 name|OREAD4
