@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	6.1 %G%"
+literal|"@(#)ex.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1275,35 +1275,6 @@ name|edited
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USG
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|USG3TTY
-ifndef|#
-directive|ifndef
-name|USG
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 for|for
 control|(
 name|i
