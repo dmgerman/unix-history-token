@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.16 %G%"
+literal|"@(#)lab.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,7 +600,10 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
-comment|/* 		     *	this is a jmp because it's a jump to a label that 		     *	has been declared global. Although this branch is 		     *	within this module the assembler will complain that 		     *	the destination is a global symbol. The complaint 		     *	arises because the assembler doesn't change jbr's 		     *	into jmp's and consequently may cause a branch  		     *	displacement overflow when the module is subsequently 		     *	linked into the rest of the program. 		     */
+comment|/* 		     * this is a funny jump because it's to a label that 		     * has been declared global. 		     * Although this branch is within this module 		     * the assembler will complain that the destination 		     * is a global symbol. 		     * The complaint arises because the assembler 		     * doesn't change relative jumps into absolute jumps. 		     * and this  may cause a branch displacement overflow 		     * when the module is subsequently linked with 		     * the rest of the program. 		     */
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	jmp	%s"
@@ -610,10 +613,28 @@ argument_list|,
 name|extname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+name|putprintf
+argument_list|(
+literal|"	jra	%s"
+argument_list|,
+literal|0
+argument_list|,
+name|extname
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 block|}
 else|else
 block|{
-comment|/* 		     *	Non-local goto. 		     * 		     *  Close all active files between top of stack and 		     *  frame at the destination level.	Then call longjmp 		     *	to unwind the stack to the destination level. 		     * 		     *	For nested routines the end is calculated as: 		     *	__disply[ bn ] . ap + sizeof( local frame ) 		     *	The size of the local frame is dumped out by 		     *	the second pass as an assembler constant. 		     *	The main routine may not be compiled in this 		     *	module, so its size may not be available. 		     * 	However all of its variables will be globally 		     *	declared, so only the known runtime temporaries 		     *	will be in its stack frame. 		     */
+comment|/* 		     *	Non-local goto. 		     * 		     *  Close all active files between top of stack and 		     *  frame at the destination level.	Then call longjmp 		     *	to unwind the stack to the destination level. 		     * 		     *	For nested routines the end of the frame 		     *	is calculated as: 		     *	    __disply[bn].fp + sizeof(local frame) 		     *	(adjusted by (sizeof int) to get just past the end). 		     *	The size of the local frame is dumped out by 		     *	the second pass as an assembler constant. 		     *	The main routine may not be compiled in this 		     *	module, so its size may not be available. 		     * 	However all of its variables will be globally 		     *	declared, so only the known runtime temporaries 		     *	will be in its stack frame. 		     */
 name|parts
 index|[
 name|bn
@@ -664,7 +685,9 @@ name|sprintf
 argument_list|(
 name|extname
 argument_list|,
-literal|"LF%d+%d"
+literal|"%s%d+%d"
+argument_list|,
+name|FRAME_SIZE_LABEL
 argument_list|,
 name|p
 operator|->
