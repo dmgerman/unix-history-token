@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_pci.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -5927,17 +5921,6 @@ name|dinfo
 operator|->
 name|cfg
 decl_stmt|;
-comment|/* 	 * You can share PCI interrupts. 	 */
-if|if
-condition|(
-name|type
-operator|==
-name|SYS_RES_IRQ
-condition|)
-name|flags
-operator||=
-name|RF_SHAREABLE
-expr_stmt|;
 comment|/* 	 * Perform lazy resource allocation 	 * 	 * XXX add support here for SYS_RES_IOPORT and SYS_RES_MEMORY 	 */
 if|if
 condition|(
