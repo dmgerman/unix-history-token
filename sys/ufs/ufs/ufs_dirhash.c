@@ -610,6 +610,21 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Don't hash removed directories. */
+if|if
+condition|(
+name|ip
+operator|->
+name|i_effnlink
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|vp
 operator|=
 name|ip
