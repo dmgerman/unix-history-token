@@ -393,6 +393,13 @@ block|}
 block|,
 comment|/* IOD0081 - I-O DATA DEVICE,INC. IFML-560 */
 block|{
+literal|0x71004d24
+block|,
+name|NULL
+block|}
+block|,
+comment|/* IBM0071 - IBM ThinkPad 240 IrDA controller*/
+block|{
 literal|0x21002534
 block|,
 name|NULL
@@ -504,6 +511,13 @@ name|NULL
 block|}
 block|,
 comment|/* SHP1010 - Rockwell 33600bps Modem */
+block|{
+literal|0x10f0a34d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SMCF010 - SMC IrCC*/
 block|{
 literal|0xc100ad4d
 block|,
