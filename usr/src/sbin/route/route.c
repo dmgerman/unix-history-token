@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.11 (Berkeley) %G%"
+literal|"@(#)route.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,6 +1066,10 @@ name|struct
 name|radix_node
 name|rnode
 decl_stmt|;
+name|struct
+name|nrtentry
+name|nrtentry
+decl_stmt|;
 name|kget
 argument_list|(
 name|rn
@@ -1113,6 +1117,50 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|rnode
+operator|.
+name|rn_flags
+operator|&
+name|RNF_ACTIVE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Dead entry in tree: %x\n"
+argument_list|,
+name|rn
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|kget
+argument_list|(
+name|rn
+argument_list|,
+name|nrtentry
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nrtentry
+operator|.
+name|nrt_rt
+operator|.
+name|rt_flags
+operator|&
+name|RTF_GATEWAY
+condition|)
+block|{
 operator|*
 name|rnp
 operator|=
@@ -1121,6 +1169,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 block|}
 else|else
