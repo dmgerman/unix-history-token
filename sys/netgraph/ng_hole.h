@@ -33,6 +33,53 @@ name|NGM_HOLE_COOKIE
 value|915433206
 end_define
 
+begin_comment
+comment|/* Statistics structure for one hook. */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_hole_hookstat
+block|{
+name|uint64_t
+name|frames
+decl_stmt|;
+name|uint64_t
+name|octets
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_HOLE_HOOKSTAT_TYPE_INFO
+value|{				\ 	{ "frames",&ng_parse_uint64_type },		\ 	{ "octets",&ng_parse_uint64_type },		\ 	{ NULL }						\ }
+end_define
+
+begin_comment
+comment|/* Netgraph commands. */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_HOLE_GET_STATS
+init|=
+literal|1
+block|,
+name|NGM_HOLE_CLR_STATS
+block|,
+name|NGM_HOLE_GETCLR_STATS
+block|, }
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif
