@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)subr_rmap.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)subr_rmap.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -51,49 +51,38 @@ begin_comment
 comment|/*  * Initialize map mp to have (mapsize-2) segments  * and to be called ``name'', which we print if  * the slots become so fragmented that we lose space.  * The map itself is initialized with size elements free  * starting at addr.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|rminit
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|addr
-argument_list|,
+parameter_list|,
 name|name
-argument_list|,
+parameter_list|,
 name|mapsize
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|map
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|long
 name|size
 decl_stmt|,
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mapsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -164,7 +153,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * A piece of memory of at least size units is allocated from the  * specified map using a first-fit algorithm. It returns the starting  * address of the allocated space.  *  * This routine knows about and handles the interleaving of the swapmap.  */
@@ -439,34 +428,26 @@ begin_comment
 comment|/*  * The previously allocated space at addr of size units is freed  * into the specified map. This routine is responsible for sorting  * the frred space into the correct location in the map, and coalescing  * it with free space on either side if they adjoin.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rmfree
-argument_list|(
-argument|mp
-argument_list|,
-argument|size
-argument_list|,
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|size
+parameter_list|,
+name|addr
+parameter_list|)
 name|struct
 name|map
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|size
 decl_stmt|,
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|mapent
@@ -843,7 +824,7 @@ literal|"bad rmfree"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
