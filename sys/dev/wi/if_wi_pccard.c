@@ -740,6 +740,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|FUJITSU
+argument_list|,
+name|WL110
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|LUCENT
 argument_list|,
 name|WAVELAN_IEEE
