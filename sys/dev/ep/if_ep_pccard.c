@@ -825,7 +825,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ep_pccard_detach
 parameter_list|(
 name|device_t
@@ -861,7 +861,11 @@ argument_list|,
 literal|"already unloaded\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|sc
 operator|->
@@ -874,7 +878,7 @@ operator|&=
 operator|~
 name|IFF_RUNNING
 expr_stmt|;
-name|if_down
+name|if_detach
 argument_list|(
 operator|&
 name|sc
@@ -915,6 +919,11 @@ argument_list|,
 literal|"unload\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
