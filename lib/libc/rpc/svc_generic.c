@@ -1009,11 +1009,6 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
 name|bindaddr
 operator|->
 name|addr
