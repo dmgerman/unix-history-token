@@ -1480,13 +1480,13 @@ operator|||
 name|sx
 operator|->
 name|sx_xholder
-operator|==
+operator|!=
 name|curthread
 operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"Lock %s not %slocked @ %s:%d"
+literal|"Lock %s not %slocked @ %s:%d\n"
 argument_list|,
 name|sx
 operator|->
@@ -1539,7 +1539,7 @@ name|curthread
 condition|)
 name|printf
 argument_list|(
-literal|"Lock %s not exclusively locked @ %s:%d"
+literal|"Lock %s not exclusively locked @ %s:%d\n"
 argument_list|,
 name|sx
 operator|->
