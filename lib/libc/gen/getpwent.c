@@ -3395,11 +3395,6 @@ name|resultlen
 argument_list|)
 condition|)
 block|{
-name|free
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
