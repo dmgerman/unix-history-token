@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rwho.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rwho.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,13 +94,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -98,7 +124,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -195,7 +227,39 @@ name|aflg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|utmpcmp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|myutmp
+operator|*
+operator|,
+expr|struct
+name|myutmp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -211,15 +275,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -312,17 +367,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: rwho [-a]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -343,18 +389,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|_PATH_RWHODIR
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|mp
 operator|=
 name|myutmp
@@ -370,12 +413,14 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|readdir
 argument_list|(
 name|dirp
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -529,18 +574,13 @@ name|nusers
 operator|>=
 name|NUSERS
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"too many users\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"too many users"
 argument_list|)
 expr_stmt|;
-block|}
 name|mp
 operator|->
 name|myutmp
@@ -853,25 +893,44 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|utmpcmp
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
 argument_list|(
-argument|u1
+name|stderr
 argument_list|,
-argument|u2
+literal|"usage: rwho [-a]\n"
 argument_list|)
-end_macro
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_function
+name|int
+name|utmpcmp
+parameter_list|(
+name|u1
+parameter_list|,
+name|u2
+parameter_list|)
 name|struct
 name|myutmp
 modifier|*
 name|u1
 decl_stmt|,
-modifier|*
+decl|*
 name|u2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
