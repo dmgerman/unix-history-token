@@ -83,6 +83,11 @@ decl_stmt|;
 comment|/* FRAMED Routes */
 name|char
 modifier|*
+name|msrepstr
+decl_stmt|;
+comment|/* MS-CHAP2-Response */
+name|char
+modifier|*
 name|repstr
 decl_stmt|;
 comment|/* Reply-Message */
@@ -213,7 +218,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|radius_Authenticate
 parameter_list|(
 name|struct
@@ -227,6 +232,12 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 specifier|const
 name|char
