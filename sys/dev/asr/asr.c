@@ -14137,11 +14137,11 @@ name|asr_cdevsw
 argument_list|,
 name|unit
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_OPERATOR
 argument_list|,
-name|S_IRWXU
+literal|0640
 argument_list|,
 literal|"rasr%d"
 argument_list|,
