@@ -12600,7 +12600,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"Medium"
+literal|"Moderate"
 block|,
 literal|"Moderate security settings."
 block|,
