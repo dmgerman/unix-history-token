@@ -309,7 +309,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|const
 name|u_int16_t
 modifier|*
 name|dv_ispfw
@@ -1580,6 +1579,15 @@ name|u_int16_t
 name|isp_residx
 decl_stmt|;
 comment|/* index of next result */
+specifier|volatile
+name|u_int16_t
+name|isp_resodx
+decl_stmt|;
+comment|/* index of next result */
+specifier|volatile
+name|u_int16_t
+name|isp_rspbsy
+decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|isp_lasthdls

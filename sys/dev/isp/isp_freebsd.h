@@ -237,7 +237,7 @@ typedef|,
 name|int
 typedef|,
 name|int
-typedef|, const
+typedef|,
 name|u_int16_t
 modifier|*
 modifier|*
