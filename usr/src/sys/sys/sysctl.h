@@ -1,7 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)sysctl.h	7.21 (Berkeley) %G%  */
 end_comment
+
+begin_comment
+comment|/*  * These are for the eproc structure defined below.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Definitions for sysctl call.  The sysctl call uses a hierarchical name  * for objects that can be examined or modified.  The name is expressed as  * a sequence of integers.  Like a file path name, the meaning of each  * component depends on its place in the hierarchy.  The top-level and kern  * identifiers are defined here, and other identifiers are defined in the  * respective subsystem header files.  */
@@ -495,6 +534,164 @@ comment|/* by real uid */
 end_comment
 
 begin_comment
+comment|/*   * KERN_PROC subtype ops return arrays of augmented proc structures:  */
+end_comment
+
+begin_struct
+struct|struct
+name|kinfo_proc
+block|{
+name|struct
+name|proc
+name|kp_proc
+decl_stmt|;
+comment|/* proc structure */
+struct|struct
+name|eproc
+block|{
+name|struct
+name|proc
+modifier|*
+name|e_paddr
+decl_stmt|;
+comment|/* address of proc */
+name|struct
+name|session
+modifier|*
+name|e_sess
+decl_stmt|;
+comment|/* session pointer */
+name|struct
+name|pcred
+name|e_pcred
+decl_stmt|;
+comment|/* process credentials */
+name|struct
+name|ucred
+name|e_ucred
+decl_stmt|;
+comment|/* current credentials */
+ifdef|#
+directive|ifdef
+name|sparc
+struct|struct
+block|{
+name|segsz_t
+name|vm_rssize
+decl_stmt|;
+comment|/* resident set size */
+name|segsz_t
+name|vm_tsize
+decl_stmt|;
+comment|/* text size */
+name|segsz_t
+name|vm_dsize
+decl_stmt|;
+comment|/* data size */
+name|segsz_t
+name|vm_ssize
+decl_stmt|;
+comment|/* stack size */
+block|}
+name|e_vm
+struct|;
+else|#
+directive|else
+name|struct
+name|vmspace
+name|e_vm
+decl_stmt|;
+comment|/* address space */
+endif|#
+directive|endif
+name|pid_t
+name|e_ppid
+decl_stmt|;
+comment|/* parent process id */
+name|pid_t
+name|e_pgid
+decl_stmt|;
+comment|/* process group id */
+name|short
+name|e_jobc
+decl_stmt|;
+comment|/* job control counter */
+name|dev_t
+name|e_tdev
+decl_stmt|;
+comment|/* controlling tty dev */
+name|pid_t
+name|e_tpgid
+decl_stmt|;
+comment|/* tty process group id */
+name|struct
+name|session
+modifier|*
+name|e_tsess
+decl_stmt|;
+comment|/* tty session pointer */
+define|#
+directive|define
+name|WMESGLEN
+value|7
+name|char
+name|e_wmesg
+index|[
+name|WMESGLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* wchan message */
+name|segsz_t
+name|e_xsize
+decl_stmt|;
+comment|/* text size */
+name|short
+name|e_xrssize
+decl_stmt|;
+comment|/* text rss */
+name|short
+name|e_xccount
+decl_stmt|;
+comment|/* text references */
+name|short
+name|e_xswrss
+decl_stmt|;
+name|long
+name|e_flag
+decl_stmt|;
+define|#
+directive|define
+name|EPROC_CTTY
+value|0x01
+comment|/* controlling tty vnode active */
+define|#
+directive|define
+name|EPROC_SLEADER
+value|0x02
+comment|/* session leader */
+name|char
+name|e_login
+index|[
+name|MAXLOGNAME
+index|]
+decl_stmt|;
+comment|/* setlogin() name */
+name|long
+name|e_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|kp_eproc
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * CTL_HW identifiers  */
 end_comment
 
@@ -904,6 +1101,24 @@ name|void
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fill_eproc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|eproc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
