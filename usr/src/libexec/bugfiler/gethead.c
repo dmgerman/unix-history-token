@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethead.c	5.9 (Berkeley) %G%"
+literal|"@(#)gethead.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,10 @@ name|distf
 decl_stmt|;
 name|distf
 operator|=
+name|strdup
+argument_list|(
 name|_PATH_TMP
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -350,6 +353,11 @@ operator|(
 name|void
 operator|)
 name|unlink
+argument_list|(
+name|distf
+argument_list|)
+expr_stmt|;
+name|free
 argument_list|(
 name|distf
 argument_list|)
