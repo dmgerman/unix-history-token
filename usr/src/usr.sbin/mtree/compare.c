@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.11 (Berkeley) %G%"
+literal|"@(#)compare.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -514,7 +514,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", not modified: %s)"
+literal|", not modified: %s)\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -528,7 +528,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", modified)"
+literal|", modified)\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -614,7 +614,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", not modified: %s)"
+literal|", not modified: %s)\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -628,7 +628,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", modified)"
+literal|", modified)\n"
 argument_list|)
 expr_stmt|;
 else|else
