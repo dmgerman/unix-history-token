@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.21 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmmac.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -74,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
 end_include
 
 begin_include
