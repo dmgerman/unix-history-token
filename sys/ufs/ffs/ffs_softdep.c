@@ -1405,13 +1405,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|int
-name|lockcnt
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -1536,9 +1529,6 @@ operator|->
 name|lkt_held
 operator|=
 name|curthread
-expr_stmt|;
-name|lockcnt
-operator|++
 expr_stmt|;
 block|}
 end_function
@@ -1871,9 +1861,6 @@ operator|->
 name|lkt_held
 operator|=
 name|curthread
-expr_stmt|;
-name|lockcnt
-operator|++
 expr_stmt|;
 endif|#
 directive|endif
