@@ -903,7 +903,7 @@ name|m
 operator|+=
 name|printf
 argument_list|(
-literal|"%x%c"
+literal|"%02x%c"
 argument_list|,
 operator|*
 name|cp
