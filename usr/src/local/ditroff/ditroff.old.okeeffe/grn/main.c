@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.16	(Berkeley) 84/04/17  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values (font, size, scale, thickness) may be  * overridden with a "default" command and are further overridden by  * commands in the input.  A description of the command-line options are  * listed below.  A space is NOT required for the operand of an option.  *  *	command options are:  *  *	-L dir	set the library directory to dir.  If a file is not found  *		in the current directory, it is looked for in dir (default  *		is /usr/lib/gremlib).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *	-P dev	and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *		Inside the GS and GE, commands are accepted to reconfigure  *	    the picture.  At most one command may reside on each line, and  *	    each command is followed by a parameter separated by white space.  *	    The commands are as follows, and may be abbreviated down to one  *	    character (with exception of "scale" down to "sc") and may be  *	    upper or lower case.  *  *			      default  -  make all settings in the current  *					  .GS/.GE the global defaults.  *					  Height, width and file are NOT saved.  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *					  by an integer point size).  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the default.  *			   pointscale  -  turn on scaling point sizes to  *					  match "scale" commands.  (optional  *					  operand "off" to turn it off)  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  If the file  *					  isn't in the current directory, the  *					  gremlin library is tried.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g3, and g4, save information, g8  *	and g9 are used for text processing and g5-g7 are reserved.  */
+comment|/*	main.c	1.17	(Berkeley) 84/05/25  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values (font, size, scale, thickness) may be  * overridden with a "default" command and are further overridden by  * commands in the input.  A description of the command-line options are  * listed below.  A space is NOT required for the operand of an option.  *  *	command options are:  *  *	-L dir	set the library directory to dir.  If a file is not found  *		in the current directory, it is looked for in dir (default  *		is /usr/lib/gremlib).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *	-P dev	and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *		Inside the GS and GE, commands are accepted to reconfigure  *	    the picture.  At most one command may reside on each line, and  *	    each command is followed by a parameter separated by white space.  *	    The commands are as follows, and may be abbreviated down to one  *	    character (with exception of "scale" and "stipple" down to "sc"  *	    and "st") and may be upper or lower case.  *  *			      default  -  make all settings in the current  *					  .GS/.GE the global defaults.  *					  Height, width and file are NOT saved.  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *					  by an integer point size).  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			   stipple, l  -  use a stipple font for polygons.  Arg  *					  is troff font name.  No Default.  Can  *					  use only one stipple font per picture.  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the default.  *			   pointscale  -  turn on scaling point sizes to  *					  match "scale" commands.  (optional  *					  operand "off" to turn it off)  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  If the file  *					  isn't in the current directory, the  *					  gremlin library is tried.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g3, and g4, save information, g8  *	and g9 are used for text processing and g5-g7 are reserved.  */
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"main.c	1.16	84/04/17"
+literal|"main.c	1.17	84/05/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,6 +386,19 @@ comment|/* flag for pointsize scaling */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|defstipple
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|thick
 index|[
@@ -424,6 +437,13 @@ end_decl_stmt
 begin_comment
 comment|/*    optionally changed by commands inside grn */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|stipple
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|double
@@ -1339,6 +1359,10 @@ name|i
 index|]
 expr_stmt|;
 block|}
+name|stipple
+operator|=
+name|defstipple
+expr_stmt|;
 name|gremlinfile
 index|[
 literal|0
@@ -1846,6 +1870,20 @@ argument_list|,
 name|GScommand
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stipple
+condition|)
+block|{
+comment|/* stipple requested for this picture */
+name|printf
+argument_list|(
+literal|".st %s\n"
+argument_list|,
+name|stipple
+argument_list|)
+expr_stmt|;
+block|}
 name|lastx
 operator|=
 name|xleft
@@ -1871,12 +1909,14 @@ name|e
 argument_list|)
 condition|)
 block|{
+comment|/* traverse picture;  print elements */
 name|HGPrintElt
 argument_list|(
 name|e
+argument_list|,
+name|baseline
 argument_list|)
 expr_stmt|;
-comment|/* traverse picture;  print elements */
 name|e
 operator|=
 name|DBNextElt
@@ -1940,6 +1980,18 @@ argument_list|(
 literal|".sp -1\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stipple
+condition|)
+block|{
+comment|/* restore stipple to previous */
+name|printf
+argument_list|(
+literal|".st\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\\D't %du'\\D's %du'\n"
@@ -1977,7 +2029,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	savestate  ( )  |  | Results:	all the current  scaling / font size / font name / thickness /  |		pointscale  settings are saved to be the defaults.  Scaled  |		point sizes are NOT saved.  The scaling is done each time a  |		new picture is started.  |  | Side Efct:	defpoint, scale, deffont, defsize and defthick are modified.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	savestate  ( )  |  | Results:	all the current  scaling / font size / font name / thickness /  |		pointscale  settings are saved to be the defaults.  Scaled  |		point sizes are NOT saved.  The scaling is done each time a  |		new picture is started.  |  | Side Efct:	scale, and def* are modified.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -2069,6 +2121,11 @@ name|i
 index|]
 expr_stmt|;
 block|}
+name|defstipple
+operator|=
+name|stipple
+expr_stmt|;
+comment|/* if stipple has been set, it's remembered */
 name|scale
 operator|*=
 name|xscale
@@ -2480,6 +2537,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|str1
+index|[
+literal|1
+index|]
+operator|==
+literal|'t'
+condition|)
+goto|goto
+name|stipplecommand
+goto|;
+comment|/* or stipple */
 name|tfont
 index|[
 literal|3
@@ -2501,6 +2571,33 @@ name|tfont
 index|[
 literal|3
 index|]
+argument_list|,
+name|str2
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+comment|/* l */
+name|stipplecommand
+label|:
+comment|/* stipple */
+name|stipple
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|str2
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|stipple
 argument_list|,
 name|str2
 argument_list|)
