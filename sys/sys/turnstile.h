@@ -53,6 +53,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|turnstile_adjust
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|u_char
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|turnstile
 modifier|*

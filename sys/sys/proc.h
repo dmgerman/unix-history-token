@@ -754,6 +754,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_BORROWING
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Thread is borrowing pri from another. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_UNUSED0
 value|0x00000001
 end_define
