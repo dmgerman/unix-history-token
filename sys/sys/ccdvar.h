@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccdvar.h,v 1.6 1997/02/22 09:44:51 peter Exp $ */
+comment|/* $Id: ccdvar.h,v 1.7 1998/09/15 10:07:26 gibbs Exp $ */
 end_comment
 
 begin_comment
@@ -308,10 +308,19 @@ name|sc_geom
 decl_stmt|;
 comment|/* pseudo geometry info */
 name|struct
-name|dkdevice
-name|sc_dkdev
+name|disklabel
+name|sc_label
 decl_stmt|;
 comment|/* generic disk device info */
+name|int
+name|sc_bopenmask
+decl_stmt|;
+name|int
+name|sc_copenmask
+decl_stmt|;
+name|int
+name|sc_openmask
+decl_stmt|;
 block|}
 struct|;
 end_struct
