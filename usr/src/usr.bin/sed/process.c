@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.6 (Berkeley) %G%"
+literal|"@(#)process.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,28 +175,6 @@ operator|(
 expr|struct
 name|s_command
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|cspace
-name|__P
-argument_list|(
-operator|(
-name|SPACE
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|size_t
-operator|,
-expr|enum
-name|e_spflag
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1457,10 +1435,11 @@ name|regex_t
 modifier|*
 name|re
 decl_stmt|;
+name|size_t
+name|re_off
+decl_stmt|;
 name|int
 name|n
-decl_stmt|,
-name|re_off
 decl_stmt|;
 name|char
 modifier|*
