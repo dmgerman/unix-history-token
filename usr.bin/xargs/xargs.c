@@ -797,7 +797,7 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
-name|u_int
+name|size_t
 operator|)
 name|nline
 operator|+
@@ -1253,6 +1253,9 @@ name|replstr
 argument_list|,
 name|inpline
 argument_list|,
+operator|(
+name|size_t
+operator|)
 literal|255
 argument_list|)
 expr_stmt|;
