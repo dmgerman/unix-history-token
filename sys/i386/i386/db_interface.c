@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.9 1994/09/02 04:12:02 davidg Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.10 1994/09/15 11:38:59 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -34,18 +34,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ddb/ddb.h>
+file|<sys/reboot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
+file|<machine/segments.h>
 end_include
 
-begin_comment
-comment|/* #include<vm/vm_statistics.h> */
-end_comment
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
 
 begin_include
 include|#
@@ -73,53 +75,21 @@ name|ddb_regs
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Received keyboard interrupt sequence.  */
 end_comment
 
-begin_function
-name|void
-name|kdb_kbd_trap
-parameter_list|(
-name|regs
-parameter_list|)
-name|struct
-name|i386_saved_state
-modifier|*
-name|regs
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|db_active
-operator|==
-literal|0
-operator|&&
-operator|(
-name|boothowto
-operator|&
-name|RB_KDB
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\n\nkernel: keyboard interrupt\n"
-argument_list|)
-expr_stmt|;
-name|kdb_trap
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+begin_endif
+unit|void kdb_kbd_trap(regs) 	struct i386_saved_state *regs; { 	if (db_active == 0&& (boothowto& RB_KDB)) { 	    db_printf("\n\nkernel: keyboard interrupt\n"); 	    kdb_trap(-1, 0, regs); 	} }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  kdb_trap - field a TRACE or BPT trap  */
@@ -170,24 +140,12 @@ condition|)
 block|{
 case|case
 name|T_BPTFLT
-comment|/* T_INT3 */
 case|:
 comment|/* breakpoint */
 case|case
-name|T_KDBTRAP
-comment|/* T_WATCHPOINT */
+name|T_TRCTRAP
 case|:
-comment|/* watchpoint */
-case|case
-name|T_PRIVINFLT
-comment|/* T_DEBUG */
-case|:
-comment|/* single_step */
-case|case
-operator|-
-literal|1
-case|:
-comment|/* keyboard interrupt */
+comment|/* debug exception */
 break|break;
 default|default:
 name|kdbprinttrap
@@ -230,13 +188,12 @@ name|regs
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ISPL
+argument_list|(
 name|regs
 operator|->
 name|tf_cs
-operator|&
-literal|0x3
-operator|)
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -255,13 +212,23 @@ operator|->
 name|tf_esp
 expr_stmt|;
 comment|/* kernel stack pointer */
-if|#
-directive|if
-literal|0
-block|ddb_regs.ss   = KERNEL_DS;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+define|#
+directive|define
+name|rss
+parameter_list|()
+value|({u_short ss; __asm __volatile("movl %%ss,%0" : "=r" (ss)); ss;})
 endif|#
 directive|endif
-asm|asm(" movw %%ss,%%ax; movl %%eax,%0 "  		: "=g" (ddb_regs.tf_ss)  		: 		: "ax");
+name|ddb_regs
+operator|.
+name|tf_ss
+operator|=
+name|rss
+argument_list|()
+expr_stmt|;
 block|}
 name|db_active
 operator|++
@@ -336,11 +303,12 @@ name|tf_ebx
 expr_stmt|;
 if|if
 condition|(
+name|ISPL
+argument_list|(
 name|regs
 operator|->
 name|tf_cs
-operator|&
-literal|0x3
+argument_list|)
 condition|)
 block|{
 comment|/* 	     * user mode - saved esp and ss valid 	     */
@@ -451,19 +419,19 @@ decl_stmt|,
 name|code
 decl_stmt|;
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"kernel: "
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"type %d"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|" trap, code=%x\n"
 argument_list|,
@@ -765,7 +733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX move this to machdep.c and allow it to be called iff any debugger is  * installed.  * XXX msg is not printed.  */
+comment|/*  * XXX move this to machdep.c and allow it to be called iff any debugger is  * installed.  */
 end_comment
 
 begin_function
@@ -795,10 +763,17 @@ name|in_Debugger
 operator|=
 literal|1
 expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"Debugger(\"%s\")\n"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__GNUC__
-asm|asm("int $3");
+asm|__asm __volatile("int $3");
 else|#
 directive|else
 name|int3
