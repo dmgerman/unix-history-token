@@ -50,6 +50,8 @@ argument_list|,
 name|col
 argument_list|,
 name|c
+argument_list|,
+name|m
 argument_list|)
 specifier|register
 expr|struct
@@ -60,8 +62,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|short
+name|char
 name|c
+decl_stmt|,
+name|m
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +76,15 @@ name|i
 expr_stmt|;
 name|int
 name|nvis
+decl_stmt|;
+name|short
+name|x
+init|=
+name|c
+operator||
+name|m
+operator|<<
+name|WWC_MSHIFT
 decl_stmt|;
 comment|/* 	 * First, shift the line. 	 */
 block|{
@@ -137,7 +150,7 @@ name|q
 operator|->
 name|c_w
 operator|=
-name|c
+name|x
 expr_stmt|;
 block|}
 comment|/* 	 * If can't see it, just return. 	 */
@@ -413,7 +426,7 @@ name|tt_inschar
 operator|||
 name|tt
 operator|.
-name|tt_setinsert
+name|tt_insspace
 operator|)
 operator|&&
 name|nvis
@@ -436,6 +449,12 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_inschar
+condition|)
 name|xxinschar
 argument_list|(
 name|row
@@ -443,12 +462,24 @@ argument_list|,
 name|col
 argument_list|,
 name|c
-operator|&
-name|wwavailmodes
-operator|<<
-name|WWC_MSHIFT
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|xxinsspace
+argument_list|(
+name|row
+argument_list|,
+name|col
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
+literal|' '
+expr_stmt|;
+block|}
 name|p
 operator|=
 operator|&
@@ -492,13 +523,7 @@ name|q
 operator|->
 name|c_w
 operator|=
-name|tt
-operator|.
-name|tt_setinsert
-condition|?
-name|c
-else|:
-literal|' '
+name|x
 expr_stmt|;
 block|}
 block|}
