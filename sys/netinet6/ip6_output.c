@@ -8031,6 +8031,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|opt
+operator|->
+name|ip6po_m
+operator|=
+name|control
+expr_stmt|;
 for|for
 control|(
 init|;
