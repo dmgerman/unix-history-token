@@ -122,6 +122,22 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|db_build
 name|__P
@@ -681,9 +697,14 @@ name|warnx
 argument_list|(
 literal|"record not tc expanded: %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|bp
+argument_list|)
 argument_list|,
 name|bp
 argument_list|)
