@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.12	%G%	*/
+comment|/*	kern_synch.c	3.13	%G%	*/
 end_comment
 
 begin_include
@@ -1332,7 +1332,11 @@ name|rip
 operator|->
 name|p_flag
 operator|&
+operator|(
 name|SPAGI
+operator||
+name|SDETACH
+operator|)
 operator|)
 expr_stmt|;
 if|if
