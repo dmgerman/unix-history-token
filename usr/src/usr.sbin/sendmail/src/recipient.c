@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.2 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,11 +1073,6 @@ name|q_next
 operator|=
 name|NULL
 expr_stmt|;
-name|e
-operator|->
-name|e_nrcpts
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|a
@@ -1334,12 +1329,8 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|a
-operator|)
-return|;
 block|}
+elseif|else
 if|if
 condition|(
 name|m
@@ -1456,11 +1447,6 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|a
-operator|)
-return|;
 block|}
 if|if
 condition|(
@@ -1468,11 +1454,30 @@ name|m
 operator|!=
 name|LocalMailer
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_nrcpts
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|a
 operator|)
 return|;
+block|}
 comment|/* try aliasing */
 name|alias
 argument_list|(
@@ -1572,6 +1577,11 @@ name|Arpa_Info
 argument_list|,
 literal|"queued (user database error)"
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_nrcpts
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -1874,6 +1884,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_nrcpts
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|a

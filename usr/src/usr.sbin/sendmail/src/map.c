@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.1 (Berkeley) %G%"
+literal|"@(#)map.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1372,8 +1372,8 @@ name|char
 modifier|*
 name|vp
 decl_stmt|;
+specifier|auto
 name|int
-modifier|*
 name|vsize
 decl_stmt|;
 if|if
@@ -1440,7 +1440,12 @@ name|map_file
 argument_list|,
 name|buf
 argument_list|,
-name|bufsiz
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|vp

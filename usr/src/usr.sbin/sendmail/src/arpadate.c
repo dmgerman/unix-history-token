@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	6.2 (Berkeley) %G%"
+literal|"@(#)arpadate.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,28 +95,6 @@ index|[
 literal|40
 index|]
 decl_stmt|;
-specifier|extern
-name|struct
-name|tm
-modifier|*
-name|localtime
-argument_list|()
-decl_stmt|,
-modifier|*
-name|gmtime
-argument_list|()
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 comment|/* 	**  Get current time. 	**	This will be used if a null argument is passed and 	**	to resolve the timezone. 	*/
 operator|(
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -147,6 +147,17 @@ end_define
 
 begin_comment
 comment|/* chunk size for memory allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXUSERENVIRON
+value|100
+end_define
+
+begin_comment
+comment|/* max envariables saved */
 end_comment
 
 begin_ifndef
@@ -462,18 +473,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|VA_ARG_FORMAL
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_ARG_DECL
-end_define
-
-begin_define
-define|#
-directive|define
 name|VA_LOCAL_DECL
 value|va_list ap;
 end_define
@@ -505,20 +504,6 @@ include|#
 directive|include
 file|<varargs.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|VA_ARG_FORMAL
-value|,va_alist
-end_define
-
-begin_define
-define|#
-directive|define
-name|VA_ARG_DECL
-value|va_dcl
-end_define
 
 begin_define
 define|#
@@ -618,6 +603,23 @@ end_endif
 begin_comment
 comment|/* UNAME */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<vfork.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

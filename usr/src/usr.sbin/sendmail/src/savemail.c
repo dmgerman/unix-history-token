@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.2 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1471,6 +1471,43 @@ expr_stmt|;
 block|}
 end_for
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s: return to sender: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|ee
+operator|->
+name|e_id
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 operator|(
 name|void
@@ -1633,6 +1670,8 @@ begin_expr_stmt
 name|eatheader
 argument_list|(
 name|ee
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.8 (Berkeley) %G%"
+literal|"@(#)main.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,22 @@ literal|""
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|UserEnviron
+index|[
+name|MAXUSERENVIRON
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* saved user environment */
+end_comment
 
 begin_comment
 comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. **	These must be kept out of BSS for frozen configuration files **		to work. */
@@ -499,6 +515,15 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
 decl_stmt|;
 end_decl_stmt
 
@@ -978,6 +1003,94 @@ name|SETPROCTITLE
 end_ifdef
 
 begin_comment
+comment|/* 	**  Move the environment so setproctitle can use the space at 	**  the top of memory. 	*/
+end_comment
+
+begin_for
+for|for
+control|(
+name|i
+operator|=
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|MAXUSERENVIRON
+operator|&&
+operator|(
+name|p
+operator|=
+name|envp
+index|[
+name|i
+index|]
+operator|)
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"FS="
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|p
+argument_list|,
+literal|"LD_"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|UserEnviron
+index|[
+name|j
+operator|++
+index|]
+operator|=
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_for
+
+begin_expr_stmt
+name|UserEnviron
+index|[
+name|j
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|environ
+operator|=
+name|UserEnviron
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	**  Save start and extent of argv for setproctitle. 	*/
 end_comment
 
@@ -991,7 +1104,6 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-operator|--
 name|i
 operator|>
 literal|0

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.1 (Berkeley) %G%"
+literal|"@(#)err.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,10 +103,32 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_macro
 name|syserr
 argument_list|(
-argument|fmt VA_ARG_FORMAL
+argument|char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|syserr
+argument_list|(
+argument|fmt
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -118,8 +140,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|VA_ARG_DECL
+name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -281,10 +308,32 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_macro
 name|usrerr
 argument_list|(
-argument|fmt VA_ARG_FORMAL
+argument|char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|usrerr
+argument_list|(
+argument|fmt
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -296,8 +345,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|VA_ARG_DECL
+name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -413,12 +467,36 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|message
+argument_list|(
+argument|char *num
+argument_list|,
+argument|char *msg
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|message
 argument_list|(
 argument|num
 argument_list|,
-argument|msg VA_ARG_FORMAL
+argument|msg
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -437,8 +515,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|VA_ARG_DECL
+name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -492,12 +575,36 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|nmessage
+argument_list|(
+argument|char *num
+argument_list|,
+argument|char *msg
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|nmessage
 argument_list|(
 argument|num
 argument_list|,
-argument|msg VA_ARG_FORMAL
+argument|msg
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -516,8 +623,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|VA_ARG_DECL
+name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.3 (Berkeley) %G%"
+literal|"@(#)util.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -734,7 +734,7 @@ name|mp
 operator|->
 name|metaname
 operator|!=
-name|NULL
+literal|'\0'
 condition|;
 name|mp
 operator|++
@@ -1915,9 +1915,9 @@ name|LOG_NOTICE
 argument_list|,
 literal|"timeout waiting for input from %s\n"
 argument_list|,
-name|RealHostName
+name|CurHostName
 condition|?
-name|RealHostName
+name|CurHostName
 else|:
 literal|"local"
 argument_list|)

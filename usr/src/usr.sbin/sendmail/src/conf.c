@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.9 (Berkeley) %G%"
+literal|"@(#)conf.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,10 +2291,32 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_macro
 name|setproctitle
 argument_list|(
-argument|fmt VA_ARG_FORMAL
+argument|char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|setproctitle
+argument_list|(
+argument|fmt
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -2306,8 +2328,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|VA_ARG_DECL
+name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{

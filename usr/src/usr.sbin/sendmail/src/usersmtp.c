@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.2 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.3 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.2 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.3 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1890,11 +1890,29 @@ name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
+name|mci
+operator|->
+name|mci_exitstat
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_TSyserr
 argument_list|,
-literal|"reply: read error from %s"
+literal|"%s: reply: read error from %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
+name|e
+operator|->
+name|e_id
 argument_list|,
 name|mci
 operator|->
@@ -2165,6 +2183,30 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|smtpmessage
+argument_list|(
+argument|char *f
+argument_list|,
+argument|MAILER *m
+argument_list|,
+argument|MCI *mci
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|smtpmessage
 argument_list|(
@@ -2172,7 +2214,9 @@ argument|f
 argument_list|,
 argument|m
 argument_list|,
-argument|mci VA_ARG_FORMAL
+argument|mci
+argument_list|,
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -2198,8 +2242,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|VA_ARG_DECL
+name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{

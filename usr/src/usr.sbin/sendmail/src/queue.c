@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.4 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.5 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.4 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.5 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2251,6 +2251,11 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+specifier|extern
+name|bool
+name|shouldqueue
+parameter_list|()
+function_decl|;
 comment|/* is this an interesting entry? */
 if|if
 condition|(
@@ -3019,6 +3024,8 @@ expr_stmt|;
 name|eatheader
 argument_list|(
 name|e
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* do the delivery */
@@ -5040,7 +5047,7 @@ name|pw_gid
 expr_stmt|;
 name|a
 operator|->
-name|q_ruser
+name|q_user
 operator|=
 name|newstr
 argument_list|(
@@ -5064,7 +5071,7 @@ name|DefGid
 expr_stmt|;
 name|a
 operator|->
-name|q_ruser
+name|q_user
 operator|=
 name|newstr
 argument_list|(
@@ -5072,14 +5079,6 @@ name|DefUser
 argument_list|)
 expr_stmt|;
 block|}
-name|a
-operator|->
-name|q_user
-operator|=
-name|a
-operator|->
-name|q_ruser
-expr_stmt|;
 name|a
 operator|->
 name|q_flags

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.2 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.3 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.2 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.3 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,10 +476,13 @@ expr_stmt|;
 if|if
 condition|(
 name|RealHostName
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+name|RealHostName
+operator|=
+name|MyHostName
+expr_stmt|;
 name|CurHostName
 operator|=
 name|RealHostName
@@ -491,15 +494,6 @@ argument_list|,
 name|CurHostName
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* this must be us!! */
-name|CurHostName
-operator|=
-name|MyHostName
-expr_stmt|;
-block|}
 name|expand
 argument_list|(
 literal|"\001e"

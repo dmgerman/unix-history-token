@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.9 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2133,6 +2133,19 @@ operator|->
 name|e_flags
 operator||=
 name|EF_TIMEOUT
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"421 %s... Message timed out\n"
+argument_list|,
+name|q
+operator|->
+name|q_paddr
+argument_list|)
 expr_stmt|;
 block|}
 else|else
