@@ -1204,7 +1204,7 @@ name|sem
 operator|)
 operator|->
 name|count
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
@@ -1233,14 +1233,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-operator|(
-operator|*
-name|sem
-operator|)
-operator|->
-name|count
-operator|--
-expr_stmt|;
 name|_pthread_mutex_unlock
 argument_list|(
 operator|&
