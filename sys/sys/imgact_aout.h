@@ -524,6 +524,12 @@ operator|(
 expr|struct
 name|proc
 operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|off_t
 operator|)
 argument_list|)
 decl_stmt|;

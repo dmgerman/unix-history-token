@@ -488,25 +488,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|expand_name
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|uid_t
-operator|,
-name|pid_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|gsignal
 name|__P
