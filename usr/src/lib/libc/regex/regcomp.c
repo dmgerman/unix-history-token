@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regcomp.c	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Henry Spencer.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regcomp.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regcomp.c	5.4 (Berkeley) %G%"
+literal|"@(#)regcomp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3352,6 +3352,21 @@ argument_list|(
 name|cs
 argument_list|,
 literal|']'
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|EAT
+argument_list|(
+literal|'-'
+argument_list|)
+condition|)
+name|CHadd
+argument_list|(
+name|cs
+argument_list|,
+literal|'-'
 argument_list|)
 expr_stmt|;
 while|while
