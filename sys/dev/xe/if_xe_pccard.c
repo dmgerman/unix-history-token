@@ -2026,7 +2026,8 @@ operator|!=
 name|prodext
 condition|)
 name|vpfmatch
-operator|--
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
