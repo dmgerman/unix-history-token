@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.17	81/12/02	*/
+comment|/*	Locore.c	4.18	82/06/27	*/
 end_comment
 
 begin_include
@@ -1128,6 +1128,10 @@ name|whichqs
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|masterpaddr
+condition|)
 name|masterpaddr
 operator|=
 literal|0
