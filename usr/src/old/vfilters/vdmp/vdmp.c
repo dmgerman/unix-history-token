@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  VDMP: version 4.2				updated %G%  *  *  reads raster file created by cifplot and dumps it onto the  *  Varian or Versatec plotter.  *  Must be called with vcontrol or by vpd/vad daemon since  *  it assumes plotter is already opened as device 3.  */
+comment|/*  VDMP: version 4.3				updated %G%  *  *  reads raster file created by cifplot and dumps it onto the  *  Varian or Versatec plotter.  *  Must be called with vcontrol or by vpd/vad daemon since  *  it assumes plotter is already opened as device 3.  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vdmp.c	4.2\t%G%"
+literal|"@(#)vdmp.c	4.3\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -555,6 +555,8 @@ operator|)
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
 name|write
 argument_list|(
 literal|3
@@ -562,6 +564,13 @@ argument_list|,
 name|buf
 argument_list|,
 name|i
+argument_list|)
+operator|!=
+name|i
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
