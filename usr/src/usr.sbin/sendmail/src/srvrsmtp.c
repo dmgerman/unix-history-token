@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.15 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.16 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.15 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.16 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +267,21 @@ comment|/* verb -- go into verbose mode */
 end_comment
 
 begin_comment
+comment|/* use this to catch and log "door handle" attempts on your system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDLOGBOGUS
+value|23
+end_define
+
+begin_comment
+comment|/* bogus command that should be logged */
+end_comment
+
+begin_comment
 comment|/* debugging-only commands, only enabled if SMTPDEBUG is defined */
 end_comment
 
@@ -368,6 +383,10 @@ block|,
 literal|"debug"
 block|,
 name|CMDDBGDEBUG
+block|,
+literal|"wiz"
+block|,
+name|CMDLOGBOGUS
 block|,
 name|NULL
 block|,
@@ -2505,6 +2524,13 @@ case|case
 name|CMDDBGDEBUG
 case|:
 comment|/* set debug mode */
+endif|#
+directive|endif
+comment|/* SMTPDEBUG */
+case|case
+name|CMDLOGBOGUS
+case|:
+comment|/* bogus command */
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2516,7 +2542,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_CRIT
 argument_list|,
 literal|"\"%s\" command from %s (%s)"
 argument_list|,
@@ -2536,9 +2562,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* FALL THROUGH */
-endif|#
-directive|endif
-comment|/* SMTPDEBUG */
 case|case
 name|CMDERROR
 case|:
