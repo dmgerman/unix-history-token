@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	5.6 (Berkeley) %G%"
+literal|"@(#)cabs.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,28 +528,29 @@ begin_comment
 comment|/* CABS(Z)  * RETURN THE ABSOLUTE VALUE OF THE COMPLEX NUMBER  Z = X + iY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84.  * REVISED BY K.C. NG, 7/12/85.  *  * Required kernel function :  *	hypot(x,y)  *  * Method :  *	cabs(z) = hypot(x,y) .  */
 end_comment
 
-begin_decl_stmt
+begin_struct
+struct|struct
+name|complex
+block|{
+name|double
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
 name|double
 name|cabs
-argument_list|(
+parameter_list|(
 name|z
-argument_list|)
-decl|struct
-block|{
-name|double
-name|x
-decl_stmt|,
-name|y
+parameter_list|)
+name|struct
+name|complex
+name|z
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-name|z
-expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 return|return
 name|hypot
@@ -564,31 +565,19 @@ name|y
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_decl_stmt
+begin_function
 name|double
 name|z_abs
-argument_list|(
+parameter_list|(
 name|z
-argument_list|)
-decl|struct
-block|{
-name|double
-name|x
-decl_stmt|,
-name|y
+parameter_list|)
+name|struct
+name|complex
+modifier|*
+name|z
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-operator|*
-name|z
-expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 return|return
 name|hypot
@@ -603,7 +592,7 @@ name|y
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* A faster but less accurate version of cabs(x,y) */
