@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	5.7 (Berkeley) %G%"
+literal|"@(#)rmt.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,6 +509,9 @@ name|lseek
 argument_list|(
 name|tape
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|atol
 argument_list|(
 name|count
