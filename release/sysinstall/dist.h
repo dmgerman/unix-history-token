@@ -113,15 +113,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_KRB
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_EXPERIMENTAL
-value|0x4000
+value|0x2000
 end_define
 
 begin_define
@@ -149,6 +142,38 @@ directive|define
 name|_DIST_USER
 define|\
 value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
+end_define
+
+begin_comment
+comment|/* Subtypes for DES distribution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_DES
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_SEBONES
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_SSECURE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_KERBEROS
+value|0x0008
 end_define
 
 begin_comment
@@ -256,22 +281,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_SRC_SECURE
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_SRC_EBONES
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_SRC_ALL
-value|0x3FFF
+value|0xFFFF
 end_define
 
 begin_comment
