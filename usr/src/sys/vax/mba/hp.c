@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.15	%G%	*/
+comment|/*	hp.c	3.16	%G%	*/
 end_comment
 
 begin_comment
@@ -1493,26 +1493,20 @@ name|unit
 operator|<=
 name|DK_NMAX
 condition|)
+block|{
 name|dk_busy
 operator||=
 literal|1
 operator|<<
 name|unit
 expr_stmt|;
-if|if
-condition|(
-name|DK_N
-operator|+
-name|NHP
-operator|<=
-name|DK_NMAX
-condition|)
 name|dk_seek
 index|[
 name|unit
 index|]
 operator|++
 expr_stmt|;
+block|}
 return|return;
 name|done
 label|:
