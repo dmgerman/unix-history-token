@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.74	83/05/27	*/
+comment|/*	up.c	4.75	83/05/30	*/
 end_comment
 
 begin_include
@@ -388,48 +388,6 @@ begin_comment
 comment|/* END OF STUFF WHICH SHOULD BE READ IN PER DISK */
 end_comment
 
-begin_comment
-comment|/*  * On a 780 upSDIST could be 2, but  * in the interest of 750's...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_upSDIST
-value|3
-end_define
-
-begin_comment
-comment|/* 1.5 msec */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_upRDIST
-value|4
-end_define
-
-begin_comment
-comment|/* 2.0 msec */
-end_comment
-
-begin_decl_stmt
-name|int
-name|upSDIST
-init|=
-name|_upSDIST
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|upRDIST
-init|=
-name|_upRDIST
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|upprobe
@@ -575,24 +533,38 @@ block|{
 name|short
 name|nsect
 decl_stmt|;
+comment|/* # sectors/track */
 name|short
 name|ntrak
 decl_stmt|;
+comment|/* # tracks/cylinder */
 name|short
 name|nspc
 decl_stmt|;
+comment|/* # sectors/cylinder */
 name|short
 name|ncyl
 decl_stmt|;
+comment|/* # cylinders */
 name|struct
 name|size
 modifier|*
 name|sizes
 decl_stmt|;
+comment|/* partition tables */
+name|short
+name|sdist
+decl_stmt|;
+comment|/* seek distance metric */
+name|short
+name|rdist
+decl_stmt|;
+comment|/* rotational distance metric */
 block|}
 name|upst
 index|[]
 init|=
+block|{
 block|{
 literal|32
 block|,
@@ -606,7 +578,13 @@ literal|815
 block|,
 name|up9300_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* 9300 */
+block|{
 literal|32
 block|,
 literal|19
@@ -619,7 +597,13 @@ literal|823
 block|,
 name|up9766_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* 9766 */
+block|{
 literal|32
 block|,
 literal|10
@@ -632,7 +616,13 @@ literal|823
 block|,
 name|up160_sizes
 block|,
-comment|/* fujitsu 160m */
+literal|3
+block|,
+literal|4
+block|}
+block|,
+comment|/* fuji 160m */
+block|{
 literal|32
 block|,
 literal|16
@@ -645,7 +635,13 @@ literal|1024
 block|,
 name|upam_sizes
 block|,
-comment|/* ampex capricorn */
+literal|7
+block|,
+literal|8
+block|}
+block|,
+comment|/* Capricorn */
+block|{
 literal|0
 block|,
 literal|0
@@ -655,6 +651,11 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|}
 struct|;
 end_struct
@@ -2116,7 +2117,9 @@ name|st
 operator|->
 name|nsect
 operator|-
-name|upSDIST
+name|st
+operator|->
+name|sdist
 operator|)
 operator|%
 name|st
@@ -2180,7 +2183,9 @@ name|st
 operator|->
 name|nsect
 operator|-
-name|upRDIST
+name|st
+operator|->
+name|rdist
 condition|)
 goto|goto
 name|done
