@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.17 1995/05/15 19:03:08 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.18 1995/05/20 19:11:44 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -978,6 +978,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|u_long
+name|l
+decl_stmt|;
+comment|/* Never use the first track */
 if|if
 condition|(
 operator|!
@@ -997,6 +1001,29 @@ operator|->
 name|bios_sect
 expr_stmt|;
 block|}
+comment|/* Always end on cylinder boundary */
+name|l
+operator|=
+operator|(
+name|offset
+operator|+
+name|size
+operator|)
+operator|%
+operator|(
+name|d
+operator|->
+name|bios_sect
+operator|*
+name|d
+operator|->
+name|bios_hd
+operator|)
+expr_stmt|;
+name|size
+operator|-=
+name|l
+expr_stmt|;
 name|i
 operator|=
 name|Add_Chunk

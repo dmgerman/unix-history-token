@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.10 1995/05/18 22:25:37 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.11 1995/05/21 07:47:24 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -80,13 +80,6 @@ define|#
 directive|define
 name|DOSPTYP_EXTENDED
 value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOSPTYP_ONTRACK
-value|84
 end_define
 
 begin_define
@@ -178,11 +171,16 @@ name|read_block
 argument_list|(
 name|fd
 argument_list|,
+name|WHERE
+argument_list|(
 name|i
 operator|+
 name|c1
 operator|->
 name|offset
+argument_list|,
+name|new
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -788,7 +786,12 @@ name|read_block
 argument_list|(
 name|fd
 argument_list|,
+name|WHERE
+argument_list|(
 literal|0
+argument_list|,
+name|d1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dp
@@ -1401,7 +1404,12 @@ name|read_block
 argument_list|(
 name|fd
 argument_list|,
+name|WHERE
+argument_list|(
 literal|0
+argument_list|,
+name|d1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
