@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)types.h	2.3 88/08/15 4.0 RPCSRC */
-end_comment
-
-begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
-end_comment
-
-begin_comment
-comment|/*      @(#)types.h 1.18 87/07/24 SMI      */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)types.h 1.18 87/07/24 SMI  *	from: @(#)types.h	2.3 88/08/15 4.0 RPCSRC  *	$Id: types.h,v 1.5 1996/12/30 13:59:40 peter Exp $  */
 end_comment
 
 begin_comment
@@ -18,41 +10,27 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__TYPES_RPC_HEADER__
+name|_RPC_TYPES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__TYPES_RPC_HEADER__
+name|_RPC_TYPES_H
 end_define
 
 begin_define
 define|#
 directive|define
 name|bool_t
-value|int
+value|int32_t
 end_define
 
 begin_define
 define|#
 directive|define
 name|enum_t
-value|int
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(1)
+value|int32_t
 end_define
 
 begin_define
@@ -61,6 +39,42 @@ directive|define
 name|__dontcare__
 value|-1
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FALSE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TRUE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -79,14 +93,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|void
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -137,49 +143,13 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INADDR_LOOPBACK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|INADDR_LOOPBACK
-value|(u_long)0x7F000001
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXHOSTNAMELEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXHOSTNAMELEN
-value|64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ndef __TYPES_RPC_HEADER__ */
+comment|/* !_RPC_TYPES_H */
 end_comment
 
 end_unit

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC; from 1.31 88/02/08 SMI*/
-end_comment
-
-begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  *	$Id: clnt.h,v 1.5 1996/12/30 13:59:38 peter Exp $  */
 end_comment
 
 begin_comment
@@ -14,14 +10,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CLNT_
+name|_RPC_CLNT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CLNT_
+name|_RPC_CLNT_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
+end_include
 
 begin_comment
 comment|/*  * Rpc calls return an enum clnt_stat.  This should be looked at more,  * since each implementation is required to live with this (implementation  * independent) list of errors.  */
@@ -145,7 +153,7 @@ block|{
 name|int
 name|RE_errno
 decl_stmt|;
-comment|/* realated system error */
+comment|/* related system error */
 name|enum
 name|auth_stat
 name|RE_why
@@ -153,11 +161,11 @@ decl_stmt|;
 comment|/* why the auth error occurred */
 struct|struct
 block|{
-name|u_long
+name|u_int32_t
 name|low
 decl_stmt|;
 comment|/* lowest verion supported */
-name|u_long
+name|u_int32_t
 name|high
 decl_stmt|;
 comment|/* highest verion supported */
@@ -167,10 +175,10 @@ struct|;
 struct|struct
 block|{
 comment|/* maybe meaningful if RPC_FAILED */
-name|long
+name|int32_t
 name|s1
 decl_stmt|;
-name|long
+name|int32_t
 name|s2
 decl_stmt|;
 block|}
@@ -207,6 +215,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|__rpc_client
 block|{
 name|AUTH
 modifier|*
@@ -216,55 +225,118 @@ comment|/* authenticator */
 struct|struct
 name|clnt_ops
 block|{
+comment|/* call remote procedure */
 name|enum
 name|clnt_stat
-function_decl|(
-modifier|*
+argument_list|(
+operator|*
 name|cl_call
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* call remote procedure */
-name|void
-function_decl|(
-modifier|*
-name|cl_abort
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+name|u_long
+operator|,
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+expr|struct
+name|timeval
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* abort a call */
 name|void
-function_decl|(
-modifier|*
-name|cl_geterr
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*cl_abort
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* get specific error code */
-name|bool_t
-function_decl|(
-modifier|*
-name|cl_freeres
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* frees results */
 name|void
-function_decl|(
-modifier|*
-name|cl_destroy
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* destroy this structure */
+argument_list|(
+argument|*cl_geterr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+expr|struct
+name|rpc_err
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* frees results */
 name|bool_t
-function_decl|(
-modifier|*
-name|cl_control
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*cl_freeres
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* destroy this structure */
+name|void
+argument_list|(
+argument|*cl_destroy
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* the ioctl() of rpc */
+name|bool_t
+argument_list|(
+argument|*cl_control
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_client
+operator|*
+operator|,
+name|u_int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 modifier|*
 name|cl_ops
@@ -306,7 +378,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, argsp, xres, resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, (caddr_t)argsp, \ 		xres, (caddr_t)resp, secs))
 end_define
 
 begin_define
@@ -329,7 +401,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, argsp, xres, resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, (caddr_t)argsp, \ 		xres, (caddr_t)resp, secs))
 end_define
 
 begin_comment
@@ -449,7 +521,7 @@ value|((*(cl)->cl_ops->cl_control)(cl,rq,in))
 end_define
 
 begin_comment
-comment|/*  * control operations that apply to both udp and tcp transports  */
+comment|/*  * control operations that apply to udp, tcp and unix transports  *  * Note: options marked XXX are no-ops in this implementation of RPC.  * The are present in TI-RPC but can't be implemented here since they  * depend on the presence of STREAMS/TLI, which we don't have.  *  */
 end_comment
 
 begin_define
@@ -485,6 +557,149 @@ begin_comment
 comment|/* get server's address (sockaddr) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLGET_FD
+value|6
+end_define
+
+begin_comment
+comment|/* get connections file descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_SVC_ADDR
+value|7
+end_define
+
+begin_comment
+comment|/* get server's address (netbuf)         XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_FD_CLOSE
+value|8
+end_define
+
+begin_comment
+comment|/* close fd while clnt_destroy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_FD_NCLOSE
+value|9
+end_define
+
+begin_comment
+comment|/* Do not close fd while clnt_destroy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_XID
+value|10
+end_define
+
+begin_comment
+comment|/* Get xid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_XID
+value|11
+end_define
+
+begin_comment
+comment|/* Set xid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_VERS
+value|12
+end_define
+
+begin_comment
+comment|/* Get version number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_VERS
+value|13
+end_define
+
+begin_comment
+comment|/* Set version number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_PROG
+value|14
+end_define
+
+begin_comment
+comment|/* Get program number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_PROG
+value|15
+end_define
+
+begin_comment
+comment|/* Set program number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_SVC_ADDR
+value|16
+end_define
+
+begin_comment
+comment|/* get server's address (netbuf)         XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_PUSH_TIMOD
+value|17
+end_define
+
+begin_comment
+comment|/* push timod if not already present     XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_POP_TIMOD
+value|18
+end_define
+
+begin_comment
+comment|/* pop timod                             XXX */
+end_comment
+
 begin_comment
 comment|/*  * udp only control operations  */
 end_comment
@@ -512,6 +727,21 @@ comment|/* get retry timeout (timeval) */
 end_comment
 
 begin_comment
+comment|/*  * Operations which GSSAPI needs. (Bletch.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_LOCAL_ADDR
+value|19
+end_define
+
+begin_comment
+comment|/* get local addr (sockaddr) */
+end_comment
+
+begin_comment
 comment|/*  * void  * CLNT_DESTROY(rh);  * 	CLIENT *rh;  */
 end_comment
 
@@ -536,7 +766,7 @@ value|((*(rh)->cl_ops->cl_destroy)(rh))
 end_define
 
 begin_comment
-comment|/*  * RPCTEST is a test program which is accessable on every rpc  * transport/port.  It is used for testing, performance evaluation,  * and network administration.  */
+comment|/*  * RPCTEST is a test program which is accessible on every rpc  * transport/port.  It is used for testing, performance evaluation,  * and network administration.  */
 end_comment
 
 begin_define
@@ -579,157 +809,306 @@ value|((u_long)0)
 end_define
 
 begin_comment
-comment|/*  * Below are the client handle creation routines for the various  * implementations of client side rpc.  They can return NULL if a   * creation failure occurs.  */
+comment|/*  * Below are the client handle creation routines for the various  * implementations of client side rpc.  They can return NULL if a  * creation failure occurs.  */
 end_comment
 
 begin_comment
 comment|/*  * Memory based rpc (for speed check and testing)  * CLIENT *  * clntraw_create(prog, vers)  *	u_long prog;  *	u_long vers;  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clntraw_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*  * Generic client creation routine. Supported protocols are "udp" and "tcp"  */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
+name|__END_DECLS
+comment|/*  * Generic client creation routine. Supported protocols are "udp", "tcp"  * and "unix".  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	char *host; 	-- hostname  *	u_long prog;	-- program number  *	u_long vers;	-- version number  *	char *prot;	-- protocol  */
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clnt_create
-parameter_list|(
-comment|/*host, prog, vers, prot*/
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* 	char *host; 	-- hostname 	u_long prog;	-- program number 	u_long vers;	-- version number 	char *prot;	-- protocol */
-end_comment
-
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * TCP based rpc  * CLIENT *  * clnttcp_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clnttcp_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * UDP based rpc.  * CLIENT *  * clntudp_create(raddr, program, version, wait, sockp)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *  * Same as above, but you specify max packet sizes.  * CLIENT *  * clntudp_bufcreate(raddr, program, version, wait, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clntudp_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+expr|struct
+name|timeval
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|CLIENT
 modifier|*
 name|clntudp_bufcreate
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+expr|struct
+name|timeval
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
+comment|/*  * AF_UNIX based rpc  * CLIENT *  * clntunix_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_un *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
+name|__BEGIN_DECLS
+specifier|extern
+name|CLIENT
+modifier|*
+name|clntunix_create
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * Print why creation failed  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
+specifier|extern
 name|void
 name|clnt_pcreateerror
-parameter_list|(
-comment|/* char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* stderr */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|clnt_spcreateerror
-parameter_list|(
-comment|/* char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* string */
 end_comment
 
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * Like clnt_perror(), but is more verbose in its output  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
+specifier|extern
 name|void
 name|clnt_perrno
-parameter_list|(
-comment|/* enum clnt_stat num */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|clnt_stat
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* stderr */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|clnt_sperrno
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|clnt_stat
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Print an English error message, given the client error code  */
+comment|/* string */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|__END_DECLS
+comment|/*  * Print an English error message, given the client error code  */
+name|__BEGIN_DECLS
+specifier|extern
 name|void
 name|clnt_perror
-parameter_list|(
-comment|/* CLIENT *clnt, char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|CLIENT
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* stderr */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|clnt_sperror
-parameter_list|(
-comment|/* CLIENT *clnt, char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|CLIENT
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* string */
 end_comment
 
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_comment
-comment|/*   * If a creation fails, the following allows the user to figure out why.  */
+comment|/*  * If a creation fails, the following allows the user to figure out why.  */
 end_comment
 
 begin_struct
@@ -756,24 +1135,6 @@ name|rpc_createerr
 name|rpc_createerr
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Copy error message to buffer.  */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|clnt_sperrno
-parameter_list|(
-comment|/* enum clnt_stat num */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* string */
-end_comment
 
 begin_define
 define|#
@@ -803,7 +1164,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!_CLNT_*/
+comment|/* !_RPC_CLNT_H */
 end_comment
 
 end_unit
