@@ -729,7 +729,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(						\ 	(a)->ie_fport == (a)->ie_fport&&				\ 	(a)->ie_lport == (b)->ie_lport&&				\ 	(a)->ie_faddr.s_addr == (b)->ie_faddr.s_addr&&			\ 	(a)->ie_laddr.s_addr == (b)->ie_laddr.s_addr			\ )
+value|(						\ 	(a)->ie_fport == (b)->ie_fport&&				\ 	(a)->ie_lport == (b)->ie_lport&&				\ 	(a)->ie_faddr.s_addr == (b)->ie_faddr.s_addr&&			\ 	(a)->ie_laddr.s_addr == (b)->ie_laddr.s_addr			\ )
 end_define
 
 begin_define
