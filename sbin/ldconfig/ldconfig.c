@@ -550,7 +550,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Rf:mrsv"
+literal|"Rf:imrsv"
 argument_list|)
 operator|)
 operator|!=
@@ -577,6 +577,14 @@ case|:
 name|hints_file
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|insecure
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -655,6 +663,7 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* Here begins the aout libs processing */
 name|dir_list
 operator|=
 name|strdup
@@ -929,7 +938,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ldconfig [-aout | -elf] [-Rmrsv] [-f hints_file] [dir | file ...]\n"
+literal|"usage: ldconfig [-aout | -elf] [-Rimrsv] [-f hints_file] [dir | file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
