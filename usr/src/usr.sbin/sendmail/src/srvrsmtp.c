@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.17 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.18 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.17 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,6 +759,18 @@ operator|*
 name|cmd
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* throw away leading whitespace */
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
 expr_stmt|;
 comment|/* decode command */
 for|for

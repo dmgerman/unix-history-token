@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.8 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.9 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.8 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.9 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,11 @@ ifdef|#
 directive|ifdef
 name|DBM
 comment|/* 	**  Check to see that the alias file is complete. 	**	If not, we will assume that someone died, and it is up 	**	to us to rebuild it. 	*/
+if|if
+condition|(
+operator|!
+name|init
+condition|)
 name|dbminit
 argument_list|(
 name|aliasfile
@@ -573,11 +578,25 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* 			**  Reinitialize alias file in case the new 			**  one is mv'ed in instead of cp'ed in. 			** 			**	Only works with new DBM -- old one will 			**	just consume file descriptors forever. 			**	If you have a dbmclose() it can be 			**	added before the sleep(30). 			*/
 name|sleep
 argument_list|(
 literal|30
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NDBM
+name|dbminit
+argument_list|(
+name|aliasfile
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NDBM
+block|}
 block|}
 else|else
 name|atcnt
@@ -1082,6 +1101,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|dbminit
+argument_list|(
+name|aliasfile
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
