@@ -466,6 +466,15 @@ literal|0x06861106
 argument_list|,
 literal|0x40
 argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x30741106
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 return|return
 literal|"VIA 82C686 ATA100 controller"
@@ -1283,9 +1292,10 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* prepare for ATA-66 on the 82C686 and rev 0x12 and newer 82C596's */
+comment|/* prepare for ATA-66 on the 82C686a and rev 0x12 and newer 82C596's */
 if|if
 condition|(
+operator|(
 name|ata_find_dev
 argument_list|(
 name|dev
@@ -1294,6 +1304,17 @@ literal|0x06861106
 argument_list|,
 literal|0
 argument_list|)
+operator|&&
+operator|!
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x06861106
+argument_list|,
+literal|0x40
+argument_list|)
+operator|)
 operator|||
 name|ata_find_dev
 argument_list|(

@@ -2463,6 +2463,15 @@ literal|0x06861106
 argument_list|,
 literal|0x40
 argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x30741106
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* 82C686b */
