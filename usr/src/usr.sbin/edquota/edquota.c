@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	5.3 (Berkeley) %G%"
+literal|"@(#)edquota.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,37 +553,32 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|pid
-operator|,
-name|xpid
-expr_stmt|;
 name|int
-name|stat
+name|pid
 decl_stmt|,
+name|xpid
+decl_stmt|;
+name|long
 name|omask
 decl_stmt|;
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<<((s)-1))
+name|int
+name|stat
+decl_stmt|;
 name|omask
 operator|=
 name|sigblock
 argument_list|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGINT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGQUIT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGHUP
 argument_list|)
