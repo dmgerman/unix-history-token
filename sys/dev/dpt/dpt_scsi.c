@@ -171,22 +171,6 @@ name|dpt_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* The linked list of softc structures */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|dpt_softc_list
-name|dpt_softcs
-init|=
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|dpt_softcs
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -5451,16 +5435,6 @@ operator|->
 name|pending_ccb_list
 argument_list|)
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|dpt_softcs
-argument_list|,
-name|dpt
-argument_list|,
-name|links
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5662,16 +5636,6 @@ literal|0
 case|:
 break|break;
 block|}
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|dpt_softcs
-argument_list|,
-name|dpt
-argument_list|,
-name|links
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
