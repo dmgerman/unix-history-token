@@ -3840,7 +3840,7 @@ name|sembuf
 modifier|*
 name|sops
 decl_stmt|;
-name|int
+name|u_int
 name|nsops
 decl_stmt|;
 block|}
@@ -3879,7 +3879,7 @@ name|uap
 operator|->
 name|semid
 decl_stmt|;
-name|int
+name|u_int
 name|nsops
 init|=
 name|uap
@@ -3935,7 +3935,7 @@ directive|ifdef
 name|SEM_DEBUG
 name|printf
 argument_list|(
-literal|"call to semop(%d, 0x%x, %d)\n"
+literal|"call to semop(%d, 0x%x, %u)\n"
 argument_list|,
 name|semid
 argument_list|,
@@ -4083,7 +4083,7 @@ directive|ifdef
 name|SEM_DEBUG
 name|printf
 argument_list|(
-literal|"too many sops (max=%d, nsops=%d)\n"
+literal|"too many sops (max=%d, nsops=%u)\n"
 argument_list|,
 name|MAX_SOPS
 argument_list|,
@@ -4132,7 +4132,7 @@ directive|ifdef
 name|SEM_DEBUG
 name|printf
 argument_list|(
-literal|"eval = %d from copyin(%08x, %08x, %d)\n"
+literal|"eval = %d from copyin(%08x, %08x, %u)\n"
 argument_list|,
 name|eval
 argument_list|,
