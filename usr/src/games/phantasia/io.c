@@ -267,7 +267,7 @@ name|sscanf
 argument_list|(
 name|Databuf
 argument_list|,
-literal|"%F"
+literal|"%lf"
 argument_list|,
 operator|&
 name|result

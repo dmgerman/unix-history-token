@@ -1267,7 +1267,7 @@ name|sscanf
 argument_list|(
 name|Databuf
 argument_list|,
-literal|"%F %F"
+literal|"%lf %lf"
 argument_list|,
 operator|&
 name|Player
@@ -1825,7 +1825,7 @@ name|sscanf
 argument_list|(
 name|Databuf
 argument_list|,
-literal|"%F %F"
+literal|"%lf %lf"
 argument_list|,
 operator|&
 name|x
@@ -2094,7 +2094,7 @@ name|sscanf
 argument_list|(
 name|Databuf
 argument_list|,
-literal|"%F %F"
+literal|"%lf %lf"
 argument_list|,
 operator|&
 name|x
