@@ -70,6 +70,13 @@ begin_comment
 comment|/* GCC.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GETLINE_NO_LIMIT
+value|-1
+end_define
+
 begin_decl_stmt
 name|int
 name|getline
@@ -88,6 +95,32 @@ operator|,
 name|FILE
 operator|*
 name|_stream
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getline_safe
+name|__PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+name|_lineptr
+operator|,
+name|size_t
+operator|*
+name|_n
+operator|,
+name|FILE
+operator|*
+name|_stream
+operator|,
+name|int
+name|limit
 operator|)
 argument_list|)
 decl_stmt|;
@@ -117,6 +150,9 @@ name|_terminator
 operator|,
 name|int
 name|_offset
+operator|,
+name|int
+name|limit
 operator|)
 argument_list|)
 decl_stmt|;

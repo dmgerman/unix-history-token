@@ -276,6 +276,9 @@ name|void
 operator|)
 argument_list|)
 block|{
+name|rcs_cleanup
+argument_list|()
+expr_stmt|;
 name|Lock_Cleanup
 argument_list|()
 expr_stmt|;
@@ -424,7 +427,6 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|unsigned
 name|char
 name|buf
 index|[
@@ -790,7 +792,7 @@ name|defined
 argument_list|(
 name|__STDC__
 argument_list|)
-name|fperror
+name|fperrmsg
 parameter_list|(
 name|FILE
 modifier|*
@@ -810,7 +812,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|fperror
+function|fperrmsg
 parameter_list|(
 name|fp
 parameter_list|,

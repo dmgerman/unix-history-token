@@ -374,59 +374,6 @@ comment|/* strip the newline */
 comment|/*      * If this is a relative repository pathname, turn it into an absolute      * one by tacking on the CVSROOT environment variable. If the CVSROOT      * environment variable is not set, die now.      */
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|repos
-argument_list|,
-literal|".."
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strncmp
-argument_list|(
-name|repos
-argument_list|,
-literal|"../"
-argument_list|,
-literal|3
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"in directory %s:"
-argument_list|,
-name|xupdate_dir
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"`..'-relative repositories are not supported."
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"illegal source repository"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 operator|!
 name|isabsolute
 argument_list|(
@@ -483,6 +430,46 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"illegal repository setting"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pathname_levels
+argument_list|(
+name|repos
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"in directory %s:"
+argument_list|,
+name|xupdate_dir
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"`..'-relative repositories are not supported."
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"illegal source repository"
 argument_list|)
 expr_stmt|;
 block|}

@@ -166,6 +166,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|cvs_temp_name
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Internal data structures and macros for the diff3 program; includes  * data structures for both diff3 diffs and normal diffs.  */
 end_comment
@@ -2492,16 +2505,6 @@ argument_list|(
 name|content1
 argument_list|)
 expr_stmt|;
-name|free_diff_blocks
-argument_list|(
-name|thread0
-argument_list|)
-expr_stmt|;
-name|free_diff_blocks
-argument_list|(
-name|thread1
-argument_list|)
-expr_stmt|;
 name|free_diff3_blocks
 argument_list|(
 name|diff3
@@ -2846,6 +2849,10 @@ name|struct
 name|diff3_block
 specifier|const
 name|zero_diff3
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
 comment|/* Initialization */
 name|result
@@ -3163,6 +3170,22 @@ argument_list|,
 name|high_water_thread
 argument_list|,
 name|last_diff3
+argument_list|)
+expr_stmt|;
+name|free_diff_blocks
+argument_list|(
+name|using
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|free_diff_blocks
+argument_list|(
+name|using
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -5632,10 +5655,8 @@ literal|0
 expr_stmt|;
 name|diffout
 operator|=
-name|tmpnam
-argument_list|(
-name|NULL
-argument_list|)
+name|cvs_temp_name
+argument_list|()
 expr_stmt|;
 name|outfile_hold
 operator|=

@@ -589,9 +589,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|printf
+name|fputs
 argument_list|(
 name|line
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.     Copyright (C) 1985, 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
+comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.     Copyright (C) 1985, 89, 90, 91, 92, 93, 95 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
 end_comment
 
 begin_ifndef
@@ -19,11 +19,26 @@ begin_comment
 comment|/* POSIX says that<sys/types.h> must be included (by the caller) before<regex.h>.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_C_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|VMS
-end_ifdef
+argument_list|)
+end_if
 
 begin_comment
 comment|/* VMS doesn't have `size_t' in<sys/types.h>, even though POSIX says it    should be there.  */
@@ -250,6 +265,17 @@ value|(RE_NO_EMPTY_RANGES<< 1)
 end_define
 
 begin_comment
+comment|/* If this bit is set, succeed as soon as we match the whole pattern,    without further backtracking.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RE_NO_POSIX_BACKTRACKING
+value|(RE_UNMATCHED_RIGHT_PAREN_ORD<< 1)
+end_define
+
+begin_comment
 comment|/* This global variable defines the particular regexp syntax to use (for    some interfaces).  When a regexp is compiled, the syntax used is    stored in the pattern buffer, so changing this does not affect    already-compiled regexps.  */
 end_comment
 
@@ -259,6 +285,28 @@ name|reg_syntax_t
 name|re_syntax_options
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|emacs
+end_ifdef
+
+begin_comment
+comment|/* In Emacs, this is the string or buffer in which we    are matching.  It is used for looking up syntax properties.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Lisp_Object
+name|re_match_object
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -571,6 +619,46 @@ begin_comment
 comment|/* This data structure represents a compiled pattern.  Before calling    the pattern compiler, the fields `buffer', `allocated', `fastmap',    `translate', and `no_sub' can be set.  After the pattern has been    compiled, the `re_nsub' field is available.  All other fields are    private to the regex routines.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RE_TRANSLATE_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RE_TRANSLATE_TYPE
+value|char *
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_TRANSLATE
+parameter_list|(
+name|TBL
+parameter_list|,
+name|C
+parameter_list|)
+value|((TBL)[C])
+end_define
+
+begin_define
+define|#
+directive|define
+name|RE_TRANSLATE_P
+parameter_list|(
+name|TBL
+parameter_list|)
+value|(TBL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|re_pattern_buffer
@@ -602,8 +690,7 @@ modifier|*
 name|fastmap
 decl_stmt|;
 comment|/* Either a translate table to apply to all characters before            comparing them, or zero for no translation.  The translation            is applied to a pattern when it is compiled and to a string            when it is matched.  */
-name|char
-modifier|*
+name|RE_TRANSLATE_TYPE
 name|translate
 decl_stmt|;
 comment|/* Number of subexpressions found by the compiler.  */
@@ -664,6 +751,12 @@ name|newline_anchor
 range|:
 literal|1
 decl_stmt|;
+comment|/* If true, multi-byte form in the `buffer' should be recognized as a      multibyte character. */
+name|unsigned
+name|multibyte
+range|:
+literal|1
+decl_stmt|;
 comment|/* [[[end pattern_buffer]]] */
 block|}
 struct|;
@@ -676,17 +769,6 @@ name|re_pattern_buffer
 name|regex_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* search.c (search_buffer) in Emacs needs this one opcode value.  It is    defined both in `regex.c' and here.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RE_EXACTN_VALUE
-value|1
-end_define
 
 begin_escape
 end_escape
@@ -1099,26 +1181,49 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_REGEX_RE_COMP
+end_ifdef
+
 begin_comment
-comment|/* 4.2 bsd compatibility.  System headers may declare the argument as    either "char *" (e.g. Cray unistd.h) or "const char *" (e.g. linux    regex.h), so don't prototype them here.  */
+comment|/* 4.2 bsd compatibility.  */
 end_comment
 
-begin_function_decl
+begin_comment
+comment|/* CVS: don't use prototypes: they may conflict with system headers.  */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|re_comp
-parameter_list|()
-function_decl|;
-end_function_decl
+name|_RE_ARGS
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|re_exec
-parameter_list|()
-function_decl|;
-end_function_decl
+name|_RE_ARGS
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* POSIX compatibility.  */

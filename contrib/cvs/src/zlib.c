@@ -1889,6 +1889,10 @@ name|pos
 operator|+=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|pos
@@ -1909,6 +1913,10 @@ name|pos
 operator|+=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|pos

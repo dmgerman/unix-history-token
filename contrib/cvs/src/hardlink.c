@@ -125,11 +125,6 @@ sizeof|sizeof
 argument_list|(
 name|ino_t
 argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
 operator|+
 literal|1
 argument_list|)
@@ -218,7 +213,7 @@ name|hp
 operator|->
 name|type
 operator|=
-name|UNKNOWN
+name|NT_UNKNOWN
 expr_stmt|;
 name|hp
 operator|->
@@ -293,7 +288,7 @@ name|p
 operator|->
 name|type
 operator|=
-name|UNKNOWN
+name|NT_UNKNOWN
 expr_stmt|;
 name|p
 operator|->
@@ -394,12 +389,6 @@ name|path
 operator|=
 name|xmalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
-operator|(
 name|strlen
 argument_list|(
 name|dir
@@ -411,7 +400,6 @@ name|file
 argument_list|)
 operator|+
 literal|2
-operator|)
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -585,12 +573,6 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
-operator|(
 name|strlen
 argument_list|(
 name|dir
@@ -602,7 +584,6 @@ name|file
 argument_list|)
 operator|+
 literal|2
-operator|)
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -668,11 +649,6 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|ino_t
-argument_list|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
 argument_list|)
 operator|+
 literal|1
@@ -988,12 +964,6 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
-operator|(
 name|strlen
 argument_list|(
 name|dir
@@ -1007,7 +977,6 @@ name|key
 argument_list|)
 operator|+
 literal|2
-operator|)
 argument_list|)
 expr_stmt|;
 name|sprintf

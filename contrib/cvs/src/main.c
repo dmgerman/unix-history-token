@@ -390,9 +390,17 @@ block|,
 name|init
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|SERVER_SUPPORT
+argument_list|)
 block|{
 literal|"kserver"
 block|,
@@ -439,9 +447,27 @@ block|,
 name|logout
 block|}
 block|,
-ifdef|#
-directive|ifdef
+endif|#
+directive|endif
+comment|/* AUTH_CLIENT_SUPPORT */
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|AUTH_SERVER_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_GSSAPI
+argument_list|)
+operator|)
+operator|&&
+name|defined
+argument_list|(
 name|SERVER_SUPPORT
+argument_list|)
 block|{
 literal|"pserver"
 block|,
@@ -455,9 +481,6 @@ block|,
 comment|/* placeholder */
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* AUTH_CLIENT_SUPPORT */
 block|{
 literal|"rdiff"
 block|,
@@ -489,16 +512,6 @@ name|cvsremove
 block|}
 block|,
 block|{
-literal|"status"
-block|,
-literal|"st"
-block|,
-literal|"stat"
-block|,
-name|cvsstatus
-block|}
-block|,
-block|{
 literal|"rtag"
 block|,
 literal|"rt"
@@ -506,6 +519,31 @@ block|,
 literal|"rfreeze"
 block|,
 name|rtag
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+block|{
+literal|"server"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|server
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+literal|"status"
+block|,
+literal|"st"
+block|,
+literal|"stat"
+block|,
+name|cvsstatus
 block|}
 block|,
 block|{
@@ -539,6 +577,16 @@ name|update
 block|}
 block|,
 block|{
+literal|"version"
+block|,
+literal|"ve"
+block|,
+literal|"ver"
+block|,
+name|version
+block|}
+block|,
+block|{
 literal|"watch"
 block|,
 name|NULL
@@ -558,21 +606,6 @@ block|,
 name|watchers
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
-block|{
-literal|"server"
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|server
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|,
@@ -624,7 +657,7 @@ block|,
 comment|/* I really don't think I want to try to define "version control"        in one line.  I'm not sure one can get more concise than the        paragraph in ../cvs.spec without assuming the reader knows what        version control means.  */
 literal|"For CVS updates and additional information, see\n"
 block|,
-literal|"    Cyclic Software at http://www.cyclic.com/ or\n"
+literal|"    the CVS home page at http://www.cvshome.org/ or\n"
 block|,
 literal|"    Pascal Molli's CVS site at http://www.loria.fr/~molli/cvs-index.html\n"
 block|,
@@ -669,18 +702,55 @@ literal|"        import       Import sources into CVS, using vendor branches\n"
 block|,
 literal|"        init         Create a CVS repository if it doesn't exist\n"
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_KERBEROS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SERVER_SUPPORT
+argument_list|)
+literal|"        kserver      Kerberos server mode\n"
+block|,
+endif|#
+directive|endif
 literal|"        log          Print out history information for files\n"
 block|,
 ifdef|#
 directive|ifdef
 name|AUTH_CLIENT_SUPPORT
-literal|"        login        Prompt for password for authenticating server.\n"
+literal|"        login        Prompt for password for authenticating server\n"
 block|,
-literal|"        logout       Removes entry in .cvspass for remote repository.\n"
+literal|"        logout       Removes entry in .cvspass for remote repository\n"
 block|,
 endif|#
 directive|endif
 comment|/* AUTH_CLIENT_SUPPORT */
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|AUTH_SERVER_SUPPORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_GSSAPI
+argument_list|)
+operator|)
+operator|&&
+name|defined
+argument_list|(
+name|SERVER_SUPPORT
+argument_list|)
+literal|"        pserver      Password server mode\n"
+block|,
+endif|#
+directive|endif
 literal|"        rdiff        Create 'patch' format diffs between releases\n"
 block|,
 literal|"        release      Indicate that a Module is no longer in use\n"
@@ -689,6 +759,13 @@ literal|"        remove       Remove an entry from the repository\n"
 block|,
 literal|"        rtag         Add a symbolic tag to a module\n"
 block|,
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+literal|"        server       Server mode\n"
+block|,
+endif|#
+directive|endif
 literal|"        status       Display status information on checked out files\n"
 block|,
 literal|"        tag          Add a symbolic tag to checked out version of files\n"
@@ -1295,6 +1372,17 @@ name|strcmp
 argument_list|(
 name|cmd_name
 argument_list|,
+literal|"release"
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|cmd_name
+argument_list|,
 literal|"status"
 argument_list|)
 operator|!=
@@ -1343,6 +1431,19 @@ condition|(
 name|sig
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SIGABRT
+case|case
+name|SIGABRT
+case|:
+name|name
+operator|=
+literal|"abort"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SIGHUP
@@ -1465,16 +1566,6 @@ name|CVSroot
 init|=
 name|CVSROOT_DFLT
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|version_string
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|config_string
-decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -1521,6 +1612,14 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Has the user asked for help?  This 				   lets us support the `cvs -H cmd' 				   convention to give help for cmd. */
+specifier|static
+specifier|const
+name|char
+name|short_options
+index|[]
+init|=
+literal|"+Qqrwtnlvb:T:e:d:Hfz:s:xa"
+decl_stmt|;
 specifier|static
 name|struct
 name|option
@@ -1808,11 +1907,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+f"
+name|short_options
 argument_list|,
-name|NULL
+name|long_options
 argument_list|,
-name|NULL
+operator|&
+name|option_index
 argument_list|)
 operator|)
 operator|!=
@@ -1865,7 +1965,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+Qqrwtnlvb:T:e:d:Hfz:s:xa"
+name|short_options
 argument_list|,
 name|long_options
 argument_list|,
@@ -1982,25 +2082,26 @@ break|break;
 case|case
 literal|'v'
 case|:
-comment|/* Having the year here is a good idea, so people have 		   some idea of how long ago their version of CVS was 		   released.  */
 operator|(
 name|void
 operator|)
 name|fputs
 argument_list|(
-name|version_string
+literal|"\n"
 argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
+name|version
 argument_list|(
-name|config_string
+literal|0
 argument_list|,
-name|stdout
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2018,7 +2119,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\ Copyright (c) 1989-1998 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
+literal|"\ Copyright (c) 1989-2000 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
 argument_list|,
 name|stdout
 argument_list|)
@@ -2190,7 +2291,7 @@ expr_stmt|;
 if|if
 condition|(
 name|gzip_level
-operator|<=
+operator|<
 literal|0
 operator|||
 name|gzip_level
@@ -2203,7 +2304,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"gzip compression level must be between 1 and 9"
+literal|"gzip compression level must be between 0 and 9"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2355,12 +2456,22 @@ name|cm
 operator|->
 name|fullname
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown command: `%s'\n\n"
+argument_list|,
+name|command_name
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|(
 name|cmd_usage
 argument_list|)
 expr_stmt|;
-comment|/* no match */
+block|}
 else|else
 name|command_name
 operator|=
@@ -2702,6 +2813,21 @@ name|DONT_USE_SIGNALS
 comment|/* make sure we clean up on error */
 ifdef|#
 directive|ifdef
+name|SIGABRT
+operator|(
+name|void
+operator|)
+name|SIG_register
+argument_list|(
+name|SIGABRT
+argument_list|,
+name|main_cleanup
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|SIGHUP
 operator|(
 name|void
@@ -2711,16 +2837,6 @@ argument_list|(
 name|SIGHUP
 argument_list|,
 name|main_cleanup
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|Lock_Cleanup
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2738,16 +2854,6 @@ argument_list|,
 name|main_cleanup
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGINT
-argument_list|,
-name|Lock_Cleanup
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -2761,16 +2867,6 @@ argument_list|(
 name|SIGQUIT
 argument_list|,
 name|main_cleanup
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|Lock_Cleanup
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2788,16 +2884,6 @@ argument_list|,
 name|main_cleanup
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|Lock_Cleanup
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -2811,16 +2897,6 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|main_cleanup
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|Lock_Cleanup
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3091,7 +3167,7 @@ name|n
 operator|->
 name|type
 operator|=
-name|UNKNOWN
+name|NT_UNKNOWN
 expr_stmt|;
 name|n
 operator|->
@@ -3202,7 +3278,7 @@ argument_list|,
 name|current_root
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check to see if we can write into the history file.  If not, 		 * we assume that we can't work in the repository. 		 * BUT, only if the history file exists. 		 */
+comment|/* 		 * Check to see if the repository exists. 		 */
 if|if
 condition|(
 operator|!
@@ -3231,11 +3307,6 @@ name|CVSROOTADM
 argument_list|)
 operator|+
 literal|20
-operator|+
-sizeof|sizeof
-argument_list|(
-name|CVSROOTADM_HISTORY
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3295,69 +3366,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|path
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|path
-argument_list|,
-name|CVSROOTADM_HISTORY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isfile
-argument_list|(
-name|path
-argument_list|)
-operator|&&
-operator|!
-name|isaccessible
-argument_list|(
-name|path
-argument_list|,
-name|R_OK
-operator||
-name|W_OK
-argument_list|)
-condition|)
-block|{
-name|save_errno
-operator|=
-name|errno
-expr_stmt|;
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"Sorry, you don't have read/write access to the history file"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|save_errno
-argument_list|,
-literal|"%s"
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|path
@@ -3374,6 +3382,11 @@ condition|(
 name|cvs_update_env
 condition|)
 block|{
+specifier|static
+name|char
+modifier|*
+name|prev
+decl_stmt|;
 name|char
 modifier|*
 name|env
@@ -3419,7 +3432,23 @@ argument_list|(
 name|env
 argument_list|)
 expr_stmt|;
-comment|/* do not free env, as putenv has control of it */
+comment|/* do not free env yet, as putenv has control of it */
+comment|/* but do free the previous value, if any */
+if|if
+condition|(
+name|prev
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|prev
+argument_list|)
+expr_stmt|;
+name|prev
+operator|=
+name|env
+expr_stmt|;
 block|}
 endif|#
 directive|endif

@@ -582,6 +582,13 @@ name|SEND_NO_CONTENTS
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|BACKUP_MODIFIED_FILES
+value|8
+end_define
+
 begin_comment
 comment|/* Send an argument to the remote server.  */
 end_comment

@@ -716,6 +716,15 @@ literal|"#SystemAuth=no\n"
 block|,
 literal|"\n"
 block|,
+literal|"# Put CVS lock files in this directory rather than directly in the repository.\n"
+block|,
+literal|"#LockDir=/var/lock/cvs\n"
+block|,
+literal|"\n"
+block|,
+ifdef|#
+directive|ifdef
+name|PRESERVE_PERMISSIONS_SUPPORT
 literal|"# Set `PreservePermissions' to `yes' to save file status information\n"
 block|,
 literal|"# in the repository.\n"
@@ -724,6 +733,8 @@ literal|"#PreservePermissions=no\n"
 block|,
 literal|"\n"
 block|,
+endif|#
+directive|endif
 literal|"# Set `TopLevelAdmin' to `yes' to create a CVS directory at the top\n"
 block|,
 literal|"# level of the new working directory when using the `cvs checkout'\n"
@@ -731,6 +742,14 @@ block|,
 literal|"# command.\n"
 block|,
 literal|"#TopLevelAdmin=no\n"
+block|,
+literal|"\n"
+block|,
+literal|"# Set `LogHistory' to `all' or `TOFEWGCMAR' to log all transactions to the\n"
+block|,
+literal|"# history file, or a subset as needed (ie `TMAR' logs all write operations)\n"
+block|,
+literal|"#LogHistory=TOFEWGCMAR\n"
 block|,
 name|NULL
 block|}
@@ -938,6 +957,13 @@ name|admin_file
 modifier|*
 name|fileptr
 decl_stmt|;
+if|if
+condition|(
+name|noexec
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|save_cwd
@@ -3401,6 +3427,12 @@ argument_list|,
 name|adm
 argument_list|)
 expr_stmt|;
+comment|/* Make Emptydir so it's there if we need it */
+name|mkdir_if_needed
+argument_list|(
+name|CVSNULLREPOS
+argument_list|)
+expr_stmt|;
 comment|/* 80 is long enough for all the administrative file names, plus        "/" and so on.  */
 name|info
 operator|=
@@ -3699,6 +3731,87 @@ argument_list|,
 literal|"cannot close %s"
 argument_list|,
 name|info
+argument_list|)
+expr_stmt|;
+comment|/* Make the new history file world-writeable, since every CVS            user will need to be able to write to it.  We use chmod()            because xchmod() is too shy. */
+name|chmod
+argument_list|(
+name|info
+argument_list|,
+literal|0666
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Make an empty val-tags file to prevent problems creating it later.  */
+name|strcpy
+argument_list|(
+name|info
+argument_list|,
+name|adm
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|info
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|info
+argument_list|,
+name|CVSROOTADM_VALTAGS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isfile
+argument_list|(
+name|info
+argument_list|)
+condition|)
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|fp
+operator|=
+name|open_file
+argument_list|(
+name|info
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|info
+argument_list|)
+expr_stmt|;
+comment|/* Make the new val-tags file world-writeable, since every CVS            user will need to be able to write to it.  We use chmod()            because xchmod() is too shy. */
+name|chmod
+argument_list|(
+name|info
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 block|}

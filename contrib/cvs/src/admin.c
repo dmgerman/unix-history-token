@@ -93,7 +93,83 @@ name|admin_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s rcs-options files...\n"
+literal|"Usage: %s %s [options] files...\n"
+block|,
+literal|"\t-a users   Append (comma-separated) user names to access list.\n"
+block|,
+literal|"\t-A file    Append another file's access list.\n"
+block|,
+literal|"\t-b[rev]    Set default branch (highest branch on trunk if omitted).\n"
+block|,
+literal|"\t-c string  Set comment leader.\n"
+block|,
+literal|"\t-e[users]  Remove (comma-separated) user names from access list\n"
+block|,
+literal|"\t           (all names if omitted).\n"
+block|,
+literal|"\t-I         Run interactively.\n"
+block|,
+literal|"\t-k subst   Set keyword substitution mode:\n"
+block|,
+literal|"\t   kv   (Default) Substitue keyword and value.\n"
+block|,
+literal|"\t   kvl  Substitue keyword, value, and locker (if any).\n"
+block|,
+literal|"\t   k    Substitue keyword only.\n"
+block|,
+literal|"\t   o    Preserve original string.\n"
+block|,
+literal|"\t   b    Like o, but mark file as binary.\n"
+block|,
+literal|"\t   v    Substitue value only.\n"
+block|,
+literal|"\t-l[rev]    Lock revision (latest revision on branch,\n"
+block|,
+literal|"\t           latest revision on trunk if omitted).\n"
+block|,
+literal|"\t-L         Set strict locking.\n"
+block|,
+literal|"\t-m rev:msg  Replace revision's log message.\n"
+block|,
+literal|"\t-n tag[:[rev]]  Tag branch or revision.  If :rev is omitted,\n"
+block|,
+literal|"\t                delete the tag; if rev is omitted, tag the latest\n"
+block|,
+literal|"\t                revision on the default branch.\n"
+block|,
+literal|"\t-N tag[:[rev]]  Same as -n except override existing tag.\n"
+block|,
+literal|"\t-o range   Delete (outdate) specified range of revisions:\n"
+block|,
+literal|"\t   rev1::rev2  Between rev1 and rev2, excluding rev1 and rev2.\n"
+block|,
+literal|"\t   rev::       After rev on the same branch.\n"
+block|,
+literal|"\t   ::rev       Before rev on the same branch.\n"
+block|,
+literal|"\t   rev         Just rev.\n"
+block|,
+literal|"\t   rev1:rev2   Between rev1 and rev2, including rev1 and rev2.\n"
+block|,
+literal|"\t   rev:        rev and following revisions on the same branch.\n"
+block|,
+literal|"\t   :rev        rev and previous revisions on the same branch.\n"
+block|,
+literal|"\t-q         Run quietly.\n"
+block|,
+literal|"\t-s state[:rev]  Set revision state (latest revision on branch,\n"
+block|,
+literal|"\t                latest revision on trunk if omitted).\n"
+block|,
+literal|"\t-t[file]   Get descriptive text from file (stdin if omitted).\n"
+block|,
+literal|"\t-t-string  Set descriptive text.\n"
+block|,
+literal|"\t-u[rev]    Unlock the revision (latest revision on branch,\n"
+block|,
+literal|"\t           latest revision on trunk if omitted).\n"
+block|,
+literal|"\t-U         Unset strict locking.\n"
 block|,
 literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
@@ -138,7 +214,7 @@ name|char
 modifier|*
 name|kflag
 decl_stmt|;
-comment|/* Description (-t).  See sanity.sh for various moanings about        files and stdin and such.  "" if -t specified without an        argument.  It is "-t" followed by the argument.  */
+comment|/* Description (-t).  */
 name|char
 modifier|*
 name|desc
@@ -664,23 +740,6 @@ break|break;
 case|case
 literal|'e'
 case|:
-if|if
-condition|(
-name|optarg
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"removing entire access list not yet implemented"
-argument_list|)
-expr_stmt|;
-block|}
 name|arg_add
 argument_list|(
 operator|&
@@ -931,8 +990,15 @@ block|}
 if|if
 condition|(
 name|optarg
-operator|==
+operator|!=
 name|NULL
+operator|&&
+name|optarg
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
 condition|)
 name|admin_data
 operator|.
@@ -940,41 +1006,39 @@ name|desc
 operator|=
 name|xstrdup
 argument_list|(
-literal|"-t"
+name|optarg
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|admin_data
-operator|.
-name|desc
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
+name|size_t
+name|bufsize
+init|=
+literal|0
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|get_file
 argument_list|(
 name|optarg
-argument_list|)
-operator|+
-literal|5
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
+argument_list|,
+name|optarg
+argument_list|,
+literal|"r"
+argument_list|,
+operator|&
 name|admin_data
 operator|.
 name|desc
 argument_list|,
-literal|"-t"
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|admin_data
-operator|.
-name|desc
+operator|&
+name|bufsize
 argument_list|,
-name|optarg
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 block|}
@@ -1499,13 +1563,98 @@ name|desc
 operator|!=
 name|NULL
 condition|)
-name|send_arg
-argument_list|(
+block|{
+name|char
+modifier|*
+name|p
+init|=
 name|admin_data
 operator|.
 name|desc
+decl_stmt|;
+name|send_to_server
+argument_list|(
+literal|"Argument -t-"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|send_to_server
+argument_list|(
+literal|"\012Argumentx "
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+operator|++
+name|p
+expr_stmt|;
+block|}
+else|else
+block|{
+name|char
+modifier|*
+name|q
+init|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\n'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+condition|)
+name|q
+operator|=
+name|p
+operator|+
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|send_to_server
+argument_list|(
+name|p
+argument_list|,
+name|q
+operator|-
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|q
+expr_stmt|;
+block|}
+block|}
+name|send_to_server
+argument_list|(
+literal|"\012"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|admin_data
@@ -2417,85 +2566,13 @@ name|rcs
 operator|->
 name|desc
 operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|admin_data
-operator|->
-name|desc
-index|[
-literal|2
-index|]
-operator|==
-literal|'-'
-condition|)
-name|rcs
-operator|->
-name|desc
-operator|=
 name|xstrdup
 argument_list|(
 name|admin_data
 operator|->
 name|desc
-operator|+
-literal|3
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|char
-modifier|*
-name|descfile
-init|=
-name|admin_data
-operator|->
-name|desc
-operator|+
-literal|2
-decl_stmt|;
-name|size_t
-name|bufsize
-init|=
-literal|0
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-comment|/* If -t specified with no argument, read from stdin. */
-if|if
-condition|(
-operator|*
-name|descfile
-operator|==
-literal|'\0'
-condition|)
-name|descfile
-operator|=
-name|NULL
-expr_stmt|;
-name|get_file
-argument_list|(
-name|descfile
-argument_list|,
-name|descfile
-argument_list|,
-literal|"r"
-argument_list|,
-operator|&
-name|rcs
-operator|->
-name|desc
-argument_list|,
-operator|&
-name|bufsize
-argument_list|,
-operator|&
-name|len
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2672,6 +2749,20 @@ name|users
 index|[
 name|u
 index|]
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+name|RCS_delaccess
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -3137,17 +3228,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|rev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|revnum
 operator|!=
 name|NULL
 condition|)
+block|{
 name|n
 operator|=
 name|findnode
@@ -3159,12 +3246,19 @@ argument_list|,
 name|revnum
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|revnum
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|n
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
-name|revnum
-operator|==
-name|NULL
-operator|||
 name|n
 operator|==
 name|NULL
@@ -3185,15 +3279,9 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|revnum
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
-name|revnum
+name|rev
 argument_list|)
 expr_stmt|;
 name|status
@@ -3202,6 +3290,11 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+name|free
+argument_list|(
+name|rev
+argument_list|)
+expr_stmt|;
 name|delta
 operator|=
 operator|(
@@ -3330,6 +3423,11 @@ name|rcs
 operator|->
 name|versions
 argument_list|,
+name|rev
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|rev
 argument_list|)
 expr_stmt|;
@@ -3517,24 +3615,9 @@ operator|->
 name|file
 argument_list|)
 expr_stmt|;
-comment|/* Upon failure, we want to abandon any changes made to the 	   RCS data structure.  Forcing a reparse does the trick, 	   but leaks memory and is kludgey.  Should we export 	   free_rcsnode_contents for this purpose? */
-name|RCS_reparsercsfile
+name|RCS_abandon
 argument_list|(
 name|rcs
-argument_list|,
-operator|(
-name|FILE
-operator|*
-operator|*
-operator|)
-name|NULL
-argument_list|,
-operator|(
-expr|struct
-name|rcsbuffer
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
