@@ -411,6 +411,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|OPTION_FORMAT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|OPTION_HELP
 value|12
 end_define
@@ -650,7 +657,7 @@ name|required_argument
 block|,
 name|NULL
 block|,
-literal|'F'
+name|OPTION_FORMAT
 block|}
 block|,
 block|{
@@ -1306,7 +1313,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'F'
+name|OPTION_FORMAT
 case|:
 name|bsdtar
 operator|->
@@ -2968,7 +2975,7 @@ literal|"  -w    Interactive\n"
 literal|"Create: %p -c [options] [<file> |<dir> | @<archive> | -C<dir> ]\n"
 literal|"<file>,<dir>  add these items to archive\n"
 literal|"  -z, -j  Compress archive with gzip/bzip2\n"
-literal|"  -F {ustar|pax|cpio|shar}  Select archive format\n"
+literal|"  --format {ustar|pax|cpio|shar}  Select archive format\n"
 ifdef|#
 directive|ifdef
 name|HAVE_GETOPT_LONG
