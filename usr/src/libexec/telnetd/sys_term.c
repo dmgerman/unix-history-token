@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.9 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|TCSETA
-value|TIOCSETA
+value|TIOCSETAW
 end_define
 
 begin_define
