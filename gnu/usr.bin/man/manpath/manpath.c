@@ -470,6 +470,9 @@ argument_list|(
 name|config_file
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAIN
 if|if
 condition|(
 name|locale
@@ -518,6 +521,9 @@ literal|""
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* MAIN */
 if|if
 condition|(
 operator|(
@@ -1137,6 +1143,9 @@ name|mandir
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|MAIN
 elseif|else
 if|if
 condition|(
@@ -1314,6 +1323,9 @@ name|man_locales
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* MAIN */
 else|else
 block|{
 name|gripe_reading_mp_config
