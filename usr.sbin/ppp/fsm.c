@@ -6415,7 +6415,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Warning: Truncating option length from %d to %d\n"
+literal|"Warning: Truncating option length from %d to %ld\n"
 argument_list|,
 name|o
 operator|->
