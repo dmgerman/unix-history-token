@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -775,6 +775,9 @@ literal|0
 operator|&&
 operator|!
 name|QueueRun
+operator|&&
+operator|!
+name|ForceMail
 condition|)
 block|{
 name|usrerr
@@ -995,6 +998,9 @@ literal|0
 operator|&&
 operator|!
 name|QueueRun
+operator|&&
+operator|!
+name|ForceMail
 condition|)
 name|usrerr
 argument_list|(
@@ -1188,6 +1194,9 @@ literal|0
 operator|&&
 operator|!
 name|QueueRun
+operator|&&
+operator|!
+name|ForceMail
 condition|)
 block|{
 name|usrerr

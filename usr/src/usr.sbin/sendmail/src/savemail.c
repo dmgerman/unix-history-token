@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -91,6 +91,10 @@ name|exclusive
 operator|++
 condition|)
 return|return;
+name|ForceMail
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
 condition|(
@@ -416,6 +420,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|auto
+name|ADDRESS
+modifier|*
+name|q
+decl_stmt|;
 comment|/* we have a home directory; open dead.letter */
 name|message
 argument_list|(
@@ -454,23 +463,31 @@ name|To
 operator|=
 name|buf
 expr_stmt|;
-name|i
+name|q
 operator|=
-name|mailfile
+name|NULL
+expr_stmt|;
+name|sendto
 argument_list|(
 name|buf
 argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
 operator|&
-name|From
+name|q
 argument_list|)
 expr_stmt|;
-name|giveresponse
+operator|(
+name|void
+operator|)
+name|deliver
 argument_list|(
-name|i
+name|q
 argument_list|,
-name|TRUE
-argument_list|,
-name|LocalMailer
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -556,12 +573,6 @@ end_expr_stmt
 
 begin_expr_stmt
 name|NoAlias
-operator|++
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ForceMail
 operator|++
 expr_stmt|;
 end_expr_stmt
