@@ -25,27 +25,6 @@ directive|include
 file|<dev/sound/chip.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|notyet
-end_if
-
-begin_include
-include|#
-directive|include
-file|"midi.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notyet */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2021,25 +2000,11 @@ name|parent
 argument_list|)
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|notyet
-if|#
-directive|if
-name|NMIDI
-operator|>
-literal|0
 comment|/* Share the IRQ with the MIDI driver.  */
 name|irqctl
 operator||=
 literal|0x40
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NMIDI> 0 */
-endif|#
-directive|endif
-comment|/* notyet */
 name|dmactl
 operator|=
 name|dma_bits
@@ -2737,7 +2702,7 @@ name|mss
 decl_stmt|;
 if|if
 condition|(
-name|isa_get_vendorid
+name|isa_get_logicalid
 argument_list|(
 name|dev
 argument_list|)
@@ -7846,7 +7811,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|isa_get_vendorid
+name|isa_get_logicalid
 argument_list|(
 name|parent
 argument_list|)

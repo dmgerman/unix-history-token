@@ -226,6 +226,20 @@ name|SNDCARD_NSS
 value|26
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCARD_UART16550
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_OPL
+value|28
+end_define
+
 begin_include
 include|#
 directive|include
@@ -2301,6 +2315,20 @@ define|#
 directive|define
 name|SNDCTL_MIDI_MPUCMD
 value|_IOWR('m', 2, mpu_command_rec)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIOSPASSTHRU
+value|_IOWR('m', 3, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIOGPASSTHRU
+value|_IOWR('m', 4, int)
 end_define
 
 begin_comment

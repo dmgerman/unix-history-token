@@ -141,9 +141,6 @@ modifier|*
 name|pcmintr_arg
 decl_stmt|;
 comment|/* pcm intr arg */
-if|#
-directive|if
-name|notyet
 name|device_t
 name|midi
 decl_stmt|;
@@ -158,9 +155,6 @@ modifier|*
 name|midiintr_arg
 decl_stmt|;
 comment|/* midi intr arg */
-endif|#
-directive|endif
-comment|/* notyet */
 name|void
 modifier|*
 name|ih
@@ -1068,9 +1062,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 comment|/* Midi Interface */
 name|func
 operator|=
@@ -1147,9 +1138,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 name|bus_generic_attach
 argument_list|(
 name|dev
@@ -1441,9 +1429,6 @@ operator|=
 name|arg
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|SCF_MIDI
 case|:
@@ -1460,9 +1445,6 @@ operator|=
 name|arg
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
 default|default:
 return|return
 operator|(
@@ -1608,9 +1590,6 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|notyet
 case|case
 name|SCF_MIDI
 case|:
@@ -1627,9 +1606,6 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* notyet */
 default|default:
 return|return
 operator|(
@@ -1753,9 +1729,6 @@ operator|->
 name|pcmintr_arg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 if|if
 condition|(
 operator|(
@@ -1781,9 +1754,6 @@ operator|->
 name|midiintr_arg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 comment|/* Throw an eoi. */
 name|csa_writeio
 argument_list|(

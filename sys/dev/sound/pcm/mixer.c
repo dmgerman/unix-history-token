@@ -37,6 +37,12 @@ operator|=
 literal|50
 block|,
 index|[
+name|SOUND_MIXER_SYNTH
+index|]
+operator|=
+literal|75
+block|,
+index|[
 name|SOUND_MIXER_PCM
 index|]
 operator|=

@@ -2316,9 +2316,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|notyet
 comment|/* Midi Interface */
 name|func
 operator|=
@@ -2441,9 +2438,6 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* notyet */
 comment|/* probe/attach kids */
 name|bus_generic_attach
 argument_list|(
