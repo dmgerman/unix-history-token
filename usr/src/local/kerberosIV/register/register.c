@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)register.c	1.7 (Berkeley) %G%"
+literal|"@(#)register.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberosIV/des.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<kerberosIV/krb.h>
 end_include
 
 begin_include
