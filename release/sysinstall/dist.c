@@ -725,6 +725,19 @@ name|NULL
 block|}
 block|,
 block|{
+literal|"stools"
+block|,
+literal|"/usr/src"
+block|,
+operator|&
+name|SrcDists
+block|,
+name|DIST_SRC_TOOLS
+block|,
+name|NULL
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|, }
