@@ -72,14 +72,6 @@ name|rusage
 name|p_cru
 decl_stmt|;
 comment|/* sum of stats for reaped children */
-define|#
-directive|define
-name|pstat_endzero
-value|pstat_startcopy
-define|#
-directive|define
-name|pstat_startcopy
-value|p_timer
 name|struct
 name|itimerval
 name|p_timer
@@ -88,6 +80,14 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* virtual-time timers */
+define|#
+directive|define
+name|pstat_endzero
+value|pstat_startcopy
+define|#
+directive|define
+name|pstat_startcopy
+value|p_prof
 struct|struct
 name|uprof
 block|{
