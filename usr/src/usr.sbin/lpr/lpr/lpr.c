@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	4.24 (Berkeley) %G%"
+literal|"@(#)lpr.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +387,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* maximum number of copies allowed */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DU
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* daemon user-id */
 end_comment
 
 begin_decl_stmt
@@ -1133,6 +1143,20 @@ argument_list|(
 name|tfname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|tfd
+argument_list|,
+name|DU
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* owned by daemon for protection */
 name|card
 argument_list|(
 literal|'H'
@@ -2219,6 +2243,34 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|fchown
+argument_list|(
+name|f
+argument_list|,
+name|userid
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: cannot chown %s\n"
+argument_list|,
+name|name
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|++
 name|n
 index|[
@@ -2984,6 +3036,23 @@ condition|)
 name|MC
 operator|=
 name|DEFMAXCOPIES
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|DU
+operator|=
+name|pgetnum
+argument_list|(
+literal|"du"
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|DU
+operator|=
+name|DEFUID
 expr_stmt|;
 name|SC
 operator|=
