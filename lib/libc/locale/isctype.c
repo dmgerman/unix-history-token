@@ -532,36 +532,5 @@ return|;
 block|}
 end_function
 
-begin_undef
-undef|#
-directive|undef
-name|digittoint
-end_undef
-
-begin_function
-name|int
-name|digittoint
-parameter_list|(
-name|c
-parameter_list|)
-name|int
-name|c
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|__maskrune
-argument_list|(
-operator|(
-name|c
-operator|)
-argument_list|,
-literal|0xFF
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 
