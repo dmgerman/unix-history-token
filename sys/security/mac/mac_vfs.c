@@ -3962,7 +3962,7 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|how
+name|flag
 parameter_list|)
 block|{
 name|KASSERT
@@ -3978,7 +3978,6 @@ literal|"mac_init_mbuf on non-header mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* "how" is one of M_(TRY|DONT)WAIT */
 name|mac_init_label
 argument_list|(
 operator|&
@@ -4000,7 +3999,7 @@ name|m_pkthdr
 operator|.
 name|label
 argument_list|,
-name|how
+name|flag
 argument_list|)
 expr_stmt|;
 ifdef|#
