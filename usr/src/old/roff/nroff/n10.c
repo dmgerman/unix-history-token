@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n10.c	4.1 %G%"
+literal|"@(#)n10.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1583,6 +1583,12 @@ if|if
 condition|(
 name|dt
 operator|%
+name|t
+operator|.
+name|Em
+operator|||
+name|dt
+operator|==
 name|t
 operator|.
 name|Em
