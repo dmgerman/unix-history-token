@@ -4646,7 +4646,7 @@ name|reg
 argument_list|,
 name|pci_maptype
 argument_list|(
-name|base
+name|map
 argument_list|)
 argument_list|,
 name|ln2range
