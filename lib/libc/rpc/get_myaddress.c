@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_myaddress.c,v 1.5 1996/11/22 23:37:08 pst Exp $"
+literal|"$Id: get_myaddress.c,v 1.6 1996/12/30 14:26:28 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,9 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+literal|1024
+operator|*
+literal|8
 index|]
 decl_stmt|;
 name|struct
@@ -421,6 +423,19 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gotit
+operator|==
+literal|0
+condition|)
+comment|/* still found nothing?? */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0
