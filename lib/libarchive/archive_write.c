@@ -27,23 +27,6 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DMALLOC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dmalloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

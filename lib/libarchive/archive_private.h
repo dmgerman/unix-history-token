@@ -471,6 +471,9 @@ parameter_list|,
 name|struct
 name|archive_entry
 modifier|*
+parameter_list|,
+name|int
+name|tartype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -671,28 +674,6 @@ name|b
 parameter_list|)
 value|((a)< (b) ? (a) : (b))
 end_define
-
-begin_comment
-comment|/*  * Private ACL handling:  parse and generate ACL strings.  * These are private because they handle a lot of very weird formats  * that clients should not be messing with.  Clients should only  * deal with their platform-native formats.  Because of the need to  * support many formats cleanly, new arguments are likely to get added  * on a regular basis.  Clients who try to use this interface are  * likely to be surprised when it changes.  */
-end_comment
-
-begin_function_decl
-name|int
-name|__archive_entry_acl_parse_w
-parameter_list|(
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|,
-specifier|const
-name|wchar_t
-modifier|*
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

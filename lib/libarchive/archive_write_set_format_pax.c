@@ -29,23 +29,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DMALLOC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dmalloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -2793,6 +2776,9 @@ argument_list|,
 name|ustarbuff
 argument_list|,
 name|entry_main
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* If we built any extended attributes, write that entry first. */
@@ -2862,13 +2848,6 @@ name|p
 argument_list|,
 operator|&
 name|pax_entry_name
-argument_list|)
-expr_stmt|;
-name|archive_entry_set_tartype
-argument_list|(
-name|pax_attr_entry
-argument_list|,
-literal|'x'
 argument_list|)
 expr_stmt|;
 name|archive_entry_set_pathname
@@ -2953,6 +2932,8 @@ argument_list|,
 name|paxbuff
 argument_list|,
 name|pax_attr_entry
+argument_list|,
+literal|'x'
 argument_list|)
 expr_stmt|;
 name|archive_entry_free

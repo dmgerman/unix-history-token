@@ -256,17 +256,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|archive_entry_tartype
-parameter_list|(
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -430,6 +419,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|archive_entry_set_link
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|archive_entry_set_mode
 parameter_list|(
 name|struct
@@ -516,19 +520,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|archive_entry_set_tartype
-parameter_list|(
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|,
-name|char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|archive_entry_set_uid
 parameter_list|(
 name|struct
@@ -571,7 +562,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient.  The intent here is to allow  * libarchive internals to fetch/store text-format strings, but  * clients use the more involved interface that allows them control  * over uid/uname/gid/gname lookups.  */
+comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient for a number of reasons:  *   = clients need control over uname/uid and gname/gid mappings  *   = there are many different ACL text formats  *   = would like to be able to read/convert archives containing ACLs  *     on platforms that lack ACL libraries  */
 end_comment
 
 begin_comment
@@ -896,6 +887,28 @@ modifier|*
 parameter_list|,
 name|int
 name|want_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  *  * You were warned!  */
+end_comment
+
+begin_function_decl
+name|int
+name|__archive_entry_acl_parse_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|,
+name|int
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

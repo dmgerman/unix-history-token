@@ -21,23 +21,6 @@ begin_comment
 comment|/*  * This uses 'printf' family functions, which can cause issues  * for size-critical applications.  I've separated it out to make  * this issue clear.  (Currently, it is called directly from within  * the core code, so it cannot easily be omitted.)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DMALLOC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dmalloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

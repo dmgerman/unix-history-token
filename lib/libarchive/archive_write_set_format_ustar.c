@@ -23,23 +23,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DMALLOC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dmalloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -592,6 +575,9 @@ argument_list|,
 name|buff
 argument_list|,
 name|entry
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -684,6 +670,9 @@ name|struct
 name|archive_entry
 modifier|*
 name|entry
+parameter_list|,
+name|int
+name|tartype
 parameter_list|)
 block|{
 name|unsigned
@@ -1432,10 +1421,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|archive_entry_tartype
-argument_list|(
-name|entry
-argument_list|)
+name|tartype
 operator|>=
 literal|0
 condition|)
@@ -1447,10 +1433,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|archive_entry_tartype
-argument_list|(
-name|entry
-argument_list|)
+name|tartype
 expr_stmt|;
 block|}
 elseif|else

@@ -21,23 +21,6 @@ begin_comment
 comment|/*  * Basic resizable string support, to simplify manipulating arbitrary-sized  * strings while minimizing heap activity.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_DMALLOC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dmalloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
