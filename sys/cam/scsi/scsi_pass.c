@@ -2315,7 +2315,7 @@ name|ds_flags
 operator|=
 name|DEVSTAT_NO_DATA
 expr_stmt|;
-name|devstat_end_transaction
+name|devstat_end_transaction_buf
 argument_list|(
 operator|&
 name|softc
@@ -2323,18 +2323,6 @@ operator|->
 name|device_stats
 argument_list|,
 name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|done_ccb
-operator|->
-name|csio
-operator|.
-name|tag_action
-operator|&
-literal|0xf
-argument_list|,
-name|ds_flags
 argument_list|)
 expr_stmt|;
 name|biodone
