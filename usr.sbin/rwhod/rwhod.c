@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<protocols/rwhod.h>
 end_include
 
@@ -1334,13 +1340,43 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%d: bad from port"
+literal|"%d: bad source port from %s"
 argument_list|,
 name|ntohs
 argument_list|(
 name|from
 operator|.
 name|sin_port
+argument_list|)
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|from
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|cc
+operator|<
+name|WHDRSIZE
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"short packet from %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|from
+operator|.
+name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1384,11 +1420,14 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"malformed host name from %x"
+literal|"malformed host name from %s"
 argument_list|,
+name|inet_ntoa
+argument_list|(
 name|from
 operator|.
 name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
