@@ -391,6 +391,13 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|"\t{ NODEV, 0, 0 },\t/* for NFS diskless */\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
 literal|"\t{ NODEV, 0, 0 }\n"
 argument_list|)
 expr_stmt|;
