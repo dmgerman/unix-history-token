@@ -37,6 +37,12 @@ directive|include
 file|"wcd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"wfd.h"
+end_include
+
 begin_comment
 comment|/* # include "wmt.h" -- add your driver here */
 end_comment
@@ -441,6 +447,26 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|wfdattach
+parameter_list|(
+name|struct
+name|atapi
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|atapi_params
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|wcdattach
 parameter_list|(
 name|struct
@@ -734,6 +760,19 @@ name|drqtype
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* When 'slow' is set, clear 'intrcmd' */
+if|if
+condition|(
+name|ata
+operator|->
+name|slow
+condition|)
+name|ata
+operator|->
+name|intrcmd
+operator|=
+literal|0
+expr_stmt|;
 comment|/* overlap operation supported */
 if|if
 condition|(
@@ -969,6 +1008,48 @@ case|case
 name|AT_TYPE_DIRECT
 case|:
 comment|/* direct-access */
+if|#
+directive|if
+name|NWFD
+operator|>
+literal|0
+comment|/* ATAPI Floppy(LS-120) */
+if|if
+condition|(
+name|wfdattach
+argument_list|(
+name|ata
+argument_list|,
+name|unit
+argument_list|,
+name|ap
+argument_list|,
+name|ata
+operator|->
+name|debug
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* Device attached successfully. */
+name|ata
+operator|->
+name|attached
+index|[
+name|unit
+index|]
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 case|case
 name|AT_TYPE_CDROM
 case|:
@@ -1156,6 +1237,14 @@ case|:
 return|return
 operator|(
 literal|"READ_BIG"
+operator|)
+return|;
+case|case
+literal|0x2a
+case|:
+return|return
+operator|(
+literal|"WRITE_BIG"
 operator|)
 return|;
 case|case
@@ -2087,7 +2176,7 @@ name|PRIBIO
 argument_list|,
 literal|"atacmd"
 argument_list|,
-literal|0
+literal|100
 argument_list|)
 expr_stmt|;
 name|ac

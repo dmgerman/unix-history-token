@@ -725,6 +725,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_WRITE_BIG
+value|0x2a
+end_define
+
+begin_comment
+comment|/* write data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_READ_TOC
 value|0x43
 end_define
