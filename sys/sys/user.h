@@ -232,6 +232,10 @@ name|int
 name|ki_structsize
 decl_stmt|;
 comment|/* size of this structure */
+name|int
+name|ki_layout
+decl_stmt|;
+comment|/* reserved: layout identifier */
 name|struct
 name|pargs
 modifier|*
