@@ -1127,7 +1127,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|u_int16_t
+name|uint
 argument_list|)
 expr_stmt|;
 operator|*
