@@ -529,7 +529,7 @@ name|NG_NODE_UNREF
 parameter_list|(
 name|node
 parameter_list|)
-value|ng_unref_node(node)
+value|ng_unref(node)
 end_define
 
 begin_define
