@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	5.2 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,8 +1099,16 @@ name|mp
 operator|->
 name|m_lines
 operator|-
-literal|2
+literal|1
 expr_stmt|;
+while|while
+condition|(
+name|t
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
 name|readline
 argument_list|(
 name|mesf
@@ -1108,6 +1116,15 @@ argument_list|,
 name|linebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|blankline
+argument_list|(
+name|linebuf
+argument_list|)
+condition|)
+break|break;
+block|}
 while|while
 condition|(
 name|t
