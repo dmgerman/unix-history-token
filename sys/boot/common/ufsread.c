@@ -559,23 +559,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__sparc64__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|UFS1_ONLY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
