@@ -3273,6 +3273,18 @@ name|if_baudrate
 operator|=
 literal|10000000
 expr_stmt|;
+name|IFQ_SET_MAXLEN
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|VR_TX_LIST_CNT
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_snd
@@ -3282,6 +3294,14 @@ operator|=
 name|VR_TX_LIST_CNT
 operator|-
 literal|1
+expr_stmt|;
+name|IFQ_SET_READY
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5198,14 +5218,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_head
-operator|!=
-name|NULL
+argument_list|)
 condition|)
+block|{
 name|vr_start_locked
 argument_list|(
 name|ifp
@@ -5447,18 +5469,9 @@ block|}
 block|}
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* DEVICE_POLLING */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vr_intr
@@ -5880,15 +5893,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_IF_QLEN
+operator|!
+name|IFQ_DRV_IS_EMPTY
 argument_list|(
 operator|&
 name|ifp
 operator|->
 name|if_snd
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|vr_start_locked
 argument_list|(
@@ -5903,13 +5915,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Encapsulate an mbuf chain in a descriptor by coupling the mbuf data  * pointers to the fragment pointers.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|vr_encap
@@ -6076,13 +6082,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Main transmit routine. To avoid having to do mbuf copies, we put pointers  * to the mbuf data regions directly in the transmit lists. We also save a  * copy of the pointers since the transmit list fragment pointers are  * physical addresses.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vr_start
@@ -6118,9 +6118,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|vr_start_locked
@@ -6176,7 +6173,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_DEQUEUE
+name|IFQ_DRV_DEQUEUE
 argument_list|(
 operator|&
 name|ifp
@@ -6207,7 +6204,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Rollback, send what we were able to encap. */
-name|IF_PREPEND
+name|IFQ_DRV_PREPEND
 argument_list|(
 operator|&
 name|ifp
@@ -6302,9 +6299,6 @@ name|IFF_OACTIVE
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|vr_init
@@ -6337,9 +6331,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|vr_init_locked
@@ -6747,13 +6738,7 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Set media options.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|vr_ifmedia_upd
@@ -6792,13 +6777,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Report current media status.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vr_ifmedia_sts
@@ -6859,9 +6838,6 @@ operator|->
 name|mii_media_status
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|vr_ioctl
@@ -7053,9 +7029,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|vr_watchdog
@@ -7111,13 +7084,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_snd
-operator|.
-name|ifq_head
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 name|vr_start_locked
 argument_list|(
@@ -7130,13 +7104,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX lists.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vr_stop
@@ -7425,13 +7393,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|vr_shutdown
