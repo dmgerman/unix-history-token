@@ -951,6 +951,16 @@ argument_list|,
 argument|tle
 argument_list|)
 block|{
+comment|/* Take the scheduling lock. */
+name|KSE_SCHED_LOCK
+argument_list|(
+name|curkse
+argument_list|,
+name|pthread
+operator|->
+name|kseg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -973,16 +983,6 @@ name|sig
 argument_list|)
 condition|)
 block|{
-comment|/* Take the scheduling lock. */
-name|KSE_SCHED_LOCK
-argument_list|(
-name|curkse
-argument_list|,
-name|pthread
-operator|->
-name|kseg
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Return the signal number and make the 			 * thread runnable. 			 */
 name|pthread
 operator|->
@@ -1130,6 +1130,15 @@ operator|=
 name|pthread
 expr_stmt|;
 block|}
+name|KSE_SCHED_UNLOCK
+argument_list|(
+name|curkse
+argument_list|,
+name|pthread
+operator|->
+name|kseg
+argument_list|)
+expr_stmt|;
 block|}
 name|KSE_LOCK_RELEASE
 argument_list|(

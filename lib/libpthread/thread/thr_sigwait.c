@@ -92,6 +92,9 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
+name|kse_critical_t
+name|crit
+decl_stmt|;
 name|_thr_enter_cancellation_point
 argument_list|(
 name|curthread
@@ -151,12 +154,27 @@ argument_list|,
 name|SIGSTOP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check to see if a pending signal is in the wait mask. 	 * This has to be atomic. */
+comment|/* 	 * Check to see if a pending signal is in the wait mask. 	 * This has to be atomic. 	 */
 name|tempset
 operator|=
 name|curthread
 operator|->
 name|sigpend
+expr_stmt|;
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
+name|KSE_LOCK_ACQUIRE
+argument_list|(
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_signal_lock
+argument_list|)
 expr_stmt|;
 name|SIGSETOR
 argument_list|(
@@ -239,16 +257,31 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Return the signal number to the caller: */
-operator|*
-name|sig
-operator|=
-name|i
+name|KSE_LOCK_RELEASE
+argument_list|(
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_signal_lock
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
+argument_list|)
 expr_stmt|;
 name|_thr_leave_cancellation_point
 argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+comment|/* Return the signal number to the caller: */
+operator|*
+name|sig
+operator|=
+name|i
 expr_stmt|;
 return|return
 operator|(
@@ -256,15 +289,6 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Lock the array of SIG_DFL wait counts. 	 */
-name|THR_LOCK_ACQUIRE
-argument_list|(
-name|curthread
-argument_list|,
-operator|&
-name|_thread_signal_lock
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Enter a loop to find the signals that are SIG_DFL.  For 	 * these signals we must install a dummy signal handler in 	 * order for the kernel to pass them in to us.  POSIX says 	 * that the _application_ must explicitly install a dummy 	 * handler for signals that are SIG_IGN in order to sigwait 	 * on them.  Note that SIG_IGN signals are left in the 	 * mask because a subsequent sigaction could enable an 	 * ignored signal. 	 */
 name|sigemptyset
 argument_list|(
@@ -357,12 +381,19 @@ block|}
 block|}
 block|}
 comment|/* Done accessing _thread_dfl_count for now. */
-name|THR_LOCK_RELEASE
+name|KSE_LOCK_RELEASE
 argument_list|(
 name|curthread
+operator|->
+name|kse
 argument_list|,
 operator|&
 name|_thread_signal_lock
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 if|if
@@ -424,9 +455,16 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * Relock the array of SIG_DFL wait counts. 	 */
-name|THR_LOCK_ACQUIRE
+name|crit
+operator|=
+name|_kse_critical_enter
+argument_list|()
+expr_stmt|;
+name|KSE_LOCK_ACQUIRE
 argument_list|(
 name|curthread
+operator|->
+name|kse
 argument_list|,
 operator|&
 name|_thread_signal_lock
@@ -518,12 +556,19 @@ block|}
 block|}
 block|}
 comment|/* Done accessing _thread_dfl_count. */
-name|THR_LOCK_RELEASE
+name|KSE_LOCK_RELEASE
 argument_list|(
 name|curthread
+operator|->
+name|kse
 argument_list|,
 operator|&
 name|_thread_signal_lock
+argument_list|)
+expr_stmt|;
+name|_kse_critical_leave
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 name|_thr_leave_cancellation_point
