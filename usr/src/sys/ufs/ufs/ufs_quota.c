@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1799,9 +1799,22 @@ operator|!=
 name|VREG
 condition|)
 block|{
-name|vrele
+operator|(
+name|void
+operator|)
+name|vn_close
 argument_list|(
 name|vp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1818,9 +1831,22 @@ name|mp
 argument_list|)
 condition|)
 block|{
-name|vrele
+operator|(
+name|void
+operator|)
+name|vn_close
 argument_list|(
 name|vp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1838,6 +1864,8 @@ name|vp
 condition|)
 name|quotaoff
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|type
@@ -1971,7 +1999,7 @@ name|dq
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Search vnodes associated with this mount point, 	 * adding references to quota file being opened. 	 * NB: only need to add dquot's for inodes being modified; 	 * vp->v_usecount == 0 below should use vp->v_writecnt == 0. 	 */
+comment|/* 	 * Search vnodes associated with this mount point, 	 * adding references to quota file being opened. 	 * NB: only need to add dquot's for inodes being modified. 	 */
 name|again
 label|:
 for|for
@@ -1999,7 +2027,7 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_usecount
+name|v_writecount
 operator|==
 literal|0
 condition|)
@@ -2073,6 +2101,8 @@ name|error
 condition|)
 name|quotaoff
 argument_list|(
+name|p
+argument_list|,
 name|mp
 argument_list|,
 name|type
@@ -2098,11 +2128,21 @@ end_comment
 begin_macro
 name|quotaoff
 argument_list|(
+argument|p
+argument_list|,
 argument|mp
 argument_list|,
 argument|type
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -2156,6 +2196,9 @@ name|struct
 name|inode
 modifier|*
 name|ip
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 if|if
 condition|(
@@ -2304,9 +2347,21 @@ operator|&=
 operator|~
 name|VSYSTEM
 expr_stmt|;
-name|vrele
+name|error
+operator|=
+name|vn_close
 argument_list|(
 name|qvp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|ump
@@ -2387,7 +2442,7 @@ name|MNT_QUOTA
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
