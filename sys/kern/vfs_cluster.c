@@ -567,7 +567,10 @@ name|rbp
 operator|=
 name|gbincore
 argument_list|(
+operator|&
 name|vp
+operator|->
+name|v_bufobj
 argument_list|,
 name|lblkno
 operator|+
@@ -3211,7 +3214,10 @@ name|tbp
 operator|=
 name|gbincore
 argument_list|(
+operator|&
 name|vp
+operator|->
+name|v_bufobj
 argument_list|,
 name|start_lbn
 argument_list|)
@@ -3448,6 +3454,14 @@ name|b_op
 expr_stmt|;
 name|bp
 operator|->
+name|b_bufobj
+operator|=
+name|tbp
+operator|->
+name|b_bufobj
+expr_stmt|;
+name|bp
+operator|->
 name|b_bufsize
 operator|=
 literal|0
@@ -3605,7 +3619,10 @@ name|tbp
 operator|=
 name|gbincore
 argument_list|(
+operator|&
 name|vp
+operator|->
+name|v_bufobj
 argument_list|,
 name|start_lbn
 argument_list|)
@@ -4076,12 +4093,9 @@ expr_stmt|;
 comment|/* put on clean list */
 name|bufobj_wref
 argument_list|(
-operator|&
 name|tbp
 operator|->
-name|b_vp
-operator|->
-name|v_bufobj
+name|b_bufobj
 argument_list|)
 expr_stmt|;
 name|splx

@@ -47,6 +47,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|bufobj
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mount
 struct_decl|;
 end_struct_decl
@@ -259,6 +265,11 @@ name|struct
 name|buf_ops
 modifier|*
 name|b_op
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|b_bufobj
 decl_stmt|;
 name|unsigned
 name|b_magic
@@ -2165,7 +2176,7 @@ modifier|*
 name|incore
 parameter_list|(
 name|struct
-name|vnode
+name|bufobj
 modifier|*
 parameter_list|,
 name|daddr_t
@@ -2180,20 +2191,7 @@ modifier|*
 name|gbincore
 parameter_list|(
 name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|daddr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|inmem
-parameter_list|(
-name|struct
-name|vnode
+name|bufobj
 modifier|*
 parameter_list|,
 name|daddr_t

@@ -12114,9 +12114,12 @@ name|bp
 operator|=
 name|incore
 argument_list|(
+operator|&
 name|freeblks
 operator|->
 name|fb_devvp
+operator|->
+name|v_bufobj
 argument_list|,
 name|dbn
 argument_list|)

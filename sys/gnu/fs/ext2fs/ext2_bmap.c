@@ -576,7 +576,10 @@ operator|&&
 operator|!
 name|incore
 argument_list|(
+operator|&
 name|vp
+operator|->
+name|v_bufobj
 argument_list|,
 name|metalbn
 argument_list|)
