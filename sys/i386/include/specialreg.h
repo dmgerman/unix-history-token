@@ -490,7 +490,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPUID_HHT
+name|CPUID_HTT
 value|0x10000000
 end_define
 
@@ -513,6 +513,38 @@ define|#
 directive|define
 name|CPUID_PBE
 value|0x80000000
+end_define
+
+begin_comment
+comment|/*  * CPUID instruction 1 ebx info  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUID_BRAND_INDEX
+value|0x000000ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_CLFUSH_SIZE
+value|0x0000ff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_HTT_CORES
+value|0x00ff0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUID_LOCAL_APIC_ID
+value|0xff000000
 end_define
 
 begin_comment
