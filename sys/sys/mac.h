@@ -2145,13 +2145,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* XXX This u_char should be vm_prot_t! */
-end_comment
-
 begin_function_decl
-name|u_char
-name|mac_check_vnode_mmap_prot
+name|int
+name|mac_check_vnode_mmap
 parameter_list|(
 name|struct
 name|ucred
@@ -2164,7 +2160,27 @@ modifier|*
 name|vp
 parameter_list|,
 name|int
-name|newmapping
+name|prot
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mac_check_vnode_mprotect
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|int
+name|prot
 parameter_list|)
 function_decl|;
 end_function_decl
