@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1994 by Andrew A. Chernov, Moscow, Russia.  * All ri
 end_comment
 
 begin_comment
-comment|/* $Id */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
