@@ -138,11 +138,16 @@ directive|include
 file|<i386/isa/if_csreg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pnp.h"
-end_include
+begin_comment
+comment|/* #include "pnp.h" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPNP
+value|0
+end_define
 
 begin_if
 if|#
