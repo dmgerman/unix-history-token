@@ -2566,7 +2566,7 @@ operator|==
 name|res
 condition|)
 break|break;
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|rp
 argument_list|)
@@ -2616,7 +2616,7 @@ operator|==
 name|consumer
 condition|)
 break|break;
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|pc
 argument_list|)
