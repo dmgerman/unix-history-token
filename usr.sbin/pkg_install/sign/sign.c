@@ -378,6 +378,10 @@ decl_stmt|;
 name|int
 name|success
 decl_stmt|;
+name|sign
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|type
