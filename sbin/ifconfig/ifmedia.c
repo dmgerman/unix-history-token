@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ifconfig.c,v 1.34 1997/04/21 01:17:58 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: ifmedia.c,v 1.2 1997/05/10 14:47:35 peter Exp $ */
+comment|/*	$Id$ */
 end_comment
 
 begin_comment
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
 end_include
 
 begin_include
