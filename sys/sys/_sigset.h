@@ -82,7 +82,7 @@ name|_SIG_VALID
 parameter_list|(
 name|sig
 parameter_list|)
-value|((sig)< _SIG_MAXSIG&& (sig)> 0)
+value|((sig)<= _SIG_MAXSIG&& (sig)> 0)
 end_define
 
 begin_comment
