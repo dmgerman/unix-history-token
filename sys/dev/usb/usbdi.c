@@ -1095,6 +1095,8 @@ condition|(
 name|err
 operator|!=
 name|USBD_IN_PROGRESS
+operator|&&
+name|err
 condition|)
 goto|goto
 name|bad2
@@ -5097,6 +5099,8 @@ condition|(
 name|err
 operator|!=
 name|USBD_IN_PROGRESS
+operator|&&
+name|err
 condition|)
 block|{
 name|usbd_free_xfer
