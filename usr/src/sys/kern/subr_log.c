@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -59,13 +59,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOG_NBIO
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOG_ASYNC
 value|0x04
 end_define
@@ -91,12 +84,10 @@ modifier|*
 name|sc_selp
 decl_stmt|;
 comment|/* process waiting on select call */
-name|struct
-name|pgrp
-modifier|*
-name|sc_pgrp
+name|int
+name|sc_pgid
 decl_stmt|;
-comment|/* process group for async I/O */
+comment|/* process/group for async I/O */
 block|}
 name|logsoftc
 struct|;
@@ -146,20 +137,15 @@ literal|1
 expr_stmt|;
 name|logsoftc
 operator|.
-name|sc_selp
-operator|=
-literal|0
-expr_stmt|;
-name|logsoftc
-operator|.
-name|sc_pgrp
+name|sc_pgid
 operator|=
 name|u
 operator|.
 name|u_procp
 operator|->
-name|p_pgrp
+name|p_pid
 expr_stmt|;
+comment|/* signal process only */
 comment|/* 	 * Potential race here with putchar() but since putchar should be 	 * called by autoconf, msg_magic should be initialized by the time 	 * we get here. 	 */
 if|if
 condition|(
@@ -258,12 +244,6 @@ name|sc_selp
 operator|=
 literal|0
 expr_stmt|;
-name|logsoftc
-operator|.
-name|sc_pgrp
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_block
 
@@ -277,6 +257,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -291,6 +273,12 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -327,11 +315,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|logsoftc
-operator|.
-name|sc_state
+name|flag
 operator|&
-name|LOG_NBIO
+name|IO_NDELAY
 condition|)
 block|{
 name|splx
@@ -606,6 +592,11 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -643,17 +634,44 @@ name|sc_state
 operator|&
 name|LOG_ASYNC
 condition|)
-name|pgsignal
+block|{
+if|if
+condition|(
+name|logsoftc
+operator|.
+name|sc_pgid
+operator|<
+literal|0
+condition|)
+name|gsignal
 argument_list|(
 name|logsoftc
 operator|.
-name|sc_pgrp
+name|sc_pgid
 argument_list|,
 name|SIGIO
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|=
+name|pfind
+argument_list|(
+name|logsoftc
+operator|.
+name|sc_pgid
+argument_list|)
+condition|)
+name|psignal
+argument_list|(
+name|p
+argument_list|,
+name|SIGIO
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|logsoftc
@@ -690,6 +708,8 @@ end_comment
 begin_macro
 name|logioctl
 argument_list|(
+argument|dev
+argument_list|,
 argument|com
 argument_list|,
 argument|data
@@ -764,29 +784,6 @@ break|break;
 case|case
 name|FIONBIO
 case|:
-if|if
-condition|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
-condition|)
-name|logsoftc
-operator|.
-name|sc_state
-operator||=
-name|LOG_NBIO
-expr_stmt|;
-else|else
-name|logsoftc
-operator|.
-name|sc_state
-operator|&=
-operator|~
-name|LOG_NBIO
-expr_stmt|;
 break|break;
 case|case
 name|FIOASYNC
@@ -815,14 +812,9 @@ operator|~
 name|LOG_ASYNC
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* XXX remove -- a single open device doesn't need this */
 case|case
 name|TIOCSPGRP
 case|:
-block|{
 name|logsoftc
 operator|.
 name|sc_pgid
@@ -835,9 +827,6 @@ operator|)
 name|data
 expr_stmt|;
 break|break;
-block|}
-endif|#
-directive|endif
 case|case
 name|TIOCGPGRP
 case|:
@@ -850,9 +839,7 @@ name|data
 operator|=
 name|logsoftc
 operator|.
-name|sc_pgrp
-operator|->
-name|pg_id
+name|sc_pgid
 expr_stmt|;
 break|break;
 default|default:
