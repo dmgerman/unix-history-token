@@ -1,25 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)sbus.c	7.3 (Berkeley) %G%  *  * from: $Header: sbus.c,v 1.8 92/06/17 06:59:43 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sbus.c	7.4 (Berkeley) %G%  *  * from: $Header: sbus.c,v 1.10 92/11/26 02:28:13 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
 comment|/*  * Sbus stuff.  */
-end_comment
-
-begin_comment
-comment|/* #include "sbus.h" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NSBUS
-value|1
-end_define
-
-begin_comment
-comment|/* XXX */
 end_comment
 
 begin_include
@@ -228,6 +213,12 @@ name|struct
 name|sbus_attach_args
 name|sa
 decl_stmt|;
+specifier|register
+name|struct
+name|romaux
+modifier|*
+name|ra
+decl_stmt|;
 comment|/* 	 * XXX there is only one Sbus, for now -- do not know how to 	 * address children on others 	 */
 if|if
 condition|(
@@ -248,16 +239,13 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Record clock frequency for synchronous SCSI. 	 * IS THIS THE CORRECT DEFAULT?? 	 */
+name|ra
+operator|=
+name|aux
+expr_stmt|;
 name|node
 operator|=
-operator|(
-operator|(
-expr|struct
-name|romaux
-operator|*
-operator|)
-name|aux
-operator|)
+name|ra
 operator|->
 name|ra_node
 expr_stmt|;
@@ -289,6 +277,48 @@ operator|->
 name|sc_clockfreq
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ra
+operator|->
+name|ra_bp
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|ra
+operator|->
+name|ra_bp
+operator|->
+name|name
+argument_list|,
+literal|"sbus"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sa
+operator|.
+name|sa_ra
+operator|.
+name|ra_bp
+operator|=
+name|ra
+operator|->
+name|ra_bp
+operator|+
+literal|1
+expr_stmt|;
+else|else
+name|sa
+operator|.
+name|sa_ra
+operator|.
+name|ra_bp
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 * Loop through ROM children, fixing any relative addresses 	 * and then configuring each device. 	 */
 for|for
