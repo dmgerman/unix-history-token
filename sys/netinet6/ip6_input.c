@@ -890,6 +890,14 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* timer for regeneranation of temporary addresses randomize ID */
+name|callout_init
+argument_list|(
+operator|&
+name|in6_tmpaddrtimer_ch
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
