@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fetch.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -495,17 +489,6 @@ name|FALSE
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|HOSTNAME_MAX
-value|64
-end_define
-
-begin_comment
-comment|/*  * Try and fetch a file by URL, returning the directory name for where  * it's unpacked, if successful.  */
-end_comment
 
 begin_function
 name|char
