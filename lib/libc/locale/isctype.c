@@ -98,9 +98,9 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_A
+name|_CTYPE_A
 operator||
-name|_D
+name|_CTYPE_D
 argument_list|)
 operator|)
 return|;
@@ -131,7 +131,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_A
+name|_CTYPE_A
 argument_list|)
 operator|)
 return|;
@@ -195,7 +195,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_B
+name|_CTYPE_B
 argument_list|)
 operator|)
 return|;
@@ -226,7 +226,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_C
+name|_CTYPE_C
 argument_list|)
 operator|)
 return|;
@@ -257,7 +257,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_D
+name|_CTYPE_D
 argument_list|)
 operator|)
 return|;
@@ -288,7 +288,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_G
+name|_CTYPE_G
 argument_list|)
 operator|)
 return|;
@@ -319,7 +319,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_X
+name|_CTYPE_X
 argument_list|)
 operator|)
 return|;
@@ -350,7 +350,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_I
+name|_CTYPE_I
 argument_list|)
 operator|)
 return|;
@@ -381,7 +381,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_L
+name|_CTYPE_L
 argument_list|)
 operator|)
 return|;
@@ -412,7 +412,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_D
+name|_CTYPE_D
 argument_list|)
 operator|)
 return|;
@@ -443,7 +443,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_Q
+name|_CTYPE_Q
 argument_list|)
 operator|)
 return|;
@@ -474,7 +474,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_R
+name|_CTYPE_R
 argument_list|)
 operator|)
 return|;
@@ -505,7 +505,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_P
+name|_CTYPE_P
 argument_list|)
 operator|)
 return|;
@@ -567,7 +567,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_S
+name|_CTYPE_S
 argument_list|)
 operator|)
 return|;
@@ -598,7 +598,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_T
+name|_CTYPE_T
 argument_list|)
 operator|)
 return|;
@@ -629,7 +629,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_U
+name|_CTYPE_U
 argument_list|)
 operator|)
 return|;
@@ -660,7 +660,7 @@ operator|(
 name|c
 operator|)
 argument_list|,
-name|_X
+name|_CTYPE_X
 argument_list|)
 operator|)
 return|;
