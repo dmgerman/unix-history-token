@@ -1739,7 +1739,7 @@ name|lapic
 operator|.
 name|icr_lo
 operator|&
-name|APIC_RESV2_MASK
+name|APIC_ICRLO_RESV_MASK
 operator|)
 operator||
 name|dest_type
@@ -1957,7 +1957,7 @@ name|lapic
 operator|.
 name|icr_lo
 operator|&
-name|APIC_RESV2_MASK
+name|APIC_ICRLO_RESV_MASK
 operator|)
 operator||
 name|APIC_DEST_DESTFLD

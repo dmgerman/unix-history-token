@@ -784,6 +784,13 @@ name|APIC_RESV2_MASK
 value|0xfff00000
 end_define
 
+begin_define
+define|#
+directive|define
+name|APIC_ICRLO_RESV_MASK
+value|(APIC_RESV1_MASK | APIC_RESV2_MASK)
+end_define
+
 begin_comment
 comment|/* fields in ICR_HIGH */
 end_comment
