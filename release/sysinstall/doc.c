@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.7 1995/10/27 01:22:53 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.8 1995/10/27 03:59:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  */
 end_comment
 
 begin_include
@@ -31,6 +31,30 @@ argument_list|(
 name|VAR_BROWSER_PACKAGE
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strstr
+argument_list|(
+name|variable_get
+argument_list|(
+name|SYSTEM_STATE
+argument_list|)
+argument_list|,
+literal|"install"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"This option may only be used after the system is installed, sorry!"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
+comment|/* Make sure we have media available */
 if|if
 condition|(
 operator|!
