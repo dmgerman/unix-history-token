@@ -166,6 +166,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|zflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zero stats */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|interval
 decl_stmt|;
 end_decl_stmt
