@@ -2734,7 +2734,19 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|||
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"bad hexadecimal digits"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|isxdigit
 argument_list|(
@@ -2750,7 +2762,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"bad hexadecimal digits"
+literal|"odd count hexadecimal digits"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2761,7 +2773,7 @@ block|}
 if|if
 condition|(
 name|p
-operator|>
+operator|>=
 name|buf
 operator|+
 name|len
@@ -2779,7 +2791,7 @@ expr_stmt|;
 else|else
 name|warnx
 argument_list|(
-literal|"strings too long"
+literal|"string too long"
 argument_list|)
 expr_stmt|;
 return|return
