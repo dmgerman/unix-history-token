@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -77,6 +77,8 @@ block|,
 name|VT_PROCFS
 block|,
 name|VT_AFS
+block|,
+name|VT_ISOFS
 block|}
 enum|;
 end_enum
@@ -230,10 +232,14 @@ name|int
 name|v_ralen
 decl_stmt|;
 comment|/* Read-ahead length */
+name|daddr_t
+name|v_maxra
+decl_stmt|;
+comment|/* last readahead block */
 name|long
 name|v_spare
 index|[
-literal|8
+literal|7
 index|]
 decl_stmt|;
 comment|/* round to 128 bytes */
