@@ -2631,6 +2631,13 @@ block|}
 block|,
 comment|/* PNP0511 */
 block|{
+literal|0x31307256
+block|,
+literal|"USR3031"
+block|}
+block|,
+comment|/* USR3031 */
+block|{
 literal|0
 block|}
 block|}
