@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -31,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
 end_include
 
 begin_include
@@ -289,7 +283,7 @@ argument_list|,
 name|dle
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
+comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create() and has not 				 * been destroyed yet:  				 */
 if|if
 condition|(
 name|pthread
@@ -307,60 +301,25 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|_thread_stack_free
+argument_list|(
+name|pthread
+operator|->
+name|stack
+argument_list|,
 name|pthread
 operator|->
 name|attr
 operator|.
 name|stacksize_attr
-operator|==
-name|PTHREAD_STACK_DEFAULT
-condition|)
-block|{
-comment|/* 						 * Default-size stack.  Cache 						 * it: 						 */
-name|struct
-name|stack
-modifier|*
-name|spare_stack
-decl_stmt|;
-name|spare_stack
-operator|=
-operator|(
+argument_list|,
 name|pthread
 operator|->
-name|stack
-operator|+
-name|PTHREAD_STACK_DEFAULT
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|stack
-argument_list|)
-operator|)
-expr_stmt|;
-name|SLIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|_stackq
-argument_list|,
-name|spare_stack
-argument_list|,
-name|qe
+name|attr
+operator|.
+name|guardsize_attr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 						 * Non-standard stack size.                                                  * free() it outside the locks. 						 */
-name|p_stack
-operator|=
-name|pthread
-operator|->
-name|stack
-expr_stmt|;
-block|}
 block|}
 comment|/* 				 * Point to the thread structure that must 				 * be freed outside the locks: 				 */
 name|pthread_cln
@@ -370,7 +329,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * This thread has not detached, so do 				 * not destroy it. 				 * 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
+comment|/* 				 * This thread has not detached, so do 				 * not destroy it. 				 * 				 * Check if the stack was not specified by 				 * the caller to pthread_create() and has not 				 * been destroyed yet:  				 */
 if|if
 condition|(
 name|pthread
@@ -388,61 +347,26 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|_thread_stack_free
+argument_list|(
+name|pthread
+operator|->
+name|stack
+argument_list|,
 name|pthread
 operator|->
 name|attr
 operator|.
 name|stacksize_attr
-operator|==
-name|PTHREAD_STACK_DEFAULT
-condition|)
-block|{
-comment|/* 						 * Default-size stack.  Cache 						 * it: 						 */
-name|struct
-name|stack
-modifier|*
-name|spare_stack
-decl_stmt|;
-name|spare_stack
-operator|=
-operator|(
+argument_list|,
 name|pthread
 operator|->
-name|stack
-operator|+
-name|PTHREAD_STACK_DEFAULT
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|stack
-argument_list|)
-operator|)
-expr_stmt|;
-name|SLIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|_stackq
-argument_list|,
-name|spare_stack
-argument_list|,
-name|qe
+name|attr
+operator|.
+name|guardsize_attr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 						 * Non-standard stack size. 						 * free() it outside the locks: 						 */
-name|p_stack
-operator|=
-name|pthread
-operator|->
-name|stack
-expr_stmt|;
-block|}
-comment|/* 					 * NULL the stack pointer now 					 * that the memory has been freed:  					 */
+comment|/* 					 * NULL the stack pointer now that the 					 * memory has been freed: 					 */
 name|pthread
 operator|->
 name|stack

@@ -957,13 +957,6 @@ name|pthread_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the thread stack cache: */
-name|SLIST_INIT
-argument_list|(
-operator|&
-name|_stackq
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Create a red zone below the main stack.  All other stacks are 		 * constrained to a maximum size by the paramters passed to 		 * mmap(), but this stack is only limited by resource limits, so 		 * this stack needs an explicitly mapped red zone to protect the 		 * thread stack that is just beyond. 		 */
 if|if
 condition|(
@@ -977,9 +970,9 @@ name|USRSTACK
 operator|-
 name|PTHREAD_STACK_INITIAL
 operator|-
-name|PTHREAD_STACK_GUARD
+name|PTHREAD_GUARD_DEFAULT
 argument_list|,
-name|PTHREAD_STACK_GUARD
+name|PTHREAD_GUARD_DEFAULT
 argument_list|,
 literal|0
 argument_list|,

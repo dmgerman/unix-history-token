@@ -1111,6 +1111,9 @@ decl_stmt|;
 name|size_t
 name|stacksize_attr
 decl_stmt|;
+name|size_t
+name|guardsize_attr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1174,13 +1177,13 @@ value|65536
 end_define
 
 begin_comment
-comment|/*  * Size of red zone at the end of each stack.  In actuality, this "red zone" is  * merely an unmapped region, except in the case of the initial stack.  Since  * mmap() makes it possible to specify the maximum growth of a MAP_STACK region,  * an unmapped gap between thread stacks achieves the same effect as explicitly  * mapped red zones.  */
+comment|/*  * Size of default red zone at the end of each stack.  In actuality, this "red  * zone" is merely an unmapped region, except in the case of the initial stack.  * Since mmap() makes it possible to specify the maximum growth of a MAP_STACK  * region, an unmapped gap between thread stacks achieves the same effect as  * explicitly mapped red zones.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTHREAD_STACK_GUARD
+name|PTHREAD_GUARD_DEFAULT
 value|PAGE_SIZE
 end_define
 
@@ -2081,25 +2084,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Spare thread stack. */
-end_comment
-
-begin_struct
-struct|struct
-name|stack
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|stack
-argument_list|)
-name|qe
-expr_stmt|;
-comment|/* Queue entry for this stack. */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Global variables for the uthread kernel.  */
 end_comment
 
@@ -2539,6 +2523,8 @@ block|,
 name|NULL
 block|,
 name|PTHREAD_STACK_DEFAULT
+block|,
+name|PTHREAD_GUARD_DEFAULT
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3040,54 +3026,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Spare stack queue.  Stacks of default size are cached in order to reduce  * thread creation time.  Spare stacks are used in LIFO order to increase cache  * locality.  */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|SLIST_HEAD
-argument_list|(,
-name|stack
-argument_list|)
-name|_stackq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Base address of next unallocated default-size {stack, red zone}.  Stacks are  * allocated contiguously, starting below the bottom of the main stack.  When a  * new stack is created, a red zone is created (actually, the red zone is simply  * left unmapped) below the bottom of the stack, such that the stack will not be  * able to grow all the way to the top of the next stack.  This isn't  * fool-proof.  It is possible for a stack to grow by a large amount, such that  * it grows into the next stack, and as long as the memory within the red zone  * is never accessed, nothing will prevent one thread stack from trouncing all  * over the next.  */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|void
-modifier|*
-name|_next_stack
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-comment|/* main stack top   - main stack size       - stack size            - (red zone + main stack red zone) */
-init|=
-operator|(
-name|void
-operator|*
-operator|)
-name|USRSTACK
-operator|-
-name|PTHREAD_STACK_INITIAL
-operator|-
-name|PTHREAD_STACK_DEFAULT
-operator|-
-operator|(
-literal|2
-operator|*
-name|PTHREAD_STACK_GUARD
-operator|)
-endif|#
-directive|endif
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Declare the kernel scheduler jump buffer and stack:  */
 end_comment
 
@@ -3299,6 +3237,32 @@ parameter_list|(
 name|struct
 name|pthread
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|_thread_stack_alloc
+parameter_list|(
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_stack_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
