@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas<matt@3am-software.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040reg.h,v 1.1.1.2 1997/08/03 12:17:39 peter Exp $  */
+comment|/*	$NetBSD: dc21040reg.h,v 1.13 1997/10/17 09:26:58 matt Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$Id$ */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas<matt@3am-software.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Id: dc21040reg.h,v 1.24 1997/05/16 19:47:09 thomas Exp  */
 end_comment
 
 begin_if
@@ -1520,6 +1528,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TULIP_SIASTS_LINK100FAIL
+value|0x00000002L
+end_define
+
+begin_define
+define|#
+directive|define
 name|TULIP_SIACONN_RESET
 value|0x00000000L
 end_define
@@ -1848,14 +1863,14 @@ begin_define
 define|#
 directive|define
 name|TULIP_21142_SIATXRX_10BASET
-value|0x0000F3FFL
+value|0x00007F3FL
 end_define
 
 begin_define
 define|#
 directive|define
 name|TULIP_21142_SIAGEN_10BASET
-value|0x00000000L
+value|0x00000008L
 end_define
 
 begin_define
@@ -1869,14 +1884,14 @@ begin_define
 define|#
 directive|define
 name|TULIP_21142_SIATXRX_10BASET_FD
-value|0x0000F3FDL
+value|0x00007F3DL
 end_define
 
 begin_define
 define|#
 directive|define
 name|TULIP_21142_SIAGEN_10BASET_FD
-value|0x00000000L
+value|0x00000008L
 end_define
 
 begin_define
@@ -1890,7 +1905,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21142_SIATXRX_AUI
-value|0x0000F3FDL
+value|0x00000705L
 end_define
 
 begin_define
@@ -1911,7 +1926,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21142_SIATXRX_BNC
-value|0x0000F3FDL
+value|0x00000705L
 end_define
 
 begin_define
@@ -2820,6 +2835,80 @@ end_define
 begin_comment
 comment|/* Reset PHY */
 end_comment
+
+begin_comment
+comment|/*  * ACCTON EN1207 specialties  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_OUI_EN1207_0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_OUI_EN1207_1
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_OUI_EN1207_2
+value|0xE8
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_CSR8_EN1207
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_CSR9_EN1207
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_CSR10_EN1207
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_CSR11_EN1207
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_EN1207_BNC_INIT
+value|0x0000011B
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_EN1207_UTP_INIT
+value|0x9E00000B
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_EN1207_100_INIT
+value|0x6D00031B
+end_define
 
 begin_comment
 comment|/*  * SROM definitions for the 21140 and 21041.  */
