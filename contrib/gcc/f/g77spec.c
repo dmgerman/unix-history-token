@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Specific flags and argument handling of the Fortran front-end.    Copyright (C) 1997, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Specific flags and argument handling of the Fortran front-end.    Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -27,12 +27,6 @@ begin_include
 include|#
 directive|include
 file|"gcc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<f/version.h>
 end_include
 
 begin_ifndef
@@ -301,25 +295,6 @@ name|g77_newargv
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* --- This comes from gcc.c (2.8.1) verbatim: */
-end_comment
-
-begin_comment
-comment|/* This defines which switch letters take arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_SWITCH_TAKES_ARG
-parameter_list|(
-name|CHAR
-parameter_list|)
-define|\
-value|((CHAR) == 'D' || (CHAR) == 'U' || (CHAR) == 'o' \    || (CHAR) == 'e' || (CHAR) == 'T' || (CHAR) == 'u' \    || (CHAR) == 'I' || (CHAR) == 'm' || (CHAR) == 'x' \    || (CHAR) == 'L' || (CHAR) == 'A')
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -341,21 +316,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* This defines which multi-letter switches take arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_WORD_SWITCH_TAKES_ARG
-parameter_list|(
-name|STR
-parameter_list|)
-define|\
-value|(!strcmp (STR, "Tdata") || !strcmp (STR, "Ttext")	\   || !strcmp (STR, "Tbss") || !strcmp (STR, "include")	\   || !strcmp (STR, "imacros") || !strcmp (STR, "aux-info") \   || !strcmp (STR, "idirafter") || !strcmp (STR, "iprefix") \   || !strcmp (STR, "iwithprefix") || !strcmp (STR, "iwithprefixbefore") \   || !strcmp (STR, "isystem") || !strcmp (STR, "specs"))
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -376,10 +336,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* --- End of verbatim.  */
-end_comment
 
 begin_comment
 comment|/* Assumes text[0] == '-'.  Returns number of argv items that belong to    (and follow) this one, an option id for options important to the    caller, and a pointer to the first char of the arg, if embedded (else    returns NULL, meaning no arg or it's the next argv).     Note that this also assumes gcc.c's pass converting long options    to short ones, where available, has already been run.  */
@@ -1523,11 +1479,9 @@ name|OPTION_version
 case|:
 name|printf
 argument_list|(
-literal|"\ GNU Fortran (GCC %s) %s\n\ Copyright (C) 2002 Free Software Foundation, Inc.\n\ \n\ GNU Fortran comes with NO WARRANTY, to the extent permitted by law.\n\ You may redistribute copies of GNU Fortran\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the file named COPYING\n\ or type the command `info -f g77 Copying'.\n\ "
+literal|"\ GNU Fortran (GCC) %s\n\ Copyright (C) 2002 Free Software Foundation, Inc.\n\ \n\ GNU Fortran comes with NO WARRANTY, to the extent permitted by law.\n\ You may redistribute copies of GNU Fortran\n\ under the terms of the GNU General Public License.\n\ For more information about these matters, see the file named COPYING\n\ or type the command `info -f g77 Copying'.\n\ "
 argument_list|,
 name|version_string
-argument_list|,
-name|ffe_version_string
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2208,6 +2162,27 @@ end_decl_stmt
 begin_comment
 comment|/* Not used for F77. */
 end_comment
+
+begin_comment
+comment|/* Table of language-specific spec functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|spec_function
+name|lang_specific_spec_functions
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
