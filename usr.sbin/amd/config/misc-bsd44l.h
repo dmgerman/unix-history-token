@@ -36,24 +36,11 @@ directive|include
 file|<sys/ucred.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|mount
-value|__kern_mount
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/mount.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|mount
-end_undef
 
 begin_include
 include|#
@@ -61,36 +48,11 @@ directive|include
 file|<nfs/rpcv2.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfs_init
-value|__kern_nfs_init
-end_define
-
 begin_include
 include|#
 directive|include
 file|<nfs/nfs.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|nfs_init
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_include
 include|#
