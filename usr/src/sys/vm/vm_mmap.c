@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -224,7 +224,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -673,6 +673,9 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|uap
 operator|->
 name|pos
@@ -2250,9 +2253,6 @@ name|fitit
 argument_list|,
 name|pager
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|foff
 argument_list|,
 name|TRUE
@@ -2350,9 +2350,6 @@ name|fitit
 argument_list|,
 name|pager
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|foff
 argument_list|,
 name|FALSE
@@ -2424,9 +2421,6 @@ name|fitit
 argument_list|,
 name|pager
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|foff
 argument_list|,
 name|FALSE
@@ -2552,9 +2546,6 @@ name|TRUE
 argument_list|,
 name|pager
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|foff
 argument_list|,
 name|FALSE
@@ -2703,14 +2694,8 @@ name|vm_object_pmap_copy
 argument_list|(
 name|object
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|foff
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|foff
 operator|+
 name|size
