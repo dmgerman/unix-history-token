@@ -1186,6 +1186,14 @@ literal|"Netgear MA301 PCI IEEE 802.11b"
 block|}
 block|,
 block|{
+literal|0x16ab
+block|,
+literal|0x1102
+block|,
+literal|"Linksys WDT11 PCI IEEE 802.11b"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
