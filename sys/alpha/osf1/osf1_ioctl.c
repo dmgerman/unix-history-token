@@ -798,6 +798,8 @@ name|if_name
 argument_list|,
 literal|"ti"
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* looks good */
