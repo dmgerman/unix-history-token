@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.17 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,7 @@ name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|bytes
@@ -112,6 +113,7 @@ modifier|*
 name|win
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|bytes
