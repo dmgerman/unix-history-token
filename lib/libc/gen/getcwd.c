@@ -123,6 +123,8 @@ specifier|register
 name|DIR
 modifier|*
 name|dir
+init|=
+name|NULL
 decl_stmt|;
 specifier|register
 name|dev_t
@@ -794,6 +796,10 @@ argument_list|(
 name|dir
 argument_list|)
 expr_stmt|;
+name|dir
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Truncate any file name. */
 operator|*
 name|bup
@@ -827,6 +833,18 @@ condition|)
 name|free
 argument_list|(
 name|pt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dir
+condition|)
+operator|(
+name|void
+operator|)
+name|closedir
+argument_list|(
+name|dir
 argument_list|)
 expr_stmt|;
 name|free
