@@ -2834,7 +2834,7 @@ condition|(
 name|AlarmWentOff
 condition|)
 block|{
-name|msgDebug
+name|msgConfirm
 argument_list|(
 literal|"Failure to read from media - timeout or user abort.\n"
 argument_list|)
@@ -2858,7 +2858,7 @@ operator|!=
 name|i
 condition|)
 block|{
-name|msgDebug
+name|msgConfirm
 argument_list|(
 literal|"Write error on transfer to cpio process, try of %d bytes\n"
 argument_list|,

@@ -2853,7 +2853,14 @@ literal|0
 operator|||
 name|AlarmWentOff
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Read error on media (timeout or user abort).\n"
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|total
 operator|+=
 name|n
