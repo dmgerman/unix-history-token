@@ -147,7 +147,7 @@ name|dest
 parameter_list|,
 name|label
 parameter_list|)
-value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    __func__ ": PKG_GETINT error, idx = %d\n.", idx);	\ 		goto label;						\ 	}								\ 	if (tmp->Type != ACPI_TYPE_INTEGER)				\ 		goto label;						\ 	dest = tmp->Integer.Value;					\ } while (0)
+value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    "%s: PKG_GETINT error, idx = %d\n.", __func__, idx); \ 		goto label;						\ 	}								\ 	if (tmp->Type != ACPI_TYPE_INTEGER)				\ 		goto label;						\ 	dest = tmp->Integer.Value;					\ } while (0)
 end_define
 
 begin_define
@@ -167,7 +167,7 @@ name|size
 parameter_list|,
 name|label
 parameter_list|)
-value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    __func__ ": PKG_GETSTR error, idx = %d\n.", idx);	\ 		goto label;						\ 	}								\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->Buffer.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while (0)
+value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    "%s: PKG_GETSTR error, idx = %d\n.", __func__, idx); \ 		goto label;						\ 	}								\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->Buffer.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while (0)
 end_define
 
 begin_struct
