@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	3.2	%H%	*/
+comment|/*	conf.h	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|BNETLDIS
+name|NETLDISC
 value|1
 end_define
 
