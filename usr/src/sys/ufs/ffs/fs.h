@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.4	%G%	*/
+comment|/*	fs.h	1.5	%G%	*/
 end_comment
 
 begin_comment
@@ -144,14 +144,14 @@ comment|/* it can be made larger as long as that structures size remains sane. *
 end_comment
 
 begin_comment
-comment|/*  * Super block for a file system.  *  * The super block is nominally located at disk block 1 although  * this is naive due to bad blocks.  Inode 0 can't be used for normal  * purposes, thus the root inode is inode 1.  */
+comment|/*  * Super block for a file system.  *  * The super block is nominally located at disk block 1 although  * this is naive due to bad blocks.  Inode 0 can't be used for normal  * purposes, historically bad blocks were linked to inode 1,  * thus the root inode is 2. (inode 1 is no longer used for  * this purpose, however numerous dump tapes make this  * assumption, so we are stuck with it)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ROOTINO
-value|((ino_t)1)
+value|((ino_t)2)
 end_define
 
 begin_comment
