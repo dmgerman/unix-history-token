@@ -901,6 +901,16 @@ decl_stmt|,
 name|eval
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|YP
+specifier|extern
+name|int
+name|_use_yp
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* YP */
 if|if
 condition|(
 name|err
@@ -910,6 +920,22 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
+if|if
+condition|(
+name|_use_yp
+condition|)
+name|warnx
+argument_list|(
+literal|"NIS information unchanged"
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* YP */
 name|warnx
 argument_list|(
 literal|"%s: unchanged"
