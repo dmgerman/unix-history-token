@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)trap.c	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)trap.c	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -150,14 +150,8 @@ name|nsysent
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"dbg.h"
-end_include
-
 begin_comment
-comment|/*  * Called from the trap handler when a processor trap occurs.  */
+comment|/*  * trap(frame):  *	Exception, fault, and trap interface to BSD kernel. This  * common code is called from assembly language IDT gate entry  * routines that prepare a suitable stack frame, and restore this  * frame after the exception has been processed. Note that the  * effect is as if the arguments were passed call by reference.  */
 end_comment
 
 begin_decl_stmt
@@ -726,63 +720,6 @@ operator|=
 name|SIGFPE
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * If the user SP is above the stack segment, 	 * grow the stack automatically. 	 */
-case|case
-name|T_STKFLT
-operator|+
-name|USER
-case|:
-case|case
-name|T_SEGFLT
-operator|+
-name|USER
-case|:
-if|if
-condition|(
-name|grow
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|locr0
-index|[
-name|tESP
-index|]
-argument_list|)
-comment|/*|| grow(code)*/
-condition|)
-goto|goto
-name|out
-goto|;
-name|ucode
-operator|=
-name|code
-expr_stmt|;
-name|i
-operator|=
-name|SIGSEGV
-expr_stmt|;
-break|break;
-case|case
-name|T_TABLEFLT
-case|:
-comment|/* allow page table faults in kernel */
-case|case
-name|T_TABLEFLT
-operator|+
-name|USER
-case|:
-comment|/* page table fault */
-name|panic
-argument_list|(
-literal|"ptable fault"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 case|case
 name|T_PAGEFLT
 case|:
@@ -1054,79 +991,6 @@ operator|=
 name|SIGTRAP
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * For T_KSPNOTVAL and T_BUSERR, can not allow spl to 	 * drop to 0 as clock could go off and we would end up 	 * doing an rei to the interrupt stack at ipl 0 (a 	 * reserved operand fault).  Instead, we allow psignal 	 * to post an ast, then return to user mode where we 	 * will reenter the kernel on the kernel's stack and 	 * can then service the signal. 	 */
-case|case
-name|T_KSPNOTVAL
-case|:
-if|if
-condition|(
-name|noproc
-condition|)
-name|panic
-argument_list|(
-literal|"ksp not valid"
-argument_list|)
-expr_stmt|;
-comment|/* fall thru... */
-case|case
-name|T_KSPNOTVAL
-operator|+
-name|USER
-case|:
-name|printf
-argument_list|(
-literal|"pid %d: ksp not valid\n"
-argument_list|,
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-comment|/* must insure valid kernel stack pointer? */
-name|trapsignal
-argument_list|(
-name|SIGKILL
-argument_list|,
-literal|0
-operator||
-name|FRMTRAP
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_ar0
-operator|=
-name|oar0
-expr_stmt|;
-return|return;
-case|case
-name|T_BUSERR
-operator|+
-name|USER
-case|:
-name|trapsignal
-argument_list|(
-name|SIGBUS
-argument_list|,
-name|code
-operator||
-name|FRMTRAP
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_ar0
-operator|=
-name|oar0
-expr_stmt|;
-return|return;
-endif|#
-directive|endif
 include|#
 directive|include
 file|"isa.h"
@@ -1364,7 +1228,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Called from locore when a system call occurs  */
+comment|/*  * syscall(frame):  *	System call request from POSIX system call gate interface to kernel.  * Like trap(), argument is call by reference.  */
 end_comment
 
 begin_comment
@@ -1418,7 +1282,6 @@ operator|)
 operator|&
 name|frame
 operator|)
-comment|/*-PS*/
 decl_stmt|;
 specifier|register
 name|caddr_t
