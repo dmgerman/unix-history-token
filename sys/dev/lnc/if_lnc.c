@@ -678,6 +678,16 @@ end_function
 begin_define
 define|#
 directive|define
+name|inb
+parameter_list|(
+name|port
+parameter_list|)
+value|bus_space_read_1(sc->lnc_btag, sc->lnc_bhandle, port)
+end_define
+
+begin_define
+define|#
+directive|define
 name|inw
 parameter_list|(
 name|port
@@ -3874,15 +3884,9 @@ index|]
 operator|=
 name|inb
 argument_list|(
-name|sc
-operator|->
-name|iobase
-operator|+
-operator|(
 name|i
 operator|*
 name|skip
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX -- should check return status of if_attach 	 */
