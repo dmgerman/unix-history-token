@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.68 2001/12/24 21:36:16 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.69 2001/12/27 18:43:46 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -690,11 +690,11 @@ value|0x46524545
 define|#
 directive|define
 name|XFER_BUSY
-value|0x42555357
+value|0x42555359
 define|#
 directive|define
 name|XFER_ONQU
-value|0x504f5255
+value|0x4f4e5155
 endif|#
 directive|endif
 comment|/* For control pipe */
