@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.1 (Berkeley) %G%"
+literal|"@(#)write.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,6 +393,18 @@ operator|==
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|ubuf
+operator|.
+name|ut_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|strcmp
