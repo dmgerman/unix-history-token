@@ -104,6 +104,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|<machine/lock.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
