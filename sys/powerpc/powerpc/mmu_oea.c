@@ -3448,9 +3448,6 @@ block|{
 name|pmap_t
 name|pm
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 comment|/* 	 * Load all the data we need up front to encourasge the compiler to 	 * not issue any loads while we have interrupts disabled below. 	 */
 name|pm
 operator|=
@@ -3485,13 +3482,6 @@ argument_list|(
 name|cpumask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Address this again later? 	 * NetBSD only change the segment registers on return to userland. 	 */
-if|#
-directive|if
-literal|0
-block|critical_enter();  	for (i = 0; i< 16; i++) { 		__asm __volatile("mtsr %0,%1" :: "r"(i), "r"(pm->pm_sr[i])); 	} 	__asm __volatile("sync; isync");  	critical_exit();
-endif|#
-directive|endif
 block|}
 end_block
 
