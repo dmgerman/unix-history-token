@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vv.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vv.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,12 +20,6 @@ end_if
 begin_comment
 comment|/*  * Proteon ProNET-10 and ProNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right in config. Thus the name is "vv".  *  * This driver is compatible with the Unibus ProNET 10 megabit and  * 80 megabit token ring interfaces (models p1000 and p1080).  * A unit may be marked as 80 megabit using "flags 1" in the  * config file.  *  * This driver is also compatible with the Q-bus ProNET 10 megabit and  * 80 megabit token ring interfaces (models p1100 and p1180), but  * only on a MicroVAX-II or MicroVAX-III.  No attempt is made to  * support the MicroVAX-I.  *  * TRAILERS: This driver has a new implementation of trailers that  * is at least a tolerable neighbor on the ring. The offset is not  * stored in the protocol type, but instead only in the vh_info  * field. Also, the vh_info field, and the two shorts before the  * trailing header, are in network byte order, not VAX byte order.  *  * Of course, nothing but BSD UNIX supports trailers on ProNET.  * If you need interoperability with anything else (like the p4200),  * turn off trailers using the -trailers option to /etc/ifconfig!  *  * HARDWARE COMPATABILITY: This driver prefers that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. They can be supported  * by adding "| UBA_NEED16" to the vs_ifuba.ifu_flags initialization  * in vvattach().  *  * The old warning about use without Wire Centers applies only to CTL  * (p1002) cards with serial<= 057, which have not received ECO 176-743,  * which was implemented in March, 1982. Most such CTLs have received  * this ECO.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -54,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"protosw.h"
 end_include
 
@@ -61,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_include
@@ -133,6 +145,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"../vax/pte.h"
+end_include
 
 begin_include
 include|#
@@ -273,8 +291,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|vvprintf
-value|if (vs->vs_if.if_flags& IFF_DEBUG) printf
+name|vvlog
+value|if (vs->vs_if.if_flags& IFF_DEBUG) log
 end_define
 
 begin_comment
@@ -410,6 +428,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_extern
+extern|extern wakeup(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/*  * Software status of each interface.  *  * Each interface is referenced by a network interface structure,  * vs_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  * We also have, for each interface, a UBA interface structure, which  * contains information about the UNIBUS resources held by the interface:  * map registers, buffered data paths, etc.  Information is cached in this  * structure for use by the if_uba.c routines in running the interface  * efficiently.  */
 end_comment
@@ -485,6 +512,20 @@ name|short
 name|vs_ipl
 decl_stmt|;
 comment|/* interrupt priority on Q-bus */
+name|short
+name|vs_flags
+decl_stmt|;
+comment|/* board state: */
+define|#
+directive|define
+name|VS_RUNNING
+value|0x01
+comment|/* board has been initialized */
+define|#
+directive|define
+name|VS_INIT
+value|0x02
+comment|/* board being initialized */
 block|}
 name|vv_softc
 index|[
@@ -497,7 +538,7 @@ begin_define
 define|#
 directive|define
 name|NOHOST
-value|0xffff
+value|0xff
 end_define
 
 begin_comment
@@ -833,6 +874,12 @@ operator|&
 literal|01
 argument_list|)
 expr_stmt|;
+name|vs
+operator|->
+name|vs_host
+operator|=
+name|NOHOST
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -940,9 +987,33 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|vv_softc
+index|[
+name|unit
+index|]
+operator|.
+name|vs_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
+name|vv_softc
+index|[
+name|unit
+index|]
+operator|.
+name|vs_flags
+operator|&=
+operator|~
+name|VS_RUNNING
+expr_stmt|;
 name|vvinit
 argument_list|(
 name|unit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -956,12 +1027,16 @@ begin_macro
 name|vvinit
 argument_list|(
 argument|unit
+argument_list|,
+argument|cansleep
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|unit
+decl_stmt|,
+name|cansleep
 decl_stmt|;
 end_decl_stmt
 
@@ -1022,6 +1097,46 @@ operator|)
 literal|0
 condition|)
 return|return;
+comment|/* 	 * Prevent multiple instances of vvinit 	 * from trying simultaneously. 	 */
+while|while
+condition|(
+name|vs
+operator|->
+name|vs_flags
+operator|&
+name|VS_INIT
+condition|)
+block|{
+if|if
+condition|(
+name|cansleep
+condition|)
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vs
+argument_list|)
+expr_stmt|;
+else|else
+return|return;
+block|}
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_flags
+operator|&
+name|VS_RUNNING
+condition|)
+return|return;
+name|vs
+operator|->
+name|vs_flags
+operator|=
+name|VS_INIT
+expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1092,6 +1207,12 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
+name|vs
+operator|->
+name|vs_flags
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
 name|vs
@@ -1105,7 +1226,8 @@ expr_stmt|;
 comment|/* 	 * Now that the uba is set up, figure out our address and 	 * update complete our host address. 	 */
 if|if
 condition|(
-operator|(
+name|cansleep
+condition|)
 name|vs
 operator|->
 name|vs_host
@@ -1114,7 +1236,12 @@ name|vvidentify
 argument_list|(
 name|unit
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|vs
+operator|->
+name|vs_host
 operator|==
 name|NOHOST
 condition|)
@@ -1128,10 +1255,18 @@ operator|&=
 operator|~
 name|IFF_UP
 expr_stmt|;
+name|vs
+operator|->
+name|vs_flags
+operator|=
+literal|0
+expr_stmt|;
 return|return;
 block|}
-name|printf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: host %u\n"
 argument_list|,
 name|unit
@@ -1166,6 +1301,38 @@ name|VV_HEN
 expr_stmt|;
 comment|/* take over input, */
 comment|/* keep relay closed */
+if|if
+condition|(
+name|cansleep
+condition|)
+block|{
+name|timeout
+argument_list|(
+name|wakeup
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|vs
+argument_list|,
+name|hz
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vs
+argument_list|,
+name|PZERO
+argument_list|)
+expr_stmt|;
+comment|/* let contacts settle */
+block|}
+else|else
 name|DELAY
 argument_list|(
 literal|500000
@@ -1300,6 +1467,21 @@ operator|.
 name|if_flags
 operator||=
 name|IFF_UP
+expr_stmt|;
+name|vs
+operator|->
+name|vs_flags
+operator|=
+name|VS_RUNNING
+expr_stmt|;
+comment|/* clear VS_INIT */
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vs
+argument_list|)
 expr_stmt|;
 name|vvxint
 argument_list|(
@@ -1459,7 +1641,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NOHOST
 operator|)
 return|;
 block|}
@@ -1592,9 +1774,26 @@ index|]
 expr_stmt|;
 comment|/* test mode */
 comment|/* 		 * let the flag and token timers pop so that the init ring bit 		 * will be allowed to work, by waiting about 1 second 		 */
-name|DELAY
+name|timeout
 argument_list|(
-literal|1000000L
+name|wakeup
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|vs
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vs
+argument_list|,
+name|PZERO
 argument_list|)
 expr_stmt|;
 comment|/* 		 * retry loop  		 */
@@ -1685,6 +1884,9 @@ name|VV_DEN
 operator||
 name|VV_ENB
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* purge stale data from BDP */
 if|if
 condition|(
@@ -1713,6 +1915,8 @@ operator|.
 name|ifrw_bdp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* do a transmit */
 name|ubaaddr
 operator|=
@@ -1891,6 +2095,9 @@ operator|.
 name|ifrw_bdp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|m
 operator|=
 name|if_rubaget
@@ -1925,6 +2132,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|v
 operator|=
 operator|(
@@ -2511,21 +2720,6 @@ specifier|register
 name|int
 name|oc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QBA
-name|splx
-argument_list|(
-name|vv_softc
-index|[
-name|unit
-index|]
-operator|.
-name|vs_ipl
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ui
 operator|=
 name|vvinfo
@@ -2541,6 +2735,18 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QBA
+name|splx
+argument_list|(
+name|vs
+operator|->
+name|vs_ipl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vs
 operator|->
 name|vs_if
@@ -2579,8 +2785,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: stray interrupt vvocsr = %b\n"
 argument_list|,
 name|unit
@@ -2687,8 +2895,10 @@ operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vv%d: error vvocsr = %b\n"
 argument_list|,
 name|unit
@@ -2761,10 +2971,6 @@ name|vv_softc
 modifier|*
 name|vs
 decl_stmt|;
-specifier|register
-name|int
-name|s
-decl_stmt|;
 name|vs
 operator|=
 operator|&
@@ -2773,9 +2979,11 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|vvprintf
+name|log
 argument_list|(
-literal|"vv%d: lost a transmit interrupt.\n"
+name|LOG_ERR
+argument_list|,
+literal|"vv%d: lost transmit interrupt\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2785,19 +2993,9 @@ operator|->
 name|vs_timeouts
 operator|++
 expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|vvstart
 argument_list|(
 name|unit
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2864,21 +3062,6 @@ decl_stmt|;
 name|short
 name|resid
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|QBA
-name|splx
-argument_list|(
-name|vv_softc
-index|[
-name|unit
-index|]
-operator|.
-name|vs_ipl
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vs
 operator|=
 operator|&
@@ -2887,6 +3070,18 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QBA
+name|splx
+argument_list|(
+name|vs
+operator|->
+name|vs_ipl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vs
 operator|->
 name|vs_if
@@ -2946,8 +3141,10 @@ operator|&
 name|VVRERR
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vv%d: receive error, vvicsr = %b\n"
 argument_list|,
 name|unit
@@ -3094,8 +3291,10 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: len too long or short, \ len = %d, vvicsr = %b\n"
 argument_list|,
 name|unit
@@ -3127,8 +3326,10 @@ operator|!=
 name|RING_VERSION
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: bad protocol header version %d\n"
 argument_list|,
 name|unit
@@ -3183,8 +3384,10 @@ operator|>
 name|VVMTU
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: off> VVMTU, off = %d, vvicsr = %b\n"
 argument_list|,
 name|unit
@@ -3256,15 +3459,19 @@ operator|>
 name|len
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: trailer packet too short\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: off = %d, resid = %d, vvicsr = %b\n"
 argument_list|,
 name|unit
@@ -3307,8 +3514,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: len is zero, vvicsr = %b\n"
 argument_list|,
 name|unit
@@ -3354,8 +3563,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: if_rubaget() failed, vvicsr = %b\n"
 argument_list|,
 name|unit
@@ -3475,8 +3686,10 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|vvprintf
+name|vvlog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"vv%d: unknown pkt type 0x%x\n"
 argument_list|,
 name|unit
@@ -3704,6 +3917,23 @@ name|ifp
 operator|->
 name|if_unit
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENETDOWN
+operator|)
+return|;
 name|addr
 operator|=
 operator|(
@@ -3752,8 +3982,10 @@ operator|.
 name|if_ipackets
 condition|)
 block|{
-name|vvprintf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vv%d: lost a receive interrupt, icsr = %b\n"
 argument_list|,
 name|unit
@@ -4366,6 +4598,20 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|vv_softc
+modifier|*
+name|vs
+init|=
+operator|&
+name|vv_softc
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
+decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -4377,6 +4623,25 @@ name|ifaddr
 operator|*
 operator|)
 name|data
+decl_stmt|;
+name|struct
+name|vvreg
+modifier|*
+name|addr
+init|=
+operator|(
+expr|struct
+name|vvreg
+operator|*
+operator|)
+operator|(
+name|vvinfo
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
+operator|)
 decl_stmt|;
 name|int
 name|s
@@ -4399,11 +4664,11 @@ case|:
 if|if
 condition|(
 operator|(
-name|ifp
+name|vs
 operator|->
-name|if_flags
+name|vs_flags
 operator|&
-name|IFF_RUNNING
+name|VS_RUNNING
 operator|)
 operator|==
 literal|0
@@ -4413,6 +4678,8 @@ argument_list|(
 name|ifp
 operator|->
 name|if_unit
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Did self-test succeed? 		 */
@@ -4463,13 +4730,8 @@ operator|&
 literal|0xff
 operator|)
 operator|!=
-name|vv_softc
-index|[
-name|ifp
+name|vs
 operator|->
-name|if_unit
-index|]
-operator|.
 name|vs_host
 condition|)
 name|error
@@ -4480,11 +4742,83 @@ break|break;
 block|}
 block|}
 break|break;
+case|case
+name|SIOCSIFFLAGS
+case|:
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+operator|&&
+name|vs
+operator|->
+name|vs_flags
+operator|&
+name|VS_RUNNING
+condition|)
+block|{
+name|addr
+operator|->
+name|vvicsr
+operator|=
+name|VV_RST
+expr_stmt|;
+name|addr
+operator|->
+name|vvocsr
+operator|=
+name|VV_RST
+expr_stmt|;
+name|vs
+operator|->
+name|vs_flags
+operator|&=
+operator|~
+name|VS_RUNNING
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|&&
+operator|(
+name|vs
+operator|->
+name|vs_flags
+operator|&
+name|VS_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+name|vvinit
+argument_list|(
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+break|break;
 block|}
 name|splx
 argument_list|(
