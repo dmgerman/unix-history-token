@@ -9691,7 +9691,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|case SERIAL_RESET: 	        CP_DEBUG2 (d, ("ioctl: reset\n"));
+block|case SERIAL_RESET: 		CP_DEBUG2 (d, ("ioctl: reset\n"));
 comment|/* Only for superuser! */
 if|#
 directive|if
@@ -9704,7 +9704,7 @@ directive|else
 block|error = suser (td);
 endif|#
 directive|endif
-block|if (error) 	                return error; 		s = splimp (); 		cp_reset (c->board, 0, 0); 		splx (s); 		return 0;  	case SERIAL_HARDRESET: 	        CP_DEBUG2 (d, ("ioctl: hardreset\n"));
+block|if (error) 			return error; 		s = splimp (); 		cp_reset (c->board, 0, 0); 		splx (s); 		return 0;  	case SERIAL_HARDRESET: 		CP_DEBUG2 (d, ("ioctl: hardreset\n"));
 comment|/* Only for superuser! */
 if|#
 directive|if
@@ -9717,7 +9717,7 @@ directive|else
 block|error = suser (td);
 endif|#
 directive|endif
-block|if (error) 	                return error; 		s = splimp ();
+block|if (error) 			return error; 		s = splimp ();
 comment|/* hard_reset (c->board); */
 block|splx (s); 		return 0;
 endif|#
