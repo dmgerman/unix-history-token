@@ -2214,6 +2214,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|SET_UNIT
+argument_list|(
+name|dev
+argument_list|,
+name|validunits
+argument_list|)
+expr_stmt|;
 name|sp
 operator|=
 operator|&
@@ -2261,13 +2268,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|SET_UNIT
-argument_list|(
-name|dev
-argument_list|,
-name|validunits
-argument_list|)
-expr_stmt|;
 name|validunits
 operator|++
 expr_stmt|;
