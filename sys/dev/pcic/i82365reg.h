@@ -1724,7 +1724,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_PNP_82365
-value|0x000ED040
+value|0x000ED041
 end_define
 
 begin_comment
@@ -1735,7 +1735,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_PNP_CL_PD6720
-value|0x010ED040
+value|0x010ED041
 end_define
 
 begin_comment
@@ -1746,7 +1746,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_PNP_VLSI_82C146
-value|0x020ED040
+value|0x020ED041
 end_define
 
 begin_comment
@@ -1757,7 +1757,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_PNP_82365_CARDBUS
-value|0x030ED040
+value|0x030ED041
 end_define
 
 begin_comment
