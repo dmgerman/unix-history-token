@@ -128,7 +128,7 @@ decl_stmt|;
 if|if
 condition|(
 name|n
-operator|==
+operator|<=
 literal|0
 condition|)
 comment|/* sanity check */
