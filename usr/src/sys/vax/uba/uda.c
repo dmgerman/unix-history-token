@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.13 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1907,6 +1907,14 @@ block|{
 name|printf
 argument_list|(
 literal|"uda: Controller failed to init\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
