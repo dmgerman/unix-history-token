@@ -157,7 +157,7 @@ name|SYSCTL_NODE
 argument_list|(
 name|_net_link
 argument_list|,
-name|IFT_8021_VLAN
+name|IFT_L2VLAN
 argument_list|,
 name|vlan
 argument_list|,
@@ -775,7 +775,7 @@ name|if_data
 operator|.
 name|ifi_type
 operator|=
-name|IFT_8021_VLAN
+name|IFT_L2VLAN
 expr_stmt|;
 name|ifp
 operator|->

@@ -168,17 +168,6 @@ comment|/* length in octets of encapsulation */
 end_comment
 
 begin_comment
-comment|/* These sorts of interfaces got their own identifier from IANA */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFT_8021_VLAN
-value|IFT_L2VLAN
-end_define
-
-begin_comment
 comment|/* sysctl(3) tags, for compatibility purposes */
 end_comment
 
