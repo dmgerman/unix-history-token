@@ -37465,7 +37465,10 @@ name|struct
 name|ip6_hdr
 modifier|*
 name|h
+init|=
+name|NULL
 decl_stmt|;
+comment|/* make the compiler happy */
 name|struct
 name|pf_rule
 modifier|*
