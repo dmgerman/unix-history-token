@@ -1020,7 +1020,7 @@ begin_define
 define|#
 directive|define
 name|RFKERNELONLY
-value|RFSTOPPED
+value|(RFSTOPPED|RFHIGHPID)
 end_define
 
 begin_endif
