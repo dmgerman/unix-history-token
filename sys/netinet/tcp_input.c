@@ -8315,6 +8315,14 @@ name|snd_scale
 argument_list|)
 expr_stmt|;
 block|}
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|acked
@@ -8336,7 +8344,7 @@ name|so_snd
 operator|.
 name|sb_cc
 expr_stmt|;
-name|sbdrop
+name|sbdrop_locked
 argument_list|(
 operator|&
 name|so
@@ -8360,7 +8368,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sbdrop
+name|sbdrop_locked
 argument_list|(
 operator|&
 name|so
@@ -8381,6 +8389,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 name|sowwakeup
 argument_list|(
 name|so
