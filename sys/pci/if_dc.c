@@ -11154,7 +11154,7 @@ name|sc
 operator|->
 name|dc_pnic_rx_buf
 expr_stmt|;
-comment|/* 	 * Now copy the salvaged frame to the last mbuf and fake up 	 * the status word to make it look like a successful  	 * frame reception. 	 */
+comment|/* 	 * Now copy the salvaged frame to the last mbuf and fake up 	 * the status word to make it look like a successful 	 * frame reception. 	 */
 name|dc_newbuf
 argument_list|(
 name|sc
@@ -13461,7 +13461,7 @@ name|cnt
 init|=
 literal|0
 decl_stmt|;
-comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
+comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out 	 * of fragments or hit the end of the mbuf chain. 	 */
 name|m
 operator|=
 name|m_head
