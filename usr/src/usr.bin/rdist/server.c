@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.13 (Berkeley) %G%"
+literal|"@(#)server.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6423,7 +6423,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|remove
+name|removeit
 argument_list|(
 operator|&
 name|stb
@@ -6470,7 +6470,7 @@ comment|/*  * Remove a file or directory (recursively) and send back an acknowle
 end_comment
 
 begin_macro
-name|remove
+name|removeit
 argument_list|(
 argument|stp
 argument_list|)
@@ -6709,7 +6709,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|remove
+name|removeit
 argument_list|(
 operator|&
 name|stb
@@ -7959,6 +7959,23 @@ argument_list|,
 argument|a3
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|a1
+decl_stmt|,
+name|a2
+decl_stmt|,
+name|a3
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
