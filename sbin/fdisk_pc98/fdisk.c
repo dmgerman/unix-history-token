@@ -4831,7 +4831,7 @@ name|ioctl
 argument_list|(
 name|fdw
 argument_list|,
-name|DIOCGPC98
+name|DIOCSPC98
 argument_list|,
 name|buf
 argument_list|)
