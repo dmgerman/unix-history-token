@@ -2026,9 +2026,9 @@ name|rv
 operator|->
 name|r_bushandle
 operator|->
-name|bsh_iat
+name|bsh_maxiatsz
 operator|=
-name|NULL
+name|BUS_SPACE_IAT_MAXSIZE
 expr_stmt|;
 name|rv
 operator|->
@@ -2053,6 +2053,19 @@ operator|->
 name|bsh_ressz
 operator|=
 literal|0
+expr_stmt|;
+comment|/* default: direct access */
+name|rv
+operator|->
+name|r_bushandle
+operator|->
+name|bsh_bam
+operator|=
+name|rv
+operator|->
+name|r_bustag
+operator|->
+name|bs_da
 expr_stmt|;
 else|#
 directive|else
@@ -2268,9 +2281,9 @@ name|r
 operator|->
 name|r_bushandle
 operator|->
-name|bsh_iat
+name|bsh_maxiatsz
 operator|=
-name|NULL
+name|BUS_SPACE_IAT_MAXSIZE
 expr_stmt|;
 name|r
 operator|->
@@ -2295,6 +2308,19 @@ operator|->
 name|bsh_ressz
 operator|=
 literal|0
+expr_stmt|;
+comment|/* default: direct access */
+name|r
+operator|->
+name|r_bushandle
+operator|->
+name|bsh_bam
+operator|=
+name|r
+operator|->
+name|r_bustag
+operator|->
+name|bs_da
 expr_stmt|;
 else|#
 directive|else
