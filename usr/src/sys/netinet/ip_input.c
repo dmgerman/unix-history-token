@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.27 81/12/12 */
+comment|/* ip_input.c 1.28 81/12/22 */
 end_comment
 
 begin_include
@@ -597,6 +597,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"ip->ip_dst %x ip->ip_ttl %x\n"
+argument_list|,
+name|ip
+operator|->
+name|ip_dst
+argument_list|,
+name|ip
+operator|->
+name|ip_ttl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|--
