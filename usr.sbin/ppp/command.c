@@ -1031,7 +1031,7 @@ end_ifndef
 begin_function_decl
 specifier|static
 name|int
-name|AliasEnable
+name|NatEnable
 parameter_list|(
 name|struct
 name|cmdargs
@@ -1044,7 +1044,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|AliasOption
+name|NatOption
 parameter_list|(
 name|struct
 name|cmdargs
@@ -3833,7 +3833,7 @@ specifier|static
 name|struct
 name|cmdtab
 specifier|const
-name|AliasCommands
+name|NatCommands
 index|[]
 init|=
 block|{
@@ -3856,7 +3856,7 @@ literal|"deny_incoming"
 block|,
 name|NULL
 block|,
-name|AliasOption
+name|NatOption
 block|,
 name|LOCAL_AUTH
 block|,
@@ -3877,7 +3877,7 @@ literal|"enable"
 block|,
 name|NULL
 block|,
-name|AliasEnable
+name|NatEnable
 block|,
 name|LOCAL_AUTH
 block|,
@@ -3891,7 +3891,7 @@ literal|"log"
 block|,
 name|NULL
 block|,
-name|AliasOption
+name|NatOption
 block|,
 name|LOCAL_AUTH
 block|,
@@ -3954,7 +3954,7 @@ literal|"same_ports"
 block|,
 name|NULL
 block|,
-name|AliasOption
+name|NatOption
 block|,
 name|LOCAL_AUTH
 block|,
@@ -3971,11 +3971,25 @@ name|PKT_ALIAS_SAME_PORTS
 block|}
 block|,
 block|{
+literal|"target"
+block|,
+name|NULL
+block|,
+name|nat_SetTarget
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Default address for incoming connections"
+block|,
+literal|"nat target addr"
+block|}
+block|,
+block|{
 literal|"unregistered_only"
 block|,
 name|NULL
 block|,
-name|AliasOption
+name|NatOption
 block|,
 name|LOCAL_AUTH
 block|,
@@ -3996,7 +4010,7 @@ literal|"use_sockets"
 block|,
 name|NULL
 block|,
-name|AliasOption
+name|NatOption
 block|,
 name|LOCAL_AUTH
 block|,
@@ -4027,7 +4041,7 @@ literal|"Display this message"
 block|,
 literal|"nat help|? [command]"
 block|,
-name|AliasCommands
+name|NatCommands
 block|}
 block|,
 block|{
@@ -4589,7 +4603,7 @@ literal|"NAT control"
 block|,
 literal|"nat option yes|no"
 block|,
-name|AliasCommands
+name|NatCommands
 block|}
 block|,
 endif|#
@@ -9791,6 +9805,22 @@ name|bundle
 argument_list|)
 condition|)
 block|{
+default|default:
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Altering authname while at phase %s\n"
+argument_list|,
+name|bundle_PhaseName
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* drop through */
 case|case
 name|PHASE_DEAD
 case|:
@@ -9850,19 +9880,6 @@ literal|1
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-break|break;
-default|default:
-name|err
-operator|=
-literal|"set authname: Only available at phase DEAD/ESTABLISH\n"
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogWARN
-argument_list|,
-name|err
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -15152,7 +15169,7 @@ end_ifndef
 begin_function
 specifier|static
 name|int
-name|AliasEnable
+name|NatEnable
 parameter_list|(
 name|struct
 name|cmdargs
@@ -15300,7 +15317,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|AliasOption
+name|NatOption
 parameter_list|(
 name|struct
 name|cmdargs
