@@ -16455,7 +16455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NFS advisory byte-level locks.  * Currently unsupported.  */
+comment|/*  * NFS advisory byte-level locks.  */
 end_comment
 
 begin_function
