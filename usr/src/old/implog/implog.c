@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.13 (Berkeley) %G%"
+literal|"@(#)implog.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,7 +187,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|link
+name|linkn
 init|=
 operator|-
 literal|1
@@ -369,7 +369,7 @@ break|break;
 case|case
 literal|'L'
 case|:
-name|link
+name|linkn
 operator|=
 name|IMPLINK_IP
 expr_stmt|;
@@ -406,7 +406,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|link
+name|linkn
 operator|=
 name|atoi
 argument_list|(
@@ -1143,7 +1143,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|link
+name|linkn
 operator|>=
 literal|0
 operator|&&
@@ -1151,7 +1151,7 @@ name|ip
 operator|->
 name|il_link
 operator|!=
-name|link
+name|linkn
 condition|)
 return|return;
 if|if
