@@ -12,25 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_ifdef
@@ -173,7 +155,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: fsmagic.c,v 1.33 2000/08/05 17:36:48 christos Exp $"
+literal|"@(#)$Id: fsmagic.c,v 1.36 2002/07/03 19:00:41 christos Exp $"
 argument_list|)
 end_macro
 
@@ -190,20 +172,16 @@ begin_function
 name|int
 name|fsmagic
 parameter_list|(
-name|fn
-parameter_list|,
-name|sb
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|fn
-decl_stmt|;
+parameter_list|,
 name|struct
 name|stat
 modifier|*
 name|sb
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ret

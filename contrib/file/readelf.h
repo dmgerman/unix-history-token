@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * readelf.h   * @(#)$Id: readelf.h,v 1.7 1999/02/14 17:16:11 christos Exp $  *  * Provide elf data structures for non-elf machines, allowing file  * non-elf hosts to determine if an elf binary is stripped.  * Note: cobbled from the linux header file, with modifications  */
+comment|/*	$NetBSD: readelf.h,v 1.9 2002/05/18 07:00:47 pooka Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * readelf.h   * @(#)Id: readelf.h,v 1.9 2002/05/16 18:45:56 christos Exp   *  * Provide elf data structures for non-elf machines, allowing file  * non-elf hosts to determine if an elf binary is stripped.  * Note: cobbled from the linux header file, with modifications  */
 end_comment
 
 begin_ifndef
@@ -14,6 +18,23 @@ define|#
 directive|define
 name|__fake_elf_h__
 end_define
+
+begin_if
+if|#
+directive|if
+name|HAVE_STDINT_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -713,6 +734,13 @@ name|NT_TASKSTRUCT
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|NT_NETBSD_CORE_PROCINFO
+value|1
+end_define
+
 begin_comment
 comment|/* Note header in a PT_NOTE section */
 end_comment
@@ -797,6 +825,78 @@ define|#
 directive|define
 name|NT_AUXV
 value|6
+end_define
+
+begin_comment
+comment|/* Note types used in executables */
+end_comment
+
+begin_comment
+comment|/* NetBSD executables (name = "NetBSD") */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_NETBSD_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_NETBSD_EMULATION
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NT_OPENBSD_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* GNU executables (name = "GNU") */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_GNU_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* GNU OS tags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GNU_OS_LINUX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_OS_HURD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_OS_SOLARIS
+value|2
 end_define
 
 begin_endif
