@@ -1202,6 +1202,12 @@ define|\
 value|(((slice)<< 16) | (((unit)& 0x1e0)<< 16) | \ 				(((unit)& 0x1f)<< 3) | (part))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_GEOM
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1374,6 +1380,15 @@ name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_GEOM */
+end_comment
 
 begin_endif
 endif|#
