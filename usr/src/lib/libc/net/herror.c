@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)herror.c	6.3 (Berkeley) %G%"
+literal|"@(#)herror.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,9 @@ name|v
 operator|->
 name|iov_base
 operator|=
+operator|(
+name|u_int
+operator|)
 name|h_errno
 operator|<
 name|h_nerr
