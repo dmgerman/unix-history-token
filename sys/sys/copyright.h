@@ -16,7 +16,7 @@ define|#
 directive|define
 name|COPYRIGHT_FreeBSD
 define|\
-value|"Copyright (c) 1992-2001 The FreeBSD Project.\n"
+value|"Copyright (c) 1992-2002 The FreeBSD Project.\n"
 end_define
 
 begin_comment
@@ -40,7 +40,7 @@ define|#
 directive|define
 name|COPYRIGHT_PC98
 define|\
-value|"Copyright (c) 1994-2001 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
+value|"Copyright (c) 1994-2002 FreeBSD(98) porting team.\nCopyright (c) 1992  A.Kojima F.Ukai M.Ishii (KMC).\n"
 end_define
 
 begin_if
