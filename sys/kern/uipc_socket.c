@@ -494,12 +494,6 @@ operator|=
 operator|++
 name|so_gencnt
 expr_stmt|;
-name|so
-operator|->
-name|so_zone
-operator|=
-name|socket_zone
-expr_stmt|;
 comment|/* sx_init(&so->so_sxlock, "socket sxlock"); */
 name|TAILQ_INIT
 argument_list|(
@@ -1049,9 +1043,7 @@ expr_stmt|;
 comment|/* sx_destroy(&so->so_sxlock); */
 name|uma_zfree
 argument_list|(
-name|so
-operator|->
-name|so_zone
+name|socket_zone
 argument_list|,
 name|so
 argument_list|)

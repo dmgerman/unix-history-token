@@ -62,10 +62,6 @@ begin_struct
 struct|struct
 name|socket
 block|{
-name|uma_zone_t
-name|so_zone
-decl_stmt|;
-comment|/* zone we were allocated from */
 name|int
 name|so_count
 decl_stmt|;
