@@ -3183,6 +3183,11 @@ operator|=
 name|priv
 operator|->
 name|response_addr
+operator|=
+name|NGI_RETADDR
+argument_list|(
+name|item
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3339,6 +3344,11 @@ operator|=
 name|priv
 operator|->
 name|response_addr
+operator|=
+name|NGI_RETADDR
+argument_list|(
+name|item
+argument_list|)
 expr_stmt|;
 name|priv
 operator|->
