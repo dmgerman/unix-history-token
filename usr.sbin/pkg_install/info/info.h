@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: info.h,v 1.4 1993/09/04 05:06:40 jkh Exp $ */
+comment|/* $Id: info.h,v 1.5 1993/09/08 01:46:56 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -23,63 +23,84 @@ begin_define
 define|#
 directive|define
 name|SHOW_COMMENT
-value|0x1
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DESC
-value|0x2
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PLIST
-value|0x4
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_INSTALL
-value|0x8
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DEINSTALL
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_REQUIRE
-value|0x20
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PREFIX
-value|0x40
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_INDEX
-value|0x80
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_FILES
-value|0x100
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_DISPLAY
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_REQBY
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_MTREE
+value|0x0800
 end_define
 
 begin_decl_stmt

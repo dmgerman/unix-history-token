@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: show.c,v 1.4 1993/09/04 05:06:44 jkh Exp $"
+literal|"$Id: show.c,v 1.3 1993/09/08 01:46:59 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,6 +282,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PLIST_SRC
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@srcdir %s\n"
+else|:
+literal|"\tSRCDIR to %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PLIST_CMD
 case|:
 name|printf
@@ -393,6 +410,23 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+name|PLIST_IGNORE_INST
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@ignore_inst ??? doesn't belong here.\n"
+else|:
+literal|"\tIgnore next file installation directive (doesn't belong)\n"
+argument_list|)
+expr_stmt|;
+name|ign
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 name|PLIST_NAME
 case|:
 name|printf
@@ -402,6 +436,74 @@ condition|?
 literal|"@name %s\n"
 else|:
 literal|"\tPackage name: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_DISPLAY
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@display %s\n"
+else|:
+literal|"\tInstall message file: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_PKGDEP
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@pkgdep %s\n"
+else|:
+literal|"\tPackage depends on: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_MTREE
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@mtree %s\n"
+else|:
+literal|"\tPackage mtree file: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_DIR_RM
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@dirrm %s\n"
+else|:
+literal|"\tDeinstall directory remove: %s\n"
 argument_list|,
 name|p
 operator|->

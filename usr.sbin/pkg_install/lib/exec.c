@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: exec.c,v 1.4 1993/09/04 05:06:47 jkh Exp $"
+literal|"$Id: exec.c,v 1.2 1993/09/03 23:01:12 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,17 +51,48 @@ name|va_list
 name|args
 decl_stmt|;
 name|char
+modifier|*
 name|cmd
-index|[
-name|FILENAME_MAX
-operator|*
-literal|2
-index|]
 decl_stmt|;
-comment|/* reasonable default for what I do */
 name|int
 name|ret
+decl_stmt|,
+name|maxargs
 decl_stmt|;
+name|maxargs
+operator|=
+name|sysconf
+argument_list|(
+name|_SC_ARG_MAX
+argument_list|)
+expr_stmt|;
+name|maxargs
+operator|-=
+literal|32
+expr_stmt|;
+comment|/* some slop for the sh -c */
+name|cmd
+operator|=
+name|malloc
+argument_list|(
+name|maxargs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cmd
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"vsystem can't alloc arg space"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|va_start
 argument_list|(
 name|args
@@ -69,15 +100,31 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|vsprintf
+if|if
+condition|(
+name|vsnprintf
 argument_list|(
 name|cmd
+argument_list|,
+name|maxargs
 argument_list|,
 name|fmt
 argument_list|,
 name|args
 argument_list|)
+operator|>
+name|maxargs
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"vsystem args are too long"
+argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -100,6 +147,11 @@ expr_stmt|;
 name|va_end
 argument_list|(
 name|args
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cmd
 argument_list|)
 expr_stmt|;
 return|return

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.5 1993/09/04 05:06:38 jkh Exp $"
+literal|"$Id: main.c,v 1.2 1993/09/03 23:01:00 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvDnp:"
+literal|"hvDdnfp:"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,22 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|NoDeInstall
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|CleanDirs
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|Force
 init|=
 name|FALSE
 decl_stmt|;
@@ -79,7 +95,7 @@ block|{
 name|int
 name|ch
 decl_stmt|,
-name|err
+name|error
 decl_stmt|;
 name|char
 modifier|*
@@ -136,6 +152,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|Force
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 name|Prefix
@@ -147,6 +171,14 @@ case|case
 literal|'D'
 case|:
 name|NoDeInstall
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|CleanDirs
 operator|=
 name|TRUE
 expr_stmt|;
@@ -223,8 +255,25 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Fake
+operator|&&
+name|getuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"You must be root to delete packages."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
-name|err
+name|error
 operator|=
 name|pkg_perform
 argument_list|(
@@ -245,11 +294,11 @@ name|stderr
 argument_list|,
 literal|"%d package deletion(s) failed.\n"
 argument_list|,
-name|err
+name|error
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+name|error
 return|;
 block|}
 else|else
@@ -350,6 +399,27 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-p arg     override prefix with arg\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-d         delete empty directories when deinstalling\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-f         force delete even if dependencies exist\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"           or deinstall/requirement checks fail\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

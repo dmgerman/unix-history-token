@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: futil.c,v 1.4 1993/09/04 05:06:27 jkh Exp $"
+literal|"$Id: futil.c,v 1.2 1993/09/03 23:00:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,14 +187,12 @@ name|dir
 parameter_list|,
 name|char
 modifier|*
-name|file
+name|arg
 parameter_list|)
 block|{
 name|char
-name|fname
-index|[
-name|FILENAME_MAX
-index|]
+modifier|*
+name|cd_to
 decl_stmt|;
 if|if
 condition|(
@@ -202,29 +200,19 @@ operator|!
 name|dir
 operator|||
 operator|*
-name|file
+name|arg
 operator|==
 literal|'/'
 condition|)
 comment|/* absolute path? */
-name|strcpy
-argument_list|(
-name|fname
-argument_list|,
-name|file
-argument_list|)
+name|cd_to
+operator|=
+literal|"/"
 expr_stmt|;
 else|else
-name|sprintf
-argument_list|(
-name|fname
-argument_list|,
-literal|"%s/%s"
-argument_list|,
+name|cd_to
+operator|=
 name|dir
-argument_list|,
-name|file
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -234,18 +222,20 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"chmod -R %s %s"
+literal|"cd %s&& chmod -R %s %s"
+argument_list|,
+name|cd_to
 argument_list|,
 name|Mode
 argument_list|,
-name|fname
+name|arg
 argument_list|)
 condition|)
 name|whinge
 argument_list|(
-literal|"Couldn't change mode of '%s' to '%s'."
+literal|"Couldn't change modes of '%s' to '%s'."
 argument_list|,
-name|fname
+name|arg
 argument_list|,
 name|Mode
 argument_list|)
@@ -253,27 +243,68 @@ expr_stmt|;
 if|if
 condition|(
 name|Owner
+operator|&&
+name|Group
 condition|)
+block|{
 if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"chown -R %s %s"
+literal|"cd %s&& chown -R %s.%s %s"
+argument_list|,
+name|cd_to
 argument_list|,
 name|Owner
 argument_list|,
-name|fname
+name|Group
+argument_list|,
+name|arg
+argument_list|)
+condition|)
+name|whinge
+argument_list|(
+literal|"Couldn't change owner/group of '%s' to '%s.%s'."
+argument_list|,
+name|arg
+argument_list|,
+name|Owner
+argument_list|,
+name|Group
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|Owner
+condition|)
+block|{
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"cd %s&& chown -R %s %s"
+argument_list|,
+name|cd_to
+argument_list|,
+name|Owner
+argument_list|,
+name|arg
 argument_list|)
 condition|)
 name|whinge
 argument_list|(
 literal|"Couldn't change owner of '%s' to '%s'."
 argument_list|,
-name|fname
+name|arg
 argument_list|,
 name|Owner
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+elseif|else
 if|if
 condition|(
 name|Group
@@ -282,18 +313,20 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"chgrp -R %s %s"
+literal|"cd %s&& chgrp -R %s %s"
+argument_list|,
+name|cd_to
 argument_list|,
 name|Group
 argument_list|,
-name|fname
+name|arg
 argument_list|)
 condition|)
 name|whinge
 argument_list|(
 literal|"Couldn't change group of '%s' to '%s'."
 argument_list|,
-name|fname
+name|arg
 argument_list|,
 name|Group
 argument_list|)

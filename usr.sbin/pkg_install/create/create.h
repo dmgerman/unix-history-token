@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: create.h,v 1.4 1993/09/12 20:45:28 jkh Exp $ */
+comment|/* $Id: create.h,v 1.5 1994/05/19 18:27:38 alm Exp $ */
 end_comment
 
 begin_comment
@@ -40,6 +40,14 @@ specifier|extern
 name|char
 modifier|*
 name|Desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Display
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +96,14 @@ specifier|extern
 name|char
 modifier|*
 name|ExcludeFrom
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Mtree
 decl_stmt|;
 end_decl_stmt
 

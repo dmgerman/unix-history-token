@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.10 1994/10/04 16:07:50 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.11 1994/11/17 10:51:46 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -233,6 +233,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|REQUIRED_BY_FNAME
+value|"+REQUIRED_BY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISPLAY_FNAME
+value|"+DISPLAY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTREE_FNAME
+value|"+MTREE_DIRS"
+end_define
+
+begin_define
+define|#
+directive|define
 name|CMD_CHAR
 value|'@'
 end_define
@@ -277,6 +298,16 @@ block|,
 name|PLIST_UNEXEC
 block|,
 name|PLIST_SRC
+block|,
+name|PLIST_DISPLAY
+block|,
+name|PLIST_PKGDEP
+block|,
+name|PLIST_MTREE
+block|,
+name|PLIST_DIR_RM
+block|,
+name|PLIST_IGNORE_INST
 block|}
 enum|;
 end_enum
@@ -590,6 +621,8 @@ name|char
 modifier|*
 parameter_list|,
 name|Boolean
+parameter_list|,
+name|Boolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -840,6 +873,8 @@ begin_function_decl
 name|int
 name|delete_package
 parameter_list|(
+name|Boolean
+parameter_list|,
 name|Boolean
 parameter_list|,
 name|Package

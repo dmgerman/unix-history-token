@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.3 1993/09/05 04:53:49 jkh Exp $"
+literal|"$Id: main.c,v 1.4 1993/09/14 19:53:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRnp:SMt:"
+literal|"hvIRfnp:SMt:"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|NoRecord
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|Force
 init|=
 name|FALSE
 decl_stmt|;
@@ -225,6 +233,14 @@ case|case
 literal|'R'
 case|:
 name|NoRecord
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|Force
 operator|=
 name|TRUE
 expr_stmt|;

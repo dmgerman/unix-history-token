@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.8 1994/10/14 05:55:57 jkh Exp $"
+literal|"$Id: perform.c,v 1.9 1994/10/14 05:57:49 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,15 @@ operator|++
 name|err_cnt
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|CheckPkg
+condition|)
+return|return
+literal|1
+return|;
+comment|/* no dir -> not installed! */
 block|}
 for|for
 control|(
@@ -571,6 +580,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|Flags
+operator|&
+name|SHOW_REQBY
+operator|)
+operator|&&
+operator|!
+name|isemptyfile
+argument_list|(
+name|REQUIRED_BY_FNAME
+argument_list|)
+condition|)
+name|show_file
+argument_list|(
+literal|"Required by:\n"
+argument_list|,
+name|REQUIRED_BY_FNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|Flags
 operator|&
 name|SHOW_DESC
@@ -580,6 +610,26 @@ argument_list|(
 literal|"Description:\n"
 argument_list|,
 name|DESC_FNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Flags
+operator|&
+name|SHOW_DISPLAY
+operator|)
+operator|&&
+name|fexists
+argument_list|(
+name|DISPLAY_FNAME
+argument_list|)
+condition|)
+name|show_file
+argument_list|(
+literal|"Install notice:\n"
+argument_list|,
+name|DISPLAY_FNAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -640,6 +690,26 @@ argument_list|(
 literal|"De-Install script:\n"
 argument_list|,
 name|DEINSTALL_FNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|Flags
+operator|&
+name|SHOW_MTREE
+operator|)
+operator|&&
+name|fexists
+argument_list|(
+name|MTREE_FNAME
+argument_list|)
+condition|)
+name|show_file
+argument_list|(
+literal|"mtree file:\n"
+argument_list|,
+name|MTREE_FNAME
 argument_list|)
 expr_stmt|;
 if|if

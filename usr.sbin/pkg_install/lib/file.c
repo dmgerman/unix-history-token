@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.4 1993/09/06 23:28:42 jkh Exp $"
+literal|"$Id: file.c,v 1.5 1993/09/18 03:39:48 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,13 +92,12 @@ argument_list|)
 operator|!=
 name|FAIL
 operator|&&
-operator|(
+name|S_ISDIR
+argument_list|(
 name|sb
 operator|.
 name|st_mode
-operator|&
-name|S_IFDIR
-operator|)
+argument_list|)
 condition|)
 return|return
 name|TRUE
@@ -116,7 +115,7 @@ end_comment
 
 begin_function
 name|Boolean
-name|isempty
+name|isemptydir
 parameter_list|(
 name|char
 modifier|*
@@ -226,6 +225,61 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Check to see if file is a file and is empty. If nonexistent or not    a file, say "it's empty", otherwise return TRUE if zero sized. */
+end_comment
+
+begin_function
+name|Boolean
+name|isemptyfile
+parameter_list|(
+name|char
+modifier|*
+name|fname
+parameter_list|)
+block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|fname
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+name|FAIL
+operator|&&
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
 begin_function
 name|char
 modifier|*
@@ -324,7 +378,7 @@ name|st_size
 condition|)
 name|barf
 argument_list|(
-literal|"Short read on '%s' - did not get %d bytes."
+literal|"Short read on '%s' - did not get %qd bytes."
 argument_list|,
 name|fname
 argument_list|,

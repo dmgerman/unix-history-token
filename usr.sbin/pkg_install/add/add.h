@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: add.h,v 1.4 1993/09/04 05:06:25 jkh Exp $ */
+comment|/* $Id: add.h,v 1.3 1993/09/05 04:53:47 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -52,6 +52,13 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|NoRecord
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|Force
 decl_stmt|;
 end_decl_stmt
 

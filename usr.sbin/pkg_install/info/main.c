@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.6 1994/05/25 06:28:14 jkh Exp $"
+literal|"$Id: main.c,v 1.7 1994/06/01 05:15:00 asami Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acde:fikrpLqIvhl:"
+literal|"acdDe:fikrRpLqImvhl:"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,10 @@ operator||
 name|SHOW_DEINSTALL
 operator||
 name|SHOW_REQUIRE
+operator||
+name|SHOW_DISPLAY
+operator||
+name|SHOW_MTREE
 expr_stmt|;
 break|break;
 case|case
@@ -223,6 +227,14 @@ name|SHOW_DESC
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+name|Flags
+operator||=
+name|SHOW_DISPLAY
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 name|Flags
@@ -255,11 +267,27 @@ name|SHOW_REQUIRE
 expr_stmt|;
 break|break;
 case|case
+literal|'R'
+case|:
+name|Flags
+operator||=
+name|SHOW_REQBY
+expr_stmt|;
+break|break;
+case|case
 literal|'L'
 case|:
 name|Flags
 operator||=
 name|SHOW_FILES
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|Flags
+operator||=
+name|SHOW_MTREE
 expr_stmt|;
 break|break;
 case|case
@@ -329,6 +357,8 @@ operator|=
 name|SHOW_COMMENT
 operator||
 name|SHOW_DESC
+operator||
+name|SHOW_REQBY
 expr_stmt|;
 comment|/* Get all the remaining package names, if any */
 while|while
@@ -489,6 +519,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"-D         print install notice\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"-f         show packing list\n"
 argument_list|)
 expr_stmt|;
@@ -517,6 +554,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"-R         show packages depending on this package\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"-p         show prefix\n"
 argument_list|)
 expr_stmt|;
@@ -525,6 +569,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-l<str>   Prefix each info catagory with<str>\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-L         show intalled files\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-q         minimal output (``quiet'' mode)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -552,7 +610,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n[no args = -c -d]\n"
+literal|"\n[no args = -c -d -R]\n"
 argument_list|)
 expr_stmt|;
 name|exit

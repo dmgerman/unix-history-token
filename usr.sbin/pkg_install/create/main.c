@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.6 1994/04/16 21:50:53 jkh Exp $"
+literal|"$Id: main.c,v 1.7 1994/05/19 18:27:40 alm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNhvf:p:c:d:i:k:r:t:X:"
+literal|"YNhvf:p:c:d:i:k:r:t:X:D:m:"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Desc
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Display
 init|=
 name|NULL
 decl_stmt|;
@@ -123,6 +132,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|ExcludeFrom
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Mtree
 init|=
 name|NULL
 decl_stmt|;
@@ -300,6 +318,22 @@ case|:
 name|Dereference
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|Display
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|Mtree
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -524,14 +558,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-p arg     install prefix will be arg\n"
+literal|"-k script  de-install script\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-k script  de-install script\n"
+literal|"-D file    install notice\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-m file    mtree spec for directories\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-p prefix  install prefix will be arg\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -560,6 +608,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-v         verbose\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-Y         assume `yes' answer to all questions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-N         assume `no' answer to all questions\n"
 argument_list|)
 expr_stmt|;
 name|exit

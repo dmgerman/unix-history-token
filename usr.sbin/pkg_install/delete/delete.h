@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: delete.h,v 1.1.1.1 1993/08/26 01:19:54 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -31,6 +31,20 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|NoDeInstall
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|CleanDirs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|Force
 decl_stmt|;
 end_decl_stmt
 
