@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.6 1994/11/07 11:26:30 davidg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:36:34  rpd  *	$Id: sys.c,v 1.7 1994/12/30 07:48:07 bde Exp $  */
 end_comment
 
 begin_include
@@ -95,21 +95,32 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|mapbuf
+index|[
+name|MAPBUFSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mapblock
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|xread
 parameter_list|(
-name|addr
-parameter_list|,
-name|size
-parameter_list|)
 name|char
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|count
@@ -161,29 +172,17 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|read
-argument_list|(
-argument|buffer
-argument_list|,
-argument|count
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|buffer
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+name|int
+name|count
+parameter_list|)
 block|{
 name|int
 name|logno
@@ -327,23 +326,16 @@ name|size
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|find
-argument_list|(
-argument|path
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|path
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -420,6 +412,10 @@ argument_list|()
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 operator|(
 operator|(
@@ -437,6 +433,10 @@ operator|->
 name|fs_inopb
 index|]
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|inode
 operator|.
@@ -684,37 +684,15 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_block
+end_function
 
-begin_decl_stmt
-name|char
-name|mapbuf
-index|[
-name|MAPBUFSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function
 name|int
-name|mapblock
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
 name|block_map
-argument_list|(
-argument|file_block
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|file_block
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -797,14 +775,14 @@ index|]
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|openrd
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -920,7 +898,7 @@ name|devs
 expr_stmt|;
 block|}
 comment|/*******************************************************\ 		* Look inside brackets for unit number, and partition	* 		\*******************************************************/
-comment|/* 		 * Allow any valid digit as the unit number, as the BIOS 		 * will complain if the unit number is out of range. 		 * Restricting the range here prevents the possibilty of using 		 * BIOSes that support more than 2 units. 	 * XXX Bad values may cause strange errors, need to check if 	 * what happens when a value out of range is supplied. 		 */
+comment|/* 		 * Allow any valid digit as the unit number, as the BIOS 		 * will complain if the unit number is out of range. 		 * Restricting the range here prevents the possibilty of using 		 * BIOSes that support more than 2 units. 		 * XXX Bad values may cause strange errors, need to check if 		 * what happens when a value out of range is supplied. 		 */
 if|if
 condition|(
 operator|*
@@ -1141,7 +1119,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.11 1995/01/20 07:48:21 wpaul Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.12 1995/01/25 21:37:45 bde Exp $  */
 end_comment
 
 begin_include
@@ -109,23 +109,16 @@ begin_comment
 comment|/* enable A20, 					   enable output buffer full interrupt 					   enable data line 					   enable clock line */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|loadflags
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Gate A20 for high memory  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|gateA20
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -205,7 +198,7 @@ endif|#
 directive|endif
 endif|IBM_L40
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* printf - only handles %d as decimal, %c as char, %s as string */
@@ -214,24 +207,11 @@ end_comment
 begin_macro
 name|printf
 argument_list|(
-argument|format
+argument|const char *format
 argument_list|,
-argument|data
+argument|...
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|format
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|data
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -239,12 +219,19 @@ name|int
 modifier|*
 name|dataptr
 init|=
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
-name|data
+name|format
 decl_stmt|;
 name|char
 name|c
 decl_stmt|;
+name|dataptr
+operator|++
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -353,6 +340,7 @@ case|case
 literal|'x'
 case|:
 block|{
+name|unsigned
 name|int
 name|num
 init|=
@@ -474,14 +462,13 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|putchar
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|c
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -526,22 +513,15 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|getchar
-argument_list|(
-argument|in_buf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|in_buf
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|c
@@ -561,14 +541,10 @@ name|RB_SERIAL
 operator|)
 condition|?
 name|serial_getc
-argument_list|(
-name|c
-argument_list|)
+argument_list|()
 else|:
 name|getc
-argument_list|(
-name|c
-argument_list|)
+argument_list|()
 operator|)
 operator|)
 operator|==
@@ -621,24 +597,18 @@ name|c
 operator|)
 return|;
 block|}
-end_block
-
-begin_if
-if|#
-directive|if
-name|BOOTWAIT
-end_if
+end_function
 
 begin_comment
 comment|/*  * This routine uses an inb to an unused port, the time to execute that  * inb is approximately 1.25uS.  This value is pretty constant across  * all CPU's and all buses, with the exception of some PCI implentations  * that do not forward this I/O adress to the ISA bus as they know it  * is not a valid ISA bus address, those machines execute this inb in  * 60 nS :-(.  *  * XXX we need to use BIOS timer calls or something more reliable to  * produce timeouts in the boot code.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|delay1ms
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -661,28 +631,16 @@ literal|0x84
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_macro
+begin_function
+name|int
 name|gets
-argument_list|(
-argument|buf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|buf
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
@@ -784,28 +742,22 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|strcmp
-argument_list|(
-argument|s1
-argument_list|,
-argument|s2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s1
-decl_stmt|,
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 name|s2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -834,36 +786,24 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|bcopy
-argument_list|(
-argument|from
-argument_list|,
-argument|to
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|from
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|to
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -881,18 +821,18 @@ name|from
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* To quote Ken: "You are not expected to understand this." :) */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|twiddle
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|putchar
 argument_list|(
@@ -930,7 +870,7 @@ literal|'\b'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

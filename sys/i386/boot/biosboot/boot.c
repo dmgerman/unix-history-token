@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.33 1995/03/14 08:21:53 davidg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.34 1995/04/14 01:35:59 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -48,6 +48,22 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NAMEBUF_LEN
+value|100
+end_define
+
+begin_decl_stmt
+name|char
+name|namebuf
+index|[
+name|NAMEBUF_LEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|exec
@@ -62,53 +78,23 @@ name|bootinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|init_serial
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|probe_keyboard
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|loadflags
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|end
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* NORETURN */
+end_comment
 
-begin_macro
+begin_function
+name|void
 name|boot
-argument_list|(
-argument|drive
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|drive
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|ret
@@ -117,6 +103,9 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|FORCE_COMCONSOLE
 if|if
 condition|(
 name|probe_keyboard
@@ -136,6 +125,22 @@ literal|"\nNo keyboard found.\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|init_serial
+argument_list|()
+expr_stmt|;
+name|loadflags
+operator||=
+name|RB_SERIAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nSerial console forced.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Pick up the story from the Bios on geometry of disks */
 for|for
 control|(
@@ -188,10 +193,12 @@ name|bi_memsizes_valid
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This is ugly, but why use 4 printf()s when 1 will do? */
 name|printf
 argument_list|(
-literal|"\n\>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n\ Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n\ Usage: [[%s(%d,a)]%s][-abcdhrsv]\n\ Use ? for file list or press Enter for defaults\n\n"
+literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
+literal|"Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n"
+literal|"Usage: [[%s(%d,a)]%s][-abcdhrsv]\n"
+literal|"Use ? for file list or press Enter for defaults\n\n"
 argument_list|,
 name|ouraddr
 argument_list|,
@@ -310,22 +317,15 @@ goto|goto
 name|loadstart
 goto|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|loadprog
-argument_list|(
-argument|howto
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|howto
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|long
 name|int
@@ -361,6 +361,10 @@ endif|#
 directive|endif
 name|read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|head
 argument_list|,
@@ -543,6 +547,10 @@ directive|else
 comment|/* Assume we're loading high, so that the BIOS isn't in the way. */
 name|xread
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|head
@@ -588,6 +596,10 @@ argument_list|)
 expr_stmt|;
 name|xread
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|head
@@ -668,6 +680,10 @@ else|#
 directive|else
 name|pbzero
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|head
@@ -722,11 +738,19 @@ comment|/* Copy the symbol table size				*/
 comment|/********************************************************/
 name|pcpy
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|head
 operator|.
 name|a_syms
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 sizeof|sizeof
@@ -769,6 +793,10 @@ argument_list|)
 expr_stmt|;
 name|xread
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|head
@@ -787,6 +815,10 @@ comment|/* Load the string table size				*/
 comment|/********************************************************/
 name|read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|i
 argument_list|,
@@ -798,9 +830,17 @@ argument_list|)
 expr_stmt|;
 name|pcpy
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|i
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 sizeof|sizeof
@@ -840,6 +880,10 @@ argument_list|)
 expr_stmt|;
 name|xread
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|addr
 argument_list|,
 name|i
@@ -977,39 +1021,16 @@ name|ouraddr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_define
-define|#
-directive|define
-name|NAMEBUF_LEN
-value|100
-end_define
-
-begin_decl_stmt
-name|char
-name|namebuf
-index|[
-name|NAMEBUF_LEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
+begin_function
+name|void
 name|getbootdev
-argument_list|(
-argument|howto
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 modifier|*
 name|howto
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|c
@@ -1202,7 +1223,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.7 1995/01/25 21:37:41 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.8 1995/02/16 15:06:09 bde Exp $  */
 end_comment
 
 begin_comment
@@ -171,24 +171,67 @@ begin_comment
 comment|/*#define EMBEDDED_DISKLABEL 1*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|I_ADDR
+value|((void *) 0)
+end_define
+
+begin_comment
+comment|/* XXX where all reads go */
+end_comment
+
+begin_comment
+comment|/* Read ahead buffer large enough for one track on a 1440K floppy.  For  * reading from floppies, the bootstrap has to be loaded on a 64K boundary  * to ensure that this buffer doesn't cross a 64K DMA boundary.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RA_SECTORS
+value|18
+end_define
+
 begin_decl_stmt
-specifier|extern
-name|struct
-name|disklabel
-name|disklabel
+specifier|static
+name|char
+name|ra_buf
+index|[
+name|RA_SECTORS
+operator|*
+name|BPS
+index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*struct	disklabel disklabel;*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|int
+name|ra_dev
+decl_stmt|;
+end_decl_stmt
 
-begin_macro
+begin_decl_stmt
+specifier|static
+name|int
+name|ra_end
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ra_first
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
 name|devopen
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|dos_partition
@@ -683,14 +726,14 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|devread
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|offset
@@ -747,81 +790,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_define
-define|#
-directive|define
-name|I_ADDR
-value|((void *) 0)
-end_define
-
-begin_comment
-comment|/* XXX where all reads go */
-end_comment
-
-begin_comment
-comment|/* Read ahead buffer large enough for one track on a 1440K floppy.  For  * reading from floppies, the bootstrap has to be loaded on a 64K boundary  * to ensure that this buffer doesn't cross a 64K DMA boundary.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RA_SECTORS
-value|18
-end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-name|ra_buf
-index|[
-name|RA_SECTORS
-operator|*
-name|BPS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ra_dev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ra_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ra_first
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
+begin_function
+name|void
 name|Bread
-argument_list|(
-argument|dosdev
-argument_list|,
-argument|sector
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|dosdev
-decl_stmt|,
+parameter_list|,
+name|int
 name|sector
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -984,26 +964,18 @@ name|BPS
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|badsect
-argument_list|(
-argument|dosdev
-argument_list|,
-argument|sector
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|int
 name|dosdev
-decl_stmt|,
+parameter_list|,
+name|int
 name|sector
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1244,7 +1216,7 @@ return|return
 name|sector
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
