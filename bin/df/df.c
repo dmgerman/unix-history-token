@@ -2058,7 +2058,7 @@ condition|)
 block|{
 name|header
 operator|=
-literal|"  Size"
+literal|"   Size"
 expr_stmt|;
 name|mwp
 operator|->
@@ -2482,7 +2482,15 @@ literal|100.0
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"  "
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
