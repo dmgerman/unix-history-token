@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys.c	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -145,6 +145,21 @@ expr_stmt|;
 name|_rtt
 argument_list|()
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * For gcc  */
+end_comment
+
+begin_macro
+name|__main
+argument_list|()
+end_macro
+
+begin_block
+block|{
+return|return;
 block|}
 end_block
 
