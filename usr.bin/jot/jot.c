@@ -47,25 +47,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * jot - print sequential or random data  *  * Author:  John Kunze, Office of Comp. Affairs, UCB  */
@@ -311,18 +310,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|double
 name|xd
@@ -387,9 +382,6 @@ literal|1
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -1346,16 +1338,13 @@ begin_function
 name|int
 name|putdata
 parameter_list|(
-name|x
-parameter_list|,
-name|notlast
-parameter_list|)
 name|double
 name|x
-decl_stmt|;
+parameter_list|,
 name|long
+name|int
 name|notlast
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1568,7 +1557,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -1593,12 +1584,10 @@ begin_function
 name|int
 name|getprec
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1675,7 +1664,9 @@ end_function
 begin_function
 name|void
 name|getformat
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
