@@ -874,7 +874,7 @@ comment|/*  * Determine signal that should be delivered to process p, the curren
 end_comment
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline
 name|int
 name|__cursig
