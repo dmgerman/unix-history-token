@@ -6014,9 +6014,21 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|stop
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6509,15 +6521,15 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|stop
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|stop
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK_NOSWITCH
@@ -6762,15 +6774,15 @@ name|p_pptr
 argument_list|)
 expr_stmt|;
 block|}
-name|stop
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|stop
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK_NOSWITCH
@@ -6877,10 +6889,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with the proc p locked.  */
+comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  Must be called with the proc p locked and the scheduler  * lock held.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|stop
 parameter_list|(
@@ -6900,10 +6913,12 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_assert
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|p
@@ -6927,12 +6942,6 @@ operator|)
 name|p
 operator|->
 name|p_pptr
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
