@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: diskslice.h,v 1.20 1997/02/22 09:45:06 peter Exp $  */
+comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: diskslice.h,v 1.21 1997/09/16 14:31:44 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -79,16 +79,6 @@ directive|define
 name|WHOLE_DISK_SLICE
 value|1
 end_define
-
-begin_comment
-comment|/* upcoming change from julian.. early warning of probable form */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
 
 begin_struct
 struct|struct
@@ -202,119 +192,6 @@ comment|/* nonzero if label is writable */
 block|}
 struct|;
 end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* switch table for slice handlers (sample only) */
-end_comment
-
-begin_struct
-struct|struct
-name|slice_switch
-block|{
-name|int
-function_decl|(
-modifier|*
-name|slice_load
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|slice_check
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|slice_gone
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* 	 * etc. 	 * each  routine is called with the address of the private data 	 * and the minor number.. 	 * Other arguments as needed 	 */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|diskslice
-block|{
-name|u_long
-name|ds_offset
-decl_stmt|;
-comment|/* starting sector */
-name|u_long
-name|ds_size
-decl_stmt|;
-comment|/* number of sectors */
-name|int
-name|ds_type
-decl_stmt|;
-comment|/* (foreign) slice type */
-ifdef|#
-directive|ifdef
-name|PC98
-name|int
-name|ds_subtype
-decl_stmt|;
-comment|/* sub slice type */
-name|u_char
-name|ds_name
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* slice name */
-endif|#
-directive|endif
-name|struct
-name|dkbad_intern
-modifier|*
-name|ds_bad
-decl_stmt|;
-comment|/* bad sector table, if any */
-name|void
-modifier|*
-name|ds_date
-decl_stmt|;
-comment|/* Slice type specific data */
-block|struct
-name|slice_switch
-operator|*
-switch|switch
-empty_stmt|;
-comment|/* switch table for type handler */
-name|u_char
-name|ds_bopenmask
-decl_stmt|;
-comment|/* bdevs open */
-name|u_char
-name|ds_copenmask
-decl_stmt|;
-comment|/* cdevs open */
-name|u_char
-name|ds_openmask
-decl_stmt|;
-comment|/* [bc]devs open */
-name|u_char
-name|ds_wlabel
-decl_stmt|;
-comment|/* nonzero if label is writable */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
