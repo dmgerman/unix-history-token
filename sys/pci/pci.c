@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.112 1999/07/27 05:08:36 mdodd Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci.c,v 1.113 1999/07/28 07:57:47 dfr Exp $  *  */
 end_comment
 
 begin_include
@@ -4989,7 +4989,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pci_print_child
 parameter_list|(
 name|device_t
@@ -5008,6 +5008,11 @@ name|pcicfgregs
 modifier|*
 name|cfg
 decl_stmt|;
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -5021,6 +5026,15 @@ operator|&
 name|dinfo
 operator|->
 name|cfg
+expr_stmt|;
+name|retval
+operator|+=
+name|bus_print_child_header
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5036,6 +5050,8 @@ name|intline
 operator|!=
 literal|255
 condition|)
+name|retval
+operator|+=
 name|printf
 argument_list|(
 literal|" irq %d"
@@ -5045,6 +5061,8 @@ operator|->
 name|intline
 argument_list|)
 expr_stmt|;
+name|retval
+operator|+=
 name|printf
 argument_list|(
 literal|" at device %d.%d"
@@ -5060,21 +5078,20 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" on %s%d"
-argument_list|,
-name|device_get_name
+name|retval
+operator|+=
+name|bus_print_child_footer
 argument_list|(
 name|dev
-argument_list|)
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+name|child
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

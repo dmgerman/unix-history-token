@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tcasic.c,v 1.3 1999/05/08 21:58:49 dfr Exp $ */
+comment|/* $Id: tcasic.c,v 1.4 1999/05/10 15:54:58 peter Exp $ */
 end_comment
 
 begin_comment
@@ -141,20 +141,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|tcasic_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -181,7 +167,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_print_child
 argument_list|,
-name|tcasic_print_child
+name|bus_generic_print_child
 argument_list|)
 block|,
 block|{
@@ -308,36 +294,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|tcasic_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|" at %s%d"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|bus
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -181,7 +181,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|gbus_print_child
 parameter_list|(
 name|device_t
@@ -384,7 +384,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|gbus_print_child
 parameter_list|(
 name|device_t
@@ -404,16 +404,27 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|" at %s%d offset 0x%x"
-argument_list|,
-name|device_get_name
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
+name|retval
+operator|+=
+name|bus_print_child_header
 argument_list|(
 name|bus
-argument_list|)
 argument_list|,
-name|device_get_unit
+name|dev
+argument_list|)
+expr_stmt|;
+name|retval
+operator|+=
+name|printf
+argument_list|(
+literal|" on %s offset 0x%x\n"
+argument_list|,
+name|device_get_nameunit
 argument_list|(
 name|bus
 argument_list|)
@@ -423,6 +434,11 @@ operator|->
 name|gd_offset
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

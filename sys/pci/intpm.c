@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Takanori Watanabe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *        notice, this list of conditions and the following disclaimer in the  *        documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.    IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: intpm.c,v 1.11 1999/07/03 20:17:06 peter Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Takanori Watanabe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *        notice, this list of conditions and the following disclaimer in the  *        documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.    IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: intpm.c,v 1.12 1999/07/24 19:13:54 nsouch Exp $  */
 end_comment
 
 begin_include
@@ -186,18 +186,6 @@ specifier|static
 name|int
 name|intsmb_attach
 parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|intsmb_print_child
-parameter_list|(
-name|device_t
-parameter_list|,
 name|device_t
 parameter_list|)
 function_decl|;
@@ -563,7 +551,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_print_child
 argument_list|,
-name|intsmb_print_child
+name|bus_generic_print_child
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -943,37 +931,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|intsmb_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|" on %s%d"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|bus
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 

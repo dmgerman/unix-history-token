@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: kftxx.c,v 1.4 1998/11/15 18:25:16 dfr Exp $ */
+comment|/* $Id: kftxx.c,v 1.5 1999/05/08 21:58:53 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -160,7 +160,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|kft_print_child
 parameter_list|(
 name|device_t
@@ -561,7 +561,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|kft_print_child
 parameter_list|(
 name|device_t
@@ -586,16 +586,27 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|printf
-argument_list|(
-literal|" at %s%d hose %d"
-argument_list|,
-name|device_get_name
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
+name|retval
+operator|+=
+name|bus_print_child_header
 argument_list|(
 name|bus
-argument_list|)
 argument_list|,
-name|device_get_unit
+name|dev
+argument_list|)
+expr_stmt|;
+name|retval
+operator|+=
+name|printf
+argument_list|(
+literal|" on %s hose %d\n"
+argument_list|,
+name|device_get_nameunit
 argument_list|(
 name|bus
 argument_list|)
@@ -605,6 +616,11 @@ operator|->
 name|kd_hosenum
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

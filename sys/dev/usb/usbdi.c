@@ -5037,7 +5037,7 @@ argument_list|)
 end_if
 
 begin_function
-name|void
+name|int
 name|usbd_print_child
 parameter_list|(
 name|device_t
@@ -5048,22 +5048,35 @@ name|child
 parameter_list|)
 block|{
 comment|/* 	struct usb_softc *sc = device_get_softc(child); 	*/
-name|printf
-argument_list|(
-literal|" at %s%d"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|parent
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
+name|retval
+operator|+=
+name|bus_print_child_header
 argument_list|(
 name|parent
-argument_list|)
+argument_list|,
+name|child
 argument_list|)
 expr_stmt|;
-comment|/* XXX How do we get to the usbd_device_handle??? 	usbd_device_handle dev = invalidadosch;  	printf(" addr %d", dev->addr);  	if (bootverbose) { 		if (dev->lowspeed) 			printf(", lowspeed"); 		if (dev->self_powered) 			printf(", self powered"); 		else 			printf(", %dmA", dev->power); 		printf(", config %d", dev->config); 	} 	 */
+name|retval
+operator|+=
+name|bus_print_child_footer
+argument_list|(
+name|parent
+argument_list|,
+name|child
+argument_list|)
+expr_stmt|;
+comment|/* XXX How do we get to the usbd_device_handle??? 	usbd_device_handle dev = invalidadosch;  	retval += printf(" addr %d\n", dev->addr);  	if (bootverbose) { 		if (dev->lowspeed) 			retval += printf(", lowspeed"); 		if (dev->self_powered) 			retval += printf(", self powered"); 		else 			retval += printf(", %dmA", dev->power); 		retval += printf(", config %d", dev->config); 	} 	 */
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

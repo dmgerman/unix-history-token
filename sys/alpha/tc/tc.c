@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tc.c,v 1.4 1999/05/10 15:53:33 peter Exp $ */
+comment|/* $Id: tc.c,v 1.5 1999/07/01 22:49:03 peter Exp $ */
 end_comment
 
 begin_comment
@@ -243,20 +243,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|void
-name|tc_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|tc_checkslot
 parameter_list|(
@@ -297,7 +283,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_print_child
 argument_list|,
-name|tc_print_child
+name|bus_generic_print_child
 argument_list|)
 block|,
 block|{
@@ -3026,36 +3012,6 @@ name|dev
 argument_list|)
 argument_list|,
 name|cookie
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|tc_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|" at %s%d"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|bus
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

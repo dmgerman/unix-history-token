@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iicbus.c,v 1.8 1999/04/11 02:55:52 eivind Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iicbus.c,v 1.9 1999/05/08 21:59:04 dfr Exp $  *  */
 end_comment
 
 begin_comment
@@ -240,7 +240,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|iicbus_print_child
 parameter_list|(
 name|device_t
@@ -668,7 +668,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|iicbus_print_child
 parameter_list|(
 name|device_t
@@ -688,6 +688,20 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|retval
+init|=
+literal|0
+decl_stmt|;
+name|retval
+operator|+=
+name|bus_print_child_header
+argument_list|(
+name|bus
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|iicdev
@@ -698,16 +712,13 @@ block|{
 case|case
 name|IICBUS_DEVICE_CLASS
 case|:
+name|retval
+operator|+=
 name|printf
 argument_list|(
-literal|" on %s%d addr 0x%x"
+literal|" on %s addr 0x%x\n"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|bus
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|bus
 argument_list|)
@@ -721,32 +732,30 @@ break|break;
 case|case
 name|IICBUS_DRIVER_CLASS
 case|:
-name|printf
-argument_list|(
-literal|" on %s%d"
-argument_list|,
-name|device_get_name
+name|retval
+operator|+=
+name|bus_print_child_footer
 argument_list|(
 name|bus
-argument_list|)
 argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
+name|dev
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: unknown class!"
+literal|"%s: unknown class!\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

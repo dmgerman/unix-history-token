@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tcds.c,v 1.1 1998/08/20 08:27:11 dfr Exp $ */
+comment|/* $Id: tcds.c,v 1.2 1999/05/08 21:58:50 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -229,20 +229,6 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
-name|tcds_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|tcds_lance_dma_setup
 parameter_list|(
 name|void
@@ -292,7 +278,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_print_child
 argument_list|,
-name|tcds_print_child
+name|bus_generic_print_child
 argument_list|)
 block|,
 block|{
@@ -1843,46 +1829,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|tcds_print_child
-parameter_list|(
-name|device_t
-name|bus
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|tcds_dev
-modifier|*
-name|ioasic
-init|=
-name|device_get_ivars
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|printf
-argument_list|(
-literal|" at %s%d"
-argument_list|,
-name|device_get_name
-argument_list|(
-name|bus
-argument_list|)
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|bus
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
