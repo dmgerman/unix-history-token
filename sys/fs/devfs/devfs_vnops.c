@@ -7066,5 +7066,29 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Our calling convention to the device drivers used to be that we passed  * vnode.h IO_* flags to read()/write(), but we're moving to fcntl.h O_   * flags instead since that's what open(), close() and ioctl() takes and  * we don't really want vnode.h in device drivers.  * We solved the source compatibility by redefining some vnode flags to  * be the same as the fcntl ones and by sending down the bitwise OR of  * the respective fcntl/vnode flags.  These CTASSERTS make sure nobody  * pulls the rug out under this.  */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|O_NONBLOCK
+operator|==
+name|IO_NDELAY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|O_FSYNC
+operator|==
+name|IO_SYNC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

@@ -949,7 +949,7 @@ comment|/* exclusive create request */
 end_comment
 
 begin_comment
-comment|/*  * Flags for ioflag. (high 16 bits used to ask for read-ahead and  * help with write clustering)  */
+comment|/*  * Flags for ioflag. (high 16 bits used to ask for read-ahead and  * help with write clustering)  * NB: IO_NDELAY and IO_DIRECT are linked to fcntl.h  */
 end_comment
 
 begin_define
@@ -977,12 +977,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_SYNC
+name|IO_NDELAY
 value|0x0004
 end_define
 
 begin_comment
-comment|/* do I/O synchronously */
+comment|/* FNDELAY flag set in file table */
 end_comment
 
 begin_define
@@ -999,12 +999,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_NDELAY
+name|IO_ASYNC
 value|0x0010
 end_define
 
 begin_comment
-comment|/* FNDELAY flag set in file table */
+comment|/* bawrite rather then bdwrite */
 end_comment
 
 begin_define
@@ -1032,12 +1032,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_ASYNC
+name|IO_SYNC
 value|0x0080
 end_define
 
 begin_comment
-comment|/* bawrite rather then bdwrite */
+comment|/* do I/O synchronously */
 end_comment
 
 begin_define
