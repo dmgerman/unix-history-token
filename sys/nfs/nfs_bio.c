@@ -3657,7 +3657,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 comment|/* 		 * If the lease is non-cachable or IO_SYNC do bwrite(). 		 */
 if|if
@@ -5667,7 +5671,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 name|bp
 operator|->

@@ -8795,7 +8795,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 block|}
 block|}
