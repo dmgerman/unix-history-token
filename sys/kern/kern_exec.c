@@ -3494,15 +3494,6 @@ name|imgp
 decl_stmt|;
 block|{
 name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|imgp
-operator|->
-name|proc
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
