@@ -38,7 +38,7 @@ end_ifndef
 begin_expr_stmt
 name|__COPYRIGHT
 argument_list|(
-literal|"@(#) Copyright (c) 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1993\nThe Regents of the University of California.  All rights reserved.\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -58,21 +58,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: sort.c,v 1.26 2001/04/30 00:25:09 ross Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_expr_stmt
-name|__SCCSID
-argument_list|(
-literal|"@(#)sort.c	8.1 (Berkeley) 6/6/93"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+unit|__RCSID("$NetBSD: sort.c,v 1.26 2001/04/30 00:25:09 ross Exp $"); __SCCSID("@(#)sort.c	8.1 (Berkeley) 6/6/93");
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -82,6 +78,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -994,7 +1004,10 @@ index|[
 name|i
 index|]
 operator|=
+name|strdup
+argument_list|(
 name|_PATH_STDIN
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1292,17 +1305,19 @@ name|sigaction
 name|act
 init|=
 block|{
+block|{
 name|onsignal
+block|}
+block|,
+name|SA_RESTART
+operator||
+name|SA_RESETHAND
 block|,
 block|{
 block|{
 literal|0
 block|}
 block|}
-block|,
-name|SA_RESTART
-operator||
-name|SA_RESETHAND
 block|}
 decl_stmt|;
 specifier|static
@@ -1622,6 +1637,7 @@ name|sig
 parameter_list|)
 name|int
 name|sig
+name|__unused
 decl_stmt|;
 block|{
 name|cleanup

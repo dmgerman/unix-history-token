@@ -19,21 +19,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: tmp.c,v 1.7 2001/02/19 15:45:45 jdolecek Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_expr_stmt
-name|__SCCSID
-argument_list|(
-literal|"@(#)tmp.c	8.1 (Berkeley) 6/6/93"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+unit|__RCSID("$NetBSD: tmp.c,v 1.7 2001/02/19 15:45:45 jdolecek Exp $"); __SCCSID("@(#)tmp.c	8.1 (Berkeley) 6/6/93");
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -43,6 +39,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

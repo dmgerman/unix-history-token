@@ -25,21 +25,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: files.c,v 1.16 2001/02/19 20:50:17 jdolecek Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_expr_stmt
-name|__SCCSID
-argument_list|(
-literal|"@(#)files.c	8.1 (Berkeley) 6/6/93"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+unit|__RCSID("$NetBSD: files.c,v 1.16 2001/02/19 20:50:17 jdolecek Exp $"); __SCCSID("@(#)files.c	8.1 (Berkeley) 6/6/93");
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -49,6 +45,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -107,6 +117,7 @@ name|struct
 name|filelist
 modifier|*
 name|filelist
+name|__unused
 decl_stmt|;
 name|int
 name|nfiles
@@ -123,6 +134,7 @@ name|struct
 name|field
 modifier|*
 name|dummy
+name|__unused
 decl_stmt|;
 block|{
 name|int
@@ -458,11 +470,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|length_t
+call|)
+argument_list|(
 name|end
 operator|-
 name|pos
 operator|->
 name|data
+argument_list|)
 operator|<
 name|pos
 operator|->
@@ -593,6 +610,7 @@ name|int
 name|flno
 decl_stmt|,
 name|top
+name|__unused
 decl_stmt|;
 name|struct
 name|filelist
@@ -614,6 +632,7 @@ name|struct
 name|field
 modifier|*
 name|dummy2
+name|__unused
 decl_stmt|;
 block|{
 specifier|static
@@ -1048,6 +1067,7 @@ name|int
 name|flno
 decl_stmt|,
 name|top
+name|__unused
 decl_stmt|;
 name|struct
 name|filelist
@@ -1401,6 +1421,7 @@ begin_decl_stmt
 name|DBT
 modifier|*
 name|key
+name|__unused
 decl_stmt|,
 modifier|*
 name|line
@@ -1725,14 +1746,17 @@ name|int
 name|flno
 decl_stmt|,
 name|top
+name|__unused
 decl_stmt|;
 name|struct
 name|filelist
 modifier|*
 name|filelist
+name|__unused
 decl_stmt|;
 name|int
 name|nfiles
+name|__unused
 decl_stmt|;
 name|RECHEADER
 modifier|*
@@ -1746,6 +1770,7 @@ name|struct
 name|field
 modifier|*
 name|dummy2
+name|__unused
 decl_stmt|;
 block|{
 name|int
@@ -1824,11 +1849,16 @@ return|;
 block|}
 if|if
 condition|(
+call|(
+name|length_t
+call|)
+argument_list|(
 name|end
 operator|-
 name|rec
 operator|->
 name|data
+argument_list|)
 operator|<
 name|rec
 operator|->
