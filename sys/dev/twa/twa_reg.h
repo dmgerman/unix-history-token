@@ -620,6 +620,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TWA_BUNDLED_FW_VERSION_STRING
+value|"2.04.00.005"
+end_define
+
+begin_define
+define|#
+directive|define
 name|TWA_ALIGNMENT
 value|0x4
 end_define
@@ -670,7 +677,7 @@ begin_define
 define|#
 directive|define
 name|TWA_BASE_FW_SRL
-value|0x17
+value|23
 end_define
 
 begin_define
@@ -691,21 +698,21 @@ begin_define
 define|#
 directive|define
 name|TWA_CURRENT_FW_SRL
-value|0x18
+value|27
 end_define
 
 begin_define
 define|#
 directive|define
 name|TWA_CURRENT_FW_BRANCH
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|TWA_CURRENT_FW_BUILD
-value|9
+value|6
 end_define
 
 begin_define
@@ -852,7 +859,7 @@ block|{
 name|bus_addr_t
 name|address
 decl_stmt|;
-name|bus_size_t
+name|u_int32_t
 name|length
 decl_stmt|;
 block|}
@@ -1614,7 +1621,7 @@ block|}
 name|status_block
 struct|;
 name|u_int8_t
-name|err_specific_desc
+name|err_desc
 index|[
 literal|98
 index|]

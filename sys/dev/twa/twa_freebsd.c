@@ -396,18 +396,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|twa_intrhook
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -1037,54 +1025,6 @@ name|si_drv1
 operator|=
 name|sc
 expr_stmt|;
-comment|/* 	 * Schedule ourselves to bring the controller up once interrupts are 	 * available.  This isn't strictly necessary, since we disable 	 * interrupts while probing the controller, but it is more in keeping 	 * with common practice for other disk devices. 	 */
-name|sc
-operator|->
-name|twa_ich
-operator|.
-name|ich_func
-operator|=
-name|twa_intrhook
-expr_stmt|;
-name|sc
-operator|->
-name|twa_ich
-operator|.
-name|ich_arg
-operator|=
-name|sc
-expr_stmt|;
-if|if
-condition|(
-name|config_intrhook_establish
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|twa_ich
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|twa_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"Can't establish configuration hook.\n"
-argument_list|)
-expr_stmt|;
-name|twa_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1154,7 +1094,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_cmd_tag
 argument_list|,
 name|sc
 operator|->
@@ -1178,11 +1118,11 @@ name|bus_dmamap_destroy
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|)
 expr_stmt|;
 comment|/* Free all memory allocated so far. */
@@ -1211,7 +1151,7 @@ name|bus_dmamem_free
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_cmd_tag
 argument_list|,
 name|sc
 operator|->
@@ -1248,13 +1188,41 @@ if|if
 condition|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 condition|)
 name|bus_dma_tag_destroy
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
+argument_list|)
+expr_stmt|;
+comment|/* Destroy the cmd DMA tag. */
+if|if
+condition|(
+name|sc
+operator|->
+name|twa_cmd_tag
+condition|)
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|twa_cmd_tag
+argument_list|)
+expr_stmt|;
+comment|/* Destroy the parent DMA tag. */
+if|if
+condition|(
+name|sc
+operator|->
+name|twa_parent_tag
+condition|)
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|twa_parent_tag
 argument_list|)
 expr_stmt|;
 comment|/* Disconnect the interrupt handler. */
@@ -1663,59 +1631,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function name:	twa_intrhook  * Description:		Callback for us to enable interrupts.  *  * Input:		arg	-- ptr to per ctlr structure  * Output:		None  * Return value:	None  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|twa_intrhook
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|struct
-name|twa_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|twa_softc
-operator|*
-operator|)
-name|arg
-decl_stmt|;
-name|twa_dbg_dprint
-argument_list|(
-literal|4
-argument_list|,
-name|sc
-argument_list|,
-literal|"twa_intrhook Entered"
-argument_list|)
-expr_stmt|;
-comment|/* Pull ourselves off the intrhook chain. */
-name|config_intrhook_disestablish
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|twa_ich
-argument_list|)
-expr_stmt|;
-comment|/* Enable interrupts. */
-name|twa_enable_interrupts
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Function name:	twa_write_pci_config  * Description:		Writes to the PCI config space.  *  * Input:		sc	-- ptr to per ctlr structure  *			value	-- value to be written  *			size	-- # of bytes to be written  * Output:		None  * Return value:	None  */
 end_comment
 
@@ -1806,7 +1721,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-comment|/* Allocate the bus DMA tag appropriate for PCI. */
+comment|/* Create the parent dma tag. */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -1824,8 +1739,6 @@ name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
-operator|+
-literal|1
 argument_list|,
 comment|/* highaddr */
 name|NULL
@@ -1856,7 +1769,7 @@ comment|/* flags */
 operator|&
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_parent_tag
 comment|/* tag */
 argument_list|)
 condition|)
@@ -1865,7 +1778,75 @@ name|twa_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"Can't allocate DMA tag.\n"
+literal|"Can't allocate parent DMA tag.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
+comment|/* Create a bus dma tag for cmd pkts. */
+if|if
+condition|(
+name|bus_dma_tag_create
+argument_list|(
+name|sc
+operator|->
+name|twa_parent_tag
+argument_list|,
+comment|/* parent */
+name|TWA_ALIGNMENT
+argument_list|,
+comment|/* alignment */
+literal|0
+argument_list|,
+comment|/* boundary */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|TWA_Q_LENGTH
+operator|*
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|twa_command_packet
+argument_list|)
+operator|)
+argument_list|,
+comment|/* maxsize */
+literal|1
+argument_list|,
+comment|/* nsegments */
+name|BUS_SPACE_MAXSIZE_32BIT
+argument_list|,
+comment|/* maxsegsize */
+literal|0
+argument_list|,
+comment|/* flags */
+operator|&
+name|sc
+operator|->
+name|twa_cmd_tag
+comment|/* tag */
+argument_list|)
+condition|)
+block|{
+name|twa_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"Can't allocate cmd DMA tag.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1881,7 +1862,7 @@ name|bus_dmamem_alloc
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_cmd_tag
 argument_list|,
 operator|(
 name|void
@@ -1906,16 +1887,25 @@ name|twa_cmd_map
 operator|)
 argument_list|)
 condition|)
+block|{
+name|twa_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"Can't allocate memory for cmd pkts.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 name|bus_dmamap_load
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_cmd_tag
 argument_list|,
 name|sc
 operator|->
@@ -1970,6 +1960,66 @@ name|twa_command_packet
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Create a bus dma tag for data buffers. */
+if|if
+condition|(
+name|bus_dma_tag_create
+argument_list|(
+name|sc
+operator|->
+name|twa_parent_tag
+argument_list|,
+comment|/* parent */
+name|TWA_ALIGNMENT
+argument_list|,
+comment|/* alignment */
+literal|0
+argument_list|,
+comment|/* boundary */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* lowaddr */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* highaddr */
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+comment|/* filter, filterarg */
+name|TWA_MAX_IO_SIZE
+argument_list|,
+comment|/* maxsize */
+name|TWA_MAX_SG_ELEMENTS
+argument_list|,
+comment|/* nsegments */
+name|TWA_MAX_IO_SIZE
+argument_list|,
+comment|/* maxsegsize */
+name|BUS_DMA_WAITOK
+argument_list|,
+comment|/* flags */
+operator|&
+name|sc
+operator|->
+name|twa_buf_tag
+comment|/* tag */
+argument_list|)
+condition|)
+block|{
+name|twa_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"Can't allocate buf DMA tag.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -2049,21 +2099,21 @@ index|]
 operator|=
 name|tr
 expr_stmt|;
-comment|/* 		 * Create a map for data buffers.  maxsize (256 * 1024) used in 		 * bus_dma_tag_create above should suffice the bounce page needs 		 * for data buffers, since the max I/O size we support is 128KB. 		 * If we supported I/O's bigger than 256KB, we would have to 		 * create a second dma_tag, with the appropriate maxsize. 		 */
+comment|/* Create maps for data buffers. */
 if|if
 condition|(
 name|bus_dmamap_create
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 literal|0
 argument_list|,
 operator|&
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|)
 condition|)
 return|return
@@ -2146,12 +2196,17 @@ index|]
 operator|.
 name|length
 operator|=
+call|(
+name|u_int32_t
+call|)
+argument_list|(
 name|segs
 index|[
 name|i
 index|]
 operator|.
 name|ds_len
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2223,6 +2278,12 @@ name|tr
 operator|->
 name|tr_sc
 argument_list|)
+expr_stmt|;
+name|tr
+operator|->
+name|tr_flags
+operator||=
+name|TWA_CMD_MAPPED
 expr_stmt|;
 if|if
 condition|(
@@ -2410,11 +2471,11 @@ name|tr
 operator|->
 name|tr_sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
@@ -2458,11 +2519,11 @@ name|tr
 operator|->
 name|tr_sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
@@ -2745,19 +2806,24 @@ name|bus_dmamap_load
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|,
 name|tr
 operator|->
 name|tr_data
 argument_list|,
+call|(
+name|bus_size_t
+call|)
+argument_list|(
 name|tr
 operator|->
 name|tr_length
+argument_list|)
 argument_list|,
 name|twa_setup_data_dmamap
 argument_list|,
@@ -2773,6 +2839,26 @@ condition|(
 name|error
 operator|==
 name|EINPROGRESS
+condition|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|tr
+operator|->
+name|tr_flags
+operator|&
+name|TWA_CMD_MAPPED
+operator|)
 condition|)
 block|{
 name|tr
@@ -2792,6 +2878,12 @@ condition|)
 name|twa_disallow_new_requests
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|error
@@ -2965,11 +3057,11 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
@@ -3017,11 +3109,11 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|,
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
@@ -3030,11 +3122,11 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|twa_dma_tag
+name|twa_buf_tag
 argument_list|,
 name|tr
 operator|->
-name|tr_dma_map
+name|tr_buf_map
 argument_list|)
 expr_stmt|;
 block|}
@@ -3369,9 +3461,6 @@ name|u_int8_t
 modifier|*
 name|cdb
 decl_stmt|;
-name|int
-name|cmd_phys_addr
-decl_stmt|;
 if|if
 condition|(
 name|tr
@@ -3428,22 +3517,11 @@ operator|.
 name|cmd_pkt_9k
 operator|)
 expr_stmt|;
-name|cmd_phys_addr
-operator|=
-name|cmd9k
-operator|->
-name|sg_list
-index|[
-literal|0
-index|]
-operator|.
-name|address
-expr_stmt|;
 name|twa_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"9K cmd = %x %x %x %x %x %x %x %x %x\n"
+literal|"9K cmd = %x %x %x %x %x %x %x %llx %x\n"
 argument_list|,
 name|cmd9k
 operator|->
@@ -3477,7 +3555,19 @@ name|cmd9k
 operator|->
 name|sgl_entries
 argument_list|,
-name|cmd_phys_addr
+call|(
+name|__uint64_t
+call|)
+argument_list|(
+name|cmd9k
+operator|->
+name|sg_list
+index|[
+literal|0
+index|]
+operator|.
+name|address
+argument_list|)
 argument_list|,
 name|cmd9k
 operator|->
@@ -3668,24 +3758,20 @@ name|count
 argument_list|)
 expr_stmt|;
 block|}
-name|cmd_phys_addr
-operator|=
+name|twa_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"cmd_phys=0x%llx data=%p length=0x%x\n"
+argument_list|,
 call|(
-name|int
+name|__uint64_t
 call|)
 argument_list|(
 name|tr
 operator|->
 name|tr_cmd_phys
 argument_list|)
-expr_stmt|;
-name|twa_printf
-argument_list|(
-name|sc
-argument_list|,
-literal|"cmdphys=0x%x data=%p length=0x%x\n"
-argument_list|,
-name|cmd_phys_addr
 argument_list|,
 name|tr
 operator|->
