@@ -5825,10 +5825,6 @@ condition|(
 name|grent
 operator|==
 name|NULL
-operator|&&
-name|errno
-operator|!=
-literal|0
 condition|)
 block|{
 operator|*
