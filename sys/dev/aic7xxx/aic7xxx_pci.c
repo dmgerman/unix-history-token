@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995-2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_pci.c#12 $  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995-2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_pci.c#16 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -160,6 +160,20 @@ define|#
 directive|define
 name|ID_9005_GENERIC_MASK
 value|0xFFF0FFFF00000000ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_9005_SISL_MASK
+value|0x000FFFFF00000000ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_9005_SISL_ID
+value|0x0005900500000000ull
 end_define
 
 begin_define
@@ -389,8 +403,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AIC7895_RAID_PORT
-value|0x7893900478939004ull
+name|ID_AIC7895_ARO
+value|0x7890900478939004ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AIC7895_ARO_MASK
+value|0xFFF0FFFFFFFFFFFFull
 end_define
 
 begin_define
@@ -419,6 +440,13 @@ define|#
 directive|define
 name|ID_AIC7890
 value|0x001F9005000F9005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AIC7890_ARO
+value|0x00139005000F9005ull
 end_define
 
 begin_define
@@ -473,6 +501,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AIC7892_ARO
+value|0x00839005FFFF9005ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AHA_29160
 value|0x00809005E2A09005ull
 end_define
@@ -522,6 +557,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AIC7896_ARO
+value|0x00539005FFFF9005ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AHA_3950U2B_0
 value|0x00509005FFFF9005ull
 end_define
@@ -552,6 +594,13 @@ define|#
 directive|define
 name|ID_AIC7899
 value|0x00CF9005FFFF9005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AIC7899_ARO
+value|0x00C39005FFFF9005ull
 end_define
 
 begin_define
@@ -762,6 +811,17 @@ end_define
 begin_comment
 comment|/* Combined with Raid */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBID_9005_TYPE_KNOWN
+parameter_list|(
+name|id
+parameter_list|)
+define|\
+value|((((id)& 0xF) == SUBID_9005_TYPE_MB)		\ 	|| (((id)& 0xF) == SUBID_9005_TYPE_CARD)	\ 	|| (((id)& 0xF) == SUBID_9005_TYPE_LCCARD)	\ 	|| (((id)& 0xF) == SUBID_9005_TYPE_RAID))
+end_define
 
 begin_define
 define|#
@@ -1311,6 +1371,17 @@ block|,
 name|ahc_aic7880_setup
 block|}
 block|,
+comment|/* Ignore all SISL (AAC on MB) based controllers. */
+block|{
+name|ID_9005_SISL_ID
+block|,
+name|ID_9005_SISL_MASK
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* aic7890 based controllers */
 block|{
 name|ID_AHA_2930U2
@@ -1358,6 +1429,16 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2950 Ultra2 SCSI adapter"
+block|,
+name|ahc_aic7890_setup
+block|}
+block|,
+block|{
+name|ID_AIC7890_ARO
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec aic7890/91 Ultra2 SCSI adapter (ARO)"
 block|,
 name|ahc_aic7890_setup
 block|}
@@ -1433,6 +1514,16 @@ block|,
 name|ahc_aic7892_setup
 block|}
 block|,
+block|{
+name|ID_AIC7892_ARO
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec aic7892 Ultra2 SCSI adapter (ARO)"
+block|,
+name|ahc_aic7892_setup
+block|}
+block|,
 comment|/* aic7895 based controllers */
 block|{
 name|ID_AHA_2940U_DUAL
@@ -1460,6 +1551,16 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec 3944A Ultra SCSI adapter"
+block|,
+name|ahc_aic7895_setup
+block|}
+block|,
+block|{
+name|ID_AIC7895_ARO
+block|,
+name|ID_AIC7895_ARO_MASK
+block|,
+literal|"Adaptec aic7895 Ultra SCSI adapter (ARO)"
 block|,
 name|ahc_aic7895_setup
 block|}
@@ -1505,6 +1606,16 @@ block|,
 name|ahc_aic7896_setup
 block|}
 block|,
+block|{
+name|ID_AIC7896_ARO
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec aic7896/97 Ultra2 SCSI adapter (ARO)"
+block|,
+name|ahc_aic7896_setup
+block|}
+block|,
 comment|/* aic7899 based controllers */
 block|{
 name|ID_AHA_3960D
@@ -1522,6 +1633,16 @@ block|,
 name|ID_ALL_MASK
 block|,
 literal|"Adaptec (Compaq OEM) 3960D Ultra160 SCSI adapter"
+block|,
+name|ahc_aic7899_setup
+block|}
+block|,
+block|{
+name|ID_AIC7899_ARO
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec aic7899 Ultra160 SCSI adapter (ARO)"
 block|,
 name|ahc_aic7899_setup
 block|}
@@ -1631,18 +1752,6 @@ block|,
 name|ID_DEV_VENDOR_MASK
 block|,
 literal|"Adaptec aic7895 Ultra SCSI adapter"
-block|,
-name|ahc_aic7895_setup
-block|}
-block|,
-block|{
-name|ID_AIC7895_RAID_PORT
-operator|&
-name|ID_DEV_VENDOR_MASK
-block|,
-name|ID_DEV_VENDOR_MASK
-block|,
-literal|"Adaptec aic7895 Ultra SCSI adapter (RAID PORT)"
 block|,
 name|ahc_aic7895_setup
 block|}
@@ -2293,6 +2402,13 @@ name|subvendor
 operator|==
 literal|0x9005
 operator|&&
+name|SUBID_9005_TYPE_KNOWN
+argument_list|(
+name|subdevice
+argument_list|)
+operator|!=
+literal|0
+operator|&&
 name|SUBID_9005_MFUNCENB
 argument_list|(
 name|subdevice
@@ -2341,11 +2457,27 @@ operator|->
 name|id_mask
 operator|)
 condition|)
+block|{
+comment|/* Honor exclusion entries. */
+if|if
+condition|(
+name|entry
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 name|entry
 operator|)
 return|;
+block|}
 block|}
 return|return
 operator|(
