@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_mptable_force_htt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -762,6 +768,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MPTABLE_FORCE_HTT
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -772,6 +784,11 @@ name|id_mask
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1556,11 +1573,16 @@ operator|&
 name|cpu_mask
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MPTABLE_FORCE_HTT
 name|mptable_hyperthread_fixup
 argument_list|(
 name|cpu_mask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -3567,6 +3589,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MPTABLE_FORCE_HTT
+end_ifdef
+
 begin_comment
 comment|/*  * Perform a hyperthreading "fix-up" to enumerate any logical CPU's  * that aren't already listed in the table.  *  * XXX: We assume that all of the physical CPUs in the  * system have the same number of logical CPUs.  *  * XXX: We assume that APIC ID's are allocated such that  * the APIC ID's for a physical processor are aligned  * with the number of logical CPU's in the processor.  */
 end_comment
@@ -3754,6 +3782,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MPTABLE_FORCE_HTT */
+end_comment
 
 begin_comment
 comment|/*  * Support code for routing PCI interrupts using the MP Table.  */
