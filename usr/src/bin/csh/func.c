@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c 4.8 83/02/09"
+literal|"@(#)func.c 4.9 83/06/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,13 +433,19 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sighold
+operator|(
+name|void
+operator|)
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGINT
 argument_list|)
+argument_list|)
 expr_stmt|;
 else|else
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -469,7 +475,7 @@ literal|"-"
 argument_list|)
 condition|)
 block|{
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -490,7 +496,7 @@ argument_list|(
 name|vv
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -808,6 +814,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWGRP
+end_ifdef
+
 begin_macro
 name|donewgrp
 argument_list|(
@@ -883,6 +895,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|islogin
@@ -1816,9 +1833,15 @@ if|if
 condition|(
 name|setintr
 condition|)
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
+name|mask
+argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|search
@@ -1832,9 +1855,12 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sighold
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|whyles
@@ -2014,9 +2040,15 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sighold
+operator|(
+name|void
+operator|)
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|lshift
@@ -2037,9 +2069,15 @@ if|if
 condition|(
 name|setintr
 condition|)
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
+name|mask
+argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|reexecute
@@ -2058,9 +2096,15 @@ if|if
 condition|(
 name|setintr
 condition|)
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
+name|mask
+argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3150,9 +3194,15 @@ if|if
 condition|(
 name|setintr
 condition|)
+operator|(
+name|void
+operator|)
 name|sigrelse
 argument_list|(
+name|mask
+argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|v
@@ -3292,9 +3342,15 @@ if|if
 condition|(
 name|setintr
 condition|)
-name|sighold
+operator|(
+name|void
+operator|)
+name|sigblock
+argument_list|(
+name|mask
 argument_list|(
 name|SIGINT
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4759,7 +4815,11 @@ end_macro
 begin_block
 block|{
 name|int
+argument_list|(
+operator|*
 name|old
+argument_list|)
+argument_list|()
 decl_stmt|,
 name|ldisc
 decl_stmt|;
@@ -4780,7 +4840,7 @@ argument_list|()
 expr_stmt|;
 name|old
 operator|=
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -4795,7 +4855,7 @@ name|SIGTSTP
 argument_list|)
 expr_stmt|;
 comment|/* the shell stops here */
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -4831,7 +4891,7 @@ condition|)
 block|{
 name|old
 operator|=
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTTIN
 argument_list|,
@@ -4845,7 +4905,7 @@ argument_list|,
 name|SIGTTIN
 argument_list|)
 expr_stmt|;
-name|sigsys
+name|signal
 argument_list|(
 name|SIGTTIN
 argument_list|,
