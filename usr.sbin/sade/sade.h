@@ -2088,12 +2088,6 @@ begin_comment
 comment|/* Which src distributions we want		*/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -2129,11 +2123,6 @@ end_decl_stmt
 begin_comment
 comment|/* The XFree86 fonts we want			*/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2624,12 +2613,6 @@ begin_comment
 comment|/* XFree86 main menu				*/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -2663,6 +2646,26 @@ begin_comment
 comment|/* XFree86 server distribution menu		*/
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|X_AS_PKG
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -2674,6 +2677,11 @@ begin_comment
 comment|/* XFree86 server distribution menu		*/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -2684,11 +2692,6 @@ end_decl_stmt
 begin_comment
 comment|/* XFree86 font selection menu			*/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3860,12 +3863,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
-end_ifndef
-
 begin_function_decl
 specifier|extern
 name|int
@@ -3877,11 +3874,6 @@ name|self
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -4673,7 +4665,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|installFixupBin
+name|installFixupBase
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -4681,6 +4673,12 @@ name|self
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
 
 begin_function_decl
 specifier|extern
@@ -4693,6 +4691,11 @@ name|self
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -4736,26 +4739,6 @@ name|void
 name|installEnvironment
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|installPackage
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|,
-name|char
-modifier|*
-name|package
-parameter_list|,
-name|char
-modifier|*
-name|desc
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -113,12 +113,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
-end_ifndef
-
 begin_function
 specifier|static
 name|int
@@ -286,15 +280,6 @@ name|DITEM_REDRAW
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !X_AS_PKG */
-end_comment
 
 begin_define
 define|#
@@ -534,9 +519,6 @@ argument_list|,
 name|DIST_SRC_ALL
 argument_list|)
 operator|&&
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
 name|_IS_SET
 argument_list|(
 name|XF86Dists
@@ -558,12 +540,6 @@ argument_list|,
 name|DIST_XF86_FONTS_ALL
 argument_list|)
 return|;
-else|#
-directive|else
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -843,9 +819,6 @@ block|,
 name|distExtractAll
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
 block|{
 literal|" Distributions, XFree86"
 block|,
@@ -856,8 +829,6 @@ block|,
 name|distSetXF86
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|" Documentation"
 block|,
@@ -1582,9 +1553,6 @@ operator|&
 name|MenuUsermgmt
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
 block|{
 literal|" XFree86, Fonts"
 block|,
@@ -1617,6 +1585,12 @@ block|}
 block|,
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|X_AS_PKG
+argument_list|)
+operator|&&
 name|defined
 argument_list|(
 name|__i386__
@@ -1641,8 +1615,6 @@ operator|&
 name|MenuXF86SelectPC98Server
 block|}
 block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|{
@@ -5783,48 +5755,20 @@ literal|" XFree86"
 block|,
 literal|"The XFree86 distribution"
 block|,
-ifdef|#
-directive|ifdef
-name|X_AS_PKG
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86
-block|}
-block|,
-else|#
-directive|else
 name|x11FlagCheck
 block|,
 name|distSetXF86
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSrcDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6365,13 +6309,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86Config
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -6467,13 +6408,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXDesktops
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -6584,19 +6522,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
-end_ifndef
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86Select
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -6670,13 +6599,610 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
 name|DMenu
 name|MenuXF86SelectCore
-init|=
+operator|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"XFree86 base distribution types"
+block|,
+literal|"Please check off the basic XFree86 components you wish to install.\n"
+literal|"Bin, lib, and set are recommended for a minimum installaion."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"All"
+block|,
+literal|"Select all below"
+block|,
+name|NULL
+block|,
+name|setX11Misc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all below"
+block|,
+name|NULL
+block|,
+name|clearX11Misc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" bin"
+block|,
+literal|"Client applications"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_CLIENTS
+block|}
+block|,
+block|{
+literal|" lib"
+block|,
+literal|"Shared libraries and data files needed at runtime"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_LIB
+block|}
+block|,
+block|{
+literal|" man"
+block|,
+literal|"Manual pages"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_MAN
+block|}
+block|,
+block|{
+literal|" doc"
+block|,
+literal|"Documentation"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_DOC
+block|}
+block|,
+block|{
+literal|" prog"
+block|,
+literal|"Programming tools"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_PROG
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+name|DMenu
+name|MenuXF86SelectFonts
+operator|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Font distribution selection."
+block|,
+literal|"Please check off the individual font distributions you wish to\n\ install.  At the minimum, you should install the standard\n\ 75 DPI and misc fonts if you're also installing a server\n\ (these are selected by default)."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"All"
+block|,
+literal|"All fonts"
+block|,
+name|NULL
+block|,
+name|setX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset font selections"
+block|,
+name|NULL
+block|,
+name|clearX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" fnts"
+block|,
+literal|"Standard miscellaneous fonts"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86FontDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_FONTS_BITMAPS
+block|}
+block|,
+block|{
+literal|" f75"
+block|,
+literal|"75 DPI fonts"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86FontDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_FONTS_75
+block|}
+block|,
+block|{
+literal|" f100"
+block|,
+literal|"100 DPI fonts"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86FontDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_FONTS_100
+block|}
+block|,
+block|{
+literal|" fcyr"
+block|,
+literal|"Cyrillic Fonts"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86FontDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_FONTS_CYR
+block|}
+block|,
+block|{
+literal|" fscl"
+block|,
+literal|"Speedo and Type scalable fonts"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86FontDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_FONTS_SCALE
+block|}
+block|,
+block|{
+literal|" server"
+block|,
+literal|"Font server"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86FontDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_FONTS_SERVER
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+name|DMenu
+name|MenuXF86SelectServer
+operator|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"X Server selection."
+block|,
+literal|"Please check off the types of X servers you wish to install.\n"
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"All"
+block|,
+literal|"Select all of the above"
+block|,
+name|NULL
+block|,
+name|setX11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all of the above"
+block|,
+name|NULL
+block|,
+name|clearX11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" srv"
+block|,
+literal|"Standard Graphics Framebuffer"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_FB
+block|}
+block|,
+block|{
+literal|" nest"
+block|,
+literal|"Nested X Server"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_NEST
+block|}
+block|,
+block|{
+literal|" prt"
+block|,
+literal|"X Print Server"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_PRINT
+block|}
+block|,
+block|{
+literal|" vfb"
+block|,
+literal|"Virtual Framebuffer"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SERVER_VFB
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+else|#
+directive|else
+name|DMenu
+name|MenuXF86SelectCore
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7023,13 +7549,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectFonts
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7247,13 +7770,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectServer
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7723,10 +8243,7 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_if
+block|;
 if|#
 directive|if
 name|defined
@@ -7738,12 +8255,9 @@ name|defined
 argument_list|(
 name|PC98
 argument_list|)
-end_if
-
-begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectPC98Server
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -8085,27 +8599,15 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+block|;
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* !X_AS_PKG */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuDiskDevices
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -8131,13 +8633,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuHTMLDoc
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -8207,17 +8706,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The main installation menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuInstallCustom
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -8374,29 +8867,17 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
+block|;
 ifdef|#
 directive|ifdef
 name|__i386__
-end_ifdef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|PC98
-end_ifdef
-
-begin_comment
 comment|/* IPL type menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuIPLType
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -8456,22 +8937,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_else
+block|;
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* MBR type menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMBRType
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -8561,35 +9033,17 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+block|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* PC98 */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* __i386__ */
-end_comment
-
-begin_comment
 comment|/* Final configuration menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuConfigure
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -8875,13 +9329,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuStartup
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -9256,13 +9707,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworking
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -9563,13 +10011,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSendmail
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -9637,13 +10082,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNTP
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -11681,19 +12123,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
+block|;
 ifdef|#
 directive|ifdef
 name|WITH_SYSCONS
-end_ifdef
-
-begin_decl_stmt
 name|DMenu
 name|MenuSyscons
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -11866,19 +12302,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
+block|;
 ifdef|#
 directive|ifdef
 name|PC98
-end_ifdef
-
-begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeymap
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -11931,18 +12361,12 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_else
+block|;
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeymap
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -12710,22 +13134,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+block|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* PC98 */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeyrate
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -12802,13 +13217,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsSaver
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -12991,19 +13403,13 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
+block|;
 ifndef|#
 directive|ifndef
 name|PC98
-end_ifndef
-
-begin_decl_stmt
 name|DMenu
 name|MenuSysconsScrnmap
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -13117,13 +13523,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsTtys
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -13267,13 +13670,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsFont
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -13497,31 +13897,16 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+block|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* PC98 */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* WITH_SYSCONS */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuUsermgmt
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -13570,13 +13955,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSecurity
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -13650,13 +14032,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSecurityProfile
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -13709,13 +14088,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuFixit
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -13778,7 +14154,7 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
+block|;
 end_decl_stmt
 
 end_unit

@@ -321,9 +321,9 @@ name|installUpgrade
 block|}
 block|,
 block|{
-literal|"installFixupBin"
+literal|"installFixupBase"
 block|,
-name|installFixupBin
+name|installFixupBase
 block|}
 block|,
 ifndef|#
