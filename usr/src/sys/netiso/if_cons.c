@@ -9438,7 +9438,7 @@ endif|notdef
 end_endif
 
 begin_comment
-comment|/*   * NAME:	cons_ctlinput()  * CALLED FROM:  *  lower layer when ECN_CLEAR occurs : this routine is here  *  for consistency - cons subnet service calls its higher layer  *  through the protosw entry.  * FUNCTION& ARGUMENTS:  *  cmd is a PRC_* command, list found in ../h/protosw.h  *  copcb is the obvious.  *  This serves the higher-layer cons service.  * NOTE: this takes 3rd arg. because cons uses it to inform itself  *  of things (timeouts, etc) but has a pcb instead of an address.  */
+comment|/*   * NAME:	cons_ctlinput()  * CALLED FROM:  *  lower layer when ECN_CLEAR occurs : this routine is here  *  for consistency - cons subnet service calls its higher layer  *  through the protosw entry.  * FUNCTION& ARGUMENTS:  *  cmd is a PRC_* command, list found in ../sys/protosw.h  *  copcb is the obvious.  *  This serves the higher-layer cons service.  * NOTE: this takes 3rd arg. because cons uses it to inform itself  *  of things (timeouts, etc) but has a pcb instead of an address.  */
 end_comment
 
 begin_macro

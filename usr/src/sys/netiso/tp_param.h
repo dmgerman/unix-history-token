@@ -815,7 +815,7 @@ endif|MNULL
 end_endif
 
 begin_comment
-comment|/* if ../h/mbuf.h gets MT_types up to 0x40, these will  	 * have to be changed: 	 */
+comment|/* if ../sys/mbuf.h gets MT_types up to 0x40, these will  	 * have to be changed: 	 */
 end_comment
 
 begin_define
