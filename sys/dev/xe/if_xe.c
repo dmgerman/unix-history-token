@@ -2668,7 +2668,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Done */
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
