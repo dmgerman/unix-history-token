@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hist.c 4.1 %G%"
+literal|"@(#)hist.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,6 +381,10 @@ decl_stmt|,
 name|rflg
 init|=
 literal|0
+decl_stmt|,
+name|cflg
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -407,6 +411,38 @@ expr_stmt|;
 name|vp
 operator|++
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|vp
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|vp
+operator|&&
+name|eq
+argument_list|(
+operator|*
+name|vp
+argument_list|,
+literal|"-c"
+argument_list|)
+condition|)
+block|{
+name|cflg
+operator|++
+expr_stmt|;
+name|vp
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -427,6 +463,7 @@ expr_stmt|;
 name|vp
 operator|++
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -456,6 +493,8 @@ operator|&
 name|n
 argument_list|,
 name|rflg
+argument_list|,
+name|cflg
 argument_list|)
 expr_stmt|;
 block|}
@@ -469,6 +508,8 @@ argument_list|,
 argument|np
 argument_list|,
 argument|rflg
+argument_list|,
+argument|cflg
 argument_list|)
 end_macro
 
@@ -535,6 +576,8 @@ argument_list|,
 name|np
 argument_list|,
 name|rflg
+argument_list|,
+name|cflg
 argument_list|)
 expr_stmt|;
 if|if
@@ -544,6 +587,8 @@ condition|)
 name|phist
 argument_list|(
 name|hp
+argument_list|,
+name|cflg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -558,6 +603,8 @@ condition|)
 name|phist
 argument_list|(
 name|hp
+argument_list|,
+name|cflg
 argument_list|)
 expr_stmt|;
 name|hp
@@ -576,6 +623,8 @@ begin_expr_stmt
 name|phist
 argument_list|(
 name|hp
+argument_list|,
+name|cflg
 argument_list|)
 specifier|register
 expr|struct
@@ -585,8 +634,20 @@ name|hp
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|cflg
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+if|if
+condition|(
+name|cflg
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"%6d\t"
