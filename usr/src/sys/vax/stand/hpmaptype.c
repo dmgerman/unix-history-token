@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpmaptype.c	4.1	83/02/18	*/
+comment|/*	hpmaptype.c	4.2	83/02/18	*/
 end_comment
 
 begin_comment
@@ -607,13 +607,6 @@ name|ntracks
 decl_stmt|,
 name|hpsn
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"hpmaptype: type=%d\n"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Handle SI model byte stuff when 	 * we think it's an RM03 or RM05. 	 */
 if|if
 condition|(
@@ -631,15 +624,6 @@ operator|=
 name|hpaddr
 operator|->
 name|hpsn
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"hpsn=%x\n"
-argument_list|,
-name|hpsn
-operator|&
-literal|0xffff
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
