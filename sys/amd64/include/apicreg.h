@@ -1021,6 +1021,31 @@ name|APIC_LVTT_TM
 value|0x00020000
 end_define
 
+begin_define
+define|#
+directive|define
+name|APIC_LVTT_TM_ONE_SHOT
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_LVTT_TM_PERIODIC
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* APIC timer current count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_TIMER_MAX_COUNT
+value|0xffffffff
+end_define
+
 begin_comment
 comment|/* fields in TDCR */
 end_comment

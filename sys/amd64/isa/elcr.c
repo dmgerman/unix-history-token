@@ -69,23 +69,11 @@ name|elcr_status
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
 begin_decl_stmt
-specifier|static
 name|int
 name|elcr_found
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Check to see if we have what looks like a valid ELCR.  We do this by  * verifying that IRQs 0, 1, 2, and 13 are all edge triggered.  */
@@ -245,15 +233,10 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|elcr_found
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
