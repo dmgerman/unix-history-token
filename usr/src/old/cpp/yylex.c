@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c 1.1 %G%"
+literal|"@(#)yylex.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,22 @@ init|;
 condition|;
 control|)
 block|{
+specifier|extern
+name|int
+name|passcom
+decl_stmt|;
+comment|/* this crap makes #if's work */
+name|int
+name|opt_passcom
+init|=
+name|passcom
+decl_stmt|;
+comment|/* even with -C option */
+name|passcom
+operator|=
+literal|0
+expr_stmt|;
+comment|/* (else comments make syntax errs) */
 name|newp
 operator|=
 name|skipbl
@@ -214,6 +230,11 @@ argument_list|(
 name|newp
 argument_list|)
 expr_stmt|;
+name|passcom
+operator|=
+name|opt_passcom
+expr_stmt|;
+comment|/* nb: lint uses -C so its useful! */
 if|if
 condition|(
 operator|*
@@ -758,6 +779,8 @@ operator|=
 name|c
 operator|-
 literal|'a'
+operator|+
+literal|10
 expr_stmt|;
 if|if
 condition|(
@@ -789,6 +812,8 @@ operator|=
 name|c
 operator|-
 literal|'A'
+operator|+
+literal|10
 expr_stmt|;
 if|if
 condition|(
