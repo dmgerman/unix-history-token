@@ -913,7 +913,7 @@ specifier|static
 name|int
 name|pci_enable_io_modes
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -946,7 +946,7 @@ argument_list|,
 operator|&
 name|pci_enable_io_modes
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|"Enable I/O and memory bits in the config register.  Some BIOSes do not\n\ enable these bits correctly.  We'd like to do this all the time, but there\n\ are some peripherals that this causes problems with."
 argument_list|)
@@ -958,7 +958,7 @@ specifier|static
 name|int
 name|pci_do_powerstate
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -991,7 +991,7 @@ argument_list|,
 operator|&
 name|pci_do_powerstate
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Enable setting the power states of the PCI devices.  This means that we\n\ set devices into D0 before probe/attach, and D3 if they fail to attach.  It\n\ also means we set devices into D3 state before shutdown."
 argument_list|)
