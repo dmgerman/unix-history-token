@@ -3408,7 +3408,7 @@ literal|"netgraph UNI structure lists"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
