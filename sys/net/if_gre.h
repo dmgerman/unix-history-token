@@ -452,6 +452,14 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|mtx
+name|gre_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|gre_softc_head
 name|gre_softc_list
 decl_stmt|;

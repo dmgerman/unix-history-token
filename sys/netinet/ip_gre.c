@@ -1268,7 +1268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the gre interface associated with our src/dst/proto set.  */
+comment|/*  * Find the gre interface associated with our src/dst/proto set.  *  * XXXRW: Need some sort of drain/refcount mechanism so that the softc  * reference remains valid after it's returned from gre_lookup().  Right  * now, I'm thinking it should be reference-counted with a gre_dropref()  * when the caller is done with the softc.  This is complicated by how  * to handle destroying the gre softc; probably using a gre_drain() in  * in_gre.c during destroy.  */
 end_comment
 
 begin_function
@@ -1310,6 +1310,12 @@ name|gre_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|gre_mtx
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|sc
@@ -1386,12 +1392,26 @@ operator|!=
 literal|0
 operator|)
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|gre_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|sc
 operator|)
 return|;
 block|}
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|gre_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
