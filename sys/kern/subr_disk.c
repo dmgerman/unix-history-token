@@ -117,20 +117,6 @@ name|diskpsize
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|struct
-name|disk
-modifier|*
-name|disk_enumerate
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
