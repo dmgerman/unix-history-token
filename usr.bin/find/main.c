@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -231,6 +237,16 @@ name|Pflag
 decl_stmt|,
 name|ch
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
