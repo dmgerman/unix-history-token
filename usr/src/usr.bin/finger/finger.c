@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.5 (Berkeley) %G%"
+literal|"@(#)finger.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5516,6 +5516,7 @@ name|struct
 name|in_addr
 name|defaddr
 decl_stmt|;
+specifier|static
 name|char
 modifier|*
 name|alist
