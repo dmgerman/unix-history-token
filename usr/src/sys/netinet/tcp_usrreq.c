@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.79	83/06/14	*/
+comment|/*	tcp_usrreq.c	1.80	83/06/20	*/
 end_comment
 
 begin_include
@@ -1189,7 +1189,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Initiate (or continue) disconnect.  * If embryonic state, just send reset (once).  * If not in ``let data drain'' option, just drop.  * Otherwise (hard), mark socket disconnecting and drop  * current input data; switch states based on user close, and  * send segment to peer (with FIN).  */
+comment|/*  * Initiate (or continue) disconnect.  * If embryonic state, just send reset (once).  * If in ``let data drain'' option and linger null, just drop.  * Otherwise (hard), mark socket disconnecting and drop  * current input data; switch states based on user close, and  * send segment to peer (with FIN).  */
 end_comment
 
 begin_function
@@ -1236,6 +1236,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_LINGER
+operator|)
+operator|&&
 name|so
 operator|->
 name|so_linger
