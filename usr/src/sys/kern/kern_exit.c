@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	6.4	84/08/29	*/
+comment|/*	kern_exit.c	6.5	84/12/20	*/
 end_comment
 
 begin_include
@@ -874,6 +874,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|p
+operator|->
+name|p_cptr
+operator|=
+name|NULL
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
