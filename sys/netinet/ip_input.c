@@ -2312,7 +2312,7 @@ name|ip_fw_fwd_addr
 operator|->
 name|sin_addr
 expr_stmt|;
-comment|/* 	 * Don't accept packets with a loopback destination address 	 * unless they arrived via the loopback interface. 	 * XXX - should ip->ip_dst.s_addr be pkt_dst.s_addr? 	 */
+comment|/* 	 * Don't accept packets with a loopback destination address 	 * unless they arrived via the loopback interface. 	 */
 if|if
 condition|(
 operator|(
@@ -2365,7 +2365,7 @@ endif|#
 directive|endif
 return|return;
 block|}
-comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated. 	 */
+comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 */
 name|checkif
 operator|=
 name|ip_checkinterface
@@ -2390,6 +2390,12 @@ name|IFF_LOOPBACK
 operator|)
 operator|==
 literal|0
+operator|)
+operator|&&
+operator|(
+name|ip_fw_fwd_addr
+operator|==
+name|NULL
 operator|)
 expr_stmt|;
 name|TAILQ_FOREACH
