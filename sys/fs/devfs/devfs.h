@@ -15,6 +15,12 @@ directive|define
 name|_FS_DEVFS_DEVFS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
+
 begin_define
 define|#
 directive|define
