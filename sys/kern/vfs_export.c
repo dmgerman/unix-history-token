@@ -12397,6 +12397,12 @@ operator|->
 name|v_type
 operator|!=
 name|VBLK
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VCHR
 condition|)
 return|return
 operator|(
