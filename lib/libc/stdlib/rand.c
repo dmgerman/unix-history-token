@@ -309,9 +309,13 @@ specifier|static
 name|u_long
 name|next
 init|=
-literal|1
+literal|892053144
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* after srand(1), NSHUFF counted */
+end_comment
 
 begin_function
 name|int
@@ -319,11 +323,13 @@ name|rand
 parameter_list|()
 block|{
 return|return
+operator|(
 name|do_rand
 argument_list|(
 operator|&
 name|next
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -361,11 +367,8 @@ control|)
 operator|(
 name|void
 operator|)
-name|do_rand
-argument_list|(
-operator|&
-name|next
-argument_list|)
+name|rand
+argument_list|()
 expr_stmt|;
 block|}
 end_function
