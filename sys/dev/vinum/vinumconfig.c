@@ -4,7 +4,7 @@ comment|/* To do:   * Don't store drive configuration on the config DB: read eac
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: config.c,v 1.6 1998/12/28 04:56:22 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.22 1998/12/30 05:07:24 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -46,14 +46,6 @@ begin_comment
 comment|/* return on a failed command */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_comment
 comment|/* Why aren't these declared anywhere? XXX */
 end_comment
@@ -68,11 +60,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -244,8 +231,6 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -481,8 +466,6 @@ name|s
 parameter_list|)
 block|{
 comment|/* no atoi in the kernel */
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|r
 init|=
@@ -566,8 +549,6 @@ modifier|*
 name|vol
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -620,8 +601,6 @@ modifier|*
 name|plex
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -674,8 +653,6 @@ modifier|*
 name|sd
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -728,8 +705,6 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -783,8 +758,6 @@ name|int
 name|plexno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -854,8 +827,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -922,8 +893,6 @@ modifier|*
 name|op
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 if|if
 condition|(
 name|vinum_conf
@@ -961,8 +930,6 @@ name|int
 name|plexno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|volume
 modifier|*
@@ -1013,6 +980,41 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|vol
+operator|->
+name|plexes
+operator|>
+literal|0
+operator|)
+comment|/* we have other plexes */
+operator|&&
+operator|(
+name|vol
+operator|->
+name|flags
+operator|&
+name|VF_CONFIG_SETUPSTATE
+operator|==
+literal|0
+operator|)
+condition|)
+comment|/* and we're not setting up state */
+name|invalidate_subdisks
+argument_list|(
+operator|&
+name|PLEX
+index|[
+name|plexno
+index|]
+argument_list|,
+name|sd_stale
+argument_list|)
+expr_stmt|;
+comment|/* make the subdisks invalid */
 name|vol
 operator|->
 name|plex
@@ -1067,8 +1069,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1162,6 +1162,15 @@ index|]
 index|]
 decl_stmt|;
 comment|/* last subdisk */
+if|if
+condition|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_concat
+condition|)
+comment|/* concat, */
 name|sd
 operator|->
 name|plexoffset
@@ -1174,7 +1183,22 @@ name|lastsd
 operator|->
 name|plexoffset
 expr_stmt|;
-comment|/* take it */
+comment|/* starts here */
+else|else
+comment|/* striped or RAID-5, */
+name|sd
+operator|->
+name|plexoffset
+operator|=
+name|plex
+operator|->
+name|stripesize
+operator|*
+name|plex
+operator|->
+name|subdisks
+expr_stmt|;
+comment|/* starts here */
 block|}
 else|else
 comment|/* first subdisk */
@@ -1243,65 +1267,25 @@ argument_list|,
 name|INITIAL_SUBDISKS_IN_PLEX
 argument_list|)
 expr_stmt|;
-comment|/* XXX I'm not sure this makes any sense      * for anything except concatenated plexes,      * and it comes up with the wrong answer for      * RAID-5 plexes, but it's currently needed      * for the calculations.  We'll adjust for      * RAID-5 in config_plex */
-if|if
-condition|(
-operator|(
-name|sd
-operator|->
-name|sectors
-operator|+
-name|sd
-operator|->
-name|plexoffset
-operator|)
-operator|>
+comment|/* Adjust size of plex and volume. */
 name|plex
 operator|->
 name|length
-condition|)
-block|{
-comment|/* gone beyond the end of the plex */
-name|plex
-operator|->
-name|length
-operator|=
+operator|+=
 name|sd
 operator|->
 name|sectors
-operator|+
-name|sd
-operator|->
-name|plexoffset
 expr_stmt|;
-comment|/* adjust the length */
+comment|/* plex gets this much bigger */
 if|if
 condition|(
-operator|(
 name|plex
 operator|->
 name|volno
 operator|>=
 literal|0
-operator|)
-comment|/* we have a volume */
-operator|&&
-operator|(
-name|plex
-operator|->
-name|length
-operator|>
-name|VOL
-index|[
-name|plex
-operator|->
-name|volno
-index|]
-operator|.
-name|size
-operator|)
 condition|)
-comment|/* and we're now the longest plex */
+comment|/* we have a volume */
 name|VOL
 index|[
 name|plex
@@ -1311,12 +1295,23 @@ index|]
 operator|.
 name|size
 operator|=
+name|max
+argument_list|(
+name|VOL
+index|[
+name|plex
+operator|->
+name|volno
+index|]
+operator|.
+name|size
+argument_list|,
 name|plex
 operator|->
 name|length
+argument_list|)
 expr_stmt|;
-comment|/* increase the size of the volume */
-block|}
+comment|/* adjust its size */
 comment|/* We need to check that the subdisks don't overlap,      * but we can't do that until a point where we *must*      * know the size of all the subdisks.  That's not      * here.  But we need to sort them by offset */
 for|for
 control|(
@@ -1403,6 +1398,13 @@ index|]
 operator|=
 name|sdno
 expr_stmt|;
+name|sd
+operator|->
+name|plexsdno
+operator|=
+name|i
+expr_stmt|;
+comment|/* note where we are in the subdisk */
 return|return
 name|i
 return|;
@@ -1418,6 +1420,13 @@ index|]
 operator|=
 name|sdno
 expr_stmt|;
+name|sd
+operator|->
+name|plexsdno
+operator|=
+name|i
+expr_stmt|;
+comment|/* note where we are in the subdisk */
 return|return
 name|i
 return|;
@@ -1437,8 +1446,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|sd
 modifier|*
@@ -1483,21 +1490,12 @@ name|state
 operator|!=
 name|drive_up
 condition|)
-comment|/* not up */
-name|throw_rude_remark
+name|update_sd_state
 argument_list|(
-name|EIO
-argument_list|,
-literal|"Drive %s is not accessible"
-argument_list|,
-name|drive
-operator|->
-name|label
-operator|.
-name|name
+name|sdno
 argument_list|)
 expr_stmt|;
-elseif|else
+comment|/* that crashes the subdisk */
 if|if
 condition|(
 name|sd
@@ -2121,8 +2119,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|driveno
 decl_stmt|;
@@ -2258,8 +2254,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|driveno
 decl_stmt|;
@@ -2405,6 +2399,13 @@ operator|=
 name|drive_uninit
 expr_stmt|;
 comment|/* in use, nothing worthwhile there */
+name|drive
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born drive */
 return|return
 name|driveno
 return|;
@@ -2429,8 +2430,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|driveno
 decl_stmt|;
@@ -2485,9 +2484,7 @@ name|strcmp
 argument_list|(
 name|drive
 operator|->
-name|label
-operator|.
-name|name
+name|devicename
 argument_list|,
 name|devname
 argument_list|)
@@ -2558,6 +2555,13 @@ operator|=
 name|drive_uninit
 expr_stmt|;
 comment|/* in use, nothing worthwhile there */
+name|drive
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born drive */
 return|return
 name|driveno
 return|;
@@ -2576,8 +2580,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|sdno
 decl_stmt|;
@@ -2731,7 +2733,10 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
-name|BROKEN_GDB
+name|lockdrive
+argument_list|(
+name|drive
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2777,6 +2782,11 @@ name|drives_used
 operator|--
 expr_stmt|;
 comment|/* one less drive */
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2797,8 +2807,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|sdno
 decl_stmt|;
@@ -2896,6 +2904,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* put in its name */
+name|sd
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born subdisk */
 return|return
 name|sdno
 return|;
@@ -2915,8 +2930,6 @@ name|int
 name|sdno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|sd
 modifier|*
@@ -3419,8 +3432,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|plexno
 decl_stmt|;
@@ -3622,8 +3633,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|plexno
 decl_stmt|;
@@ -3722,6 +3731,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* put in its name */
+name|plex
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born plex */
 return|return
 name|plexno
 return|;
@@ -3741,8 +3757,6 @@ name|int
 name|plexno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|plex
 modifier|*
@@ -3780,32 +3794,6 @@ argument_list|(
 name|plex
 operator|->
 name|lock
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|plex
-operator|->
-name|defective_region
-condition|)
-name|Free
-argument_list|(
-name|plex
-operator|->
-name|defective_region
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|plex
-operator|->
-name|unmapped_region
-condition|)
-name|Free
-argument_list|(
-name|plex
-operator|->
-name|unmapped_region
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3846,8 +3834,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|volno
 decl_stmt|;
@@ -3986,8 +3972,6 @@ name|int
 name|create
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|volno
 decl_stmt|;
@@ -4092,6 +4076,13 @@ operator|=
 name|DEV_BSIZE
 expr_stmt|;
 comment|/* block size of this volume */
+name|vol
+operator|->
+name|flags
+operator||=
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* newly born volume */
 return|return
 name|volno
 return|;
@@ -4111,8 +4102,6 @@ name|int
 name|volno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|volume
 modifier|*
@@ -4161,11 +4150,10 @@ begin_function
 name|void
 name|config_drive
 parameter_list|(
-name|void
+name|int
+name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|enum
 name|drive_label_info
 name|partition_status
@@ -4220,6 +4208,33 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* and get a pointer */
+if|if
+condition|(
+name|update
+operator|&&
+operator|(
+operator|(
+name|drive
+operator|->
+name|flags
+operator|&
+name|VF_NEWBORN
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+comment|/* this drive exists already */
+return|return;
+comment|/* don't do anything */
+name|drive
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* no longer newly born */
 if|if
 condition|(
 name|drive
@@ -4307,6 +4322,7 @@ else|else
 comment|/* no change */
 break|break;
 block|}
+comment|/* open the device and get the configuration */
 name|bcopy
 argument_list|(
 name|token
@@ -4338,21 +4354,23 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* open the device and get the configuration */
 name|partition_status
 operator|=
 name|read_drive_label
 argument_list|(
 name|drive
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|partition_status
-operator|==
-name|DL_CANT_OPEN
 condition|)
 block|{
+case|case
+name|DL_CANT_OPEN
+case|:
 comment|/* not our kind */
 name|close_drive
 argument_list|(
@@ -4400,16 +4418,11 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|partition_status
-operator|==
+break|break;
+case|case
 name|DL_WRONG_DRIVE
-condition|)
-block|{
-comment|/* valid drive, not ours */
+case|:
+comment|/* valid drive, not the name we expected */
 name|close_drive
 argument_list|(
 name|drive
@@ -4435,7 +4448,52 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|DL_DELETED_LABEL
+case|:
+comment|/* it was a drive, but we deleted it */
+break|break;
+case|case
+name|DL_NOT_OURS
+case|:
+comment|/* nothing to do with the rest */
+case|case
+name|DL_OURS
+case|:
+break|break;
 block|}
+comment|/* read_drive_label overwrites the device name. 	     * If we get here, we can have the drive, 	     * so put it back again */
+name|bcopy
+argument_list|(
+name|token
+index|[
+name|parameter
+index|]
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|,
+name|min
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|drive
+operator|->
+name|devicename
+argument_list|)
+argument_list|,
+name|strlen
+argument_list|(
+name|token
+index|[
+name|parameter
+index|]
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|kw_state
@@ -4533,11 +4591,10 @@ begin_function
 name|void
 name|config_subdisk
 parameter_list|(
-name|void
+name|int
+name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|parameter
 decl_stmt|;
@@ -4555,10 +4612,6 @@ name|u_int64_t
 name|size
 decl_stmt|;
 name|int
-name|sectors
-decl_stmt|;
-comment|/* sector offset value */
-name|int
 name|detached
 init|=
 literal|0
@@ -4574,6 +4627,13 @@ comment|/* index in plexes subdisk table */
 name|int
 name|namedsdno
 decl_stmt|;
+name|enum
+name|sdstate
+name|state
+init|=
+name|sd_unallocated
+decl_stmt|;
+comment|/* state to set, if specified */
 name|sdno
 operator|=
 name|get_empty_sd
@@ -4743,6 +4803,16 @@ name|namedsdno
 operator|>=
 literal|0
 condition|)
+block|{
+comment|/* got one */
+if|if
+condition|(
+name|update
+condition|)
+comment|/* are we updating? */
+return|return;
+comment|/* that's OK, nothing more to do */
+else|else
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -4755,6 +4825,7 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 name|token
@@ -4873,6 +4944,7 @@ argument_list|)
 expr_stmt|;
 comment|/* insert plex information */
 break|break;
+comment|/* Set the state.  We can't do this directly, 	     * because give_sd_to_plex may change it */
 case|case
 name|kw_state
 case|:
@@ -4886,8 +4958,6 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* must be a kernel user */
-name|sd
-operator|->
 name|state
 operator|=
 name|SdState
@@ -5108,20 +5178,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|state
+operator|!=
+name|sd_unallocated
+condition|)
+comment|/* we had a specific state to set */
+name|sd
+operator|->
+name|state
+operator|=
+name|state
+expr_stmt|;
+comment|/* do it now */
+elseif|else
+if|if
+condition|(
 name|sd
 operator|->
 name|state
 operator|==
 name|sd_unallocated
 condition|)
-comment|/* no state decided, */
+comment|/* no, nothing set yet, */
 name|sd
 operator|->
 name|state
 operator|=
-name|sd_init
+name|sd_up
 expr_stmt|;
-comment|/* at least we're in the game */
+comment|/* must be up */
 comment|/* register the subdisk with the drive.  This action      * will have the side effect of setting the offset if      * we haven't specified one, and causing an error      * message if it overlaps with another subdisk. */
 name|give_sd_to_drive
 argument_list|(
@@ -5132,18 +5217,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a plex definition.  * If we find an error, print a message, deallocate the nascent plex, and return  */
+comment|/* Handle a plex definition.  */
 end_comment
 
 begin_function
 name|void
 name|config_plex
 parameter_list|(
-name|void
+name|int
+name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|parameter
 decl_stmt|;
@@ -5260,6 +5344,16 @@ name|namedplexno
 operator|>=
 literal|0
 condition|)
+block|{
+comment|/* plex exists already, */
+if|if
+condition|(
+name|update
+condition|)
+comment|/* are we updating? */
+return|return;
+comment|/* yes: that's OK, just return */
+else|else
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -5272,6 +5366,7 @@ name|parameter
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|bcopy
 argument_list|(
 name|token
@@ -5689,11 +5784,10 @@ begin_function
 name|void
 name|config_volume
 parameter_list|(
-name|void
+name|int
+name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|parameter
 decl_stmt|;
@@ -5751,6 +5845,33 @@ name|volno
 index|]
 expr_stmt|;
 comment|/* and get a pointer */
+if|if
+condition|(
+name|update
+operator|&&
+operator|(
+operator|(
+name|vol
+operator|->
+name|flags
+operator|&
+name|VF_NEWBORN
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+comment|/* this volume exists already */
+return|return;
+comment|/* don't do anything */
+name|vol
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* no longer newly born */
 for|for
 control|(
 name|parameter
@@ -6211,10 +6332,11 @@ name|struct
 name|keywordset
 modifier|*
 name|keyset
+parameter_list|,
+name|int
+name|update
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|status
 decl_stmt|;
@@ -6278,106 +6400,55 @@ case|case
 name|kw_read
 case|:
 comment|/* read config from a specified drive */
-name|vinum_conf
-operator|.
-name|flags
-operator||=
-name|VF_KERNELOP
-operator||
-name|VF_READING_CONFIG
-expr_stmt|;
-comment|/* kernel operation: reading config */
-name|status
-operator|=
-name|check_drive
+name|vinum_scandisk
 argument_list|(
+operator|&
 name|token
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-comment|/* check the drive info */
-name|vinum_conf
-operator|.
-name|flags
-operator|&=
-operator|~
-operator|(
-name|VF_KERNELOP
-operator||
-name|VF_READING_CONFIG
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|!=
-literal|0
-condition|)
-block|{
-name|char
-modifier|*
-name|msg
-init|=
-literal|"Can't read configuration from %s"
-decl_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-name|ENODEV
-condition|)
-name|msg
-operator|=
-literal|"No vinum configuration on %s"
-expr_stmt|;
-name|throw_rude_remark
-argument_list|(
-name|status
 argument_list|,
-name|msg
-argument_list|,
-name|token
-index|[
+name|tokens
+operator|-
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
-block|}
-name|updateconfig
-argument_list|(
-name|VF_KERNELOP
-argument_list|)
-expr_stmt|;
-comment|/* update from kernel space */
+comment|/* read the config from disk */
 break|break;
 case|case
 name|kw_drive
 case|:
 name|config_drive
-argument_list|()
+argument_list|(
+name|update
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|kw_subdisk
 case|:
 name|config_subdisk
-argument_list|()
+argument_list|(
+name|update
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|kw_plex
 case|:
 name|config_plex
-argument_list|()
+argument_list|(
+name|update
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|kw_volume
 case|:
 name|config_volume
-argument_list|()
+argument_list|(
+name|update
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* Anything else is invalid in this context */
@@ -6420,8 +6491,6 @@ modifier|*
 name|keyset
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|status
 decl_stmt|;
@@ -6441,6 +6510,8 @@ argument_list|(
 name|cptr
 argument_list|,
 name|keyset
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ioctl_reply
@@ -6761,6 +6832,12 @@ block|{
 comment|/* and it belongs to this drive */
 name|sdmsg
 operator|.
+name|index
+operator|=
+name|sdno
+expr_stmt|;
+name|sdmsg
+operator|.
 name|type
 operator|=
 name|sd_object
@@ -7021,6 +7098,7 @@ name|subdisks
 operator|--
 expr_stmt|;
 comment|/* removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out 	     * of the structure, and it needs to be 	     * reinitialized */
+comment|/* XXX Think about this.  Maybe we should just 	     * leave a hole */
 if|if
 condition|(
 name|plex
@@ -7042,12 +7120,15 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* need to reinitialize */
-name|rebuild_plex_unmappedlist
+name|printf
 argument_list|(
-name|plex
+literal|"vinum: removing %s\n"
+argument_list|,
+name|sd
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
-comment|/* and see what remains */
 name|free_sd
 argument_list|(
 name|sdno
@@ -7064,11 +7145,22 @@ expr_stmt|;
 comment|/* can't do that */
 block|}
 else|else
+block|{
+name|printf
+argument_list|(
+literal|"vinum: removing %s\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|free_sd
 argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7399,6 +7491,15 @@ comment|/* can't do that */
 return|return;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"vinum: removing %s\n"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|free_plex
 argument_list|(
 name|plexno
@@ -7564,6 +7665,15 @@ name|plexmsg
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"vinum: removing %s\n"
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|free_volume
 argument_list|(
 name|volno
@@ -7580,11 +7690,22 @@ expr_stmt|;
 comment|/* can't do that */
 block|}
 else|else
+block|{
+name|printf
+argument_list|(
+literal|"vinum: removing %s\n"
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|free_volume
 argument_list|(
 name|volno
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7611,8 +7732,6 @@ argument_list|,
 name|sd_up
 argument_list|,
 name|setstate_configuring
-operator||
-name|setstate_norecurse
 argument_list|)
 expr_stmt|;
 block|}
@@ -7634,7 +7753,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|u_int64_t
 name|size
 decl_stmt|;
 name|int
@@ -7708,8 +7827,6 @@ argument_list|,
 name|setstate_force
 operator||
 name|setstate_configuring
-operator||
-name|setstate_norecurse
 argument_list|)
 expr_stmt|;
 block|}
@@ -7786,7 +7903,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vinum: plex %s must have equal sized subdisks\n"
+literal|"vinum: %s must have equal sized subdisks\n"
 argument_list|,
 name|plex
 operator|->
@@ -7802,8 +7919,6 @@ argument_list|,
 name|setstate_force
 operator||
 name|setstate_configuring
-operator||
-name|setstate_norecurse
 argument_list|)
 expr_stmt|;
 block|}
@@ -7830,12 +7945,30 @@ name|subdisks
 condition|)
 block|{
 comment|/* plex has subdisks, calculate size */
-name|rebuild_plex_unmappedlist
-argument_list|(
+comment|/* XXX We shouldn't need to calculate the size any 	 * more.  Check this some time */
+if|if
+condition|(
 name|plex
+operator|->
+name|length
+operator|!=
+name|size
+condition|)
+name|printf
+argument_list|(
+literal|"Correcting length of %s: was %qd, is %qd\n"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|,
+name|plex
+operator|->
+name|length
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
-comment|/* rebuild the unmapped list first */
 name|plex
 operator|->
 name|length
@@ -7877,8 +8010,6 @@ argument_list|,
 name|setstate_none
 operator||
 name|setstate_configuring
-operator||
-name|setstate_norecurse
 argument_list|)
 expr_stmt|;
 block|}
@@ -7997,8 +8128,6 @@ argument_list|,
 name|volume_up
 argument_list|,
 name|setstate_configuring
-operator||
-name|setstate_norecurse
 argument_list|)
 expr_stmt|;
 block|}
@@ -8016,49 +8145,12 @@ name|int
 name|kernelstate
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
-name|int
-name|sdno
-decl_stmt|;
 name|int
 name|plexno
 decl_stmt|;
 name|int
 name|volno
 decl_stmt|;
-name|struct
-name|volume
-modifier|*
-name|vol
-decl_stmt|;
-name|struct
-name|plex
-modifier|*
-name|plex
-decl_stmt|;
-for|for
-control|(
-name|sdno
-operator|=
-literal|0
-init|;
-name|sdno
-operator|<
-name|vinum_conf
-operator|.
-name|subdisks_used
-condition|;
-name|sdno
-operator|++
-control|)
-name|update_sd_config
-argument_list|(
-name|sdno
-argument_list|,
-name|kernelstate
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|plexno
@@ -8096,13 +8188,28 @@ condition|;
 name|volno
 operator|++
 control|)
-name|update_volume_config
+block|{
+name|VOL
+index|[
+name|volno
+index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_CONFIG_SETUPSTATE
+expr_stmt|;
+comment|/* no more setupstate */
+name|set_volume_state
 argument_list|(
 name|volno
 argument_list|,
-name|kernelstate
+name|volume_up
+argument_list|,
+name|setstate_configuring
 argument_list|)
 expr_stmt|;
+block|}
 name|save_config
 argument_list|()
 expr_stmt|;
@@ -8168,7 +8275,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* We need two flags here: VF_CONFIGURING      * tells other processes to hold off (this       * function), and VF_CONFIG_INCOMPLETE      * tells the state change routines not to      * propagate incrememntal state changes */
+comment|/* We need two flags here: VF_CONFIGURING      * tells other processes to hold off (this      * function), and VF_CONFIG_INCOMPLETE      * tells the state change routines not to      * propagate incrememntal state changes */
 name|vinum_conf
 operator|.
 name|flags
