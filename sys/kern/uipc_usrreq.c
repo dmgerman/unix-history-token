@@ -3310,8 +3310,13 @@ expr_stmt|;
 name|unp_gc
 argument_list|()
 expr_stmt|;
+comment|/* Will unlock UNP. */
 block|}
+else|else
 name|UNP_UNLOCK
+argument_list|()
+expr_stmt|;
+name|UNP_UNLOCK_ASSERT
 argument_list|()
 expr_stmt|;
 if|if
@@ -6891,6 +6896,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * unp_defer is thread-local during garbage collection, and does not require  * explicit synchronization.  unp_gcing prevents other threads from entering  * garbage collection, and perhaps should be an sx lock instead.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -6951,7 +6960,12 @@ if|if
 condition|(
 name|unp_gcing
 condition|)
+block|{
+name|UNP_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 name|unp_gcing
 operator|=
 literal|1
@@ -6960,8 +6974,10 @@ name|unp_defer
 operator|=
 literal|0
 expr_stmt|;
+name|UNP_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * before going through all this, set all FDs to 	 * be NOT defered and NOT externally accessible 	 */
-comment|/* 	 * XXXRW: Acquiring a sleep lock while holding UNP 	 * mutex cannot be a good thing. 	 */
 name|sx_slock
 argument_list|(
 operator|&
@@ -7495,6 +7511,9 @@ expr_stmt|;
 name|unp_gcing
 operator|=
 literal|0
+expr_stmt|;
+name|UNP_UNLOCK_ASSERT
+argument_list|()
 expr_stmt|;
 block|}
 end_function
