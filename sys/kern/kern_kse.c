@@ -1183,6 +1183,39 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"thread exiting without a process"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ke
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"thread exiting without a kse"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|kg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"thread exiting without a kse group"
+operator|)
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -1243,13 +1276,6 @@ argument_list|)
 expr_stmt|;
 comment|/* XXXSMP */
 comment|/* Reassign this thread's KSE. */
-if|if
-condition|(
-name|ke
-operator|!=
-name|NULL
-condition|)
-block|{
 name|ke
 operator|->
 name|ke_thread
@@ -1273,15 +1299,7 @@ argument_list|(
 name|ke
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Unlink this thread from its proc. and the kseg */
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1299,13 +1317,6 @@ operator|->
 name|p_numthreads
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|kg
-operator|!=
-name|NULL
-condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1323,8 +1334,7 @@ operator|->
 name|kg_numthreads
 operator|--
 expr_stmt|;
-block|}
-comment|/* 		 * The test below is NOT true if we are the 		 * sole exiting thread. P_STOPPED_SNGL is unset 		 * in exit1() after it is the only survivor. 		 */
+comment|/* 	 * The test below is NOT true if we are the 	 * sole exiting thread. P_STOPPED_SNGL is unset 	 * in exit1() after it is the only survivor. 	 */
 if|if
 condition|(
 name|P_SHOULDSTOP
@@ -1374,7 +1384,11 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_state
@@ -1404,11 +1418,6 @@ operator|->
 name|ke_tdspare
 operator|=
 name|td
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|cpu_throw
 argument_list|()
