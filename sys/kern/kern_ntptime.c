@@ -375,7 +375,7 @@ begin_define
 define|#
 directive|define
 name|PPS_FAVGMAX
-value|8
+value|7
 end_define
 
 begin_comment
@@ -438,10 +438,6 @@ name|long
 name|nsec
 decl_stmt|;
 comment|/* PPS nanoseconds */
-name|long
-name|count
-decl_stmt|;
-comment|/* PPS nanosecond counter */
 block|}
 struct|;
 end_struct
@@ -471,6 +467,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* phase offset */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|pps_fcount
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* frequency accumulator */
 end_comment
 
 begin_decl_stmt
@@ -515,17 +522,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* scaled frequency dispersion (ns/s) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|long
-name|pps_lastcount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last counter offset */
 end_comment
 
 begin_decl_stmt
@@ -1186,10 +1182,14 @@ name|freq
 operator|=
 name|L_GINT
 argument_list|(
+operator|(
 name|time_freq
-argument_list|)
+operator|/
+literal|1000
+operator|)
 operator|*
-name|SCALE_PPM
+literal|65536
+argument_list|)
 expr_stmt|;
 name|ntv
 operator|.
@@ -1285,10 +1285,14 @@ name|ppsfreq
 operator|=
 name|L_GINT
 argument_list|(
+operator|(
 name|pps_freq
-argument_list|)
+operator|/
+literal|1000
+operator|)
 operator|*
-name|SCALE_PPM
+literal|65536
+argument_list|)
 expr_stmt|;
 name|ntv
 operator|.
@@ -1797,9 +1801,9 @@ name|pps_filt
 operator|.
 name|nsec
 operator|=
-name|pps_filt
-operator|.
-name|count
+literal|0
+expr_stmt|;
+name|pps_fcount
 operator|=
 literal|0
 expr_stmt|;
@@ -2287,26 +2291,8 @@ name|u_nsec
 operator|+=
 name|NANOSECOND
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (u_nsec> (time_tick>> 1)) 		u_nsec -= time_tick; 	else if (u_nsec< -(time_tick>> 1)) 		u_nsec += time_tick;
-endif|#
-directive|endif
-name|pps_tf
-index|[
-literal|0
-index|]
-operator|.
-name|count
-operator|=
-name|pps_tf
-index|[
-literal|1
-index|]
-operator|.
-name|count
-operator|+
+name|pps_fcount
+operator|+=
 name|u_nsec
 expr_stmt|;
 if|if
@@ -2684,9 +2670,7 @@ expr_stmt|;
 name|v_nsec
 operator|=
 operator|-
-name|pps_filt
-operator|.
-name|count
+name|pps_fcount
 expr_stmt|;
 name|pps_lastsec
 operator|=
@@ -2697,12 +2681,7 @@ index|]
 operator|.
 name|sec
 expr_stmt|;
-name|pps_tf
-index|[
-literal|0
-index|]
-operator|.
-name|count
+name|pps_fcount
 operator|=
 literal|0
 expr_stmt|;
@@ -2914,7 +2893,7 @@ name|L_RSHIFT
 argument_list|(
 name|ftemp
 argument_list|,
-name|PPS_FAVG
+literal|1
 argument_list|)
 expr_stmt|;
 name|L_ADD
