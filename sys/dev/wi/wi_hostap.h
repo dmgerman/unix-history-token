@@ -76,6 +76,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HOSTAP_FLAGS_BITS
+value|"\20\01ASSOC\02AUTH\03PERM"
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIOCHOSTAP_GET
 value|_IOWR('i', 210, struct ifreq)
 end_define

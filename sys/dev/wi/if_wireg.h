@@ -1926,6 +1926,13 @@ name|WI_SUPPRATES_11M
 value|0x0008
 end_define
 
+begin_define
+define|#
+directive|define
+name|WI_RATES_BITS
+value|"\20\0011M\0022M\0035.5M\00411M"
+end_define
+
 begin_comment
 comment|/*  * Information frame types.  */
 end_comment
