@@ -178,7 +178,7 @@ name|MINOR2SC
 parameter_list|(
 name|m
 parameter_list|)
-value|(&si_softc[SI_CARD(m)])
+value|((struct si_softc *)devclass_get_softc(si_devclass, SI_CARD(m)))
 end_define
 
 begin_define

@@ -379,7 +379,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/*  * MEMSIZE is the total shared mem region  * RAMSIZE is value to use when probing  */
+comment|/*  * MEMSIZE is the total shared mem region  * RAMSIZE is value to use when probing  * PROBEALLOC is the amount to bus_resource_alloc() during probe.  */
 end_comment
 
 begin_define
@@ -443,6 +443,13 @@ define|#
 directive|define
 name|SIEISA_RAMSIZE
 value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIPROBEALLOC
+value|0x8000
 end_define
 
 end_unit
