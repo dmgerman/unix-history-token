@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.15 (Berkeley) %G%"
+literal|"@(#)mount.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,10 +1043,6 @@ operator|&
 name|flags
 argument_list|)
 expr_stmt|;
-name|argc
-operator|=
-literal|1
-expr_stmt|;
 switch|switch
 condition|(
 name|mnttype
@@ -1158,54 +1154,9 @@ return|;
 endif|#
 directive|endif
 comment|/* NFS */
-ifdef|#
-directive|ifdef
-name|MFS
 case|case
 name|MOUNT_MFS
 case|:
-name|mntname
-operator|=
-literal|"memfs"
-expr_stmt|;
-if|if
-condition|(
-name|options
-condition|)
-name|argc
-operator|+=
-name|getmfsopts
-argument_list|(
-name|options
-argument_list|,
-operator|&
-name|argv
-index|[
-name|argc
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mntopts
-condition|)
-name|argc
-operator|+=
-name|getmfsopts
-argument_list|(
-name|mntopts
-argument_list|,
-operator|&
-name|argv
-index|[
-name|argc
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* fall through to */
-endif|#
-directive|endif
-comment|/* MFS */
 default|default:
 name|argv
 index|[
@@ -1213,6 +1164,10 @@ literal|0
 index|]
 operator|=
 name|mntname
+expr_stmt|;
+name|argc
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1245,6 +1200,40 @@ operator|=
 name|flagval
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|options
+condition|)
+name|argc
+operator|+=
+name|getexecopts
+argument_list|(
+name|options
+argument_list|,
+operator|&
+name|argv
+index|[
+name|argc
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mntopts
+condition|)
+name|argc
+operator|+=
+name|getexecopts
+argument_list|(
+name|mntopts
+argument_list|,
+operator|&
+name|argv
+index|[
+name|argc
+index|]
+argument_list|)
+expr_stmt|;
 name|argv
 index|[
 name|argc
@@ -2004,14 +1993,8 @@ return|return;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MFS
-end_ifdef
-
 begin_macro
-name|getmfsopts
+name|getexecopts
 argument_list|(
 argument|options
 argument_list|,
@@ -2137,15 +2120,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MFS */
-end_comment
 
 begin_ifdef
 ifdef|#
