@@ -6751,6 +6751,10 @@ parameter_list|,
 name|vm_offset_t
 name|offset
 parameter_list|,
+name|vm_offset_t
+modifier|*
+name|paddr
+parameter_list|,
 name|int
 name|prot
 parameter_list|)
@@ -6768,9 +6772,9 @@ return|return
 operator|-
 literal|1
 return|;
-return|return
-name|i386_btop
-argument_list|(
+operator|*
+name|paddr
+operator|=
 name|adp
 operator|->
 name|va_info
@@ -6778,7 +6782,9 @@ operator|.
 name|vi_window
 operator|+
 name|offset
-argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_function
