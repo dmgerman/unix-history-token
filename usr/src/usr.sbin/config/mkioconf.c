@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkioconf.c	2.5	82/10/25	*/
+comment|/*	mkioconf.c	2.6	83/01/02	*/
 end_comment
 
 begin_include
@@ -113,14 +113,14 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../h/param.h\"\n"
+literal|"#include \"../machine/pte.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../h/pte.h\"\n"
+literal|"#include \"../h/param.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1566,7 +1566,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sunmb/mbvar.h\"\n"
+literal|"#include \"../sundev/mbvar.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
