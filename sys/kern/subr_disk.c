@@ -45,6 +45,12 @@ directive|include
 file|<sys/disklabel.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_disk.h>
+end_include
+
 begin_comment
 comment|/*-  * Disk error is the preface to plaintive error messages  * about failing disk transfers.  It prints messages of the form  * 	"hp0g: BLABLABLA cmd=read fsbn 12345 of 12344-12347"  * blkdone should be -1 if the position of the error is unknown.  * The message is printed with printf.  */
 end_comment
