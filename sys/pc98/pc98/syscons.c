@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -497,6 +503,34 @@ name|bios_values_t
 name|bios_value
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|enable_panic_key
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_panic_key
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|enable_panic_key
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -22547,6 +22581,19 @@ comment|/* do nothing */
 endif|#
 directive|endif
 comment|/* SC_DISABLE_DDBKEY */
+break|break;
+case|case
+name|PNC
+case|:
+if|if
+condition|(
+name|enable_panic_key
+condition|)
+name|panic
+argument_list|(
+literal|"Forced by the panic key"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|NEXT
