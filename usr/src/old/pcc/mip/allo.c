@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)allo.c	4.5 (Berkeley) %G%"
+literal|"@(#)allo.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,13 +157,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|TBUSY
-value|01000
-end_define
 
 begin_ifndef
 ifndef|#
