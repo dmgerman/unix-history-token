@@ -419,6 +419,36 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|pcm_setswap
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|pcm_swap_t
+modifier|*
+name|swap
+parameter_list|)
+block|{
+name|snddev_info
+modifier|*
+name|d
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|d
+operator|->
+name|swap
+operator|=
+name|swap
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* This is the generic init routine */
 end_comment
@@ -818,6 +848,12 @@ name|unit
 argument_list|)
 expr_stmt|;
 comment|/* debugging... */
+name|d
+operator|->
+name|swap
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 literal|0
 return|;

@@ -565,6 +565,23 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|pcm_swap_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|dir
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -616,6 +633,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|devinfo
+decl_stmt|;
+name|pcm_swap_t
+modifier|*
+name|swap
 decl_stmt|;
 name|char
 name|status
