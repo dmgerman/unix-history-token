@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Jake Burkholder  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 Jake Burkholder  * Copyright (c) 2004 Robert Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -113,7 +113,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrdump [-c] [-f] [-q] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]"
+value|"usage: ktrdump [-c] [-f] [-q] [-r] [-t] [-e execfile] [-i ktrfile ] [-m corefile] [-o outfile]"
 end_define
 
 begin_decl_stmt
@@ -204,6 +204,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|qflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rflag
 decl_stmt|;
 end_decl_stmt
 
@@ -322,6 +329,11 @@ name|ktr_entry
 modifier|*
 name|buf
 decl_stmt|;
+name|uintmax_t
+name|tlast
+decl_stmt|,
+name|tnow
+decl_stmt|;
 name|struct
 name|stat
 name|sb
@@ -375,7 +387,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cfqte:i:m:o:"
+literal|"cfqrte:i:m:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -541,6 +553,14 @@ literal|'q'
 case|:
 name|qflag
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|rflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1022,6 +1042,11 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+name|tlast
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1288,12 +1313,9 @@ if|if
 condition|(
 name|tflag
 condition|)
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"%16ju "
-argument_list|,
+block|{
+name|tnow
+operator|=
 operator|(
 name|uintmax_t
 operator|)
@@ -1303,8 +1325,50 @@ name|i
 index|]
 operator|.
 name|ktr_timestamp
+expr_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+block|{
+if|if
+condition|(
+name|tlast
+operator|==
+operator|-
+literal|1
+condition|)
+name|tlast
+operator|=
+name|tnow
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"%16ju "
+argument_list|,
+name|tlast
+operator|-
+name|tnow
 argument_list|)
 expr_stmt|;
+name|tlast
+operator|=
+name|tnow
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"%16ju "
+argument_list|,
+name|tnow
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fflag
