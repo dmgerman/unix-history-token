@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	5.3 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -627,7 +627,6 @@ name|parseaddr
 argument_list|(
 literal|"postmaster"
 argument_list|,
-operator|&
 name|q
 argument_list|,
 literal|0

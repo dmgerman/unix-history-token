@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.6 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.7 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.6 (Berkeley) %G%"
+literal|"@(#)queue.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1232,7 +1232,9 @@ operator|(
 name|void
 operator|)
 name|orderq
-argument_list|()
+argument_list|(
+name|FALSE
+argument_list|)
 expr_stmt|;
 comment|/* process them once at a time */
 while|while
@@ -1695,6 +1697,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|extern
+name|long
+name|atol
+parameter_list|()
+function_decl|;
 switch|switch
 condition|(
 name|lbuf
@@ -2454,6 +2461,11 @@ name|fgetfolded
 parameter_list|()
 function_decl|;
 specifier|extern
+name|long
+name|atol
+parameter_list|()
+function_decl|;
+specifier|extern
 name|ADDRESS
 modifier|*
 name|sendto
@@ -2744,6 +2756,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|qfp

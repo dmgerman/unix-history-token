@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.8 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.9 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.8 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +388,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIZ
+end_ifdef
+
 begin_decl_stmt
 name|bool
 name|IsWiz
@@ -399,6 +405,12 @@ end_decl_stmt
 begin_comment
 comment|/* set if we are a wizard */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|WIZ
+end_endif
 
 begin_decl_stmt
 name|char
@@ -483,10 +495,6 @@ name|bool
 name|hasmail
 decl_stmt|;
 comment|/* mail command received */
-name|int
-name|rcps
-decl_stmt|;
-comment|/* number of recipients */
 specifier|extern
 name|ADDRESS
 modifier|*
@@ -500,10 +508,6 @@ decl_stmt|;
 name|hasmail
 operator|=
 name|FALSE
-expr_stmt|;
-name|rcps
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1126,9 +1130,6 @@ name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-name|rcps
-operator|++
-expr_stmt|;
 break|break;
 case|case
 name|CMDDATA
@@ -1299,10 +1300,6 @@ argument_list|()
 expr_stmt|;
 comment|/* clean up a bit */
 name|hasmail
-operator|=
-literal|0
-expr_stmt|;
-name|rcps
 operator|=
 literal|0
 expr_stmt|;

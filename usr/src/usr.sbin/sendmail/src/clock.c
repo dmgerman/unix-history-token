@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)clock.c	5.2 (Berkeley) %G%"
+literal|"@(#)clock.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ modifier|*
 name|ev
 decl_stmt|;
 name|int
-name|pid
+name|mypid
 init|=
 name|getpid
 argument_list|()
@@ -548,7 +548,7 @@ name|ev
 operator|->
 name|ev_pid
 operator|!=
-name|pid
+name|mypid
 operator|)
 condition|)
 block|{

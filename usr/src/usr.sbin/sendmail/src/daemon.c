@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.10 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.11 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.10 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.11 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +469,9 @@ block|}
 end_if
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGCHLD

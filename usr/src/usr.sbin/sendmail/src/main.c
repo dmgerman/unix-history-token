@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,6 +517,16 @@ begin_expr_stmt
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 	**  Set default values for variables. 	**	These cannot be in initialized data space. 	*/
+end_comment
+
+begin_expr_stmt
+name|setdefaults
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 
