@@ -225,6 +225,8 @@ name|fflag
 operator|=
 name|hflag
 operator|=
+name|vflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -812,7 +814,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chmod [-f -R [-H | -L | -P] -v] mode file ...\n"
+literal|"usage: chmod [-fv] [-R [-H | -L | -P]] mode file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
