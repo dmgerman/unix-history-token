@@ -508,7 +508,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: %s [-i<inffile>] -s<sysfile> "
-literal|"[-d devname] [-o outfile]\n"
+literal|"[-n devname] [-o outfile]\n"
 argument_list|,
 name|__progname
 argument_list|)
