@@ -49,6 +49,12 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -15052,13 +15058,13 @@ name|timer
 operator|.
 name|tv_sec
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|timer
 operator|.
 name|tv_usec
 operator|=
-literal|750
+literal|0
 expr_stmt|;
 name|ready
 operator|=
