@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_resource.c	8.5 (Berkeley) 1/21/94  * $Id: kern_resource.c,v 1.32 1998/02/09 06:09:24 eivind Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_resource.c	8.5 (Berkeley) 1/21/94  * $Id: kern_resource.c,v 1.33 1998/03/04 10:25:52 dufault Exp $  */
 end_comment
 
 begin_include
@@ -2263,6 +2263,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+comment|/* XXX: why spl-protect ?  worst case is an off-by-one report */
 name|s
 operator|=
 name|splstatclock
@@ -2331,6 +2332,20 @@ name|p_rtime
 operator|.
 name|tv_usec
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|p
+operator|->
+name|p_oncpu
+operator|!=
+literal|0xff
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|p
@@ -2338,9 +2353,10 @@ operator|==
 name|curproc
 condition|)
 block|{
-comment|/* XXX what if it's running on another cpu?? */
+endif|#
+directive|endif
 comment|/* 		 * Adjust for the current time slice.  This is actually fairly 		 * important since the error here is on the order of a time 		 * quantum, which is much greater than the sampling error. 		 */
-name|microtime
+name|microruntime
 argument_list|(
 operator|&
 name|tv
@@ -2352,7 +2368,9 @@ name|tv
 operator|.
 name|tv_sec
 operator|-
-name|runtime
+name|p
+operator|->
+name|p_runtime
 operator|.
 name|tv_sec
 expr_stmt|;
@@ -2362,7 +2380,9 @@ name|tv
 operator|.
 name|tv_usec
 operator|-
-name|runtime
+name|p
+operator|->
+name|p_runtime
 operator|.
 name|tv_usec
 expr_stmt|;
@@ -2385,10 +2405,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|SMP
-comment|/* sigh, microtime and fork/exit madness here */
 comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
@@ -2408,8 +2424,6 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|totusec
 operator|=
 literal|0
@@ -2506,15 +2520,9 @@ literal|1000000
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_SYS_SYSPROTO_H_
-end_ifndef
-
-begin_struct
 struct|struct
 name|getrusage_args
 block|{
@@ -2528,18 +2536,9 @@ name|rusage
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|int
 name|getrusage
 parameter_list|(
@@ -2648,9 +2647,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|ruadd
 parameter_list|(
@@ -2667,9 +2663,6 @@ decl_stmt|,
 decl|*
 name|ru2
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
 name|long
@@ -2771,13 +2764,7 @@ name|ip2
 operator|++
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Make a copy of the plimit structure.  * We share these structures copy-on-write after fork,  * and copy when a limit is changed.  */
-end_comment
-
-begin_function
 name|struct
 name|plimit
 modifier|*

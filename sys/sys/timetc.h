@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)time.h	8.5 (Berkeley) 5/4/95  * $Id: time.h,v 1.21 1998/03/26 20:53:36 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)time.h	8.5 (Berkeley) 5/4/95  * $Id: time.h,v 1.22 1998/03/30 09:55:35 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -274,6 +274,14 @@ name|u_int64_t
 name|offset_nano
 decl_stmt|;
 name|struct
+name|timeval
+name|microtime
+decl_stmt|;
+name|struct
+name|timespec
+name|nanotime
+decl_stmt|;
+name|struct
 name|timecounter
 modifier|*
 name|other
@@ -286,6 +294,105 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Operations on timespecs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|timespecclear
+parameter_list|(
+name|tvp
+parameter_list|)
+value|(tvp)->tv_sec = (tvp)->tv_nsec = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|timespecisset
+parameter_list|(
+name|tvp
+parameter_list|)
+value|((tvp)->tv_sec || (tvp)->tv_nsec)
+end_define
+
+begin_define
+define|#
+directive|define
+name|timespeccmp
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|cmp
+parameter_list|)
+define|\
+value|(((tvp)->tv_sec == (uvp)->tv_sec) ?				\ 	    ((tvp)->tv_nsec cmp (uvp)->tv_nsec) :			\ 	    ((tvp)->tv_sec cmp (uvp)->tv_sec))
+end_define
+
+begin_define
+define|#
+directive|define
+name|timespecadd
+parameter_list|(
+name|vvp
+parameter_list|,
+name|uvp
+parameter_list|)
+define|\
+value|do {								\ 		(vvp)->tv_sec += (uvp)->tv_sec;		\ 		(vvp)->tv_nsec += (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec>= 1000000000) {			\ 			(vvp)->tv_sec++;				\ 			(vvp)->tv_nsec -= 1000000000;			\ 		}							\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|timespecsub
+parameter_list|(
+name|vvp
+parameter_list|,
+name|uvp
+parameter_list|)
+define|\
+value|do {								\ 		(vvp)->tv_sec -= (uvp)->tv_sec;		\ 		(vvp)->tv_nsec -= (uvp)->tv_nsec;	\ 		if ((vvp)->tv_nsec< 0) {				\ 			(vvp)->tv_sec--;				\ 			(vvp)->tv_nsec += 1000000000;			\ 		}							\ 	} while (0)
+end_define
+
+begin_comment
+comment|/* Operations on timevals. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|timevalcmp
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|cmp
+parameter_list|)
+define|\
+value|(((tvp)->tv_sec == (uvp)->tv_sec) ?				\ 	    ((tvp)->tv_usec cmp (uvp)->tv_usec) :			\ 	    ((tvp)->tv_sec cmp (uvp)->tv_sec))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/* Operations on timevals. */
@@ -555,12 +662,42 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|getmicroruntime
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+name|tv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|getmicrotime
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|timeval
+operator|*
+name|tv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|getnanoruntime
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timespec
 operator|*
 name|tv
 operator|)
@@ -600,6 +737,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|itimerdecr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|itimerval
+operator|*
+name|itp
+operator|,
+name|int
+name|usec
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|itimerfix
 name|__P
 argument_list|(
@@ -614,18 +769,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|itimerdecr
+name|void
+name|microruntime
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|itimerval
+name|timeval
 operator|*
-name|itp
-operator|,
-name|int
-name|usec
+name|tv
 operator|)
 argument_list|)
 decl_stmt|;
@@ -648,7 +800,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|nanotime
+name|nanoruntime
 name|__P
 argument_list|(
 operator|(
@@ -663,13 +815,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|second_overflow
+name|nanotime
 name|__P
 argument_list|(
 operator|(
-name|u_int32_t
+expr|struct
+name|timespec
 operator|*
-name|psec
+name|ts
 operator|)
 argument_list|)
 decl_stmt|;
