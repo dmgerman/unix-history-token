@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.20	83/04/04	*/
+comment|/*	vm_meter.c	4.21	83/05/18	*/
 end_comment
 
 begin_include
@@ -208,7 +208,11 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	 * Setup thresholds for paging: 	 *	lotsfree	is threshold where paging daemon turns on 	 *	desfree		is amount of memory desired free.  if less 	 *			than this for extended period, do swapping 	 *	minfree		is minimal amount of free memory which is 	 *			tolerable. 	 * 	 * Strategy of 4/22/81: 	 *	lotsfree is 1/4 of memory free. 	 *	desfree is 200k bytes, but at most 1/8 of memory 	 *	minfree is 64k bytes, but at most 1/2 of desfree 	 */
+comment|/* 	 * Setup thresholds for paging: 	 *	lotsfree	is threshold where paging daemon turns on 	 *	desfree		is amount of memory desired free.  if less 	 *			than this for extended period, do swapping 	 *	minfree		is minimal amount of free memory which is 	 *			tolerable. 	 */
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* 	 * Strategy of 4/22/81: 	 *	lotsfree is 1/4 of memory free. 	 *	desfree is 200k bytes, but at most 1/8 of memory 	 *	minfree is 64k bytes, but at most 1/2 of desfree 	 */
 if|if
 condition|(
 name|lotsfree
@@ -285,6 +289,90 @@ operator|/
 literal|2
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+comment|/* 	 * Strategy of 3/17/83: 	 *	lotsfree is 1/8 of memory free. 	 *	desfree is 100k bytes, but at most 1/16 of memory 	 *	minfree is 32k bytes, but at most 1/2 of desfree 	 */
+if|if
+condition|(
+name|lotsfree
+operator|==
+literal|0
+condition|)
+name|lotsfree
+operator|=
+name|LOOPPAGES
+operator|/
+literal|8
+expr_stmt|;
+if|if
+condition|(
+name|desfree
+operator|==
+literal|0
+condition|)
+block|{
+name|desfree
+operator|=
+operator|(
+literal|100
+operator|*
+literal|1024
+operator|)
+operator|/
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|desfree
+operator|>
+name|LOOPPAGES
+operator|/
+literal|16
+condition|)
+name|desfree
+operator|=
+name|LOOPPAGES
+operator|/
+literal|16
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|minfree
+operator|==
+literal|0
+condition|)
+block|{
+name|minfree
+operator|=
+operator|(
+literal|32
+operator|*
+literal|1024
+operator|)
+operator|/
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|minfree
+operator|>
+name|desfree
+operator|/
+literal|2
+condition|)
+name|minfree
+operator|=
+name|desfree
+operator|/
+literal|2
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Maxpgio thresholds how much paging is acceptable. 	 * This figures that 2/3 busy on an arm is all that is 	 * tolerable for paging.  We assume one operation per disk rev. 	 */
 if|if
 condition|(
@@ -303,6 +391,24 @@ operator|/
 literal|3
 expr_stmt|;
 comment|/* 	 * Clock to scan using max of ~~10% of processor time for sampling, 	 *     this estimated to allow maximum of 200 samples per second. 	 * This yields a ``fastscan'' of roughly (with CLSIZE=2): 	 *<=1m	2m	3m	4m	8m 	 * 	5s	10s	15s	20s	40s 	 */
+ifdef|#
+directive|ifdef
+name|vax
+define|#
+directive|define
+name|LOTSOFMEM
+value|2
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+define|#
+directive|define
+name|LOTSOFMEM
+value|4
+endif|#
+directive|endif
 if|if
 condition|(
 name|nswdev
@@ -313,7 +419,7 @@ name|physmem
 operator|*
 name|NBPG
 operator|>
-literal|2
+name|LOTSOFMEM
 operator|*
 literal|1024
 operator|*
@@ -325,7 +431,9 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: should run interleaved swap with>= 2Mb\n"
+literal|"WARNING: should run interleaved swap with>= %dMb\n"
+argument_list|,
+name|LOTSOFMEM
 argument_list|)
 expr_stmt|;
 if|if
