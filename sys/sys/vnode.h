@@ -683,6 +683,17 @@ begin_comment
 comment|/* Mount in progress */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VOBJDIRTY
+value|0x800000
+end_define
+
+begin_comment
+comment|/* object might be dirty */
+end_comment
+
 begin_comment
 comment|/*  * Vnode attributes.  A field value of VNOVAL represents a field whose value  * is unavailable (getattr) or which is not to be changed (setattr).  */
 end_comment
@@ -1403,6 +1414,17 @@ name|vp
 parameter_list|)
 define|\
 value|(!((vp)->v_flag& (VFREE|VDOOMED))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&& \ 	 (!(vp)->v_object || \ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VMIGHTFREE
+parameter_list|(
+name|vp
+parameter_list|)
+define|\
+value|(!((vp)->v_flag& (VFREE|VDOOMED))&&	\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
 end_define
 
 begin_define

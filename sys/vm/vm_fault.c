@@ -2405,17 +2405,13 @@ argument_list|,
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
-name|vm_object_set_flag
+name|vm_object_set_writeable_dirty
 argument_list|(
 name|fs
 operator|.
 name|m
 operator|->
 name|object
-argument_list|,
-name|OBJ_WRITEABLE
-operator||
-name|OBJ_MIGHTBEDIRTY
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If the fault is a write, we know that this page is being 		 * written NOW so dirty it explicitly to save on  		 * pmap_is_modified() calls later. 		 * 		 * If this is a NOSYNC mmap we do not want to set PG_NOSYNC 		 * if the page is already dirty to prevent data written with 		 * the expectation of being synced from not being synced. 		 * Likewise if this entry does not request NOSYNC then make 		 * sure the page isn't marked NOSYNC.  Applications sharing 		 * data should use the same flags to avoid ping ponging. 		 * 		 * Also tell the backing pager, if any, that it should remove 		 * any swap backing since the page is now dirty. 		 */
