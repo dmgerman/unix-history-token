@@ -40,6 +40,7 @@ begin_decl_stmt
 specifier|static
 name|char
 name|orig_rcsid
+index|[]
 init|=
 literal|"From: Id: res_query.c,v 8.14 1997/06/09 17:47:05 halley Exp $"
 decl_stmt|;
