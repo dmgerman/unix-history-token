@@ -58,6 +58,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_comment
+comment|/* for RB_POWEROFF */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -4074,6 +4084,18 @@ name|acpi_softc_t
 modifier|*
 name|sc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|howto
+operator|&
+name|RB_POWEROFF
+operator|)
+condition|)
+block|{
+return|return;
+block|}
 name|sc
 operator|=
 operator|(
@@ -4082,12 +4104,11 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-comment|/* wait 1sec before turning off the system power */
-name|DELAY
+name|acpi_execute_pts
 argument_list|(
-literal|1000
-operator|*
-literal|1000
+name|sc
+argument_list|,
+name|ACPI_S_STATE_S5
 argument_list|)
 expr_stmt|;
 name|acpi_trans_sleeping_state
@@ -4118,33 +4139,6 @@ name|slp_typ_a
 decl_stmt|,
 name|slp_typ_b
 decl_stmt|;
-comment|/* Prepare to sleep */
-name|acpi_execute_pts
-argument_list|(
-name|sc
-argument_list|,
-name|state
-argument_list|)
-expr_stmt|;
-comment|/* PowerResource manipulation */
-name|acpi_powerres_set_sleeping_state
-argument_list|(
-name|sc
-argument_list|,
-name|state
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|acpi_debug
-condition|)
-block|{
-name|acpi_powerres_debug
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -4195,6 +4189,41 @@ block|{
 return|return;
 comment|/* unsupported sleeping type */
 block|}
+if|if
+condition|(
+name|state
+operator|<
+name|ACPI_S_STATE_S5
+condition|)
+block|{
+comment|/* Prepare to sleep */
+name|acpi_execute_pts
+argument_list|(
+name|sc
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+comment|/* PowerResource manipulation */
+name|acpi_powerres_set_sleeping_state
+argument_list|(
+name|sc
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|acpi_debug
+condition|)
+block|{
+name|acpi_powerres_debug
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 	 * XXX currently supported S1 and S5 only. 	 */
 switch|switch
 condition|(
@@ -4214,33 +4243,16 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-name|acpi_execute_wak
-argument_list|(
-name|sc
-argument_list|,
-name|state
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|ACPI_S_STATE_S5
 case|:
 comment|/* Power the system off using ACPI */
-name|EVENTHANDLER_REGISTER
+name|shutdown_nice
 argument_list|(
-name|shutdown_final
-argument_list|,
-name|acpi_soft_off
-argument_list|,
-name|sc
-argument_list|,
-name|SHUTDOWN_PRI_LAST
+name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
-name|shutdown_nice
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 break|break;
 default|default:
 break|break;
@@ -4252,6 +4264,13 @@ operator|<
 name|ACPI_S_STATE_S5
 condition|)
 block|{
+name|acpi_execute_wak
+argument_list|(
+name|sc
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
 name|acpi_powerres_set_sleeping_state
 argument_list|(
 name|sc
@@ -5917,6 +5936,17 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|shutdown_final
+argument_list|,
+name|acpi_soft_off
+argument_list|,
+name|sc
+argument_list|,
+name|SHUTDOWN_PRI_LAST
+argument_list|)
+expr_stmt|;
 name|acpi_pmap_release
 argument_list|()
 expr_stmt|;
