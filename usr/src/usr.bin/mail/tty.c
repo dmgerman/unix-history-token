@@ -13,19 +13,13 @@ directive|include
 file|"rcv.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	2.1 %G%"
+literal|"@(#)tty.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
