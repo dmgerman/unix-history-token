@@ -74,6 +74,12 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cputypes.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -146,6 +152,13 @@ name|defined
 argument_list|(
 name|PC98
 argument_list|)
+if|if
+condition|(
+name|cpu_class
+operator|<
+name|CPUCLASS_586
+condition|)
+return|return;
 name|do_cpuid
 argument_list|(
 literal|1
