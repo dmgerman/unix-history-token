@@ -625,12 +625,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCHED_4BSD
-end_ifdef
-
 begin_comment
 comment|/*  * Remove a thread from its KSEGRP's run queue.  * This in turn may remove it from a KSE if it was already assigned  * to one, possibly causing a new thread to be assigned to the KSE  * and the KSE getting a new priority.  */
 end_comment
@@ -837,11 +831,6 @@ comment|/* will replace it with another */
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Change the priority of a thread that is on the run queue.  */
@@ -1823,7 +1812,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Our thread state says that we are already on a run queue, so 	 * update our state as if we had been dequeued by choosethread(). 	 */
+comment|/* 	 * Our thread state says that we are already on a run queue, so 	 * update our state as if we had been dequeued by choosethread(). 	 * However we must not actually be on the system run queue yet. 	 */
 name|MPASS
 argument_list|(
 name|TD_ON_RUNQ
@@ -1832,6 +1821,36 @@ name|td
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|MPASS
+argument_list|(
+name|td
+operator|->
+name|td_sched
+operator|->
+name|ke_state
+operator|!=
+name|KES_ONRUNQ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_HADTHREADS
+condition|)
+block|{
+comment|/* 		 * If this is a threaded process we actually ARE on the 		 * ksegrp run queue so take it off that first. 		 */
+name|remrunqueue
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* maybe use a simpler version */
+block|}
 name|TD_SET_RUNNING
 argument_list|(
 name|td
