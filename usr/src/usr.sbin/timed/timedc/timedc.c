@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	2.1 (Berkeley) %G%"
+literal|"@(#)timedc.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,10 @@ name|nmatches
 decl_stmt|,
 name|longest
 decl_stmt|;
+specifier|extern
+name|int
+name|NCMDS
+decl_stmt|;
 name|longest
 operator|=
 literal|0
@@ -592,16 +596,24 @@ name|c
 operator|=
 name|cmdtab
 init|;
-name|p
-operator|=
 name|c
-operator|->
-name|c_name
+operator|<
+operator|&
+name|cmdtab
+index|[
+name|NCMDS
+index|]
 condition|;
 name|c
 operator|++
 control|)
 block|{
+name|p
+operator|=
+name|c
+operator|->
+name|c_name
+expr_stmt|;
 for|for
 control|(
 name|q

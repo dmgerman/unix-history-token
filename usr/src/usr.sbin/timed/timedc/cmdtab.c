@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	2.1 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,10 +181,6 @@ name|helphelp
 block|,
 name|help
 block|,
-literal|0
-block|}
-block|,
-block|{
 literal|0
 block|}
 block|, }
