@@ -3154,22 +3154,6 @@ name|dma_stat
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_FLUSHCACHE_ON
-if|if
-condition|(
-name|request
-operator|->
-name|flags
-operator|&
-name|ADR_F_FLUSHCACHE
-condition|)
-goto|goto
-name|finish
-goto|;
-endif|#
-directive|endif
 comment|/* finish DMA transfer */
 if|if
 condition|(

@@ -65,10 +65,6 @@ define|#
 directive|define
 name|ADR_F_FORCE_PIO
 value|0x0010
-define|#
-directive|define
-name|ADR_F_FLUSHCACHE
-value|0x0020
 name|caddr_t
 name|data
 decl_stmt|;
