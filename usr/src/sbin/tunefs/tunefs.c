@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	8.1 (Berkeley) %G%"
+literal|"@(#)tunefs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,13 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -104,6 +110,29 @@ include|#
 directive|include
 file|<paths.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/* the optimization warning string template */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTWARN
+value|"should optimize for %s with minfree %s %d%%"
+end_define
 
 begin_union
 union|union
@@ -144,7 +173,62 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|bwrite
+parameter_list|(
+name|daddr_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bread
+parameter_list|(
+name|daddr_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|getsb
+parameter_list|(
+name|struct
+name|fs
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -211,9 +295,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|special
 operator|=
 name|argv
@@ -295,21 +379,13 @@ goto|goto
 name|again
 goto|;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tunefs: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|special
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|special
 argument_list|)
 expr_stmt|;
 block|}
@@ -335,8 +411,10 @@ operator|)
 operator|!=
 name|S_IFCHR
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|10
+argument_list|,
 literal|"%s: not a block or character device"
 argument_list|,
 name|special
@@ -419,8 +497,10 @@ name|argc
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|10
+argument_list|,
 literal|"-a: missing %s"
 argument_list|,
 name|name
@@ -446,21 +526,21 @@ name|i
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
-literal|"%s: %s must be>= 1"
+literal|10
+argument_list|,
+literal|"%s must be>= 1 (was %s)"
+argument_list|,
+name|name
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s changes from %d to %d\n"
+literal|"%s changes from %d to %d"
 argument_list|,
 name|name
 argument_list|,
@@ -491,8 +571,10 @@ name|argc
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|10
+argument_list|,
 literal|"-d: missing %s"
 argument_list|,
 name|name
@@ -512,11 +594,9 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s changes from %dms to %dms\n"
+literal|"%s changes from %dms to %dms"
 argument_list|,
 name|name
 argument_list|,
@@ -547,8 +627,10 @@ name|argc
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|10
+argument_list|,
 literal|"-e: missing %s"
 argument_list|,
 name|name
@@ -574,21 +656,21 @@ name|i
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
-literal|"%s: %s must be>= 1"
+literal|10
+argument_list|,
+literal|"%s must be>= 1 (was %s)"
+argument_list|,
+name|name
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s changes from %d to %d\n"
+literal|"%s changes from %d to %d"
 argument_list|,
 name|name
 argument_list|,
@@ -619,8 +701,10 @@ name|argc
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|10
+argument_list|,
 literal|"-m: missing %s"
 argument_list|,
 name|name
@@ -650,21 +734,21 @@ name|i
 operator|>
 literal|99
 condition|)
-name|fatal
+name|errx
 argument_list|(
-literal|"%s: bad %s"
+literal|10
+argument_list|,
+literal|"bad %s (%s)"
+argument_list|,
+name|name
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s changes from %d%% to %d%%\n"
+literal|"%s changes from %d%% to %d%%"
 argument_list|,
 name|name
 argument_list|,
@@ -685,7 +769,7 @@ if|if
 condition|(
 name|i
 operator|>=
-literal|10
+name|MINFREE
 operator|&&
 name|sblock
 operator|.
@@ -693,20 +777,22 @@ name|fs_optim
 operator|==
 name|FS_OPTSPACE
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
+name|OPTWARN
 argument_list|,
-literal|"should optimize %s"
+literal|"time"
 argument_list|,
-literal|"for time with minfree>= 10%\n"
+literal|">="
+argument_list|,
+name|MINFREE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|i
 operator|<
-literal|10
+name|MINFREE
 operator|&&
 name|sblock
 operator|.
@@ -714,13 +800,15 @@ name|fs_optim
 operator|==
 name|FS_OPTTIME
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
+name|OPTWARN
 argument_list|,
-literal|"should optimize %s"
+literal|"space"
 argument_list|,
-literal|"for space with minfree< 10%\n"
+literal|"<"
+argument_list|,
+name|MINFREE
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -737,8 +825,10 @@ name|argc
 operator|<
 literal|1
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|10
+argument_list|,
 literal|"-o: missing %s"
 argument_list|,
 name|name
@@ -804,12 +894,11 @@ operator|=
 name|FS_OPTTIME
 expr_stmt|;
 else|else
-name|fatal
+name|errx
 argument_list|(
-literal|"%s: bad %s (options are `space' or `time')"
+literal|10
 argument_list|,
-operator|*
-name|argv
+literal|"bad %s (options are `space' or `time')"
 argument_list|,
 name|name
 argument_list|)
@@ -823,11 +912,9 @@ operator|==
 name|i
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s remains unchanged as %s\n"
+literal|"%s remains unchanged as %s"
 argument_list|,
 name|name
 argument_list|,
@@ -839,11 +926,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
-argument_list|,
-literal|"%s changes from %s to %s\n"
+literal|"%s changes from %s to %s"
 argument_list|,
 name|name
 argument_list|,
@@ -872,19 +957,21 @@ name|sblock
 operator|.
 name|fs_minfree
 operator|>=
-literal|10
+name|MINFREE
 operator|&&
 name|i
 operator|==
 name|FS_OPTSPACE
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
+name|OPTWARN
 argument_list|,
-literal|"should optimize %s"
+literal|"time"
 argument_list|,
-literal|"for time with minfree>= 10%\n"
+literal|">="
+argument_list|,
+name|MINFREE
 argument_list|)
 expr_stmt|;
 if|if
@@ -893,30 +980,27 @@ name|sblock
 operator|.
 name|fs_minfree
 operator|<
-literal|10
+name|MINFREE
 operator|&&
 name|i
 operator|==
 name|FS_OPTTIME
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stdout
+name|OPTWARN
 argument_list|,
-literal|"should optimize %s"
+literal|"space"
 argument_list|,
-literal|"for space with minfree< 10%\n"
+literal|"<"
+argument_list|,
+name|MINFREE
 argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-name|fatal
-argument_list|(
-literal|"-%c: unknown flag"
-argument_list|,
-operator|*
-name|cp
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -926,9 +1010,9 @@ name|argc
 operator|!=
 literal|1
 condition|)
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|bwrite
 argument_list|(
 operator|(
@@ -1003,8 +1087,14 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|usage
-label|:
+parameter_list|()
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1062,29 +1152,24 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|getsb
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|,
+parameter_list|,
 name|file
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fs
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fi
 operator|=
@@ -1101,27 +1186,15 @@ name|fi
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tunefs: %s: %s\n"
-argument_list|,
-name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|bread
@@ -1140,22 +1213,15 @@ argument_list|,
 name|SBSIZE
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|4
 argument_list|,
-literal|"tunefs: %s: bad super block\n"
+literal|"%s: bad super block"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fs
@@ -1164,22 +1230,15 @@ name|fs_magic
 operator|!=
 name|FS_MAGIC
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|5
 argument_list|,
-literal|"tunefs: %s: bad magic number\n"
+literal|"%s: bad magic number"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
-block|}
 name|dev_bsize
 operator|=
 name|fs
@@ -1194,39 +1253,28 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|bwrite
-argument_list|(
-argument|blk
-argument_list|,
-argument|buf
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|blk
+parameter_list|,
+name|buf
+parameter_list|,
+name|size
+parameter_list|)
+name|daddr_t
+name|blk
+decl_stmt|;
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|blk
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-specifier|register
+name|int
 name|size
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1246,18 +1294,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|6
+argument_list|,
 literal|"FS SEEK"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|6
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|write
@@ -1271,50 +1314,40 @@ argument_list|)
 operator|!=
 name|size
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|7
+argument_list|,
 literal|"FS WRITE"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|7
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|bread
-argument_list|(
-argument|bno
-argument_list|,
-argument|buf
-argument_list|,
-argument|cnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|bno
+parameter_list|,
+name|buf
+parameter_list|,
+name|cnt
+parameter_list|)
 name|daddr_t
 name|bno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|cnt
+decl_stmt|;
 block|{
-specifier|register
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|lseek
@@ -1390,70 +1423,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
-comment|/* VARARGS1 */
-end_comment
-
-begin_macro
-name|fatal
-argument_list|(
-argument|fmt
-argument_list|,
-argument|arg1
-argument_list|,
-argument|arg2
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|fmt
-decl_stmt|,
-modifier|*
-name|arg1
-decl_stmt|,
-modifier|*
-name|arg2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tunefs: "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
-argument_list|)
-expr_stmt|;
-name|putc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_function
 
 end_unit
 
