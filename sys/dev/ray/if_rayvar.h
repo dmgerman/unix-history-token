@@ -15,16 +15,16 @@ name|struct
 name|ray_cmd_net
 name|p_1
 decl_stmt|;
-name|u_int8_t
-name|np_ap_status
-decl_stmt|;
 name|struct
 name|ray_net_params
 decl|\
 name|p_2
 decl_stmt|;
 name|u_int8_t
-name|np_countrycode
+name|np_ap_status
+decl_stmt|;
+name|int
+name|np_promisc
 decl_stmt|;
 block|}
 struct|;
@@ -110,11 +110,6 @@ name|arpcom
 name|arpcom
 decl_stmt|;
 comment|/* Ethernet common 		*/
-name|struct
-name|ifmedia
-name|ifmedia
-decl_stmt|;
-comment|/* Ifnet common 		*/
 name|struct
 name|callout_handle
 name|tx_timerh
@@ -212,10 +207,6 @@ name|int
 name|sc_havenet
 decl_stmt|;
 comment|/* true if we have a network	*/
-name|int
-name|sc_promisc
-decl_stmt|;
-comment|/* current set value		*/
 name|u_int8_t
 name|sc_ccsinuse
 index|[
@@ -1038,6 +1029,36 @@ end_endif
 
 begin_comment
 comment|/* RAY_MBUF_DUMP */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RAY_RECERR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RAY_RECERR
+parameter_list|(
+name|sc
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {				\     struct ifnet *ifp =&(sc)->arpcom.ac_if;				\     if (ifp->if_flags& IFF_DEBUG) {					\ 	    device_printf((sc)->dev, "%s(%d) " fmt "\n",		\ 		__FUNCTION__ , __LINE__ , ##args);			\ } } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RAY_RECERR */
 end_comment
 
 begin_comment
