@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpc.c,v 1.5 1997/09/24 06:47:46 charnier Exp $"
+literal|"$Id: lpc.c,v 1.6 1997/12/02 20:45:43 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,6 +1395,9 @@ name|printf
 argument_list|(
 literal|"%-*s\t%s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|HELPINDENT
 argument_list|,
 name|c
