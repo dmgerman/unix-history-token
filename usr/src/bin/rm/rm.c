@@ -5,21 +5,13 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.5 (Berkeley) %G%"
+literal|"@(#)rm.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|errcode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-name|uid
-decl_stmt|,
-name|euid
 decl_stmt|;
 end_decl_stmt
 
@@ -103,16 +95,6 @@ expr_stmt|;
 name|rflg
 operator|=
 literal|0
-expr_stmt|;
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
-name|euid
-operator|=
-name|geteuid
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -468,7 +450,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s/%.14s"
+literal|"%s/%s"
 argument_list|,
 name|arg
 argument_list|,
@@ -561,21 +543,6 @@ operator|<
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|uid
-operator|==
-name|buf
-operator|.
-name|st_uid
-operator|||
-name|euid
-operator|==
-name|buf
-operator|.
-name|st_uid
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"rm: override protection %o for %s? "
@@ -596,18 +563,6 @@ name|yes
 argument_list|()
 condition|)
 return|return;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"rm: %s: not owner.\n"
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 block|}
 if|if
