@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.22 (Berkeley) %G%"
+literal|"@(#)main.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1707,6 +1707,20 @@ literal|"TP_BSIZE (%d) is not a power of 2"
 argument_list|,
 name|TP_BSIZE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sblock
+operator|->
+name|fs_inodefmt
+operator|>=
+name|FS_44INODEFMT
+condition|)
+name|spcl
+operator|.
+name|c_flags
+operator||=
+name|DR_NEWINODEFMT
 expr_stmt|;
 name|maxino
 operator|=
