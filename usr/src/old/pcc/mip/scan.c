@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.15 (Berkeley) %G%"
+literal|"@(#)scan.c	2.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,7 +473,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|fpe
 parameter_list|()
 function_decl|;
