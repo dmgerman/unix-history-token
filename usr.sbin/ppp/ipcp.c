@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.4 1995/05/30 03:50:38 rgrimes Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.5 1995/07/04 02:57:11 davidg Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -118,6 +118,8 @@ name|in_range
 name|DefMyAddress
 decl_stmt|,
 name|DefHisAddress
+decl_stmt|,
+name|DefTriggerAddress
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +547,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Defaults:  My Address: %s/%d  "
+literal|"Defaults:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" My Address:  %s/%d\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -561,7 +568,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"His Address: %s/%d\n"
+literal|" His Address: %s/%d\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -571,6 +578,22 @@ name|ipaddr
 argument_list|)
 argument_list|,
 name|DefHisAddress
+operator|.
+name|width
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" Negotiation: %s/%d\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|DefTriggerAddress
+operator|.
+name|ipaddr
+argument_list|)
+argument_list|,
+name|DefTriggerAddress
 operator|.
 name|width
 argument_list|)
@@ -613,6 +636,17 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|DefHisAddress
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|DefTriggerAddress
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|DefTriggerAddress
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -754,6 +788,31 @@ operator|.
 name|s_addr
 operator|=
 name|DefHisAddress
+operator|.
+name|ipaddr
+operator|.
+name|s_addr
+expr_stmt|;
+block|}
+comment|/*    * Some implementation of PPP are:    *  Starting a negotiaion by require sending *special* value as my address,    *  even though standard of PPP is defined full negotiation based.    *  (e.g. "0.0.0.0" or Not "0.0.0.0")    */
+if|if
+condition|(
+name|icp
+operator|->
+name|want_ipaddr
+operator|.
+name|s_addr
+operator|==
+literal|0
+condition|)
+block|{
+name|icp
+operator|->
+name|want_ipaddr
+operator|.
+name|s_addr
+operator|=
+name|DefTriggerAddress
 operator|.
 name|ipaddr
 operator|.
