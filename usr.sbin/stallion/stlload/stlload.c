@@ -620,6 +620,11 @@ argument_list|(
 literal|"ioctl(STL_BSTOP)"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" (Perhaps you're trying to download firmare to a PCI card that\n doesn't require this?)\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
