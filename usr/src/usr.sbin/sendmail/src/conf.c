@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.187 (Berkeley) %G%"
+literal|"@(#)conf.c	8.188 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1733,11 +1733,35 @@ argument_list|(
 name|ultrix
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
 name|__osf__
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|_USE_DEC_SVC_CONF_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_USE_DEC_SVC_CONF_
+end_ifdef
 
 begin_include
 include|#
@@ -1976,17 +2000,9 @@ name|svcno
 return|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|_USE_DEC_SVC_CONF_
 name|struct
 name|svcinfo
 modifier|*
@@ -2181,13 +2197,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|ultrix
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__osf__
+name|_USE_DEC_SVC_CONF_
 argument_list|)
 comment|/* 	**  Fall-back mechanism. 	*/
 for|for
