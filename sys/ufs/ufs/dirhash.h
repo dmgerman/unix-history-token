@@ -127,11 +127,6 @@ begin_struct
 struct|struct
 name|dirhash
 block|{
-name|struct
-name|mtx
-name|dh_mtx
-decl_stmt|;
-comment|/* protects all fields except dh_list */
 name|doff_t
 modifier|*
 modifier|*
@@ -189,7 +184,6 @@ name|int
 name|dh_onlist
 decl_stmt|;
 comment|/* true if on the ufsdirhash_list chain */
-comment|/* Protected by ufsdirhash_mtx. */
 name|TAILQ_ENTRY
 argument_list|(
 argument|dirhash

@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -59,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bio.h>
 end_include
 
 begin_include
@@ -119,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dirhash.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ufs/extattr.h>
 end_include
 
 begin_include
@@ -454,22 +436,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Protects: ufsdirhash_list, `dh_list' field, ufs_dirhashmem. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ufsdirhash_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Locking order:  *	ufsdirhash_mtx  *	dh_mtx  *  * The dh_mtx mutex should be aquired either via the inode lock, or via  * ufsdirhash_mtx. Only the owner of the inode may free the associated  * dirhash, but anything can steal its memory and set dh_hash to NULL.  */
-end_comment
-
-begin_comment
 comment|/*  * Attempt to build up a hash table for the directory contents in  * inode 'ip'. Returns 0 on success, or -1 of the operation failed.  */
 end_comment
 
@@ -732,12 +698,6 @@ operator|->
 name|dh_blkfree
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|memreqd
@@ -747,12 +707,6 @@ operator|>
 name|ufs_dirhashmaxmem
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|memreqd
@@ -783,17 +737,11 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Enough was freed, and ufsdirhash_mtx has been locked. */
+comment|/* Enough was freed. */
 block|}
 name|ufs_dirhashmem
 operator|+=
 name|memreqd
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Use non-blocking mallocs so that we will revert to a linear 	 * lookup on failure rather than potentially blocking forever. 	 */
 name|MALLOC
@@ -961,18 +909,6 @@ name|DIRHASH_EMPTY
 expr_stmt|;
 block|}
 comment|/* Initialise the hash table and block statistics. */
-name|mtx_init
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|,
-literal|"dirhash"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|dh
 operator|->
 name|dh_narrays
@@ -1307,12 +1243,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1328,12 +1258,6 @@ operator|->
 name|dh_onlist
 operator|=
 literal|1
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1427,21 +1351,9 @@ name|i_dirhash
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|memreqd
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1489,20 +1401,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -1517,20 +1415,6 @@ argument_list|,
 name|dh
 argument_list|,
 name|dh_list
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
 argument_list|)
 expr_stmt|;
 comment|/* The dirhash pointed to by 'dh' is exclusively ours now. */
@@ -1638,14 +1522,6 @@ name|dh_blkfree
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|FREE
 argument_list|(
 name|dh
@@ -1659,21 +1535,9 @@ name|i_dirhash
 operator|=
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|mem
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1767,7 +1631,7 @@ operator|(
 name|EJUSTRETURN
 operator|)
 return|;
-comment|/* 	 * Move this dirhash towards the end of the list if it has a 	 * score higher than the next entry, and aquire the dh_mtx. 	 * Optimise the case where it's already the last by performing 	 * an unlocked read of the TAILQ_NEXT pointer. 	 * 	 * In both cases, end up holding just dh_mtx. 	 */
+comment|/* 	 * Move this dirhash towards the end of the list if it has a 	 * score higher than the next entry. 	 * Optimise the case where it's already the last by performing 	 * an unlocked read of the TAILQ_NEXT pointer. 	 */
 if|if
 condition|(
 name|TAILQ_NEXT
@@ -1780,20 +1644,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If the new score will be greater than that of the next 		 * entry, then move this entry past it. With both mutexes 		 * held, dh_next won't go away, but its dh_score could 		 * change; that's not important since it is just a hint. 		 */
 if|if
 condition|(
@@ -1859,24 +1709,6 @@ name|dh_list
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Already the last, though that could change as we wait. */
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1887,14 +1719,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -2070,14 +1894,6 @@ operator|==
 name|DIRHASH_DEL
 condition|)
 continue|continue;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -2337,14 +2153,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2354,14 +2162,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -2403,14 +2203,6 @@ name|restart
 goto|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -2498,14 +2290,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2515,14 +2299,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -2584,14 +2360,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -2624,14 +2392,6 @@ argument_list|,
 operator|(
 literal|"ufsdirhash_findfree: bad stats"
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
 argument_list|)
 expr_stmt|;
 name|pos
@@ -2958,14 +2718,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -2975,14 +2727,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3013,14 +2757,6 @@ operator|/
 name|DIRALIGN
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -3059,14 +2795,6 @@ operator|/
 name|DIRALIGN
 condition|)
 break|break;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 call|(
@@ -3127,14 +2855,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3144,14 +2864,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3192,14 +2904,6 @@ operator|/
 literal|4
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3286,14 +2990,6 @@ name|dirp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3340,14 +3036,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3357,14 +3045,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3428,14 +3108,6 @@ name|dirp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3485,14 +3157,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3502,14 +3166,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3567,14 +3223,6 @@ argument_list|)
 operator|=
 name|newoff
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3616,14 +3264,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3633,14 +3273,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3679,14 +3311,6 @@ name|dh_nblk
 condition|)
 block|{
 comment|/* Out of space; must rebuild. */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3735,14 +3359,6 @@ index|]
 operator|=
 name|block
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3786,14 +3402,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -3803,14 +3411,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3860,14 +3460,6 @@ operator|>
 literal|1
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -3965,14 +3557,6 @@ name|dh_dirblks
 operator|=
 name|block
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4035,14 +3619,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dh
@@ -4052,14 +3628,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|ufsdirhash_free
 argument_list|(
 name|ip
@@ -4287,14 +3855,6 @@ argument_list|(
 literal|"ufsdirhash_checkblock: bad first-free"
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4340,7 +3900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Adjust the number of free bytes in the block containing `offset'  * by the value specified by `diff'.  *  * The caller must ensure we have exclusive access to `dh'; normally  * that means that dh_mtx should be held, but this is also called  * from ufsdirhash_build() where exclusive access can be assumed.  */
+comment|/*  * Adjust the number of free bytes in the block containing `offset'  * by the value specified by `diff'.  *  * The caller must ensure we have exclusive access to `dh'.  */
 end_comment
 
 begin_function
@@ -4590,16 +4150,6 @@ block|{
 name|int
 name|slot
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* Find the entry. */
 name|KASSERT
 argument_list|(
@@ -4707,16 +4257,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* Mark the entry as deleted. */
 name|DH_ENTRY
 argument_list|(
@@ -4984,7 +4524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to free up `wanted' bytes by stealing memory from existing  * dirhashes. Returns zero with ufsdirhash_mtx locked if successful.  */
+comment|/*  * Try to free up `wanted' bytes by stealing memory from existing  * dirhashes. Returns zero if successful.  */
 end_comment
 
 begin_function
@@ -5017,12 +4557,6 @@ name|mem
 decl_stmt|,
 name|narrays
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|wanted
@@ -5048,12 +4582,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -5061,14 +4589,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|dh
@@ -5093,20 +4613,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -5198,21 +4704,7 @@ operator|->
 name|dh_blkfree
 argument_list|)
 expr_stmt|;
-comment|/* Unlock everything, free the detached memory. */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|dh
-operator|->
-name|dh_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
+comment|/* Free the detached memory. */
 for|for
 control|(
 name|i
@@ -5251,18 +4743,12 @@ name|M_DIRHASH
 argument_list|)
 expr_stmt|;
 comment|/* Account for the returned memory, and repeat if necessary. */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|)
-expr_stmt|;
 name|ufs_dirhashmem
 operator|-=
 name|mem
 expr_stmt|;
 block|}
-comment|/* Success; return with ufsdirhash_mtx locked. */
+comment|/* Success. */
 return|return
 operator|(
 literal|0
@@ -5295,16 +4781,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|ufsdirhash_mtx
-argument_list|,
-literal|"dirhash list"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT

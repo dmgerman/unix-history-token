@@ -180,6 +180,12 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* XXX actually non-spare (for ext2fs). */
+name|struct
+name|dirhash
+modifier|*
+name|i_dirhash
+decl_stmt|;
+comment|/* Hashing for large directories */
 comment|/* 	 * The on-disk dinode itself. 	 */
 name|struct
 name|dinode
