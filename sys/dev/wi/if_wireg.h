@@ -1847,9 +1847,12 @@ name|u_int16_t
 name|wi_type
 decl_stmt|;
 name|u_int16_t
+name|wi_num_dom
+decl_stmt|;
+name|u_int8_t
 name|wi_domains
 index|[
-literal|6
+literal|10
 index|]
 decl_stmt|;
 block|}
