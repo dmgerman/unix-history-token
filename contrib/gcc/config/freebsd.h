@@ -112,7 +112,7 @@ value|FBSD_CPP_SPEC
 end_define
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling or need threads support.    (simular to the default, except no -lg, and no -p).  */
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Before    __FreeBSD_version 500016, select the appropriate libc, depending on    whether we're doing profiling or need threads support.  (similar to    the default, except no -lg, and no -p).  At __FreeBSD_version    500016 and later, when threads support is requested include both    -lc and -lc_r instead of only -lc_r.  */
 end_comment
 
 begin_undef
@@ -121,12 +121,43 @@ directive|undef
 name|LIB_SPEC
 end_undef
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500016
+end_if
+
 begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"\   %{!shared: \     %{!pg: \       %{!pthread:-lc} \       %{pthread:-lc_r}} \     %{pg: \       %{!pthread:-lc_p} \       %{pthread:-lc_r_p}} \   }"
+value|"							\    %{!shared:								\      %{!pg: %{pthread:-lc_r} -lc}					\      %{pg:  %{pthread:-lc_r_p} -lc_p}					\    }"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LIB_SPEC
+value|"							\   %{!shared:								\     %{!pg:								\       %{!pthread:-lc}							\       %{pthread:-lc_r}}							\     %{pg:								\       %{!pthread:-lc_p}							\       %{pthread:-lc_r_p}}						\   }"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/************************[  Target stuff  ]***********************************/
