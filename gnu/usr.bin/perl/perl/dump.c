@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: dump.c,v $$Revision: 1.1.1.1 $$Date: 1993/08/23 21:29:36 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: dump.c,v $  * Revision 1.1.1.1  1993/08/23  21:29:36  nate  * PERL!  *  * Revision 4.0.1.2  92/06/08  13:14:22  lwall  * patch20: removed implicit int declarations on funcions  * patch20: fixed confusion between a *var's real name and its effective name  *   * Revision 4.0.1.1  91/06/07  10:58:44  lwall  * patch4: new copyright notice  *   * Revision 4.0  91/03/20  01:08:25  lwall  * 4.0 baseline.  *   */
+comment|/* $RCSfile: dump.c,v $$Revision: 1.1.1.1 $$Date: 1994/09/10 06:27:32 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: dump.c,v $  * Revision 1.1.1.1  1994/09/10  06:27:32  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:36  nate  * PERL!  *  * Revision 4.0.1.2  92/06/08  13:14:22  lwall  * patch20: removed implicit int declarations on funcions  * patch20: fixed confusion between a *var's real name and its effective name  *   * Revision 4.0.1.1  91/06/07  10:58:44  lwall  * patch4: new copyright notice  *   * Revision 4.0  91/03/20  01:08:25  lwall  * 4.0 baseline.  *   */
 end_comment
 
 begin_include
@@ -1528,7 +1528,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|AF_LOCAL
+name|AF_LOCAL_XX
 condition|)
 operator|(
 name|void

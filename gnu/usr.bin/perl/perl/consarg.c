@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: consarg.c,v $$Revision: 1.1.1.1 $$Date: 1993/08/23 21:29:35 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: consarg.c,v $  * Revision 1.1.1.1  1993/08/23  21:29:35  nate  * PERL!  *  * Revision 4.0.1.4  92/06/08  12:26:27  lwall  * patch20: new warning for use of x with non-numeric right operand  * patch20: modulus with highest bit in left operand set didn't always work  * patch20: illegal lvalue message could be followed by core dump  * patch20: deleted some minor memory leaks  *   * Revision 4.0.1.3  91/11/05  16:21:16  lwall  * patch11: random cleanup  * patch11: added eval {}  * patch11: added sort {} LIST  * patch11: "foo" x -1 dumped core  * patch11: substr() and vec() weren't allowed in an lvalue list  *   * Revision 4.0.1.2  91/06/07  10:33:12  lwall  * patch4: new copyright notice  * patch4: length($`), length($&), length($') now optimized to avoid string copy  *   * Revision 4.0.1.1  91/04/11  17:38:34  lwall  * patch1: fixed "Bad free" error  *   * Revision 4.0  91/03/20  01:06:15  lwall  * 4.0 baseline.  *   */
+comment|/* $RCSfile: consarg.c,v $$Revision: 1.1.1.1 $$Date: 1994/09/10 06:27:32 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: consarg.c,v $  * Revision 1.1.1.1  1994/09/10  06:27:32  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:35  nate  * PERL!  *  * Revision 4.0.1.4  92/06/08  12:26:27  lwall  * patch20: new warning for use of x with non-numeric right operand  * patch20: modulus with highest bit in left operand set didn't always work  * patch20: illegal lvalue message could be followed by core dump  * patch20: deleted some minor memory leaks  *   * Revision 4.0.1.3  91/11/05  16:21:16  lwall  * patch11: random cleanup  * patch11: added eval {}  * patch11: added sort {} LIST  * patch11: "foo" x -1 dumped core  * patch11: substr() and vec() weren't allowed in an lvalue list  *   * Revision 4.0.1.2  91/06/07  10:33:12  lwall  * patch4: new copyright notice  * patch4: length($`), length($&), length($') now optimized to avoid string copy  *   * Revision 4.0.1.1  91/04/11  17:38:34  lwall  * patch1: fixed "Bad free" error  *   * Revision 4.0  91/03/20  01:06:15  lwall  * 4.0 baseline.  *   */
 end_comment
 
 begin_include
@@ -4081,13 +4081,13 @@ name|arg1
 operator|->
 name|arg_flags
 operator|&
-name|AF_LOCAL
+name|AF_LOCAL_XX
 condition|)
 name|arg
 operator|->
 name|arg_flags
 operator||=
-name|AF_LOCAL
+name|AF_LOCAL_XX
 expr_stmt|;
 name|arg
 index|[
@@ -6212,7 +6212,7 @@ name|arg
 operator|->
 name|arg_flags
 operator||=
-name|AF_LOCAL
+name|AF_LOCAL_XX
 expr_stmt|;
 return|return
 name|arg

@@ -20,19 +20,11 @@ comment|/*SUPPRESS 460*/
 end_comment
 
 begin_comment
-comment|/* EUNICE  *	This symbol, if defined, indicates that the program is being compiled  *	under the EUNICE package under VMS.  The program will need to handle  *	things like files that don't go away the first time you unlink them,  *	due to version numbering.  It will also need to compensate for lack  *	of a respectable link() command.  */
+comment|/*#undef	EUNICE		*/
 end_comment
 
 begin_comment
-comment|/* VMS  *	This symbol, if defined, indicates that the program is running under  *	VMS.  It is currently only set in conjunction with the EUNICE symbol.  */
-end_comment
-
-begin_comment
-comment|/*#undef	EUNICE		/**/
-end_comment
-
-begin_comment
-comment|/*#undef	VMS		/**/
+comment|/*#undef	VMS		*/
 end_comment
 
 begin_comment
@@ -207,7 +199,7 @@ comment|/* CHARSPRINTF  *	This symbol is defined if this system declares "char *
 end_comment
 
 begin_comment
-comment|/*#undef	CHARSPRINTF 	/**/
+comment|/*#undef	CHARSPRINTF 	*/
 end_comment
 
 begin_comment
@@ -215,7 +207,7 @@ comment|/* HAS_CHSIZE  *	This symbol, if defined, indicates that the chsize rout
 end_comment
 
 begin_comment
-comment|/*#undef	HAS_CHSIZE		/**/
+comment|/*#undef	HAS_CHSIZE		*/
 end_comment
 
 begin_comment
@@ -252,7 +244,7 @@ comment|/* DOSUID  *	This symbol, if defined, indicates that the C program shoul
 end_comment
 
 begin_comment
-comment|/*#undef DOSUID		/**/
+comment|/*#undef DOSUID		*/
 end_comment
 
 begin_comment
@@ -358,7 +350,7 @@ comment|/* HAS_GETHOSTENT  *	This symbol, if defined, indicates that the gethost
 end_comment
 
 begin_comment
-comment|/*#undef	HAS_GETHOSTENT		/**/
+comment|/*#undef	HAS_GETHOSTENT		*/
 end_comment
 
 begin_comment
@@ -380,7 +372,7 @@ comment|/* HAS_GETPGRP2  *	This symbol, if defined, indicates that the getpgrp2(
 end_comment
 
 begin_comment
-comment|/*#undef	HAS_GETPGRP2		/**/
+comment|/*#undef	HAS_GETPGRP2		*/
 end_comment
 
 begin_comment
@@ -459,14 +451,6 @@ end_comment
 
 begin_comment
 comment|/* rindex  *	This preprocessor symbol is defined, along with index, if the system  *	uses the strchr and strrchr routines instead.  */
-end_comment
-
-begin_comment
-comment|/*#undef	index strchr	/* cultural */
-end_comment
-
-begin_comment
-comment|/*#undef	rindex strrchr	/*  differences? */
 end_comment
 
 begin_comment
@@ -596,46 +580,6 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/* HAS_MSG  *	This symbol, if defined, indicates that the entire msg*(2) library is  *	supported.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_MSG		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_MSGCTL  *	This symbol, if defined, indicates that the msgctl() routine is  *	available to control message passing.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_MSGCTL		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_MSGGET  *	This symbol, if defined, indicates that the msgget() routine is  *	available to get messages.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_MSGGET		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_MSGRCV  *	This symbol, if defined, indicates that the msgrcv() routine is  *	available to receive messages.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_MSGRCV		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_MSGSND  *	This symbol, if defined, indicates that the msgsnd() routine is  *	available to send messages.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_MSGSND		/**/
-end_comment
-
-begin_comment
 comment|/* HAS_NDBM  *	This symbol, if defined, indicates that ndbm.h exists and should  *	be included.  */
 end_comment
 
@@ -651,10 +595,6 @@ end_comment
 
 begin_comment
 comment|/* HAS_ODBM  *	This symbol, if defined, indicates that dbm.h exists and should  *	be included.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_ODBM		/**/
 end_comment
 
 begin_comment
@@ -756,38 +696,6 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/* HAS_SEM  *	This symbol, if defined, indicates that the entire sem*(2) library is  *	supported.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SEM		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SEMCTL  *	This symbol, if defined, indicates that the semctl() routine is  *	available to control semaphores.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SEMCTL		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SEMGET  *	This symbol, if defined, indicates that the semget() routine is  *	available to get semaphores ids.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SEMGET		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SEMOP  *	This symbol, if defined, indicates that the semop() routine is  *	available to perform semaphore operations.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SEMOP		/**/
-end_comment
-
-begin_comment
 comment|/* HAS_SETEGID  *	This symbol, if defined, indicates that the setegid routine is available  *	to change the effective gid of the current program.  */
 end_comment
 
@@ -834,10 +742,6 @@ comment|/* HAS_SETPGRP2  *	This symbol, if defined, indicates that the setpgrp2(
 end_comment
 
 begin_comment
-comment|/*#undef	HAS_SETPGRP2		/**/
-end_comment
-
-begin_comment
 comment|/* HAS_SETPRIORITY  *	This symbol, if defined, indicates that the setpriority() routine is  *	available to set a process's priority.  */
 end_comment
 
@@ -870,10 +774,6 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*#undef	HAS_SETRESGID		/**/
-end_comment
-
-begin_comment
 comment|/* HAS_SETREUID  *	This symbol, if defined, indicates that the setreuid routine is  *	available to change the real and effective uid of the current program.  */
 end_comment
 
@@ -889,10 +789,6 @@ end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SETRESUID		/**/
 end_comment
 
 begin_comment
@@ -921,54 +817,6 @@ end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SHM  *	This symbol, if defined, indicates that the entire shm*(2) library is  *	supported.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SHM		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SHMAT  *	This symbol, if defined, indicates that the shmat() routine is  *	available to attach a shared memory segment.  */
-end_comment
-
-begin_comment
-comment|/* VOID_SHMAT  *	This symbol, if defined, indicates that the shmat() routine  *	returns a pointer of type void*.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SHMAT		/**/
-end_comment
-
-begin_comment
-comment|/*#undef	VOIDSHMAT		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SHMCTL  *	This symbol, if defined, indicates that the shmctl() routine is  *	available to control a shared memory segment.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SHMCTL		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SHMDT  *	This symbol, if defined, indicates that the shmdt() routine is  *	available to detach a shared memory segment.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SHMDT		/**/
-end_comment
-
-begin_comment
-comment|/* HAS_SHMGET  *	This symbol, if defined, indicates that the shmget() routine is  *	available to get a shared memory segment id.  */
-end_comment
-
-begin_comment
-comment|/*#undef	HAS_SHMGET		/**/
 end_comment
 
 begin_comment
@@ -1004,10 +852,6 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*#undef	OLDSOCKET	/**/
-end_comment
-
-begin_comment
 comment|/* STATBLOCKS  *	This symbol is defined if this system has a stat structure declaring  *	st_blksize and st_blocks.  */
 end_comment
 
@@ -1023,10 +867,6 @@ end_comment
 
 begin_comment
 comment|/* STDSTDIO  *	This symbol is defined if this system has a FILE structure declaring  *	_ptr and _cnt in stdio.h.  */
-end_comment
-
-begin_comment
-comment|/*#undef	STDSTDIO 	/**/
 end_comment
 
 begin_comment
@@ -1189,10 +1029,6 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*#undef	CHARVSPRINTF 	/**/
-end_comment
-
-begin_comment
 comment|/* HAS_WAIT4  *	This symbol, if defined, indicates that wait4() exists.  */
 end_comment
 
@@ -1243,7 +1079,7 @@ begin_define
 define|#
 directive|define
 name|GROUPSTYPE
-value|int
+value|gid_t
 end_define
 
 begin_comment
@@ -1255,15 +1091,7 @@ comment|/* I_FCNTL  *	This manifest constant tells the C program to include<fcnt
 end_comment
 
 begin_comment
-comment|/*#undef	I_FCNTL	/**/
-end_comment
-
-begin_comment
 comment|/* I_GDBM  *	This symbol, if defined, indicates that gdbm.h exists and should  *	be included.  */
-end_comment
-
-begin_comment
-comment|/*#undef	I_GDBM		/**/
 end_comment
 
 begin_comment
@@ -1296,10 +1124,6 @@ end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/*#undef	I_SYS_IN		/**/
 end_comment
 
 begin_comment
@@ -1340,14 +1164,6 @@ begin_comment
 comment|/**/
 end_comment
 
-begin_comment
-comment|/*#undef	PWQUOTA		/**/
-end_comment
-
-begin_comment
-comment|/*#undef	PWAGE		/**/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1376,10 +1192,6 @@ end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/*#undef	PWCOMMENT	/**/
 end_comment
 
 begin_comment
@@ -1426,10 +1238,6 @@ begin_comment
 comment|/* I_SYS_SELECT  *	This symbol is defined if the program should include<sys/select.h>.  */
 end_comment
 
-begin_comment
-comment|/*#undef	I_TIME	 	/**/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1438,14 +1246,6 @@ end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/*#undef	SYSTIMEKERNEL 	/**/
-end_comment
-
-begin_comment
-comment|/*#undef	I_SYS_SELECT 	/**/
 end_comment
 
 begin_comment
@@ -1478,10 +1278,6 @@ end_comment
 
 begin_comment
 comment|/* I_VFORK  *	This symbol, if defined, indicates to the C program that it should  *	include vfork.h.  */
-end_comment
-
-begin_comment
-comment|/*#undef	I_VFORK		/**/
 end_comment
 
 begin_comment
@@ -1531,26 +1327,6 @@ end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/*#undef	I_SYS_DIR	/**/
-end_comment
-
-begin_comment
-comment|/*#undef	I_NDIR		/**/
-end_comment
-
-begin_comment
-comment|/*#undef	I_SYS_NDIR	/**/
-end_comment
-
-begin_comment
-comment|/*#undef	I_MY_DIR	/**/
-end_comment
-
-begin_comment
-comment|/*#undef	DIRNAMLEN	/**/
 end_comment
 
 begin_comment

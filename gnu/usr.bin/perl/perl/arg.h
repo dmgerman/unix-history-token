@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: arg.h,v $$Revision: 1.1.1.1 $$Date: 1993/08/23 21:29:34 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: arg.h,v $  * Revision 1.1.1.1  1993/08/23  21:29:34  nate  * PERL!  *  * Revision 4.0.1.3  92/06/08  11:44:06  lwall  * patch20: O_PIPE conflicted with Atari  * patch20: clarified debugging output for literals and double-quoted strings  *   * Revision 4.0.1.2  91/11/05  15:51:05  lwall  * patch11: added eval {}  * patch11: added sort {} LIST  *   * Revision 4.0.1.1  91/06/07  10:18:30  lwall  * patch4: length($`), length($&), length($') now optimized to avoid string copy  * patch4: new copyright notice  * patch4: many, many itty-bitty portability fixes  *   * Revision 4.0  91/03/20  01:03:09  lwall  * 4.0 baseline.  *   */
+comment|/* $RCSfile: arg.h,v $$Revision: 1.1.1.1 $$Date: 1994/09/10 06:27:34 $  *  *    Copyright (c) 1991, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: arg.h,v $  * Revision 1.1.1.1  1994/09/10  06:27:34  gclarkii  * Initial import of Perl 4.046 bmaked  *  * Revision 1.1.1.1  1993/08/23  21:29:34  nate  * PERL!  *  * Revision 4.0.1.3  92/06/08  11:44:06  lwall  * patch20: O_PIPE conflicted with Atari  * patch20: clarified debugging output for literals and double-quoted strings  *   * Revision 4.0.1.2  91/11/05  15:51:05  lwall  * patch11: added eval {}  * patch11: added sort {} LIST  *   * Revision 4.0.1.1  91/06/07  10:18:30  lwall  * patch4: length($`), length($&), length($') now optimized to avoid string copy  * patch4: new copyright notice  * patch4: many, many itty-bitty portability fixes  *   * Revision 4.0  91/03/20  01:03:09  lwall  * 4.0 baseline.  *   */
 end_comment
 
 begin_define
@@ -2964,7 +2964,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_LOCAL
+name|AF_LOCAL_XX
 value|128
 end_define
 
