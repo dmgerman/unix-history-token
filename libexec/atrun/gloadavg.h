@@ -19,7 +19,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char atrun_h_rcsid[] = "$FreeBSD$";
+unit|static char atrun_h_rcsid[] = "$Id$";
 endif|#
 directive|endif
 end_endif
