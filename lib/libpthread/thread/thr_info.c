@@ -673,11 +673,18 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Output a header for file descriptors: */
-name|strcpy
+name|snprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"\n\n=============\nFILE DESCRIPTOR TABLE\n\n"
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+literal|"\n\n=============\nFILE DESCRIPTOR TABLE (table size %d)\n\n"
+argument_list|,
+name|_thread_dtablesize
 argument_list|)
 expr_stmt|;
 name|_thread_sys_write

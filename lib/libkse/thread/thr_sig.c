@@ -71,21 +71,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
-specifier|volatile
+name|spinlock_t
 name|thread_dead_lock
 init|=
-literal|0
+name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|long
-specifier|volatile
+name|spinlock_t
 name|thread_link_list_lock
 init|=
-literal|0
+name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +97,7 @@ name|_lock_thread_list
 parameter_list|()
 block|{
 comment|/* Lock the thread list: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|thread_link_list_lock
@@ -118,7 +116,7 @@ name|_lock_dead_thread_list
 parameter_list|()
 block|{
 comment|/* Lock the dead thread list: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|thread_dead_lock
@@ -137,7 +135,7 @@ name|_unlock_thread_list
 parameter_list|()
 block|{
 comment|/* Unlock the thread list: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|thread_link_list_lock
@@ -172,7 +170,7 @@ name|_unlock_dead_thread_list
 parameter_list|()
 block|{
 comment|/* Unlock the dead thread list: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|thread_dead_lock
@@ -277,6 +275,8 @@ comment|/* Check if the scheduler interrupt has come at an 		 * unfortunate time
 if|if
 condition|(
 name|thread_link_list_lock
+operator|.
+name|access_lock
 condition|)
 comment|/* 			 * Set a flag so that the thread that has 			 * the lock yields when it unlocks the 			 * thread list: 			 */
 name|yield_on_unlock_thread
@@ -287,6 +287,8 @@ comment|/* Check if the scheduler interrupt has come at an 		 * unfortunate time
 if|if
 condition|(
 name|thread_dead_lock
+operator|.
+name|access_lock
 condition|)
 comment|/* 			 * Set a flag so that the thread that has 			 * the lock yields when it unlocks the 			 * dead thread list: 			 */
 name|yield_on_unlock_dead

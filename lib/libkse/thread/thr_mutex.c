@@ -15,6 +15,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -231,11 +237,22 @@ name|m_type
 operator|=
 name|type
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
 name|pmutex
 operator|->
-name|access_lock
-operator|=
+name|lock
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pmutex
+operator|->
+name|lock
+argument_list|)
+argument_list|)
 expr_stmt|;
 operator|*
 name|mutex
@@ -300,7 +317,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* Lock the mutex structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -308,7 +325,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Free the memory allocated for the mutex 		 * structure: 		 */
@@ -382,7 +399,7 @@ literal|0
 condition|)
 block|{
 comment|/* Lock the mutex structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -390,7 +407,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
@@ -516,7 +533,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the mutex structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -524,7 +541,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -585,7 +602,7 @@ literal|0
 condition|)
 block|{
 comment|/* Lock the mutex structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -593,7 +610,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
@@ -665,7 +682,7 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -673,7 +690,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Block signals: */
@@ -687,7 +704,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex again: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -695,7 +712,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -771,7 +788,7 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 comment|/* Unlock the mutex structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -779,7 +796,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Block signals: */
@@ -793,7 +810,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex again: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -801,7 +818,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -828,7 +845,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the mutex structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -836,7 +853,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -883,7 +900,7 @@ block|}
 else|else
 block|{
 comment|/* Lock the mutex structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -891,7 +908,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to mutex type: */
@@ -1071,7 +1088,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the mutex structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -1079,7 +1096,7 @@ operator|*
 name|mutex
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}

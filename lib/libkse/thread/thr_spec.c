@@ -103,7 +103,7 @@ operator|++
 control|)
 block|{
 comment|/* Lock the key table entry: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -112,7 +112,7 @@ operator|*
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -155,7 +155,7 @@ operator|=
 name|destructor
 expr_stmt|;
 comment|/* Unlock the key table entry: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -164,7 +164,7 @@ operator|*
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 return|return
@@ -174,7 +174,7 @@ operator|)
 return|;
 block|}
 comment|/* Unlock the key table entry: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -183,7 +183,7 @@ operator|*
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -216,7 +216,7 @@ name|PTHREAD_KEYS_MAX
 condition|)
 block|{
 comment|/* Lock the key table entry: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -224,7 +224,7 @@ index|[
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -251,7 +251,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 comment|/* Unlock the key table entry: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -259,7 +259,7 @@ index|[
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -293,6 +293,16 @@ decl_stmt|;
 name|int
 name|itr
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|destructor
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 for|for
 control|(
 name|itr
@@ -329,7 +339,7 @@ name|specific_data_count
 condition|)
 block|{
 comment|/* Lock the key table entry: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -337,8 +347,12 @@ index|[
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
 argument_list|)
+expr_stmt|;
+name|destructor
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -387,29 +401,19 @@ operator|->
 name|specific_data_count
 operator|--
 expr_stmt|;
-if|if
-condition|(
+name|destructor
+operator|=
 name|key_table
 index|[
 name|key
 index|]
 operator|.
 name|destructor
-condition|)
-name|key_table
-index|[
-name|key
-index|]
-operator|.
-name|destructor
-argument_list|(
-name|data
-argument_list|)
 expr_stmt|;
 block|}
 block|}
 comment|/* Unlock the key table entry: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 name|key_table
@@ -417,7 +421,17 @@ index|[
 name|key
 index|]
 operator|.
-name|access_lock
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 				 * If there is a destructore, call it 				 * with the key table entry unlocked: 				 */
+if|if
+condition|(
+name|destructor
+condition|)
+name|destructor
+argument_list|(
+name|data
 argument_list|)
 expr_stmt|;
 block|}
@@ -567,18 +581,6 @@ operator|<
 name|PTHREAD_KEYS_MAX
 condition|)
 block|{
-comment|/* Lock the key table entry: */
-name|_spinlock
-argument_list|(
-operator|&
-name|key_table
-index|[
-name|key
-index|]
-operator|.
-name|access_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|key_table
@@ -646,18 +648,6 @@ name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/* Unlock the key table entry: */
-name|_atomic_unlock
-argument_list|(
-operator|&
-name|key_table
-index|[
-name|key
-index|]
-operator|.
-name|access_lock
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|ret
@@ -713,18 +703,6 @@ operator|<
 name|PTHREAD_KEYS_MAX
 condition|)
 block|{
-comment|/* Lock the key table entry: */
-name|_spinlock
-argument_list|(
-operator|&
-name|key_table
-index|[
-name|key
-index|]
-operator|.
-name|access_lock
-argument_list|)
-expr_stmt|;
 comment|/* Check if this key has been used before: */
 if|if
 condition|(
@@ -759,18 +737,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Unlock the key table entry: */
-name|_atomic_unlock
-argument_list|(
-operator|&
-name|key_table
-index|[
-name|key
-index|]
-operator|.
-name|access_lock
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 comment|/* No specific data has been created, so just return NULL: */

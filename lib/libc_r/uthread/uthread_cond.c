@@ -15,6 +15,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -181,11 +187,22 @@ name|c_type
 operator|=
 name|type
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
 name|pcond
 operator|->
-name|access_lock
-operator|=
+name|lock
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcond
+operator|->
+name|lock
+argument_list|)
+argument_list|)
 expr_stmt|;
 operator|*
 name|cond
@@ -236,7 +253,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -244,7 +261,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Free the memory allocated for the condition 		 * variable structure: 		 */
@@ -325,7 +342,7 @@ literal|0
 condition|)
 block|{
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -333,7 +350,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -382,7 +399,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Unlock the condition variable structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -390,7 +407,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
@@ -404,7 +421,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -412,7 +429,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex: */
@@ -434,7 +451,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the condition variable structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -442,7 +459,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -516,7 +533,7 @@ literal|0
 condition|)
 block|{
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -524,7 +541,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -615,7 +632,7 @@ block|}
 else|else
 block|{
 comment|/* Unlock the condition variable structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -623,7 +640,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
@@ -637,7 +654,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -645,7 +662,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Lock the mutex: */
@@ -690,7 +707,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the condition variable structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -698,7 +715,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -749,7 +766,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -757,7 +774,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -816,7 +833,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the condition variable structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -824,7 +841,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -875,7 +892,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* Lock the condition variable structure: */
-name|_spinlock
+name|_SPINLOCK
 argument_list|(
 operator|&
 operator|(
@@ -883,7 +900,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 comment|/* Process according to condition variable type: */
@@ -942,7 +959,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Unlock the condition variable structure: */
-name|_atomic_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
 operator|(
@@ -950,7 +967,7 @@ operator|*
 name|cond
 operator|)
 operator|->
-name|access_lock
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
