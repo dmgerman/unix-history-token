@@ -1357,7 +1357,7 @@ name|PSOCK
 operator||
 name|PCATCH
 argument_list|,
-literal|"nfsd"
+literal|"-"
 argument_list|,
 literal|0
 argument_list|)
