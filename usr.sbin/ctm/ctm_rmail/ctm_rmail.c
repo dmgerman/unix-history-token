@@ -965,9 +965,12 @@ name|sprintf
 argument_list|(
 name|tname
 argument_list|,
-literal|"tmp.%s"
+literal|"%s.%d.tmp"
 argument_list|,
 name|pname
+argument_list|,
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
