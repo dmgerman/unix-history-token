@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sem.c,v 1.6 1997/08/07 21:42:15 steve Exp $"
+literal|"$Id: sem.c,v 1.7 1998/02/28 10:50:00 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,12 +74,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include

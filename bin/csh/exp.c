@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: exp.c,v 1.4 1997/02/22 14:01:52 peter Exp $"
+literal|"$Id: exp.c,v 1.5 1997/08/07 21:42:07 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,19 +49,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -69,27 +57,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SHORT_STRINGS
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SHORT_STRINGS */
-end_comment
 
 begin_if
 if|#

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lex.c,v 1.7 1997/08/07 21:42:11 steve Exp $"
+literal|"$Id: lex.c,v 1.8 1997/08/08 00:54:04 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -68,12 +62,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.7 1997/08/07 21:42:08 steve Exp $"
+literal|"$Id: file.c,v 1.8 1998/02/01 17:11:01 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,12 +56,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -99,27 +93,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SHORT_STRINGS
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SHORT_STRINGS */
-end_comment
 
 begin_if
 if|#

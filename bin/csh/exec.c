@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: exec.c,v 1.8 1997/12/10 22:18:22 eivind Exp $"
+literal|"$Id: exec.c,v 1.9 1998/02/28 10:49:54 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,12 +74,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include

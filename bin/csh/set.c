@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: set.c,v 1.7 1997/08/07 21:42:16 steve Exp $"
+literal|"$Id: set.c,v 1.8 1998/02/28 10:50:02 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,39 +44,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SHORT_STRINGS
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SHORT_STRINGS */
 end_comment
 
 begin_if
