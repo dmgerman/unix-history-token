@@ -10640,14 +10640,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"ohci_abort_xfer: hcpriv==0\n"
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ohci_abort_xfer: hcpriv==0\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -16005,6 +16005,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ohci_device_isoc_abort: hcpriv==0\n"
