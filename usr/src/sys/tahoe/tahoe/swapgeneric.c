@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -154,6 +154,14 @@ name|vddriver
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vba_driver
+name|hdcdriver
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|genericconf
@@ -181,6 +189,23 @@ operator|&
 name|vddriver
 block|,
 literal|"dk"
+block|,
+name|makedev
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+block|,	}
+block|,
+block|{
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|hdcdriver
+block|,
+literal|"hd"
 block|,
 name|makedev
 argument_list|(
