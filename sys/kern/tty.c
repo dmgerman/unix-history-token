@@ -15774,6 +15774,12 @@ operator|->
 name|t_wopeners
 operator|==
 literal|0
+operator|&&
+name|tp
+operator|->
+name|t_close
+operator|!=
+name|NULL
 condition|)
 name|tp
 operator|->
@@ -15834,6 +15840,14 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_close
+operator|!=
+name|NULL
+condition|)
 name|tp
 operator|->
 name|t_close
