@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -8,12 +8,6 @@ define|#
 directive|define
 name|KERNEL
 end_define
-
-begin_include
-include|#
-directive|include
-file|"pte.h"
-end_include
 
 begin_include
 include|#
@@ -31,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"vmmeter.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vmparam.h"
 end_include
 
 begin_include
@@ -61,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"text.h"
 end_include
 
 begin_include
@@ -115,6 +97,24 @@ begin_include
 include|#
 directive|include
 file|"syscall.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vm/vm_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vm/vm_map.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pmap.h"
 end_include
 
 begin_function
@@ -173,15 +173,19 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-name|struct
-name|text
-modifier|*
-name|tp
+name|vm_map_t
+name|map
 init|=
 operator|(
-expr|struct
-name|text
-operator|*
+name|vm_map_t
+operator|)
+literal|0
+decl_stmt|;
+name|pmap_t
+name|pmap
+init|=
+operator|(
+name|pmap_t
 operator|)
 literal|0
 decl_stmt|;
@@ -223,12 +227,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_XLINK %d\n"
+literal|"#define\tP_MAP %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_xlink
+name|p_map
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPMAP %d\n"
+argument_list|,
+operator|&
+name|map
+operator|->
+name|pmap
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPM_STCHG %d\n"
+argument_list|,
+operator|&
+name|pmap
+operator|->
+name|pm_stchanged
 argument_list|)
 expr_stmt|;
 name|printf
@@ -273,66 +297,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_TSIZE %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_tsize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_DSIZE %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_dsize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_SSIZE %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_ssize
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_P0BR %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_p0br
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_SZPT %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_szpt
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_TEXTP %d\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_textp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"#define\tP_FLAG %d\n"
 argument_list|,
 operator|&
@@ -353,16 +317,6 @@ argument_list|(
 literal|"#define\tSRUN %d\n"
 argument_list|,
 name|SRUN
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tX_CADDR %d\n"
-argument_list|,
-operator|&
-name|tp
-operator|->
-name|x_caddr
 argument_list|)
 expr_stmt|;
 name|printf
@@ -488,6 +442,13 @@ argument_list|(
 literal|"#define\tNBPG %d\n"
 argument_list|,
 name|NBPG
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tNPTEPG %d\n"
+argument_list|,
+name|NPTEPG
 argument_list|)
 expr_stmt|;
 name|printf
@@ -855,6 +816,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tMMUBASE %d\n"
+argument_list|,
+name|MMUBASE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tMMUSTAT %d\n"
 argument_list|,
 name|MMUSTAT
@@ -1044,6 +1012,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tSG_ISHIFT %d\n"
+argument_list|,
+name|SG_ISHIFT
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tPCB_FLAGS %d\n"
 argument_list|,
 operator|&
@@ -1089,56 +1064,6 @@ argument_list|,
 name|pcb
 operator|->
 name|pcb_regs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P0BR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p0br
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P0LR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p0lr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P1BR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p1br
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_P1LR %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_p1lr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_SZPT %d\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_szpt
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1223,6 +1148,13 @@ argument_list|(
 literal|"#define\tENAMETOOLONG %d\n"
 argument_list|,
 name|ENAMETOOLONG
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tCLKBASE %d\n"
+argument_list|,
+name|CLKBASE
 argument_list|)
 expr_stmt|;
 name|printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.13 89/11/30$  *  *	@(#)clockreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.13 89/11/30$  *  *	@(#)clockreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -71,18 +71,29 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* base/offsets for register access (for locore.s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLKBASE
+value|IOP(0x5F8000)
+end_define
+
 begin_define
 define|#
 directive|define
 name|CLKCR1
-value|IOP(0x5F8001)
+value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
 name|CLKCR2
-value|IOP(0x5F8003)
+value|0x3
 end_define
 
 begin_define
@@ -103,21 +114,21 @@ begin_define
 define|#
 directive|define
 name|CLKMSB1
-value|IOP(0x5F8005)
+value|0x5
 end_define
 
 begin_define
 define|#
 directive|define
 name|CLKMSB2
-value|IOP(0x5F8009)
+value|0x9
 end_define
 
 begin_define
 define|#
 directive|define
 name|CLKMSB3
-value|IOP(0x5F800D)
+value|0xD
 end_define
 
 begin_comment

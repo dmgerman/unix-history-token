@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.15 89/09/25$  *  *	@(#)hpux.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.1 90/07/09$  *  *	@(#)hpux.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -195,60 +195,6 @@ value|_IO('t', 104)
 end_define
 
 begin_comment
-comment|/* HP-UX directory stuff */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HPUXNSIZ
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|HPUXPSIZ
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|HPUXDSIZ
-value|sizeof(struct hpuxdirect)
-end_define
-
-begin_struct
-struct|struct
-name|hpuxdirect
-block|{
-name|u_long
-name|hpuxd_ino
-decl_stmt|;
-name|u_short
-name|hpuxd_reclen
-decl_stmt|;
-name|u_short
-name|hpuxd_namlen
-decl_stmt|;
-name|char
-name|hpuxd_name
-index|[
-name|HPUXNSIZ
-index|]
-decl_stmt|;
-name|char
-name|hpuxd_pad
-index|[
-name|HPUXPSIZ
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* HP-UX stat structure */
 end_comment
 
@@ -344,6 +290,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ooHU_AROFF
+value|0x004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ooHU_TSOFF
+value|0x092
+end_define
+
+begin_define
+define|#
+directive|define
+name|ooHU_EDOFF
+value|0x91E
+end_define
+
+begin_define
+define|#
+directive|define
+name|ooHU_FPOFF
+value|0xA66
+end_define
+
+begin_comment
+comment|/* 6.5 offsets */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|oHU_AROFF
 value|0x004
 end_define
@@ -352,25 +330,25 @@ begin_define
 define|#
 directive|define
 name|oHU_TSOFF
-value|0x092
+value|0x0B2
 end_define
 
 begin_define
 define|#
 directive|define
 name|oHU_EDOFF
-value|0x91E
+value|0x93A
 end_define
 
 begin_define
 define|#
 directive|define
 name|oHU_FPOFF
-value|0xA66
+value|0xA86
 end_define
 
 begin_comment
-comment|/* 6.5 offsets */
+comment|/* 7.X offsets */
 end_comment
 
 begin_define
@@ -384,21 +362,21 @@ begin_define
 define|#
 directive|define
 name|HU_TSOFF
-value|0x0B2
+value|0x0B4
 end_define
 
 begin_define
 define|#
 directive|define
 name|HU_EDOFF
-value|0x93A
+value|0x8C8
 end_define
 
 begin_define
 define|#
 directive|define
 name|HU_FPOFF
-value|0xA86
+value|0xA28
 end_define
 
 begin_define
@@ -696,6 +674,101 @@ end_define
 
 begin_comment
 comment|/* T_ZERODIV+USER */
+end_comment
+
+begin_comment
+comment|/* HP-UX POSIX signal stuff implementation */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__hpuxsigset_t
+block|{
+name|long
+name|sigset
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+name|hpuxsigset_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|hpuxsigaction
+block|{
+name|void
+function_decl|(
+modifier|*
+name|sa_handler
+function_decl|)
+parameter_list|()
+function_decl|;
+name|hpuxsigset_t
+name|sa_mask
+decl_stmt|;
+name|int
+name|sa_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|HPUXSA_ONSTACK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXSA_RESETHAND
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXSA_NOCLDSTOP
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPUXSIG_BLOCK
+value|0
+end_define
+
+begin_comment
+comment|/* block specified signal set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXSIG_UNBLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* unblock specified signal set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUXSIG_SETMASK
+value|2
+end_define
+
+begin_comment
+comment|/* set specified signal set */
 end_comment
 
 end_unit
