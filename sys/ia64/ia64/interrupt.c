@@ -263,12 +263,6 @@ argument_list|,
 literal|"clock interrupt"
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|cnt
 operator|.
 name|v_intr
@@ -317,12 +311,6 @@ name|clockframe
 operator|*
 operator|)
 name|framep
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 break|break;
