@@ -216,7 +216,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: mls_ipl.c,v 2.2.2.1 2001/06/26 10:43:20 darrenr Exp $"
+literal|"@(#)$Id: mls_ipl.c,v 2.2.2.2 2002/04/10 05:05:54 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +273,20 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iplidentify
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

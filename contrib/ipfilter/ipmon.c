@@ -384,7 +384,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.12.2.32 2002/03/13 03:30:18 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.12.2.34 2002/03/22 10:27:16 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

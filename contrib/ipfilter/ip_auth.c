@@ -715,7 +715,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.17 2002/03/06 09:44:10 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.19 2002/04/23 14:57:27 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2235,6 +2235,12 @@ return|return
 literal|0
 return|;
 block|}
+name|RWLOCK_EXIT
+argument_list|(
+operator|&
+name|ipf_auth
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -2292,12 +2298,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|RWLOCK_EXIT
-argument_list|(
-operator|&
-name|ipf_auth
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2472,6 +2472,7 @@ directive|if
 name|SOLARIS
 name|error
 operator|=
+operator|(
 name|fr_qout
 argument_list|(
 name|fra
@@ -2480,6 +2481,13 @@ name|fra_q
 argument_list|,
 name|m
 argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+name|EINVAL
+else|:
+literal|0
 expr_stmt|;
 else|#
 directive|else
@@ -2620,6 +2628,7 @@ directive|if
 name|SOLARIS
 name|error
 operator|=
+operator|(
 name|fr_qin
 argument_list|(
 name|fra
@@ -2628,6 +2637,13 @@ name|fra_q
 argument_list|,
 name|m
 argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+name|EINVAL
+else|:
+literal|0
 expr_stmt|;
 else|#
 directive|else

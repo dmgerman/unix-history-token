@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"@(#)$Id: solaris.c,v 2.15.2.29 2002/01/15 14:36:54 darrenr Exp $"
+literal|"@(#)$Id: solaris.c,v 2.15.2.30 2002/04/23 14:57:51 darrenr Exp $"
 end_pragma
 
 begin_include
@@ -5678,7 +5678,7 @@ name|ipf_solaris
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function
@@ -6479,7 +6479,7 @@ name|ipf_solaris
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function

@@ -268,7 +268,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfs.c,v 2.6.2.8 2001/09/14 18:52:21 darrenr Exp $"
+literal|"@(#)$Id: ipfs.c,v 2.6.2.9 2002/04/17 17:42:59 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1331,7 +1331,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:f:lNnSRruvWw"
+literal|"d:f:i:lNnSRruvWw"
 argument_list|)
 operator|)
 operator|!=

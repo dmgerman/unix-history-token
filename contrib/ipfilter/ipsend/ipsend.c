@@ -139,12 +139,6 @@ directive|include
 file|"ipsend.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ipf.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -173,7 +167,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipsend.c,v 2.2.2.4 2002/02/22 15:32:57 darrenr Exp $"
+literal|"@(#)$Id: ipsend.c,v 2.2.2.5 2002/04/23 14:58:57 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
