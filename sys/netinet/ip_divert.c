@@ -747,11 +747,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sa
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* force mbuf reclaim below */
 name|SOCKBUF_UNLOCK
 argument_list|(
 operator|&
@@ -760,6 +755,11 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+name|sa
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* force mbuf reclaim below */
 block|}
 else|else
 name|sorwakeup_locked
