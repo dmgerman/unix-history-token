@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.4 (Berkeley) 81/04/28"
+literal|"@(#)savecore.c	4.5 (Berkeley) 81/05/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,31 +1056,17 @@ argument_list|,
 name|core_vers
 argument_list|)
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Vmunix version mismatch:\n\t%sand\n\t%s"
+literal|"Warning: vmunix version mismatch:\n\t%sand\n\t%s"
 argument_list|,
 name|vers
 argument_list|,
 name|core_vers
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"; image not saved\n"
-argument_list|)
-expr_stmt|;
-name|do_the_dump
-operator|=
-literal|0
-expr_stmt|;
-return|return;
-block|}
 name|fp
 operator|=
 name|fopen
