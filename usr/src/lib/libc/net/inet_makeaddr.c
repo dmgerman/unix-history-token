@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_makeaddr.c	4.1	82/10/07	*/
+comment|/*	inet_makeaddr.c	4.2	82/10/07	*/
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ end_comment
 begin_function
 name|struct
 name|in_addr
-name|if_makeaddr
+name|inet_makeaddr
 parameter_list|(
 name|net
 parameter_list|,

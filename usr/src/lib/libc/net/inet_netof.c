@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_netof.c	4.1	82/10/07	*/
+comment|/*	inet_netof.c	4.2	82/10/07	*/
 end_comment
 
 begin_include
@@ -20,7 +20,7 @@ comment|/*  * Return the network number from an internet  * address; handles cla
 end_comment
 
 begin_macro
-name|in_netof
+name|inet_netof
 argument_list|(
 argument|in
 argument_list|)
