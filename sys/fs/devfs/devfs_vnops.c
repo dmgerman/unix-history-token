@@ -1705,6 +1705,19 @@ name|vp
 operator|->
 name|v_data
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|de
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"Null dirent in devfs_getattr vp=%p"
+operator|,
+name|vp
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -1713,12 +1726,27 @@ name|v_type
 operator|==
 name|VDIR
 condition|)
+block|{
 name|de
 operator|=
 name|de
 operator|->
 name|de_dir
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|de
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"Null dir dirent in devfs_getattr vp=%p"
+operator|,
+name|vp
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 operator|(
