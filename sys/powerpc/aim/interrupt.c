@@ -349,20 +349,9 @@ comment|/* 		 * Re-enable interrupts and call the generic trap code 		 */
 if|#
 directive|if
 literal|0
-block|printf("powerpc_interrupt: got trap\n");
+block|printf("powerpc_interrupt: got trap\n"); 		mtmsr(mfmsr() | PSL_EE); 		isync();
 endif|#
 directive|endif
-name|mtmsr
-argument_list|(
-name|mfmsr
-argument_list|()
-operator||
-name|PSL_EE
-argument_list|)
-expr_stmt|;
-name|isync
-argument_list|()
-expr_stmt|;
 name|trap
 argument_list|(
 name|framep
