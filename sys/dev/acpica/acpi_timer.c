@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<acpica/acpivar.h>
+file|<dev/acpica/acpivar.h>
 end_include
 
 begin_include
