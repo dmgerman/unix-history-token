@@ -1769,6 +1769,28 @@ argument_list|,
 argument|exit_underline_mode
 argument_list|)
 block|}
+comment|/* we do this check/fix in postprocess_termcap(), but some packagers      * prefer to bypass it...      */
+if|if
+condition|(
+name|acs_chars
+operator|==
+literal|0
+operator|&&
+name|enter_alt_charset_mode
+operator|!=
+literal|0
+operator|&&
+name|exit_alt_charset_mode
+operator|!=
+literal|0
+condition|)
+name|acs_chars
+operator|=
+name|strdup
+argument_list|(
+name|VT_ACSC
+argument_list|)
+expr_stmt|;
 comment|/* listed in structure-member order of first argument */
 name|PAIRED
 argument_list|(
