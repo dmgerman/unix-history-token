@@ -33,16 +33,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|GCC_INCLUDE_DIR
-end_undef
-
-begin_comment
-comment|/* We don't need one for now. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
 name|TOOL_INCLUDE_DIR
 end_undef
 
@@ -103,12 +93,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|STANDARD_EXEC_PREFIX
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|TOOLDIR_BASE_PREFIX
 end_undef
 
@@ -122,6 +106,10 @@ directive|undef
 name|MD_EXEC_PREFIX
 end_undef
 
+begin_comment
+comment|/* We don't want one. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -132,12 +120,6 @@ end_define
 begin_comment
 comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|STANDARD_STARTFILE_PREFIX
-end_undef
 
 begin_undef
 undef|#
