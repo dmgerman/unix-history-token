@@ -37,12 +37,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -69,6 +63,16 @@ include|#
 directive|include
 file|<zlib.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_comment
+comment|/* zlib.h is borked, so must precede err.h */
+end_comment
 
 begin_include
 include|#

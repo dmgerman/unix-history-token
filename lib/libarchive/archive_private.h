@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"archive.h"
 end_include
 
@@ -73,23 +67,6 @@ name|archive_entry
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* 	 * Space to store per-entry strings.  Most header strings are 	 * copied here from the format-specific header, in order to 	 * gaurantee null-termination.  Maybe these should go into 	 * per-format storage? 	 */
-name|struct
-name|archive_string
-name|entry_name
-decl_stmt|;
-name|struct
-name|archive_string
-name|entry_linkname
-decl_stmt|;
-name|struct
-name|archive_string
-name|entry_uname
-decl_stmt|;
-name|struct
-name|archive_string
-name|entry_gname
-decl_stmt|;
 comment|/* Utility:  Pointer to a block of nulls. */
 specifier|const
 name|char
@@ -100,10 +77,10 @@ name|size_t
 name|null_length
 decl_stmt|;
 comment|/* 	 * Used to limit reads of entry data.   Eventually, each reader 	 * will be able to register it's own read_data routine and these 	 * will move into the per-format data for the formats that use them. 	 */
-name|uint64_t
+name|off_t
 name|entry_bytes_remaining
 decl_stmt|;
-name|uint64_t
+name|off_t
 name|entry_padding
 decl_stmt|;
 comment|/* Skip this much after entry data. */
@@ -147,29 +124,12 @@ name|int
 name|pad_uncompressed_byte
 decl_stmt|;
 comment|/* TODO: Support this. */
-comment|/* 	 * PAX extended header data.  When reading, 	 * name/linkname/uname/gname fields may point into here.  This 	 * should be moved into per-format data storage. 	 */
-name|struct
-name|archive_string
-name|pax_header
-decl_stmt|;
-comment|/* 	 * GNU header fields.  These should be moved into format-specific 	 * storage. 	 */
-name|struct
-name|archive_string
-name|gnu_name
-decl_stmt|;
-name|struct
-name|archive_string
-name|gnu_linkname
-decl_stmt|;
-name|int
-name|gnu_header_recursion_depth
-decl_stmt|;
 comment|/* Position in UNCOMPRESSED data stream. */
-name|intmax_t
+name|off_t
 name|file_position
 decl_stmt|;
 comment|/* File offset of beginning of most recently-read header. */
-name|intmax_t
+name|off_t
 name|header_position
 decl_stmt|;
 comment|/* 	 * Detection functions for decompression: bid functions are 	 * given a block of data from the beginning of the stream and 	 * can bid on whether or not they support the data stream. 	 * General guideline: bid the number of bits that you actually 	 * test, e.g., 16 if you test a 2-byte magic value.  The 	 * highest bidder will have their init function invoked, which 	 * can set up pointers to specific handlers. 	 * 	 * On write, the client just invokes an archive_write_set function 	 * which sets up the data here directly. 	 */
@@ -367,7 +327,7 @@ modifier|*
 name|format
 decl_stmt|;
 comment|/* Active format. */
-comment|/* 	 * Storage for format-specific data.  Note that there can be 	 * multiple format readers active at one time, so we need to 	 * allow for multiple format readers to have their data 	 * available.  The pformat_data slot here is the solution: on 	 * read, it's set up in the bid phase and is gauranteed to 	 * always point to a void* variable that the format can use. 	 */
+comment|/* 	 * Storage for format-specific data.  Note that there can be 	 * multiple format readers active at one time, so we need to 	 * allow for multiple format readers to have their data 	 * available.  The pformat_data slot here is the solution: on 	 * read, it is gauranteed to always point to a void* variable 	 * that the format can use. 	 */
 name|void
 modifier|*
 modifier|*
@@ -693,6 +653,18 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|err_combine
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b) ? (a) : (b))
+end_define
 
 begin_endif
 endif|#

@@ -18,20 +18,22 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<inttypes.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_comment
+comment|/* For int64_t */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_comment
+comment|/* For ssize_t and size_t */
+end_comment
 
 begin_define
 define|#

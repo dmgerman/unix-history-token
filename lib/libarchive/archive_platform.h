@@ -39,6 +39,20 @@ begin_comment
 comment|/* For __FBSDID */
 end_comment
 
+begin_comment
+comment|/*  * Note that SUSv3 says that inttypes.h includes stdint.h.  * Since inttypes.h predates stdint.h, it's safest to always  * use inttypes.h instead of stdint.h.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_comment
+comment|/* For int64_t, etc. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -78,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|ARCHIVE_ERRNO_PROGRAMMER
-value|EDOOFUS
+value|EINVAL
 end_define
 
 begin_define
@@ -88,10 +102,85 @@ name|ARCHIVE_ERRNO_MISC
 value|(-1)
 end_define
 
+begin_comment
+comment|/*  * Older versions of inttypes.h don't have INT64_MAX, etc.  Since  * SUSv3 requires them to be macros when they are defined, we can  * easily test for and define them here if necessary.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT64_MAX
+end_ifndef
+
+begin_comment
+comment|/* XXX Is this really necessary? XXX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INT64_MAX
+value|0x7fffffffffffffffLL
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_MAX
+value|0xffffffffffffffffULL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __alpha__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INT64_MAX
+value|0x7fffffffffffffffL
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_MAX
+value|0xffffffffffffffffUL
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! INT64_MAX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  __FreeBSD__ */
+end_comment
 
 begin_comment
 comment|/* No non-FreeBSD platform will have __FBSDID, so just define it here. */
@@ -130,6 +219,12 @@ ifdef|#
 directive|ifdef
 name|LINUX
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
 
 begin_define
 define|#

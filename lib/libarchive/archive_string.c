@@ -377,26 +377,5 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Append Unicode character to string using UTF8 encoding */
-end_comment
-
-begin_comment
-unit|struct archive_string * __archive_strappend_char_UTF8(struct archive_string *as, int c) { 	char buff[6];  	if (c<= 0x7f) { 		buff[0] = c; 		return (__archive_string_append(as, buff, 1)); 	} else if (c<= 0x7ff) { 		buff[0] = 0xc0 | (c>> 6); 		buff[1] = 0x80 | (c& 0x3f); 		return (__archive_string_append(as, buff, 2)); 	} else if (c<= 0xffff) { 		buff[0] = 0xe0 | (c>> 12); 		buff[1] = 0x80 | ((c>> 6)& 0x3f); 		buff[2] = 0x80 | (c& 0x3f); 		return (__archive_string_append(as, buff, 3)); 	} else if (c<= 0x1fffff) { 		buff[0] = 0xf0 | (c>> 18); 		buff[1] = 0x80 | ((c>> 12)& 0x3f); 		buff[2] = 0x80 | ((c>> 6)& 0x3f); 		buff[3] = 0x80 | (c& 0x3f); 		return (__archive_string_append(as, buff, 4)); 	} else if (c<= 0x3ffffff) { 		buff[0] = 0xf8 | (c>> 24); 		buff[1] = 0x80 | ((c>> 18)& 0x3f); 		buff[2] = 0x80 | ((c>> 12)& 0x3f); 		buff[3] = 0x80 | ((c>> 6)& 0x3f); 		buff[4] = 0x80 | (c& 0x3f); 		return (__archive_string_append(as, buff, 5)); 	} else if (c<= 0x7fffffff) { 		buff[0] = 0xfc | (c>> 30); 		buff[1] = 0x80 | ((c>> 24)& 0x3f); 		buff[1] = 0x80 | ((c>> 18)& 0x3f); 		buff[2] = 0x80 | ((c>> 12)& 0x3f); 		buff[3] = 0x80 | ((c>> 6)& 0x3f); 		buff[4] = 0x80 | (c& 0x3f); 		return (__archive_string_append(as, buff, 6)); 	} else {
-comment|/* TODO: Handle this error?? */
-end_comment
-
-begin_endif
-unit|return (as); 	} }
-endif|#
-directive|endif
-end_endif
-
 end_unit
 

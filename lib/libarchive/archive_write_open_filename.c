@@ -86,7 +86,7 @@ begin_struct
 struct|struct
 name|write_file_data
 block|{
-name|intmax_t
+name|off_t
 name|offset
 decl_stmt|;
 name|int

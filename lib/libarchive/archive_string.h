@@ -52,11 +52,19 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Initialize an archive_string object on the stack or elsewhere. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|EMPTY_ARCHIVE_STRING
-value|{0,0,0}
+name|archive_string_init
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|do { (a)->s = NULL; (a)->length = 0; (a)->buffer_length = 0; } while(0)
 end_define
 
 begin_comment
@@ -242,7 +250,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|((as)->length=0,archive_strncat((as), (p), (l)))
+value|((as)->length=0, archive_strncat((as), (p), (l)))
 end_define
 
 begin_comment

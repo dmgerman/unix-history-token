@@ -52,11 +52,13 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
+begin_comment
+comment|/* #include<stdint.h> */
+end_comment
+
+begin_comment
+comment|/* See archive_platform.h */
+end_comment
 
 begin_include
 include|#
@@ -217,6 +219,14 @@ name|struct
 name|links_entry
 modifier|*
 name|links_head
+decl_stmt|;
+name|struct
+name|archive_string
+name|entry_name
+decl_stmt|;
+name|struct
+name|archive_string
+name|entry_linkname
 decl_stmt|;
 block|}
 struct|;
@@ -858,7 +868,7 @@ expr_stmt|;
 name|archive_strncpy
 argument_list|(
 operator|&
-name|a
+name|cpio
 operator|->
 name|entry_name
 argument_list|,
@@ -871,7 +881,7 @@ name|archive_entry_set_pathname
 argument_list|(
 name|entry
 argument_list|,
-name|a
+name|cpio
 operator|->
 name|entry_name
 operator|.
@@ -909,6 +919,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|off_t
+operator|)
 name|bytes
 operator|<
 name|a
@@ -936,7 +949,7 @@ expr_stmt|;
 name|archive_strncpy
 argument_list|(
 operator|&
-name|a
+name|cpio
 operator|->
 name|entry_linkname
 argument_list|,
@@ -951,7 +964,7 @@ name|archive_entry_set_symlink
 argument_list|(
 name|entry
 argument_list|,
-name|a
+name|cpio
 operator|->
 name|entry_linkname
 operator|.

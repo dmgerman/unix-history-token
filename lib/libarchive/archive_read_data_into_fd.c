@@ -132,9 +132,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-name|size_t
-operator|)
 name|bytes_read
 operator|>
 name|a
