@@ -291,6 +291,10 @@ name|xdrproc_t
 operator|)
 name|xdr_keybuf
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|secretkey
 argument_list|,
 operator|(
