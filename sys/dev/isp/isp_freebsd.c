@@ -6379,6 +6379,20 @@ name|xs
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * Make sure the command is *really* dead before we 			 * release the handle (and DMA resources) for reuse. 			 */
+operator|(
+name|void
+operator|)
+name|isp_control
+argument_list|(
+name|isp
+argument_list|,
+name|ISPCTL_ABORT_CMD
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+comment|/* 			 * After this point, the comamnd is really dead. 			 */
 if|if
 condition|(
 name|XS_XFRLEN
