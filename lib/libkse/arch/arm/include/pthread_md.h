@@ -256,6 +256,8 @@ argument_list|(
 expr|struct
 name|pthread
 operator|*
+argument_list|,
+name|int
 argument_list|)
 expr_stmt|;
 end_expr_stmt
