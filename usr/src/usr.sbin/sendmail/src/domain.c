@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.15 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.16 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.15 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.16 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1244,6 +1244,15 @@ operator|*
 name|rcode
 operator|=
 name|EX_CONFIG
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"MX list for %s points back to %s"
+argument_list|,
+name|host
+argument_list|,
+name|MyHostName
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
