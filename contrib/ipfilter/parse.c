@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -198,7 +204,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse.c,v 2.0.2.5 1997/03/31 10:05:38 darrenr Exp $"
+literal|"$Id: parse.c,v 2.0.2.7 1997/05/08 11:24:09 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2005,6 +2011,28 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|*
+operator|*
+name|cpp
+operator|==
+literal|'!'
+condition|)
+block|{
+name|fil
+operator|.
+name|fr_flags
+operator||=
+name|FR_NOTSRCIP
+expr_stmt|;
+operator|(
+operator|*
+name|cpp
+operator|)
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|hostmask
 argument_list|(
 operator|&
@@ -2142,6 +2170,28 @@ name|ch
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|cpp
+operator|==
+literal|'!'
+condition|)
+block|{
+name|fil
+operator|.
+name|fr_flags
+operator||=
+name|FR_NOTDSTIP
+expr_stmt|;
+operator|(
+operator|*
+name|cpp
+operator|)
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|hostmask
@@ -7025,6 +7075,21 @@ name|fr_proto
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"from %s"
+argument_list|,
+name|fp
+operator|->
+name|fr_flags
+operator|&
+name|FR_NOTSRCIP
+condition|?
+literal|"!"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7046,7 +7111,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"from any "
+literal|"any "
 argument_list|)
 expr_stmt|;
 else|else
@@ -7056,7 +7121,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"from %s"
+literal|"%s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -7179,6 +7244,21 @@ name|fr_sport
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"to %s"
+argument_list|,
+name|fp
+operator|->
+name|fr_flags
+operator|&
+name|FR_NOTDSTIP
+condition|?
+literal|"!"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7200,7 +7280,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"to any"
+literal|"any"
 argument_list|)
 expr_stmt|;
 else|else
@@ -7210,7 +7290,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"to %s"
+literal|"%s"
 argument_list|,
 name|inet_ntoa
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.0.2.5 1997/03/31 10:05:32 darrenr Exp $  */
+comment|/*  * (C)opyright 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.0.2.9 1997/05/24 07:35:11 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -32,6 +32,38 @@ end_define
 begin_comment
 comment|/* Maximum number of states held */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PAIRS
+parameter_list|(
+name|s1
+parameter_list|,
+name|d1
+parameter_list|,
+name|s2
+parameter_list|,
+name|d2
+parameter_list|)
+value|((((s1) == (s2))&& ((d1) == (d2))) ||\ 				 (((s1) == (d2))&& ((d1) == (s2))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPPAIR
+parameter_list|(
+name|s1
+parameter_list|,
+name|d1
+parameter_list|,
+name|s2
+parameter_list|,
+name|d2
+parameter_list|)
+value|PAIRS((s1).s_addr, (d1).s_addr, \ 				      (s2).s_addr, (d2).s_addr)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -379,6 +411,55 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
+name|u_long
+name|fr_tcpidletimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_tcpclosewait
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_tcplastack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_tcptimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_tcpclosed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_udptimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_icmptimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|fr_tcpstate
 name|__P
@@ -515,6 +596,23 @@ name|ipstate
 operator|*
 operator|,
 name|u_short
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_state_ioctl
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

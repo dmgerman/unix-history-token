@@ -483,6 +483,9 @@ condition|(
 operator|(
 name|c
 operator|=
+operator|(
+name|char
+operator|)
 name|getopt
 argument_list|(
 name|argc

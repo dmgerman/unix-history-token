@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"$Id: solaris.c,v 2.0.2.3 1997/03/27 13:45:28 darrenr Exp $"
+literal|"$Id: solaris.c,v 2.0.2.5 1997/05/08 10:11:04 darrenr Exp $"
 name|;
 end_pragma
 
@@ -956,7 +956,7 @@ literal|"ipf"
 argument_list|,
 name|S_IFCHR
 argument_list|,
-name|instance
+name|IPL_LOGIPF
 argument_list|,
 name|DDI_PSEUDO
 argument_list|,
@@ -987,11 +987,11 @@ literal|"ipnat"
 argument_list|,
 name|S_IFCHR
 argument_list|,
-name|instance
+name|IPL_LOGNAT
 argument_list|,
 name|DDI_PSEUDO
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|==
 name|DDI_FAILURE
@@ -1018,11 +1018,11 @@ literal|"ipstate"
 argument_list|,
 name|S_IFCHR
 argument_list|,
-name|instance
+name|IPL_LOGSTATE
 argument_list|,
 name|DDI_PSEUDO
 argument_list|,
-literal|2
+literal|0
 argument_list|)
 operator|==
 name|DDI_FAILURE
@@ -4898,6 +4898,24 @@ name|fin_fi
 operator|.
 name|fi_dst
 expr_stmt|;
+if|#
+directive|if
+name|SOLARIS2
+operator|>
+literal|5
+if|if
+condition|(
+name|dir
+operator|=
+name|ire_cache_lookup
+argument_list|(
+name|dst
+operator|.
+name|s_addr
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|dir
@@ -4909,6 +4927,8 @@ operator|.
 name|s_addr
 argument_list|)
 condition|)
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

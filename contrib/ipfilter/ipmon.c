@@ -69,6 +69,12 @@ end_else
 begin_include
 include|#
 directive|include
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/byteorder.h>
 end_include
 
@@ -242,6 +248,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ip_proxy.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ip_nat.h"
 end_include
 
@@ -282,7 +294,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipmon.c,v 2.0.2.6 1997/04/02 12:23:27 darrenr Exp $"
+literal|"$Id: ipmon.c,v 2.0.2.9 1997/04/30 13:54:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2772,471 +2784,13 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-operator|*
-name|t
-operator|++
-operator|=
-literal|'\n'
-expr_stmt|;
-operator|*
-name|t
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
-name|opts
-operator|&
-name|OPT_SYSLOG
-condition|)
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"%s"
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|log
-argument_list|,
-literal|"%s"
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|print_statelog
-parameter_list|(
-name|log
-parameter_list|,
-name|buf
-parameter_list|,
-name|blen
-parameter_list|)
-name|FILE
-modifier|*
-name|log
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|blen
-decl_stmt|;
-block|{
-name|struct
-name|ipslog
-modifier|*
-name|sl
-init|=
-operator|(
-expr|struct
-name|ipslog
-operator|*
-operator|)
-name|buf
-decl_stmt|;
-name|struct
-name|protoent
-modifier|*
-name|pr
-decl_stmt|;
-name|char
-modifier|*
-name|t
-init|=
-name|line
-decl_stmt|,
-modifier|*
-name|proto
-decl_stmt|,
-name|pname
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|struct
-name|tm
-modifier|*
-name|tm
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-name|res
-operator|=
-operator|(
-name|opts
-operator|&
-name|OPT_RESOLVE
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-expr_stmt|;
-name|tm
-operator|=
-name|localtime
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-operator|&
-name|sl
+name|nl
 operator|->
-name|isl_tv
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|opts
-operator|&
-name|OPT_SYSLOG
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%2d/%02d/%4d "
-argument_list|,
-name|tm
-operator|->
-name|tm_mday
-argument_list|,
-name|tm
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|tm
-operator|->
-name|tm_year
-operator|+
-literal|1900
-argument_list|)
-expr_stmt|;
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%02d:%02d:%02d.%-.6ld "
-argument_list|,
-name|tm
-operator|->
-name|tm_hour
-argument_list|,
-name|tm
-operator|->
-name|tm_min
-argument_list|,
-name|tm
-operator|->
-name|tm_sec
-argument_list|,
-name|sl
-operator|->
-name|isl_tv
-operator|.
-name|tv_usec
-argument_list|)
-expr_stmt|;
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
+name|nl_type
 operator|==
-name|ISL_NEW
-condition|)
-name|strcpy
-argument_list|(
-name|t
-argument_list|,
-literal|"STATE:NEW "
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|==
-name|ISL_EXPIRE
-condition|)
-name|strcpy
-argument_list|(
-name|t
-argument_list|,
-literal|"STATE:EXPIRE "
-argument_list|)
-expr_stmt|;
-else|else
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"Type: %d "
-argument_list|,
-name|sl
-operator|->
-name|isl_type
-argument_list|)
-expr_stmt|;
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-name|pr
-operator|=
-name|getprotobynumber
-argument_list|(
-operator|(
-name|int
-operator|)
-name|sl
-operator|->
-name|isl_p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pr
-condition|)
-block|{
-name|proto
-operator|=
-name|pname
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|proto
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|sl
-operator|->
-name|isl_p
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|proto
-operator|=
-name|pr
-operator|->
-name|p_name
-expr_stmt|;
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_p
-operator|==
-name|IPPROTO_TCP
-operator|||
-name|sl
-operator|->
-name|isl_p
-operator|==
-name|IPPROTO_UDP
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%s,%s -> "
-argument_list|,
-name|hostname
-argument_list|(
-name|res
-argument_list|,
-name|sl
-operator|->
-name|isl_src
-argument_list|)
-argument_list|,
-name|portname
-argument_list|(
-name|res
-argument_list|,
-name|proto
-argument_list|,
-name|sl
-operator|->
-name|isl_sport
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%s,%s PR %s "
-argument_list|,
-name|hostname
-argument_list|(
-name|res
-argument_list|,
-name|sl
-operator|->
-name|isl_dst
-argument_list|)
-argument_list|,
-name|portname
-argument_list|(
-name|res
-argument_list|,
-name|proto
-argument_list|,
-name|sl
-operator|->
-name|isl_dport
-argument_list|)
-argument_list|,
-name|proto
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_p
-operator|==
-name|IPPROTO_ICMP
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%s -> "
-argument_list|,
-name|hostname
-argument_list|(
-name|res
-argument_list|,
-name|sl
-operator|->
-name|isl_src
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|t
-argument_list|,
-literal|"%s PR icmp %d "
-argument_list|,
-name|hostname
-argument_list|(
-name|res
-argument_list|,
-name|sl
-operator|->
-name|isl_dst
-argument_list|)
-argument_list|,
-name|sl
-operator|->
-name|isl_itype
-argument_list|)
-expr_stmt|;
-block|}
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sl
-operator|->
-name|isl_type
-operator|!=
-name|ISL_NEW
+name|NL_EXPIRE
 condition|)
 block|{
 ifdef|#
@@ -3249,12 +2803,68 @@ name|sprintf
 argument_list|(
 argument|t
 argument_list|,
-literal|"Pkts %qd Bytes %qd"
+literal|" Pkts %qd Bytes %qd"
 argument_list|,
 else|#
 directive|else
 argument|(void) sprintf(t,
-literal|"Pkts %ld Bytes %ld"
+literal|" Pkts %ld Bytes %ld"
+argument|,
+endif|#
+directive|endif
+argument|nl->nl_pkts, nl->nl_bytes); 		t += strlen(t); 	}  	*t++ =
+literal|'\n'
+argument|; 	*t++ =
+literal|'\0'
+argument|; 	if (opts& OPT_SYSLOG) 		syslog(LOG_INFO,
+literal|"%s"
+argument|, line); 	else 		(void) fprintf(log,
+literal|"%s"
+argument|, line); }   static	void	print_statelog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	ipslog *sl = (struct ipslog *)buf; 	struct	protoent *pr; 	char	*t = line
+argument_list|,
+argument|*proto
+argument_list|,
+argument|pname[
+literal|6
+argument|]; 	struct	tm	*tm; 	int	res;  	res = (opts& OPT_RESOLVE) ?
+literal|1
+argument|:
+literal|0
+argument|; 	tm = localtime((time_t *)&sl->isl_tv.tv_sec); 	if (!(opts& OPT_SYSLOG)) { 		(void) sprintf(t,
+literal|"%2d/%02d/%4d "
+argument|, 			tm->tm_mday, tm->tm_mon +
+literal|1
+argument|, tm->tm_year +
+literal|1900
+argument|); 		t += strlen(t); 	} 	(void) sprintf(t,
+literal|"%02d:%02d:%02d.%-.6ld "
+argument|, 		tm->tm_hour, tm->tm_min, tm->tm_sec, sl->isl_tv.tv_usec); 	t += strlen(t);  	if (sl->isl_type == ISL_NEW) 		strcpy(t,
+literal|"STATE:NEW "
+argument|); 	else if (sl->isl_type == ISL_EXPIRE) 		strcpy(t,
+literal|"STATE:EXPIRE "
+argument|); 	else 		sprintf(t,
+literal|"Type: %d "
+argument|, sl->isl_type); 	t += strlen(t);  	pr = getprotobynumber((int)sl->isl_p); 	if (!pr) { 		proto = pname; 		sprintf(proto,
+literal|"%d"
+argument|, (u_int)sl->isl_p); 	} else 		proto = pr->p_name;  	if (sl->isl_p == IPPROTO_TCP || sl->isl_p == IPPROTO_UDP) { 		(void) sprintf(t,
+literal|"%s,%s -> "
+argument|, 			hostname(res, sl->isl_src), 			portname(res, proto, sl->isl_sport)); 		t += strlen(t); 		(void) sprintf(t,
+literal|"%s,%s PR %s"
+argument|, 			hostname(res, sl->isl_dst), 			portname(res, proto, sl->isl_dport), proto); 	} else if (sl->isl_p == IPPROTO_ICMP) { 		(void) sprintf(t,
+literal|"%s -> "
+argument|, hostname(res, sl->isl_src)); 		t += strlen(t); 		(void) sprintf(t,
+literal|"%s PR icmp %d"
+argument|, 			hostname(res, sl->isl_dst), sl->isl_itype); 	} 	t += strlen(t); 	if (sl->isl_type != ISL_NEW) {
+ifdef|#
+directive|ifdef
+name|USE_QUAD_T
+argument|(void) sprintf(t,
+literal|" Pkts %qd Bytes %qd"
+argument|,
+else|#
+directive|else
+argument|(void) sprintf(t,
+literal|" Pkts %ld Bytes %ld"
 argument|,
 endif|#
 directive|endif
@@ -3268,21 +2878,9 @@ argument|, line); 	else 		(void) fprintf(log,
 literal|"%s"
 argument|, line); }   static	void	print_ipflog(log, buf, blen) FILE	*log; char	*buf; int	blen; { 	struct	protoent *pr; 	struct	tcphdr	*tp; 	struct	icmp	*ic; 	struct	ip	*ipc; 	struct	tm	*tm; 	char	c[
 literal|3
-argument|]
-argument_list|,
-argument|pname[
+argument|], pname[
 literal|8
-argument|]
-argument_list|,
-argument|*t
-argument_list|,
-argument|*proto; 	u_short	hl
-argument_list|,
-argument|p; 	int	i
-argument_list|,
-argument|lvl
-argument_list|,
-argument|res;
+argument|], *t, *proto; 	u_short	hl, p; 	int	i, lvl, res;
 if|#
 directive|if
 operator|!
@@ -3469,9 +3067,7 @@ argument|, line); 	if (opts& OPT_HEXHDR) 		dumphex(log, buf, sizeof(struct ipl_c
 literal|"%s: [-NFhstvxX] [-f<logfile>]\n"
 argument|, prog); 	exit(
 literal|1
-argument|); }   void flushlogs(file, log) char *file; FILE *log; { 	int	fd
-argument_list|,
-argument|flushed =
+argument|); }   void flushlogs(file, log) char *file; FILE *log; { 	int	fd, flushed =
 literal|0
 argument|;  	if ((fd = open(file, O_RDWR)) == -
 literal|1
@@ -3495,42 +3091,19 @@ argument|, flushed); 	} }   int main(argc, argv) int argc; char *argv[]; { 	stru
 literal|3
 argument|] = {-
 literal|1
-argument_list|,
-argument|-
+argument|, -
 literal|1
-argument_list|,
-argument|-
+argument|, -
 literal|1
-argument|}
-argument_list|,
-argument|flushed =
+argument|}, flushed =
 literal|0
-argument_list|,
-argument|doread
-argument_list|,
-argument|n
-argument_list|,
-argument|i
-argument_list|,
-argument|nfd =
+argument|, doread, n, i, nfd =
 literal|1
-argument|; 	int	tr
-argument_list|,
-argument|nr
-argument_list|,
-argument|regular; 	int	fdt[
+argument|; 	int	tr, nr, regular; 	int	fdt[
 literal|3
-argument|] = {IPL_LOGIPF
-argument_list|,
-argument|IPL_LOGNAT
-argument_list|,
-argument|IPL_LOGSTATE}; 	char	buf[
+argument|] = {IPL_LOGIPF, IPL_LOGNAT, IPL_LOGSTATE}; 	char	buf[
 literal|512
-argument|]
-argument_list|,
-argument|c
-argument_list|,
-argument|*iplfile = IPL_NAME; 	extern	int	optind; 	extern	char	*optarg;  	while ((c = getopt(argc, argv,
+argument|], c, *iplfile = IPL_NAME; 	extern	int	optind; 	extern	char	*optarg;  	while ((c = getopt(argc, argv,
 literal|"?af:FhnNsStvxX"
 argument|)) != -
 literal|1

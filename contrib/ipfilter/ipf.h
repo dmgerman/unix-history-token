@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993-1996 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.0.2.4 1997/03/27 13:45:18 darrenr Exp $  */
+comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.0.2.6 1997/04/30 13:49:05 darrenr Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__IPF_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__IPF_H__
+end_define
 
 begin_ifndef
 ifndef|#
@@ -290,58 +302,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__SVR4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__svr4__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|index
-value|strchr
-end_define
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|memset(a, 0, b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bcopy
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|memmove(b,a,c)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|ipopt_names
@@ -528,6 +488,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __IPF_H__ */
+end_comment
 
 end_unit
 

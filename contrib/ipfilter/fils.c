@@ -159,6 +159,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ip_compat.h"
 end_include
 
@@ -172,6 +178,12 @@ begin_include
 include|#
 directive|include
 file|"ipf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip_proxy.h"
 end_include
 
 begin_include
@@ -246,7 +258,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fils.c,v 2.0.2.7 1997/04/02 12:23:16 darrenr Exp $"
+literal|"$Id: fils.c,v 2.0.2.9 1997/05/08 10:11:31 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,7 +576,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"afhIiosvd:"
+literal|"afhIinosvd:"
 argument_list|)
 operator|)
 operator|!=
@@ -783,11 +795,44 @@ name|opts
 operator|&
 name|OPT_IPSTATES
 operator|)
-operator|&&
+condition|)
+block|{
+name|int
+name|sfd
+init|=
+name|open
+argument_list|(
+name|IPL_STATE
+argument_list|,
+name|O_RDONLY
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|sfd
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"open"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|ioctl
 argument_list|(
-name|fd
+name|sfd
 argument_list|,
 name|SIOCGIPST
 argument_list|,
@@ -809,6 +854,12 @@ name|exit
 argument_list|(
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|close
+argument_list|(
+name|sfd
 argument_list|)
 expr_stmt|;
 block|}

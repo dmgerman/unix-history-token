@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_addr.c,v 2.0.2.3 1997/03/27 13:45:00 darrenr Exp $"
+literal|"$Id: inet_addr.c,v 2.0.2.4 1997/05/08 10:11:34 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -579,8 +579,28 @@ begin_comment
 comment|/*  * Ascii internet address interpretation routine.  * The value returned is in network order.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOLARIS2
+argument_list|)
+operator|&&
+operator|(
+name|SOLARIS2
+operator|>
+literal|5
+operator|)
+end_if
+
 begin_function
+name|u_int
+else|#
+directive|else
 name|u_long
+endif|#
+directive|endif
 name|inet_addr
 parameter_list|(
 name|cp

@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: ipt.h,v 2.0.2.4 1997/03/27 13:45:23 darrenr Exp $  */
+comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: ipt.h,v 2.0.2.6 1997/04/30 13:49:22 darrenr Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__IPT_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__IPT_H__
+end_define
 
 begin_include
 include|#
@@ -120,6 +132,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __IPT_H__ */
+end_comment
 
 end_unit
 

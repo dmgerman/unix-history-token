@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: kmem.h,v 2.0.2.3 1997/03/10 08:10:38 darrenr Exp $  */
+comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  * $Id: kmem.h,v 2.0.2.5 1997/04/30 13:49:35 darrenr Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__KMEM_H__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__KMEM_H__
+end_define
 
 begin_ifndef
 ifndef|#
@@ -87,6 +99,15 @@ directive|define
 name|KMEM
 value|"/dev/kmem"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __KMEM_H__ */
+end_comment
 
 end_unit
 

@@ -150,6 +150,26 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|solaris
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/stream.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
