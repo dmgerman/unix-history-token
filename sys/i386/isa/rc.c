@@ -4218,7 +4218,7 @@ operator|&=
 operator|~
 name|FLUSHO
 expr_stmt|;
-name|ttstart
+name|rc_start
 argument_list|(
 name|tp
 argument_list|)
@@ -8681,6 +8681,13 @@ name|TS_BUSY
 expr_stmt|;
 name|enable_intr
 argument_list|()
+expr_stmt|;
+name|ttwwakeup
+argument_list|(
+name|rc
+operator|->
+name|rc_tp
+argument_list|)
 expr_stmt|;
 block|}
 end_function
