@@ -186,7 +186,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|PAM_IGNORE
+name|PAM_SUCCESS
 operator|)
 return|;
 name|r
@@ -242,7 +242,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|PAM_IGNORE
+name|PAM_SUCCESS
 operator|)
 return|;
 name|PAM_VERBOSE_ERROR
