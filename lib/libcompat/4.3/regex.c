@@ -117,11 +117,22 @@ name|s
 operator|==
 literal|'\0'
 condition|)
+block|{
+if|if
+condition|(
+name|re_regexp
+operator|==
+name|NULL
+condition|)
+return|return
+literal|"no previous regular expression"
+return|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|re_regexp
