@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.28	%G%	*/
+comment|/*	up.c	3.29	%G%	*/
 end_comment
 
 begin_include
@@ -10,8 +10,18 @@ file|"../conf/up.h"
 end_include
 
 begin_comment
-comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * This driver works marginally on an Emulex SC-11B controller with rev  * level J microcode, defining:  *	int	olducode = 1;  * to force CPU stalling delays.  *  * It has worked with no delays and no problems on a prototype  * SC-21 controller.  Emulex intends to upgrade all SC-11s on VAXes to SC-21s.  * You should get a SC-21 to replace any SC-11 on a VAX.  *  * SC-11B Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
+comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|N
+parameter_list|)
+value|{ register int d; d = N; while (--d> 0); }
+end_define
 
 begin_include
 include|#
@@ -263,7 +273,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * To fill a 300M drive:  *	A is designed to be used as a root.  *	B is suitable for a swap area.  *	H is the primary storage area.  * On systems with RP06'es, we normally use only 291346 blocks of the H  * area, and use DEF or G to cover the rest of the drive.  The C system  * covers the whole drive and can be used for pack-pack copying.  */
+comment|/*  * To fill a 300M drive:  *	A is designed to be used as a root.  *	B is suitable for a swap area.  *	H is the primary storage area.  * On systems with RP06'es, we normally use only 291346 blocks of the H  * area, and use DEF or G to cover the rest of the drive.  The C system  * covers the whole drive and can be used for pack-pack copying.  *  * Note: sizes here are for AMPEX drives with 815 cylinders.  * CDC drives can make the F,G, and H areas larger as they have 823 cylinders.  */
 end_comment
 
 begin_struct
@@ -318,18 +328,17 @@ block|,
 literal|562
 block|,
 comment|/* G=cyl 562 thru 814 */
-literal|445664
+literal|291346
 block|,
 literal|82
 block|,
-comment|/* H=cyl 82 thru 814 */
-comment|/* Later, and more safely for H area... 	291346,	82,		/* H=cyl 82 thru 561 */
+comment|/* H=cyl 82 thru 561 */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following defines are used in offset positioning  * when trying to recover disk errors, with the constants being  * +/- microinches.  Note that header compare inhibit (HCI) is not  * tried (this makes sense only during read, in any case.)  *  * NOT ALL OF THESE ARE IMPLEMENTED ON 9300!?!  */
+comment|/*  * The following defines are used in offset positioning  * when trying to recover disk errors, with the constants being  * +/- microinches.  Note that header compare inhibit (HCI) is not  * tried (this makes sense only during read, in any case.)  *  * NB: Not all drives/controllers emulate all of these.  */
 end_comment
 
 begin_define
@@ -761,104 +770,6 @@ begin_comment
 comment|/* Information about UBA usage saved here */
 end_comment
 
-begin_comment
-comment|/*  * The EMULEX controller balks if accessed quickly after  * certain operations.  With rev J delays seem to be needed only  * when selecting a new unit, and in drive initialization type  * like PRESET and DCLR.  The following variables control the delay  * DELAY(n) is approximately n usec.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|olducode
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|idelay
-init|=
-literal|500
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Delay after PRESET or DCLR */
-end_comment
-
-begin_decl_stmt
-name|int
-name|osdelay
-init|=
-literal|150
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Old delay after selecting drive in upcs2 */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ordelay
-init|=
-literal|100
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Old delay after SEARCH */
-end_comment
-
-begin_decl_stmt
-name|int
-name|oasdel
-init|=
-literal|100
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Old delay after clearing bit in upas */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nsdelay
-init|=
-literal|25
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|N
-parameter_list|)
-value|{ register int d; d = N; while (--d> 0); }
-end_define
-
-begin_decl_stmt
-name|int
-name|nwaitcs2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many sdelay loops ? */
-end_comment
-
-begin_decl_stmt
-name|int
-name|neasycs2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* How many sdelay loops not needed ? */
-end_comment
-
 begin_decl_stmt
 name|int
 name|up_wticks
@@ -1195,7 +1106,7 @@ name|didie
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Other drivers tend to say something like 	 *	upaddr->upcs1 = IE; 	 *	upaddr->upas = 1<<unit; 	 * here, but the SC-11B will cancel a command which 	 * happens to be sitting in the cs1 if you clear the go 	 * bit by storing there (so the first is not safe), 	 * and it also does not like being bothered with operations 	 * such as clearing upas when a transfer is active (as 	 * it may well be.) 	 * 	 * Thus we keep careful track of when we re-enable IE 	 * after an interrupt and do it only if we didn't issue 	 * a command which re-enabled it as a matter of course. 	 * We clear bits in upas in the interrupt routine, when 	 * no transfers are active. 	 */
+comment|/* 	 * Other drivers tend to say something like 	 *	upaddr->upcs1 = IE; 	 *	upaddr->upas = 1<<unit; 	 * here, but some controllers will cancel a command 	 * happens to be sitting in the cs1 if you clear the go 	 * bit by storing there (so the first is not safe). 	 * 	 * Thus we keep careful track of when we re-enable IE 	 * after an interrupt and do it only if we didn't issue 	 * a command which re-enabled it as a matter of course. 	 * We clear bits in upas in the interrupt routine, when 	 * no transfers are active. 	 */
 if|if
 condition|(
 name|unit
@@ -1249,7 +1160,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * The SC-11B doesn't start SEARCH commands when transfers are 	 * in progress.  In fact, it tends to get confused when given 	 * SEARCH'es during transfers, generating interrupts with neither 	 * RDY nor a bit in the upas register.  Thus we defer 	 * until an interrupt when a transfer is pending. 	 */
+comment|/* 	 * Most controllers don't start SEARCH commands when transfers are 	 * in progress.  In fact, some tend to get confused when given 	 * SEARCH'es during transfers, generating interrupts with neither 	 * RDY nor a bit in the upas register.  Thus we defer 	 * until an interrupt when a transfer is pending. 	 */
 if|if
 condition|(
 name|uptab
@@ -1296,29 +1207,11 @@ operator|)
 operator|!=
 name|unit
 condition|)
-block|{
 name|upaddr
 operator|->
 name|upcs2
 operator|=
 name|unit
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|olducode
-condition|?
-name|osdelay
-else|:
-name|nsdelay
-argument_list|)
-expr_stmt|;
-name|nwaitcs2
-operator|++
-expr_stmt|;
-block|}
-else|else
-name|neasycs2
-operator|++
 expr_stmt|;
 comment|/* 	 * If we have changed packs or just initialized, 	 * then the volume will not be valid; if so, clear 	 * the drive, preset it and put in 16bit/word mode. 	 */
 if|if
@@ -1344,11 +1237,6 @@ name|DCLR
 operator||
 name|GO
 expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
-expr_stmt|;
 name|upaddr
 operator|->
 name|upcs1
@@ -1358,11 +1246,6 @@ operator||
 name|PRESET
 operator||
 name|GO
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
 expr_stmt|;
 name|upaddr
 operator|->
@@ -1560,15 +1443,6 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|olducode
-condition|)
-name|DELAY
-argument_list|(
-name|ordelay
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1796,21 +1670,11 @@ operator|)
 operator|!=
 name|dn
 condition|)
-block|{
 name|upaddr
 operator|->
 name|upcs2
 operator|=
 name|dn
-expr_stmt|;
-comment|/* DELAY(sdelay);		Provided by ubasetup() */
-name|nwaitcs2
-operator|++
-expr_stmt|;
-block|}
-else|else
-name|neasycs2
-operator|++
 expr_stmt|;
 name|up_ubinfo
 operator|=
@@ -1821,7 +1685,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Providing delay */
 comment|/* 	 * If drive is not present and on-line, then 	 * get rid of this with an error and loop to get 	 * rid of the rest of its queued requests. 	 * (Then on to any other ready drives.) 	 */
 if|if
 condition|(
@@ -1982,11 +1845,6 @@ operator||
 name|OFFSET
 operator||
 name|GO
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2303,29 +2161,11 @@ operator|)
 operator|!=
 name|unit
 condition|)
-block|{
 name|upaddr
 operator|->
 name|upcs2
 operator|=
 name|unit
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|olducode
-condition|?
-name|osdelay
-else|:
-name|nsdelay
-argument_list|)
-expr_stmt|;
-name|nwaitcs2
-operator|++
-expr_stmt|;
-block|}
-else|else
-name|neasycs2
-operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2453,11 +2293,6 @@ name|DCLR
 operator||
 name|GO
 expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
-expr_stmt|;
 name|needie
 operator|=
 literal|0
@@ -2484,11 +2319,6 @@ operator||
 name|GO
 operator||
 name|IE
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2531,11 +2361,6 @@ operator||
 name|GO
 operator||
 name|IE
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2703,19 +2528,12 @@ name|upcs1
 operator|&
 name|TRE
 condition|)
-block|{
 name|upaddr
 operator|->
 name|upcs1
 operator|=
 name|TRE
 expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* 	 * If we have a unit with an outstanding SEARCH, 	 * and the hardware indicates the unit requires attention, 	 * the bring the drive to the ready queue. 	 * Finally, if the controller is not transferring 	 * start it if any drives are now ready to transfer. 	 */
 name|as
@@ -2768,7 +2586,6 @@ operator|<<
 name|unit
 operator|)
 condition|)
-block|{
 name|upaddr
 operator|->
 name|upas
@@ -2777,16 +2594,6 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
-if|if
-condition|(
-name|olducode
-condition|)
-name|DELAY
-argument_list|(
-name|oasdel
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|upustart
@@ -3049,11 +2856,6 @@ operator|=
 name|FMT22
 expr_stmt|;
 comment|/* == RTC ???? */
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3218,11 +3020,6 @@ operator||
 name|DCLR
 operator||
 name|GO
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
 expr_stmt|;
 name|bn
 operator|=
@@ -3411,11 +3208,6 @@ operator|=
 name|CLR
 expr_stmt|;
 comment|/* clear controller */
-name|DELAY
-argument_list|(
-name|idelay
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|unit
