@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_hci_cmds.c  *  * Copyright (c) Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_hci_cmds.c,v 1.3 2003/04/01 18:15:25 max Exp $  * $FreeBSD$  */
+comment|/*  * ng_hci_cmds.c  *  * Copyright (c) Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_hci_cmds.c,v 1.4 2003/09/08 18:57:51 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1317,12 +1317,21 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/*  	 * Now we can remove command timeout, dequeue completed command 	 * and return command parameters. Note: ng_hci_command_untimeout()  	 * will drop NG_HCI_UNIT_COMMAND_PENDING flag. 	 */
+comment|/*  	 * Now we can remove command timeout, dequeue completed command 	 * and return command parameters. ng_hci_command_untimeout will 	 * drop NG_HCI_UNIT_COMMAND_PENDING flag. 	 * Note: if ng_hci_command_untimeout() fails (returns non-zero) 	 * then timeout aready happened and timeout message went info node 	 * queue. In this case we ignore command completion and pretend 	 * there is a timeout. 	 */
+if|if
+condition|(
 name|ng_hci_command_untimeout
 argument_list|(
 name|unit
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
 name|NG_BT_MBUFQ_DEQUEUE
 argument_list|(
 operator|&
@@ -1382,10 +1391,7 @@ block|{
 name|ng_hci_unit_p
 name|unit
 init|=
-operator|(
-name|ng_hci_unit_p
-operator|)
-name|arg1
+name|NULL
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1399,6 +1405,33 @@ name|opcode
 decl_stmt|;
 if|if
 condition|(
+name|NG_NODE_NOT_VALID
+argument_list|(
+name|node
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: Netgraph node is not valid\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|unit
+operator|=
+operator|(
+name|ng_hci_unit_p
+operator|)
+name|NG_NODE_PRIVATE
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|unit
 operator|->
 name|state
@@ -1406,6 +1439,13 @@ operator|&
 name|NG_HCI_UNIT_COMMAND_PENDING
 condition|)
 block|{
+name|unit
+operator|->
+name|state
+operator|&=
+operator|~
+name|NG_HCI_UNIT_COMMAND_PENDING
+expr_stmt|;
 name|NG_BT_MBUFQ_DEQUEUE
 argument_list|(
 operator|&
@@ -1423,22 +1463,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|KASSERT
+name|NG_HCI_ALERT
 argument_list|(
-literal|0
-argument_list|,
-operator|(
 literal|"%s: %s - command queue is out of sync!\n"
-operator|,
+argument_list|,
 name|__func__
-operator|,
+argument_list|,
 name|NG_NODE_NAME
 argument_list|(
 name|unit
 operator|->
 name|node
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1487,7 +1523,7 @@ name|opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Try to send more commands 		 */
+comment|/* Try to send more commands */
 name|NG_HCI_BUFF_CMD_SET
 argument_list|(
 name|unit
@@ -1497,13 +1533,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|unit
-operator|->
-name|state
-operator|&=
-operator|~
-name|NG_HCI_UNIT_COMMAND_PENDING
-expr_stmt|;
 name|ng_hci_send_command
 argument_list|(
 name|unit
@@ -1511,26 +1540,18 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|KASSERT
+name|NG_HCI_ALERT
 argument_list|(
-literal|0
+literal|"%s: %s - no pending command\n"
 argument_list|,
-operator|(
-literal|"%s: %s - no pending command, state=%#x\n"
-operator|,
 name|__func__
-operator|,
+argument_list|,
 name|NG_NODE_NAME
 argument_list|(
 name|unit
 operator|->
 name|node
 argument_list|)
-operator|,
-name|unit
-operator|->
-name|state
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2138,6 +2159,20 @@ operator|&
 name|unit
 operator|->
 name|con_list
+argument_list|)
+expr_stmt|;
+comment|/* Remove all timeouts (if any) */
+if|if
+condition|(
+name|con
+operator|->
+name|flags
+operator|&
+name|NG_HCI_CON_TIMEOUT_PENDING
+condition|)
+name|ng_hci_con_untimeout
+argument_list|(
+name|con
 argument_list|)
 expr_stmt|;
 comment|/* Connection terminated by local host */

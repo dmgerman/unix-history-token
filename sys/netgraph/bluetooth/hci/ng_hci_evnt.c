@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_hci_evnt.c  *  * Copyright (c) Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_hci_evnt.c,v 1.5 2003/04/01 18:15:25 max Exp $  * $FreeBSD$  */
+comment|/*  * ng_hci_evnt.c  *  * Copyright (c) Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: ng_hci_evnt.c,v 1.6 2003/09/08 18:57:51 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1866,7 +1866,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* 	 * Two possible cases: 	 * 	 * 1) We have found connection descriptor. That means upper layer has 	 *    requested this connection via LP_CON_REQ message 	 * 	 * 2) We do not have connection descriptor. That means upper layer 	 *    nas not requested this connection or (less likely) we gave up 	 *    on this connection (timeout). The most likely scenario is that 	 *    we have received Create_Connection/Add_SCO_Connection command  	 *    from the RAW hook 	 */
+comment|/* 	 * Two possible cases: 	 * 	 * 1) We have found connection descriptor. That means upper layer has 	 *    requested this connection via LP_CON_REQ message. In this case 	 *    connection must have timeout set. If ng_hci_con_untimeout() fails 	 *    then timeout message already went into node's queue. In this case 	 *    ignore Connection_Complete event and let timeout deal with it. 	 * 	 * 2) We do not have connection descriptor. That means upper layer 	 *    nas not requested this connection or (less likely) we gave up 	 *    on this connection (timeout). The most likely scenario is that 	 *    we have received Create_Connection/Add_SCO_Connection command  	 *    from the RAW hook 	 */
 if|if
 condition|(
 name|con
@@ -1932,12 +1932,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|error
+operator|=
 name|ng_hci_con_untimeout
 argument_list|(
 name|con
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * Update connection descriptor and send notification  	 * to the upper layers. 	 */
 name|con
 operator|->
@@ -2276,7 +2287,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* com_compl */
+comment|/* con_compl */
 end_comment
 
 begin_comment
@@ -2472,11 +2483,18 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|ng_hci_con_untimeout
+argument_list|(
+name|con
+argument_list|)
+expr_stmt|;
 name|ng_hci_free_con
 argument_list|(
 name|con
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|error
@@ -2617,6 +2635,20 @@ argument_list|,
 name|ep
 operator|->
 name|reason
+argument_list|)
+expr_stmt|;
+comment|/* Remove all timeouts (if any) */
+if|if
+condition|(
+name|con
+operator|->
+name|flags
+operator|&
+name|NG_HCI_CON_TIMEOUT_PENDING
+condition|)
+name|ng_hci_con_untimeout
+argument_list|(
+name|con
 argument_list|)
 expr_stmt|;
 name|ng_hci_free_con
