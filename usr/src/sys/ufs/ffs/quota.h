@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)quota.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)quota.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -257,9 +257,10 @@ modifier|*
 name|dq_forw
 decl_stmt|,
 modifier|*
+modifier|*
 name|dq_back
 decl_stmt|;
-comment|/* MUST be first entry */
+comment|/* hash list */
 name|struct
 name|dquot
 modifier|*
