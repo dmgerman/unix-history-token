@@ -3934,12 +3934,9 @@ name|i_effnlink
 operator|==
 literal|0
 condition|)
-name|vrele
-argument_list|(
-name|ITOV
+name|ffs_snapgone
 argument_list|(
 name|ip
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4181,12 +4178,9 @@ name|i_effnlink
 operator|==
 literal|0
 condition|)
-name|vrele
-argument_list|(
-name|ITOV
+name|ffs_snapgone
 argument_list|(
 name|oip
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

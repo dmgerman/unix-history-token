@@ -593,14 +593,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ffs_snapremove
+name|ffs_snapgone
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|inode
 operator|*
-name|vp
 operator|)
 argument_list|)
 decl_stmt|;
