@@ -20822,7 +20822,6 @@ name|char
 modifier|*
 name|attrname
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|data
