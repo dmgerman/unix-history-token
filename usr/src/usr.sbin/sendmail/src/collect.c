@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.14.1.1 (Berkeley) %G%"
+literal|"@(#)collect.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1083,16 +1083,6 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|char
-name|junkbuf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|,
-modifier|*
-name|sfgets
-argument_list|()
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1100,6 +1090,23 @@ name|p
 init|=
 name|buf
 decl_stmt|;
+name|bool
+name|printmsg
+init|=
+name|TRUE
+decl_stmt|;
+name|char
+name|junkbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|sfgets
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 name|strchr
@@ -1112,6 +1119,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|printmsg
+condition|)
+name|usrerr
+argument_list|(
+literal|"header line too long"
+argument_list|)
+expr_stmt|;
+name|printmsg
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|sfgets
