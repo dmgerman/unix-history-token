@@ -1325,6 +1325,8 @@ operator|=
 name|arg
 operator|.
 name|nextstop
+operator|-
+name|time_second
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -1562,6 +1564,8 @@ operator|=
 name|arg
 operator|.
 name|nextstop
+operator|-
+name|time_second
 expr_stmt|;
 if|if
 condition|(
@@ -1569,7 +1573,7 @@ name|atv
 operator|.
 name|tv_sec
 operator|<
-name|time_second
+literal|0
 condition|)
 block|{
 name|printf
@@ -1581,8 +1585,6 @@ name|arg
 operator|.
 name|nextstop
 operator|=
-name|time_second
-operator|+
 literal|30
 expr_stmt|;
 comment|/* last resort */
