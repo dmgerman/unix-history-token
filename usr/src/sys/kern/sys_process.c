@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"acct.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ptrace.h"
 end_include
 
 begin_comment
@@ -372,11 +378,14 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -513,10 +522,10 @@ condition|(
 name|i
 condition|)
 block|{
-comment|/* read user I */
 case|case
-literal|1
+name|PT_READ_I
 case|:
+comment|/* read the child's text space */
 if|if
 condition|(
 operator|!
@@ -552,10 +561,10 @@ name|ip_addr
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* read user D */
 case|case
-literal|2
+name|PT_READ_D
 case|:
+comment|/* read the child's data space */
 if|if
 condition|(
 operator|!
@@ -591,10 +600,10 @@ name|ip_addr
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* read u */
 case|case
-literal|3
+name|PT_READ_U
 case|:
+comment|/* read the child's u. */
 name|i
 operator|=
 operator|(
@@ -638,11 +647,10 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* write user I */
-comment|/* Must set up to allow writing */
 case|case
-literal|4
+name|PT_WRITE_I
 case|:
+comment|/* write the child's text space */
 comment|/* 		 * If text, must assure exclusive use 		 */
 if|if
 condition|(
@@ -820,10 +828,10 @@ operator||=
 name|XWRIT
 expr_stmt|;
 break|break;
-comment|/* write user D */
 case|case
-literal|5
+name|PT_WRITE_D
 case|:
+comment|/* write the child's data space */
 if|if
 condition|(
 name|suword
@@ -861,10 +869,10 @@ name|ip_data
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* write u */
 case|case
-literal|6
+name|PT_WRITE_U
 case|:
+comment|/* write the child's u. */
 name|i
 operator|=
 operator|(
@@ -962,14 +970,14 @@ operator|.
 name|ip_data
 expr_stmt|;
 break|break;
-comment|/* set signal and continue */
-comment|/* one version causes a trace-trap */
 case|case
-literal|9
+name|PT_STEP
 case|:
+comment|/* single step the child */
 case|case
-literal|7
+name|PT_CONTINUE
 case|:
+comment|/* continue the child */
 if|if
 condition|(
 operator|(
@@ -1024,7 +1032,7 @@ if|if
 condition|(
 name|i
 operator|==
-literal|9
+name|PT_STEP
 condition|)
 name|u
 operator|.
@@ -1049,10 +1057,10 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* force exit */
 case|case
-literal|8
+name|PT_KILL
 case|:
+comment|/* kill the child process */
 name|wakeup
 argument_list|(
 operator|(

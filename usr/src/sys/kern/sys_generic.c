@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1373,6 +1373,9 @@ name|lqsave
 decl_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|ibits
 argument_list|,
 sizeof|sizeof
@@ -1383,6 +1386,9 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|obits
 argument_list|,
 sizeof|sizeof
@@ -1426,7 +1432,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    ni * sizeof(fd_mask)); \ 		if (u.u_error) \ 			goto done; \ 	}
+value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    (unsigned)(ni * sizeof(fd_mask))); \ 		if (u.u_error) \ 			goto done; \ 	}
 name|getbits
 argument_list|(
 name|in
@@ -1799,7 +1805,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		int error = copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    ni * sizeof(fd_mask)); \ 		if (error) \ 			u.u_error = error; \ 	}
+value|if (uap->name) { \ 		int error = copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    (unsigned)(ni * sizeof(fd_mask))); \ 		if (error) \ 			u.u_error = error; \ 	}
 if|if
 condition|(
 name|u
