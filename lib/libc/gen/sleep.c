@@ -18,13 +18,25 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)sleep.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)sleep.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +48,18 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -69,13 +93,25 @@ name|struct
 name|timespec
 name|time_remaining
 decl_stmt|;
+comment|/* 	 * Avoid overflow when `seconds' is huge.  This assumes that 	 * the maximum value for a time_t is>= LONG_MAX. 	 */
 if|if
 condition|(
 name|seconds
-operator|!=
-literal|0
+operator|>
+name|LONG_MAX
 condition|)
-block|{
+return|return
+operator|(
+name|seconds
+operator|-
+name|LONG_MAX
+operator|+
+name|sleep
+argument_list|(
+name|LONG_MAX
+argument_list|)
+operator|)
+return|;
 name|time_to_sleep
 operator|.
 name|tv_sec
@@ -88,13 +124,8 @@ name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
-name|time_remaining
-operator|=
-name|time_to_sleep
-expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|nanosleep
 argument_list|(
 operator|&
@@ -103,31 +134,43 @@ argument_list|,
 operator|&
 name|time_remaining
 argument_list|)
-expr_stmt|;
-name|seconds
-operator|=
-name|time_remaining
-operator|.
-name|tv_sec
-expr_stmt|;
+operator|!=
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
-name|time_remaining
-operator|.
-name|tv_nsec
-operator|>
-literal|0
+name|errno
+operator|!=
+name|EINTR
 condition|)
-name|seconds
-operator|++
-expr_stmt|;
-comment|/* round up */
-block|}
 return|return
 operator|(
 name|seconds
 operator|)
 return|;
+comment|/* best guess */
+return|return
+operator|(
+name|time_remaining
+operator|.
+name|tv_sec
+operator|+
+operator|(
+name|time_remaining
+operator|.
+name|tv_nsec
+operator|!=
+literal|0
+operator|)
+operator|)
+return|;
+comment|/* round up */
 block|}
 end_function
 
