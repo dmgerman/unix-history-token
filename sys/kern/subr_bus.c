@@ -9845,7 +9845,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"[NOT!MPSAFE]\n"
+literal|"[GIANT-LOCKED]\n"
 argument_list|)
 expr_stmt|;
 if|if
