@@ -512,7 +512,7 @@ specifier|static
 name|int
 name|debug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2833,6 +2833,10 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -2846,6 +2850,7 @@ name|SBP_DEV_TOATTACH
 operator|)
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 block|}
 else|else
 block|{
@@ -5281,6 +5286,10 @@ name|lun_id
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -5304,6 +5313,7 @@ literal|0xf
 index|]
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 switch|switch
 condition|(
 name|func
@@ -6771,7 +6781,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"ORB status src:%x resp:%x dead:%x"
-literal|" len:%x stat:%x orb:%x%08x\n"
+literal|" len:%x stat:%x orb:%x%08lx\n"
 argument_list|,
 name|sbp_status
 operator|->
@@ -6793,7 +6803,7 @@ name|sbp_status
 operator|->
 name|status
 argument_list|,
-name|ntohl
+name|ntohs
 argument_list|(
 name|sbp_status
 operator|->
@@ -10180,7 +10190,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|", %x:%d"
+literal|", %x:%zd"
 argument_list|,
 name|segments
 index|[
@@ -10240,7 +10250,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"sbp_execute_ocb: warning, "
-literal|"segment length(%d) is less than 16."
+literal|"segment length(%zd) is less than 16."
 literal|"(seg=%d/%d)\n"
 argument_list|,
 name|s
@@ -10444,7 +10454,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"orb: 0x%x next: 0x%x, flags %x\n"
+literal|"orb: 0x%x next: 0x%lx, flags %x\n"
 argument_list|,
 name|vtophys
 argument_list|(

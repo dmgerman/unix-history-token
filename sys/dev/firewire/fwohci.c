@@ -1,26 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. SHimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nxfer
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DEBUG_PACKET
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG_PACKET
-end_undef
 
 begin_define
 define|#
@@ -166,12 +147,6 @@ directive|include
 file|<sys/rman.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -258,21 +233,11 @@ directive|include
 file|<dev/firewire/firewire_phy.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|OHCI_DEBUG
-end_define
-
 begin_undef
 undef|#
 directive|undef
 name|OHCI_DEBUG
 end_undef
-
-begin_comment
-comment|/* #define OHCI_DEBUG */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -682,25 +647,6 @@ parameter_list|)
 value|bus_space_read_4((sc)->bst, (sc)->bsh, (r))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|senderr
-parameter_list|(
-name|e
-parameter_list|)
-value|{ error = (e); goto bad;}
-end_define
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -760,6 +706,8 @@ operator|,
 expr|struct
 name|fwohci_dbch
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -779,6 +727,8 @@ operator|,
 expr|struct
 name|fwohci_dbch
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2107,9 +2057,22 @@ operator|)
 operator|==
 literal|0x3f
 condition|)
-block|{
-name|printf
+name|bm
+operator|=
+name|node
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"fw_set_bus_manager: %d->%d (loop=%d)\n"
 argument_list|,
 name|bm
@@ -2119,25 +2082,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|bm
-operator|=
-name|node
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"fw_set_bus_manager: %d-X%d (loop=%d)\n"
-argument_list|,
-name|bm
-argument_list|,
-name|node
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|bm
@@ -2589,13 +2533,6 @@ operator|&
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX: Not support bridge function yet, then clear bus ID */
-block|OWRITE(sc, FWOHCI_NODEID, (OREAD(sc, FWOHCI_NODEID))& 0xffff003f);
-endif|#
-directive|endif
 comment|/* XXX: Available Isochrounous DMA channel probe */
 for|for
 control|(
@@ -3307,6 +3244,10 @@ argument_list|,
 name|OHCI_HCC_RESET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -3344,6 +3285,10 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"done (%d)\n"
@@ -3351,12 +3296,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|OWRITE(sc, OHCI_HCCCTLCLR, OHCI_HCC_LINKEN | OHCI_HCC_LPS);
-endif|#
-directive|endif
 name|OWRITE
 argument_list|(
 name|sc
@@ -3416,6 +3355,10 @@ operator|<<
 literal|12
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -3766,7 +3709,7 @@ literal|0
 block|if (e1394a&& (OREAD(sc, OHCI_HCCCTL)& OHCI_HCC_PRPHY)) {
 else|#
 directive|else
-comment|/* XXX f¤force to enable 1394a */
+comment|/* XXX force to enable 1394a */
 if|if
 condition|(
 name|e1394a
@@ -3774,6 +3717,10 @@ condition|)
 block|{
 endif|#
 directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -4244,13 +4191,6 @@ name|set_intr
 operator|=
 name|fwohci_set_intr
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* why this need twice? */
-block|fwohci_db_init(&sc->arrq);
-endif|#
-directive|endif
 comment|/* enable link */
 name|OWRITE
 argument_list|(
@@ -4479,12 +4419,6 @@ operator||
 name|OHCI_CNTL_DMA_DEAD
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|fwohci_ibr(sc);
-endif|#
-directive|endif
 return|return
 name|err
 return|;
@@ -4500,7 +4434,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-comment|/* 	fwohci_txd(sc,&(sc->atrq)); 	fwohci_txd(sc,&(sc->atrs)); 	fw_expire_tlabel(&sc->fc); */
 name|struct
 name|fwohci_softc
 modifier|*
@@ -4627,12 +4560,6 @@ decl_stmt|;
 name|u_int32_t
 name|off
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|u_int32_t reg;
-endif|#
-directive|endif
 name|struct
 name|fw_xfer
 modifier|*
@@ -4854,14 +4781,6 @@ name|db
 operator|.
 name|immed
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|switch(tcode){ 	case FWTCODE_STREAM: 		hdr_off = 4; 		hdr_len = 8; 		len = ntohs(fp->mode.stream.len) + 4; 		break; 	case FWTCODE_RREQQ: 	case FWTCODE_WRES: 		hdr_off = 12; 		hdr_len = 12; 		len = 12; 		break; 	case FWTCODE_WREQQ: 	case FWTCODE_RRESQ: 	case FWTCODE_RREQB: 		hdr_off = 16; 		hdr_len = 16; 		len = 16; 		break; 	case FWTCODE_PHY: 		hdr_off = 12; 		hdr_len = 12; 		len = 12; 		break; 	default: 		hdr_off = 16; 		hdr_len = 16;
-comment|/* presume block request len */
-block|len = ntohs(fp->mode.rresb.len) + 16; 		break; 	}
-else|#
-directive|else
 name|info
 operator|=
 operator|&
@@ -4887,8 +4806,6 @@ name|send
 operator|.
 name|len
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -5265,12 +5182,6 @@ name|xfer
 operator|->
 name|mbuf
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|m_adj(m, hdr_off);
-endif|#
-directive|endif
 do|do
 block|{
 name|db
@@ -5455,8 +5366,14 @@ goto|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"fwohci_start: lack of db_trq\n"
 argument_list|)
 expr_stmt|;
@@ -5479,23 +5396,6 @@ literal|"kick\n"
 argument_list|)
 expr_stmt|;
 comment|/* kick asy q */
-if|#
-directive|if
-literal|0
-block|if(!(OREAD(sc, OHCI_DMACTL(off))& OHCI_CNTL_DMA_ACTIVE)&& fsegment != -1){ 		if (OREAD(sc, OHCI_DMACTL(off))& OHCI_CNTL_DMA_RUN) { 			OWRITE(sc, OHCI_DMACTL(off), OHCI_CNTL_DMA_WAKE); 		} else if (dbch->top != db_tr) {
-comment|/* db_tr contains next unfilled db */
-if|#
-directive|if
-literal|0
-block|printf("start DMA\n"); 			print_db(dbch->top->db, 0, 2);
-endif|#
-directive|endif
-block|OWRITE(sc, OHCI_DMACMD(off),  				vtophys(dbch->top->db) | fsegment); 			OWRITE(sc, OHCI_DMACTL(off), OHCI_CNTL_DMA_RUN); 		} else 			printf("fwohci_start: nothing to kick\n"); 	}
-else|#
-directive|else
-if|#
-directive|if
-literal|1
 if|if
 condition|(
 name|dbch
@@ -5507,38 +5407,6 @@ operator|&
 name|FWXFERQ_RUNNING
 condition|)
 block|{
-else|#
-directive|else
-name|reg
-operator|=
-name|OREAD
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_DMACTL
-argument_list|(
-name|off
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|reg
-operator|&
-name|OHCI_CNTL_DMA_RUN
-operator|)
-operator|&&
-operator|!
-operator|(
-name|reg
-operator|&
-name|OHCI_CNTL_DMA_DEAD
-operator|)
-condition|)
-block|{
-endif|#
-directive|endif
 name|OWRITE
 argument_list|(
 name|sc
@@ -5554,8 +5422,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"start AT DMA status=%x\n"
 argument_list|,
 name|OREAD
@@ -5611,8 +5489,6 @@ operator||=
 name|FWXFERQ_RUNNING
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|dbch
 operator|->
 name|top
@@ -5626,6 +5502,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_drain_atq
@@ -5672,6 +5551,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_drain_ats
@@ -5718,6 +5600,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_start_atq
@@ -5754,6 +5639,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_start_ats
@@ -5790,6 +5678,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 name|void
 name|fwohci_txd
 parameter_list|(
@@ -5909,12 +5800,6 @@ operator|>
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|cmd = 0xfffffff0& OREAD(sc, OHCI_DMACMD(off));
-endif|#
-directive|endif
 name|LAST_DB
 argument_list|(
 name|tr
@@ -5951,12 +5836,6 @@ goto|goto
 name|out
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-block|if(OREAD(sc, OHCI_DMACTL(off))& OHCI_CNTL_DMA_DEAD ){
-else|#
-directive|else
 if|if
 condition|(
 name|db
@@ -5970,8 +5849,6 @@ operator|&
 name|OHCI_CNTL_DMA_DEAD
 condition|)
 block|{
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|OHCI_DEBUG
@@ -6323,14 +6200,6 @@ operator|.
 name|queued
 operator|--
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|} else {
-comment|/* already drained after timeout or getting response? */
-block|printf("fwohci_txd: no xfer stat=%d\n", stat);
-endif|#
-directive|endif
 block|}
 name|tr
 operator|->
@@ -6359,12 +6228,6 @@ expr_stmt|;
 block|}
 name|out
 label|:
-if|#
-directive|if
-literal|0
-block|if (packets< 1) 		printf("fwohci_txd: no packets..out of order execution??\n");
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -6406,6 +6269,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_drain
@@ -6584,6 +6450,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_db_free
@@ -6736,6 +6605,9 @@ name|db_trq
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_db_init
@@ -7111,6 +6983,9 @@ operator|->
 name|top
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_itx_disable
@@ -7199,6 +7074,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_irx_disable
@@ -7327,6 +7205,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_irx_post
@@ -7356,6 +7237,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_irxpp_enable
@@ -7702,6 +7586,9 @@ return|return
 name|err
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_tx_enable
@@ -8137,6 +8024,9 @@ return|return
 name|err
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_rx_enable
@@ -8682,6 +8572,9 @@ return|return
 name|err
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_itxbuf_enable
@@ -9642,6 +9535,9 @@ return|return
 name|err
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_irxbuf_enable
@@ -10613,6 +10509,9 @@ return|return
 name|err
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_irx_enable
@@ -10688,6 +10587,9 @@ name|err
 return|;
 block|}
 block|}
+end_function
+
+begin_function
 name|int
 name|fwohci_shutdown
 parameter_list|(
@@ -10832,9 +10734,15 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_define
 define|#
 directive|define
 name|ACK_ALL
+end_define
+
+begin_function
 specifier|static
 name|void
 name|fwohci_intr_body
@@ -10846,6 +10754,9 @@ name|sc
 parameter_list|,
 name|u_int32_t
 name|stat
+parameter_list|,
+name|int
+name|count
 parameter_list|)
 block|{
 name|u_int32_t
@@ -10868,12 +10779,6 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
-define|#
-directive|define
-name|OHCI_DEBUG
-undef|#
-directive|undef
-name|OHCI_DEBUG
 ifdef|#
 directive|ifdef
 name|OHCI_DEBUG
@@ -11209,6 +11114,9 @@ operator|&
 name|sc
 operator|->
 name|arrs
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|fwohci_arcv
@@ -11219,6 +11127,9 @@ operator|&
 name|sc
 operator|->
 name|arrq
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11262,12 +11173,6 @@ argument_list|,
 literal|0x10000
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|OWRITE(sc, OHCI_HCCCTLCLR, OHCI_HCC_LINKEN); 		OWRITE(sc, OHCI_HCCCTL, OHCI_HCC_LPS); 		OWRITE(sc, OHCI_HCCCTL, OHCI_HCC_LINKEN);
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -11292,12 +11197,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|irstat = OREAD(sc, OHCI_IR_STAT)& OREAD(sc, OHCI_IR_MASK);
-else|#
-directive|else
 name|irstat
 operator|=
 name|OREAD
@@ -11307,8 +11206,6 @@ argument_list|,
 name|OHCI_IR_STAT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|OWRITE
 argument_list|(
 name|sc
@@ -11377,6 +11274,8 @@ name|ir
 index|[
 name|i
 index|]
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 block|}
@@ -11416,12 +11315,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|itstat = OREAD(sc, OHCI_IT_STAT)& OREAD(sc, OHCI_IT_MASK);
-else|#
-directive|else
 name|itstat
 operator|=
 name|OREAD
@@ -11431,8 +11324,6 @@ argument_list|,
 name|OHCI_IT_STAT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|OWRITE
 argument_list|(
 name|sc
@@ -11521,6 +11412,8 @@ operator|&
 name|sc
 operator|->
 name|arrs
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 block|}
@@ -11561,6 +11454,8 @@ operator|&
 name|sc
 operator|->
 name|arrq
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 block|}
@@ -11592,12 +11487,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ** Checking whether the node is root or not. If root, turn on  ** cycle master. */
-if|#
-directive|if
-literal|0
-block|OWRITE(sc, FWOHCI_NODEID, (OREAD(sc, FWOHCI_NODEID))& 0xffff003f);
-endif|#
-directive|endif
 name|device_printf
 argument_list|(
 name|fc
@@ -11634,12 +11523,6 @@ argument_list|(
 literal|"Bus reset failure\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|fwohci_ibr(sc);
-endif|#
-directive|endif
 goto|goto
 name|sidout
 goto|;
@@ -11958,6 +11841,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+end_function
+
+begin_function
 name|void
 name|fwohci_intr
 parameter_list|(
@@ -12051,10 +11937,16 @@ argument_list|(
 name|sc
 argument_list|,
 name|stat
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_poll
@@ -12179,6 +12071,8 @@ argument_list|(
 name|sc
 argument_list|,
 name|stat
+argument_list|,
+name|count
 argument_list|)
 expr_stmt|;
 name|splx
@@ -12187,6 +12081,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_set_intr
@@ -12214,8 +12111,18 @@ operator|*
 operator|)
 name|fc
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"fwochi_set_intr: %d\n"
 argument_list|,
 name|enable
@@ -12262,6 +12169,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_tbuf_update
@@ -12448,6 +12358,9 @@ name|dmach
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_rbuf_update
@@ -12525,6 +12438,9 @@ default|default:
 break|break;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|dump_dma
 parameter_list|(
@@ -12784,6 +12700,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|dump_db
 parameter_list|(
@@ -13255,6 +13174,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+end_function
+
+begin_function
 name|void
 name|print_db
 parameter_list|(
@@ -13751,6 +13673,9 @@ block|}
 block|}
 return|return;
 block|}
+end_function
+
+begin_function
 name|void
 name|fwohci_ibr
 parameter_list|(
@@ -13833,6 +13758,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_function
 name|void
 name|fwohci_txbufdb
 parameter_list|(
@@ -14483,6 +14411,9 @@ expr_stmt|;
 comment|/* device_printf(sc->fc.dev, "DB %08x %3d %08x %08x\n", bulkxfer, bulkxfer->npacket, vtophys(db_tr->db), vtophys(fdb_tr->db)); */
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|fwohci_add_tx_buf
@@ -14727,38 +14658,32 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|fwohci_add_rx_buf
 parameter_list|(
-name|db_tr
-parameter_list|,
-name|size
-parameter_list|,
-name|mode
-parameter_list|,
-name|buf
-parameter_list|,
-name|dummy
-parameter_list|)
 name|struct
 name|fwohcidb_tr
 modifier|*
 name|db_tr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|short
 name|size
-decl_stmt|;
+parameter_list|,
 name|int
 name|mode
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|buf
-decl_stmt|,
-decl|*
+parameter_list|,
+name|void
+modifier|*
 name|dummy
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|volatile
 name|struct
@@ -14955,12 +14880,6 @@ name|i
 operator|++
 control|)
 block|{
-if|#
-directive|if
-literal|0
-block|db[i].db.desc.depend = 0;
-endif|#
-directive|endif
 name|db
 index|[
 name|i
@@ -15120,31 +15039,26 @@ return|return
 literal|1
 return|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* BUS parameter initialization after BUS reset  */
-block|void fwohci_busreset(sc) struct fwohci_softc *sc; { }
-endif|#
-directive|endif
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_ircv
 parameter_list|(
-name|sc
-parameter_list|,
-name|dbch
-parameter_list|)
 name|struct
 name|fwohci_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|fwohci_dbch
 modifier|*
 name|dbch
-decl_stmt|;
+parameter_list|,
+name|int
+name|count
+parameter_list|)
 block|{
 name|struct
 name|fwohcidb_tr
@@ -15327,6 +15241,18 @@ operator|&
 literal|0x1f
 condition|)
 block|{
+if|if
+condition|(
+name|count
+operator|>=
+literal|0
+operator|&&
+name|count
+operator|--
+operator|==
+literal|0
+condition|)
+break|break;
 name|ld
 operator|=
 operator|(
@@ -15390,12 +15316,6 @@ name|count
 operator|)
 expr_stmt|;
 comment|/* { device_printf(sc->fc.dev, "%04x %2x 0x%08x 0x%08x 0x%08x 0x%08x\n", len,  		db_tr->db[0].db.desc.status& 0x1f, qld[0],qld[1],qld[2],qld[3]); } */
-if|#
-directive|if
-literal|0
-block|fp=(struct fw_pkt *)(ld + sizeof(struct fwohci_trailer));
-else|#
-directive|else
 name|fp
 operator|=
 operator|(
@@ -15405,8 +15325,6 @@ operator|*
 operator|)
 name|ld
 expr_stmt|;
-endif|#
-directive|endif
 name|qld
 index|[
 literal|0
@@ -15640,12 +15558,6 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!(reg& OHCI_CNTL_DMA_RUN) || 			!(reg& OHCI_CNTL_DMA_ACTIVE) || 			(reg& OHCI_CNTL_DMA_DEAD)) { 				printf("reg = %x\n", reg); 		}
-endif|#
-directive|endif
 block|}
 name|dbch
 operator|->
@@ -15713,6 +15625,9 @@ name|dmach
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_define
 define|#
 directive|define
 name|PLEN
@@ -15720,6 +15635,9 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((ntohs(x))+0x3)& ~0x3)
+end_define
+
+begin_function
 specifier|static
 name|int
 name|fwohci_get_plen
@@ -16017,24 +15935,26 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|fwohci_arcv
 parameter_list|(
-name|sc
-parameter_list|,
-name|dbch
-parameter_list|)
 name|struct
 name|fwohci_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|fwohci_dbch
 modifier|*
 name|dbch
-decl_stmt|;
+parameter_list|,
+name|int
+name|count
+parameter_list|)
 block|{
 name|struct
 name|fwohcidb_tr
@@ -16060,12 +15980,6 @@ name|stat
 decl_stmt|,
 name|off
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|u_int32_t *qld; 	u_int32_t dbcmd; 	int itr, i;
-endif|#
-directive|endif
 name|u_int
 name|spd
 decl_stmt|;
@@ -16133,18 +16047,6 @@ operator|=
 name|splfw
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|OWRITE(sc, OHCI_DMACTLCLR(off), OHCI_CNTL_DMA_RUN); 	dbcmd = OREAD(sc, OHCI_DMACMD(off))& ~0xf;
-comment|/* { db_tr = dbch->top; ld = (u_int8_t *)db_tr->buf; qld = (u_int32_t *)ld; len = dbch->xferq.psize - (db_tr->db[0].db.desc.count); device_printf(sc->fc.dev, "%08x %04x %2x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n", ld, len,  		db_tr->db[0].db.desc.status& 0x1f, qld[0],qld[1],qld[2],qld[3], dbcmd, vtophys(db_tr->db)); } */
-block|for( db_tr = dbch->top, itr = 1; 		dbcmd != vtophys(db_tr->db); itr++){ 		db_tr = STAILQ_NEXT(db_tr, link); 		if( itr>= dbch->ndb ) break;
-comment|/* if(itr != 1){ ld = (u_int8_t *)db_tr->buf; qld = (u_int32_t *)ld; len = dbch->xferq.psize - (db_tr->db[0].db.desc.count); device_printf(sc->fc.dev, "%04x %2x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x 0x%08x\n", len,  		db_tr->db[0].db.desc.status& 0x1f, qld[0],qld[1],qld[2],qld[3], dbcmd, vtophys(db_tr->db)); } */
-block|}
-comment|/* OHCI does not support per packet receive mode in Aync receive. */
-block|if( dbcmd != vtophys(db_tr->db)){ 		if(&sc->arrq == dbch){ 			OWRITE(sc, FWOHCI_INTMASKCLR, OHCI_INT_DMA_PRRQ); 		}else if(&sc->arrs == dbch){ 			OWRITE(sc, FWOHCI_INTMASKCLR, OHCI_INT_DMA_PRRS); 		} 		OWRITE(sc, OHCI_DMACTLCLR(off), OHCI_CNTL_DMA_RUN); 		splx(s); 		return; 	}else{ 		db_tr = STAILQ_NEXT(db_tr, link); 		dbch->top = db_tr; 		OWRITE(sc, OHCI_DMACMD(off),vtophys(dbch->top->db) | 1); 		OWRITE(sc, OHCI_DMACTL(off), OHCI_CNTL_DMA_RUN); 	}  	db_tr = dbch->bottom; 	while(itr> 0){ 		db_tr->db[0].db.desc.depend |= z; 		db_tr = STAILQ_NEXT(db_tr, link); 		ld = (u_int8_t *)db_tr->buf; 		qld = (u_int32_t *)db_tr->buf; 		len = dbch->xferq.psize - (db_tr->db[0].db.desc.count); 		pcnt = 0; 		do{
-else|#
-directive|else
 name|db_tr
 operator|=
 name|dbch
@@ -16217,12 +16119,6 @@ name|dbch
 operator|->
 name|buf_offset
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("len: %d  resCount: %d  offset: %d\n", 				len, resCount, dbch->buf_offset);
-endif|#
-directive|endif
 while|while
 condition|(
 name|len
@@ -16230,8 +16126,20 @@ operator|>
 literal|0
 condition|)
 block|{
-endif|#
-directive|endif
+if|if
+condition|(
+name|count
+operator|>=
+literal|0
+operator|&&
+name|count
+operator|--
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|dbch
@@ -17010,12 +16918,6 @@ block|}
 empty_stmt|;
 name|out
 label|:
-if|#
-directive|if
-literal|0
-block|itr--; 		fwohci_add_rx_buf(db_tr, dbch->xferq.psize, dbch->xferq.flag, 0, NULL);
-else|#
-directive|else
 if|if
 condition|(
 name|resCount
@@ -17106,22 +17008,12 @@ name|resCount
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 comment|/* XXX make sure DMA is not dead */
 block|}
 if|#
 directive|if
 literal|0
-block|dbch->bottom = db_tr; 	dbch->bottom->db[0].db.desc.depend&= 0xfffffff0;
-else|#
-directive|else
-if|#
-directive|if
-literal|0
 block|if (pcnt< 1) 		printf("fwohci_arcv: no packets\n");
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|splx
