@@ -6372,9 +6372,7 @@ name|bio_length
 condition|;
 name|pos
 operator|+=
-name|bp
-operator|->
-name|bio_length
+name|size
 control|)
 block|{
 if|if
