@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2355,13 +2355,6 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-define|#
-directive|define
-name|rcverr
-parameter_list|(
-name|errno
-parameter_list|)
-value|{ error = errno; splx(s); goto release; }
 if|if
 condition|(
 name|so
@@ -2392,11 +2385,6 @@ name|so_error
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|release
 goto|;
@@ -2409,16 +2397,9 @@ name|so_state
 operator|&
 name|SS_CANTRCVMORE
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 goto|goto
 name|release
 goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2441,11 +2422,15 @@ operator|&
 name|PR_CONNREQUIRED
 operator|)
 condition|)
-name|rcverr
-argument_list|(
+block|{
+name|error
+operator|=
 name|ENOTCONN
-argument_list|)
 expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
 if|if
 condition|(
 name|uio
@@ -2465,11 +2450,15 @@ name|so_state
 operator|&
 name|SS_NBIO
 condition|)
-name|rcverr
-argument_list|(
+block|{
+name|error
+operator|=
 name|EWOULDBLOCK
-argument_list|)
 expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
 name|sbunlock
 argument_list|(
 operator|&
