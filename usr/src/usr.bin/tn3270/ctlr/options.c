@@ -41,7 +41,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../system/globals.h"
+file|"../general/globals.h"
 end_include
 
 begin_include
