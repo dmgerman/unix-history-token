@@ -3017,6 +3017,14 @@ name|cbp
 operator|->
 name|cb_buf
 operator|.
+name|bio_caller2
+operator|=
+name|cbp
+expr_stmt|;
+name|cbp
+operator|->
+name|cb_buf
+operator|.
 name|bio_dev
 operator|=
 name|ci2
