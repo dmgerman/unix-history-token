@@ -1146,7 +1146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	union_allocvp:	allocate a union_node and associate it with a  *			parent union_node and one or two vnodes.  *  *	vpp	Holds the returned vnode locked and referenced if no   *		error occurs.  *  *	mp	Holds the mount point.  mp may or may not be busied.   *		allocvp makes no changes to mp.  *  *	dvp	Holds the parent union_node to the one we wish to create.  *		XXX may only be used to traverse an uncopied lowervp-based  *		tree?  XXX  *  *		dvp may or may not be locked.  allocvp makes no changes  *		to dvp.  *  *	upperdvp Holds the parent vnode to uppervp, generally used along  *		with path component information to create a shadow of  *		lowervp when uppervp does not exist.  *  *		upperdvp is referenced but unlocked on entry, and will be  *		dereferenced on return.  *  *	uppervp	Holds the new uppervp vnode to be stored in the   *		union_node we are allocating.  uppervp is referenced but  *		not locked, and will be dereferenced on return.  *  *	lowervp	Holds the new lowervp vnode to be stored in the  *		union_node we are allocating.  uppervp is referenced but  *		not locked, and will be dereferenced on return.  *   *	cnp	Holds path component information to be coupled with  *		lowervp and upperdvp to allow unionfs to create an uppervp  *		later on.  Only used if lowervp is valid.  The conents  *		of cnp is only valid for the duration of the call.  *  *	docache	Determine whether this node should be entered in the  *		cache or whether it should be destroyed as soon as possible.  *  * all union_nodes are maintained on a singly-linked  * list.  new nodes are only allocated when they cannot  * be found on this list.  entries on the list are  * removed when the vfs reclaim entry is called.  *  * a single lock is kept for the entire list.  this is  * needed because the getnewvnode() function can block  * waiting for a vnode to become free, in which case there  * may be more than one process trying to get the same  * vnode.  this lock is only taken if we are going to  * call getnewvnode, since the kernel itself is single-threaded.  *  * if an entry is found on the list, then call vget() to  * take a reference.  this is done because there may be  * zero references to it and so it needs to removed from  * the vnode free list.  */
+comment|/*  *	union_allocvp:	allocate a union_node and associate it with a  *			parent union_node and one or two vnodes.  *  *	vpp	Holds the returned vnode locked and referenced if no   *		error occurs.  *  *	mp	Holds the mount point.  mp may or may not be busied.   *		allocvp makes no changes to mp.  *  *	dvp	Holds the parent union_node to the one we wish to create.  *		XXX may only be used to traverse an uncopied lowervp-based  *		tree?  XXX  *  *		dvp may or may not be locked.  allocvp makes no changes  *		to dvp.  *  *	upperdvp Holds the parent vnode to uppervp, generally used along  *		with path component information to create a shadow of  *		lowervp when uppervp does not exist.  *  *		upperdvp is referenced but unlocked on entry, and will be  *		dereferenced on return.  *  *	uppervp	Holds the new uppervp vnode to be stored in the   *		union_node we are allocating.  uppervp is referenced but  *		not locked, and will be dereferenced on return.  *  *	lowervp	Holds the new lowervp vnode to be stored in the  *		union_node we are allocating.  lowervp is referenced but  *		not locked, and will be dereferenced on return.  *   *	cnp	Holds path component information to be coupled with  *		lowervp and upperdvp to allow unionfs to create an uppervp  *		later on.  Only used if lowervp is valid.  The conents  *		of cnp is only valid for the duration of the call.  *  *	docache	Determine whether this node should be entered in the  *		cache or whether it should be destroyed as soon as possible.  *  * all union_nodes are maintained on a singly-linked  * list.  new nodes are only allocated when they cannot  * be found on this list.  entries on the list are  * removed when the vfs reclaim entry is called.  *  * a single lock is kept for the entire list.  this is  * needed because the getnewvnode() function can block  * waiting for a vnode to become free, in which case there  * may be more than one process trying to get the same  * vnode.  this lock is only taken if we are going to  * call getnewvnode, since the kernel itself is single-threaded.  *  * if an entry is found on the list, then call vget() to  * take a reference.  this is done because there may be  * zero references to it and so it needs to removed from  * the vnode free list.  */
 end_comment
 
 begin_function
@@ -1225,13 +1225,6 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|xlowervp
-init|=
-name|NULLVP
-decl_stmt|;
-name|struct
 name|union_mount
 modifier|*
 name|um
@@ -1299,9 +1292,10 @@ name|v_type
 operator|)
 condition|)
 block|{
-name|xlowervp
-operator|=
+name|vrele
+argument_list|(
 name|lowervp
+argument_list|)
 expr_stmt|;
 name|lowervp
 operator|=
@@ -2347,15 +2341,6 @@ expr_stmt|;
 block|}
 name|out
 label|:
-if|if
-condition|(
-name|xlowervp
-condition|)
-name|vrele
-argument_list|(
-name|xlowervp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|docache
