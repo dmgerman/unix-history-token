@@ -239,12 +239,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* revoke privs */
-name|setegid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|setgid
 argument_list|(
 name|getgid
