@@ -4258,7 +4258,7 @@ name|out
 argument_list|,
 literal|"# /dev/%s:\n"
 literal|"text: %s\n"
-literal|"bytes/sectors: %d\n"
+literal|"bytes/sector: %d\n"
 literal|"sectors/cylinder: %ju\n"
 argument_list|,
 name|disk
