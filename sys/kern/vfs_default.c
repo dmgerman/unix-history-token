@@ -1611,15 +1611,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
 if|if
 condition|(
 name|ap
@@ -1631,7 +1622,9 @@ condition|)
 name|simple_unlock
 argument_list|(
 operator|&
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_interlock
 argument_list|)
