@@ -2499,7 +2499,7 @@ name|args
 operator|.
 name|next_hop
 expr_stmt|;
-comment|/*                  * On return we must do the following:                  * m == NULL         -> drop the pkt (old interface, deprecated)                  * (off& IP_FW_PORT_DENY_FLAG)	-> drop the pkt (new interface)                  * 1<=off<= 0xffff		-> DIVERT                  * (off& IP_FW_PORT_DYNT_FLAG)	-> send to a DUMMYNET pipe                  * (off& IP_FW_PORT_TEE_FLAG)	-> TEE the packet                  * dst != old			-> IPFIREWALL_FORWARD                  * off==0, dst==old		-> accept                  * If some of the above modules are not compiled in, then                  * we should't have to check the corresponding condition                  * (because the ipfw control socket should not accept                  * unsupported rules), but better play safe and drop                  * packets in case of doubt.                  */
+comment|/* 		 * On return we must do the following: 		 * m == NULL	-> drop the pkt (old interface, deprecated) 		 * (off& IP_FW_PORT_DENY_FLAG)	-> drop the pkt (new interface) 		 * 1<=off<= 0xffff		-> DIVERT 		 * (off& IP_FW_PORT_DYNT_FLAG)	-> send to a DUMMYNET pipe 		 * (off& IP_FW_PORT_TEE_FLAG)	-> TEE the packet 		 * dst != old			-> IPFIREWALL_FORWARD 		 * off==0, dst==old		-> accept 		 * If some of the above modules are not compiled in, then 		 * we should't have to check the corresponding condition 		 * (because the ipfw control socket should not accept 		 * unsupported rules), but better play safe and drop 		 * packets in case of doubt. 		 */
 if|if
 condition|(
 operator|(

@@ -1389,7 +1389,7 @@ name|next_hop
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Grab info from MT_TAG mbufs prepended to the chain. */
+comment|/* Grab info from MT_TAG mbufs prepended to the chain.	*/
 for|for
 control|(
 init|;
