@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)raw_cb.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)raw_cb.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -152,6 +152,9 @@ name|so
 operator|->
 name|so_snd
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|RAWSNDQ
 argument_list|)
 operator|==
@@ -169,6 +172,9 @@ name|so
 operator|->
 name|so_rcv
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|RAWRCVQ
 argument_list|)
 operator|==
