@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: options.c,v 1.14 1997/08/22 15:50:09 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -880,20 +880,6 @@ name|char
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|setipaddr
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3578,6 +3564,26 @@ name|setholdoff
 block|}
 block|,
 comment|/* set holdoff time (seconds) */
+comment|/* backwards compat hack */
+block|{
+literal|"dns1"
+block|,
+literal|1
+block|,
+name|setdnsaddr
+block|}
+block|,
+comment|/* DNS address for the peer's use */
+block|{
+literal|"dns2"
+block|,
+literal|1
+block|,
+name|setdnsaddr
+block|}
+block|,
+comment|/* DNS address for the peer's use */
+comment|/* end compat hack */
 block|{
 literal|"ms-dns"
 block|,
@@ -8606,7 +8612,6 @@ comment|/*  * setipaddr - Set the IP address  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|setipaddr
 parameter_list|(

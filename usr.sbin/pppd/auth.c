@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.17 1997/08/19 17:52:31 peter Exp $"
+literal|"$Id: auth.c,v 1.18 1997/08/22 12:03:52 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Set if not wild or blank */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|non_wildclient
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Set if we have run the /etc/ppp/auth-up script. */
 end_comment
 
@@ -664,6 +675,19 @@ operator|(
 expr|struct
 name|wordlist
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|auth_set_ip_addr
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1563,6 +1587,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/*      * If we have overridden addresses based on auth info      * then set that information now before continuing.      */
+name|auth_set_ip_addr
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 comment|/*      * If there is no more authentication still to be done,      * proceed to the network (or callback) phase.      */
 if|if
 condition|(
@@ -1687,6 +1717,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/*      * If we have overridden addresses based on auth info      * then set that information now before continuing.      */
+name|auth_set_ip_addr
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 comment|/*      * If there is no more authentication still being done,      * proceed to the network (or callback) phase.      */
 if|if
 condition|(
@@ -4813,6 +4849,83 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|auth_set_ip_addr
+parameter_list|(
+name|unit
+parameter_list|)
+name|int
+name|unit
+decl_stmt|;
+block|{
+name|struct
+name|wordlist
+modifier|*
+name|addrs
+decl_stmt|;
+if|if
+condition|(
+name|non_wildclient
+operator|&&
+operator|(
+name|addrs
+operator|=
+name|addresses
+index|[
+name|unit
+index|]
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+init|;
+name|addrs
+operator|!=
+name|NULL
+condition|;
+name|addrs
+operator|=
+name|addrs
+operator|->
+name|next
+control|)
+block|{
+comment|/* Look for address overrides, and set them if we have any */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|addrs
+operator|->
+name|word
+argument_list|,
+literal|':'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|setipaddr
+argument_list|(
+name|addrs
+operator|->
+name|word
+argument_list|)
+condition|)
+break|break;
+block|}
+block|}
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*  * auth_ip_addr - check whether the peer is authorized to use  * a given IP address.  Returns 1 if authorized, 0 otherwise.  */
 end_comment
@@ -4864,6 +4977,11 @@ modifier|*
 name|addrs
 decl_stmt|;
 block|{
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
 name|u_int32_t
 name|a
 decl_stmt|,
@@ -4913,6 +5031,12 @@ operator|!
 name|auth_required
 return|;
 comment|/* no addresses authorized */
+name|x
+operator|=
+name|y
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4927,6 +5051,9 @@ operator|->
 name|next
 control|)
 block|{
+name|y
+operator|++
+expr_stmt|;
 comment|/* "-" means no addresses authorized, "*" means any address allowed */
 name|ptr_word
 operator|=
@@ -4960,6 +5087,25 @@ condition|)
 return|return
 literal|1
 return|;
+comment|/* 	 * A colon in the string means that we wish to force a specific 	 * local:remote address, but we ignore these for now. 	 */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|addrs
+operator|->
+name|word
+argument_list|,
+literal|':'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|x
+operator|++
+expr_stmt|;
+else|else
+block|{
 name|accept
 operator|=
 literal|1
@@ -5248,8 +5394,12 @@ return|return
 name|accept
 return|;
 block|}
+comment|/* else */
+block|}
 return|return
-literal|0
+name|x
+operator|==
+name|y
 return|;
 comment|/* not in list => can't have it */
 block|}
@@ -5974,6 +6124,19 @@ name|free_wordlist
 argument_list|(
 name|addr_list
 argument_list|)
+expr_stmt|;
+name|non_wildclient
+operator|=
+operator|(
+name|best_flag
+operator|&
+name|NONWILD_CLIENT
+operator|)
+operator|&&
+operator|*
+name|client
+operator|!=
+literal|'\0'
 expr_stmt|;
 return|return
 name|best_flag
