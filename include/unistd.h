@@ -1526,9 +1526,9 @@ operator|(
 name|char
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
-name|int
+name|vm_offset_t
 operator|,
 name|int
 operator|)
