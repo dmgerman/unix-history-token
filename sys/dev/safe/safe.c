@@ -10424,7 +10424,7 @@ decl_stmt|;
 comment|/* NB: assume caller has lock on ring */
 name|printf
 argument_list|(
-literal|"%s: ERNGSTAT %x (next %u) back %u front %u\n"
+literal|"%s: ERNGSTAT %x (next %u) back %lu front %lu\n"
 argument_list|,
 name|tag
 argument_list|,
@@ -10436,6 +10436,11 @@ operator|>>
 name|SAFE_PE_ERNGSTAT_NEXT_S
 operator|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|sc
 operator|->
 name|sc_back
@@ -10443,7 +10448,13 @@ operator|-
 name|sc
 operator|->
 name|sc_ring
+argument_list|)
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|sc
 operator|->
 name|sc_front
@@ -10451,6 +10462,7 @@ operator|-
 name|sc
 operator|->
 name|sc_ring
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10597,6 +10609,9 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|sc
 operator|->
 name|sc_spring
@@ -10726,6 +10741,9 @@ index|]
 argument_list|,
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|sc
 operator|->
