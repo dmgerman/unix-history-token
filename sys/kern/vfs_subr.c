@@ -2363,13 +2363,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-if|if
-condition|(
-name|mp
-operator|==
-name|NULL
-condition|)
-return|return;
 name|simple_lock
 argument_list|(
 operator|&
@@ -2580,6 +2573,8 @@ expr_stmt|;
 comment|/* 	 * Try to reuse vnodes if we hit the max.  This situation only 	 * occurs in certain large-memory (2G+) situations.  For the  	 * algorithm to be stable we have to try to reuse at least 2. 	 * No hysteresis should be necessary. 	 */
 if|if
 condition|(
+name|mp
+operator|&&
 name|numvnodes
 operator|-
 name|freevnodes
