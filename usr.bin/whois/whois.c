@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: whois.c,v 1.5 1998/02/19 19:07:50 wollman Exp $"
+literal|"$Id: whois.c,v 1.2.2.3 1998/02/19 19:10:26 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
