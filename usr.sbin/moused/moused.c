@@ -8029,7 +8029,7 @@ condition|)
 block|{
 comment|/* 	 * Hack for Logitech MouseMan Mouse - Middle button 	 * 	 * Unfortunately this mouse has variable length packets: the standard 	 * Microsoft 3 byte packet plus an optional 4th byte whenever the 	 * middle button status changes. 	 * 	 * We have already processed the standard packet with the movement 	 * and button info.  Now post an event message with the old status 	 * of the left and right buttons and the updated middle button. 	 */
 comment|/* 	 * Even worse, different MouseMen and TrackMen differ in the 4th 	 * byte: some will send 0x00/0x20, others 0x01/0x21, or even 	 * 0x02/0x22, so I have to strip off the lower bits.          *          * [JCH-96/01/21]          * HACK for ALPS "fourth button". (It's bit 0x10 of the "fourth byte"          * and it is activated by tapping the glidepad with the finger! 8^)          * We map it to bit bit3, and the reverse map in xf86Events just has          * to be extended so that it is identified as Button 4. The lower          * half of the reverse-map may remain unchanged. 	 */
-comment|/* 	 * [KY-97/08/03] 	 * Receive the fourth byte only when preceeding three bytes have 	 * been detected (pBufP>= cur_proto[4]).  In the previous 	 * versions, the test was pBufP == 0; thus, we may have mistakingly 	 * received a byte even if we didn't see anything preceeding  	 * the byte. 	 */
+comment|/* 	 * [KY-97/08/03] 	 * Receive the fourth byte only when preceding three bytes have 	 * been detected (pBufP>= cur_proto[4]).  In the previous 	 * versions, the test was pBufP == 0; thus, we may have mistakingly 	 * received a byte even if we didn't see anything preceding  	 * the byte. 	 */
 if|if
 condition|(
 operator|(
@@ -14576,21 +14576,7 @@ name|old
 decl_stmt|,
 name|now
 decl_stmt|;
-specifier|static
 name|int
-name|x_idle
-init|=
-operator|-
-literal|1
-decl_stmt|,
-name|y_idle
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|int
-name|deltat
-decl_stmt|,
 name|x
 decl_stmt|,
 name|y
