@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.16 1995/05/30 08:07:45 rgrimes Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.16.2.1 1995/06/02 10:57:50 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -3756,7 +3756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Renames on files require moving the denode to a new hash queue since the  * denode's location is used to compute which hash queue to put the file  * in. Unless it is a rename in place.  For example "mv a b".  *  * What follows is the basic algorithm:  *  * if (file move) {  *	if (dest file exists) {  *		remove dest file  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing directory slot  *	} else {  *		write new entry in dest directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry  *	}  * } else {  *	directory move  *	if (dest directory exists) {  *		if (dest is not empty) {  *			return ENOTEMPTY  *		}  *		remove dest directory  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing entry  *	} else {  *		be sure dest is not a child of src directory  *		write entry in dest directory  *		update "." and ".." in moved directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry for moved directory  *	}  * }  *  * On entry:  *	source's parent directory is unlocked  *	source file or directory is unlocked  *	destination's parent directory is locked  *	destination file or directory is locked if it exists  *  * On exit:  *	all denodes should be released  *  * Notes:  * I'm not sure how the memory containing the pathnames pointed at by the  * componentname structures is freed, there may be some memory bleeding  * for each rename done.  */
+comment|/*  * Renames on files require moving the denode to a new hash queue since the  * denode's location is used to compute which hash queue to put the file  * in. Unless it is a rename in place.  For example "mv a b".  *  * What follows is the basic algorithm:  *  * if (file move) {  *	if (dest file exists) {  *		remove dest file  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing directory slot  *	} else {  *		write new entry in dest directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry  *	}  * } else {  *	directory move  *	if (dest directory exists) {  *		if (dest is not empty) {  *			return ENOTEMPTY  *		}  *		remove dest directory  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing entry  *	} else {  *		be sure dest is not a child of src directory  *		write entry in dest directory  *		update "." and ".." in moved directory  *		clear old directory entry for moved directory  *	}  * }  *  * On entry:  *	source's parent directory is unlocked  *	source file or directory is unlocked  *	destination's parent directory is locked  *	destination file or directory is locked if it exists  *  * On exit:  *	all denodes should be released  *  * Notes:  * I'm not sure how the memory containing the pathnames pointed at by the  * componentname structures is freed, there may be some memory bleeding  * for each rename done.  */
 end_comment
 
 begin_function
@@ -4578,6 +4578,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+name|sourceisadirectory
+condition|)
+block|{
 name|fdep
 operator|->
 name|de_dirclust
@@ -4599,6 +4605,7 @@ argument_list|(
 name|fdep
 argument_list|)
 expr_stmt|;
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|ap
