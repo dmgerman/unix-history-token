@@ -261,6 +261,8 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|cpu_class
+init|=
+name|CPUCLASS_386
 decl_stmt|;
 end_decl_stmt
 
