@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.38 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1195,7 +1195,7 @@ literal|2
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_ERR
 argument_list|,
 literal|"%s: include %s: transient error: %e"
 argument_list|,
@@ -1453,6 +1453,10 @@ name|int
 name|udbexpand
 parameter_list|()
 function_decl|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|udbexpand
@@ -1505,7 +1509,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: deferred: udbexpand"
+literal|"%s: deferred: udbexpand: %e"
 argument_list|,
 name|e
 operator|->
@@ -1516,7 +1520,12 @@ endif|#
 directive|endif
 name|message
 argument_list|(
-literal|"queued (user database error)"
+literal|"queued (user database error): %s"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|e

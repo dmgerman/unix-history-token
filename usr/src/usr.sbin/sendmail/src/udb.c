@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.17 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.18 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.17 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.18 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2224,6 +2224,26 @@ operator|!=
 name|EACCES
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|2
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"dbopen(%s): %e"
+argument_list|,
+name|spec
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|up
 operator|->
 name|udb_type

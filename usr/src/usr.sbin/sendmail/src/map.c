@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.11 (Berkeley) %G%"
+literal|"@(#)map.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ argument_list|(
 name|BTREE_MAP
 argument_list|)
 end_if
+
+begin_undef
+undef|#
+directive|undef
+name|__P
+end_undef
 
 begin_include
 include|#
@@ -361,6 +367,10 @@ name|lockfile
 argument_list|(
 name|dbm_dirfno
 argument_list|(
+operator|(
+name|DBM
+operator|*
+operator|)
 name|map
 operator|->
 name|map_db
@@ -377,6 +387,10 @@ name|val
 operator|=
 name|dbm_fetch
 argument_list|(
+operator|(
+name|DBM
+operator|*
+operator|)
 name|map
 operator|->
 name|map_db
@@ -391,6 +405,10 @@ name|lockfile
 argument_list|(
 name|dbm_dirfno
 argument_list|(
+operator|(
+name|DBM
+operator|*
+operator|)
 name|map
 operator|->
 name|map_db

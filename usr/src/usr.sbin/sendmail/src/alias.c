@@ -48,6 +48,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|NEWDB
+undef|#
+directive|undef
+name|__P
 include|#
 directive|include
 file|<db.h>
@@ -75,7 +78,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.35 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.36 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -90,7 +93,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.35 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.36 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,7 +119,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.35 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.36 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +134,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.35 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.36 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3747,7 +3750,7 @@ literal|2
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_ERR
 argument_list|,
 literal|"%s: forward %s: transient error: %e"
 argument_list|,

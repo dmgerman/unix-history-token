@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.52 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.53 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.52 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.53 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2626,7 +2626,7 @@ literal|3
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_CRIT
 argument_list|,
 literal|"orderq: bogus qf name %s"
 argument_list|,
