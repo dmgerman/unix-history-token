@@ -392,6 +392,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|ufs_disk_write
+parameter_list|(
+name|struct
+name|uufsd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
