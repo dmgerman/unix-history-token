@@ -2458,10 +2458,12 @@ expr_stmt|;
 comment|/* sorry, fwprintf(read_only_file, L"") returns WEOF, not 0 */
 if|if
 condition|(
-name|cantwrite
+name|prepwrite
 argument_list|(
 name|fp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

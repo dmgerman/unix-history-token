@@ -505,13 +505,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Return true iff the given FILE cannot be written now.  */
+comment|/*  * Prepare the given FILE for writing, and return 0 iff it  * can be written now.  Otherwise, return EOF and set errno.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|cantwrite
+name|prepwrite
 parameter_list|(
 name|fp
 parameter_list|)

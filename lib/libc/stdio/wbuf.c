@@ -97,10 +97,12 @@ name|_lbfsize
 expr_stmt|;
 if|if
 condition|(
-name|cantwrite
+name|prepwrite
 argument_list|(
 name|fp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(

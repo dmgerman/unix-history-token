@@ -2370,10 +2370,12 @@ directive|endif
 comment|/* sorry, fprintf(read_only_file, "") returns EOF, not 0 */
 if|if
 condition|(
-name|cantwrite
+name|prepwrite
 argument_list|(
 name|fp
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
