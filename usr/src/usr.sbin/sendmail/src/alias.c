@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.4 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.5 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.4 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.5 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1531,6 +1531,17 @@ name|p
 operator|++
 operator|=
 name|c
+expr_stmt|;
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
 expr_stmt|;
 block|}
 block|}
