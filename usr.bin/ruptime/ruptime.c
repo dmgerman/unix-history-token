@@ -1045,12 +1045,6 @@ condition|(
 name|tval
 operator|<
 literal|0
-operator|||
-name|tval
-operator|>
-name|DAYSPERNYEAR
-operator|*
-name|SECSPERDAY
 condition|)
 block|{
 operator|(
