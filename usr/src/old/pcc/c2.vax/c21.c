@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.22 %G%"
+literal|"@(#)c21.c 4.23 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5227,10 +5227,12 @@ expr_stmt|;
 name|redunm
 operator|++
 expr_stmt|;
-name|flow
-operator|=
-name|r
-expr_stmt|;
+return|return
+operator|(
+name|p
+operator|)
+return|;
+comment|/* avoid stale uses[] data */
 block|}
 else|else
 name|splitrand
