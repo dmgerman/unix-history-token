@@ -723,7 +723,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|jailcansethostname
+name|prison_set_hostname_allowed
 init|=
 literal|1
 decl_stmt|;
@@ -732,20 +732,20 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_kern
+name|_kern_prison
 argument_list|,
-name|KERN_JAILCANSETHOSTNAME
+name|OID_AUTO
 argument_list|,
-name|jailcansethostname
+name|set_hostname_allowed
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|jailcansethostname
+name|prison_set_hostname_allowed
 argument_list|,
 literal|0
 argument_list|,
-literal|"Jail can set its hostname"
+literal|"Processes in prison can set their hostnames"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -780,7 +780,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|jailcansethostname
+name|prison_set_hostname_allowed
 condition|)
 return|return
 operator|(

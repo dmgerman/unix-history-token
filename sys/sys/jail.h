@@ -113,6 +113,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Sysctl-set variables that determine global jail policy  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|prison_set_hostname_allowed
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
