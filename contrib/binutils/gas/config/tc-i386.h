@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 92, 93, 94, 95, 96, 1997 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -1447,6 +1447,11 @@ directive|define
 name|iclrKludge
 value|0x80000
 comment|/* used to convert clr to xor */
+define|#
+directive|define
+name|FWait
+value|0x100000
+comment|/* instruction needs FWAIT */
 comment|/* (opcode_modifier& COMES_IN_ALL_SIZES) is true if the      instuction comes in byte, word, and dword sizes and is encoded into      machine code in the canonical way. */
 define|#
 directive|define
@@ -1716,6 +1721,40 @@ name|flag_16bit_code
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|md_maybe_text
+parameter_list|()
+define|\
+value|((bfd_get_section_flags (stdoutput, now_seg)& SEC_CODE) != 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|md_maybe_text
+parameter_list|()
+define|\
+value|(now_seg != data_section&& now_seg != bss_section)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1732,7 +1771,7 @@ parameter_list|,
 name|around
 parameter_list|)
 define|\
-value|if ((n)&& !need_pass_2							\&& (!(fill) || ((char)*(fill) == (char)0x90&& (len) == 1))		\&& now_seg != data_section&& now_seg != bss_section)		\   {									\     char *p;								\     p = frag_var (rs_align_code, 15, 1, (relax_substateT) max,		\ 		  (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x90;								\     goto around;							\   }
+value|if ((n)&& !need_pass_2							\&& (!(fill) || ((char)*(fill) == (char)0x90&& (len) == 1))		\&& md_maybe_text ())						\   {									\     char *p;								\     p = frag_var (rs_align_code, 15, 1, (relax_substateT) max,		\ 		  (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x90;								\     goto around;							\   }
 end_define
 
 begin_decl_stmt
@@ -1830,6 +1869,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DIFF_EXPR_OK
+end_define
+
+begin_comment
+comment|/* foo-. gets turned into PC relative relocs */
+end_comment
 
 begin_comment
 comment|/* end of tc-i386.h */
