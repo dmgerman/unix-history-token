@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.19.1.1 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.20 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.19.1.1 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.20 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1435,6 +1435,9 @@ operator|(
 name|FALSE
 operator|)
 return|;
+comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU). 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
+name|cnameloop
+label|:
 for|for
 control|(
 name|cp
@@ -1461,7 +1464,6 @@ condition|)
 name|n
 operator|++
 expr_stmt|;
-comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU). 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
 name|dp
 operator|=
 name|searchlist
@@ -1555,12 +1557,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Now run through the search list for the name in question. 	*/
-name|cnameloop
-label|:
-name|dp
-operator|=
-name|searchlist
-expr_stmt|;
 name|mxmatch
 operator|=
 name|NULL
