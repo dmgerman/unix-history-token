@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -477,7 +477,19 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|(bcmp((a)->siso_data, (b)->siso_data, (unsigned)(a)->siso_nlen)==0)
+value|(bcmp((a)->siso_data, (b)->siso_data, (unsigned)(a)->siso_nlen) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAME_ISOIFADDR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(bcmp((a)->siso_data, (b)->siso_data, \ 	(unsigned)((b)->siso_nlen - (b)->siso_tlen)) == 0)
 end_define
 
 begin_comment
