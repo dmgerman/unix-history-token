@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.6 (Berkeley) %G%"
+literal|"@(#)uuq.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,7 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|float
+name|double
 name|atof
 parameter_list|()
 function_decl|;
