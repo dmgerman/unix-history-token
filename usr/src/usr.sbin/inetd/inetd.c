@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.19 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2214,6 +2214,7 @@ argument_list|(
 name|SIGBLOCK
 argument_list|)
 expr_stmt|;
+comment|/* 			 * sep->se_wait may be holding the pid of a daemon 			 * that we're waiting for.  If so, don't overwrite 			 * it unless the config file explicitly says don't  			 * wait. 			 */
 if|if
 condition|(
 name|cp
@@ -2221,6 +2222,20 @@ operator|->
 name|se_bi
 operator|==
 literal|0
+operator|&&
+operator|(
+name|sep
+operator|->
+name|se_wait
+operator|==
+literal|1
+operator|||
+name|cp
+operator|->
+name|se_wait
+operator|==
+literal|0
+operator|)
 condition|)
 name|sep
 operator|->
