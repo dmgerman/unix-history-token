@@ -169,6 +169,13 @@ operator|->
 name|OemId
 argument_list|)
 expr_stmt|;
+name|buf
+index|[
+literal|6
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|setenv
 argument_list|(
 literal|"hint.acpi.0.oem"
