@@ -199,6 +199,8 @@ name|shell
 decl_stmt|,
 modifier|*
 name|p
+init|=
+name|NULL
 decl_stmt|;
 name|iflag
 operator|=
