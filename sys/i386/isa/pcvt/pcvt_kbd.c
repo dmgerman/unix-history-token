@@ -5434,7 +5434,7 @@ operator|)
 literal|0
 return|;
 comment|/* 					 * see whether the last move did 					 * happen "recently", i.e. before 					 * less than half a second 					 */
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|now
@@ -5451,11 +5451,13 @@ operator|.
 name|lastmove
 argument_list|)
 expr_stmt|;
+name|getmicrotime
+argument_list|(
+operator|&
 name|mouse
 operator|.
 name|lastmove
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
 name|accel
 operator|=
