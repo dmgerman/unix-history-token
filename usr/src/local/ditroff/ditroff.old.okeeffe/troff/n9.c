@@ -1360,6 +1360,19 @@ operator|==
 name|delim
 condition|)
 break|break;
+if|if
+condition|(
+name|cbits
+argument_list|(
+name|c
+argument_list|)
+operator|!=
+literal|' '
+condition|)
+name|ch
+operator|=
+name|c
+expr_stmt|;
 name|vflag
 operator|=
 literal|0
