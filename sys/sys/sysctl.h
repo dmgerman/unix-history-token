@@ -3015,15 +3015,12 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|name
 operator|,
 name|int
 operator|*
-name|mibp
 operator|,
 name|size_t
 operator|*
-name|sizep
 operator|)
 argument_list|)
 decl_stmt|;
