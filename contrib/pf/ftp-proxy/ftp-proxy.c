@@ -1,15 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$OpenBSD: ftp-proxy.c,v 1.33 2003/08/22 21:50:34 david Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1996-2001  *	Obtuse Systems Corporation.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Obtuse Systems nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY OBTUSE SYSTEMS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL OBTUSE SYSTEMS CORPORATION OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * ftp proxy, Originally based on juniper_ftp_proxy from the Obtuse  * Systems juniper firewall, written by Dan Boulet<danny@obtuse.com>  * and Bob Beck<beck@obtuse.com>  *  * This version basically passes everything through unchanged except  * for the PORT and the * "227 Entering Passive Mode" reply.  *  * A PORT command is handled by noting the IP address and port number  * specified and then configuring a listen port on some very high port  * number and telling the server about it using a PORT message.  * We then watch for an in-bound connection on the port from the server  * and connect to the client's port when it happens.  *  * A "227 Entering Passive Mode" reply is handled by noting the IP address  * and port number specified and then configuring a listen port on some  * very high port number and telling the client about it using a  * "227 Entering Passive Mode" reply.  * We then watch for an in-bound connection on the port from the client  * and connect to the server's port when it happens.  *  * supports tcp wrapper lookups/access control with the -w flag using  * the real destination address - the tcp wrapper stuff is done after  * the real destination address is retrieved from pf  *  */
