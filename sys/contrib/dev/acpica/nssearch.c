@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 97 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 99 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -103,7 +103,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Searching %s [%p] For %4.4s (%s)\n"
+literal|"Searching %s (%p) For [%4.4s] (%s)\n"
 operator|,
 name|ScopeName
 operator|,
@@ -162,7 +162,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name %4.4s Type [%s] found in scope [%4.4s] %p\n"
+literal|"Name [%4.4s] (%s) %p found in scope [%4.4s] %p\n"
 operator|,
 operator|(
 name|char
@@ -179,12 +179,13 @@ name|Type
 argument_list|)
 operator|,
 name|NextNode
-operator|->
-name|Name
-operator|.
-name|Ascii
 operator|,
-name|NextNode
+name|AcpiUtGetNodeName
+argument_list|(
+name|Node
+argument_list|)
+operator|,
+name|Node
 operator|)
 argument_list|)
 expr_stmt|;
@@ -226,7 +227,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name %4.4s Type [%s] not found in search in scope [%4.4s] %p first child %p\n"
+literal|"Name [%4.4s] (%s) not found in search in scope [%4.4s] %p first child %p\n"
 operator|,
 operator|(
 name|char
@@ -240,11 +241,10 @@ argument_list|(
 name|Type
 argument_list|)
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|Node
 operator|,

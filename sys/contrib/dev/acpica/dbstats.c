@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 68 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 69 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -266,7 +266,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 break|break;
@@ -304,7 +304,7 @@ name|ObjDesc
 operator|->
 name|Region
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 break|break;
@@ -357,7 +357,7 @@ name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 break|break;
@@ -388,7 +388,7 @@ name|ObjDesc
 operator|->
 name|ThermalZone
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 break|break;

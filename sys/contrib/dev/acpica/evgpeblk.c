@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpeblk - GPE block creation and initialization.  *              $Revision: 26 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -349,7 +349,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Edge/Level determination is based on the 2nd character       * of the method name      */
+comment|/*      * Edge/Level determination is based on the 2nd character      * of the method name      */
 switch|switch
 condition|(
 name|Name
@@ -1049,7 +1049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDeleteGpeBlock  *  * PARAMETERS:  GpeBlock        - Existing GPE block  *  * RETURN:      Status  *  * DESCRIPTION: Install new GPE block with mutex support  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvDeleteGpeBlock  *  * PARAMETERS:  GpeBlock        - Existing GPE block  *  * RETURN:      Status  *  * DESCRIPTION: Remove a GPE block  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1869,19 +1869,7 @@ name|GpeBlock
 operator|->
 name|RegisterCount
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|GpeBlock
-operator|->
-name|BlockAddress
-operator|.
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(

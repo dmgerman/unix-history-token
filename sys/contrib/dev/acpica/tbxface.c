@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -501,7 +501,6 @@ while|while
 condition|(
 name|TableDesc
 condition|)
-empty_stmt|;
 block|{
 comment|/*          * Delete all namespace entries owned by this table.  Note that these          * entries can appear anywhere in the namespace by virtue of the AML          * "Scope" operator.  Thus, we need to track ownership by an ID, not          * simply a position within the hierarchy          */
 name|AcpiNsDeleteNamespaceByOwner

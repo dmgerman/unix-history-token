@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 37 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -256,14 +256,18 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/*          * Check for HE, LL or HL          */
-if|if
+comment|/*          * Check for HE, LL interrupts          */
+switch|switch
 condition|(
 name|Temp8
 operator|&
-literal|0x01
+literal|0x09
 condition|)
 block|{
+case|case
+literal|0x01
+case|:
+comment|/* HE */
 name|OutputStruct
 operator|->
 name|Data
@@ -284,16 +288,11 @@ name|ActiveHighLow
 operator|=
 name|ACPI_ACTIVE_HIGH
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|Temp8
-operator|&
-literal|0x8
-condition|)
-block|{
+break|break;
+case|case
+literal|0x08
+case|:
+comment|/* LL */
 name|OutputStruct
 operator|->
 name|Data
@@ -314,16 +313,17 @@ name|ActiveHighLow
 operator|=
 name|ACPI_ACTIVE_LOW
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*                  * Only _LL and _HE polarity/trigger interrupts                  * are allowed (ACPI spec v1.0b ection 6.4.2.1),                  * so an error will occur if we reach this point                  */
+break|break;
+default|default:
+comment|/*              * Only _LL and _HE polarity/trigger interrupts              * are allowed (ACPI spec, section "IRQ Format")              * so 0x00 and 0x09 are illegal.              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Invalid interrupt polarity/trigger in resource list\n"
+literal|"Invalid interrupt polarity/trigger in resource list, %X\n"
+operator|,
+name|Temp8
 operator|)
 argument_list|)
 expr_stmt|;
@@ -332,7 +332,6 @@ argument_list|(
 name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/*          * Check for sharable          */
 name|OutputStruct
@@ -762,18 +761,20 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
-comment|/* Check for the minimum length. */
+comment|/* Validate minimum descriptor length */
 if|if
 condition|(
 name|Temp16
 operator|<
 literal|6
 condition|)
+block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_INVALID_RESOURCE_TYPE
+name|AE_AML_BAD_RESOURCE_LENGTH
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|BytesConsumed
 operator|=
@@ -872,7 +873,7 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/* Minimum number of IRQs is one. */
+comment|/* Must have at least one IRQ */
 if|if
 condition|(
 name|Temp8
@@ -880,14 +881,9 @@ operator|<
 literal|1
 condition|)
 block|{
-operator|*
-name|BytesConsumed
-operator|=
-literal|0
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_INVALID_RESOURCE_TYPE
+name|AE_AML_BAD_RESOURCE_LENGTH
 argument_list|)
 expr_stmt|;
 block|}
@@ -955,7 +951,7 @@ operator|+=
 literal|4
 expr_stmt|;
 block|}
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the length.      */
 if|if
 condition|(
 operator|*
@@ -976,9 +972,11 @@ operator|*
 literal|4
 operator|)
 operator|+
+operator|(
 literal|5
 operator|+
 literal|1
+operator|)
 condition|)
 block|{
 comment|/* Dereference the Index */
@@ -1023,6 +1021,10 @@ name|char
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|OutputStruct
 operator|+
 name|StructSize

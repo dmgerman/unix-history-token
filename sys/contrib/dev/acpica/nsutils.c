@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 129 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 131 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -316,6 +316,19 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[NULL NAME]"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Convert handle to a full pathname and print it (with supplied message) */
 name|Buffer
 operator|.
@@ -1092,7 +1105,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"returning [%p] (abs) \"\\%s\"\n"
+literal|"Returning [%p] (abs) \"\\%s\"\n"
 operator|,
 name|InternalName
 operator|,
@@ -1108,7 +1121,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"returning [%p] (rel) \"%s\"\n"
+literal|"Returning [%p] (rel) \"%s\"\n"
 operator|,
 name|InternalName
 operator|,
@@ -2200,19 +2213,17 @@ literal|"Parent of %p [%4.4s] is %p [%4.4s]\n"
 operator|,
 name|ChildNode
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ChildNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ParentNode
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ParentNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2248,11 +2259,10 @@ literal|"unable to find parent of %p (%4.4s)\n"
 operator|,
 name|ChildNode
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ChildNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

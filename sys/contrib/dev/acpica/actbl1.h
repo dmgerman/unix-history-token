@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl1.h - ACPI 1.0 tables  *       $Revision: 26 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl1.h - ACPI 1.0 tables  *       $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -37,10 +37,8 @@ typedef|typedef
 struct|struct
 name|rsdt_descriptor_rev1
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* ACPI Table header */
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
 name|UINT32
 name|TableOffsetEntry
 index|[
@@ -119,10 +117,8 @@ typedef|typedef
 struct|struct
 name|fadt_descriptor_rev1
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* ACPI Table header */
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
 name|UINT32
 name|FirmwareCtrl
 decl_stmt|;

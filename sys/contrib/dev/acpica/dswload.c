@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -328,7 +328,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"State=%p Op=%p [%s] "
+literal|"State=%p Op=%p [%s]\n"
 operator|,
 name|WalkState
 operator|,
@@ -495,6 +495,26 @@ block|}
 break|break;
 default|default:
 comment|/*          * For all other named opcodes, we will enter the name into the namespace.          *          * Setup the search flags.          * Since we are entering a name into the namespace, we do not want to          * enable the search-to-root upsearch.          *          * There are only two conditions where it is acceptable that the name          * already exists:          *    1) the Scope() operator can reopen a scoping object that was          *       previously defined (Scope, Method, Device, etc.)          *    2) Whenever we are parsing a deferred opcode (OpRegion, Buffer,          *       BufferField, or Package), the name of the object is already          *       in the namespace.          */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|DeferredNode
+condition|)
+block|{
+comment|/* This name is already in the namespace, get the node */
+name|Node
+operator|=
+name|WalkState
+operator|->
+name|DeferredNode
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+break|break;
+block|}
 name|Flags
 operator|=
 name|ACPI_NS_NO_UPSEARCH
@@ -525,24 +545,34 @@ name|Flags
 operator||=
 name|ACPI_NS_ERROR_IF_FOUND
 expr_stmt|;
-name|ACPI_DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Cannot already exist\n"
+literal|"[%s] Cannot already exist\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ObjectType
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_DISPATCH
 operator|,
-literal|"Both Find or Create allowed\n"
+literal|"[%s] Both Find or Create allowed\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ObjectType
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1604,7 +1634,27 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Enter the named type into the internal namespace.  We enter the name          * as we go downward in the parse tree.  Any necessary subobjects that involve          * arguments to the opcode must be created as we go back up the parse tree later.          */
+comment|/*          * Enter the named type into the internal namespace.  We enter the name          * as we go downward in the parse tree.  Any necessary subobjects that involve          * arguments to the opcode must be created as we go back up the parse tree later.          *          * Note: Name may already exist if we are executing a deferred opcode.          */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|DeferredNode
+condition|)
+block|{
+comment|/* This name is already in the namespace, get the node */
+name|Node
+operator|=
+name|WalkState
+operator|->
+name|DeferredNode
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+break|break;
+block|}
 name|Status
 operator|=
 name|AcpiNsLookup

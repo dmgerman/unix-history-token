@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 115 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 116 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -178,14 +178,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Invalid descriptor type %X in %p\n"
+literal|"%p has invalid descriptor [%s]\n"
 operator|,
-name|ACPI_GET_DESCRIPTOR_TYPE
+name|ObjDesc
+operator|,
+name|AcpiUtGetDescriptorName
 argument_list|(
 name|ObjDesc
 argument_list|)
-operator|,
-name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;

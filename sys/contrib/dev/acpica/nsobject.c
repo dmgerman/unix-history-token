@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 87 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 89 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -138,7 +138,14 @@ comment|/* Not a name handle */
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"NsAttachObject: Invalid handle\n"
+literal|"NsAttachObject: Invalid handle %p [%s]\n"
+operator|,
+name|Node
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|Node
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -271,11 +278,10 @@ name|ObjDesc
 operator|,
 name|Node
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -483,11 +489,10 @@ literal|"Node %p [%4.4s] Object %p\n"
 operator|,
 name|Node
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ObjDesc
 operator|)

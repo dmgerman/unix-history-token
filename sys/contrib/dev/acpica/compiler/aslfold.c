@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslfold - Constant folding  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslfold - Constant folding  *              $Revision: 8 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -963,16 +963,7 @@ name|ASL_PARSE_OUTPUT
 argument_list|,
 literal|"Constant expression reduced to (INTEGER) %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->

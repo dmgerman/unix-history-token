@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -348,6 +348,42 @@ name|RegionObj
 parameter_list|,
 name|BOOLEAN
 name|AcpiNsIsLocked
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiEvExecuteRegMethod
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|RegionObj
+parameter_list|,
+name|UINT32
+name|Function
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiEvRegRun
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
 parameter_list|)
 function_decl|;
 end_function_decl

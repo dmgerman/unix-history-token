@@ -74,7 +74,7 @@ init|=
 operator|&
 name|AslCompilername
 index|[
-literal|254
+literal|255
 index|]
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 95 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 98 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -934,11 +934,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Currently executing control method is [%4.4s]\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1266,11 +1265,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Method [%4.4s] has %X stacked result objects\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
 name|NumResults
 argument_list|)
@@ -1385,11 +1383,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    [%4.4s]\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|WalkState
@@ -1403,7 +1400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayObjectType  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display current calling tree of nested control methods  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayObjectType  *  * PARAMETERS:  ObjectArg       - User entered NS node handle  *  * RETURN:      None  *  * DESCRIPTION: Display type of an arbitrary NS node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1484,14 +1481,7 @@ name|Info
 operator|->
 name|HardwareId
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Info
-operator|->
-name|Address
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Info
 operator|->
@@ -1658,7 +1648,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayGpes  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION: Display the GPE structures  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayGpes  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display the current GPE structures  *  ******************************************************************************/
 end_comment
 
 begin_function

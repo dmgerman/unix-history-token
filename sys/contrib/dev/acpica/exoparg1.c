@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 148 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 151 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -847,19 +847,7 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Integer too large to convert to BCD: %8.8X%8.8X\n"
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Operand
 index|[
@@ -1315,7 +1303,7 @@ name|Value
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_STR
 argument_list|(
-literal|"ExOpcode_1A_0T_0R"
+literal|"ExOpcode_1A_0T_1R"
 argument_list|,
 name|AcpiPsGetOpcodeName
 argument_list|(

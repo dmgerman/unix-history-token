@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 143 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 144 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -178,6 +178,10 @@ name|UINT8
 name|AcpiGbl_IntegerNybbleWidth
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Keep local copies of these FADT-based registers */
+end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN

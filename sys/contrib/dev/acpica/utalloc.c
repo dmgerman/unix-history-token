@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 131 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local cache and memory allocation routines  *              $Revision: 134 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1886,7 +1886,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ALLOCATIONS
 operator|,
-literal|"Freeing size %X\n"
+literal|"Freeing size 0%X\n"
 operator|,
 name|Allocation
 operator|->
@@ -2050,7 +2050,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%p Len %04X %9.9s-%d "
+literal|"%p Len %04X %9.9s-%d [%s] "
 argument_list|,
 name|Descriptor
 argument_list|,
@@ -2065,9 +2065,14 @@ argument_list|,
 name|Element
 operator|->
 name|Line
+argument_list|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|Descriptor
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Most of the elements will be internal objects. */
+comment|/* Most of the elements will be Operand objects. */
 switch|switch
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -2081,7 +2086,7 @@ name|ACPI_DESC_TYPE_OPERAND
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"ObjType %12.12s R%hd"
+literal|"%12.12s R%hd"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -2109,7 +2114,7 @@ name|ACPI_DESC_TYPE_PARSER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"ParseObj AmlOpcode %04hX"
+literal|"AmlOpcode %04hX"
 argument_list|,
 name|Descriptor
 operator|->
@@ -2126,110 +2131,19 @@ name|ACPI_DESC_TYPE_NAMED
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Node %4.4s"
+literal|"%4.4s"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
+operator|&
 name|Descriptor
 operator|->
 name|Node
-operator|.
-name|Name
-operator|.
-name|Ascii
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Untyped StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_UPDATE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"UPDATE StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_PACKAGE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"PACKAGE StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_CONTROL
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"CONTROL StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_RPSCOPE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"ROOT-PARSE-SCOPE StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_PSCOPE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"PARSE-SCOPE StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_WSCOPE
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"WALK-SCOPE StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_RESULT
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"RESULT StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_NOTIFY
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"NOTIFY StateObj"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_STATE_THREAD
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"THREAD StateObj"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* All types should appear above */
 break|break;
 block|}
 name|AcpiOsPrintf

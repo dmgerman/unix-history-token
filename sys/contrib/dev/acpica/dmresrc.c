@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmresrc.c - Resource Descriptor disassembly  *              $Revision: 8 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmresrc.c - Resource Descriptor disassembly  *              $Revision: 10 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmBitList  *  * PARAMETERS:  Mask            - 16-bit value corresponding to 16 interrupt  *                                or DMA values  *  * RETURN:      None  *  * DESCRIPTION: Dump a bit mask as a list of individual interrupt/dma levels.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmBitList  *  * PARAMETERS:  Mask            - 16-bit value corresponding to 16 interrupt  *                                or DMA values  *  * RETURN:      None  *  * DESCRIPTION: Dump a bit mask as a list of individual interrupt/DMA levels.  *  ******************************************************************************/
 end_comment
 
 begin_function

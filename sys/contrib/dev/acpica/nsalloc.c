@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 82 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 83 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -539,17 +539,15 @@ while|while
 condition|(
 name|AcpiNsCompareNames
 argument_list|(
+name|AcpiUtGetNodeName
+argument_list|(
 name|ChildNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -729,11 +727,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%4.4s (%s) added to %4.4s (%s) %p at %p\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -742,11 +739,10 @@ operator|->
 name|Type
 argument_list|)
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ParentNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: adisasm - Application-level disassembler routines  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1015,6 +1015,13 @@ argument_list|,
 literal|"Could not generate output filename\n"
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_ERROR
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|File
 operator|=
@@ -1038,6 +1045,13 @@ argument_list|,
 literal|"Could not open output file\n"
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
+name|AE_ERROR
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 block|}
 name|AcpiOsRedirectOutput
 argument_list|(
@@ -1127,7 +1141,7 @@ name|AcpiGbl_ParsedNamespaceRoot
 argument_list|)
 expr_stmt|;
 return|return
-name|AE_OK
+name|Status
 return|;
 block|}
 end_function
@@ -1185,7 +1199,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"DefinitionBlock (\"%4.4s.aml\", \"%4.4s\", %hd, \"%.6s\", \"%.8s\", %d)\n"
+literal|"DefinitionBlock (\"%4.4s.aml\", \"%4.4s\", %hd, \"%.6s\", \"%.8s\", %u)\n"
 argument_list|,
 name|Table
 operator|->
@@ -1965,7 +1979,7 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-literal|"RSDT"
+name|RSDT_SIG
 argument_list|,
 literal|4
 argument_list|)
@@ -1979,6 +1993,23 @@ operator|&
 name|NewTable
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NewTable
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Could not obtain RSDT\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|AE_NO_ACPI_TABLES
+return|;
+block|}
 if|#
 directive|if
 name|ACPI_MACHINE_WIDTH
@@ -1993,7 +2024,7 @@ name|NewTable
 operator|->
 name|Signature
 argument_list|,
-literal|"RSDT"
+name|RSDT_SIG
 argument_list|,
 literal|4
 argument_list|)
@@ -2053,7 +2084,7 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-literal|"FADT"
+name|FADT_SIG
 argument_list|,
 literal|4
 argument_list|)
@@ -2088,7 +2119,7 @@ name|NewTable
 operator|->
 name|Length
 argument_list|,
-literal|"FADT"
+name|FADT_SIG
 argument_list|,
 name|NewTable
 operator|->
@@ -2108,7 +2139,7 @@ name|TableHeader
 operator|.
 name|Signature
 argument_list|,
-literal|"FACS"
+name|FACS_SIG
 argument_list|,
 literal|4
 argument_list|)
@@ -2143,12 +2174,10 @@ name|AcpiGbl_FACS
 operator|->
 name|Length
 argument_list|,
-literal|"FACS"
+name|FACS_SIG
 argument_list|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|OemTableId
 argument_list|)
 expr_stmt|;
@@ -2218,10 +2247,9 @@ argument_list|,
 literal|"Could not obtain DSDT\n"
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+return|return
 name|AE_NO_ACPI_TABLES
-expr_stmt|;
+return|;
 block|}
 name|AcpiOsPrintf
 argument_list|(

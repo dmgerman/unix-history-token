@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultInsert  *  * PARAMETERS:  Object              - Object to push  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Push an object onto this walk's result stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultInsert  *  * PARAMETERS:  Object              - Object to push  *              Index               - Where to insert the object  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Insert an object onto this walk's result stack  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -239,7 +239,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultRemove  *  * PARAMETERS:  Object              - Where to return the popped object  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Pop an object off the bottom of this walk's result stack.  In  *              other words, this is a FIFO.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultRemove  *  * PARAMETERS:  Object              - Where to return the popped object  *              Index               - Where to extract the object  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Pop an object off the bottom of this walk's result stack.  In  *              other words, this is a FIFO.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1046,7 +1046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultStackPush  *  * PARAMETERS:  Object              - Object to push  *              WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Push an object onto the WalkState result stack.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsResultStackPush  *  * PARAMETERS:  WalkState           - Current Walk state  *  * RETURN:      Status  *  * DESCRIPTION: Push an object onto the WalkState result stack.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2091,7 +2091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitAmlWalk  *  * PARAMETERS:  WalkState       - New state to be initialized  *  * RETURN:      None  *  * DESCRIPTION: Initialize a walk state for a pass 1 or 2 parse tree walk  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsInitAmlWalk  *  * PARAMETERS:  WalkState       - New state to be initialized  *              Op              - Current parse op  *              MethodNode      - Control method NS node, if any  *              AmlStart        - Start of AML  *              AmlLength       - Length of AML  *              Params          - Method args, if any  *              ReturnObjDesc   - Where to store a return object, if any  *              PassNumber      - 1, 2, or 3  *  * RETURN:      Status  *  * DESCRIPTION: Initialize a walk state for a pass 1 or 2 parse tree walk  *  ******************************************************************************/
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
 end_include
 
 begin_define
@@ -165,6 +171,28 @@ name|SourceDesc
 argument_list|)
 operator|!=
 name|ACPI_TYPE_STRING
+operator|)
+operator|&&
+operator|!
+operator|(
+operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|SourceDesc
+argument_list|)
+operator|==
+name|ACPI_TYPE_LOCAL_REFERENCE
+operator|)
+operator|&&
+operator|(
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+operator|==
+name|AML_LOAD_OP
+operator|)
 operator|)
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 176 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 177 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -355,16 +355,7 @@ name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"%8.8X%8.8X\n"
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|SourceDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|SourceDesc
 operator|->

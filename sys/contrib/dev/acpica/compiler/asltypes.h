@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: asltypes.h - compiler data types and struct definitions  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: asltypes.h - compiler data types and struct definitions  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -715,6 +715,10 @@ block|,
 name|ASL_MSG_EARLY_EOF
 block|,
 name|ASL_MSG_SCOPE_FWD_REF
+block|,
+name|ASL_MSG_NON_ASCII
+block|,
+name|ASL_MSG_INVALID_TIME
 block|}
 name|ASL_MESSAGE_IDS
 typedef|;
@@ -978,6 +982,12 @@ literal|"Premature end-of-file reached"
 block|,
 comment|/*    ASL_MSG_SCOPE_FWD_REF */
 literal|"Forward references from Scope() not allowed"
+block|,
+comment|/*    ASL_MSG_NON_ASCII */
+literal|"Invalid characters found in file"
+block|,
+comment|/*    ASL_MSG_INVALID_TIME */
+literal|"Time parameter too long (255 max)"
 block|}
 decl_stmt|;
 end_decl_stmt

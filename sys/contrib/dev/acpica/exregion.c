@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -324,12 +324,7 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Could not map memory at %8.8X%8.8X, size %X\n"
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -399,12 +394,7 @@ name|Function
 operator|,
 name|BitWidth
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -675,12 +665,7 @@ name|Function
 operator|,
 name|BitWidth
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 8 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 9 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -175,14 +175,7 @@ name|HardwareId
 operator|.
 name|Value
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Info
-operator|->
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Info
 operator|->

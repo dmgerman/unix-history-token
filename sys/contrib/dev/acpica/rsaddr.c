@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 32 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -121,18 +121,20 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
-comment|/* Check for the minimum length. */
+comment|/* Validate minimum descriptor length */
 if|if
 condition|(
 name|Temp16
 operator|<
 literal|13
 condition|)
+block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_INVALID_RESOURCE_TYPE
+name|AE_AML_BAD_RESOURCE_LENGTH
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|BytesConsumed
 operator|=
@@ -494,15 +496,17 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes.      *      * Note that some buggy resources have a length that indicates the      * Index byte is present even though it isn't (since there is no      * following Resource String.)  We add one to catch these.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the length.      */
 if|if
 condition|(
 operator|*
 name|BytesConsumed
 operator|>
+operator|(
 literal|16
 operator|+
 literal|1
+operator|)
 condition|)
 block|{
 comment|/* Dereference the Index */
@@ -1162,7 +1166,7 @@ operator|.
 name|StringPtr
 argument_list|)
 expr_stmt|;
-comment|/*          * Buffer needs to be set to the length of the sting + one for the          *  terminating null          */
+comment|/*          * Buffer needs to be set to the length of the sting + one for the          * terminating null          */
 name|Buffer
 operator|+=
 call|(
@@ -1309,18 +1313,20 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
-comment|/* Check for the minimum length. */
+comment|/* Validate minimum descriptor length */
 if|if
 condition|(
 name|Temp16
 operator|<
 literal|23
 condition|)
+block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_INVALID_RESOURCE_TYPE
+name|AE_AML_BAD_RESOURCE_LENGTH
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|BytesConsumed
 operator|=
@@ -1682,15 +1688,17 @@ name|Buffer
 operator|+=
 literal|4
 expr_stmt|;
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes.      *      * Note that some buggy resources have a length that indicates the      * Index byte is present even though it isn't (since there is no      * following Resource String.)  We add one to catch these.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the length.      */
 if|if
 condition|(
 operator|*
 name|BytesConsumed
 operator|>
+operator|(
 literal|26
 operator|+
 literal|1
+operator|)
 condition|)
 block|{
 comment|/* Dereference the Index */
@@ -1812,7 +1820,7 @@ name|Index
 operator|+
 literal|1
 expr_stmt|;
-comment|/*          * In order for the StructSize to fall on a 32-bit boundary,          *  calculate the length of the string and expand the          *  StructSize to the next 32-bit boundary.          */
+comment|/*          * In order for the StructSize to fall on a 32-bit boundary,          * calculate the length of the string and expand the          * StructSize to the next 32-bit boundary.          */
 name|Temp8
 operator|=
 call|(
@@ -2496,18 +2504,20 @@ argument_list|,
 name|Buffer
 argument_list|)
 expr_stmt|;
-comment|/* Check for the minimum length. */
+comment|/* Validate minimum descriptor length */
 if|if
 condition|(
 name|Temp16
 operator|<
 literal|43
 condition|)
+block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_INVALID_RESOURCE_TYPE
+name|AE_AML_BAD_RESOURCE_LENGTH
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|BytesConsumed
 operator|=
@@ -2869,15 +2879,17 @@ name|Buffer
 operator|+=
 literal|8
 expr_stmt|;
-comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes.      *      * Note that some buggy resources have a length that indicates the      * Index byte is present even though it isn't (since there is no      * following Resource String.)  We add one to catch these.      */
+comment|/*      * This will leave us pointing to the Resource Source Index      * If it is present, then save it off and calculate the      * pointer to where the null terminated string goes:      * Each Interrupt takes 32-bits + the 5 bytes of the      * stream that are default.      *      * Note: Some resource descriptors will have an additional null, so      * we add 1 to the length.      */
 if|if
 condition|(
 operator|*
 name|BytesConsumed
 operator|>
+operator|(
 literal|46
 operator|+
 literal|1
+operator|)
 condition|)
 block|{
 comment|/* Dereference the Index */
@@ -3539,7 +3551,7 @@ operator|.
 name|StringPtr
 argument_list|)
 expr_stmt|;
-comment|/*          * Buffer needs to be set to the length of the sting + one for the          *  terminating null          */
+comment|/*          * Buffer needs to be set to the length of the sting + one for the          * terminating null          */
 name|Buffer
 operator|+=
 call|(

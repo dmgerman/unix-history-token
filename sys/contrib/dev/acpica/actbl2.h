@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -115,10 +115,8 @@ typedef|typedef
 struct|struct
 name|rsdt_descriptor_rev2
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* ACPI table header */
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
 name|UINT32
 name|TableOffsetEntry
 index|[
@@ -141,10 +139,8 @@ typedef|typedef
 struct|struct
 name|xsdt_descriptor_rev2
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* ACPI table header */
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
 name|UINT64
 name|TableOffsetEntry
 index|[
@@ -265,10 +261,8 @@ typedef|typedef
 struct|struct
 name|fadt_descriptor_rev2
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* ACPI table header */
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
 name|UINT32
 name|V1_FirmwareCtrl
 decl_stmt|;
@@ -565,6 +559,44 @@ decl_stmt|;
 comment|/* Extended General Purpose AcpiEvent 1 Reg Blk address */
 block|}
 name|FADT_DESCRIPTOR_REV2
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Embedded Controller */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ec_boot_resources
+block|{
+name|ACPI_TABLE_HEADER_DEF
+name|ACPI_GENERIC_ADDRESS
+name|EcControl
+decl_stmt|;
+comment|/* Address of EC command/status register */
+name|ACPI_GENERIC_ADDRESS
+name|EcData
+decl_stmt|;
+comment|/* Address of EC data register */
+name|UINT32
+name|Uid
+decl_stmt|;
+comment|/* Unique ID - must be same as the EC _UID method */
+name|UINT8
+name|GpeBit
+decl_stmt|;
+comment|/* The GPE for the EC */
+name|UINT8
+name|EcId
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Full namepath of the EC in the ACPI namespace */
+block|}
+name|EC_BOOT_RESOURCES
 typedef|;
 end_typedef
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -122,11 +122,10 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"[%4.4s.%s] was not found\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|PrefixNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|Path
 operator|)
@@ -1117,11 +1116,10 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"_STA on %4.4s was not found, assuming device is present\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|DeviceNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

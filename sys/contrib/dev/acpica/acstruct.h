@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 26 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -171,6 +171,12 @@ decl_stmt|;
 comment|/* List of control states (nested IFs) */
 name|struct
 name|acpi_namespace_node
+modifier|*
+name|DeferredNode
+decl_stmt|;
+comment|/* Used when executing deferred opcodes */
+name|struct
+name|acpi_namespace_node
 name|LocalVariables
 index|[
 name|ACPI_METHOD_NUM_LOCALS
@@ -199,7 +205,7 @@ name|acpi_namespace_node
 modifier|*
 name|MethodNode
 decl_stmt|;
-comment|/* Method Node if running a method */
+comment|/* Method node if running a method. */
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
