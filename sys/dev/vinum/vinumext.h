@@ -84,7 +84,7 @@ begin_function_decl
 name|int
 name|vinum_inactive
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
