@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.3 (Berkeley) %G%"
+literal|"@(#)printf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ name|f
 parameter_list|,
 name|func
 parameter_list|)
-value|{ \ 	if (fieldwidth) \ 		if (precision) \ 			cnt += printf(f, fieldwidth, precision, func); \ 		else \ 			cnt += printf(f, fieldwidth, func); \ 	else if (precision) \ 		cnt += printf(f, precision, func); \ 	else \ 		cnt += printf(f, func); \ }
+value|{ \ 	if (fieldwidth) \ 		if (precision) \ 			(void)printf(f, fieldwidth, precision, func); \ 		else \ 			(void)printf(f, fieldwidth, func); \ 	else if (precision) \ 		(void)printf(f, precision, func); \ 	else \ 		(void)printf(f, func); \ }
 end_define
 
 begin_decl_stmt
@@ -123,8 +123,6 @@ specifier|register
 name|int
 name|end
 decl_stmt|,
-name|cnt
-decl_stmt|,
 name|fieldwidth
 decl_stmt|,
 name|precision
@@ -170,7 +168,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -202,9 +200,6 @@ name|argv
 expr_stmt|;
 for|for
 control|(
-name|cnt
-operator|=
-literal|0
 init|;
 condition|;
 control|)
@@ -251,7 +246,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -265,8 +260,9 @@ name|fmt
 operator|>
 name|start
 condition|)
-name|cnt
-operator|+=
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s"
@@ -282,7 +278,7 @@ name|gargv
 condition|)
 name|exit
 argument_list|(
-name|cnt
+literal|0
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -407,7 +403,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -558,7 +553,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -635,7 +629,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
