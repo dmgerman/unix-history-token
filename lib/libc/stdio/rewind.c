@@ -95,6 +95,11 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+name|int
+name|serrno
+init|=
+name|errno
+decl_stmt|;
 comment|/* make sure stdio is set up */
 if|if
 condition|(
@@ -127,17 +132,22 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|clearerr_unlocked
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
+block|}
 name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* errno required by POSIX to sense error, don't zero it here */
 block|}
 end_function
 

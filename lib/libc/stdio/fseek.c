@@ -148,6 +148,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|serrno
+init|=
+name|errno
+decl_stmt|;
 comment|/* make sure stdio is set up */
 if|if
 condition|(
@@ -183,6 +188,16 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|errno
+operator|=
+name|serrno
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -215,6 +230,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|serrno
+init|=
+name|errno
+decl_stmt|;
 comment|/* make sure stdio is set up */
 if|if
 condition|(
@@ -246,6 +266,16 @@ name|FUNLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|errno
+operator|=
+name|serrno
 expr_stmt|;
 return|return
 operator|(
