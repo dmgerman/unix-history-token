@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	8.1 (Berkeley) %G%"
+literal|"@(#)getopt.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,10 +54,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_comment
-comment|/*  * get option letter from argument vector  */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -114,6 +110,10 @@ name|EMSG
 value|""
 end_define
 
+begin_comment
+comment|/*  * getopt --  *	Parse argc/argv argument vector.  */
+end_comment
+
 begin_function
 name|int
 name|getopt
@@ -139,6 +139,11 @@ modifier|*
 name|ostr
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -147,16 +152,11 @@ init|=
 name|EMSG
 decl_stmt|;
 comment|/* option letter processing */
-specifier|register
 name|char
 modifier|*
 name|oli
 decl_stmt|;
 comment|/* option letter list index */
-name|char
-modifier|*
-name|p
-decl_stmt|;
 if|if
 condition|(
 name|optreset
@@ -252,7 +252,7 @@ operator|!
 operator|(
 name|oli
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ostr
 argument_list|,
@@ -294,31 +294,6 @@ name|ostr
 operator|!=
 literal|':'
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|p
-operator|=
-name|rindex
-argument_list|(
-operator|*
-name|nargv
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-condition|)
-name|p
-operator|=
-operator|*
-name|nargv
-expr_stmt|;
-else|else
-operator|++
-name|p
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -328,12 +303,11 @@ name|stderr
 argument_list|,
 literal|"%s: illegal option -- %c\n"
 argument_list|,
-name|p
+name|__progname
 argument_list|,
 name|optopt
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|BADCH
@@ -393,30 +367,6 @@ name|EMSG
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|p
-operator|=
-name|rindex
-argument_list|(
-operator|*
-name|nargv
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-condition|)
-name|p
-operator|=
-operator|*
-name|nargv
-expr_stmt|;
-else|else
-operator|++
-name|p
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|ostr
 operator|==
@@ -440,7 +390,7 @@ name|stderr
 argument_list|,
 literal|"%s: option requires an argument -- %c\n"
 argument_list|,
-name|p
+name|__progname
 argument_list|,
 name|optopt
 argument_list|)
