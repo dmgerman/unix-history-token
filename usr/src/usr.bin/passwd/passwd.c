@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.2 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * enter a password in the password file  * this program should be suid with owner  * with an owner with write permission on /etc/passwd  */
+comment|/*  * Enter a password in the password file.  * This program should be suid with an owner  * with write permission on /etc/passwd.  */
 end_comment
 
 begin_include
@@ -717,22 +717,19 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The mode here could be 644 except then old versions 	 * of passwd that don't honor the advisory locks might 	 * sneak in and mess things up.  If we could believe the 	 * locking were honored, then we could also eliminate the 	 * chmod below after the rename. 	 */
 name|fd
 operator|=
 name|open
 argument_list|(
 name|temp
 argument_list|,
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FCREATE
+name|O_CREAT
 operator||
-name|FEXLOCK
-operator||
-name|FNBLOCK
+name|O_EXCL
 argument_list|,
-literal|0600
+literal|0644
 argument_list|)
 expr_stmt|;
 if|if
@@ -753,7 +750,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EBUSY
+name|EEXIST
 condition|)
 name|fprintf
 argument_list|(
@@ -968,13 +965,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|chmod
-argument_list|(
-name|passwd
-argument_list|,
-literal|0644
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|tf
