@@ -6913,6 +6913,7 @@ name|total_len
 expr_stmt|;
 comment|/* buffer size */
 comment|/* 89/12/29 add, for mtd891 */
+comment|/* [ 89? ] */
 if|if
 condition|(
 name|sc
