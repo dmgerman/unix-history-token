@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)word.c	4.5 %G%"
+literal|"@(#)word.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,9 @@ name|ANDF
 argument_list|(
 argument|(flags&prompt)==
 literal|0
-argument|ORF !isatty(input)
+argument|ORF ((flags&ttyflg) ANDF 	    standin->fstak!=
+literal|0
+argument|)
 argument_list|)
 name|THEN
 name|WHILE
