@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetupRegion  *  * PARAMETERS:  *ObjDesc                - Field to be read or written  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *  * RETURN:      Status  *  * DESCRIPTION: Common processing for AcpiExExtractFromField and  *              AcpiExInsertIntoField.  Initialize the  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetupRegion  *  * PARAMETERS:  *ObjDesc                - Field to be read or written  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *  * RETURN:      Status  *  * DESCRIPTION: Common processing for AcpiExExtractFromField and  *              AcpiExInsertIntoField.  Initialize the Region if necessary and  *              validate the request.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -140,7 +140,7 @@ operator|!
 operator|(
 name|RgnDesc
 operator|->
-name|Region
+name|Common
 operator|.
 name|Flags
 operator|&
@@ -188,6 +188,41 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_UNDER_DEVELOPMENT
+comment|/*      * If the Field access is AnyAcc, we can now compute the optimal      * access (because we know know the length of the parent region)      */
+if|if
+condition|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_DATA_VALID
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 comment|/*      * Validate the request.  The entire request from the byte offset for a      * length of one field datum (access width) must fit within the region.      * (Region length is specified in bytes)      */
 if|if
 condition|(
@@ -237,15 +272,14 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Field [%4.4s] access width (%d bytes) too large for region [%4.4s] (length %X)\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ObjDesc
 operator|->
@@ -253,15 +287,14 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|RgnDesc
 operator|->
 name|Region
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|RgnDesc
 operator|->
@@ -280,15 +313,14 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Field [%4.4s] Base+Offset+Width %X+%X+%X is beyond end of region [%4.4s] (length %X)\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ObjDesc
 operator|->
@@ -304,15 +336,14 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|RgnDesc
 operator|->
 name|Region
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|RgnDesc
 operator|->
@@ -514,7 +545,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|" Region[%s-%X] Access %X Base:Off %X:%X at %8.8X%8.8X\n"
+literal|" Region [%s:%X], Width %X, ByteBase %X, Offset %X at %8.8X%8.8X\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -545,12 +576,7 @@ name|BaseByteOffset
 operator|,
 name|FieldDatumByteOffset
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -1207,19 +1233,19 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value Read=%8.8X%8.8X\n"
+literal|"Value Read %8.8X%8.8X, Width %d\n"
 operator|,
-name|ACPI_HIDWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 operator|*
 name|Value
 argument_list|)
 operator|,
-name|ACPI_LODWORD
-argument_list|(
-operator|*
-name|Value
-argument_list|)
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1231,19 +1257,19 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Value Written=%8.8X%8.8X\n"
+literal|"Value Written %8.8X%8.8X, Width %d\n"
 operator|,
-name|ACPI_HIDWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 operator|*
 name|Value
 argument_list|)
 operator|,
-name|ACPI_LODWORD
-argument_list|(
-operator|*
-name|Value
-argument_list|)
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1370,6 +1396,20 @@ argument_list|,
 name|ACPI_READ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|MergedValue
 operator||=
 operator|(
@@ -1427,6 +1467,38 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Mask %8.8X%8.8X, DatumOffset %X, Width %X, Value %8.8X%8.8X, MergedValue %8.8X%8.8X\n"
+operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|Mask
+argument_list|)
+operator|,
+name|FieldDatumByteOffset
+operator|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|FieldValue
+argument_list|)
+operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|MergedValue
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Write the merged value */
 name|Status
 operator|=
@@ -1440,47 +1512,6 @@ operator|&
 name|MergedValue
 argument_list|,
 name|ACPI_WRITE
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_BFIELD
-operator|,
-literal|"Mask %8.8X%8.8X DatumOffset %X Value %8.8X%8.8X, MergedValue %8.8X%8.8X\n"
-operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Mask
-argument_list|)
-operator|,
-name|ACPI_LODWORD
-argument_list|(
-name|Mask
-argument_list|)
-operator|,
-name|FieldDatumByteOffset
-operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|FieldValue
-argument_list|)
-operator|,
-name|ACPI_LODWORD
-argument_list|(
-name|FieldValue
-argument_list|)
-operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|MergedValue
-argument_list|)
-operator|,
-name|ACPI_LODWORD
-argument_list|(
-name|MergedValue
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -1520,8 +1551,12 @@ block|{
 name|UINT32
 name|Index
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_FUNCTION_TRACE_U32
+argument_list|(
+literal|"ExGetBufferDatum"
+argument_list|,
+name|ByteGranularity
+argument_list|)
 expr_stmt|;
 comment|/* Get proper index into buffer (handles big/little endian) */
 name|Index
@@ -1632,6 +1667,8 @@ default|default:
 comment|/* Should not get here */
 break|break;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -1663,8 +1700,12 @@ block|{
 name|UINT32
 name|Index
 decl_stmt|;
-name|ACPI_FUNCTION_ENTRY
-argument_list|()
+name|ACPI_FUNCTION_TRACE_U32
+argument_list|(
+literal|"ExSetBufferDatum"
+argument_list|,
+name|ByteGranularity
+argument_list|)
 expr_stmt|;
 comment|/* Get proper index into buffer (handles big/little endian) */
 name|Index
@@ -1780,6 +1821,8 @@ default|default:
 comment|/* Should not get here */
 break|break;
 block|}
+name|return_VOID
+expr_stmt|;
 block|}
 end_function
 
@@ -1810,10 +1853,12 @@ name|UINT32
 name|FieldDatumByteOffset
 decl_stmt|;
 name|UINT32
-name|DatumOffset
+name|BufferDatumOffset
 decl_stmt|;
 name|ACPI_INTEGER
 name|PreviousRawDatum
+init|=
+literal|0
 decl_stmt|;
 name|ACPI_INTEGER
 name|ThisRawDatum
@@ -1830,6 +1875,9 @@ name|ByteFieldLength
 decl_stmt|;
 name|UINT32
 name|DatumCount
+decl_stmt|;
+name|UINT32
+name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -1888,12 +1936,43 @@ operator|.
 name|AccessByteWidth
 argument_list|)
 expr_stmt|;
+comment|/*      * If the field is not aligned on a datum boundary and does not      * fit within a single datum, we must read an extra datum.      *      * We could just split the aligned and non-aligned cases since the      * aligned case is so very simple, but this would require more code.      */
+if|if
+condition|(
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|EndFieldValidBits
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|!
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_SINGLE_DATUM
+operator|)
+operator|)
+condition|)
+block|{
+name|DatumCount
+operator|++
+expr_stmt|;
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"ByteLen=%X, DatumLen=%X, ByteGran=%X\n"
+literal|"ByteLen %X, DatumLen %X, ByteGran %X\n"
 operator|,
 name|ByteFieldLength
 operator|,
@@ -1907,7 +1986,7 @@ name|AccessByteWidth
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Clear the caller's buffer (the whole buffer length as given)      * This is very important, especially in the cases where a byte is read,      * but the buffer is really a UINT32 (4 bytes).      */
+comment|/*      * Clear the caller's buffer (the whole buffer length as given)      * This is very important, especially in the cases where the buffer      * is longer than the size of the field.      */
 name|ACPI_MEMSET
 argument_list|(
 name|Buffer
@@ -1917,15 +1996,29 @@ argument_list|,
 name|BufferLength
 argument_list|)
 expr_stmt|;
-comment|/* Read the first raw datum to prime the loop */
 name|FieldDatumByteOffset
 operator|=
 literal|0
 expr_stmt|;
-name|DatumOffset
+name|BufferDatumOffset
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Read the entire field */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|DatumCount
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|Status
 operator|=
 name|AcpiExFieldDatumIo
@@ -1935,7 +2028,7 @@ argument_list|,
 name|FieldDatumByteOffset
 argument_list|,
 operator|&
-name|PreviousRawDatum
+name|ThisRawDatum
 argument_list|,
 name|ACPI_READ
 argument_list|)
@@ -1978,7 +2071,7 @@ comment|/* 1) Shift the valid data bits down to start at bit 0 */
 name|MergedDatum
 operator|=
 operator|(
-name|PreviousRawDatum
+name|ThisRawDatum
 operator|>>
 name|ObjDesc
 operator|->
@@ -2024,7 +2117,7 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 argument_list|,
-name|DatumOffset
+name|BufferDatumOffset
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -2033,87 +2126,40 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We need to get more raw data to complete one or more field data */
-while|while
-condition|(
-name|DatumOffset
-operator|<
-name|DatumCount
-condition|)
-block|{
-name|FieldDatumByteOffset
-operator|+=
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|AccessByteWidth
-expr_stmt|;
-comment|/*          * If the field is aligned on a byte boundary, we don't want          * to perform a final read, since this would potentially read          * past the end of the region.          *          * We could just split the aligned and non-aligned cases since the          * aligned case is so very simple, but this would require more code.          */
+comment|/* Special handling for the last datum to ignore extra bits */
 if|if
 condition|(
 operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|StartFieldBitOffset
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-operator|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|StartFieldBitOffset
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|DatumOffset
-operator|<
+name|i
+operator|>=
 operator|(
 name|DatumCount
 operator|-
 literal|1
 operator|)
 operator|)
+operator|&&
+operator|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|EndFieldValidBits
 operator|)
 condition|)
 block|{
-comment|/*              * Get the next raw datum, it contains some or all bits              * of the current field datum              */
-name|Status
-operator|=
-name|AcpiExFieldDatumIo
+comment|/*              * This is the last iteration of the loop.  We need to clear              * any unused bits (bits that are not part of this field) before               * we store the final merged datum into the caller buffer.              */
+name|ThisRawDatum
+operator|&=
+name|ACPI_MASK_BITS_ABOVE
 argument_list|(
 name|ObjDesc
-argument_list|,
-name|FieldDatumByteOffset
-argument_list|,
-operator|&
-name|ThisRawDatum
-argument_list|,
-name|ACPI_READ
+operator|->
+name|CommonField
+operator|.
+name|EndFieldValidBits
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/*          * Create the (possibly) merged datum to be stored to the caller buffer          */
 if|if
@@ -2128,14 +2174,38 @@ literal|0
 condition|)
 block|{
 comment|/* Field is not skewed and we can just copy the datum */
-name|MergedDatum
-operator|=
-name|PreviousRawDatum
+name|AcpiExSetBufferDatum
+argument_list|(
+name|ThisRawDatum
+argument_list|,
+name|Buffer
+argument_list|,
+name|BufferLength
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|,
+name|BufferDatumOffset
+argument_list|)
+expr_stmt|;
+name|BufferDatumOffset
+operator|++
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * Put together the appropriate bits of the two raw data to make a              * single complete field datum              *              * 1) Normalize the first datum down to bit 0              */
+comment|/* Not aligned -- on the first iteration, just save the datum */
+if|if
+condition|(
+name|i
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/*                  * Put together the appropriate bits of the two raw data to make a                  * single complete field datum                  *                  * 1) Normalize the first datum down to bit 0                  */
 name|MergedDatum
 operator|=
 operator|(
@@ -2161,44 +2231,6 @@ operator|.
 name|DatumValidBits
 operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|DatumOffset
-operator|>=
-operator|(
-name|DatumCount
-operator|-
-literal|1
-operator|)
-operator|)
-condition|)
-block|{
-comment|/*                  * This is the last iteration of the loop.  We need to clear                  * any unused bits (bits that are not part of this field) that                  * came from the last raw datum before we store the final                  * merged datum into the caller buffer.                  */
-if|if
-condition|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|EndBufferValidBits
-condition|)
-block|{
-name|MergedDatum
-operator|&=
-name|ACPI_MASK_BITS_ABOVE
-argument_list|(
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|EndBufferValidBits
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-comment|/*          * Store the merged field datum in the caller's buffer, according to          * the granularity of the field (size of each datum).          */
 name|AcpiExSetBufferDatum
 argument_list|(
 name|MergedDatum
@@ -2213,16 +2245,68 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 argument_list|,
-name|DatumOffset
+name|BufferDatumOffset
 argument_list|)
 expr_stmt|;
-comment|/*          * Save the raw datum that was just acquired since it may contain bits          * of the *next* field datum.  Update offsets          */
+name|BufferDatumOffset
+operator|++
+expr_stmt|;
+block|}
+comment|/*              * Save the raw datum that was just acquired since it may contain bits              * of the *next* field datum              */
 name|PreviousRawDatum
 operator|=
 name|ThisRawDatum
 expr_stmt|;
-name|DatumOffset
-operator|++
+block|}
+name|FieldDatumByteOffset
+operator|+=
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+expr_stmt|;
+block|}
+comment|/* For non-aligned case, there is one last datum to insert */
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|!=
+literal|0
+condition|)
+block|{
+name|MergedDatum
+operator|=
+operator|(
+name|ThisRawDatum
+operator|>>
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|)
+expr_stmt|;
+name|AcpiExSetBufferDatum
+argument_list|(
+name|MergedDatum
+argument_list|,
+name|Buffer
+argument_list|,
+name|BufferLength
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|AccessByteWidth
+argument_list|,
+name|BufferDatumOffset
+argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
@@ -2323,6 +2407,23 @@ name|AE_BUFFER_OVERFLOW
 argument_list|)
 expr_stmt|;
 block|}
+name|ByteFieldLength
+operator|=
+name|ACPI_ROUND_BITS_UP_TO_BYTES
+argument_list|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+operator|+
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+argument_list|)
+expr_stmt|;
 comment|/* Convert byte count to datum count, round up if necessary */
 name|DatumCount
 operator|=
@@ -2342,7 +2443,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"ByteLen=%X, DatumLen=%X, ByteGran=%X\n"
+literal|"Bytes %X, Datums %X, ByteGran %X\n"
 operator|,
 name|ByteFieldLength
 operator|,
@@ -2474,6 +2575,10 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* We just wrote the first datum */
+name|DatumOffset
+operator|++
+expr_stmt|;
 comment|/* If the entire field fits within one datum, we are done. */
 if|if
 condition|(
@@ -2508,9 +2613,6 @@ operator|<
 name|DatumCount
 condition|)
 block|{
-name|DatumOffset
-operator|++
-expr_stmt|;
 name|FieldDatumByteOffset
 operator|+=
 name|ObjDesc
@@ -2583,24 +2685,28 @@ name|ThisRawDatum
 expr_stmt|;
 block|}
 comment|/*          * Special handling for the last datum if the field does NOT end on          * a datum boundary.  Update Rule must be applied to the bits outside          * the field.          */
+name|DatumOffset
+operator|++
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|DatumOffset
 operator|==
 name|DatumCount
-condition|)
-block|{
-comment|/*              * If there are dangling non-aligned bits, perform one more merged write              * Else - field is aligned at the end, no need for any more writes              */
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|ObjDesc
 operator|->
 name|CommonField
 operator|.
 name|EndFieldValidBits
+operator|)
 condition|)
 block|{
-comment|/*                  * Part3:                  * This is the last datum and the field does not end on a datum boundary.                  * Build the partial datum and write with the update rule.                  *                  * Mask off the unused bits above (after) the end-of-field                  */
+comment|/*              * If there are dangling non-aligned bits, perform one more merged write              * Else - field is aligned at the end, no need for any more writes              */
+comment|/*              * Part3:              * This is the last datum and the field does not end on a datum boundary.              * Build the partial datum and write with the update rule.              *              * Mask off the unused bits above (after) the end-of-field              */
 name|Mask
 operator|=
 name|ACPI_MASK_BITS_ABOVE
@@ -2645,10 +2751,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 else|else
 block|{
-comment|/* Normal case -- write the completed datum */
+comment|/* Normal (aligned) case -- write the completed datum */
 name|Status
 operator|=
 name|AcpiExFieldDatumIo
