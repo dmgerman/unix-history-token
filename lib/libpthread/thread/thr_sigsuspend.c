@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"thr_private.h"
 end_include
 
@@ -77,12 +83,24 @@ condition|(
 operator|!
 name|_kse_isthreaded
 argument_list|()
+operator|||
+operator|(
+name|curthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
+operator|)
 condition|)
 return|return
+operator|(
 name|__sys_sigsuspend
 argument_list|(
 name|set
 argument_list|)
+operator|)
 return|;
 comment|/* Check if a new signal set was provided by the caller: */
 if|if
@@ -96,6 +114,11 @@ name|newmask
 operator|=
 operator|*
 name|set
+expr_stmt|;
+name|SIG_CANTMASK
+argument_list|(
+name|newmask
+argument_list|)
 expr_stmt|;
 name|THR_LOCK_SWITCH
 argument_list|(

@@ -555,6 +555,10 @@ name|int
 name|k_switch
 decl_stmt|;
 comment|/* thread switch in UTS */
+name|int
+name|k_sigseqno
+decl_stmt|;
+comment|/* signal buffered count */
 block|}
 struct|;
 end_struct
@@ -1622,6 +1626,13 @@ argument|pthread
 argument_list|)
 name|gcle
 expr_stmt|;
+comment|/* Hash queue entry */
+name|LIST_ENTRY
+argument_list|(
+argument|pthread
+argument_list|)
+name|hle
+expr_stmt|;
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|struct
 name|lock
@@ -1728,6 +1739,7 @@ decl_stmt|;
 name|sigset_t
 name|sigpend
 decl_stmt|;
+specifier|volatile
 name|int
 name|check_pending
 decl_stmt|;
@@ -2094,7 +2106,7 @@ name|THR_LIST_ADD
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {					\ 	if (((thrd)->flags& THR_FLAGS_IN_TDLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_list, thrd, tle);	\ 		(thrd)->flags |= THR_FLAGS_IN_TDLIST;		\ 	}							\ } while (0)
+value|do {					\ 	if (((thrd)->flags& THR_FLAGS_IN_TDLIST) == 0) {	\ 		TAILQ_INSERT_HEAD(&_thread_list, thrd, tle);	\ 		_thr_hash_add(thrd);				\ 		(thrd)->flags |= THR_FLAGS_IN_TDLIST;		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2104,7 +2116,7 @@ name|THR_LIST_REMOVE
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_TDLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_list, thrd, tle);		\ 		(thrd)->flags&= ~THR_FLAGS_IN_TDLIST;		\ 	}							\ } while (0)
+value|do {				\ 	if (((thrd)->flags& THR_FLAGS_IN_TDLIST) != 0) {	\ 		TAILQ_REMOVE(&_thread_list, thrd, tle);		\ 		_thr_hash_remove(thrd);				\ 		(thrd)->flags&= ~THR_FLAGS_IN_TDLIST;		\ 	}							\ } while (0)
 end_define
 
 begin_define
@@ -2443,20 +2455,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Array of counts of dummy handlers for SIG_DFL signals.  This is used to  * assure that there is always a dummy signal handler installed while there  * is a thread sigwait()ing on the corresponding signal.  */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|int
-name|_thread_dfl_count
-index|[
-name|_SIG_MAXSIG
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Lock for above count of dummy handlers and for the process signal  * mask and pending signal sets.  */
 end_comment
 
@@ -2682,6 +2680,9 @@ parameter_list|(
 name|struct
 name|pthread
 modifier|*
+parameter_list|,
+name|int
+name|sys_scope
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3716,6 +3717,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_thr_critical_enter
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_critical_leave
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|_thr_start_sig_daemon
 parameter_list|(
@@ -3766,6 +3789,41 @@ name|void
 name|_thr_signal_deinit
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_hash_add
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thr_hash_remove
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pthread
+modifier|*
+name|_thr_hash_find
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

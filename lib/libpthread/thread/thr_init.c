@@ -962,13 +962,31 @@ name|_kse_init
 argument_list|()
 expr_stmt|;
 comment|/* Initialize the initial kse and kseg. */
+ifdef|#
+directive|ifdef
+name|SYSTEM_SCOPE_ONLY
 name|_kse_initial
 operator|=
 name|_kse_alloc
 argument_list|(
 name|NULL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|_kse_initial
+operator|=
+name|_kse_alloc
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|_kse_initial
@@ -1002,6 +1020,19 @@ argument_list|(
 literal|"Can't allocate initial kseg."
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSTEM_SCOPE_ONLY
+name|_kse_initial
+operator|->
+name|k_kseg
+operator|->
+name|kg_flags
+operator||=
+name|KGF_SINGLE_THREAD
+expr_stmt|;
+endif|#
+directive|endif
 name|_kse_initial
 operator|->
 name|k_schedq
@@ -1233,6 +1264,19 @@ name|attr
 operator|=
 name|_pthread_attr_default
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SYSTEM_SCOPE_ONLY
+name|thread
+operator|->
+name|attr
+operator|.
+name|flags
+operator||=
+name|PTHREAD_SCOPE_SYSTEM
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Set up the thread stack. 	 * 	 * Create a red zone below the main stack.  All other stacks 	 * are constrained to a maximum size by the parameters 	 * passed to mmap(), but this stack is only limited by 	 * resource limits, so this stack needs an explicitly mapped 	 * red zone to protect the thread stack that is just beyond. 	 */
 if|if
 condition|(
@@ -1748,17 +1792,6 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|_thread_gc_list
-argument_list|)
-expr_stmt|;
-comment|/* Initialize the SIG_DFL dummy handler count. */
-name|bzero
-argument_list|(
-name|_thread_dfl_count
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|_thread_dfl_count
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the lock for temporary installation of signal 	 * handlers (to support sigwait() semantics) and for the 	 * process signal mask and pending signal sets. 	 */

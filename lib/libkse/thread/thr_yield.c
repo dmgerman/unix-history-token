@@ -50,6 +50,22 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
+condition|)
+return|return
+operator|(
+name|__sys_sched_yield
+argument_list|()
+operator|)
+return|;
 comment|/* Reset the accumulated time slice value for the current thread: */
 name|curthread
 operator|->
@@ -92,6 +108,22 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
+condition|)
+block|{
+name|__sys_sched_yield
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 comment|/* Reset the accumulated time slice value for the current thread: */
 name|curthread
 operator|->

@@ -163,6 +163,24 @@ argument_list|(
 operator|&
 name|suspender_mask
 argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+comment|/* Cannot catch		*/
+name|sigdelset
+argument_list|(
+operator|&
+name|suspender_mask
+argument_list|,
+name|SIGSTOP
+argument_list|)
+expr_stmt|;
+comment|/* Cannot catch		*/
+name|sigdelset
+argument_list|(
+operator|&
+name|suspender_mask
+argument_list|,
 name|SIGINT
 argument_list|)
 expr_stmt|;
