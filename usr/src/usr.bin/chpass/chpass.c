@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.8 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,12 +1123,12 @@ name|strcpy
 argument_list|(
 name|to
 argument_list|,
-name|passwd
+name|_PATH_PASSWD
 argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|passwd
+name|_PATH_PASSWD
 argument_list|)
 expr_stmt|;
 name|bcopy
