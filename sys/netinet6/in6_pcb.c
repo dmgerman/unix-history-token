@@ -1932,6 +1932,11 @@ condition|(
 name|so
 condition|)
 block|{
+name|SOCK_LOCK
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_pcb
