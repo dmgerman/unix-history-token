@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/bpfdesc.h>
 end_include
 
@@ -309,6 +315,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * This tunable spits out information about what is going on which  * would be more suited for a log file.  Eventually  * this will go away as we do not currently use it.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -333,6 +343,38 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable debugging on failure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * This is just used for logging purposes as eventually we would like  * to log much more then failed requests.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mac_bsdextended_logging
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_mac_bsdextended
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|logging
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mac_bsdextended_logging
+argument_list|,
+literal|0
+argument_list|,
+literal|"Log failed authorization requests"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1099,12 +1141,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|mac_bsdextended_debugging
+name|mac_bsdextended_logging
 condition|)
-name|printf
+name|log
 argument_list|(
-literal|"mac_bsdextended: %d:%d request %d on %d:%d"
-literal|" fails\n"
+name|LOG_AUTHPRIV
+argument_list|,
+literal|"mac_bsdextended: %d:%d request %d"
+literal|" on %d:%d failed. \n"
 argument_list|,
 name|cred
 operator|->
@@ -1126,6 +1170,7 @@ operator|(
 name|EACCES
 operator|)
 return|;
+comment|/* Matching rule denies access */
 block|}
 comment|/* 	 * If the rule matched and allowed access and first match is 	 * enabled, then return success. 	 */
 if|if
