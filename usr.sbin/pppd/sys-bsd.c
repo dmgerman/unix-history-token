@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.13 1998/03/22 05:33:08 peter Exp $"
+literal|"$Id: sys-bsd.c,v 1.14 1998/06/20 18:02:16 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,11 +230,7 @@ name|defined
 argument_list|(
 name|NetBSD
 argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
+operator|&&
 operator|(
 name|NetBSD
 operator|>=
@@ -284,17 +280,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
 
 begin_endif
 endif|#
