@@ -607,7 +607,7 @@ literal|0
 decl_stmt|;
 name|CTR0
 argument_list|(
-name|KTR_INTR
+name|KTR_CLK
 argument_list|,
 literal|"hardclock fired"
 argument_list|)
@@ -1504,7 +1504,7 @@ decl_stmt|;
 block|{
 name|CTR0
 argument_list|(
-name|KTR_INTR
+name|KTR_CLK
 argument_list|,
 literal|"statclock fired"
 argument_list|)
