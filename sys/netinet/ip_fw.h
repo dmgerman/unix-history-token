@@ -15,6 +15,13 @@ directive|define
 name|_IPFW2_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPFW2
+value|1
+end_define
+
 begin_comment
 comment|/*  * The kernel representation of ipfw rules is made of a list of  * 'instructions' (for all practical purposes equivalent to BPF  * instructions), which specify which fields of the packet  * (or its metatada) should be analysed.  *  * Each instruction is stored in a structure which begins with  * "ipfw_insn", and can contain extra fields depending on the  * instruction type (listed below).  *  * "enum ipfw_opcodes" are the opcodes supported. We can have up  * to 256 different opcodes.  */
 end_comment
