@@ -77,7 +77,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: apprentice.c,v 1.34 2001/03/11 20:29:16 christos Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.39 2001/04/24 14:40:24 christos Exp $"
 argument_list|)
 end_macro
 
@@ -106,6 +106,82 @@ name|l
 parameter_list|)
 value|(isupper((unsigned char) (l)) ? \ 			tolower((unsigned char) (l)) : (l))
 end_define
+
+begin_comment
+comment|/*  * Work around a bug in headers on Digital Unix.  * At least confirmed for: OSF1 V4.0 878  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__DECC
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAP_FAILED
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MAP_FAILED
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_FAILED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_FAILED
+value|(void *) -1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAP_FILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3722,6 +3798,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|ptr
 operator|=
 operator|(
@@ -3820,7 +3901,7 @@ name|progname
 argument_list|,
 name|version
 argument_list|,
-name|VERSION
+name|VERSIONNO
 argument_list|,
 name|dbname
 argument_list|)
