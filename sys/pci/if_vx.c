@@ -689,6 +689,15 @@ condition|)
 return|return
 literal|"3Com 3c590 EtherLink III PCI"
 return|;
+if|if
+condition|(
+name|device_id
+operator|==
+literal|0x595010b7ul
+condition|)
+return|return
+literal|"3Com 3c595 EtherLink III PCI"
+return|;
 return|return
 name|NULL
 return|;
