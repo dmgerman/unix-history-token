@@ -6923,7 +6923,8 @@ name|reply
 argument_list|(
 literal|230
 argument_list|,
-literal|"User %s logged in, access restrictions apply."
+literal|"User %s logged in, "
+literal|"access restrictions apply."
 argument_list|,
 name|pw
 operator|->
