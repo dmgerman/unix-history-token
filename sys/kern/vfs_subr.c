@@ -2962,12 +2962,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-name|vp
-operator|->
-name|v_maxio
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3098,6 +3092,12 @@ operator|->
 name|v_data
 operator|=
 literal|0
+expr_stmt|;
+name|vp
+operator|->
+name|v_maxio
+operator|=
+name|DFLTPHYS
 expr_stmt|;
 name|splx
 argument_list|(
