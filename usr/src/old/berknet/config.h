@@ -4,7 +4,7 @@ comment|/*	@(#)config.h	4.3	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
-comment|/* 	These are machine-configuration dependent 	tables.  To add a machine, be sure to update all 	these tables, add the "ifdef" entry in "mach.h", 	and add config? to gothru() in sub.c. 	The tables must be consistent. 	For Berkeley, this file corresponds to the following network:  		T H E   B E R K E L E Y   N E T W O R K  			   September 7 1982                     INGVAX----i                       |        	   KIM-----\  |  /----ERNIE         /--earvax                     \ | /                  /            C70-----\ \ / /----CAD-----ESVAX                    UCBVAX                  \ 	  Onyx-----/ /|\ \----ARPA          \--medea----oz                     / | \    t----statvax-----/  |  \-------y 		      |                     	              | /------jade(h)                          		      |/                                     d----G----------c--------a                       |          |                       |          |                       f     b----e----s   		M A C H I N E   G U I D E   Name 	Char 	Run By		Type	Vers.	Default Mach. ----	----	------		----	----	------------- A	a	CFO		11/70	V7	C B	b	CFO		11/70	V7	E C	c	CFO		11/70	V7	A D	d	CFO		11/70	V7	G E	e	CFO		11/70	V7	C F	f	CFO		11/70	V7	G G	g	CFO		VAX/780	V7	C H(jade)	h	CFO		VAX/750	V7	G ing70	i	CSSG		11/70	V7	INGVAX INGVAX	j	Ingres Group 	VAX/780	V7	Ing70 ucbvax	k	CS network hub	VAX/750	V7	 oz	l	Brodersen	VAX/750	V7	medea medea	m	EE-Signal Proc.	VAX/750	V7	ESVAX KIM	n	Kim No-vax (RJF)VAX/780	V7	CSVAX ESVAX	o	EECS-CE Res.	VAX/780	V7	CSVAX	 CAD	p	Newton CAD      VAX/780 V7      ESVAX ARPAVAX	r	Fabry		VAX/780	V7	CSVAX	 SRC	s	CFO& SRC	11/45	V6	E MathStat t	Math/Stat Dept	11/45	V7	statvax C70     u       EECS            C70     V7      ARPAVAX CSVAX	v	CS Research	VAX	V7	ARPAVAX statvax w	Stat Dept	VAX/750	V7	UCBVAX Onyx	x	CS Research	Onyx	V7	ARPAVAX Cory	y	EECS Dept.	11/70	V7	UCBVAX EARVAX	z	EECS Dept.	VAX/750	V7	ESVAX  (the following machines are not connected or do not exist yet) Phonology ?	Linguistics	11/45	V6		?  (Letters used: A-P, R-Z (total of 25)) (Letters free: Q (total of 1))  The links between  A-C, C-E, C-G, G-D, G-F, G-CSVAX and CSVAX-ARPAVAX  run at 9600 baud, all others run at 1200 Baud.  Files 200,000 to 500,000 bytes are only transmitted between midnight and 6AM. There is a file-length limit of 500,000 bytes. Larger files must be split up (use the split command).   Free Commands (log in as user "network", no password):  	bpq		news		vpq		yank 	epq		ps		w 	finger 		pstat		wc 	help		rcs		where 	lpq		rcslog		who 	netlog		rcsq		whom 	netq		trq		write		  In addition, the "lpr" command is free on the Ingres machines. Sending mail between machines, and netlpr between the Computer Center machines is free.  On the EARVAX, there are no free commands (but sending mail is free). The netlpr command to Cory will allow the -c option to "epr" and "bpr", and to the CSVAX will allow "vpr".  	For RAND, these tables are:  		VAX (C) ---------GRAPHICS (A)------- TP (B)  	For NOSC, these tables are:  		   FCCMM ------ ATTS ------ MSSF ------ CCMM 				/ \ 			       /   \ 			      /     \ 			     /       \ 		OT34 ---- GATE40    ING70 			    | 			    | 			   PWB    */
+comment|/* 	These are machine-configuration dependent 	tables.  To add a machine, be sure to update all 	these tables, add the "ifdef" entry in "mach.h", 	and add config? to gothru() in sub.c. 	For Berkeley, this file corresponds to the following network:  	The tables must be consistent.   	For RAND, these tables are:  		VAX (C) ---------GRAPHICS (A)------- TP (B)  	For NOSC, these tables are:  		   FCCMM ------ ATTS ------ MSSF ------ CCMM 				/ \ 			       /   \ 			      /     \ 			     /       \ 		OT34 ---- GATE40    ING70 			    | 			    | 			   PWB    */
 end_comment
 
 begin_ifdef
@@ -1349,7 +1349,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'c'
 block|,
-literal|'c'
+literal|000
 block|,
 literal|'c'
 block|,
@@ -1423,7 +1423,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'e'
 block|,
-literal|'e'
+literal|000
 block|,
 literal|'e'
 block|,
@@ -1497,7 +1497,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'g'
 block|,
-literal|'e'
+literal|000
 block|,
 literal|'g'
 block|,
@@ -1571,7 +1571,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'g'
 block|,
-literal|'g'
+literal|000
 block|,
 literal|'g'
 block|,
@@ -1645,7 +1645,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'c'
 block|,
-literal|'c'
+literal|000
 block|,
 literal|'c'
 block|,
@@ -1719,7 +1719,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'g'
 block|,
-literal|'g'
+literal|000
 block|,
 literal|'g'
 block|,
@@ -1748,7 +1748,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Computer Center G Machine (Comp Center VAX) */
+comment|/* Computer Center G Machine (G) */
 end_comment
 
 begin_decl_stmt
@@ -1793,7 +1793,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -1810,7 +1810,7 @@ literal|'k'
 block|,
 literal|'k'
 block|,
-literal|'c'
+literal|'k'
 block|,
 comment|/* u,v,w,x,y */
 literal|'k'
@@ -1822,7 +1822,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Computer Center Jade Machine (H) */
+comment|/* Computer Center H Machine (H) */
 end_comment
 
 begin_decl_stmt
@@ -1867,7 +1867,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'g'
 block|,
-literal|'g'
+literal|000
 block|,
 literal|'g'
 block|,
@@ -1941,7 +1941,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'j'
 block|,
-literal|'j'
+literal|000
 block|,
 literal|'j'
 block|,
@@ -1999,7 +1999,7 @@ literal|'k'
 block|,
 literal|'i'
 block|,
-literal|'k'
+literal|'j'
 block|,
 comment|/* f,g,h,i,j */
 literal|'k'
@@ -2015,7 +2015,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -2095,7 +2095,7 @@ literal|'r'
 block|,
 literal|'g'
 block|,
-literal|'w'
+literal|'t'
 block|,
 comment|/* p,q,r,s,t */
 literal|'u'
@@ -2163,7 +2163,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'m'
 block|,
-literal|'m'
+literal|000
 block|,
 literal|'m'
 block|,
@@ -2192,7 +2192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Sakrison's Image Project 11/40 (Image) */
+comment|/* Sakrison's Image Project VAX (Image) */
 end_comment
 
 begin_decl_stmt
@@ -2237,7 +2237,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'o'
 block|,
-literal|'o'
+literal|000
 block|,
 literal|'o'
 block|,
@@ -2311,7 +2311,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -2385,7 +2385,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'p'
 block|,
-literal|'p'
+literal|000
 block|,
 literal|'p'
 block|,
@@ -2459,7 +2459,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'p'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -2480,80 +2480,6 @@ literal|'k'
 block|,
 comment|/* u,v,w,x,y */
 literal|'o'
-block|,
-literal|0
-comment|/* z */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Computer Center Q Machine (Q) */
-end_comment
-
-begin_decl_stmt
-name|char
-name|configQ
-index|[]
-init|=
-block|{
-comment|/* to get to i, config[i] */
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-comment|/* a,b,c,d,e */
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-comment|/* f,g,h,i,j */
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-comment|/* k,l,m,n,o */
-literal|'k'
-block|,
-literal|'q'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-comment|/* p,q,r,s,t */
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-literal|'k'
-block|,
-comment|/* u,v,w,x,y */
-literal|'k'
 block|,
 literal|0
 comment|/* z */
@@ -2607,7 +2533,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'r'
 block|,
@@ -2681,7 +2607,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'e'
 block|,
-literal|'e'
+literal|000
 block|,
 literal|'e'
 block|,
@@ -2720,62 +2646,62 @@ index|[]
 init|=
 block|{
 comment|/* to get to i, config[i] */
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
 comment|/* a,b,c,d,e */
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
 comment|/* f,g,h,i,j */
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
 comment|/* k,l,m,n,o */
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|000
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
 literal|'t'
 block|,
 comment|/* p,q,r,s,t */
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
-literal|'w'
+literal|'k'
 block|,
 comment|/* u,v,w,x,y */
-literal|'w'
+literal|'k'
 block|,
 literal|0
 comment|/* z */
@@ -2829,7 +2755,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -2903,7 +2829,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -2977,13 +2903,13 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
 literal|'k'
 block|,
-literal|'t'
+literal|'k'
 block|,
 comment|/* p,q,r,s,t */
 literal|'k'
@@ -3006,7 +2932,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* CS Research Onyx Computer */
+comment|/* Undergraduate Computing Facility Onyx Computer */
 end_comment
 
 begin_decl_stmt
@@ -3051,7 +2977,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -3125,7 +3051,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
@@ -3199,7 +3125,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'o'
 block|,
-literal|'o'
+literal|000
 block|,
 literal|'o'
 block|,
@@ -3272,11 +3198,11 @@ block|,
 comment|/* k,l,m,n,o */
 name|M_OTHER
 block|,
-name|M_OTHER
+literal|0
 block|,
 name|M_OTHER
 block|,
-name|M_CC
+name|M_OTHER
 block|,
 name|M_OTHER
 block|,
@@ -3335,7 +3261,7 @@ block|,
 literal|'k'
 block|,
 comment|/* f,g,h,i,j */
-literal|'v'
+literal|'u'
 block|,
 literal|'m'
 block|,
@@ -3348,13 +3274,13 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'k'
 block|,
-literal|'k'
+literal|000
 block|,
 literal|'k'
 block|,
 literal|'e'
 block|,
-literal|'w'
+literal|'k'
 block|,
 comment|/* p,q,r,s,t */
 literal|'k'
@@ -3427,11 +3353,19 @@ literal|"ucbcfo-a"
 block|,
 literal|'a'
 block|,
+literal|"cfo-a"
+block|,
+literal|'a'
+block|,
 literal|"B"
 block|,
 literal|'b'
 block|,
 literal|"ucbcfo-b"
+block|,
+literal|'b'
+block|,
+literal|"cfo-b"
 block|,
 literal|'b'
 block|,
@@ -3443,11 +3377,19 @@ literal|"ucbcfo-c"
 block|,
 literal|'c'
 block|,
+literal|"cfo-c"
+block|,
+literal|'c'
+block|,
 literal|"D"
 block|,
 literal|'d'
 block|,
 literal|"ucbcfo-d"
+block|,
+literal|'d'
+block|,
+literal|"cfo-d"
 block|,
 literal|'d'
 block|,
@@ -3459,11 +3401,19 @@ literal|"ucbcfo-e"
 block|,
 literal|'e'
 block|,
+literal|"cfo-e"
+block|,
+literal|'e'
+block|,
 literal|"F"
 block|,
 literal|'f'
 block|,
 literal|"ucbcfo-f"
+block|,
+literal|'f'
+block|,
+literal|"cfo-f"
 block|,
 literal|'f'
 block|,
@@ -3475,6 +3425,22 @@ literal|"ucbcfo-g"
 block|,
 literal|'g'
 block|,
+literal|"cfo-g"
+block|,
+literal|'g'
+block|,
+literal|"H"
+block|,
+literal|'h'
+block|,
+literal|"ucbcfo-h"
+block|,
+literal|'h'
+block|,
+literal|"cfo-h"
+block|,
+literal|'h'
+block|,
 literal|"ucbjade"
 block|,
 literal|'h'
@@ -3483,19 +3449,15 @@ literal|"jade"
 block|,
 literal|'h'
 block|,
-literal|"H"
-block|,
-literal|'h'
-block|,
 literal|"Ing70"
 block|,
 literal|'i'
 block|,
-literal|"ucbing70"
+literal|"ucberl70"
 block|,
 literal|'i'
 block|,
-literal|"I"
+literal|"erl70"
 block|,
 literal|'i'
 block|,
@@ -3507,7 +3469,7 @@ literal|"ucbingres"
 block|,
 literal|'j'
 block|,
-literal|"J"
+literal|"ingres"
 block|,
 literal|'j'
 block|,
@@ -3515,33 +3477,21 @@ literal|"ucbvax"
 block|,
 literal|'k'
 block|,
-literal|"UCBVAX"
+literal|"vax"
 block|,
 literal|'k'
-block|,
-literal|"K"
-block|,
-literal|'k'
-block|,
-literal|"OZ"
-block|,
-literal|'l'
 block|,
 literal|"ucboz"
 block|,
 literal|'l'
 block|,
-literal|"L"
+literal|"oz"
 block|,
 literal|'l'
 block|,
-literal|"Image"
+literal|"VLSI"
 block|,
-literal|'m'
-block|,
-literal|"ucbimage"
-block|,
-literal|'m'
+literal|'l'
 block|,
 literal|"ucbmedea"
 block|,
@@ -3551,7 +3501,7 @@ literal|"medea"
 block|,
 literal|'m'
 block|,
-literal|"M"
+literal|"Image"
 block|,
 literal|'m'
 block|,
@@ -3563,7 +3513,7 @@ literal|"ucbkim"
 block|,
 literal|'n'
 block|,
-literal|"N"
+literal|"kim"
 block|,
 literal|'n'
 block|,
@@ -3571,29 +3521,25 @@ literal|"ESVAX"
 block|,
 literal|'o'
 block|,
-literal|"ucbopt"
+literal|"ucbesvax"
 block|,
 literal|'o'
-block|,
-literal|"O"
-block|,
-literal|'o'
-block|,
-literal|"CAD"
-block|,
-literal|'p'
 block|,
 literal|"ucbcad"
 block|,
 literal|'p'
 block|,
-literal|"P"
+literal|"ucbcoke"
 block|,
 literal|'p'
 block|,
-literal|"Q"
+literal|"coke"
 block|,
-literal|'q'
+literal|'p'
+block|,
+literal|"cad"
+block|,
+literal|'p'
 block|,
 literal|"ARPAVAX"
 block|,
@@ -3603,7 +3549,7 @@ literal|"ucbarpa"
 block|,
 literal|'r'
 block|,
-literal|"R"
+literal|"arpa"
 block|,
 literal|'r'
 block|,
@@ -3615,10 +3561,6 @@ literal|"ucbsrc"
 block|,
 literal|'s'
 block|,
-literal|"S"
-block|,
-literal|'s'
-block|,
 literal|"MathStat"
 block|,
 literal|'t'
@@ -3627,19 +3569,11 @@ literal|"ucbmathstat"
 block|,
 literal|'t'
 block|,
-literal|"T"
-block|,
-literal|'t'
-block|,
 literal|"ucbc70"
 block|,
 literal|'u'
 block|,
-literal|"C70"
-block|,
-literal|'u'
-block|,
-literal|"U"
+literal|"c70"
 block|,
 literal|'u'
 block|,
@@ -3651,7 +3585,7 @@ literal|"ucbernie"
 block|,
 literal|'v'
 block|,
-literal|"V"
+literal|"ernie"
 block|,
 literal|'v'
 block|,
@@ -3659,11 +3593,7 @@ literal|"ucbstatvax"
 block|,
 literal|'w'
 block|,
-literal|"StatVax"
-block|,
-literal|'w'
-block|,
-literal|"W"
+literal|"statvax"
 block|,
 literal|'w'
 block|,
@@ -3671,11 +3601,7 @@ literal|"ucbonyx"
 block|,
 literal|'x'
 block|,
-literal|"Onyx"
-block|,
-literal|'x'
-block|,
-literal|"X"
+literal|"onyx"
 block|,
 literal|'x'
 block|,
@@ -3687,27 +3613,19 @@ literal|"ucbcory"
 block|,
 literal|'y'
 block|,
-literal|"Y"
-block|,
-literal|'y'
-block|,
-literal|"EARVAX"
-block|,
-literal|'z'
-block|,
-literal|"EECS40"
-block|,
-literal|'z'
-block|,
-literal|"ucbeecs40"
-block|,
-literal|'z'
-block|,
 literal|"ucbear"
 block|,
 literal|'z'
 block|,
-literal|"Z"
+literal|"ear"
+block|,
+literal|'z'
+block|,
+literal|"earvax"
+block|,
+literal|'z'
+block|,
+literal|"EECS40"
 block|,
 literal|'z'
 block|,
