@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -195,6 +189,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|headercount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|dflag
 init|=
@@ -222,15 +223,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|volatile
-name|sig_atomic_t
-name|phdr_flag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* local function declarations */
 end_comment
@@ -248,7 +240,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|phdr
+name|needhdr
 parameter_list|(
 name|int
 name|signo
@@ -259,8 +251,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|do_phdr
-parameter_list|()
+name|phdr
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -422,9 +416,6 @@ modifier|*
 name|kd
 init|=
 name|NULL
-decl_stmt|;
-name|int
-name|headercount
 decl_stmt|;
 name|long
 name|generation
@@ -1410,7 +1401,7 @@ name|signal
 argument_list|(
 name|SIGCONT
 argument_list|,
-name|phdr
+name|needhdr
 argument_list|)
 expr_stmt|;
 for|for
@@ -1507,19 +1498,6 @@ block|}
 block|}
 if|if
 condition|(
-name|phdr_flag
-condition|)
-block|{
-name|phdr_flag
-operator|=
-literal|0
-expr_stmt|;
-name|do_phdr
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|Cflag
 operator|>
 literal|0
@@ -1569,7 +1547,7 @@ operator|--
 name|headercount
 condition|)
 block|{
-name|do_phdr
+name|phdr
 argument_list|()
 expr_stmt|;
 name|headercount
@@ -1717,7 +1695,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|do_phdr
+name|phdr
 argument_list|()
 expr_stmt|;
 name|headercount
@@ -1807,7 +1785,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|do_phdr
+name|phdr
 argument_list|()
 expr_stmt|;
 name|headercount
@@ -2018,16 +1996,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Force a header to be prepended to the next output.  */
+end_comment
+
 begin_function
-specifier|static
 name|void
-name|phdr
+name|needhdr
 parameter_list|(
 name|int
 name|signo
 parameter_list|)
 block|{
-name|phdr_flag
+name|headercount
 operator|=
 literal|1
 expr_stmt|;
@@ -2037,8 +2018,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|do_phdr
-parameter_list|()
+name|phdr
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
