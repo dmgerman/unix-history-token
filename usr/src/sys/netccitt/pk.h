@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -277,20 +277,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ORDER3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|a , b , c
-end_define
-
-begin_define
-define|#
-directive|define
 name|ORDER4
 parameter_list|(
 name|a
@@ -332,20 +318,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ORDER3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|c , b , a
-end_define
-
-begin_define
-define|#
-directive|define
 name|ORDER4
 parameter_list|(
 name|a
@@ -378,11 +350,11 @@ block|{
 name|octet
 name|ORDER2
 argument_list|(
-name|called_addrlen
+name|calling_addrlen
 operator|:
 literal|4
 argument_list|,
-name|calling_addrlen
+name|called_addrlen
 operator|:
 literal|4
 argument_list|)
@@ -402,19 +374,23 @@ struct|struct
 name|x25_packet
 block|{
 name|octet
-name|ORDER3
+name|ORDER4
 argument_list|(
-name|lc_group_number
-operator|:
-literal|4
-argument_list|,
-name|fmt_identifier
-operator|:
-literal|3
-argument_list|,
 name|q_bit
 operator|:
 literal|1
+argument_list|,
+name|d_bit
+operator|:
+literal|1
+argument_list|,
+name|fmt_identifier
+operator|:
+literal|2
+argument_list|,
+name|lc_group_number
+operator|:
+literal|4
 argument_list|)
 decl_stmt|;
 name|octet
@@ -437,11 +413,7 @@ block|{
 name|octet
 name|ORDER4
 argument_list|(
-name|z
-operator|:
-literal|1
-argument_list|,
-name|ps
+name|pr
 operator|:
 literal|3
 argument_list|,
@@ -449,9 +421,13 @@ name|m_bit
 operator|:
 literal|1
 argument_list|,
-name|pr
+name|ps
 operator|:
 literal|3
+argument_list|,
+name|z
+operator|:
+literal|1
 argument_list|)
 decl_stmt|;
 block|}
