@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -76,7 +76,7 @@ end_include
 
 begin_decl_stmt
 name|u_char
-name|curpri
+name|curpriority
 decl_stmt|;
 end_decl_stmt
 
@@ -120,11 +120,7 @@ name|timeout
 argument_list|(
 name|roundrobin
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|hz
 operator|/
@@ -194,7 +190,7 @@ value|11
 end_define
 
 begin_comment
-comment|/*  * Recompute process priorities, once a second  */
+comment|/*  * Recompute process priorities, every hz ticks.  */
 end_comment
 
 begin_comment
@@ -444,7 +440,7 @@ argument_list|,
 name|UCHAR_MAX
 argument_list|)
 expr_stmt|;
-name|setpri
+name|resetpriority
 argument_list|(
 name|p
 argument_list|)
@@ -667,7 +663,7 @@ name|UCHAR_MAX
 argument_list|)
 expr_stmt|;
 block|}
-name|setpri
+name|resetpriority
 argument_list|(
 name|p
 argument_list|)
@@ -730,16 +726,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * General sleep call.  * Suspends current process until a wakeup is made on chan.  * The process will then be made runnable with priority pri.  * Sleeps at most timo/hz seconds (0 means no timeout).  * If pri includes PCATCH flag, signals are checked  * before and after sleeping, else signals are not checked.  * Returns 0 if awakened, EWOULDBLOCK if the timeout expires.  * If PCATCH is set and a signal needs to be delivered,  * ERESTART is returned if the current system call should be restarted  * if possible, and EINTR is returned if the system call should  * be interrupted by the signal (return EINTR).  */
+comment|/*  * General sleep call.  Suspends the current process until a wakeup is  * performed on the specified identifier.  The process will then be made  * runnable with the specified priority.  Sleeps at most timo/hz seconds  * (0 means no timeout).  If pri includes PCATCH flag, signals are checked  * before and after sleeping, else signals are not checked.  Returns 0 if  * awakened, EWOULDBLOCK if the timeout expires.  If PCATCH is set and a  * signal needs to be delivered, ERESTART is returned if the current system  * call should be restarted if possible, and EINTR is returned if the system  * call should be interrupted by the signal (return EINTR).  */
 end_comment
 
 begin_function
 name|int
 name|tsleep
 parameter_list|(
-name|chan
+name|ident
 parameter_list|,
-name|pri
+name|priority
 parameter_list|,
 name|wmesg
 parameter_list|,
@@ -747,17 +743,16 @@ name|timo
 parameter_list|)
 name|void
 modifier|*
-name|chan
+name|ident
 decl_stmt|;
 name|int
-name|pri
+name|priority
+decl_stmt|,
+name|timo
 decl_stmt|;
 name|char
 modifier|*
 name|wmesg
-decl_stmt|;
-name|int
-name|timo
 decl_stmt|;
 block|{
 specifier|register
@@ -782,7 +777,7 @@ name|sig
 decl_stmt|,
 name|catch
 init|=
-name|pri
+name|priority
 operator|&
 name|PCATCH
 decl_stmt|;
@@ -859,7 +854,7 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|chan
+name|ident
 operator|==
 name|NULL
 operator|||
@@ -884,7 +879,7 @@ name|p
 operator|->
 name|p_wchan
 operator|=
-name|chan
+name|ident
 expr_stmt|;
 name|p
 operator|->
@@ -902,7 +897,7 @@ name|p
 operator|->
 name|p_pri
 operator|=
-name|pri
+name|priority
 operator|&
 name|PRIMASK
 expr_stmt|;
@@ -913,7 +908,7 @@ name|slpque
 index|[
 name|HASH
 argument_list|(
-name|chan
+name|ident
 argument_list|)
 index|]
 expr_stmt|;
@@ -1056,7 +1051,7 @@ argument_list|()
 expr_stmt|;
 name|resume
 label|:
-name|curpri
+name|curpriority
 operator|=
 name|p
 operator|->
@@ -1334,16 +1329,16 @@ begin_function
 name|void
 name|sleep
 parameter_list|(
-name|chan
+name|ident
 parameter_list|,
-name|pri
+name|priority
 parameter_list|)
 name|void
 modifier|*
-name|chan
+name|ident
 decl_stmt|;
 name|int
-name|pri
+name|priority
 decl_stmt|;
 block|{
 specifier|register
@@ -1372,18 +1367,18 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|pri
+name|priority
 operator|>
 name|PZERO
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sleep called with pri %d> PZERO, wchan: %x\n"
+literal|"sleep called with priority %d> PZERO, wchan: %x\n"
 argument_list|,
-name|pri
+name|priority
 argument_list|,
-name|chan
+name|ident
 argument_list|)
 expr_stmt|;
 name|panic
@@ -1424,7 +1419,7 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|chan
+name|ident
 operator|==
 name|NULL
 operator|||
@@ -1449,7 +1444,7 @@ name|p
 operator|->
 name|p_wchan
 operator|=
-name|chan
+name|ident
 expr_stmt|;
 name|p
 operator|->
@@ -1467,7 +1462,7 @@ name|p
 operator|->
 name|p_pri
 operator|=
-name|pri
+name|priority
 expr_stmt|;
 name|qp
 operator|=
@@ -1476,7 +1471,7 @@ name|slpque
 index|[
 name|HASH
 argument_list|(
-name|chan
+name|ident
 argument_list|)
 index|]
 expr_stmt|;
@@ -1584,7 +1579,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|curpri
+name|curpriority
 operator|=
 name|p
 operator|->
@@ -1720,19 +1715,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wakeup on "chan"; set all processes  * sleeping on chan to run state.  */
+comment|/*  * Make all processes sleeping on the specified identifier runnable.  */
 end_comment
 
 begin_function
 name|void
 name|wakeup
 parameter_list|(
-name|chan
+name|ident
 parameter_list|)
 specifier|register
 name|void
 modifier|*
-name|chan
+name|ident
 decl_stmt|;
 block|{
 specifier|register
@@ -1766,7 +1761,7 @@ name|slpque
 index|[
 name|HASH
 argument_list|(
-name|chan
+name|ident
 argument_list|)
 index|]
 expr_stmt|;
@@ -1822,7 +1817,7 @@ name|p
 operator|->
 name|p_wchan
 operator|==
-name|chan
+name|ident
 condition|)
 block|{
 name|p
@@ -1903,7 +1898,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Since curpri is a usrpri, 				 * p->p_pri is always better than curpri. 				 */
+comment|/* 				 * Since curpriority is a user priority, 				 * p->p_pri is always better than curpriority. 				 */
 if|if
 condition|(
 operator|(
@@ -2167,7 +2162,7 @@ name|NZERO
 operator|+
 literal|4
 expr_stmt|;
-name|setpri
+name|resetpriority
 argument_list|(
 name|p
 argument_list|)
@@ -2389,7 +2384,7 @@ name|p
 operator|->
 name|p_pri
 operator|<
-name|curpri
+name|curpriority
 condition|)
 name|need_resched
 argument_list|()
@@ -2398,12 +2393,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute priority of process when running in user mode.  * Arrange to reschedule if the resulting priority  * is better than that of the current process.  */
+comment|/*  * Compute the priority of a process when running in user mode.  * Arrange to reschedule if the resulting priority is better  * than that of the current process.  */
 end_comment
 
 begin_function
 name|void
-name|setpri
+name|resetpriority
 parameter_list|(
 name|p
 parameter_list|)
@@ -2417,9 +2412,9 @@ block|{
 specifier|register
 name|unsigned
 name|int
-name|newpri
+name|newpriority
 decl_stmt|;
-name|newpri
+name|newpriority
 operator|=
 name|PUSER
 operator|+
@@ -2435,11 +2430,11 @@ name|p
 operator|->
 name|p_nice
 expr_stmt|;
-name|newpri
+name|newpriority
 operator|=
 name|min
 argument_list|(
-name|newpri
+name|newpriority
 argument_list|,
 name|MAXPRI
 argument_list|)
@@ -2448,13 +2443,13 @@ name|p
 operator|->
 name|p_usrpri
 operator|=
-name|newpri
+name|newpriority
 expr_stmt|;
 if|if
 condition|(
-name|newpri
+name|newpriority
 operator|<
-name|curpri
+name|curpriority
 condition|)
 name|need_resched
 argument_list|()
