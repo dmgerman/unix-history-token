@@ -4360,13 +4360,13 @@ name|icmp_data
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Avoid unaligned data: */
-name|memcpy
+comment|/* Avoid unaligned data (cannot use memcpy) */
+name|bcopy
 argument_list|(
+name|tp
+argument_list|,
 operator|&
 name|tv1
-argument_list|,
-name|tp
 argument_list|,
 sizeof|sizeof
 argument_list|(
