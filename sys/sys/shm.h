@@ -307,6 +307,30 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|int
@@ -326,6 +350,7 @@ name|shmat
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -340,7 +365,7 @@ name|shmget
 parameter_list|(
 name|key_t
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -366,6 +391,7 @@ begin_function_decl
 name|int
 name|shmdt
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 parameter_list|)

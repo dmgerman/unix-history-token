@@ -1279,6 +1279,7 @@ begin_struct
 struct|struct
 name|shmdt_args
 block|{
+specifier|const
 name|void
 modifier|*
 name|shmaddr
@@ -1483,6 +1484,7 @@ block|{
 name|int
 name|shmid
 decl_stmt|;
+specifier|const
 name|void
 modifier|*
 name|shmaddr
