@@ -37,6 +37,12 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|region_descriptor
+struct_decl|;
+end_struct_decl
+
 begin_function
 name|__BEGIN_DECLS
 define|#
@@ -1187,6 +1193,62 @@ asm|__asm __volatile("movl %0,%%gs" : : "rm" (sel));
 block|}
 end_function
 
+begin_comment
+comment|/* void lidt(struct region_descriptor *addr); */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|lidt
+parameter_list|(
+name|struct
+name|region_descriptor
+modifier|*
+name|addr
+parameter_list|)
+block|{
+asm|__asm __volatile("lidt (%0)" : : "r" (addr));
+block|}
+end_function
+
+begin_comment
+comment|/* void lldt(u_short sel); */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|lldt
+parameter_list|(
+name|u_short
+name|sel
+parameter_list|)
+block|{
+asm|__asm __volatile("lldt %0" : : "r" (sel));
+block|}
+end_function
+
+begin_comment
+comment|/* void ltr(u_short sel); */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ltr
+parameter_list|(
+name|u_short
+name|sel
+parameter_list|)
+block|{
+asm|__asm __volatile("ltr %0" : : "r" (sel));
+block|}
+end_function
+
 begin_function
 specifier|static
 name|__inline
@@ -1787,6 +1849,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|region_descriptor
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|lidt
+parameter_list|(
+name|struct
+name|region_descriptor
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lldt
+parameter_list|(
+name|u_short
+name|sel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ltr
+parameter_list|(
+name|u_short
+name|sel
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|outb
@@ -2189,16 +2289,6 @@ end_endif
 begin_comment
 comment|/* __GNUC__ */
 end_comment
-
-begin_function_decl
-name|void
-name|ltr
-parameter_list|(
-name|u_short
-name|sel
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
