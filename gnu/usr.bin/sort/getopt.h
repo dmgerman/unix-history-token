@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989, 90, 91, 92, 93, 94 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,11 @@ name|option
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
 name|__STDC__
 specifier|const
 name|char
@@ -97,13 +102,15 @@ name|optional_argument
 value|2
 if|#
 directive|if
-name|__STDC__
-if|#
-directive|if
 name|defined
 argument_list|(
-name|__GNU_LIBRARY__
+name|__STDC__
 argument_list|)
+operator|&&
+name|__STDC__
+ifdef|#
+directive|ifdef
+name|__GNU_LIBRARY__
 comment|/* Many other libraries have conflicting prototypes for getopt, with    differences in the consts, in stdlib.h.  To avoid compilation    errors, only prototype getopt for the GNU C library.  */
 specifier|extern
 name|int
@@ -134,7 +141,7 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-comment|/* not __GNU_LIBRARY__ */
+comment|/* __GNU_LIBRARY__ */
 specifier|extern
 name|int
 name|getopt_long
@@ -251,7 +258,7 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-comment|/* not __STDC__ */
+comment|/* __STDC__ */
 ifdef|#
 directive|ifdef
 name|__cplusplus

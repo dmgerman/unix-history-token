@@ -430,9 +430,13 @@ argument_list|,
 literal|"Instructions? "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|s
+argument_list|,
+literal|100
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if
@@ -468,9 +472,13 @@ name|level
 operator|=
 literal|'e'
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|s
+argument_list|,
+literal|100
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 if|if
@@ -515,9 +523,13 @@ argument_list|,
 literal|"Would you like to roll your own dice? "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|s
+argument_list|,
+literal|100
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -543,9 +555,13 @@ argument_list|,
 literal|"Would you like to go first? "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|s
+argument_list|,
+literal|100
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -712,9 +728,13 @@ argument_list|,
 literal|"Move? "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|s
+argument_list|,
+literal|100
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2125,9 +2145,13 @@ argument_list|,
 literal|"Roll? "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|s
+argument_list|,
+literal|10
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|n

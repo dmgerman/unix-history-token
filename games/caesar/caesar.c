@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)caesar.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)caesar.c    8.1 (Berkeley) 5/31/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +58,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<math.h>
 end_include
 
@@ -63,6 +71,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -94,7 +114,7 @@ parameter_list|,
 name|perm
 parameter_list|)
 define|\
-value|isupper(ch) ? ('A' + (ch - 'A' + perm) % 26) : \ 	    islower(ch) ? ('a' + (ch - 'a' + perm) % 26) : ch
+value|isascii(ch) ? ( \ 	isupper(ch) ? ('A' + (ch - 'A' + perm) % 26) : \ 	    islower(ch) ? ('a' + (ch - 'a' + perm) % 26) : ch) : ch
 end_define
 
 begin_comment
@@ -164,7 +184,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|printit
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -180,10 +208,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|register
 name|int
 name|ch
@@ -195,6 +219,8 @@ decl_stmt|,
 name|nread
 decl_stmt|,
 name|winnerdot
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|char
@@ -210,15 +236,6 @@ decl_stmt|,
 name|try
 decl_stmt|,
 name|winner
-decl_stmt|;
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -362,11 +379,23 @@ control|)
 block|{
 name|ch
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|inbuf
 index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|isascii
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|islower
@@ -398,6 +427,7 @@ operator|-
 literal|'A'
 index|]
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * now "dot" the freqs with the observed letter freqs 	 * and keep track of best fit 	 */
 for|for
@@ -503,6 +533,10 @@ control|)
 block|{
 name|ch
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|inbuf
 index|[
 name|i
@@ -574,21 +608,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|printit
-argument_list|(
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arg
+parameter_list|)
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -653,7 +682,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility to accept --help and --version options as unobtrusively as possible.    Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Utility to accept --help and --version options as unobtrusively as possible.    Copyright (C) 1993, 1994 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -13,40 +13,11 @@ directive|ifdef
 name|HAVE_CONFIG_H
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CONFIG_BROKETS
-argument_list|)
-end_if
-
-begin_comment
-comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"config.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -63,24 +34,6 @@ begin_include
 include|#
 directive|include
 file|<getopt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"system.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"version.h"
 end_include
 
 begin_include
@@ -143,6 +96,10 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
+name|command_name
+argument_list|,
+name|version_string
+argument_list|,
 name|usage
 argument_list|)
 name|int
@@ -155,6 +112,22 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|command_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|version_string
 decl_stmt|;
 end_decl_stmt
 
@@ -230,7 +203,10 @@ block|{
 case|case
 literal|'h'
 case|:
+call|(
+modifier|*
 name|usage
+call|)
 argument_list|(
 literal|0
 argument_list|)
@@ -240,7 +216,9 @@ literal|'v'
 case|:
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%s - %s\n"
+argument_list|,
+name|command_name
 argument_list|,
 name|version_string
 argument_list|)

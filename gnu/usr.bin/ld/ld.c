@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.27.4.2 1995/08/25 04:39:51 davidg Exp $  */
+comment|/*  *	$Id: ld.c,v 1.27.4.3 1996/05/02 16:07:24 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -14306,6 +14306,32 @@ name|LS_WRITE
 operator|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|discard_locals
+operator|==
+name|DISCARD_ALL
+operator|||
+name|discard_locals
+operator|==
+name|DISCARD_L
+operator|&&
+name|lsp
+operator|->
+name|flags
+operator|&
+name|LS_L_SYMBOL
+condition|)
+block|{
+comment|/* 			 * The user wants to discard this symbol, but it 			 * is referenced by a relocation.  We can still 			 * save some file space by suppressing the unique 			 * renaming of the symbol. 			 */
+name|lsp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|LS_RENAME
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
