@@ -1084,7 +1084,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{!shared:%{!pg:%{!pthread:-lc}%{pthread:-lc_r}}%{pg:%{!pthread:-lc_p}%{pthread:-lc_r_p}}}"
+value|"%{!shared:%{!pg:%{!pthread:%{!kthread:-lc}%{kthread:-lpthread -lc}}%{pthread:-lc_r}}%{pg:%{!pthread:%{!kthread:-lc_r}%{kthread:-lpthread_p -lc_p}}%{pthread:-lc_r_p}}}"
 end_define
 
 begin_comment
