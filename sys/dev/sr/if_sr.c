@@ -1349,7 +1349,7 @@ name|typestruct
 argument_list|,
 name|SI_SUB_DRIVERS
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt
