@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.39	83/05/28	*/
+comment|/*	ufs_lookup.c	4.40	83/05/28	*/
 end_comment
 
 begin_include
@@ -3020,7 +3020,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if a directory is empty or not.  * Inode supplied must be locked.  */
+comment|/*  * Check if a directory is empty or not.  * Inode supplied must be locked.  *  * Using a struct dirtemplate here is not precisely  * what we want, but better than using a struct direct.  *  * NB: does not handle corrupted directories.  */
 end_comment
 
 begin_expr_stmt
@@ -3043,7 +3043,7 @@ name|off_t
 name|off
 decl_stmt|;
 name|struct
-name|direct
+name|dirtemplate
 name|dbuf
 decl_stmt|;
 specifier|register
@@ -3052,6 +3052,11 @@ name|direct
 modifier|*
 name|dp
 init|=
+operator|(
+expr|struct
+name|direct
+operator|*
+operator|)
 operator|&
 name|dbuf
 decl_stmt|;
@@ -3060,6 +3065,10 @@ name|error
 decl_stmt|,
 name|count
 decl_stmt|;
+define|#
+directive|define
+name|MINDIRSIZ
+value|(sizeof (struct dirtemplate) / 2)
 for|for
 control|(
 name|off
@@ -3092,11 +3101,7 @@ name|caddr_t
 operator|)
 name|dp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|direct
-argument_list|)
+name|MINDIRSIZ
 argument_list|,
 name|off
 argument_list|,
@@ -3106,40 +3111,21 @@ operator|&
 name|count
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|direct
-argument_list|)
-operator|-
-name|count
-expr_stmt|;
-define|#
-directive|define
-name|MINDIRSIZ
-value|(sizeof (struct direct) - (MAXNAMLEN + 1))
+comment|/* 		 * Since we read MINDIRSIZ, residual must 		 * be 0 unless we're at end of file. 		 */
 if|if
 condition|(
 name|error
 operator|||
 name|count
-operator|<
-name|MINDIRSIZ
-operator|||
-name|count
-operator|<
-name|DIRSIZ
-argument_list|(
-name|dp
-argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+comment|/* skip empty entries */
 if|if
 condition|(
 name|dp
@@ -3149,6 +3135,20 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* accept only "." and ".." */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_namlen
+operator|>
+literal|2
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|dp
@@ -3165,6 +3165,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 		 * At this point d_namlen must be 1 or 2. 		 * 1 implies ".", 2 implies ".." if second 		 * char is also "." 		 */
 if|if
 condition|(
 name|dp
@@ -3173,13 +3174,6 @@ name|d_namlen
 operator|==
 literal|1
 operator|||
-operator|(
-name|dp
-operator|->
-name|d_namlen
-operator|==
-literal|2
-operator|&&
 name|dp
 operator|->
 name|d_name
@@ -3188,7 +3182,6 @@ literal|1
 index|]
 operator|==
 literal|'.'
-operator|)
 condition|)
 continue|continue;
 return|return
