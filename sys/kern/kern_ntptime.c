@@ -167,6 +167,19 @@ begin_comment
 comment|/* estimated error (us) */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|time_daemon
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* No timedaemon active */
+end_comment
+
 begin_comment
 comment|/*  * The following variables establish the state of the PLL/FLL and the  * residual time and frequency offset of the local clock. The scale  * factors are defined in the timex.h header file.  *  * time_phase and time_freq are the phase increment and the frequency  * increment, respectively, of the kernel time variable at each tick of  * the clock.  *  * time_freq is set via ntp_adjtime() from a value stored in a file when  * the synchronization daemon is first started. Its value is retrieved  * via ntp_adjtime() and written to the file about once per hour by the  * daemon.  *  * time_adj is the adjustment added to the value of tick at each timer  * interrupt and is recomputed from time_phase and time_freq at each  * seconds rollover.  *  * time_reftime is the second's portion of the system time on the last  * call to ntp_adjtime(). It is used to adjust the time_freq variable  * and to increase the time_maxerror as the time since last update  * increases.  */
 end_comment
@@ -750,18 +763,40 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * On rollover of the second the phase adjustment to be used for  * the next second is calculated. Also, the maximum error is  * increased by the tolerance. If the PPS frequency discipline  * code is present, the phase is increased to compensate for the  * CPU clock oscillator frequency error.  *  * On a 32-bit machine and given parameters in the timex.h  * header file, the maximum phase adjustment is +-512 ms and  * maximum frequency offset is a tad less than) +-512 ppm. On a  * 64-bit machine, you shouldn't need to ask.  */
+end_comment
+
 begin_function
 name|void
 name|ntp_update_second
 parameter_list|(
-name|long
+name|struct
+name|timecounter
 modifier|*
-name|newsec
+name|tc
 parameter_list|)
 block|{
+name|u_int32_t
+modifier|*
+name|newsec
+decl_stmt|;
 name|long
 name|ltemp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|time_daemon
+condition|)
+return|return;
+name|newsec
+operator|=
+operator|&
+name|tc
+operator|->
+name|offset_sec
+expr_stmt|;
 name|time_maxerror
 operator|+=
 name|time_tolerance
@@ -830,8 +865,6 @@ operator|<<
 operator|(
 name|SHIFT_SCALE
 operator|-
-name|SHIFT_HZ
-operator|-
 name|SHIFT_UPDATE
 operator|)
 expr_stmt|;
@@ -889,8 +922,6 @@ name|ltemp
 operator|<<
 operator|(
 name|SHIFT_SCALE
-operator|-
-name|SHIFT_HZ
 operator|-
 name|SHIFT_UPDATE
 operator|)
@@ -957,66 +988,30 @@ name|time_adj
 operator|-=
 operator|-
 name|ltemp
-operator|>>
+operator|<<
 operator|(
-name|SHIFT_USEC
-operator|+
-name|SHIFT_HZ
-operator|-
 name|SHIFT_SCALE
+operator|-
+name|SHIFT_USEC
 operator|)
 expr_stmt|;
 else|else
 name|time_adj
 operator|+=
 name|ltemp
-operator|>>
+operator|<<
 operator|(
-name|SHIFT_USEC
-operator|+
-name|SHIFT_HZ
-operator|-
 name|SHIFT_SCALE
+operator|-
+name|SHIFT_USEC
 operator|)
 expr_stmt|;
-if|#
-directive|if
-name|SHIFT_HZ
-operator|==
-literal|7
-comment|/* 	* When the CPU clock oscillator frequency is not a 	* power of two in Hz, the SHIFT_HZ is only an 	* approximate scale factor. In the SunOS kernel, this 	* results in a PLL gain factor of 1/1.28 = 0.78 what it 	* should be. In the following code the overall gain is 	* increased by a factor of 1.25, which results in a 	* residual error less than 3 percent. 	*/
-comment|/* Same thing applies for FreeBSD --GAW */
-if|if
-condition|(
-name|hz
-operator|==
-literal|100
-condition|)
-block|{
-if|if
-condition|(
+name|tc
+operator|->
+name|adjustment
+operator|=
 name|time_adj
-operator|<
-literal|0
-condition|)
-name|time_adj
-operator|-=
-operator|-
-name|time_adj
-operator|>>
-literal|2
 expr_stmt|;
-else|else
-name|time_adj
-operator|+=
-name|time_adj
-operator|>>
-literal|2
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SHIFT_HZ */
 comment|/* XXX - this is really bogus, but can't be fixed until 	xntpd's idea of the system clock is fixed to know how 	the user wants leap seconds handled; in the mean time, 	we assume that users of NTP are running without proper 	leap second support (this is now the default anyway) */
 comment|/* 	* Leap second processing. If in leap-insert state at 	* the end of the day, the system clock is set back one 	* second; if in leap-delete state, the system clock is 	* set ahead one second. The microtime() routine or 	* external clock driver will insure that reported time 	* is always monotonic. The ugly divides should be 	* replaced. 	*/
 switch|switch
@@ -1407,6 +1402,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|time_daemon
+operator|=
+literal|1
+expr_stmt|;
 name|error
 operator|=
 name|copyin

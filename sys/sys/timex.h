@@ -787,9 +787,10 @@ name|ntp_update_second
 name|__P
 argument_list|(
 operator|(
-name|long
+expr|struct
+name|timecounter
 operator|*
-name|newsec
+name|tc
 operator|)
 argument_list|)
 decl_stmt|;
