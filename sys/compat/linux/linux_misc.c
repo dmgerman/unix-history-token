@@ -2748,7 +2748,7 @@ condition|?
 literal|0
 else|:
 operator|(
-name|u_long
+name|uintptr_t
 operator|)
 name|args
 operator|->
