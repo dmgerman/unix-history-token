@@ -10416,7 +10416,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* save the kernel revision structure for later use */
 name|info
 operator|=
 operator|(
@@ -10432,19 +10431,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|sc
-operator|->
-name|aac_revision
-operator|=
-name|info
-operator|->
-name|KernelRevision
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -10485,6 +10471,15 @@ operator|->
 name|batteryPlatform
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* save the kernel revision structure for later use */
+name|sc
+operator|->
+name|aac_revision
+operator|=
+name|info
+operator|->
+name|KernelRevision
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -10542,6 +10537,18 @@ literal|0xffffff
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|aac_release_sync_fib
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+literal|1
+operator|||
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -10571,11 +10578,6 @@ literal|"\15NONDASD"
 argument_list|)
 expr_stmt|;
 block|}
-name|aac_release_sync_fib
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
