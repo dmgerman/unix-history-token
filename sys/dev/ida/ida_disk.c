@@ -1018,9 +1018,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|id_drvinit
-argument_list|()
-expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1060,6 +1057,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|id_drvinit
+argument_list|()
+expr_stmt|;
 name|drv
 operator|=
 operator|(
@@ -1252,7 +1252,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|id
 argument_list|,
@@ -1261,8 +1261,6 @@ argument_list|,
 name|id_driver
 argument_list|,
 name|id_devclass
-argument_list|,
-name|id_cdevsw
 argument_list|,
 literal|0
 argument_list|,
