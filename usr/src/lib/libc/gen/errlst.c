@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.11 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,10 +40,11 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 specifier|const
