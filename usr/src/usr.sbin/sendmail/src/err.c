@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.9 (Berkeley) %G%"
+literal|"@(#)err.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1243,24 +1243,44 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|num
+index|[
+literal|0
+index|]
+operator|==
+literal|'5'
+operator|||
+operator|(
 name|CurEnv
 operator|->
 name|e_message
 operator|==
 name|NULL
 operator|&&
-name|strchr
-argument_list|(
-literal|"45"
-argument_list|,
 name|num
 index|[
 literal|0
 index|]
-argument_list|)
+operator|==
+literal|'4'
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
 operator|!=
 name|NULL
 condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
 name|CurEnv
 operator|->
 name|e_message
@@ -1270,6 +1290,7 @@ argument_list|(
 name|meb
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
