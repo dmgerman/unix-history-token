@@ -399,6 +399,22 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|ACCEPT_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&accept_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACCEPT_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&accept_mtx, MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACCEPT_LOCK
 parameter_list|()
 value|mtx_lock(&accept_mtx)
@@ -973,7 +989,7 @@ name|sorele
 parameter_list|(
 name|so
 parameter_list|)
-value|do {							\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count<= 0)					\ 		panic("sorele");					\ 	if (--(so)->so_count == 0)					\ 		sofree(so);						\ 	else								\ 		SOCK_UNLOCK(so);					\ } while (0)
+value|do {							\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count<= 0)					\ 		panic("sorele");					\ 	if (--(so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -983,7 +999,7 @@ name|sotryfree
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count == 0)					\ 		sofree(so);						\ 	else								\ 		SOCK_UNLOCK(so);					\ } while(0)
+value|do {						\ 	ACCEPT_LOCK_ASSERT();						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count == 0)					\ 		sofree(so);						\ 	else {								\ 		SOCK_UNLOCK(so);					\ 		ACCEPT_UNLOCK();					\ 	}								\ } while(0)
 end_define
 
 begin_comment

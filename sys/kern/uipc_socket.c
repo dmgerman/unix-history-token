@@ -1059,6 +1059,9 @@ condition|(
 name|error
 condition|)
 block|{
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -1490,15 +1493,10 @@ name|socket
 modifier|*
 name|head
 decl_stmt|;
-name|SOCK_UNLOCK
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|ACCEPT_LOCK
+name|ACCEPT_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|SOCK_LOCK
+name|SOCK_LOCK_ASSERT
 argument_list|(
 name|so
 argument_list|)
@@ -2162,6 +2160,9 @@ expr_stmt|;
 block|}
 name|discard
 label|:
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so

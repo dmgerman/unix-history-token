@@ -1844,6 +1844,9 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
