@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,18 +39,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkdir.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkdir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * make directory  */
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -63,16 +65,17 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|int
-name|errors
-init|=
-literal|0
+name|err
 decl_stmt|;
 if|if
 condition|(
@@ -81,16 +84,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|fprintf
+name|fputs
 argument_list|(
+literal|"usage: mkdir directory ...\n"
+argument_list|,
 name|stderr
-argument_list|,
-literal|"usage: %s directory ...\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|exit
@@ -99,17 +97,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
-operator|--
-name|argc
-condition|)
+for|for
+control|(
+name|err
+operator|=
+literal|0
+init|;
+operator|*
+operator|++
+name|argv
+condition|;
+control|)
 if|if
 condition|(
 name|mkdir
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|,
 literal|0777
@@ -118,11 +121,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|fputs
 argument_list|(
-name|stderr
-argument_list|,
 literal|"mkdir: "
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|perror
@@ -131,14 +134,16 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|errors
 operator|++
+name|err
 expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|errors
-operator|!=
+name|err
+condition|?
+literal|1
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
