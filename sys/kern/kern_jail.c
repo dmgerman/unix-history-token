@@ -196,6 +196,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|jail
@@ -232,6 +236,12 @@ name|struct
 name|chroot_args
 name|ca
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* Implicitly fail if already in jail.  */
 name|error
 operator|=
@@ -244,11 +254,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|error
 operator|=
 name|copyin
@@ -268,11 +276,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 name|j
@@ -281,11 +287,15 @@ name|version
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|pr
@@ -391,6 +401,12 @@ name|pr_ref
 operator|=
 literal|1
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -403,6 +419,14 @@ argument_list|(
 name|pr
 argument_list|,
 name|M_PRISON
+argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return

@@ -412,7 +412,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * execve() system call.  */
+comment|/*  * execve() system call.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -587,6 +587,12 @@ operator|->
 name|auxarg_size
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings 	 */
 name|imgp
@@ -1846,11 +1852,9 @@ name|error
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|exec_fail
 label|:
 if|if
@@ -1874,20 +1878,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
 block|}
-else|else
-block|{
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 end_function
 

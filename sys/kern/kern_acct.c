@@ -283,7 +283,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Accounting system call.  Written based on the specification and  * previous implementation done by Mark Tinguely.  */
+comment|/*  * Accounting system call.  Written based on the specification and  * previous implementation done by Mark Tinguely.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -323,6 +323,12 @@ name|error
 decl_stmt|,
 name|flags
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* Make sure that the caller is root. */
 name|error
 operator|=
@@ -335,11 +341,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 comment|/* 	 * If accounting is to be started to a file, open that file for 	 * writing and make sure it's a 'normal'. 	 */
 if|if
 condition|(
@@ -395,11 +399,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|NDFREE
 argument_list|(
 operator|&
@@ -445,11 +447,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EACCES
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 block|}
 comment|/* 	 * If accounting was previously enabled, kill the old space-watcher, 	 * close the file, and (if no new file was specified, leave). 	 */
@@ -511,11 +515,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 comment|/* 	 * Save the new accounting file vnode, and schedule the new 	 * free space watcher. 	 */
 name|acctp
 operator|=
@@ -534,6 +536,14 @@ expr_stmt|;
 name|acctwatch
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return

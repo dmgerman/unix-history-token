@@ -1650,6 +1650,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|kqueue
@@ -1669,10 +1673,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|p
-operator|->
-name|p_fd
 decl_stmt|;
 name|struct
 name|kqueue
@@ -1689,6 +1689,18 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 name|error
 operator|=
 name|falloc
@@ -1706,11 +1718,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|fp
 operator|->
 name|f_flag
@@ -1796,6 +1806,14 @@ name|kq_fdp
 operator|=
 name|fdp
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1849,6 +1867,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|kevent
@@ -1868,10 +1890,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|p
-operator|->
-name|p_fd
 decl_stmt|;
 name|struct
 name|kevent
@@ -1903,6 +1921,18 @@ name|nerrors
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1941,11 +1971,15 @@ operator|!=
 name|DTYPE_KQUEUE
 operator|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 name|fhold
 argument_list|(
 name|fp
@@ -2241,6 +2275,12 @@ argument_list|(
 name|fp
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
