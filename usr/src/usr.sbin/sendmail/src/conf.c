@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.69 (Berkeley) %G%"
+literal|"@(#)conf.c	8.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6903,7 +6903,7 @@ name|DefUid
 argument_list|,
 name|DefGid
 argument_list|)
-operator|==
+operator|!=
 literal|0
 expr_stmt|;
 name|close
