@@ -1653,11 +1653,6 @@ name|int
 name|error
 parameter_list|)
 block|{
-name|struct
-name|g_bde_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
@@ -1673,12 +1668,6 @@ name|bytes
 argument_list|,
 name|error
 argument_list|)
-expr_stmt|;
-name|sc
-operator|=
-name|bp
-operator|->
-name|bio_driver1
 expr_stmt|;
 if|if
 condition|(
