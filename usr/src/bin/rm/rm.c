@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.17 (Berkeley) %G%"
+literal|"@(#)rm.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,6 +228,9 @@ condition|(
 name|argc
 operator|<
 literal|2
+operator|&&
+operator|!
+name|fflg
 condition|)
 block|{
 name|fprintf
