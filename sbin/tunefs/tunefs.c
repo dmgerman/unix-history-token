@@ -741,6 +741,10 @@ break|break;
 case|case
 literal|'p'
 case|:
+name|found_arg
+operator|=
+literal|1
+expr_stmt|;
 name|pflag
 operator|=
 literal|1
