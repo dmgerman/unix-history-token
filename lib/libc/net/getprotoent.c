@@ -295,12 +295,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
-operator|==
+operator|!=
 name|NULL
 condition|)
-goto|goto
-name|again
-goto|;
 operator|*
 name|cp
 operator|=
