@@ -145,6 +145,12 @@ directive|include
 file|<sys/user.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/include/psl.h>
+end_include
+
 begin_comment
 comment|/*  * quick version of vm_fault  */
 end_comment
@@ -466,6 +472,48 @@ name|td2
 operator|->
 name|td_frame
 expr_stmt|;
+if|if
+condition|(
+name|p2tf
+operator|->
+name|tf_cr_ipsr
+operator|&
+name|IA64_PSR_IS
+condition|)
+block|{
+name|p2tf
+operator|->
+name|tf_r
+index|[
+name|FRAME_R8
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* child returns zero (eax) */
+name|p2tf
+operator|->
+name|tf_r
+index|[
+name|FRAME_R10
+index|]
+operator|=
+literal|1
+expr_stmt|;
+comment|/* is child (edx) */
+name|td2
+operator|->
+name|td_pcb
+operator|->
+name|pcb_eflag
+operator|&=
+operator|~
+name|PSL_C
+expr_stmt|;
+comment|/* no error */
+block|}
+else|else
+block|{
 name|p2tf
 operator|->
 name|tf_r
@@ -495,7 +543,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no error 		*/
+comment|/* no error	 		*/
+block|}
 comment|/* 	 * Turn off RSE for a moment and work out our current 	 * ar.bspstore. This assumes that td1==curthread. Also 	 * flush dirty regs to ensure that the user's stacked 	 * regs are written out to backing store. 	 * 	 * We could cope with td1!=curthread by digging values 	 * out of its PCB but I don't see the point since 	 * current usage only allows&thread0 when creating kernel 	 * threads and&thread0 doesn't have any dirty regs. 	 */
 name|p1bs
 operator|=
