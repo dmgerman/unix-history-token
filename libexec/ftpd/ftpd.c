@@ -3917,23 +3917,13 @@ name|hostname
 operator|=
 name|NULL
 expr_stmt|;
-name|hrp
-operator|->
-name|hostinfo
-operator|=
-name|NULL
-expr_stmt|;
 name|insert
 operator|=
 literal|1
 expr_stmt|;
 block|}
 else|else
-name|insert
-operator|=
-literal|0
-expr_stmt|;
-comment|/* host already in the chain */
+block|{
 if|if
 condition|(
 name|hrp
@@ -3947,6 +3937,12 @@ operator|->
 name|hostinfo
 argument_list|)
 expr_stmt|;
+name|insert
+operator|=
+literal|0
+expr_stmt|;
+comment|/* host already in the chain */
+block|}
 name|hrp
 operator|->
 name|hostinfo
@@ -4026,14 +4022,6 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* should not reach here */
-if|if
-condition|(
-name|hrp
-operator|->
-name|hostinfo
-operator|!=
-name|NULL
-condition|)
 name|freeaddrinfo
 argument_list|(
 name|hrp
@@ -4041,11 +4029,24 @@ operator|->
 name|hostinfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|insert
+condition|)
 name|free
 argument_list|(
 name|hrp
 argument_list|)
 expr_stmt|;
+comment|/*not in chain, can free*/
+else|else
+name|hrp
+operator|->
+name|hostinfo
+operator|=
+name|NULL
+expr_stmt|;
+comment|/*mark as blank*/
 goto|goto
 name|nextline
 goto|;
@@ -4209,9 +4210,34 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|freeaddrinfo
+argument_list|(
+name|hrp
+operator|->
+name|hostinfo
+argument_list|)
+expr_stmt|;
+name|hrp
+operator|->
+name|hostinfo
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* mark as blank */
+if|if
+condition|(
+name|hp
+condition|)
+name|freehostent
+argument_list|(
+name|hp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|nextline
 goto|;
+block|}
 name|hrp
 operator|->
 name|anonuser
