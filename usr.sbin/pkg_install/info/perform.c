@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.9 1994/10/14 05:57:49 jkh Exp $"
+literal|"$Id: perform.c,v 1.10 1994/12/06 00:51:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -535,12 +535,12 @@ name|sprintf
 argument_list|(
 name|fname
 argument_list|,
-literal|"%s\t"
+literal|"%-19s "
 argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-name|show_file
+name|show_index
 argument_list|(
 name|fname
 argument_list|,
