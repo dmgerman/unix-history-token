@@ -137,6 +137,12 @@ directive|include
 file|<vm/vm_pager.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_inherit.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1543,6 +1549,24 @@ return|return
 name|ENOMEM
 return|;
 block|}
+name|vm_map_inherit
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_vmspace
+operator|->
+name|vm_map
+argument_list|,
+name|attach_va
+argument_list|,
+name|attach_va
+operator|+
+name|size
+argument_list|,
+name|VM_INHERIT_SHARE
+argument_list|)
+expr_stmt|;
 name|shmmap_s
 operator|->
 name|va
