@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fgGhiIkl:LmoO:pPqQrRst:vVW:x"
+literal|"abcdDe:fgGhiIkl:LmoO:pPqQrRst:vVW:x"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|QUIET
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|UseBlkSz
 init|=
 name|FALSE
 decl_stmt|;
@@ -252,6 +260,14 @@ case|:
 name|MatchType
 operator|=
 name|MATCH_ALL
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|UseBlkSz
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
