@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  * commenced: Sun Sep 27 18:14:01 PDT 1992  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  */
+end_comment
+
+begin_comment
+comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * julian - removed un-necessary splx() calls and debugging code  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  */
 end_comment
 
 begin_include
@@ -2388,6 +2392,17 @@ comment|/***********************************************\ 	* If it's there, put 
 ifdef|#
 directive|ifdef
 name|MACH
+name|dev
+operator|->
+name|dev_pic
+operator|=
+name|ahb_data
+index|[
+name|unit
+index|]
+operator|.
+name|vect
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2486,17 +2501,6 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* CMU */
-name|dev
-operator|->
-name|dev_pic
-operator|=
-name|ahb_data
-index|[
-name|unit
-index|]
-operator|.
-name|vect
-expr_stmt|;
 name|take_dev_irq
 argument_list|(
 name|dev
@@ -5308,11 +5312,6 @@ name|error
 operator|=
 name|XS_DRIVER_STUFFUP
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|HAD_ERROR
@@ -5333,19 +5332,6 @@ operator|)
 condition|)
 do|;
 comment|/* something (?) else finished */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|scsi_debug
-operator|=
-literal|0
-expr_stmt|;
-name|ahb_debug
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|xs
@@ -5730,7 +5716,7 @@ begin_define
 define|#
 directive|define
 name|SLEEPTIME
-value|((hz * 1000) / ONETICK)
+value|((hz * ONETICK) / 1000)
 end_define
 
 begin_macro

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sep
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
+comment|/*  * HISTORY  * $Log: aha1542.c,v $  * Revision 1.2  1993/07/15  17:52:58  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:57:59  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.3  93/05/22  16:51:18  julian  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  julian  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  julian  * Initial revision  *   * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
 end_comment
 
 begin_comment
@@ -2587,6 +2587,15 @@ directive|endif
 else|#
 directive|else
 comment|/* !defined(OSF) */
+name|dev
+operator|->
+name|dev_pic
+operator|=
+name|aha_dma
+index|[
+name|unit
+index|]
+expr_stmt|;
 name|chp
 operator|->
 name|ih_level
@@ -6507,7 +6516,7 @@ begin_define
 define|#
 directive|define
 name|SLEEPTIME
-value|((hz * 1000) / ONETICK)
+value|((hz * ONETICK) / 1000)
 end_define
 
 begin_macro
