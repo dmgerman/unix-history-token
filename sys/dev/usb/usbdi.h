@@ -875,8 +875,8 @@ begin_function_decl
 name|void
 name|usbd_set_polling
 parameter_list|(
-name|usbd_interface_handle
-name|iface
+name|usbd_device_handle
+name|dev
 parameter_list|,
 name|int
 name|on

@@ -5183,8 +5183,8 @@ begin_function
 name|void
 name|usbd_set_polling
 parameter_list|(
-name|usbd_interface_handle
-name|iface
+name|usbd_device_handle
+name|dev
 parameter_list|,
 name|int
 name|on
@@ -5194,9 +5194,7 @@ if|if
 condition|(
 name|on
 condition|)
-name|iface
-operator|->
-name|device
+name|dev
 operator|->
 name|bus
 operator|->
@@ -5204,9 +5202,7 @@ name|use_polling
 operator|++
 expr_stmt|;
 else|else
-name|iface
-operator|->
-name|device
+name|dev
 operator|->
 name|bus
 operator|->
