@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.82 1999/05/30 16:53:32 phk Exp $ */
+comment|/* $Id: brooktree848.c,v 1.83 1999/05/31 11:28:53 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1253,22 +1253,6 @@ name|ia
 init|=
 name|aux
 decl_stmt|;
-specifier|static
-name|int
-name|once
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|once
-operator|++
-condition|)
-name|cdevsw_add
-argument_list|(
-operator|&
-name|bktr_cdevsw
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ia
@@ -5252,6 +5236,22 @@ argument_list|)
 operator|&
 literal|0x000000ff
 decl_stmt|;
+specifier|static
+name|int
+name|once
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|once
+operator|++
+condition|)
+name|cdevsw_add
+argument_list|(
+operator|&
+name|bktr_cdevsw
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
