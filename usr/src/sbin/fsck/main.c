@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	3.3 (Berkeley) %G%"
+literal|"@(#)main.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -671,13 +671,7 @@ expr_stmt|;
 comment|/* 	 * 1b: locate first references to duplicates, if any 	 */
 if|if
 condition|(
-name|enddup
-operator|!=
-operator|&
 name|duplist
-index|[
-literal|0
-index|]
 condition|)
 block|{
 if|if

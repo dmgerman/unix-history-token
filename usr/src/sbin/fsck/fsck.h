@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fsck.h	3.4 (Berkeley) %G% */
+comment|/* @(#)fsck.h	3.5 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -23,17 +23,6 @@ end_define
 
 begin_comment
 comment|/* limit on bad blks (per inode) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUPTBLSIZE
-value|100
-end_define
-
-begin_comment
-comment|/* num of dup blocks to remember */
 end_comment
 
 begin_define
@@ -509,39 +498,48 @@ name|ADDR
 value|2
 end_define
 
-begin_decl_stmt
-name|daddr_t
-name|duplist
-index|[
-name|DUPTBLSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* dup block table */
+comment|/*  * Linked list of duplicate blocks  */
 end_comment
 
-begin_decl_stmt
-name|daddr_t
+begin_struct
+struct|struct
+name|dups
+block|{
+name|struct
+name|dups
 modifier|*
-name|enddup
+name|next
+decl_stmt|;
+name|daddr_t
+name|dup
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|dups
+modifier|*
+name|duplist
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* next entry in dup table */
+comment|/* head of dup list */
 end_comment
 
 begin_decl_stmt
-name|daddr_t
+name|struct
+name|dups
 modifier|*
 name|muldup
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* multiple dups part of table */
+comment|/* end of unique duplicate dup block numbers */
 end_comment
 
 begin_decl_stmt
