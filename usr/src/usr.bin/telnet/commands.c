@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.9 (Berkeley) %G%"
+literal|"@(#)commands.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5285,6 +5285,7 @@ end_expr_stmt
 begin_while
 while|while
 condition|(
+operator|(
 name|args
 index|[
 name|argno
@@ -5298,8 +5299,13 @@ argument_list|,
 name|char
 operator|*
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
+block|{
 empty_stmt|;
+block|}
 end_while
 
 begin_expr_stmt
@@ -5318,6 +5324,8 @@ name|routine
 call|)
 argument_list|(
 name|argno
+operator|-
+literal|1
 argument_list|,
 name|args
 argument_list|)
