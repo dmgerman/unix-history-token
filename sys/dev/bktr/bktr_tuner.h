@@ -128,8 +128,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_TUNER
+name|TUNER_MT2032
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_TUNER
+value|15
 end_define
 
 begin_comment
