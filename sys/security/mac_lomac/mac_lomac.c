@@ -11957,6 +11957,11 @@ operator|=
 name|mac_lomac_copy_label
 block|,
 operator|.
+name|mpo_copy_ifnet_label
+operator|=
+name|mac_lomac_copy_label
+block|,
+operator|.
 name|mpo_copy_mbuf_label
 operator|=
 name|mac_lomac_copy_label
