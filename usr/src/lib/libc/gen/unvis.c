@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unvis.c	1.2 (Berkeley) %G%"
+literal|"@(#)unvis.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -762,9 +762,14 @@ operator|)
 return|;
 default|default:
 comment|/*  		 * decoder in unknown state - (probably uninitialized)  		 */
+operator|*
+name|astate
+operator|=
+name|S_GROUND
+expr_stmt|;
 return|return
 operator|(
-name|UNVIS_ERROR
+name|UNVIS_SYNBAD
 operator|)
 return|;
 block|}
@@ -806,6 +811,8 @@ name|dst
 decl_stmt|;
 name|int
 name|state
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
@@ -865,6 +872,25 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|unvis
+argument_list|(
+name|dst
+argument_list|,
+name|c
+argument_list|,
+operator|&
+name|state
+argument_list|,
+name|UNVIS_END
+argument_list|)
+operator|==
+name|UNVIS_VALID
+condition|)
+name|dst
+operator|++
+expr_stmt|;
 operator|*
 name|dst
 operator|=
