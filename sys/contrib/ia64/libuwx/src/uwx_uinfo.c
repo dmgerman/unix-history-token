@@ -195,12 +195,7 @@ name|function_offset
 operator|=
 name|env
 operator|->
-name|context
-operator|.
-name|special
-index|[
-name|UWX_REG_IP
-index|]
+name|remapped_ip
 operator|-
 name|uentry
 operator|->
@@ -1492,7 +1487,7 @@ operator|(
 operator|(
 name|b0
 operator|&
-literal|0x3
+literal|0x7
 operator|)
 operator|<<
 literal|1

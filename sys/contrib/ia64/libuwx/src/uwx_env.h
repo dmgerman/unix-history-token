@@ -275,6 +275,9 @@ name|uint64_t
 modifier|*
 name|rstate
 decl_stmt|;
+name|uint64_t
+name|remapped_ip
+decl_stmt|;
 name|int64_t
 name|function_offset
 decl_stmt|;

@@ -6,6 +6,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__UWX_INCLUDED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__UWX_INCLUDED
+value|1
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_KERNEL
 end_ifndef
 
@@ -42,6 +55,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__EXTERN_C
+value|extern "C"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__EXTERN_C
+value|extern
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|UWX_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* Version id for callback interfaces */
+end_comment
 
 begin_comment
 comment|/* Unwind environment structure (opaque) */
@@ -88,7 +145,7 @@ function_decl|;
 end_typedef
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_register_alloc_cb
 parameter_list|(
@@ -106,7 +163,7 @@ comment|/* Allocate and initialize an unwind environment */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|struct
 name|uwx_env
 modifier|*
@@ -122,7 +179,7 @@ comment|/* Free an unwind environment */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_free
 parameter_list|(
@@ -139,7 +196,7 @@ comment|/* Put unwind express into cross-process mode */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_set_remote
 parameter_list|(
@@ -234,7 +291,7 @@ comment|/* Register copy-in and lookup IP callbacks */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_register_callbacks
 parameter_list|(
@@ -267,7 +324,7 @@ comment|/* Initialize a context with the basic info needed to start an unwind */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_init_context
 parameter_list|(
@@ -304,7 +361,7 @@ comment|/* Set the value of a specific register in the current context (non fp) 
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_set_reg
 parameter_list|(
@@ -333,7 +390,7 @@ comment|/* Set the value of a floating-point register in the current context */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_set_fr
 parameter_list|(
@@ -367,7 +424,7 @@ comment|/* Initialize the unwind history */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_init_history
 parameter_list|(
@@ -384,7 +441,7 @@ comment|/* Step one frame */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_step
 parameter_list|(
@@ -401,7 +458,7 @@ comment|/* Get symbol information, if available, for current frame */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_get_sym_info
 parameter_list|(
@@ -439,7 +496,7 @@ comment|/* Get the value of a register from the current context */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_get_reg
 parameter_list|(
@@ -469,7 +526,7 @@ comment|/* Get the NaT bit of a GR from the current context */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_get_nat
 parameter_list|(
@@ -499,7 +556,7 @@ comment|/* Get the spill location for a register in the current context */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_get_spill_loc
 parameter_list|(
@@ -529,7 +586,7 @@ comment|/* Get the ABI context code (if uwx_step returned UWX_ABI_FRAME) */
 end_comment
 
 begin_function_decl
-specifier|extern
+name|__EXTERN_C
 name|int
 name|uwx_get_abi_context_code
 parameter_list|(
@@ -927,6 +984,28 @@ begin_comment
 comment|/* Returned symbolic information */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UWX_LKUP_REMAP
+value|5
+end_define
+
+begin_comment
+comment|/* Returned remapped IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_LKUP_UINFO
+value|6
+end_define
+
+begin_comment
+comment|/* Returned unw info block ptr */
+end_comment
+
 begin_comment
 comment|/* The lookup IP callback receives a parameter vector, and returns */
 end_comment
@@ -973,6 +1052,25 @@ begin_comment
 comment|/* Predicate registers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UWX_KEY_VERSION
+value|2
+end_define
+
+begin_comment
+comment|/* Version id of unwind engine */
+end_comment
+
+begin_comment
+comment|/* UWX_KEY_FUNCSTART (below) may also be passed with the UWX_LKUP_SYMINFO */
+end_comment
+
+begin_comment
+comment|/* request. */
+end_comment
+
 begin_comment
 comment|/* Keys returned with UWX_LKUP_UTABLE */
 end_comment
@@ -1004,7 +1102,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Unwind flags */
+comment|/* Unwind flags (optional) */
 end_comment
 
 begin_define
@@ -1039,6 +1137,10 @@ end_comment
 
 begin_comment
 comment|/* given IP. They are typically used for dynamically-generated code. */
+end_comment
+
+begin_comment
+comment|/* If UWX_KEY_CONTEXT is returned, it must be the only key returned. */
 end_comment
 
 begin_define
@@ -1078,14 +1180,60 @@ comment|/* ABI-dep. context */
 end_comment
 
 begin_comment
-comment|/* Keys returned with UWX_LKUP_FDESC or UWX_LKUP_SYMINFO */
+comment|/* Keys returned with UWX_LKUP_REMAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_KEY_NEWIP
+value|5
+end_define
+
+begin_comment
+comment|/* Remapped IP */
+end_comment
+
+begin_comment
+comment|/* Keys returned with UWX_LKUP_UINFO */
+end_comment
+
+begin_comment
+comment|/* Use UWX_KEY_FUNCSTART for the start address of the function */
+end_comment
+
+begin_comment
+comment|/* Use UWX_KEY_UFLAGS for the unwind flags (optional) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWX_KEY_UINFO
+value|6
+end_define
+
+begin_comment
+comment|/* Address of unwind info block */
+end_comment
+
+begin_comment
+comment|/* Keys returned with UWX_LKUP_SYMINFO */
+end_comment
+
+begin_comment
+comment|/* These keys may be returned with UWX_LKUP_FDESC or UWX_LKUP_UINFO, */
+end_comment
+
+begin_comment
+comment|/* if the information is cheap to obtain. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UWX_KEY_MODULE
-value|5
+value|17
 end_define
 
 begin_comment
@@ -1096,7 +1244,7 @@ begin_define
 define|#
 directive|define
 name|UWX_KEY_FUNC
-value|6
+value|18
 end_define
 
 begin_comment
@@ -1107,7 +1255,7 @@ begin_define
 define|#
 directive|define
 name|UWX_KEY_FUNCSTART
-value|7
+value|19
 end_define
 
 begin_comment
@@ -1562,6 +1710,337 @@ name|disp
 parameter_list|)
 value|((int)(disp)>> 4)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|__EXTERN_C
+end_undef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|class
+name|UnwindExpress
+block|{
+name|public
+label|:
+name|UnwindExpress
+argument_list|()
+block|{
+name|env
+operator|=
+name|uwx_init
+argument_list|()
+expr_stmt|;
+block|}
+operator|~
+name|UnwindExpress
+argument_list|()
+block|{
+if|if
+condition|(
+name|env
+operator|!=
+literal|0
+condition|)
+name|uwx_free
+argument_list|(
+name|env
+argument_list|)
+expr_stmt|;
+name|env
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function
+name|int
+name|init_context
+parameter_list|(
+name|uint64_t
+name|ip
+parameter_list|,
+name|uint64_t
+name|sp
+parameter_list|,
+name|uint64_t
+name|bsp
+parameter_list|,
+name|uint64_t
+name|cfm
+parameter_list|)
+block|{
+return|return
+name|uwx_init_context
+argument_list|(
+name|env
+argument_list|,
+name|ip
+argument_list|,
+name|sp
+argument_list|,
+name|bsp
+argument_list|,
+name|cfm
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|init_history
+parameter_list|()
+block|{
+return|return
+name|uwx_init_history
+argument_list|(
+name|env
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|set_reg
+parameter_list|(
+name|int
+name|regid
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+block|{
+return|return
+name|uwx_set_reg
+argument_list|(
+name|env
+argument_list|,
+name|regid
+argument_list|,
+name|val
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|set_fr
+parameter_list|(
+name|int
+name|regid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|valp
+parameter_list|)
+block|{
+return|return
+name|uwx_set_fr
+argument_list|(
+name|env
+argument_list|,
+name|regid
+argument_list|,
+name|valp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|step
+parameter_list|()
+block|{
+return|return
+name|uwx_step
+argument_list|(
+name|env
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|get_sym_info
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|modp
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|symp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|offsetp
+parameter_list|)
+block|{
+return|return
+name|uwx_get_sym_info
+argument_list|(
+name|env
+argument_list|,
+name|modp
+argument_list|,
+name|symp
+argument_list|,
+name|offsetp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|get_reg
+parameter_list|(
+name|int
+name|regid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|valp
+parameter_list|)
+block|{
+return|return
+name|uwx_get_reg
+argument_list|(
+name|env
+argument_list|,
+name|regid
+argument_list|,
+name|valp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|get_nat
+parameter_list|(
+name|int
+name|regid
+parameter_list|,
+name|int
+modifier|*
+name|natp
+parameter_list|)
+block|{
+return|return
+name|uwx_get_nat
+argument_list|(
+name|env
+argument_list|,
+name|regid
+argument_list|,
+name|natp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|get_spill_loc
+parameter_list|(
+name|int
+name|regid
+parameter_list|,
+name|uint64_t
+modifier|*
+name|dispp
+parameter_list|)
+block|{
+return|return
+name|uwx_get_spill_loc
+argument_list|(
+name|env
+argument_list|,
+name|regid
+argument_list|,
+name|dispp
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|get_abi_context_code
+parameter_list|()
+block|{
+return|return
+name|uwx_get_abi_context_code
+argument_list|(
+name|env
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|struct
+name|uwx_env
+modifier|*
+name|get_env
+parameter_list|()
+block|{
+return|return
+name|env
+return|;
+block|}
+end_function
+
+begin_label
+name|protected
+label|:
+end_label
+
+begin_decl_stmt
+name|struct
+name|uwx_env
+modifier|*
+name|env
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+unit|};
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __UWX_INCLUDED */
+end_comment
 
 end_unit
 

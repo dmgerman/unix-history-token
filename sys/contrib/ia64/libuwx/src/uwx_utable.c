@@ -45,6 +45,9 @@ modifier|*
 name|env
 parameter_list|,
 name|uint32_t
+name|ip
+parameter_list|,
+name|uint32_t
 name|text_base
 parameter_list|,
 name|uint32_t
@@ -69,6 +72,9 @@ name|struct
 name|uwx_env
 modifier|*
 name|env
+parameter_list|,
+name|uint64_t
+name|ip
 parameter_list|,
 name|uint64_t
 name|text_base
@@ -101,6 +107,9 @@ modifier|*
 name|env
 parameter_list|,
 name|uint64_t
+name|ip
+parameter_list|,
+name|uint64_t
 modifier|*
 name|uvec
 parameter_list|,
@@ -112,21 +121,15 @@ parameter_list|)
 block|{
 name|uint64_t
 name|text_base
-init|=
-literal|0
 decl_stmt|;
 name|uint64_t
 name|unwind_flags
 decl_stmt|;
 name|uint64_t
 name|unwind_start
-init|=
-literal|0
 decl_stmt|;
 name|uint64_t
 name|unwind_end
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|keys
@@ -140,7 +143,19 @@ name|keys
 operator|=
 literal|0
 expr_stmt|;
+name|text_base
+operator|=
+literal|0
+expr_stmt|;
 name|unwind_flags
+operator|=
+literal|0
+expr_stmt|;
+name|unwind_start
+operator|=
+literal|0
+expr_stmt|;
+name|unwind_end
 operator|=
 literal|0
 expr_stmt|;
@@ -253,6 +268,11 @@ argument_list|,
 operator|(
 name|uint32_t
 operator|)
+name|ip
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|text_base
 argument_list|,
 operator|(
@@ -274,6 +294,8 @@ operator|=
 name|uwx_search_utable64
 argument_list|(
 name|env
+argument_list|,
+name|ip
 argument_list|,
 name|text_base
 argument_list|,
@@ -317,6 +339,9 @@ modifier|*
 name|env
 parameter_list|,
 name|uint32_t
+name|ip
+parameter_list|,
+name|uint32_t
 name|text_base
 parameter_list|,
 name|uint32_t
@@ -339,14 +364,9 @@ name|ub
 decl_stmt|;
 name|int
 name|mid
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-name|uint32_t
-name|ip
 decl_stmt|;
 name|uint32_t
 name|code_start
@@ -360,16 +380,7 @@ decl_stmt|;
 comment|/* Since the unwind table uses segment-relative offsets, convert */
 comment|/* the IP in the current context to a segment-relative offset. */
 name|ip
-operator|=
-name|env
-operator|->
-name|context
-operator|.
-name|special
-index|[
-name|UWX_REG_IP
-index|]
-operator|-
+operator|-=
 name|text_base
 expr_stmt|;
 name|TRACE_T_SEARCH32
@@ -395,6 +406,10 @@ literal|3
 operator|*
 name|WORDSZ
 operator|)
+expr_stmt|;
+name|mid
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -425,7 +440,7 @@ operator|&
 name|code_start
 argument_list|,
 call|(
-name|intptr_t
+name|uintptr_t
 call|)
 argument_list|(
 name|unwind_start
@@ -450,7 +465,7 @@ operator|&
 name|code_end
 argument_list|,
 call|(
-name|intptr_t
+name|uintptr_t
 call|)
 argument_list|(
 name|unwind_start
@@ -555,7 +570,7 @@ operator|&
 name|unwind_info
 argument_list|,
 call|(
-name|intptr_t
+name|uintptr_t
 call|)
 argument_list|(
 name|unwind_start
@@ -650,6 +665,9 @@ modifier|*
 name|env
 parameter_list|,
 name|uint64_t
+name|ip
+parameter_list|,
+name|uint64_t
 name|text_base
 parameter_list|,
 name|uint64_t
@@ -672,14 +690,9 @@ name|ub
 decl_stmt|;
 name|int
 name|mid
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-name|uint64_t
-name|ip
 decl_stmt|;
 name|uint64_t
 name|code_start
@@ -693,16 +706,7 @@ decl_stmt|;
 comment|/* Since the unwind table uses segment-relative offsets, convert */
 comment|/* the IP in the current context to a segment-relative offset. */
 name|ip
-operator|=
-name|env
-operator|->
-name|context
-operator|.
-name|special
-index|[
-name|UWX_REG_IP
-index|]
-operator|-
+operator|-=
 name|text_base
 expr_stmt|;
 comment|/* Standard binary search. */
@@ -724,6 +728,10 @@ literal|3
 operator|*
 name|DWORDSZ
 operator|)
+expr_stmt|;
+name|mid
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
