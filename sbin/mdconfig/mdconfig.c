@@ -811,7 +811,12 @@ argument_list|)
 condition|)
 name|optarg
 operator|+=
-literal|2
+sizeof|sizeof
+argument_list|(
+name|MD_NAME
+argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|mdio
 operator|.
@@ -1270,7 +1275,12 @@ condition|)
 continue|continue;
 name|p2
 operator|+=
-literal|2
+sizeof|sizeof
+argument_list|(
+name|MD_NAME
+argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|unit
 operator|=
