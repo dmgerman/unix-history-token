@@ -194,6 +194,12 @@ name|USB_PRODUCT_AOX_USB101
 block|}
 block|,
 block|{
+name|USB_VENDOR_KLSI
+block|,
+name|USB_PRODUCT_AOX_USB101
+block|}
+block|,
+block|{
 name|USB_VENDOR_ADS
 block|,
 name|USB_PRODUCT_ADS_UBS10BT
