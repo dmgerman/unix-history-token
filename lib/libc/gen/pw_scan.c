@@ -568,6 +568,10 @@ operator|&
 name|_PWSCAN_MASTER
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|pw
 operator|->
 name|pw_class
@@ -579,8 +583,12 @@ name|bp
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
 comment|/* class */
+goto|goto
+name|fmt
+goto|;
 if|if
 condition|(
 name|pw
