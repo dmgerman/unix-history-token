@@ -113,19 +113,21 @@ name|name
 parameter_list|,
 name|host
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|line
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|name
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|host
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|struct
 name|utmp
@@ -347,7 +349,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
