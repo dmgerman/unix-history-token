@@ -261,7 +261,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * TxAbsIntDelay (Not valid for 82542 and 82543)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if TxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with TxIntDelay, may improve traffic throughput in specific  *   network conditions.  */
+comment|/*  * TxAbsIntDelay (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if TxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with TxIntDelay, may improve traffic throughput in specific  *   network conditions.  */
 end_comment
 
 begin_define
@@ -283,7 +283,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * RxAbsIntDelay (Not valid for 82542 and 82543)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if RxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with RxIntDelay, may improve traffic throughput in specific network  *   conditions.  */
+comment|/*  * RxAbsIntDelay (Not valid for 82542/82543/82544)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if RxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with RxIntDelay, may improve traffic throughput in specific network  *   conditions.  */
 end_comment
 
 begin_define
