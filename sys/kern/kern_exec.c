@@ -3493,6 +3493,7 @@ name|vmspace_destroyed
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Called with Giant held, do not depend on it! */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_exec

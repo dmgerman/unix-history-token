@@ -288,6 +288,12 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p
@@ -381,6 +387,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

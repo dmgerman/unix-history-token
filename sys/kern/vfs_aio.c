@@ -2822,6 +2822,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|ki
 operator|->
 name|kaio_flags
@@ -3352,6 +3358,12 @@ operator|->
 name|p_aioinfo
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_function

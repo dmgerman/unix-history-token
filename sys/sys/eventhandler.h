@@ -435,7 +435,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Process events  * process_fork handlers are called without Giant.  * exit/exec handlers are called with Giant.  */
+comment|/*  * Process events  * process_fork and exit handlers are called without Giant.  * exec handlers are called with Giant, but that is by accident.  */
 end_comment
 
 begin_struct_decl

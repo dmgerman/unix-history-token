@@ -632,23 +632,11 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if any loadable modules need anything done at process exit. 	 * e.g. SYSV IPC stuff 	 * XXX what if one of these generates an error? 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_exit
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|MALLOC

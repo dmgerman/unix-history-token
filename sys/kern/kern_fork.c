@@ -2799,7 +2799,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 * 	 * Handlers must be MPSAFE, or aquire Giant themselves if not. 	 */
+comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_fork
