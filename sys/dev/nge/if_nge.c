@@ -8099,7 +8099,7 @@ condition|(
 name|ifr
 operator|->
 name|ifr_mtu
-operator|==
+operator|>=
 literal|8152
 condition|)
 name|ifp
