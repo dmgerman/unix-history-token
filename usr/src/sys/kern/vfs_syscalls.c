@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1322,6 +1322,11 @@ operator|!=
 name|rootfs
 condition|)
 do|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -2980,12 +2985,12 @@ name|error
 operator|=
 name|EINTR
 expr_stmt|;
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|indx
-argument_list|)
+index|]
 operator|=
 name|NULL
 expr_stmt|;
@@ -4624,14 +4629,14 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -9074,12 +9079,12 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
