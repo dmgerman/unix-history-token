@@ -818,6 +818,17 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|dev
+operator|==
+name|NODEV
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|dsw
 operator|=
 name|devsw
