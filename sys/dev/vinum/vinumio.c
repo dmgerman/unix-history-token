@@ -582,6 +582,26 @@ operator|->
 name|d_secsize
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|VINUMDEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_BIGDRIVE
+condition|)
+comment|/* pretend we're 100 times as big */
+name|drive
+operator|->
+name|label
+operator|.
+name|drive_size
+operator|*=
+literal|100
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* number of sectors available for subdisks */
 name|drive
 operator|->
@@ -4619,8 +4639,6 @@ name|vinum_conf
 operator|.
 name|flags
 operator||=
-name|VF_DISKCONFIG
-operator||
 name|VF_READING_CONFIG
 expr_stmt|;
 comment|/* reading config from disk */
@@ -5165,11 +5183,7 @@ operator|.
 name|flags
 operator|&=
 operator|~
-operator|(
-name|VF_DISKCONFIG
-operator||
 name|VF_READING_CONFIG
-operator|)
 expr_stmt|;
 comment|/* no longer reading from disk */
 if|if
@@ -5187,7 +5201,7 @@ argument_list|)
 expr_stmt|;
 name|updateconfig
 argument_list|(
-name|VF_DISKCONFIG
+name|VF_READING_CONFIG
 argument_list|)
 expr_stmt|;
 comment|/* update from disk config */
