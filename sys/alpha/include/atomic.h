@@ -123,111 +123,504 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_function
+specifier|static
+name|__inline
 name|void
 name|atomic_set_32
 parameter_list|(
 specifier|volatile
 name|u_int32_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int32_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int32_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldl_l %0, %2\n\t"
+comment|/* load old value */
+literal|"bis %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stl_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_clear_32
 parameter_list|(
 specifier|volatile
 name|u_int32_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int32_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int32_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldl_l %0, %2\n\t"
+comment|/* load old value */
+literal|"bic %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stl_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_add_32
 parameter_list|(
 specifier|volatile
 name|u_int32_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int32_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int32_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldl_l %0, %2\n\t"
+comment|/* load old value */
+literal|"addl %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stl_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_subtract_32
 parameter_list|(
 specifier|volatile
 name|u_int32_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int32_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int32_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldl_l %0, %2\n\t"
+comment|/* load old value */
+literal|"subl %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stl_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_set_64
 parameter_list|(
 specifier|volatile
 name|u_int64_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int64_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldq_l %0, %2\n\t"
+comment|/* load old value */
+literal|"bis %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stq_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_clear_64
 parameter_list|(
 specifier|volatile
 name|u_int64_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int64_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldq_l %0, %2\n\t"
+comment|/* load old value */
+literal|"bic %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stq_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_add_64
 parameter_list|(
 specifier|volatile
 name|u_int64_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int64_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldq_l %0, %2\n\t"
+comment|/* load old value */
+literal|"addq %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stq_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
-begin_function_decl
+begin_function
+unit|}  static
+name|__inline
 name|void
 name|atomic_subtract_64
 parameter_list|(
 specifier|volatile
 name|u_int64_t
 modifier|*
+name|p
 parameter_list|,
 name|u_int64_t
+name|v
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|u_int64_t
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldq_l %0, %2\n\t"
+comment|/* load old value */
+literal|"subq %0, %3, %0\n\t"
+comment|/* calculate new value */
+literal|"stq_c %0, %1\n\t"
+comment|/* attempt to store */
+literal|"beq %0, 2f\n\t"
+comment|/* spin if failed */
+literal|"mb\n\t"
+comment|/* drain to memory */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"2:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|v
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
 
 begin_define
+unit|}
 define|#
 directive|define
 name|atomic_set_char
@@ -344,7 +737,7 @@ comment|/*  * Atomically compare the value stored at *p with cmpval and if the  
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|__inline
 name|u_int32_t
 name|atomic_cmpset_32
@@ -363,21 +756,19 @@ parameter_list|)
 block|{
 name|u_int32_t
 name|ret
-decl_stmt|,
-name|temp
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tldl_l %1, %5\n\t"
+literal|"1:\tldl_l %0, %4\n\t"
 comment|/* load old value */
-literal|"cmpeq %1, %3, %0\n\t"
+literal|"cmpeq %0, %2, %0\n\t"
 comment|/* compare */
 literal|"beq %0, 2f\n\t"
 comment|/* exit if not equal */
-literal|"mov %4, %1\n\t"
+literal|"mov %3, %0\n\t"
 comment|/* value to store */
-literal|"stl_c %1, %2\n\t"
+literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %1, 3f\n\t"
+literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
 literal|"2:\n"
 comment|/* done */
@@ -390,11 +781,6 @@ operator|:
 literal|"=&r"
 operator|(
 name|ret
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|temp
 operator|)
 operator|,
 literal|"=m"
@@ -455,21 +841,19 @@ parameter_list|)
 block|{
 name|u_int64_t
 name|ret
-decl_stmt|,
-name|temp
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tldq_l %1, %5\n\t"
+literal|"1:\tldq_l %0, %4\n\t"
 comment|/* load old value */
-literal|"cmpeq %1, %3, %0\n\t"
+literal|"cmpeq %0, %2, %0\n\t"
 comment|/* compare */
 literal|"beq %0, 2f\n\t"
 comment|/* exit if not equal */
-literal|"mov %4, %1\n\t"
+literal|"mov %3, %0\n\t"
 comment|/* value to store */
-literal|"stq_c %1, %2\n\t"
+literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %1, 3f\n\t"
+literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
 literal|"2:\n"
 comment|/* done */
@@ -482,11 +866,6 @@ operator|:
 literal|"=&r"
 operator|(
 name|ret
-operator|)
-operator|,
-literal|"=r"
-operator|(
-name|temp
 operator|)
 operator|,
 literal|"=m"
