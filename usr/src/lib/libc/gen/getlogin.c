@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getlogin.c	4.2	82/11/14	*/
+comment|/*	getlogin.c	4.3	84/04/27	*/
 end_comment
 
 begin_include
