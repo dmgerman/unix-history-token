@@ -10043,14 +10043,6 @@ operator|)
 operator|->
 name|sin_addr
 expr_stmt|;
-if|if
-condition|(
-name|masklen
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* use default netmask */
 name|addrp
 operator|=
 operator|&
@@ -10068,6 +10060,14 @@ operator|)
 operator|->
 name|sin_addr
 expr_stmt|;
+if|if
+condition|(
+name|masklen
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* use default netmask */
 if|if
 condition|(
 name|IN_CLASSA
@@ -10166,6 +10166,15 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* Lose any host bits in the network number. */
+name|addrp
+operator|->
+name|s_addr
+operator|&=
+name|maskp
+operator|->
+name|s_addr
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
