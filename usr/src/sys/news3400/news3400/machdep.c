@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1109,6 +1109,12 @@ expr_stmt|;
 name|setup_fnt24
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+name|dipsw
+operator|&=
+name|SW_CONSOLE
+expr_stmt|;
 endif|#
 directive|endif
 switch|switch
@@ -1141,6 +1147,11 @@ name|rs_tty
 expr_stmt|;
 break|break;
 default|default:
+if|#
+directive|if
+name|NBM
+operator|>
+literal|0
 name|consdev
 operator|=
 name|makedev
@@ -1154,6 +1165,8 @@ name|constty
 operator|=
 name|cn_tty
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 return|return
