@@ -457,6 +457,18 @@ name|NOKLDLOAD
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
+end_include
+
 begin_define
 define|#
 directive|define
