@@ -376,6 +376,14 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
