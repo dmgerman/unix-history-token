@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5134,11 +5134,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|queue_empty
-argument_list|(
-operator|&
 name|vm_page_queue_free
-argument_list|)
+operator|.
+name|tqh_first
+operator|==
+name|NULL
 condition|)
 block|{
 name|simple_unlock
@@ -5158,14 +5158,18 @@ name|NULL
 operator|)
 return|;
 block|}
-name|queue_remove_first
+name|mem
+operator|=
+name|vm_page_queue_free
+operator|.
+name|tqh_first
+expr_stmt|;
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|vm_page_queue_free
 argument_list|,
 name|mem
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -5272,14 +5276,12 @@ operator|&
 name|PG_ACTIVE
 condition|)
 block|{
-name|queue_remove
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|vm_page_queue_active
 argument_list|,
 name|mem
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -5306,14 +5308,12 @@ operator|&
 name|PG_INACTIVE
 condition|)
 block|{
-name|queue_remove
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|vm_page_queue_inactive
 argument_list|,
 name|mem
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
@@ -5357,14 +5357,12 @@ operator|&
 name|vm_page_queue_free_lock
 argument_list|)
 expr_stmt|;
-name|queue_enter
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|vm_page_queue_free
 argument_list|,
 name|mem
-argument_list|,
-name|vm_page_t
 argument_list|,
 name|pageq
 argument_list|)
