@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysexits.c	6.2 (Berkeley) %G%"
+literal|"@(#)sysexits.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|<sysexits.h>
 end_include
 
 begin_comment
-comment|/*  *  SYSEXITS.C -- error messages corresponding to sysexits.h  */
+comment|/* **  SYSEXITS.C -- error messages corresponding to sysexits.h ** **	If the first character of the string is a colon, interpolate **	the current errno after the rest of the string. */
 end_comment
 
 begin_decl_stmt
@@ -46,49 +46,49 @@ index|[]
 init|=
 block|{
 comment|/* 64 USAGE */
-literal|"500 Bad usage"
+literal|" 500 Bad usage"
 block|,
 comment|/* 65 DATAERR */
-literal|"501 Data format error"
+literal|" 501 Data format error"
 block|,
 comment|/* 66 NOINPUT */
-literal|"550 Cannot open input: %s"
+literal|":550 Cannot open input"
 block|,
 comment|/* 67 NOUSER */
-literal|"550 User unknown"
+literal|" 550 User unknown"
 block|,
 comment|/* 68 NOHOST */
-literal|"550 Host unknown"
+literal|" 550 Host unknown"
 block|,
 comment|/* 69 UNAVAILABLE */
-literal|"554 Service unavailable"
+literal|" 554 Service unavailable"
 block|,
 comment|/* 70 SOFTWARE */
-literal|"554 Internal error: %s"
+literal|":554 Internal error"
 block|,
 comment|/* 71 OSERR */
-literal|"451 Operating system error: %s"
+literal|":451 Operating system error"
 block|,
 comment|/* 72 OSFILE */
-literal|"554 System file missing: %s"
+literal|":554 System file missing"
 block|,
 comment|/* 73 CANTCREAT */
-literal|"550 Can't create output: %s"
+literal|":550 Can't create output"
 block|,
 comment|/* 74 IOERR */
-literal|"451 I/O error: %s"
+literal|":451 I/O error"
 block|,
 comment|/* 75 TEMPFAIL */
-literal|"250 Deferred"
+literal|" 250 Deferred"
 block|,
 comment|/* 76 PROTOCOL */
-literal|"554 Remote protocol error"
+literal|" 554 Remote protocol error"
 block|,
 comment|/* 77 NOPERM */
-literal|"550 Insufficient permission: %s"
+literal|":550 Insufficient permission"
 block|,
 comment|/* 78 CONFIG */
-literal|"554 Local configuration error"
+literal|" 554 Local configuration error"
 block|, }
 decl_stmt|;
 end_decl_stmt
