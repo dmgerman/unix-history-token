@@ -600,6 +600,9 @@ name|fd
 parameter_list|,
 name|apm_info_t
 name|aip
+parameter_list|,
+name|int
+name|bioscall_available
 parameter_list|)
 block|{
 name|struct
@@ -935,7 +938,12 @@ name|ai_batteries
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * try to get the suspend timer 	 */
+if|if
+condition|(
+name|bioscall_available
+condition|)
+block|{
+comment|/* 		 * try to get the suspend timer 		 */
 name|bzero
 argument_list|(
 operator|&
@@ -1032,7 +1040,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 			 * OK.  We have the time (all bcd). 			 * CH - seconds 			 * DH - hours 			 * DL - minutes 			 * xh(SI) - month (1-12) 			 * xl(SI) - day of month (1-31) 			 * DI - year 			 */
+comment|/* 				 * OK.  We have the time (all bcd). 				 * CH - seconds 				 * DH - hours 				 * DL - minutes 				 * xh(SI) - month (1-12) 				 * xl(SI) - day of month (1-31) 				 * DI - year 				 */
 name|struct
 name|tm
 name|tm
@@ -1185,7 +1193,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Get the ring indicator resume state 	 */
+comment|/* 		 * Get the ring indicator resume state 		 */
 name|bzero
 argument_list|(
 operator|&
@@ -1249,6 +1257,7 @@ else|:
 literal|"dis"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1769,6 +1778,11 @@ name|char
 modifier|*
 name|cmdname
 decl_stmt|;
+name|int
+name|bioscall_available
+init|=
+literal|0
+decl_stmt|;
 name|size_t
 name|cmos_wall_len
 init|=
@@ -2064,6 +2078,7 @@ name|sleep
 operator|||
 name|standby
 condition|)
+block|{
 name|fd
 operator|=
 name|open
@@ -2072,6 +2087,31 @@ name|APMDEV
 argument_list|,
 name|O_RDWR
 argument_list|)
+expr_stmt|;
+name|bioscall_available
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|APMDEV
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+name|bioscall_available
+operator|=
+literal|1
 expr_stmt|;
 else|else
 name|fd
@@ -2187,6 +2227,8 @@ name|fd
 argument_list|,
 operator|&
 name|info
+argument_list|,
+name|bioscall_available
 argument_list|)
 expr_stmt|;
 if|if
