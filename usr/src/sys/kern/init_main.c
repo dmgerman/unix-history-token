@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.46	83/01/23	*/
+comment|/*	init_main.c	4.47	83/03/01	*/
 end_comment
 
 begin_include
@@ -493,6 +493,14 @@ directive|endif
 name|startrtclock
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KGCLOCK
+name|startkgclock
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize tables, protocols, and set up well-known inodes. 	 */
 name|mbinit
 argument_list|()
