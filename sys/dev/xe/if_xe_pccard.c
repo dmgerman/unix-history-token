@@ -1399,6 +1399,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|INTEL
+argument_list|,
+name|EEPRO100
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|XIRCOM
 argument_list|,
 name|CE
