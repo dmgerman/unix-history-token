@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.3 1995/01/14 20:36:22 wollman Exp $"
+literal|"$Id: rsh.c,v 1.4 1995/05/30 06:33:24 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -934,6 +934,7 @@ argument_list|)
 expr_stmt|;
 name|des_set_key
 argument_list|(
+operator|&
 name|cred
 operator|.
 name|session

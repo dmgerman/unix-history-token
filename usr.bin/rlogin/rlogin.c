@@ -1452,6 +1452,7 @@ argument_list|)
 expr_stmt|;
 name|des_set_key
 argument_list|(
+operator|&
 name|cred
 operator|.
 name|session

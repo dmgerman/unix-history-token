@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.7 1995/09/07 20:50:36 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.6 1995/09/13 17:23:47 markm Exp $  */
 end_comment
 
 begin_comment
@@ -1446,6 +1446,54 @@ comment|/* Bad Kerberos name format */
 end_comment
 
 begin_comment
+comment|/* Error codes returned by get_local_addr and bind_local_addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GT_LADDR_NOSOCK
+value|82
+end_define
+
+begin_comment
+comment|/* Can't open socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GT_LADDR_IFLIST
+value|83
+end_define
+
+begin_comment
+comment|/* 					 * Can't retrieve local interface  					 * configuration list 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GT_LADDR_NVI
+value|84
+end_define
+
+begin_comment
+comment|/* No valid local interface found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BND_LADDR_BIND
+value|85
+end_define
+
+begin_comment
+comment|/* Can't bind local address */
+end_comment
+
+begin_comment
 comment|/* Error code returned by krb_mk_safe */
 end_comment
 
@@ -2824,6 +2872,28 @@ operator|,
 name|char
 operator|*
 name|realm
+operator|)
+argument_list|)
+argument_list|;
+name|int
+name|krb_bind_local_addr
+name|__P
+argument_list|(
+operator|(
+name|int
+name|s
+operator|)
+argument_list|)
+argument_list|;
+name|int
+name|krb_get_local_addr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+name|returned_addr
 operator|)
 argument_list|)
 argument_list|;
