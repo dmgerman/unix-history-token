@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.25 1998/01/23 21:37:27 brian Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.26 1998/01/23 22:29:16 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -164,7 +164,7 @@ name|DEBUG
 end_ifdef
 
 begin_comment
-comment|/*  * To test the proxy arp stuff, put the following in your Makefile:  *   * arp-test: arp.c  * 	cp ${.CURDIR}/arp.c arp-test.c  * 	echo 'const char *'>>arp-test.c  * 	awk '/^Index2Nam/,/^}/' ${.CURDIR}/route.c>>arp-test.c  * 	cc -I${.CURDIR} -DDEBUG arp-test.c -o arp-test  *  * and type ``make arp-test''.  *  */
+comment|/*  * To test the proxy arp stuff, just  *   * cc -o arp-test -DDEBUG arp.c  *  */
 end_comment
 
 begin_define
@@ -1182,7 +1182,7 @@ name|LogPrintf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Index2Nam: sysctl: estimate: %s\n"
+literal|"get_ether_addr: sysctl: estimate: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
