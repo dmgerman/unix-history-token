@@ -697,7 +697,7 @@ name|vtb
 operator|->
 name|vtb_buffer
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|vtb
 operator|->
@@ -774,7 +774,7 @@ name|vtb
 operator|->
 name|vtb_buffer
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|vtb
@@ -875,7 +875,7 @@ name|vtb
 operator|->
 name|vtb_buffer
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -903,7 +903,7 @@ operator|&&
 operator|(
 name|p
 operator|!=
-name|NULL
+literal|0
 operator|)
 condition|)
 name|free
