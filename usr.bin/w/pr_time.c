@@ -239,18 +239,33 @@ literal|36
 operator|*
 literal|3600
 condition|)
+block|{
+name|int
+name|days
+init|=
+name|idle
+operator|/
+literal|86400
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %ddays "
+literal|" %dday%s "
 argument_list|,
-name|idle
-operator|/
-literal|86400
+name|days
+argument_list|,
+name|days
+operator|>
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* If idle more than an hour, print as HH:MM. */
 elseif|else
 if|if
