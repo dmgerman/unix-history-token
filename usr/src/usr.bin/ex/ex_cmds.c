@@ -1,17 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1981 Regents of the University of California */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)ex_cmds.c	5.3.1.1	%G%"
+literal|"@(#)ex_cmds.c	7.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_include
 include|#
@@ -2302,7 +2314,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"@(#) Version 3.5, %G%."
+literal|"@(#) Version 3.7, %G%."
 operator|+
 literal|5
 argument_list|)
