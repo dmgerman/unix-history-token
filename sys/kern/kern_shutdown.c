@@ -1671,6 +1671,13 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
 name|int
 name|bootopt
 decl_stmt|;
@@ -1871,6 +1878,12 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|td
+operator|->
+name|td_flags
+operator||=
+name|TDF_INPANIC
+expr_stmt|;
 if|if
 condition|(
 operator|!

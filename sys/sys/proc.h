@@ -673,6 +673,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_INPANIC
+value|0x000002
+end_define
+
+begin_comment
+comment|/* Caused a panic, let it drive crashdump */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_SINTR
 value|0x000008
 end_define

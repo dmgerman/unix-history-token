@@ -755,11 +755,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
-operator|||
-name|panicstr
 condition|)
 block|{
-comment|/* 		 * After a panic, or during autoconfiguration, just give 		 * interrupts a chance, then just return; don't run any other 		 * thread or panic below, in case this is the idle process and 		 * already asleep. 		 */
+comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return.  Don't run any other 		 * thread or panic below, in case this is the idle 		 * process and already asleep. 		 */
 return|return;
 block|}
 name|mtx_lock_spin
