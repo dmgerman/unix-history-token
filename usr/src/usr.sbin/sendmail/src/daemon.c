@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.5 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.6 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.5 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.6 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,6 +326,12 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
+block|{
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -337,11 +343,18 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+name|on
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
@@ -839,22 +852,35 @@ argument_list|,
 literal|14
 argument_list|)
 condition|)
+block|{
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|setsockopt
 argument_list|(
-name|s
+name|DaemonSocket
 argument_list|,
 name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+name|on
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
