@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.16	82/10/13	*/
+comment|/*	sys_generic.c	5.17	82/10/17	*/
 end_comment
 
 begin_include
@@ -2909,6 +2909,10 @@ name|f_type
 operator|==
 name|DTYPE_SOCKET
 condition|)
+name|u
+operator|.
+name|u_error
+operator|=
 name|soioctl
 argument_list|(
 name|fp
@@ -3048,6 +3052,10 @@ name|RESTARTSYS
 expr_stmt|;
 return|return;
 block|}
+name|u
+operator|.
+name|u_error
+operator|=
 operator|(
 operator|*
 name|cdevsw
@@ -3178,7 +3186,8 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|cmd
+operator|-
+literal|1
 operator|)
 return|;
 block|}
