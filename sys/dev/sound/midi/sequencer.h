@@ -399,7 +399,7 @@ begin_define
 define|#
 directive|define
 name|NSEQ_MAX
-value|64
+value|16
 end_define
 
 begin_comment
