@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * proc.c  *  * Routines for handling procedures, f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Header: proc.c,v 3.11 85/06/04 03:45:29 donn Exp $  * $Log:	proc.c,v $  * Revision 3.11  85/06/04  03:45:29  donn  * Changed retval() to recognize that a function declaration might have  * bombed out earlier, leaving an error node behind...  *   * Revision 3.10  85/03/08  23:13:06  donn  * Finally figured out why function calls and array elements are not legal  * dummy array dimension declarator elements.  Hacked safedim() to stop 'em.  *   * Revision 3.9  85/02/02  00:26:10  donn  * Removed the call to entrystab() in enddcl() -- this was redundant (it was  * also done in startproc()) and confusing to dbx to boot.  *   * Revision 3.8  85/01/14  04:21:53  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.7  85/01/11  21:10:35  donn  * In conjunction with other changes to implement SAVE statements, function  * nameblocks were changed to make it appear that they are 'saved' too --  * this arranges things so that function return values are forced out of  * register before a return.  *   * Revision 3.6  84/12/10  19:27:20  donn  * comblock() signals an illegal common block name by returning a null pointer,  * but incomm() wasn't able to handle it, leading to core dumps.  I put the  * fix in incomm() to pick up null common blocks.  *   * Revision 3.5  84/11/21  20:33:31  donn  * It seems that I/O elements are treated as character strings so that their  * length can be passed to the I/O routines...  Unfortunately the compiler  * assumes that no temporaries can be of type CHARACTER and casually tosses  * length and type info away when removing TEMP blocks.  This has been fixed...  *   * Revision 3.4  84/11/05  22:19:30  donn  * Fixed a silly bug in the last fix.  *   * Revision 3.3  84/10/29  08:15:23  donn  * Added code to check the type and shape of subscript declarations,  * per Jerry Berkman's suggestion.  *   * Revision 3.2  84/10/29  05:52:07  donn  * Added change suggested by Jerry Berkman to report an error when an array  * is redimensioned.  *   * Revision 3.1  84/10/13  02:12:31  donn  * Merged Jerry Berkman's version into mine.  *   * Revision 2.1  84/07/19  12:04:09  donn  * Changed comment headers for UofU.  *   * Revision 1.6  84/07/19  11:32:15  donn  * Incorporated fix to setbound() to detect backward array subscript limits.  * The fix is by Bob Corbett, donated by Jerry Berkman.  *   * Revision 1.5  84/07/18  18:25:50  donn  * Fixed problem with doentry() where a placeholder for a return value  * was not allocated if the first entry didn't require one but a later  * entry did.  *   * Revision 1.4  84/05/24  20:52:09  donn  * Installed firewall #ifdef around the code that recycles stack temporaries,  * since it seems to be broken and lacks a good fix for the time being.  *   * Revision 1.3  84/04/16  09:50:46  donn  * Fixed mkargtemp() so that it only passes back a copy of a temporary, keeping  * the original for its own use.  This fixes a set of bugs that are caused by  * elements in the argtemplist getting stomped on.  *   * Revision 1.2  84/02/28  21:12:58  donn  * Added Berkeley changes for subroutine call argument temporaries fix.  *   */
+comment|/*  * proc.c  *  * Routines for handling procedures, f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Header: proc.c,v 5.2 85/08/10 05:03:34 donn Exp $  * $Log:	proc.c,v $  * Revision 5.2  85/08/10  05:03:34  donn  * Support for NAMELIST i/o from Jerry Berkman.  *   * Revision 5.1  85/08/10  03:49:14  donn  * 4.3 alpha  *   * Revision 3.11  85/06/04  03:45:29  donn  * Changed retval() to recognize that a function declaration might have  * bombed out earlier, leaving an error node behind...  *   * Revision 3.10  85/03/08  23:13:06  donn  * Finally figured out why function calls and array elements are not legal  * dummy array dimension declarator elements.  Hacked safedim() to stop 'em.  *   * Revision 3.9  85/02/02  00:26:10  donn  * Removed the call to entrystab() in enddcl() -- this was redundant (it was  * also done in startproc()) and confusing to dbx to boot.  *   * Revision 3.8  85/01/14  04:21:53  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.7  85/01/11  21:10:35  donn  * In conjunction with other changes to implement SAVE statements, function  * nameblocks were changed to make it appear that they are 'saved' too --  * this arranges things so that function return values are forced out of  * register before a return.  *   * Revision 3.6  84/12/10  19:27:20  donn  * comblock() signals an illegal common block name by returning a null pointer,  * but incomm() wasn't able to handle it, leading to core dumps.  I put the  * fix in incomm() to pick up null common blocks.  *   * Revision 3.5  84/11/21  20:33:31  donn  * It seems that I/O elements are treated as character strings so that their  * length can be passed to the I/O routines...  Unfortunately the compiler  * assumes that no temporaries can be of type CHARACTER and casually tosses  * length and type info away when removing TEMP blocks.  This has been fixed...  *   * Revision 3.4  84/11/05  22:19:30  donn  * Fixed a silly bug in the last fix.  *   * Revision 3.3  84/10/29  08:15:23  donn  * Added code to check the type and shape of subscript declarations,  * per Jerry Berkman's suggestion.  *   * Revision 3.2  84/10/29  05:52:07  donn  * Added change suggested by Jerry Berkman to report an error when an array  * is redimensioned.  *   * Revision 3.1  84/10/13  02:12:31  donn  * Merged Jerry Berkman's version into mine.  *   * Revision 2.1  84/07/19  12:04:09  donn  * Changed comment headers for UofU.  *   * Revision 1.6  84/07/19  11:32:15  donn  * Incorporated fix to setbound() to detect backward array subscript limits.  * The fix is by Bob Corbett, donated by Jerry Berkman.  *   * Revision 1.5  84/07/18  18:25:50  donn  * Fixed problem with doentry() where a placeholder for a return value  * was not allocated if the first entry didn't require one but a later  * entry did.  *   * Revision 1.4  84/05/24  20:52:09  donn  * Installed firewall #ifdef around the code that recycles stack temporaries,  * since it seems to be broken and lacks a good fix for the time being.  *   * Revision 1.3  84/04/16  09:50:46  donn  * Fixed mkargtemp() so that it only passes back a copy of a temporary, keeping  * the original for its own use.  This fixes a set of bugs that are caused by  * elements in the argtemplist getting stomped on.  *   * Revision 1.2  84/02/28  21:12:58  donn  * Added Berkeley changes for subroutine call argument temporaries fix.  *   */
 end_comment
 
 begin_include
@@ -3060,7 +3060,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This routine creates a static block representing the namelist.    An equivalent declaration of the structure produced is: 	struct namelist 		{ 		char namelistname[16]; 		struct namelistentry 			{ 			char varname[16]; 			char *varaddr; 			int type; # negative means -type= number of chars 			struct dimensions *dimp; # null means scalar 			} names[]; 		};  	struct dimensions 		{ 		int numberofdimensions; 		int numberofelements 		int baseoffset; 		int span[numberofdimensions]; 		};    where the namelistentry list terminates with a null varname    If dimp is not null, then the corner element of the array is at    varaddr.  However,  the element with subscripts (i1,...,in) is at    varaddr - dimp->baseoffset + sizeoftype * (i1+span[0]*(i2+span[1]*...) */
+comment|/* This routine creates a static block representing the namelist.    An equivalent declaration of the structure produced is: 	struct namelist 		{ 		char namelistname[16]; 		struct namelistentry 			{ 			char varname[16]; #  16 plus null padding -> 20 			char *varaddr; 			short int type; 			short int len;	# length of type 			struct dimensions *dimp; # null means scalar 			} names[]; 		};  	struct dimensions 		{ 		int numberofdimensions; 		int numberofelements 		int baseoffset; 		int span[numberofdimensions]; 		};    where the namelistentry list terminates with a null varname    If dimp is not null, then the corner element of the array is at    varaddr.  However,  the element with subscripts (i1,...,in) is at    varaddr - dimp->baseoffset + sizeoftype * (i1+span[0]*(i2+span[1]*...) */
 end_comment
 
 begin_macro
@@ -3254,13 +3254,21 @@ name|prconi
 argument_list|(
 name|asmfile
 argument_list|,
-name|TYINT
+name|TYSHORT
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|prconi
+argument_list|(
+name|asmfile
+argument_list|,
+name|TYSHORT
 argument_list|,
 name|type
 operator|==
 name|TYCHAR
 condition|?
-operator|-
 operator|(
 name|v
 operator|->
@@ -3276,7 +3284,10 @@ else|:
 operator|(
 name|ftnint
 operator|)
+name|typesize
+index|[
 name|type
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -3302,6 +3313,7 @@ argument_list|)
 expr_stmt|;
 name|dimoffset
 operator|+=
+operator|(
 literal|3
 operator|+
 name|v
@@ -3309,6 +3321,9 @@ operator|->
 name|vdim
 operator|->
 name|ndim
+operator|)
+operator|*
+name|SZINT
 expr_stmt|;
 block|}
 else|else
