@@ -129,93 +129,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netgraph/ng_socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_socket.h>
 end_include
 
 begin_comment
 comment|/*  * It's Ascii-art time!  *   +-------------+   +-------------+  *   |socket  (ctl)|   |socket (data)|  *   +-------------+   +-------------+  *          ^                 ^  *          |                 |  *          v                 v  *    +-----------+     +-----------+  *    |pcb   (ctl)|     |pcb  (data)|  *    +-----------+     +-----------+  *          ^                 ^  *          |                 |  *          v                 v  *      +--------------------------+  *      |   Socket type private    |  *      |       data               |  *      +--------------------------+  *                   ^  *                   |  *                   v  *           +----------------+  *           | struct ng_node |  *           +----------------+  */
-end_comment
-
-begin_comment
-comment|/* Netgraph protocol control block for each socket */
-end_comment
-
-begin_struct
-struct|struct
-name|ngpcb
-block|{
-name|struct
-name|socket
-modifier|*
-name|ng_socket
-decl_stmt|;
-comment|/* the socket */
-name|struct
-name|ngsock
-modifier|*
-name|sockdata
-decl_stmt|;
-comment|/* netgraph info */
-name|LIST_ENTRY
-argument_list|(
-argument|ngpcb
-argument_list|)
-name|socks
-expr_stmt|;
-comment|/* linked list of sockets */
-name|int
-name|type
-decl_stmt|;
-comment|/* NG_CONTROL or NG_DATA */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Per-node private data */
-end_comment
-
-begin_struct
-struct|struct
-name|ngsock
-block|{
-name|struct
-name|ng_node
-modifier|*
-name|node
-decl_stmt|;
-comment|/* the associated netgraph node */
-name|struct
-name|ngpcb
-modifier|*
-name|datasock
-decl_stmt|;
-comment|/* optional data socket */
-name|struct
-name|ngpcb
-modifier|*
-name|ctlsock
-decl_stmt|;
-comment|/* optional control socket */
-name|int
-name|flags
-decl_stmt|;
-name|int
-name|refs
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|NGS_FLAG_NOLINGER
-value|1
-end_define
-
-begin_comment
-comment|/* close with last hook */
 end_comment
 
 begin_comment

@@ -78,11 +78,25 @@ name|ctlsock
 decl_stmt|;
 comment|/* optional control socket */
 name|int
+name|flags
+decl_stmt|;
+name|int
 name|refs
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NGS_FLAG_NOLINGER
+value|1
+end_define
+
+begin_comment
+comment|/* close with last hook */
+end_comment
 
 begin_endif
 endif|#
