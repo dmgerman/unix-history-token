@@ -559,7 +559,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|sd_empty
 case|:
-comment|/* 		 * If we're associated with a plex which 		 * is down, or which is the only one in the 		 * volume, we can come up without being 		 * inconsistent. 		 */
+comment|/* 		 * If we're associated with a plex which 		 * is down, or which is the only one in the 		 * volume, and we're not a RAID-5 plex, we 		 * can come up without being inconsistent. 		 * Internally, we use the force flag to bring 		 * up a RAID-5 plex after initialization. 		 */
 if|if
 condition|(
 operator|(
@@ -568,6 +568,27 @@ operator|->
 name|plexno
 operator|>=
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|PLEX
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|organization
+operator|!=
+name|plex_raid5
+operator|)
+operator|||
+operator|(
+name|flags
+operator|&
+name|setstate_force
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -610,7 +631,7 @@ comment|/* out of date info, need reviving */
 case|case
 name|sd_obsolete
 case|:
-comment|/* 		 * 1.  If the subdisk is not part of a plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 *  		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 *  		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW). 		 */
+comment|/* 		 * 1.  If the subdisk is not part of a plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 * 		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 * 		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW). 		 */
 if|if
 condition|(
 name|sd
@@ -717,7 +738,7 @@ name|EAGAIN
 expr_stmt|;
 comment|/* need to repeat */
 break|break;
-comment|/* 		 * XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not  		 */
+comment|/* 		 * XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not 		 */
 case|case
 name|sd_initializing
 case|:
@@ -750,7 +771,7 @@ return|;
 comment|/* no, try again */
 default|default:
 comment|/* can't do it */
-comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived  		 */
+comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived 		 */
 return|return
 literal|0
 return|;
@@ -961,7 +982,7 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that  	 */
+comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that 	 */
 case|case
 name|plex_up
 case|:
@@ -1025,7 +1046,7 @@ argument_list|)
 expr_stmt|;
 comment|/* and down all up subdisks */
 break|break;
-comment|/* 	 * This is only requested internally. 	 * Trust ourselves  	 */
+comment|/* 	 * This is only requested internally. 	 * Trust ourselves 	 */
 case|case
 name|plex_faulty
 case|:
@@ -1104,7 +1125,7 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Now see what we have left, and whether      * we're taking the volume down       */
+comment|/*      * Now see what we have left, and whether      * we're taking the volume down      */
 if|if
 condition|(
 name|plex
@@ -1461,12 +1482,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the state of a plex based on its environment */
+comment|/*  * Force a plex and all its subdisks  * into an 'up' state.  This is a helper  * for update_plex_state.  */
 end_comment
 
 begin_function
 name|void
-name|update_plex_state
+name|forceup
 parameter_list|(
 name|int
 name|plexno
@@ -1477,213 +1498,26 @@ name|plex
 modifier|*
 name|plex
 decl_stmt|;
-comment|/* point to our plex */
-name|enum
-name|plexstate
-name|oldstate
-decl_stmt|;
-name|enum
-name|volplexstate
-name|vps
-decl_stmt|;
-comment|/* how do we compare with the other plexes? */
-name|enum
-name|sdstates
-name|statemap
-decl_stmt|;
-comment|/* get a map of the subdisk states */
-name|plex
-operator|=
-operator|&
-name|PLEX
-index|[
-name|plexno
-index|]
-expr_stmt|;
-comment|/* point to our plex */
-name|oldstate
-operator|=
-name|plex
-operator|->
-name|state
-expr_stmt|;
-name|vps
-operator|=
-name|vpstate
-argument_list|(
-name|plex
-argument_list|)
-expr_stmt|;
-comment|/* how do we compare with the other plexes? */
-name|statemap
-operator|=
-name|sdstatemap
-argument_list|(
-name|plex
-argument_list|)
-expr_stmt|;
-comment|/* get a map of the subdisk states */
-if|if
-condition|(
-name|statemap
-operator|==
-name|sd_upstate
-condition|)
-comment|/* all subdisks ready for action */
-comment|/* 	   * All the subdisks are up.  This also means that 	   * they are consistent, so we can just bring 	   * the plex up  	 */
-name|plex
-operator|->
-name|state
-operator|=
-name|plex_up
-expr_stmt|;
-comment|/* go for it */
-elseif|else
-if|if
-condition|(
-name|statemap
-operator|==
-name|sd_emptystate
-condition|)
-block|{
-comment|/* nothing done yet */
-if|if
-condition|(
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_concat
-operator|)
-comment|/* only change this for concat and struped */
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_striped
-operator|)
-condition|)
-block|{
-comment|/* 	     * If we're associated with a volume, none of whose 	     * plexes are up, and we're new and untested, and 	     * the volume has the setupstate bit set, we can 	     * pretend to be in a consistent state. 	     */
-if|if
-condition|(
-operator|(
-operator|(
-name|vps
-operator|&
-operator|(
-name|volplex_otherup
-operator||
-name|volplex_onlyus
-operator|)
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|plex
-operator|->
-name|state
-operator|==
-name|plex_init
-operator|)
-operator|&&
-operator|(
-name|plex
-operator|->
-name|volno
-operator|>=
-literal|0
-operator|)
-operator|&&
-operator|(
-name|VOL
-index|[
-name|plex
-operator|->
-name|volno
-index|]
-operator|.
-name|flags
-operator|&
-name|VF_CONFIG_SETUPSTATE
-operator|)
-condition|)
-block|{
-comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the 		 * remaining plexes in the volume.  		 */
-name|struct
-name|volume
-modifier|*
-name|vol
-init|=
-operator|&
-name|VOL
-index|[
-name|plex
-operator|->
-name|volno
-index|]
-decl_stmt|;
-name|int
-name|plexno
-decl_stmt|;
-for|for
-control|(
-name|plexno
-operator|=
-literal|0
-init|;
-name|plexno
-operator|<
-name|vol
-operator|->
-name|plexes
-condition|;
-name|plexno
-operator|++
-control|)
-name|PLEX
-index|[
-name|vol
-operator|->
-name|plex
-index|[
-name|plexno
-index|]
-index|]
-operator|.
-name|state
-operator|=
-name|plex_up
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|vps
-operator|&
-name|volplex_otherup
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* no other plexes up */
 name|int
 name|sdno
 decl_stmt|;
 name|plex
+operator|=
+operator|&
+name|PLEX
+index|[
+name|plexno
+index|]
+expr_stmt|;
+comment|/* point to the plex */
+name|plex
 operator|->
 name|state
 operator|=
 name|plex_up
 expr_stmt|;
-comment|/* we can call that up */
+comment|/* and bring it up */
+comment|/* change the subdisks to up state */
 for|for
 control|(
 name|sdno
@@ -1700,7 +1534,6 @@ name|sdno
 operator|++
 control|)
 block|{
-comment|/* change the subdisks to up state */
 name|SD
 index|[
 name|plex
@@ -1737,25 +1570,206 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
+comment|/* Set the state of a plex based on its environment */
+end_comment
+
+begin_function
+name|void
+name|update_plex_state
+parameter_list|(
+name|int
+name|plexno
+parameter_list|)
+block|{
+name|struct
+name|plex
+modifier|*
+name|plex
+decl_stmt|;
+comment|/* point to our plex */
+name|enum
+name|plexstate
+name|oldstate
+decl_stmt|;
+name|enum
+name|sdstates
+name|statemap
+decl_stmt|;
+comment|/* get a map of the subdisk states */
+name|enum
+name|volplexstate
+name|vps
+decl_stmt|;
+comment|/* how do we compare with the other plexes? */
+name|plex
+operator|=
+operator|&
+name|PLEX
+index|[
+name|plexno
+index|]
+expr_stmt|;
+comment|/* point to our plex */
+name|oldstate
+operator|=
+name|plex
+operator|->
+name|state
+expr_stmt|;
+name|statemap
+operator|=
+name|sdstatemap
+argument_list|(
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* get a map of the subdisk states */
+name|vps
+operator|=
+name|vpstate
+argument_list|(
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* how do we compare with the other plexes? */
+if|if
+condition|(
+operator|(
+name|statemap
+operator|==
+name|sd_emptystate
+operator|)
+comment|/* all subdisks empty */
+operator|&&
+operator|(
+operator|(
+name|vps
+operator|&
+name|volplex_otherup
+operator|)
+operator|==
+literal|0
+operator|)
+comment|/* and no other plex is up */
+operator|&&
+operator|(
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_concat
+operator|)
+comment|/* and we're not RAID-5 */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_striped
+operator|)
+operator|)
+condition|)
+block|{
+name|struct
+name|volume
+modifier|*
+name|vol
+init|=
+operator|&
+name|VOL
+index|[
+name|plex
+operator|->
+name|volno
+index|]
+decl_stmt|;
+comment|/* possible volume to which it points */
+comment|/* 	 * If we're a striped or concat plex associated with a 	 * volume, none of whose plexes are up, and we're new and 	 * untested, and the volume has the setupstate bit set, we 	 * can pretend to be in a consistent state. 	 * 	 * We need to do this in one swell foop: on the next call 	 * we will no longer be just empty. 	 * 	 * This code assumes that all the other plexes are also 	 * capable of coming up (i.e. all the sds are up), but 	 * that's OK: we'll come back to this function for the 	 * remaining plexes in the volume. 	 */
+if|if
+condition|(
+operator|(
+name|plex
+operator|->
+name|state
+operator|==
+name|plex_init
+operator|)
+operator|&&
+operator|(
+name|plex
+operator|->
+name|volno
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|vol
+operator|->
+name|flags
+operator|&
+name|VF_CONFIG_SETUPSTATE
+operator|)
+condition|)
+block|{
+for|for
+control|(
+name|plexno
+operator|=
+literal|0
+init|;
+name|plexno
+operator|<
+name|vol
+operator|->
+name|plexes
+condition|;
+name|plexno
+operator|++
+control|)
+name|forceup
+argument_list|(
+name|VOL
+index|[
+name|plex
+operator|->
+name|volno
+index|]
+operator|.
+name|plex
+index|[
+name|plexno
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+name|forceup
+argument_list|(
+name|plexno
+argument_list|)
+expr_stmt|;
+comment|/* we'll do it */
+block|}
+elseif|else
+if|if
+condition|(
+name|statemap
+operator|==
+name|sd_upstate
+condition|)
+comment|/* 	 * All the subdisks are up.  This also means that 	 * they are consistent, so we can just bring 	 * the plex up 	 */
 name|plex
 operator|->
 name|state
 operator|=
-name|plex_faulty
+name|plex_up
 expr_stmt|;
-comment|/* no, it's down */
-block|}
-else|else
-comment|/* invalid or RAID-5 organization */
-name|plex
-operator|->
-name|state
-operator|=
-name|plex_faulty
-expr_stmt|;
-comment|/* it's down */
-block|}
 elseif|else
 if|if
 condition|(
@@ -1802,9 +1816,13 @@ if|if
 condition|(
 name|statemap
 operator|&
+operator|(
 name|sd_initstate
+operator||
+name|sd_emptystate
+operator|)
 condition|)
-comment|/* some subdisks initializing */
+comment|/* some subdisks empty or initializing */
 name|plex
 operator|->
 name|state
@@ -2011,11 +2029,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.   */
+comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.  */
 end_comment
 
 begin_comment
-comment|/*  * A prior version of this function checked the plex  * state as well.  At the moment, consider plex states  * information for the user only.  We'll ignore them  * and use the subdisk state only.  The last version of  * this file with the old logic was 2.7. XXX   */
+comment|/*  * A prior version of this function checked the plex  * state as well.  At the moment, consider plex states  * information for the user only.  We'll ignore them  * and use the subdisk state only.  The last version of  * this file with the old logic was 2.7. XXX  */
 end_comment
 
 begin_function
@@ -2086,7 +2104,7 @@ return|;
 case|case
 name|sd_reviving
 case|:
-comment|/* 	 * Access to a reviving subdisk depends on the 	 * organization of the plex:  	 * - If it's concatenated, access the subdisk up to its current 	 *   revive point.  If we want to write to the subdisk overlapping the 	 *   current revive block, set the conflict flag in the request, asking 	 *   the caller to put the request on the wait list, which will be 	 *   attended to by revive_block when it's done. 	 * - if it's striped, we can't do it (we could do some hairy 	 *   calculations, but it's unlikely to work). 	 * - if it's RAID-5, we can do it as long as only one 	 *   subdisk is down  	 */
+comment|/* 	 * Access to a reviving subdisk depends on the 	 * organization of the plex:  	 * - If it's concatenated, access the subdisk up to its current 	 *   revive point.  If we want to write to the subdisk overlapping the 	 *   current revive block, set the conflict flag in the request, asking 	 *   the caller to put the request on the wait list, which will be 	 *   attended to by revive_block when it's done. 	 * - if it's striped, we can't do it (we could do some hairy 	 *   calculations, but it's unlikely to work). 	 * - if it's RAID-5, we can do it as long as only one 	 *   subdisk is down 	 */
 if|if
 condition|(
 name|plex
@@ -2188,7 +2206,7 @@ return|;
 comment|/* always write to a reborn disk */
 else|else
 comment|/* don't allow a read */
-comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX  	     */
+comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX 	     */
 return|return
 name|REQUEST_DOWN
 return|;
@@ -2456,6 +2474,9 @@ name|sd_uninit
 case|:
 case|case
 name|sd_reviving
+case|:
+case|case
+name|sd_referenced
 case|:
 name|statemap
 operator||=
@@ -2757,6 +2778,9 @@ name|sd_crashed
 case|:
 case|case
 name|sd_down
+case|:
+case|case
+name|sd_referenced
 case|:
 break|break;
 case|case
@@ -3098,7 +3122,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * There's no point in saying anything here:      * the userland program does it better       */
+comment|/*      * There's no point in saying anything here:      * the userland program does it better      */
 name|ioctl_reply
 operator|->
 name|msg
@@ -3277,7 +3301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * VINUM_SETSTATE ioctl: set an object state  * msg is the message passed by the user   */
+comment|/*  * VINUM_SETSTATE ioctl: set an object state  * msg is the message passed by the user  */
 end_comment
 
 begin_function
