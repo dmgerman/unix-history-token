@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.47 1997/04/26 08:11:49 peter Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.1 1997/04/26 11:45:15 peter Exp $  */
 end_comment
 
 begin_include
@@ -217,36 +217,6 @@ end_include
 
 begin_comment
 comment|/* cngetc() */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPI_INTS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vector.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPI_INTS */
 end_comment
 
 begin_if
@@ -675,86 +645,6 @@ name|boot_addr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPI_INTS
-argument_list|)
-end_if
-
-begin_function_decl
-specifier|static
-name|void
-name|ipi_intr0
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ipi_intr1
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ipi_intr2
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ipi_intr3
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ipi_ihandler_attach
-parameter_list|(
-name|int
-name|irq
-parameter_list|,
-name|inthand2_t
-modifier|*
-name|func
-parameter_list|,
-name|unsigned
-modifier|*
-name|maskptr
-parameter_list|,
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPI_INTS */
-end_comment
 
 begin_comment
 comment|/*  * calculate usable address in base memory for AP trampoline code  */
@@ -1377,15 +1267,19 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|XFAST_IPI32
+name|APIC_IO
 argument_list|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
+file|<i386/include/md_var.h>
 end_include
+
+begin_comment
+comment|/* setidt() */
+end_comment
 
 begin_include
 include|#
@@ -1393,21 +1287,9 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-name|Xfastipi32
-parameter_list|(
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Xinvltlb() */
+end_comment
 
 begin_endif
 endif|#
@@ -1415,7 +1297,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XFAST_IPI32 */
+comment|/* APIC_IO */
 end_comment
 
 begin_function
@@ -1548,125 +1430,14 @@ argument_list|(
 literal|"IO APIC setup failure\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPI_INTS
-argument_list|)
-comment|/* setup IPI INTerrupt mechanism */
-name|ipi_ihandler_attach
-argument_list|(
-comment|/* irq */
-literal|24
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|ipi_intr0
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-name|ipi_ihandler_attach
-argument_list|(
-comment|/* irq */
-literal|25
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|ipi_intr1
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-name|ipi_ihandler_attach
-argument_list|(
-comment|/* irq */
-literal|26
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|ipi_intr2
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SMP_INVLTLB
-argument_list|)
-name|ipi_ihandler_attach
-argument_list|(
-comment|/* irq */
-literal|27
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|ipi_intr3
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XFAST_IPI32
-argument_list|)
-name|ipi_ihandler_attach
-argument_list|(
-comment|/* irq */
-literal|27
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|ipi_intr3
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/* install an inter-CPU IPI for TLB invalidation */
 name|setidt
 argument_list|(
 name|ICU_OFFSET
 operator|+
-literal|32
+name|XINVLTLB_OFFSET
 argument_list|,
-name|Xfastipi32
+name|Xinvltlb
 argument_list|,
 name|SDT_SYS386IGT
 argument_list|,
@@ -1680,34 +1451,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ipi_ihandler_attach
-argument_list|(
-comment|/* irq */
-literal|27
-argument_list|,
-comment|/* XXX */
-operator|(
-name|inthand2_t
-operator|*
-operator|)
-name|ipi_invltlb
-argument_list|,
-name|NULL
-argument_list|,
-comment|/* unit */
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XFAST_IPI32 */
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* IPI_INTS */
 if|#
 directive|if
 name|defined
@@ -6270,252 +6013,6 @@ literal|0
 return|;
 comment|/* return FAILURE */
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPI_INTS
-argument_list|)
-specifier|static
-name|void
-name|ipi_intr0
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"IPI 0\n"
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
-name|void
-name|ipi_intr1
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"IPI 1\n"
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
-name|void
-name|ipi_intr2
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"IPI 2\n"
-argument_list|)
-expr_stmt|;
-block|}
-specifier|static
-name|void
-name|ipi_intr3
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"IPI 3\n"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*----------------------------------------------------------------------- ** **	Register an interupt handler for an IPI. **	(Stolen from the PCI<->ISA glue code) ** **----------------------------------------------------------------------- */
-specifier|static
-name|int
-name|ipi_ihandler_attach
-parameter_list|(
-name|int
-name|irq
-parameter_list|,
-name|inthand2_t
-modifier|*
-name|func
-parameter_list|,
-name|unsigned
-modifier|*
-name|maskptr
-parameter_list|,
-name|int
-name|unit
-parameter_list|)
-block|{
-name|char
-name|buf
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|free_id
-decl_stmt|,
-name|id
-decl_stmt|,
-name|result
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"ipi irq%d"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-name|intrnames
-operator|,
-name|free_id
-operator|=
-literal|0
-operator|,
-name|id
-operator|=
-literal|0
-init|;
-name|id
-operator|<
-name|NR_DEVICES
-condition|;
-name|id
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-name|buf
-argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-name|free_id
-operator|<=
-literal|0
-operator|&&
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"ipi irqnn"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|free_id
-operator|=
-name|id
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|cp
-operator|++
-operator|!=
-literal|'\0'
-condition|)
-empty_stmt|;
-block|}
-if|if
-condition|(
-name|id
-operator|==
-name|NR_DEVICES
-condition|)
-block|{
-name|id
-operator|=
-name|free_id
-expr_stmt|;
-if|if
-condition|(
-name|id
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * All ipi irq counters are in use, perhaps because 			 * config is old so there aren't any.  Abuse the clk0 			 * counter. 			 */
-name|printf
-argument_list|(
-literal|"ipi_ihandler_attach: counting ipi irq%d's as clk0 irqs\n"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|result
-operator|=
-name|register_intr
-argument_list|(
-name|irq
-argument_list|,
-comment|/* isa irq	 */
-name|id
-argument_list|,
-comment|/* device id    */
-literal|0
-argument_list|,
-comment|/* flags?	 */
-name|func
-argument_list|,
-comment|/* handler	 */
-name|maskptr
-argument_list|,
-comment|/* mask pointer */
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* handler arg  */
-if|if
-condition|(
-name|result
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: ipi_ihandler_attach: result=%d\n"
-argument_list|,
-name|result
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|result
-operator|)
-return|;
-block|}
-empty_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* IPI_INTS */
 ifdef|#
 directive|ifdef
 name|SMP_INVLTLB
@@ -6535,12 +6032,6 @@ name|invldebug
 operator|&
 literal|2
 condition|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XFAST_IPI32
-argument_list|)
 name|all_but_self_ipi
 argument_list|(
 name|ICU_OFFSET
@@ -6548,18 +6039,6 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|all_but_self_ipi
-argument_list|(
-name|ICU_OFFSET
-operator|+
-literal|27
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XFAST_IPI32 */
 block|}
 block|}
 name|void
