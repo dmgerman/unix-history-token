@@ -133,7 +133,7 @@ name|PCPU
 parameter_list|(
 name|member
 parameter_list|)
-value|%g7 + PC_ ## member
+value|PCPU_REG + PC_ ## member
 end_define
 
 begin_define
@@ -145,7 +145,8 @@ name|member
 parameter_list|,
 name|reg
 parameter_list|)
-value|add %g7, PC_ ## member, reg
+define|\
+value|add	PCPU_REG, PC_ ## member, reg
 end_define
 
 begin_define
@@ -153,7 +154,8 @@ define|#
 directive|define
 name|DEBUGGER
 parameter_list|()
-value|ta %xcc, 1
+define|\
+value|ta	%xcc, 1
 end_define
 
 begin_define
