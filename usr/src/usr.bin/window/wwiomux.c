@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.12 %G%"
+literal|"@(#)wwiomux.c	3.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,16 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|w
+operator|->
+name|ww_obq
+operator|<
+name|w
+operator|->
+name|ww_obe
+condition|)
 name|imask
 operator||=
 literal|1
