@@ -66,6 +66,10 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+name|u_int16_t
+name|command
+decl_stmt|;
+comment|/* command register */
 name|u_int8_t
 name|secbus
 decl_stmt|;
@@ -82,11 +86,11 @@ name|pci_addr_t
 name|pmemlimit
 decl_stmt|;
 comment|/* topmost address of prefetchable memory */
-name|u_int32_t
+name|pci_addr_t
 name|membase
 decl_stmt|;
 comment|/* base address of memory window */
-name|u_int32_t
+name|pci_addr_t
 name|memlimit
 decl_stmt|;
 comment|/* topmost address of memory window */
@@ -576,6 +580,19 @@ expr_stmt|;
 comment|/*      * Get current bridge configuration.      */
 name|sc
 operator|->
+name|command
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|secbus
 operator|=
 name|pci_read_config
@@ -640,6 +657,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Determine current I/O decode.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|command
+operator|&
+name|PCIM_CMD_PORTEN
+condition|)
+block|{
 name|iolow
 operator|=
 name|pci_read_config
@@ -778,7 +804,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/*      * Determine current memory decode.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|command
+operator|&
+name|PCIM_CMD_MEMEN
+condition|)
+block|{
 name|sc
 operator|->
 name|membase
@@ -871,6 +907,7 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*      * Quirk handling.      */
 switch|switch
 condition|(
