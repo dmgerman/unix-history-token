@@ -1083,11 +1083,6 @@ argument_list|(
 name|mp
 argument_list|)
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|um_rootvp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1122,27 +1117,6 @@ name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
-name|union_root
-argument_list|(
-name|mp
-argument_list|,
-operator|&
-name|um_rootvp
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 comment|/* 	 * Keep flushing vnodes from the mount list. 	 * This is needed because of the un_pvp held 	 * reference to the parent vnode. 	 * If more vnodes have been freed on a given pass, 	 * the try again.  The loop will iterate at most 	 * (d) times, where (d) is the maximum tree depth 	 * in the filesystem. 	 */
 for|for
 control|(
@@ -1150,14 +1124,18 @@ name|freeing
 operator|=
 literal|0
 init|;
+operator|(
+name|error
+operator|=
 name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|um_rootvp
+literal|0
 argument_list|,
 name|flags
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|;
@@ -1215,39 +1193,16 @@ operator|=
 name|n
 expr_stmt|;
 block|}
-comment|/* At this point the root vnode should have a single reference */
+comment|/* If the most recent vflush failed, the filesystem is still busy. */
 if|if
 condition|(
-name|um_rootvp
-operator|->
-name|v_usecount
-operator|>
-literal|1
+name|error
 condition|)
-block|{
-name|vput
-argument_list|(
-name|um_rootvp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|EBUSY
+name|error
 operator|)
 return|;
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|vprint
-argument_list|(
-literal|"union root"
-argument_list|,
-name|um_rootvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Discard references to upper and lower target vnodes. 	 */
 if|if
 condition|(
@@ -1274,18 +1229,6 @@ argument_list|(
 name|um
 operator|->
 name|um_cred
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Release reference on underlying root vnode 	 */
-name|vput
-argument_list|(
-name|um_rootvp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * And blow it away for future re-use 	 */
-name|vgone
-argument_list|(
-name|um_rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, throw away the union_mount structure 	 */

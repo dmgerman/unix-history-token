@@ -719,18 +719,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|struct
-name|vnode
-modifier|*
-name|rootvp
-init|=
-name|VFSTOPORTAL
-argument_list|(
-name|mp
-argument_list|)
-operator|->
-name|pm_root
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -775,26 +763,14 @@ operator|)
 return|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|rootvp
-operator|->
-name|v_usecount
-operator|>
-literal|1
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+comment|/* There is 1 extra root vnode reference (pm_root). */
 name|error
 operator|=
 name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|rootvp
+literal|1
 argument_list|,
 name|flags
 argument_list|)
@@ -808,18 +784,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Release reference on underlying root vnode 	 */
-name|vrele
-argument_list|(
-name|rootvp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * And blow it away for future re-use 	 */
-name|vgone
-argument_list|(
-name|rootvp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Shutdown the socket.  This will cause the select in the 	 * daemon to wake up, and then the accept will get ECONNABORTED 	 * which it interprets as a request to go and bury itself. 	 */
 name|soshutdown
 argument_list|(

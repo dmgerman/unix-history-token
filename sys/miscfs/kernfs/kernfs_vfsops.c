@@ -601,18 +601,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|rootvp
-init|=
-name|VFSTOKERNFS
-argument_list|(
-name|mp
-argument_list|)
-operator|->
-name|kf_root
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -640,19 +628,6 @@ operator||=
 name|FORCECLOSE
 expr_stmt|;
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
-if|if
-condition|(
-name|rootvp
-operator|->
-name|v_usecount
-operator|>
-literal|1
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -663,13 +638,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* There is 1 extra root vnode reference (kf_root). */
 name|error
 operator|=
 name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|rootvp
+literal|1
 argument_list|,
 name|flags
 argument_list|)
@@ -683,30 +659,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|vprint
-argument_list|(
-literal|"kernfs root"
-argument_list|,
-name|rootvp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Release reference on underlying root vnode 	 */
-name|vrele
-argument_list|(
-name|rootvp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * And blow it away for future re-use 	 */
-name|vgone
-argument_list|(
-name|rootvp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Finally, throw away the kernfs_mount structure 	 */
 name|free
 argument_list|(
