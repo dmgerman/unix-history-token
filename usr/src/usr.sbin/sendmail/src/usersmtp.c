@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.20
+literal|3.21
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.20
+literal|3.21
 operator|%
 name|G
 operator|%
@@ -412,7 +412,7 @@ end_expr_stmt
 begin_expr_stmt
 name|smtpmessage
 argument_list|(
-literal|"MAIL From: %s"
+literal|"MAIL From:<%s>"
 argument_list|,
 name|canonname
 argument_list|(
@@ -527,7 +527,7 @@ operator|)
 return|;
 name|smtpmessage
 argument_list|(
-literal|"RCPT To: %s"
+literal|"RCPT To:<%s>"
 argument_list|,
 name|canonname
 argument_list|(
