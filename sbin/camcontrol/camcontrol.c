@@ -4139,13 +4139,7 @@ name|stdout
 argument_list|,
 literal|"%dKB/s transfers "
 argument_list|,
-operator|(
 name|speed
-operator|%
-literal|1000
-operator|)
-operator|*
-literal|1000
 argument_list|)
 expr_stmt|;
 if|if
