@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttymsg.c	8.1 (Berkeley) %G%"
+literal|"@(#)ttymsg.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * Display the contents of a uio structure on a terminal.  Used by wall(1),  * syslogd(8), and talk(1).  Forks and finishes in child if write would block,   * waiting up to tmout seconds.  Returns pointer to error string on unexpected   * error; string is not newline-terminated.  Various "normal" errors are   * ignored (exclusive-use, lack of permission, etc.).  */
+comment|/*  * Display the contents of a uio structure on a terminal.  Used by wall(1),  * syslogd(8), and talkd(8).  Forks and finishes in child if write would block,  * waiting up to tmout seconds.  Returns pointer to error string on unexpected  * error; string is not newline-terminated.  Various "normal" errors are  * ignored (exclusive-use, lack of permission, etc.).  */
 end_comment
 
 begin_function
@@ -169,14 +169,24 @@ if|if
 condition|(
 name|iovcnt
 operator|>
-literal|6
+sizeof|sizeof
+argument_list|(
+name|localiov
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|localiov
+index|[
+literal|0
+index|]
+argument_list|)
 condition|)
 return|return
 operator|(
 literal|"too many iov's (change code in wall/ttymsg.c)"
 operator|)
 return|;
-comment|/* 	 * open will fail on slip lines or exclusive-use lines 	 * if not running as root; not an error. 	 */
 operator|(
 name|void
 operator|)
@@ -194,6 +204,48 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|device
+operator|+
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+comment|/* A slash is an attempt to break security... */
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
+argument_list|,
+literal|"'/' in \"%s\""
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|errbuf
+operator|)
+return|;
+block|}
+comment|/* 	 * open will fail on slip lines or exclusive-use lines 	 * if not running as root; not an error. 	 */
 if|if
 condition|(
 operator|(

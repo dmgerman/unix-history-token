@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	8.1 (Berkeley) %G%"
+literal|"@(#)wall.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -108,8 +108,33 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_decl_stmt
+name|void
+name|makemsg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -142,6 +167,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -183,6 +209,19 @@ decl_stmt|,
 modifier|*
 name|ttymsg
 argument_list|()
+decl_stmt|;
+name|char
+name|line
+index|[
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_line
+argument_list|)
+operator|+
+literal|1
+index|]
 decl_stmt|;
 while|while
 condition|(
@@ -365,8 +404,37 @@ argument_list|)
 argument_list|)
 condition|)
 continue|continue;
+name|strncpy
+argument_list|(
+name|line
+argument_list|,
+name|utmp
+operator|.
+name|ut_line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_line
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|line
+index|[
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_line
+argument_list|)
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|ttymsg
@@ -376,14 +444,15 @@ name|iov
 argument_list|,
 literal|1
 argument_list|,
-name|utmp
-operator|.
-name|ut_line
+name|line
 argument_list|,
 literal|60
 operator|*
 literal|5
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -406,21 +475,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|makemsg
-argument_list|(
-argument|fname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fname
+parameter_list|)
 name|char
 modifier|*
 name|fname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -769,10 +833,14 @@ name|p
 operator|=
 name|lbuf
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|p
@@ -964,7 +1032,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
