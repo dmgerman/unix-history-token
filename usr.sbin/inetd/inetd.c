@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.6.2.1 1996/05/07 03:11:58 gpalmer Exp $"
+literal|"$Id: inetd.c,v 1.6.2.2 1996/10/28 23:03:54 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1605,6 +1605,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -1617,6 +1618,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 for|for
