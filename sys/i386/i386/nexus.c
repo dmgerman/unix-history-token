@@ -2220,6 +2220,7 @@ switch|switch
 condition|(
 name|flags
 operator|&
+operator|~
 name|INTR_TYPE_FAST
 condition|)
 block|{
