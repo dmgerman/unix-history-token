@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: do_command.c,v 1.4 1995/04/14 21:54:18 ache Exp $"
+literal|"$Id: do_command.c,v 1.6 1995/09/10 13:02:56 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,7 +356,7 @@ name|stdout_pipe
 argument_list|)
 expr_stmt|;
 comment|/* child's stdout */
-comment|/* since we are a forked process, we can diddle the command string 	 * we were passed -- nobody else is going to use it again, right? 	 * 	 * if a % is present in the command, previous characters are the 	 * command, and subsequent characters are the additional input to 	 * the command.  Subsequent %'s will be transformed into newlines, 	 * but that happens later. 	 */
+comment|/* since we are a forked process, we can diddle the command string 	 * we were passed -- nobody else is going to use it again, right? 	 * 	 * if a % is present in the command, previous characters are the 	 * command, and subsequent characters are the additional input to 	 * the command.  Subsequent %'s will be transformed into newlines, 	 * but that happens later. 	 * 	 * If there are escaped %'s, remove the escape character. 	 */
 comment|/*local*/
 block|{
 specifier|register
@@ -369,9 +369,16 @@ specifier|register
 name|int
 name|ch
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 for|for
 control|(
 name|input_data
+operator|=
+name|p
 operator|=
 name|e
 operator|->
@@ -384,13 +391,43 @@ name|input_data
 condition|;
 name|input_data
 operator|++
+operator|,
+name|p
+operator|++
 control|)
 block|{
+if|if
+condition|(
+name|p
+operator|!=
+name|input_data
+condition|)
+operator|*
+name|p
+operator|=
+name|ch
+expr_stmt|;
 if|if
 condition|(
 name|escaped
 condition|)
 block|{
+if|if
+condition|(
+name|ch
+operator|==
+literal|'%'
+operator|||
+name|ch
+operator|==
+literal|'\\'
+condition|)
+operator|*
+operator|--
+name|p
+operator|=
+name|ch
+expr_stmt|;
 name|escaped
 operator|=
 name|FALSE
@@ -426,6 +463,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 comment|/* fork again, this time so we can exec the user's command. 	 */
 switch|switch
