@@ -21,7 +21,7 @@ name|char
 name|_uuconf_debfil_rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

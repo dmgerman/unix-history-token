@@ -29,7 +29,7 @@ name|char
 name|protz_rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

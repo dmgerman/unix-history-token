@@ -57,7 +57,7 @@ name|char
 name|uusnap_rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
