@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.7, Wed Jun  7 22:12:02 MSD 1995  *  * $Id: if_sppp.h,v 1.6 1997/05/22 22:15:39 joerg Exp $  */
+comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $Id: if_sppp.h,v 1.6 1997/05/22 22:15:39 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -111,8 +111,83 @@ end_struct
 begin_define
 define|#
 directive|define
+name|AUTHNAMELEN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUTHKEYLEN
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|sauth
+block|{
+name|u_short
+name|proto
+decl_stmt|;
+comment|/* authentication protocol to use */
+name|u_short
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|AUTHFLAG_NOCALLOUT
+value|1
+comment|/* do not require authentication on */
+comment|/* callouts */
+define|#
+directive|define
+name|AUTHFLAG_NORECHALLENGE
+value|2
+comment|/* do not re-challenge CHAP */
+name|u_char
+name|name
+index|[
+name|AUTHNAMELEN
+index|]
+decl_stmt|;
+comment|/* system identification name */
+name|u_char
+name|secret
+index|[
+name|AUTHKEYLEN
+index|]
+decl_stmt|;
+comment|/* secret password */
+name|u_char
+name|challenge
+index|[
+name|AUTHKEYLEN
+index|]
+decl_stmt|;
+comment|/* random challenge */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|IDX_PAP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDX_CHAP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|IDX_COUNT
-value|(IDX_IPCP + 1)
+value|(IDX_CHAP + 1)
 end_define
 
 begin_comment
@@ -226,6 +301,12 @@ index|[
 name|IDX_COUNT
 index|]
 decl_stmt|;
+comment|/* per-proto and if callouts */
+name|struct
+name|callout_handle
+name|pap_my_to_ch
+decl_stmt|;
+comment|/* PAP needs one more... */
 name|struct
 name|slcp
 name|lcp
@@ -236,6 +317,16 @@ name|sipcp
 name|ipcp
 decl_stmt|;
 comment|/* IPCP params */
+name|struct
+name|sauth
+name|myauth
+decl_stmt|;
+comment|/* auth params, i'm peer */
+name|struct
+name|sauth
+name|hisauth
+decl_stmt|;
+comment|/* auth params, i'm authenticator */
 comment|/* 	 * These functions are filled in by sppp_attach(), and are 	 * expected to be used by the lower layer (hardware) drivers 	 * in order to communicate the (un)availability of the 	 * communication link.  Lower layer drivers that are always 	 * ready to communicate (like hardware HDLC) can shortcut 	 * pp_up from pp_tls, and pp_down from pp_tlf. 	 */
 name|void
 function_decl|(
@@ -312,6 +403,32 @@ begin_comment
 comment|/* use Cisco protocol instead of PPP */
 end_comment
 
+begin_comment
+comment|/* 0x04 was PP_TIMO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PP_CALLIN
+value|0x08
+end_define
+
+begin_comment
+comment|/* we are being called */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PP_NEEDAUTH
+value|0x10
+end_define
+
+begin_comment
+comment|/* remote requested authentication */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -333,6 +450,39 @@ end_define
 begin_comment
 comment|/* maximal MRU we want to negotiate */
 end_comment
+
+begin_comment
+comment|/*  * Definitions to pass struct sppp data down into the kernel using the  * SIOC[SG]IFGENERIC ioctl interface.  *  * In order to use this, create a struct spppreq, fill in the cmd  * field with SPPPIOGDEFS, and put the address of this structure into  * the ifr_data portion of a struct ifreq.  Pass this struct to a  * SIOCGIFGENERIC ioctl.  Then replace the cmd field by SPPPIOCDEFS,  * modify the defs field as desired, and pass the struct ifreq now  * to a SIOCSIFGENERIC ioctl.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPPPIOGDEFS
+value|((caddr_t)(('S'<< 24) + (1<< 16) + sizeof(struct sppp)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPPPIOSDEFS
+value|((caddr_t)(('S'<< 24) + (2<< 16) + sizeof(struct sppp)))
+end_define
+
+begin_struct
+struct|struct
+name|spppreq
+block|{
+name|int
+name|cmd
+decl_stmt|;
+name|struct
+name|sppp
+name|defs
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -405,6 +555,20 @@ name|struct
 name|mbuf
 modifier|*
 name|sppp_dequeue
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sppp_pick
 parameter_list|(
 name|struct
 name|ifnet
