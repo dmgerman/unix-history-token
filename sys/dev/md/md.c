@@ -2109,6 +2109,13 @@ operator|==
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
+name|u
+operator|>
+name|DKMAXUNIT
+condition|)
+return|return;
 comment|/* XXX: should check that next char is [\0sa-h] */
 comment|/* 	 * Now we cheat: We just create the disk, but don't match. 	 * Since we run before it, subr_disk.c::disk_clone() will 	 * find our disk and match the sought for device. 	 */
 name|mdcreate_malloc
