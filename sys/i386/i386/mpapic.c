@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.3 1997/05/01 19:33:12 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.4 1997/05/03 18:01:56 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -96,6 +96,33 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|lapic_t
+modifier|*
+name|lapic
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|APIC_IO
@@ -109,6 +136,33 @@ modifier|*
 name|io_apic_base
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|ioapic_t
+modifier|*
+name|ioapic
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/** XXX APIC_STRUCT */
+end_comment
 
 begin_endif
 endif|#
@@ -142,10 +196,7 @@ block|{
 comment|/* setup LVT1 as ExtINT */
 name|temp
 operator|=
-name|apic_base
-index|[
-name|APIC_LVT1
-index|]
+name|lapic__lvt_lint0
 expr_stmt|;
 name|temp
 operator|&=
@@ -155,10 +206,7 @@ name|temp
 operator||=
 literal|0x00000700
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_LVT1
-index|]
+name|lapic__lvt_lint0
 operator|=
 name|temp
 expr_stmt|;
@@ -166,10 +214,7 @@ block|}
 comment|/* setup LVT2 as NMI */
 name|temp
 operator|=
-name|apic_base
-index|[
-name|APIC_LVT2
-index|]
+name|lapic__lvt_lint1
 expr_stmt|;
 name|temp
 operator|&=
@@ -179,20 +224,14 @@ name|temp
 operator||=
 literal|0xffff0400
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_LVT2
-index|]
+name|lapic__lvt_lint1
 operator|=
 name|temp
 expr_stmt|;
 comment|/* set the Task Priority Register as needed */
 name|temp
 operator|=
-name|apic_base
-index|[
-name|APIC_TPR
-index|]
+name|lapic__tpr
 expr_stmt|;
 name|temp
 operator|&=
@@ -224,20 +263,14 @@ comment|/* disallow INT arbitration */
 endif|#
 directive|endif
 comment|/* TEST_LOPRIO */
-name|apic_base
-index|[
-name|APIC_TPR
-index|]
+name|lapic__tpr
 operator|=
 name|temp
 expr_stmt|;
 comment|/* enable the beast */
 name|temp
 operator|=
-name|apic_base
-index|[
-name|APIC_SVR
-index|]
+name|lapic__svr
 expr_stmt|;
 name|temp
 operator||=
@@ -257,10 +290,7 @@ block|temp |= 0x20;
 comment|/** FIXME: 2f == strayIRQ15 */
 endif|#
 directive|endif
-name|apic_base
-index|[
-name|APIC_SVR
-index|]
+name|lapic__svr
 operator|=
 name|temp
 expr_stmt|;
@@ -2005,10 +2035,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 operator|)
@@ -2042,10 +2069,7 @@ comment|/* build IRC_LOW */
 name|icr_lo
 operator|=
 operator|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_RESV2_MASK
 operator|)
@@ -2057,10 +2081,7 @@ operator||
 name|vector
 expr_stmt|;
 comment|/* write APIC ICR */
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|=
 name|icr_lo
 expr_stmt|;
@@ -2086,10 +2107,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 operator|)
@@ -2119,10 +2137,7 @@ else|#
 directive|else
 while|while
 condition|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
@@ -2208,10 +2223,7 @@ block|{
 comment|/* write the destination field for the target AP */
 name|icr_hi
 operator|=
-name|apic_base
-index|[
-name|APIC_ICR_HI
-index|]
+name|lapic__icr_hi
 operator|&
 operator|~
 name|APIC_ID_MASK
@@ -2227,10 +2239,7 @@ operator|<<
 literal|24
 operator|)
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_ICR_HI
-index|]
+name|lapic__icr_hi
 operator|=
 name|icr_hi
 expr_stmt|;
@@ -2298,10 +2307,7 @@ comment|/* write the destination field for the target AP */
 name|icr_hi
 operator|=
 operator|(
-name|apic_base
-index|[
-name|APIC_ICR_HI
-index|]
+name|lapic__icr_hi
 operator|&
 operator|~
 name|APIC_ID_MASK
@@ -2316,10 +2322,7 @@ operator|<<
 literal|24
 operator|)
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_ICR_HI
-index|]
+name|lapic__icr_hi
 operator|=
 name|icr_hi
 expr_stmt|;
@@ -2327,10 +2330,7 @@ comment|/* write command */
 name|icr_lo
 operator|=
 operator|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_RESV2_MASK
 operator|)
@@ -2341,20 +2341,14 @@ name|APIC_DELMODE_FIXED
 operator||
 name|vector
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|=
 name|icr_lo
 expr_stmt|;
 comment|/* wait for pending status end */
 while|while
 condition|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
@@ -2540,10 +2534,7 @@ name|long
 name|ticks_per_microsec
 decl_stmt|;
 comment|/* calculate divisor and count from value: 	 *  	 * timeBase == CPU bus clock divisor == [1,2,4,8,16,32,64,128] value == 	 * time in uS */
-name|apic_base
-index|[
-name|APIC_TDCR
-index|]
+name|lapic__dcr_timer
 operator|=
 name|APIC_TDCR_1
 expr_stmt|;
@@ -2557,10 +2548,7 @@ expr_stmt|;
 comment|/* configure timer as one-shot */
 name|lvtt
 operator|=
-name|apic_base
-index|[
-name|APIC_LVTT
-index|]
+name|lapic__lvt_timer
 expr_stmt|;
 name|lvtt
 operator|&=
@@ -2580,18 +2568,12 @@ operator||=
 name|APIC_LVTT_M
 expr_stmt|;
 comment|/* no INT, one-shot */
-name|apic_base
-index|[
-name|APIC_LVTT
-index|]
+name|lapic__lvt_timer
 operator|=
 name|lvtt
 expr_stmt|;
 comment|/* */
-name|apic_base
-index|[
-name|APIC_TICR
-index|]
+name|lapic__icr_timer
 operator|=
 name|value
 operator|*
@@ -2618,10 +2600,7 @@ comment|/** FIXME: we need to return the actual remaining time,          *      
 else|#
 directive|else
 return|return
-name|apic_base
-index|[
-name|APIC_TCCR
-index|]
+name|lapic__ccr_timer
 return|;
 endif|#
 directive|endif

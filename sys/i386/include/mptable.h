@@ -1497,19 +1497,13 @@ block|}
 comment|/* mask the LVT1 */
 name|temp
 operator|=
-name|apic_base
-index|[
-name|APIC_LVT1
-index|]
+name|lapic__lvt_lint0
 expr_stmt|;
 name|temp
 operator||=
 name|APIC_LVT_M
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_LVT1
-index|]
+name|lapic__lvt_lint0
 operator|=
 name|temp
 expr_stmt|;
@@ -4887,10 +4881,7 @@ comment|/* 0 */
 name|boot_cpu_id
 operator|=
 operator|(
-name|apic_base
-index|[
-name|APIC_ID
-index|]
+name|lapic__id
 operator|&
 name|APIC_ID_MASK
 operator|)
@@ -5371,10 +5362,7 @@ comment|/**          * NOTE: this needs further thought:          *        where
 name|mp_lock
 operator|=
 operator|(
-name|apic_base
-index|[
-name|APIC_ID
-index|]
+name|lapic__id
 operator|&
 name|APIC_ID_MASK
 operator|)
@@ -5557,10 +5545,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|apic_base
-index|[
-name|APIC_VER
-index|]
+name|lapic__version
 expr_stmt|;
 comment|/* restore the warmstart vector */
 operator|*
@@ -5975,10 +5960,7 @@ comment|/* 	 * first we do an INIT/RESET IPI this INIT IPI might be run, resetin
 comment|/* setup the address for the target AP */
 name|icr_hi
 operator|=
-name|apic_base
-index|[
-name|APIC_ICR_HI
-index|]
+name|lapic__icr_hi
 operator|&
 operator|~
 name|APIC_ID_MASK
@@ -5991,27 +5973,18 @@ operator|<<
 literal|24
 operator|)
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_ICR_HI
-index|]
+name|lapic__icr_hi
 operator|=
 name|icr_hi
 expr_stmt|;
 comment|/* do an INIT IPI: assert RESET */
 name|icr_lo
 operator|=
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 literal|0xfff00000
 expr_stmt|;
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6020,20 +5993,14 @@ expr_stmt|;
 comment|/* wait for pending status end */
 while|while
 condition|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
 comment|/* spin */
 empty_stmt|;
 comment|/* do an INIT IPI: deassert RESET */
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6048,10 +6015,7 @@ expr_stmt|;
 comment|/* wait ~10mS */
 while|while
 condition|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
@@ -6059,10 +6023,7 @@ comment|/* spin */
 empty_stmt|;
 comment|/* 	 * next we do a STARTUP IPI: the previous INIT IPI might still be 	 * latched, (P5 bug) this 1st STARTUP would then terminate 	 * immediately, and the previously started INIT IPI would continue. OR 	 * the previous INIT IPI has already run. and this STARTUP IPI will 	 * run. OR the previous INIT IPI was ignored. and this STARTUP IPI 	 * will run. 	 */
 comment|/* do a STARTUP IPI */
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6072,10 +6033,7 @@ name|vector
 expr_stmt|;
 while|while
 condition|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)
@@ -6088,10 +6046,7 @@ argument_list|)
 expr_stmt|;
 comment|/* wait ~200uS */
 comment|/* 	 * finally we do a 2nd STARTUP IPI: this 2nd STARTUP IPI should run IF 	 * the previous STARTUP IPI was cancelled by a latched INIT IPI. OR 	 * this STARTUP IPI will be ignored, as only ONE STARTUP IPI is 	 * recognized after hardware RESET or INIT IPI. 	 */
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|=
 name|icr_lo
 operator||
@@ -6101,10 +6056,7 @@ name|vector
 expr_stmt|;
 while|while
 condition|(
-name|apic_base
-index|[
-name|APIC_ICR_LOW
-index|]
+name|lapic__icr_lo
 operator|&
 name|APIC_DELSTAT_MASK
 condition|)

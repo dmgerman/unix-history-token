@@ -1348,6 +1348,21 @@ argument|apic_base
 argument_list|,
 literal|1
 argument_list|)
+if|#
+directive|if
+literal|1
+comment|/** XXX APIC_STRUCT */
+name|lapic
+operator|=
+operator|(
+name|lapic_t
+operator|*
+operator|)
+name|apic_base
+expr_stmt|;
+endif|#
+directive|endif
+comment|/** XXX APIC_STRUCT */
 endif|#
 directive|endif
 comment|/* SMP || APIC_IO */
@@ -1368,6 +1383,21 @@ argument|io_apic_base
 argument_list|,
 literal|1
 argument_list|)
+if|#
+directive|if
+literal|1
+comment|/** XXX APIC_STRUCT */
+name|ioapic
+operator|=
+operator|(
+name|ioapic_t
+operator|*
+operator|)
+name|io_apic_base
+expr_stmt|;
+endif|#
+directive|endif
+comment|/** XXX APIC_STRUCT */
 endif|#
 directive|endif
 comment|/* APIC_IO */
