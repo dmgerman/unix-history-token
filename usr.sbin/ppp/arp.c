@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.9 1997/02/22 16:09:56 peter Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.10 1997/02/25 14:04:50 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -64,27 +64,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<osreldate.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|199702
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/if_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
