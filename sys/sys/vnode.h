@@ -2875,24 +2875,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vfinddev
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|vpp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vfs_add_vnodeops
 parameter_list|(
