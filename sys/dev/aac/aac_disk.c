@@ -1044,8 +1044,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Error dumping block 0x%x\n"
+literal|"Error dumping block 0x%jx\n"
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|physical
 argument_list|)
 expr_stmt|;

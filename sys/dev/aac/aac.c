@@ -4948,21 +4948,6 @@ name|cm_fib
 operator|->
 name|Header
 operator|.
-name|SenderFibAddress
-operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|cm
-operator|->
-name|cm_fib
-expr_stmt|;
-name|cm
-operator|->
-name|cm_fib
-operator|->
-name|Header
-operator|.
 name|ReceiverFibAddress
 operator|=
 operator|(
@@ -6407,10 +6392,8 @@ name|then
 decl_stmt|;
 name|u_int32_t
 name|code
-decl_stmt|;
-name|u_int8_t
-modifier|*
-name|qaddr
+decl_stmt|,
+name|qoffset
 decl_stmt|;
 name|int
 name|error
@@ -7073,28 +7056,25 @@ name|time_second
 expr_stmt|;
 comment|/* reset later if invalid */
 comment|/* 	 * Initialise FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could  	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several  	 * header records are kept for each queue.  We use a couple of generic  	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
-name|qaddr
+name|qoffset
 operator|=
-operator|&
-name|sc
-operator|->
+name|offsetof
+argument_list|(
+expr|struct
 name|aac_common
-operator|->
+argument_list|,
 name|ac_qbuf
-index|[
-literal|0
-index|]
+argument_list|)
 operator|+
 name|AAC_QUEUE_ALIGN
 expr_stmt|;
-name|qaddr
-operator|-=
+name|qoffset
+operator|&=
 operator|(
-name|u_int32_t
-operator|)
-name|qaddr
-operator|%
 name|AAC_QUEUE_ALIGN
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|sc
 operator|->
@@ -7105,7 +7085,16 @@ expr|struct
 name|aac_queue_table
 operator|*
 operator|)
-name|qaddr
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|sc
+operator|->
+name|aac_common
+operator|+
+name|qoffset
+operator|)
 expr_stmt|;
 name|ip
 operator|->
@@ -7115,21 +7104,7 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-operator|(
-operator|(
-name|u_int32_t
-operator|)
-name|sc
-operator|->
-name|aac_queues
-operator|-
-operator|(
-name|u_int32_t
-operator|)
-name|sc
-operator|->
-name|aac_common
-operator|)
+name|qoffset
 expr_stmt|;
 name|sc
 operator|->
@@ -7932,11 +7907,9 @@ name|Header
 operator|.
 name|SenderFibAddress
 operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|fib
+literal|0
 expr_stmt|;
+comment|/* Not needed */
 name|fib
 operator|->
 name|Header
@@ -10436,8 +10409,8 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|i
+name|uint32_t
+name|cookie
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -10595,10 +10568,13 @@ literal|"FSACTL_OPEN_GET_ADAPTER_FIB"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Pass the caller out an AdapterFibContext. 		 * 		 * Note that because we only support one opener, we 		 * basically ignore this.  Set the caller's context to a magic 		 * number just in case. 		 * 		 * The Linux code hands the driver a pointer into kernel space, 		 * and then trusts it when the caller hands it back.  Aiee! 		 * Here, we give it the proc pointer of the per-adapter aif  		 * thread. It's only used as a sanity check in other calls. 		 */
-name|i
+name|cookie
 operator|=
 operator|(
-name|int
+name|uint32_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|sc
 operator|->
@@ -10609,13 +10585,13 @@ operator|=
 name|copyout
 argument_list|(
 operator|&
-name|i
+name|cookie
 argument_list|,
 name|arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|i
+name|cookie
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11014,7 +10990,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"incoming FIB oversized (%d> %d)\n"
+literal|"incoming FIB oversized (%d> %zd)\n"
 argument_list|,
 name|size
 argument_list|,
@@ -11133,7 +11109,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"outbound FIB oversized (%d> %d)\n"
+literal|"outbound FIB oversized (%d> %zd)\n"
 argument_list|,
 name|size
 argument_list|,
@@ -11970,6 +11946,9 @@ name|AdapterFibContext
 operator|!=
 operator|(
 name|int
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|sc
 operator|->

@@ -1610,6 +1610,7 @@ operator|&
 name|CAM_DATA_PHYS
 condition|)
 block|{
+comment|/* 					 * XXX This isn't 64-bit clean. 					 * However, this condition is not 					 * normally used in CAM. 					 */
 name|srb
 operator|->
 name|sg_map32
@@ -1630,7 +1631,10 @@ operator|.
 name|SgAddress
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|csio
 operator|->
