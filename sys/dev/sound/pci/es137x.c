@@ -3733,6 +3733,8 @@ name|unsigned
 name|t
 decl_stmt|,
 name|x
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|es_info
