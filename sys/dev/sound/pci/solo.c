@@ -3700,6 +3700,7 @@ name|int
 name|dir
 parameter_list|)
 block|{
+comment|/*  * XXX -- the constants written to register 8 and b in the playback case  * are certainly not 0x00. But I don't know what they really are  */
 name|KASSERT
 argument_list|(
 name|ch
@@ -3741,17 +3742,13 @@ name|vc
 argument_list|,
 literal|0x8
 argument_list|,
-literal|0x50
-operator||
-operator|(
 name|dir
 operator|==
 name|PCMDIR_PLAY
-operator|)
 condition|?
-literal|0x04
+literal|0x00
 else|:
-literal|0x02
+literal|0xc4
 argument_list|,
 literal|1
 argument_list|)
@@ -3785,6 +3782,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* mask */
+name|port_wr
+argument_list|(
+name|sc
+operator|->
+name|vc
+argument_list|,
+literal|0xb
+argument_list|,
+name|dir
+operator|==
+name|PCMDIR_PLAY
+condition|?
+literal|0x00
+else|:
+literal|0x54
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* mode */
 name|port_wr
 argument_list|(
 name|sc
@@ -4005,9 +4022,9 @@ literal|0xf
 argument_list|,
 name|go
 condition|?
-literal|0x01
-else|:
 literal|0x00
+else|:
+literal|0x01
 argument_list|,
 literal|1
 argument_list|)
