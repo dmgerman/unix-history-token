@@ -647,6 +647,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD4
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -891,6 +897,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD4
+end_ifdef
+
 begin_function
 name|int
 name|freebsd4_freebsd32_getfsstat
@@ -1110,6 +1127,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -5315,6 +5337,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD4
+end_ifdef
+
 begin_function
 name|int
 name|freebsd4_freebsd32_statfs
@@ -5478,6 +5506,17 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD4
+end_ifdef
 
 begin_function
 name|int
@@ -5643,6 +5682,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD4
+end_ifdef
+
 begin_function
 name|int
 name|freebsd4_freebsd32_fhstatfs
@@ -5806,6 +5856,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
