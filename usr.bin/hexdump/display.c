@@ -663,6 +663,10 @@ argument_list|,
 operator|(
 name|quad_t
 operator|)
+operator|(
+name|signed
+name|char
+operator|)
 operator|*
 name|bp
 argument_list|)
