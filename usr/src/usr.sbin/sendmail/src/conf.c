@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.57 (Berkeley) %G%"
+literal|"@(#)conf.c	6.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1385,6 +1385,12 @@ directive|if
 name|defined
 argument_list|(
 name|sun
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSD
 argument_list|)
 end_if
 
@@ -3702,10 +3708,18 @@ end_else
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|sun
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|)
 operator|||
 name|defined
 argument_list|(
