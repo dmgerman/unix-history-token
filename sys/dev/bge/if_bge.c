@@ -10920,11 +10920,12 @@ name|if_hwassist
 operator|=
 name|BGE_CSUM_FEATURES
 expr_stmt|;
+comment|/* NB: the code for RX csum offload is disabled for now */
 name|ifp
 operator|->
 name|if_capabilities
 operator|=
-name|IFCAP_HWCSUM
+name|IFCAP_TXCSUM
 operator||
 name|IFCAP_VLAN_HWTAGGING
 operator||
@@ -12487,7 +12488,7 @@ if|#
 directive|if
 literal|0
 comment|/* currently broken for some packets, possibly related to TCP options */
-block|if (ifp->if_hwassist) { 			m->m_pkthdr.csum_flags |= CSUM_IP_CHECKED; 			if ((cur_rx->bge_ip_csum ^ 0xffff) == 0) 				m->m_pkthdr.csum_flags |= CSUM_IP_VALID; 			if (cur_rx->bge_flags& BGE_RXBDFLAG_TCP_UDP_CSUM) { 				m->m_pkthdr.csum_data = 				    cur_rx->bge_tcp_udp_csum; 				m->m_pkthdr.csum_flags |= CSUM_DATA_VALID; 			} 		}
+block|if (ifp->if_capenable& IFCAP_RXCSUM) { 			m->m_pkthdr.csum_flags |= CSUM_IP_CHECKED; 			if ((cur_rx->bge_ip_csum ^ 0xffff) == 0) 				m->m_pkthdr.csum_flags |= CSUM_IP_VALID; 			if (cur_rx->bge_flags& BGE_RXBDFLAG_TCP_UDP_CSUM) { 				m->m_pkthdr.csum_data = 				    cur_rx->bge_tcp_udp_csum; 				m->m_pkthdr.csum_flags |= CSUM_DATA_VALID; 			} 		}
 endif|#
 directive|endif
 comment|/* 		 * If we received a packet with a vlan tag, 		 * attach that information to the packet. 		 */
@@ -14203,7 +14204,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 		 * XXX 		 * safety overkill.  If this is a fragmented packet chain 		 * with delayed TCP/UDP checksums, then only encapsulate 		 * it if we have enough descriptors to handle the entire 		 * chain at once. 		 * (paranoia -- may not actually be needed) 		 */
+comment|/* 		 * XXX 		 * The code inside the if() block is never reached since we 		 * must mark CSUM_IP_FRAGS in our if_hwassist to start getting 		 * requests to checksum TCP/UDP in a fragmented packet. 		 *  		 * XXX 		 * safety overkill.  If this is a fragmented packet chain 		 * with delayed TCP/UDP checksums, then only encapsulate 		 * it if we have enough descriptors to handle the entire 		 * chain at once. 		 * (paranoia -- may not actually be needed) 		 */
 if|if
 condition|(
 name|m_head
@@ -15602,16 +15603,23 @@ name|ifp
 operator|->
 name|if_capenable
 expr_stmt|;
+comment|/* NB: the code for RX csum offload is disabled for now */
 if|if
 condition|(
 name|mask
 operator|&
-name|IFCAP_HWCSUM
+name|IFCAP_TXCSUM
 condition|)
 block|{
+name|ifp
+operator|->
+name|if_capenable
+operator|^=
+name|IFCAP_TXCSUM
+expr_stmt|;
 if|if
 condition|(
-name|IFCAP_HWCSUM
+name|IFCAP_TXCSUM
 operator|&
 name|ifp
 operator|->
@@ -15619,17 +15627,16 @@ name|if_capenable
 condition|)
 name|ifp
 operator|->
-name|if_capenable
-operator|&=
-operator|~
-name|IFCAP_HWCSUM
+name|if_hwassist
+operator|=
+name|BGE_CSUM_FEATURES
 expr_stmt|;
 else|else
 name|ifp
 operator|->
-name|if_capenable
-operator||=
-name|IFCAP_HWCSUM
+name|if_hwassist
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|error
