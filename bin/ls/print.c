@@ -3237,7 +3237,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dbytes
+name|unit
 operator|==
 literal|0
 condition|)
@@ -3246,11 +3246,16 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*s "
+literal|"%*d%c "
 argument_list|,
 literal|4
 argument_list|,
-literal|"0B"
+operator|(
+name|int
+operator|)
+name|bytes
+argument_list|,
+literal|'B'
 argument_list|)
 expr_stmt|;
 else|else
@@ -3261,11 +3266,11 @@ name|printf
 argument_list|(
 literal|"%*.*f%c "
 argument_list|,
-literal|3
+literal|4
 argument_list|,
 name|dbytes
-operator|>
-literal|10
+operator|>=
+literal|99.95
 condition|?
 literal|0
 else|:
