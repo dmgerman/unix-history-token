@@ -208,9 +208,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|str
+argument_list|,
+name|CLNT_PERROR_BUFLEN
 argument_list|,
 literal|"%s: %s"
 argument_list|,
