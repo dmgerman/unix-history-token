@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_network.c	5.2 (Berkeley) %G%"
+literal|"@(#)inet_network.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -229,8 +235,7 @@ literal|4
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 return|;
 operator|*
@@ -260,8 +265,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 return|;
 operator|*
@@ -284,8 +288,7 @@ literal|4
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 return|;
 for|for

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_addr.c	5.3 (Berkeley) %G%"
+literal|"@(#)inet_addr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,8 +234,7 @@ literal|4
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 return|;
 operator|*
@@ -266,8 +265,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 return|;
 operator|*
@@ -417,8 +415,7 @@ break|break;
 default|default:
 return|return
 operator|(
-operator|-
-literal|1
+name|INADDR_NONE
 operator|)
 return|;
 block|}
