@@ -1,7 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -15,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.1 (Berkeley) 6/7/85"
+literal|"@(#)query.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,30 +272,13 @@ operator|,
 name|argc
 operator|--
 expr_stmt|;
-name|count
-operator|=
-name|argc
-expr_stmt|;
-while|while
-condition|(
-name|argc
-operator|>
-literal|0
-condition|)
-block|{
 name|query
 argument_list|(
-operator|*
 name|argv
+argument_list|,
+name|argc
 argument_list|)
 expr_stmt|;
-name|argv
-operator|++
-operator|,
-name|argc
-operator|--
-expr_stmt|;
-block|}
 comment|/* 	 * Listen for returning packets; 	 * may be more than one packet per host. 	 */
 name|bits
 operator|=
@@ -307,14 +311,8 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|(
-name|count
-operator|>
-literal|0
-operator|&&
 operator|!
 name|timedout
-operator|)
 operator|||
 name|select
 argument_list|(
@@ -437,14 +435,17 @@ end_function
 begin_macro
 name|query
 argument_list|(
-argument|host
+argument|argv
+argument_list|,
+argument|argc
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|host
+modifier|*
+name|argv
 decl_stmt|;
 end_decl_stmt
 
@@ -476,6 +477,19 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|host
+init|=
+operator|*
+name|argv
+decl_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -594,6 +608,46 @@ argument_list|(
 name|HOPCNT_INFINITY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+condition|)
+block|{
+name|u_long
+name|wanted
+init|=
+name|xnnet
+argument_list|(
+name|msg
+operator|->
+name|rip_nets
+index|[
+literal|0
+index|]
+argument_list|)
+operator|=
+name|htonl
+argument_list|(
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Net asked for was %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+name|wanted
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sendto
