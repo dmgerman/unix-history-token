@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.14 1999/03/17 05:04:38 mjacob Exp $ */
+comment|/* $Id: isp.c,v 1.15 1999/03/25 22:52:44 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -3079,7 +3079,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-comment|/* 		 * We don't update dev_flags with what we've set 		 * because that's not the ultimate goal setting. 		 * If we succeed with the command, we *do* update 		 * cur_dflags. 		 */
+comment|/* 		 * We don't update dev_flags with what we've set 		 * because that's not the ultimate goal setting. 		 * If we succeed with the command, we *do* update 		 * cur_dflags by getting target parameters. 		 */
 name|mbs
 operator|.
 name|param
@@ -3190,6 +3190,19 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
+comment|/* 		 * Ensure that we don't believe tagged queuing is enabled yet. 		 * It turns out that sometimes the ISP just ignores our 		 * attempts to set parameters for devices that it hasn't 		 * seen yet. 		 */
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|cur_dflags
+operator|&=
+operator|~
+name|DPARM_TQING
+expr_stmt|;
 name|maxlun
 operator|=
 operator|(
