@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.3 (Berkeley) %G%"
+literal|"@(#)termout.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,25 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../ctlr/inbound.ext"
+file|"../ctlr/externs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../ctlr/declare.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../ctlr/oia.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ctlr/options.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ctlr/outbound.ext"
 end_include
 
 begin_include
