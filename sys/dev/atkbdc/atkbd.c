@@ -4963,6 +4963,15 @@ argument_list|(
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|KB_CONF_NO_PROBE_TEST
+operator|)
+condition|)
 name|test_kbd_port
 argument_list|(
 name|kbdc
