@@ -621,6 +621,12 @@ argument_list|,
 name|PTHREAD_SCOPE_SYSTEM
 argument_list|)
 expr_stmt|;
+name|attr
+operator|->
+name|flags
+operator||=
+name|THR_SIGNAL_THREAD
+expr_stmt|;
 comment|/* sigmask will be inherited */
 if|if
 condition|(
@@ -1167,6 +1173,19 @@ name|curthread
 operator|->
 name|interrupted
 expr_stmt|;
+comment|/* Check if the signal requires a dump of thread information: */
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGINFO
+condition|)
+block|{
+comment|/* Dump thread information to file: */
+name|_thread_dump_info
+argument_list|()
+expr_stmt|;
+block|}
 name|_kse_critical_enter
 argument_list|()
 expr_stmt|;
@@ -2079,6 +2098,21 @@ operator|->
 name|tcb_tmbx
 argument_list|)
 expr_stmt|;
+comment|/* Check if the signal requires a dump of thread information: */
+if|if
+condition|(
+name|shi
+operator|->
+name|sig
+operator|==
+name|SIGINFO
+condition|)
+block|{
+comment|/* Dump thread information to file: */
+name|_thread_dump_info
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2944,6 +2978,14 @@ name|sig
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * If debugger is running, we don't quick exit, 			 * and give it a chance to check the signal. 			 */
+if|if
+condition|(
+name|_libkse_debug
+operator|==
+literal|0
+condition|)
+block|{
 name|sigfunc
 operator|=
 name|_thread_sigact
@@ -2986,6 +3028,7 @@ name|sig
 argument_list|)
 expr_stmt|;
 comment|/* Never reach */
+block|}
 block|}
 block|}
 if|if
@@ -5178,20 +5221,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Check for signals which cannot be trapped: */
-if|if
-condition|(
-name|i
-operator|==
-name|SIGKILL
-operator|||
-name|i
-operator|==
-name|SIGSTOP
-condition|)
-block|{ 		}
 comment|/* Get the signal handler details: */
-elseif|else
 if|if
 condition|(
 name|__sys_sigaction
