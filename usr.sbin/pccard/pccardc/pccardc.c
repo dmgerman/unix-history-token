@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pccardc.c,v 1.6 1997/10/06 11:35:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,14 @@ end_expr_stmt
 begin_expr_stmt
 name|DECL
 argument_list|(
+name|rdattr_main
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DECL
+argument_list|(
 name|rdmap_main
 argument_list|)
 expr_stmt|;
@@ -187,6 +195,14 @@ block|,
 name|pccardmem_main
 block|,
 literal|"Allocate memory for pccard driver"
+block|}
+block|,
+block|{
+literal|"rdattr"
+block|,
+name|rdattr_main
+block|,
+literal|"Read attribute memory"
 block|}
 block|,
 block|{
