@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: $"
+literal|"$Header: /a/cvs/386BSD/src/usr.bin/crontab/crontab.c,v 1.2 1994/01/22 20:41:10 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1773,13 +1773,58 @@ name|ERROR_EXIT
 argument_list|)
 expr_stmt|;
 block|}
-name|execlp
+if|if
+condition|(
+name|strlen
 argument_list|(
 name|editor
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|Filename
+argument_list|)
+operator|+
+literal|2
+operator|>=
+name|MAX_TEMPSTR
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: editor or filename too long\n"
+argument_list|,
+name|ProgramName
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|ERROR_EXIT
+argument_list|)
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+name|q
+argument_list|,
+literal|"%s %s"
 argument_list|,
 name|editor
 argument_list|,
 name|Filename
+argument_list|)
+expr_stmt|;
+name|execlp
+argument_list|(
+name|_PATH_BSHELL
+argument_list|,
+name|_PATH_BSHELL
+argument_list|,
+literal|"-c"
+argument_list|,
+name|q
 argument_list|,
 name|NULL
 argument_list|)
