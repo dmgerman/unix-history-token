@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.12	82/06/14	*/
+comment|/*	uipc_pipe.c	4.13	82/06/20	*/
 end_comment
 
 begin_include
@@ -136,11 +136,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|PICONNECT
-argument_list|)
-expr_stmt|;
 comment|/* when we reserve memory this routine may fail */
 name|wso
 operator|->
@@ -294,11 +289,6 @@ name|so
 operator|->
 name|so_pcb
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PIUSRREQ
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|req

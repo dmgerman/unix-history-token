@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.19	82/06/14	*/
+comment|/*	uipc_syscalls.c	4.20	82/06/20	*/
 end_comment
 
 begin_include
@@ -136,11 +136,6 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SPIPE
-argument_list|)
-expr_stmt|;
 name|u
 operator|.
 name|u_error
@@ -434,11 +429,6 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SSOCKET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -652,11 +642,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SACCEPT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -968,11 +953,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SCONNECT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|copyin
@@ -1209,11 +1189,6 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SSEND
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|getf
@@ -1413,11 +1388,6 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SRECEIVE
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|getf
@@ -1654,11 +1624,6 @@ name|struct
 name|sockaddr
 name|addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SSOCKETADDR
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|getf

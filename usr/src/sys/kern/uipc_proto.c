@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.21	82/04/25	*/
+comment|/*	uipc_proto.c	4.22	82/06/20	*/
 end_comment
 
 begin_include
@@ -655,11 +655,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PFINIT
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pr
@@ -716,11 +711,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PFFINDTYPE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|family
@@ -798,11 +788,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PFFINDPROTO
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|family
@@ -883,11 +868,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PFCTLINPUT
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pr
@@ -939,11 +919,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PFSLOWTIMO
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pr
@@ -987,11 +962,6 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|PFSLOWTIMO
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pr

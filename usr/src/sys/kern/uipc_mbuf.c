@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.35	82/06/14	*/
+comment|/*	uipc_mbuf.c	1.36	82/06/20	*/
 end_comment
 
 begin_include
@@ -74,11 +74,6 @@ end_macro
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|MBINIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m_clalloc
@@ -152,11 +147,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_CLALLOC
-argument_list|)
-expr_stmt|;
 name|npg
 operator|=
 name|ncl
@@ -404,11 +394,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|M_PGFREE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -432,11 +417,6 @@ end_macro
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|M_EXPAND
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m_clalloc
@@ -493,11 +473,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_GET
-argument_list|)
-expr_stmt|;
 name|MGET
 argument_list|(
 name|m
@@ -531,11 +506,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_GETCLR
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|m_get
@@ -600,11 +570,6 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_FREE
-argument_list|)
-expr_stmt|;
 name|MFREE
 argument_list|(
 name|m
@@ -642,11 +607,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_MORE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -715,11 +675,6 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_FREEM
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -805,11 +760,6 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_COPY
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|len
@@ -1233,11 +1183,6 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|M_ADJ
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

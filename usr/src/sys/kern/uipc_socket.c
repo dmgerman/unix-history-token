@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.41	82/06/14	*/
+comment|/*	uipc_socket.c	4.42	82/06/20	*/
 end_comment
 
 begin_include
@@ -191,11 +191,6 @@ name|proto
 decl_stmt|,
 name|error
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SOCREATE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Use process standard protocol/protocol family if none 	 * specified by address argument. 	 */
 if|if
 condition|(
@@ -416,11 +411,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|SOFREE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -502,11 +492,6 @@ name|splnet
 argument_list|()
 decl_stmt|;
 comment|/* conservative */
-name|COUNT
-argument_list|(
-name|SOCLOSE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -765,11 +750,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|SOSTAT
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -834,11 +814,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SOACCEPT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -967,11 +942,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SOCONNECT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -1071,11 +1041,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SODISCONNECT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1211,11 +1176,6 @@ name|space
 decl_stmt|,
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SOSEND
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sosendallatonce
@@ -1766,11 +1726,6 @@ name|u
 operator|.
 name|u_base
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|SORECEIVE
-argument_list|)
-expr_stmt|;
 name|restart
 label|:
 name|sblock
@@ -2465,11 +2420,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|SOIOCTL
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
