@@ -7644,6 +7644,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"dummynet: no memory for new pipe\n"
@@ -7957,10 +7960,15 @@ name|parent_nr
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* need link to a pipe */
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 name|x
 operator|=
 name|malloc
@@ -8070,9 +8078,14 @@ name|pfs
 operator|->
 name|parent_nr
 condition|)
+block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 name|x
 operator|=
 name|b
