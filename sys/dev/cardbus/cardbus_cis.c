@@ -1329,6 +1329,25 @@ end_macro
 
 begin_block
 block|{
+name|struct
+name|cardbus_devinfo
+modifier|*
+name|dinfo
+init|=
+name|device_get_ivars
+argument_list|(
+name|child
+argument_list|)
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|int
+name|reg
+decl_stmt|;
+name|u_int32_t
+name|bar
+decl_stmt|;
 if|if
 condition|(
 name|len
@@ -1349,27 +1368,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-else|else
-block|{
-name|struct
-name|cardbus_devinfo
-modifier|*
-name|dinfo
-init|=
-name|device_get_ivars
-argument_list|(
-name|child
-argument_list|)
-decl_stmt|;
-name|int
-name|type
-decl_stmt|;
-name|int
-name|reg
-decl_stmt|;
-name|u_int32_t
-name|bar
-decl_stmt|;
 name|reg
 operator|=
 operator|*
@@ -1534,8 +1532,7 @@ argument_list|(
 operator|(
 name|cbdev
 operator|,
-literal|"Opening BAR: type=%s, bar=%02x, "
-literal|"len=%04x%s%s\n"
+literal|"Opening BAR: type=%s, bar=%02x, len=%04x%s%s\n"
 operator|,
 operator|(
 name|type
@@ -1629,7 +1626,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -2219,7 +2215,7 @@ block|{
 case|case
 name|CARDBUS_CIS_ASI_TUPLE
 case|:
-comment|/* CIS in tuple space need no initialization */
+comment|/* CIS in PCI config space need no initialization */
 return|return
 operator|(
 operator|(
@@ -2266,18 +2262,6 @@ operator|)
 operator|*
 literal|4
 expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|child
-argument_list|,
-operator|*
-name|rid
-argument_list|,
-literal|0xffffffff
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|CARDBUS_CIS_ASI_ROM
@@ -2287,18 +2271,13 @@ name|rid
 operator|=
 name|CARDBUS_ROM_REG
 expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|child
-argument_list|,
-operator|*
-name|rid
-argument_list|,
-name|CARDBUS_ROM_ADDRMASK
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 		 * This mask doesn't contain the bit that actually enables 		 * the Option ROM. 		 */
+block|pci_write_config(child, *rid, CARDBUS_ROM_ADDRMASK, 4);
+endif|#
+directive|endif
 break|break;
 default|default:
 name|device_printf
@@ -2321,6 +2300,18 @@ operator|)
 return|;
 block|}
 comment|/* figure out how much space we need */
+name|pci_write_config
+argument_list|(
+name|child
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+literal|0xffffffff
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|testval
 operator|=
 name|pci_read_config
@@ -2333,11 +2324,25 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This bit has a different meaning depending if we are dealing 	 * with normal a normal BAR or an Option ROM BAR. 	 */
 if|if
 condition|(
+operator|(
+operator|(
 name|testval
 operator|&
-literal|1
+literal|0x1
+operator|)
+operator|==
+literal|0x1
+operator|)
+operator|&&
+operator|(
+operator|*
+name|rid
+operator|!=
+name|CARDBUS_ROM_REG
+operator|)
 condition|)
 block|{
 name|device_printf
@@ -2360,6 +2365,7 @@ argument_list|(
 name|testval
 argument_list|)
 expr_stmt|;
+comment|/* XXX Is this some kind of hack? */
 if|if
 condition|(
 name|size
@@ -2472,16 +2478,19 @@ decl_stmt|;
 name|bus_space_handle_t
 name|bh
 decl_stmt|;
-name|int
-name|imagenum
-decl_stmt|;
 name|u_int32_t
 name|imagesize
 decl_stmt|;
-name|int
-name|mystart
+name|u_int32_t
+name|imagebase
 init|=
 literal|0
+decl_stmt|;
+name|u_int32_t
+name|pcidata
+decl_stmt|;
+name|u_int16_t
+name|romsig
 decl_stmt|;
 name|int
 name|romnum
@@ -2489,7 +2498,7 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|dataptr
+name|imagenum
 decl_stmt|;
 name|bt
 operator|=
@@ -2524,18 +2533,22 @@ name|romnum
 operator|++
 control|)
 block|{
-if|if
-condition|(
+name|romsig
+operator|=
 name|bus_space_read_2
 argument_list|(
 name|bt
 argument_list|,
 name|bh
 argument_list|,
-name|mystart
+name|imagebase
 operator|+
 name|CARDBUS_EXROM_SIGNATURE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|romsig
 operator|!=
 literal|0xaa55
 condition|)
@@ -2549,20 +2562,11 @@ literal|"[%x] %04x\n"
 argument_list|,
 name|romnum
 argument_list|,
-name|mystart
+name|imagebase
 operator|+
 name|CARDBUS_EXROM_SIGNATURE
 argument_list|,
-name|bus_space_read_2
-argument_list|(
-name|bt
-argument_list|,
-name|bh
-argument_list|,
-name|mystart
-operator|+
-name|CARDBUS_EXROM_SIGNATURE
-argument_list|)
+name|romsig
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -2588,9 +2592,18 @@ name|NULL
 operator|)
 return|;
 block|}
-name|dataptr
+comment|/* 			 * If this was the Option ROM image that we were 			 * looking for, then we are done. 			 */
+if|if
+condition|(
+name|romnum
+operator|==
+name|imagenum
+condition|)
+break|break;
+comment|/* Find out where the next Option ROM image is */
+name|pcidata
 operator|=
-name|mystart
+name|imagebase
 operator|+
 name|bus_space_read_2
 argument_list|(
@@ -2598,7 +2611,7 @@ name|bt
 argument_list|,
 name|bh
 argument_list|,
-name|mystart
+name|imagebase
 operator|+
 name|CARDBUS_EXROM_DATA_PTR
 argument_list|)
@@ -2611,7 +2624,7 @@ name|bt
 argument_list|,
 name|bh
 argument_list|,
-name|dataptr
+name|pcidata
 operator|+
 name|CARDBUS_EXROM_DATA_IMAGE_LENGTH
 argument_list|)
@@ -2624,22 +2637,27 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * XXX some ROMs seem to have this as zero, 				 * can we assume this means 1 block? 				 */
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Warning, size of Option "
+literal|"ROM image %d is 0 bytes, assuming 512 "
+literal|"bytes.\n"
+argument_list|,
+name|romnum
+argument_list|)
+expr_stmt|;
 name|imagesize
 operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Image size is in 512 byte units */
 name|imagesize
 operator|<<=
 literal|9
 expr_stmt|;
-if|if
-condition|(
-name|romnum
-operator|==
-name|imagenum
-condition|)
-break|break;
 if|if
 condition|(
 operator|(
@@ -2649,7 +2667,7 @@ name|bt
 argument_list|,
 name|bh
 argument_list|,
-name|mystart
+name|pcidata
 operator|+
 name|CARDBUS_EXROM_DATA_INDICATOR
 argument_list|)
@@ -2657,16 +2675,33 @@ operator|&
 literal|0x80
 operator|)
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|cbdev
 argument_list|,
-literal|"Cannot read CIS: "
-literal|"Not enough images of rom\n"
+literal|"Cannot find CIS in "
+literal|"Option ROM\n"
 argument_list|)
+expr_stmt|;
+name|bus_release_resource
+argument_list|(
+name|cbdev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+name|res
+argument_list|)
+expr_stmt|;
+operator|*
+name|rid
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -2674,7 +2709,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|mystart
+name|imagebase
 operator|+=
 name|imagesize
 expr_stmt|;
@@ -2682,7 +2717,7 @@ block|}
 operator|*
 name|start
 operator|=
-name|mystart
+name|imagebase
 operator|+
 name|CARDBUS_CIS_ADDR
 argument_list|(
@@ -2696,7 +2731,7 @@ block|{
 operator|*
 name|start
 operator|=
-name|CARDBUS_CIS_SPACE
+name|CARDBUS_CIS_ADDR
 argument_list|(
 operator|*
 name|start
@@ -2921,6 +2956,9 @@ name|expect_linktarget
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|start
 operator|=
 name|pci_read_config
@@ -2931,7 +2969,15 @@ name|CARDBUS_CIS_REG
 argument_list|,
 literal|4
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|off
 operator|=
 literal|0
