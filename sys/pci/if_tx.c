@@ -2771,21 +2771,12 @@ argument_list|,
 name|TEST1_CLOCK_TEST
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do ifmedia setup. 	 */
+comment|/* Do OS independent part, including chip wakeup and reset */
 if|if
 condition|(
-name|mii_phy_probe
+name|epic_common_attach
 argument_list|(
-name|dev
-argument_list|,
-operator|&
 name|sc
-operator|->
-name|miibus
-argument_list|,
-name|epic_ifmedia_upd
-argument_list|,
-name|epic_ifmedia_sts
 argument_list|)
 condition|)
 block|{
@@ -2793,7 +2784,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII without any PHY!?\n"
+literal|"memory distribution error\n"
 argument_list|)
 expr_stmt|;
 name|bus_teardown_intr
@@ -2843,12 +2834,21 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Do OS independent part, including chip wakeup and reset */
+comment|/* Do ifmedia setup */
 if|if
 condition|(
-name|epic_common_attach
+name|mii_phy_probe
 argument_list|(
+name|dev
+argument_list|,
+operator|&
 name|sc
+operator|->
+name|miibus
+argument_list|,
+name|epic_ifmedia_upd
+argument_list|,
+name|epic_ifmedia_sts
 argument_list|)
 condition|)
 block|{
@@ -2856,7 +2856,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"memory distribution error\n"
+literal|"MII without any PHY!?\n"
 argument_list|)
 expr_stmt|;
 name|bus_teardown_intr
