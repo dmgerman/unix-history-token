@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	3.6 %G%"
+literal|"@(#)var.c	3.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ operator|.
 name|v_type
 operator|==
 name|V_STR
+operator|&&
+name|val
+operator|.
+name|v_str
+operator|!=
+literal|0
 operator|&&
 operator|(
 name|val

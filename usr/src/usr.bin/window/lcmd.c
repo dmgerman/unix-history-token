@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.20 %G%"
+literal|"@(#)lcmd.c	3.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +237,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|lcmd_arg
+name|arg_close
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
 name|arg_select
 index|[]
 decl_stmt|;
@@ -301,6 +309,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|lcmd_arg
+name|arg_write
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
 name|arg_null
 index|[]
 init|=
@@ -345,7 +361,7 @@ literal|2
 block|,
 name|l_close
 block|,
-literal|0
+name|arg_close
 block|,
 literal|"cursormodes"
 block|,
@@ -489,7 +505,7 @@ literal|2
 block|,
 name|l_write
 block|,
-literal|0
+name|arg_write
 block|,
 literal|0
 block|}
