@@ -676,5 +676,12 @@ name|_PAX_
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_TFILE_BASE
+value|"paxXXXXXXXXXX"
+end_define
+
 end_unit
 

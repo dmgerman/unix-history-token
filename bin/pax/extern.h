@@ -1771,6 +1771,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|tempfile
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|tempbase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 decl|main
 name|__P
