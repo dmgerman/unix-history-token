@@ -1,19 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.17 (Berkeley) %G%  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dmap.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
 
 begin_include
 include|#
@@ -30,13 +24,36 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
+file|<sys/uio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ucred.h>
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/namei.h>
 end_include
 
 begin_comment
@@ -56,192 +73,29 @@ name|proc
 modifier|*
 name|u_procp
 decl_stmt|;
-comment|/* pointer to proc structure */
-name|int
-modifier|*
-name|u_ar0
-decl_stmt|;
-comment|/* address of users saved R0 */
-comment|/* 1.1 - processes and protection */
-define|#
-directive|define
-name|u_cred
-value|u_nd.ni_cred
-define|#
-directive|define
-name|u_uid
-value|u_cred->cr_uid
-comment|/* effective user id */
-define|#
-directive|define
-name|u_gid
-value|u_cred->cr_gid
-comment|/* effective group id */
-comment|/* 1.2 - memory management */
-name|segsz_t
-name|u_tsize
-decl_stmt|;
-comment|/* text size (clicks) */
-name|segsz_t
-name|u_dsize
-decl_stmt|;
-comment|/* data size (clicks) */
-name|segsz_t
-name|u_ssize
-decl_stmt|;
-comment|/* stack size (clicks) */
-name|struct
-name|dmap
-name|u_pad1
-index|[
-literal|4
-index|]
-decl_stmt|;
+comment|/* pointer to proc structure XXX */
 name|label_t
 name|u_ssave
 decl_stmt|;
-comment|/* label variable for swapping */
-name|caddr_t
-name|u_taddr
-decl_stmt|;
-comment|/* user virtual address of text */
-name|caddr_t
-name|u_daddr
-decl_stmt|;
-comment|/* user virtual address of data */
-name|time_t
-name|u_outime
-decl_stmt|;
-comment|/* user time at last sample */
-name|caddr_t
-name|u_maxsaddr
-decl_stmt|;
-comment|/* user VA at max stack growth */
-comment|/* 1.3 - signal management */
-name|sig_t
-name|u_signal
-index|[
-name|NSIG
-index|]
-decl_stmt|;
-comment|/* disposition of signals */
-name|int
-name|u_sigmask
-index|[
-name|NSIG
-index|]
-decl_stmt|;
-comment|/* signals to be blocked */
-name|int
-name|u_sigonstack
-decl_stmt|;
-comment|/* signals to take on sigstack */
-name|int
-name|u_sigintr
-decl_stmt|;
-comment|/* signals that interrupt syscalls */
-name|int
-name|u_oldmask
-decl_stmt|;
-comment|/* saved mask from before sigpause */
-name|struct
-name|sigstack
-name|u_sigstack
-decl_stmt|;
-comment|/* sp& on stack state variable */
+comment|/* label variable for swapping XXX */
 define|#
 directive|define
-name|u_onstack
-value|u_sigstack.ss_onstack
-define|#
-directive|define
-name|u_sigsp
-value|u_sigstack.ss_sp
-name|int
-name|u_sig
-decl_stmt|;
-comment|/* for core dump/debugger XXX */
-name|int
-name|u_code
-decl_stmt|;
-comment|/* for core dump/debugger XXX */
-comment|/* 1.4 - descriptor management */
-name|long
-name|u_pad2
-index|[
-literal|82
-index|]
-decl_stmt|;
-comment|/* 1.5 - timing and statistics */
+name|curproc
+value|u.u_procp
+comment|/* XXX */
 name|struct
-name|rusage
-name|u_ru
+name|sigacts
+name|u_sigacts
 decl_stmt|;
-comment|/* stats for this proc */
+comment|/* p_sigacts points here (use it!) */
 name|struct
-name|rusage
-name|u_cru
+name|pstats
+name|u_stats
 decl_stmt|;
-comment|/* sum of stats for reaped children */
-name|struct
-name|itimerval
-name|u_timer
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|struct
-name|timeval
-name|u_start
-decl_stmt|;
-name|short
-name|u_acflag
-decl_stmt|;
-struct|struct
-name|uprof
-block|{
-comment|/* profile arguments */
-name|short
-modifier|*
-name|pr_base
-decl_stmt|;
-comment|/* buffer base */
-name|unsigned
-name|pr_size
-decl_stmt|;
-comment|/* buffer size */
-name|unsigned
-name|pr_off
-decl_stmt|;
-comment|/* pc offset */
-name|unsigned
-name|pr_scale
-decl_stmt|;
-comment|/* pc scaling */
-block|}
-name|u_prof
-struct|;
+comment|/* rusage, profiling& timers */
 comment|/* 1.6 - resource controls */
-name|struct
-name|rlimit
-name|u_rlimit
-index|[
-name|RLIM_NLIMITS
-index|]
-decl_stmt|;
-comment|/* namei& co. */
-name|struct
-name|nameidata
-name|u_nd
-decl_stmt|;
-name|long
-name|u_spare
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|int
-name|u_stack
+name|u_spare
 index|[
 literal|1
 index|]
@@ -254,22 +108,11 @@ begin_comment
 comment|/* u_error codes */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"errno.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_include
 include|#

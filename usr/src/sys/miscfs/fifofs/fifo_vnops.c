@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -144,7 +150,7 @@ decl_stmt|,
 name|fifo_badop
 argument_list|()
 decl_stmt|,
-name|fifo_nullop
+name|nullop
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -194,7 +200,7 @@ comment|/* select */
 name|fifo_badop
 block|,
 comment|/* mmap */
-name|fifo_nullop
+name|nullop
 block|,
 comment|/* fsync */
 name|fifo_badop
@@ -227,10 +233,10 @@ comment|/* readlink */
 name|fifo_badop
 block|,
 comment|/* abortop */
-name|fifo_nullop
+name|nullop
 block|,
 comment|/* inactive */
-name|fifo_nullop
+name|nullop
 block|,
 comment|/* reclaim */
 name|fifo_lock
@@ -248,7 +254,7 @@ comment|/* strategy */
 name|fifo_print
 block|,
 comment|/* print */
-name|fifo_nullop
+name|nullop
 block|,
 comment|/* islocked */
 name|fifo_advlock
@@ -1870,25 +1876,6 @@ literal|"fifo_badop called"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_block
-
-begin_comment
-comment|/*  * Fifo null operation  */
-end_comment
-
-begin_macro
-name|fifo_nullop
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 

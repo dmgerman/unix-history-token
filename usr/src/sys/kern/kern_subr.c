@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.   *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -483,7 +483,6 @@ condition|;
 operator|++
 name|src
 control|)
-comment|/* void */
 empty_stmt|;
 while|while
 condition|(
@@ -495,7 +494,6 @@ operator|*
 name|append
 operator|++
 condition|)
-comment|/* void */
 empty_stmt|;
 block|}
 end_block
@@ -534,7 +532,6 @@ operator|,
 operator|++
 name|to
 control|)
-comment|/* void */
 empty_stmt|;
 block|}
 end_block
@@ -589,7 +586,6 @@ operator|,
 operator|++
 name|to
 control|)
-comment|/* void */
 empty_stmt|;
 operator|*
 name|to
@@ -606,7 +602,7 @@ name|lint
 end_ifndef
 
 begin_comment
-comment|/* unused except by ct.c, other oddities */
+comment|/* unused except by ct.c, other oddities XXX */
 end_comment
 
 begin_comment
@@ -734,11 +730,13 @@ case|:
 name|c
 operator|=
 operator|*
+operator|(
+name|u_char
+operator|*
+operator|)
 name|iov
 operator|->
 name|iov_base
-operator|&
-literal|0377
 expr_stmt|;
 break|break;
 case|case
@@ -790,8 +788,6 @@ expr_stmt|;
 return|return
 operator|(
 name|c
-operator|&
-literal|0377
 operator|)
 return|;
 block|}

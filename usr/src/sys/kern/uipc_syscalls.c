@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.21 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7358,7 +7358,7 @@ name|fdes
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp

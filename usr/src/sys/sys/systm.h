@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -50,46 +50,6 @@ comment|/* number of swap devices */
 end_comment
 
 begin_decl_stmt
-name|int
-name|mpid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* generic for unique process id's */
-end_comment
-
-begin_decl_stmt
-name|char
-name|runin
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scheduling flag */
-end_comment
-
-begin_decl_stmt
-name|char
-name|runout
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scheduling flag */
-end_comment
-
-begin_decl_stmt
-name|int
-name|runrun
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scheduling flag */
-end_comment
-
-begin_decl_stmt
 name|char
 name|kmapwnt
 decl_stmt|;
@@ -100,13 +60,13 @@ comment|/* kernel map want flag */
 end_comment
 
 begin_decl_stmt
-name|char
+name|u_char
 name|curpri
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* more scheduling */
+comment|/* priority of current process */
 end_comment
 
 begin_decl_stmt
@@ -237,30 +197,6 @@ begin_comment
 comment|/* vnode equivalent to above */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|i386
-argument_list|)
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -283,11 +219,6 @@ end_decl_stmt
 begin_comment
 comment|/* its size */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -351,12 +282,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|panicstr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|wantin
 decl_stmt|;
 end_decl_stmt
 
@@ -435,6 +360,79 @@ name|q
 parameter_list|)
 value|_remque((caddr_t)q)
 end_define
+
+begin_comment
+comment|/*  * General function declarations  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nullop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enodev
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enxio
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eopnotsupp
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|seltrue
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|dev
+operator|,
+name|int
+name|which
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

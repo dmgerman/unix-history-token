@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -146,7 +146,7 @@ comment|/* marker for empty group set member */
 end_comment
 
 begin_comment
-comment|/*  * Priorities  */
+comment|/*  * Priorities.  Note that with 32 run queues,  * differences less than 4 are insignificant.  */
 end_comment
 
 begin_define
@@ -160,28 +160,35 @@ begin_define
 define|#
 directive|define
 name|PVM
-value|1
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|PINOD
-value|10
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRIBIO
-value|20
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|PVFS
-value|22
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSOCK
+value|24
 end_define
 
 begin_define
@@ -191,25 +198,22 @@ name|PZERO
 value|25
 end_define
 
-begin_define
-define|#
-directive|define
-name|PSOCK
-value|26
-end_define
+begin_comment
+comment|/* No longer magic, shouldn't be here XXX */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|PWAIT
-value|30
+value|32
 end_define
 
 begin_define
 define|#
 directive|define
 name|PLOCK
-value|35
+value|36
 end_define
 
 begin_define
@@ -225,6 +229,17 @@ directive|define
 name|PUSER
 value|50
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAXPRI
+value|127
+end_define
+
+begin_comment
+comment|/* priorities range from 0 through MAXPRI */
+end_comment
 
 begin_define
 define|#
@@ -251,6 +266,10 @@ name|NZERO
 value|0
 end_define
 
+begin_comment
+comment|/* default "nice" */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -261,6 +280,57 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * More types and definitions used throughout the kernel  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_endif

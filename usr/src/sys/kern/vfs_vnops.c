@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -140,6 +140,8 @@ name|vn_open
 argument_list|(
 name|ndp
 argument_list|,
+name|p
+argument_list|,
 name|fmode
 argument_list|,
 name|cmode
@@ -151,6 +153,14 @@ operator|*
 name|ndp
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -167,6 +177,16 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+specifier|register
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|p
+operator|->
+name|p_ucred
 decl_stmt|;
 name|struct
 name|vattr
@@ -223,6 +243,8 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -364,6 +386,8 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -423,9 +447,7 @@ name|vp
 argument_list|,
 name|VREAD
 argument_list|,
-name|ndp
-operator|->
-name|ni_cred
+name|cred
 argument_list|)
 condition|)
 goto|goto
@@ -480,9 +502,7 @@ name|vp
 argument_list|,
 name|VWRITE
 argument_list|,
-name|ndp
-operator|->
-name|ni_cred
+name|cred
 argument_list|)
 operator|)
 condition|)
@@ -519,9 +539,7 @@ name|vp
 argument_list|,
 name|vap
 argument_list|,
-name|ndp
-operator|->
-name|ni_cred
+name|cred
 argument_list|)
 condition|)
 goto|goto
@@ -541,9 +559,7 @@ name|vp
 argument_list|,
 name|fmode
 argument_list|,
-name|ndp
-operator|->
-name|ni_cred
+name|cred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1226,6 +1242,14 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|vattr
@@ -1251,9 +1275,9 @@ name|vp
 argument_list|,
 name|vap
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1550,6 +1574,14 @@ name|f_data
 operator|)
 decl_stmt|;
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|vattr
 name|vattr
 decl_stmt|;
@@ -1587,9 +1619,9 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 condition|)
 return|return
@@ -1665,9 +1697,9 @@ name|fp
 operator|->
 name|f_flag
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 expr_stmt|;
 if|if
@@ -1681,9 +1713,7 @@ operator|==
 name|TIOCSCTTY
 condition|)
 block|{
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_session
 operator|->
@@ -1735,6 +1765,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 return|return
 operator|(
 name|VOP_SELECT
@@ -1756,9 +1794,9 @@ name|fp
 operator|->
 name|f_flag
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 operator|)
 return|;
@@ -1937,44 +1975,6 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Noop  */
-end_comment
-
-begin_macro
-name|vfs_noop
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Null op  */
-end_comment
-
-begin_macro
-name|vfs_nullop
-argument_list|()
-end_macro
-
-begin_block
-block|{
 return|return
 operator|(
 literal|0

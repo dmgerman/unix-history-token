@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_rmap.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_rmap.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,8 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"dmap.h"
 end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_include
 include|#

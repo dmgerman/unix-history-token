@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_time.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_time.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"resourcevar.h"
 end_include
 
 begin_include
@@ -245,14 +245,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -491,14 +491,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -664,7 +664,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get value of an interval timer.  The process virtual and  * profiling virtual time timers are kept in the u. area, since  * they can be swapped out.  These are kept internally in the  * way they are specified externally: in time until they expire.  *  * The real time interval timer is kept in the process table slot  * for the process, and its value (it_value) is kept as an  * absolute time rather than as a delta, so that it is easy to keep  * periodic real-time signals from drifting.  *  * Virtual time timers are processed in the hardclock() routine of  * kern_clock.c.  The real time timer is processed by a timeout  * routine, called from the softclock() routine.  Since a callout  * may be delayed in real time due to interrupt processing in the system,  * it is possible for the real time timeout routine (realitexpire, given below),  * to be delayed in real time past when it is supposed to occur.  It  * does not suffice, therefore, to reload the real timer .it_value from the  * real time timers .it_interval.  Rather, we compute the next time in  * absolute time the timer should go off.  */
+comment|/*  * Get value of an interval timer.  The process virtual and  * profiling virtual time timers are kept in the p_stats area, since  * they can be swapped out.  These are kept internally in the  * way they are specified externally: in time until they expire.  *  * The real time interval timer is kept in the process table slot  * for the process, and its value (it_value) is kept as an  * absolute time rather than as a delta, so that it is easy to keep  * periodic real-time signals from drifting.  *  * Virtual time timers are processed in the hardclock() routine of  * kern_clock.c.  The real time timer is processed by a timeout  * routine, called from the softclock() routine.  Since a callout  * may be delayed in real time due to interrupt processing in the system,  * it is possible for the real time timeout routine (realitexpire, given below),  * to be delayed in real time past when it is supposed to occur.  It  * does not suffice, therefore, to reload the real timer .it_value from the  * real time timers .it_interval.  Rather, we compute the next time in  * absolute time the timer should go off.  */
 end_comment
 
 begin_comment
@@ -808,9 +808,11 @@ block|}
 else|else
 name|aitv
 operator|=
-name|u
-operator|.
-name|u_timer
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_timer
 index|[
 name|uap
 operator|->
@@ -1108,9 +1110,11 @@ name|aitv
 expr_stmt|;
 block|}
 else|else
-name|u
-operator|.
-name|u_timer
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_timer
 index|[
 name|uap
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -196,7 +196,7 @@ operator|)
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
@@ -544,7 +544,7 @@ operator|)
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
@@ -1045,7 +1045,7 @@ operator|)
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
@@ -1404,7 +1404,7 @@ operator|)
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
@@ -1927,7 +1927,7 @@ name|fdes
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
@@ -2274,6 +2274,8 @@ argument_list|,
 name|com
 argument_list|,
 name|data
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Copy any data to user, size was 		 * already set and checked above. 		 */
@@ -2457,7 +2459,7 @@ name|p
 operator|->
 name|p_fd
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 condition|)
 name|uap
 operator|->
@@ -2467,7 +2469,7 @@ name|p
 operator|->
 name|p_fd
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 expr_stmt|;
 comment|/* forgiving; slightly wrong */
 name|ni
@@ -2619,8 +2621,6 @@ operator|=
 name|selscan
 argument_list|(
 name|p
-operator|->
-name|p_fd
 argument_list|,
 name|ibits
 argument_list|,
@@ -2837,26 +2837,28 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|selscan
 argument_list|(
-name|fdp
+argument|p
 argument_list|,
-name|ibits
+argument|ibits
 argument_list|,
-name|obits
+argument|obits
 argument_list|,
-name|nfd
+argument|nfd
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
-name|filedesc
-operator|*
-name|fdp
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|fd_set
@@ -2879,6 +2881,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
 specifier|register
 name|int
 name|which
@@ -3047,6 +3059,8 @@ argument_list|(
 name|fp
 argument_list|,
 name|flag
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -3093,6 +3107,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -3105,6 +3121,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_log.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_log.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"errno.h"
 end_include
 
 begin_define
@@ -117,12 +105,34 @@ begin_macro
 name|logopen
 argument_list|(
 argument|dev
+argument_list|,
+argument|flags
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -153,9 +163,7 @@ name|logsoftc
 operator|.
 name|sc_pgid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 expr_stmt|;
@@ -530,6 +538,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|rw
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -542,6 +552,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|rw
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -587,9 +605,7 @@ name|logsoftc
 operator|.
 name|sc_selp
 operator|=
-name|u
-operator|.
-name|u_procp
+name|p
 expr_stmt|;
 break|break;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.22 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1538,11 +1538,6 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
-init|=
-operator|&
-name|u
-operator|.
-name|u_nd
 decl_stmt|;
 name|struct
 name|vattr
@@ -1551,6 +1546,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|;
+name|ndp
+operator|=
+operator|&
+name|nd
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_dirp
@@ -1648,8 +1652,11 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
+comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -1853,11 +1860,6 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
-init|=
-operator|&
-name|u
-operator|.
-name|u_nd
 decl_stmt|;
 name|struct
 name|unpcb
@@ -1870,6 +1872,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|;
+name|ndp
+operator|=
+operator|&
+name|nd
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_dirp
@@ -1964,8 +1975,11 @@ operator|=
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
+comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -2004,9 +2018,9 @@ name|vp
 argument_list|,
 name|VWRITE
 argument_list|,
-name|ndp
+name|curproc
 operator|->
-name|ni_cred
+name|p_ucred
 argument_list|)
 condition|)
 goto|goto
@@ -2678,15 +2692,11 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|filedesc
+name|proc
 modifier|*
-name|fdp
+name|p
 init|=
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_fd
+name|curproc
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -2758,11 +2768,11 @@ name|f
 decl_stmt|;
 if|if
 condition|(
-name|newfds
-operator|>
-name|ufavail
+name|fdavail
 argument_list|(
-name|fdp
+name|p
+argument_list|,
+name|newfds
 argument_list|)
 condition|)
 block|{
@@ -2819,9 +2829,9 @@ control|)
 block|{
 if|if
 condition|(
-name|ufalloc
+name|fdalloc
 argument_list|(
-name|fdp
+name|p
 argument_list|,
 literal|0
 argument_list|,
@@ -2841,7 +2851,9 @@ name|rp
 expr_stmt|;
 name|OFILE
 argument_list|(
-name|fdp
+name|p
+operator|->
+name|p_fd
 argument_list|,
 name|f
 argument_list|)
@@ -2897,9 +2909,7 @@ name|filedesc
 modifier|*
 name|fdp
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_fd
 decl_stmt|;
@@ -3034,7 +3044,7 @@ name|fd
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 name|OFILE
 argument_list|(

@@ -1,6 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.24 (Berkeley) %G%  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"vm/vm.h"
+end_include
+
+begin_comment
+comment|/* XXX */
 end_comment
 
 begin_comment
@@ -33,6 +43,13 @@ modifier|*
 name|s_ttyp
 decl_stmt|;
 comment|/* controlling terminal */
+name|char
+name|s_login
+index|[
+name|MAXLOGNAME
+index|]
+decl_stmt|;
+comment|/* setlogin() name */
 block|}
 struct|;
 end_struct
@@ -76,7 +93,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
+comment|/*  * Description of a process.  * This structure contains the information needed to manage a thread  * of control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressible except for those marked "(proc only)" below,  * which might be addressible only on a processor on which the process  * is running.  */
 end_comment
 
 begin_struct
@@ -88,7 +105,7 @@ name|proc
 modifier|*
 name|p_link
 decl_stmt|;
-comment|/* linked list of running processes */
+comment|/* doubly-linked run/sleep queue */
 name|struct
 name|proc
 modifier|*
@@ -99,72 +116,303 @@ name|proc
 modifier|*
 name|p_nxt
 decl_stmt|;
-comment|/* linked list of allocated proc slots */
+comment|/* linked list of active procs */
 name|struct
 name|proc
 modifier|*
 modifier|*
 name|p_prev
 decl_stmt|;
-comment|/* also zombies, and free proc's */
-name|caddr_t
-name|p_addr
+comment|/*    and zombies */
+comment|/* substructures: */
+name|struct
+name|pcred
+modifier|*
+name|p_cred
 decl_stmt|;
-comment|/* kernel virtual address of u-area */
-name|char
-name|p_usrpri
+comment|/* process owner's identity */
+name|struct
+name|filedesc
+modifier|*
+name|p_fd
 decl_stmt|;
-comment|/* user-priority based on p_cpu and p_nice */
-name|char
-name|p_pri
+comment|/* ptr to open files structure */
+name|struct
+name|pstats
+modifier|*
+name|p_stats
 decl_stmt|;
-comment|/* priority, negative is high */
-name|char
-name|p_cpu
+comment|/* accounting/statistics (proc only) */
+name|struct
+name|plimit
+modifier|*
+name|p_limit
 decl_stmt|;
-comment|/* cpu usage for scheduling */
+comment|/* process limits */
+name|struct
+name|vmspace
+modifier|*
+name|p_vmspace
+decl_stmt|;
+comment|/* address space */
+name|struct
+name|sigacts
+modifier|*
+name|p_sigacts
+decl_stmt|;
+comment|/* signal actions, state (proc only) */
+define|#
+directive|define
+name|p_ucred
+value|p_cred->pc_ucred
+define|#
+directive|define
+name|p_rlimit
+value|p_limit->pl_rlimit
+name|int
+name|p_flag
+decl_stmt|;
 name|char
 name|p_stat
 decl_stmt|;
-name|char
+comment|/*	char	p_space; */
+name|pid_t
+name|p_pid
+decl_stmt|;
+comment|/* unique process id */
+name|struct
+name|proc
+modifier|*
+name|p_hash
+decl_stmt|;
+comment|/* hashed based on p_pid for kill+exit+... */
+name|struct
+name|proc
+modifier|*
+name|p_pgrpnxt
+decl_stmt|;
+comment|/* pointer to next process in process group */
+name|struct
+name|proc
+modifier|*
+name|p_pptr
+decl_stmt|;
+comment|/* pointer to process structure of parent */
+name|struct
+name|proc
+modifier|*
+name|p_osptr
+decl_stmt|;
+comment|/* pointer to older sibling processes */
+comment|/* The following fields are all zeroed upon creation in fork */
+define|#
+directive|define
+name|p_startzero
+value|p_ysptr
+name|struct
+name|proc
+modifier|*
+name|p_ysptr
+decl_stmt|;
+comment|/* pointer to younger siblings */
+name|struct
+name|proc
+modifier|*
+name|p_cptr
+decl_stmt|;
+comment|/* pointer to youngest living child */
+comment|/* scheduling */
+name|u_int
+name|p_cpu
+decl_stmt|;
+comment|/* cpu usage for scheduling */
+name|int
+name|p_cpticks
+decl_stmt|;
+comment|/* ticks of cpu time */
+name|fixpt_t
+name|p_pctcpu
+decl_stmt|;
+comment|/* %cpu for this process during p_time */
+name|caddr_t
+name|p_wchan
+decl_stmt|;
+comment|/* event process is awaiting */
+name|u_int
 name|p_time
 decl_stmt|;
-comment|/* resident time for scheduling */
-name|char
-name|p_nice
-decl_stmt|;
-comment|/* nice for cpu usage */
-name|char
+comment|/* resident/nonresident time for swapping */
+name|u_int
 name|p_slptime
 decl_stmt|;
 comment|/* time since last block */
-name|char
-name|p_dupfd
+name|struct
+name|itimerval
+name|p_realtimer
 decl_stmt|;
-comment|/* sideways return value from fdopen XXX */
+comment|/* alarm timer */
+name|struct
+name|timeval
+name|p_utime
+decl_stmt|;
+comment|/* user time */
+name|struct
+name|timeval
+name|p_stime
+decl_stmt|;
+comment|/* system time */
+name|int
+name|p_traceflag
+decl_stmt|;
+comment|/* kernel trace points */
+name|struct
+name|vnode
+modifier|*
+name|p_tracep
+decl_stmt|;
+comment|/* trace to vnode */
 name|int
 name|p_sig
 decl_stmt|;
 comment|/* signals pending to this process */
-name|int
+comment|/* end area that is zeroed on creation */
+define|#
+directive|define
+name|p_endzero
+value|p_startcopy
+comment|/* The following fields are all copied upon creation in fork */
+name|sigset_t
 name|p_sigmask
 decl_stmt|;
 comment|/* current signal mask */
-name|int
+define|#
+directive|define
+name|p_startcopy
+value|p_sigmask
+name|sigset_t
 name|p_sigignore
 decl_stmt|;
 comment|/* signals being ignored */
-name|int
+name|sigset_t
 name|p_sigcatch
 decl_stmt|;
 comment|/* signals being caught by user */
+name|u_char
+name|p_pri
+decl_stmt|;
+comment|/* priority, negative is high */
+name|u_char
+name|p_usrpri
+decl_stmt|;
+comment|/* user-priority based on p_cpu and p_nice */
+name|char
+name|p_nice
+decl_stmt|;
+comment|/* nice for cpu usage */
+comment|/*	char	p_space; */
+name|struct
+name|pgrp
+modifier|*
+name|p_pgrp
+decl_stmt|;
+comment|/* pointer to process group */
+name|char
+name|p_comm
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* end area that is copied on creation */
+define|#
+directive|define
+name|p_endcopy
+value|p_wmesg
+name|char
+modifier|*
+name|p_wmesg
+decl_stmt|;
+comment|/* reason for sleep */
 name|int
-name|p_flag
+name|p_thread
 decl_stmt|;
-name|uid_t
-name|p_uid
+comment|/* id for this "thread" (Mach glue) XXX */
+name|caddr_t
+name|p_addr
 decl_stmt|;
-comment|/* effective user id */
+comment|/* kernel virtual address of u-area */
+name|swblk_t
+name|p_swaddr
+decl_stmt|;
+comment|/* disk address of u area when swapped */
+name|int
+modifier|*
+name|p_regs
+decl_stmt|;
+comment|/* saved registers during syscall/trap */
+name|u_short
+name|p_xstat
+decl_stmt|;
+comment|/* Exit status for wait; also stop signal */
+name|u_short
+name|p_dupfd
+decl_stmt|;
+comment|/* sideways return value from fdopen XXX */
+name|u_short
+name|p_acflag
+decl_stmt|;
+comment|/* accounting flags */
+comment|/*	u_short	p_space; */
+name|struct
+name|rusage
+modifier|*
+name|p_ru
+decl_stmt|;
+comment|/* exit information XXX */
+name|long
+name|p_spare
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* tmp spares to avoid shifting eproc */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|p_session
+value|p_pgrp->pg_session
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_pgid
+value|p_pgrp->pg_id
+end_define
+
+begin_comment
+comment|/* MOVE TO ucred.h? */
+end_comment
+
+begin_comment
+comment|/*  * Shareable process credentials (always resident).  * This includes a reference to the current user credentials  * as well as real and saved ids that may be used to change ids.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcred
+block|{
+name|struct
+name|ucred
+modifier|*
+name|pc_ucred
+decl_stmt|;
+comment|/* current credentials */
 name|uid_t
 name|p_ruid
 decl_stmt|;
@@ -181,199 +429,16 @@ name|gid_t
 name|p_svgid
 decl_stmt|;
 comment|/* saved effective group id */
-name|pid_t
-name|p_pid
-decl_stmt|;
-comment|/* unique process id */
-name|pid_t
-name|p_ppid
-decl_stmt|;
-comment|/* process id of parent */
-name|u_short
-name|p_xstat
-decl_stmt|;
-comment|/* Exit status for wait; also stop signal */
-name|struct
-name|rusage
-modifier|*
-name|p_ru
-decl_stmt|;
-comment|/* exit information */
-name|struct
-name|vm_map
-modifier|*
-name|p_map
-decl_stmt|;
-comment|/* VM address map */
-name|caddr_t
-name|p_shm
-decl_stmt|;
-comment|/* SYS5 shared memory private data */
 name|int
-name|p_thread
+name|p_refcnt
 decl_stmt|;
-comment|/* id for this "thread" (Mach glue) XXX */
-name|struct
-name|filedesc
-modifier|*
-name|p_fd
-decl_stmt|;
-comment|/* ptr to open files structure */
-name|int
-name|p_pad1
-decl_stmt|;
-name|segsz_t
-name|p_rssize
-decl_stmt|;
-comment|/* current resident set size in clicks */
-name|segsz_t
-name|p_maxrss
-decl_stmt|;
-comment|/* copy of u.u_limit[MAXRSS] */
-name|segsz_t
-name|p_swrss
-decl_stmt|;
-comment|/* resident set size before last swap */
-name|swblk_t
-name|p_swaddr
-decl_stmt|;
-comment|/* disk address of u area when swapped */
-name|caddr_t
-name|p_wchan
-decl_stmt|;
-comment|/* event process is awaiting */
-name|int
-name|pad2
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|int
-name|p_cpticks
-decl_stmt|;
-comment|/* ticks of cpu time */
-name|fixpt_t
-name|p_pctcpu
-decl_stmt|;
-comment|/* %cpu for this process during p_time */
-name|short
-name|p_ndx
-decl_stmt|;
-comment|/* proc index for memall (because of vfork) */
-name|struct
-name|proc
-modifier|*
-name|p_hash
-decl_stmt|;
-comment|/* hashed based on p_pid for kill+exit+... */
-name|struct
-name|proc
-modifier|*
-name|p_pptr
-decl_stmt|;
-comment|/* pointer to process structure of parent */
-name|struct
-name|proc
-modifier|*
-name|p_cptr
-decl_stmt|;
-comment|/* pointer to youngest living child */
-name|struct
-name|proc
-modifier|*
-name|p_osptr
-decl_stmt|;
-comment|/* pointer to older sibling processes */
-name|struct
-name|proc
-modifier|*
-name|p_ysptr
-decl_stmt|;
-comment|/* pointer to younger siblings */
-name|struct
-name|pgrp
-modifier|*
-name|p_pgrp
-decl_stmt|;
-comment|/* pointer to process group */
-define|#
-directive|define
-name|p_session
-value|p_pgrp->pg_session
-define|#
-directive|define
-name|p_pgid
-value|p_pgrp->pg_id
-name|struct
-name|proc
-modifier|*
-name|p_pgrpnxt
-decl_stmt|;
-comment|/* pointer to next process in process group */
-name|struct
-name|itimerval
-name|p_realtimer
-decl_stmt|;
-name|int
-name|p_traceflag
-decl_stmt|;
-comment|/* kernel trace points */
-name|struct
-name|vnode
-modifier|*
-name|p_tracep
-decl_stmt|;
-comment|/* trace to vnode */
-name|char
-name|p_comm
-index|[
-name|MAXCOMLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|char
-name|p_logname
-index|[
-name|MAXLOGNAME
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|p_wmesg
-decl_stmt|;
-name|struct
-name|timeval
-name|p_utime
-decl_stmt|;
-comment|/* user time */
-name|struct
-name|timeval
-name|p_stime
-decl_stmt|;
-comment|/* system time */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-name|int
-name|p_ckey
-decl_stmt|;
-comment|/* code cache key */
-name|int
-name|p_dkey
-decl_stmt|;
-comment|/* data cache key */
-endif|#
-directive|endif
+comment|/* number of references */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*   * proc ops return arrays of augmented proc structures  */
+comment|/*   * getkerninfo() proc ops return arrays of augmented proc structures:  */
 end_comment
 
 begin_struct
@@ -400,6 +465,21 @@ modifier|*
 name|e_sess
 decl_stmt|;
 comment|/* session pointer */
+name|struct
+name|pcred
+name|e_pcred
+decl_stmt|;
+comment|/* process credentials */
+name|struct
+name|ucred
+name|e_ucred
+decl_stmt|;
+comment|/* current credentials */
+name|struct
+name|vmspace
+name|e_vm
+decl_stmt|;
+comment|/* address space */
 name|pid_t
 name|e_pgid
 decl_stmt|;
@@ -579,24 +659,6 @@ begin_decl_stmt
 name|struct
 name|proc
 modifier|*
-name|proc
-decl_stmt|,
-modifier|*
-name|procNPROC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the proc table itself */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|freeproc
-decl_stmt|,
-modifier|*
 name|zombproc
 decl_stmt|,
 modifier|*
@@ -604,15 +666,72 @@ name|allproc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+name|proc0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* process slot for swapper */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|initproc
+decl_stmt|,
+modifier|*
+name|pageproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* process slots for init, pager */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|curproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current running proc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* lists of procs in various states */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
-name|nproc
+name|nprocs
+decl_stmt|,
+name|maxproc
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* current and max number of procs */
+end_comment
 
 begin_define
 define|#
@@ -767,6 +886,10 @@ begin_comment
 comment|/* flag codes */
 end_comment
 
+begin_comment
+comment|/* NEED TO CHECK which of these are still used */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -866,15 +989,8 @@ begin_comment
 comment|/* another flag to prevent swap out */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SOMASK
-value|0x0000200
-end_define
-
 begin_comment
-comment|/* restore old mask after taking signal */
+comment|/*#define SOMASK	0x0000200	/* restore old mask after taking signal */
 end_comment
 
 begin_define
@@ -902,34 +1018,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SVFORK
+name|SPPWAIT
 value|0x0001000
 end_define
 
 begin_comment
-comment|/* process resulted from vfork() */
+comment|/* parent is waiting for child to exec/exit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SVFDONE
-value|0x0002000
+name|SVFORK
+value|SPARSYNC
 end_define
 
 begin_comment
-comment|/* another vfork flag */
+comment|/* process resulted from vfork() XXX */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SNOVM
-value|0x0004000
-end_define
+begin_comment
+comment|/*#define SVFDONE	0x0002000	/* another vfork flag XXX */
+end_comment
 
 begin_comment
-comment|/* no vm, parent in a vfork() */
+comment|/*#define SNOVM	0x0004000	/* no vm, parent in a vfork() XXX */
 end_comment
 
 begin_define

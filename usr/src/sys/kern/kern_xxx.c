@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -293,14 +293,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return

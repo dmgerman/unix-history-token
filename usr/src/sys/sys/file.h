@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	7.7 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -9,20 +21,8 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"fcntl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"unistd.h"
-end_include
-
 begin_comment
-comment|/*  * Descriptor table entry.  * One for each kernel object.  */
+comment|/*  * Kernel descriptor table entry;  * one for each open kernel vnode and socket.  */
 end_comment
 
 begin_struct
@@ -131,163 +131,13 @@ name|nfile
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* convert O_RDONLY/O_WRONLY/O_RDWR to FREAD/FWRITE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FOPEN
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREAD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FWRITE
-value|2
-end_define
-
-begin_comment
-comment|/* kernel only versions -- deprecated, should be removed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FCREAT
-value|O_CREAT
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDEFER
-value|O_DEFER
-end_define
-
-begin_define
-define|#
-directive|define
-name|FEXCL
-value|O_EXCL
-end_define
-
-begin_define
-define|#
-directive|define
-name|FEXLOCK
-value|O_EXLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FMARK
-value|O_MARK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSHLOCK
-value|O_SHLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FTRUNC
-value|O_TRUNC
-end_define
-
-begin_comment
-comment|/* bits to save after open */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FMASK
-value|(FREAD|FWRITE|O_APPEND|O_ASYNC|O_NONBLOCK)
-end_define
-
-begin_comment
-comment|/* bits not settable by fcntl(F_SETFL, ...) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FCNTLCANT
-value|(FREAD|FWRITE|O_DEFER|O_EXLOCK|O_MARK|O_SHLOCK)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/unistd.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* operation for lseek(2); renamed by POSIX 1003.1 to unistd.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L_SET
-value|0
-end_define
-
-begin_comment
-comment|/* set file offset to offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L_INCR
-value|1
-end_define
-
-begin_comment
-comment|/* set file offset to current plus offset */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L_XTND
-value|2
-end_define
-
-begin_comment
-comment|/* set file offset to EOF plus offset */
+comment|/* KERNEL */
 end_comment
 
 end_unit

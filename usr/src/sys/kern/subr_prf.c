@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"seg.h"
 end_include
 
 begin_include
@@ -97,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"malloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/mtpr.h"
 end_include
 
 begin_ifdef
@@ -358,7 +346,7 @@ name|printf
 argument_list|(
 argument|fmt
 argument_list|,
-argument|x1
+argument|args
 argument_list|)
 end_macro
 
@@ -371,7 +359,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|x1
+name|args
 decl_stmt|;
 end_decl_stmt
 
@@ -403,7 +391,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|TOCONS
 operator||
@@ -454,7 +442,7 @@ name|uprintf
 argument_list|(
 argument|fmt
 argument_list|,
-argument|x1
+argument|args
 argument_list|)
 end_macro
 
@@ -467,7 +455,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|x1
+name|args
 decl_stmt|;
 end_decl_stmt
 
@@ -479,9 +467,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 if|if
 condition|(
@@ -502,7 +488,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|TOTTY
 argument_list|,
@@ -527,9 +513,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 decl_stmt|;
 if|if
 condition|(
@@ -618,7 +602,7 @@ name|sess
 argument_list|,
 name|fmt
 argument_list|,
-name|x1
+name|args
 argument_list|)
 specifier|register
 name|tpr_t
@@ -635,7 +619,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|x1
+name|args
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +661,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|flags
 argument_list|,
@@ -707,7 +691,7 @@ argument|level
 argument_list|,
 argument|fmt
 argument_list|,
-argument|x1
+argument|args
 argument_list|)
 end_macro
 
@@ -720,7 +704,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|x1
+name|args
 decl_stmt|;
 end_decl_stmt
 
@@ -746,7 +730,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|TOLOG
 argument_list|,
@@ -773,7 +757,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|TOCONS
 argument_list|,
@@ -865,7 +849,7 @@ name|addlog
 argument_list|(
 argument|fmt
 argument_list|,
-argument|x1
+argument|args
 argument_list|)
 end_macro
 
@@ -878,7 +862,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|x1
+name|args
 decl_stmt|;
 end_decl_stmt
 
@@ -895,7 +879,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|TOLOG
 argument_list|,
@@ -922,7 +906,7 @@ argument_list|(
 name|fmt
 argument_list|,
 operator|&
-name|x1
+name|args
 argument_list|,
 name|TOCONS
 argument_list|,
@@ -945,7 +929,7 @@ name|prf
 argument_list|(
 name|fmt
 argument_list|,
-name|adx
+name|argp
 argument_list|,
 name|flags
 argument_list|,
@@ -962,7 +946,7 @@ begin_decl_stmt
 specifier|register
 name|u_int
 modifier|*
-name|adx
+name|argp
 decl_stmt|;
 end_decl_stmt
 
@@ -1098,7 +1082,7 @@ operator|(
 name|u_long
 operator|)
 operator|*
-name|adx
+name|argp
 argument_list|,
 name|b
 argument_list|,
@@ -1114,7 +1098,7 @@ case|:
 name|b
 operator|=
 operator|*
-name|adx
+name|argp
 expr_stmt|;
 if|#
 directive|if
@@ -1191,7 +1175,7 @@ case|:
 name|b
 operator|=
 operator|*
-name|adx
+name|argp
 operator|++
 expr_stmt|;
 name|s
@@ -1201,7 +1185,7 @@ name|char
 operator|*
 operator|)
 operator|*
-name|adx
+name|argp
 expr_stmt|;
 name|printn
 argument_list|(
@@ -1333,7 +1317,7 @@ name|char
 operator|*
 operator|)
 operator|*
-name|adx
+name|argp
 expr_stmt|;
 while|while
 condition|(
@@ -1363,7 +1347,7 @@ name|char
 operator|*
 operator|)
 operator|*
-name|adx
+name|argp
 operator|++
 expr_stmt|;
 name|prf
@@ -1375,7 +1359,7 @@ name|u_int
 operator|*
 operator|)
 operator|*
-name|adx
+name|argp
 argument_list|,
 name|flags
 argument_list|,
@@ -1397,7 +1381,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|adx
+name|argp
 operator|++
 expr_stmt|;
 goto|goto
@@ -1407,7 +1391,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Printn prints a number n in base b.  * We don't use recursion to avoid deep kernel stacks.  */
+comment|/*  * Printn prints a number n in base b.  * We avoid recursion to avoid deep kernel stacks.  */
 end_comment
 
 begin_macro
@@ -1582,12 +1566,10 @@ operator||=
 name|RB_NOSYNC
 expr_stmt|;
 else|else
-block|{
 name|panicstr
 operator|=
 name|s
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"panic: %s\n"
@@ -1595,6 +1577,14 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KGDB
+name|kgdb_panic
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|KADB

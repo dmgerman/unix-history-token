@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -475,12 +475,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LOCKF
+name|M_FILEDESC
 value|39
 end_define
 
 begin_comment
+comment|/* Open file descriptor table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LOCKF
+value|40
+end_define
+
+begin_comment
 comment|/* Byte-range locking structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROC
+value|41
+end_define
+
+begin_comment
+comment|/* Proc structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SUBPROC
+value|42
+end_define
+
+begin_comment
+comment|/* Proc sub-structures */
 end_comment
 
 begin_define
@@ -581,11 +614,17 @@ value|\ 	"VM pager",
 comment|/* 36 M_VMPAGER */
 value|\ 	"VM pgdata",
 comment|/* 37 M_VMPGDATA */
-value|\ 	"open files",
+value|\ 	"file",
 comment|/* 38 M_FILE */
+value|\ 	"file descrip",
+comment|/* 39 M_FILEDESC */
 value|\ 	"lockf",
-comment|/* 39 M_LOCKF */
-value|\ 	0, 0, 0, 0, \ 	0, 0, 0, 0, 0, \ 	"temp",
+comment|/* 40 M_LOCKF */
+value|\ 	"proc",
+comment|/* 41 M_PROC */
+value|\ 	"subproc",
+comment|/* 42 M_PROC */
+value|\ 	0, 0, 0, 0, 0, 0, \ 	"temp",
 comment|/* 49 M_TEMP */
 value|\ }
 end_define

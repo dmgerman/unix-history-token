@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -451,9 +451,9 @@ name|ucred
 modifier|*
 name|cred
 init|=
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 decl_stmt|;
 specifier|register
 name|int
@@ -1086,9 +1086,9 @@ name|ucred
 modifier|*
 name|cred
 init|=
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 decl_stmt|;
 name|struct
 name|shmid_ds
@@ -1526,7 +1526,9 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 expr_stmt|;
 name|size
 operator|=
@@ -1575,7 +1577,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 operator|=
 operator|(
 name|caddr_t
@@ -1649,9 +1653,9 @@ name|IPC_R
 operator||
 name|IPC_W
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|)
 condition|)
 return|return
@@ -1824,7 +1828,9 @@ name|vm_mmap
 argument_list|(
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 operator|&
 name|uva
@@ -1986,7 +1992,9 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 expr_stmt|;
 for|for
 control|(
@@ -2065,9 +2073,9 @@ end_block
 begin_macro
 name|shmfork
 argument_list|(
-argument|rip
+argument|p1
 argument_list|,
-argument|rpp
+argument|p2
 argument_list|,
 argument|isvfork
 argument_list|)
@@ -2077,10 +2085,10 @@ begin_decl_stmt
 name|struct
 name|proc
 modifier|*
-name|rip
+name|p1
 decl_stmt|,
 modifier|*
-name|rpp
+name|p2
 decl_stmt|;
 end_decl_stmt
 
@@ -2136,9 +2144,11 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|rip
+name|p1
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 argument_list|,
 operator|(
 name|caddr_t
@@ -2148,9 +2158,11 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|rpp
+name|p2
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 operator|=
 operator|(
 name|caddr_t
@@ -2233,7 +2245,9 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 expr_stmt|;
 for|for
 control|(
@@ -2273,14 +2287,18 @@ name|caddr_t
 operator|)
 name|p
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 argument_list|,
 name|M_SHM
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_shm
+name|p_vmspace
+operator|->
+name|vm_shm
 operator|=
 name|NULL
 expr_stmt|;
@@ -2436,7 +2454,9 @@ name|vm_deallocate
 argument_list|(
 name|p
 operator|->
-name|p_map
+name|p_vmspace
+operator|->
+name|vm_map
 argument_list|,
 name|shmd
 operator|->

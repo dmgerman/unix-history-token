@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -88,6 +88,8 @@ begin_expr_stmt
 name|namei
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -97,18 +99,16 @@ name|ndp
 expr_stmt|;
 end_expr_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|u
-operator|.
-name|u_procp
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|filedesc
@@ -178,6 +178,14 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
+name|ndp
+operator|->
+name|ni_cred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
 name|fdp
 operator|=
 name|p
@@ -1202,9 +1210,9 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|ndp
+name|p
 operator|->
-name|ni_cred
+name|p_ucred
 argument_list|)
 condition|)
 block|{

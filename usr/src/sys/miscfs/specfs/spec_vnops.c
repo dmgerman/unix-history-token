@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -200,11 +200,15 @@ argument_list|()
 decl_stmt|,
 name|spec_badop
 argument_list|()
-decl_stmt|,
-name|spec_nullop
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|nullop
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -251,7 +255,7 @@ comment|/* select */
 name|spec_badop
 block|,
 comment|/* mmap */
-name|spec_nullop
+name|nullop
 block|,
 comment|/* fsync */
 name|spec_badop
@@ -284,10 +288,10 @@ comment|/* readlink */
 name|spec_badop
 block|,
 comment|/* abortop */
-name|spec_nullop
+name|nullop
 block|,
 comment|/* inactive */
-name|spec_nullop
+name|nullop
 block|,
 comment|/* reclaim */
 name|spec_lock
@@ -305,7 +309,7 @@ comment|/* strategy */
 name|spec_print
 block|,
 comment|/* print */
-name|spec_nullop
+name|nullop
 block|,
 comment|/* islocked */
 name|spec_advlock
@@ -407,6 +411,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|dev_t
 name|dev
 init|=
@@ -491,6 +503,8 @@ operator|,
 name|mode
 operator|,
 name|S_IFCHR
+operator|,
+name|p
 operator|)
 operator|)
 return|;
@@ -542,6 +556,8 @@ operator|,
 name|mode
 operator|,
 name|S_IFBLK
+operator|,
+name|p
 operator|)
 operator|)
 return|;
@@ -606,6 +622,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|buf
 modifier|*
@@ -726,6 +750,8 @@ operator|,
 name|uio
 operator|,
 name|ioflag
+operator|,
+name|p
 operator|)
 expr_stmt|;
 name|VOP_LOCK
@@ -788,6 +814,8 @@ operator|&
 name|dpart
 operator|,
 name|FREAD
+operator|,
+name|p
 operator|)
 operator|==
 literal|0
@@ -1101,6 +1129,14 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -1207,6 +1243,8 @@ operator|,
 name|uio
 operator|,
 name|ioflag
+operator|,
+name|p
 operator|)
 expr_stmt|;
 name|VOP_LOCK
@@ -1282,6 +1320,8 @@ operator|&
 name|dpart
 operator|,
 name|FREAD
+operator|,
+name|p
 operator|)
 operator|==
 literal|0
@@ -1579,6 +1619,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|dev_t
 name|dev
 init|=
@@ -1618,6 +1666,8 @@ operator|,
 name|data
 operator|,
 name|fflag
+operator|,
+name|p
 operator|)
 operator|)
 return|;
@@ -1684,6 +1734,8 @@ operator|,
 name|data
 operator|,
 name|fflag
+operator|,
+name|p
 operator|)
 operator|)
 return|;
@@ -1741,6 +1793,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|dev_t
 name|dev
@@ -1785,6 +1845,8 @@ operator|(
 name|dev
 operator|,
 name|which
+operator|,
+name|p
 operator|)
 return|;
 block|}
@@ -2018,6 +2080,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|dev_t
 name|dev
 init|=
@@ -2173,6 +2243,8 @@ argument_list|,
 name|flag
 argument_list|,
 name|mode
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -2321,25 +2393,6 @@ literal|"spec_badop called"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_block
-
-begin_comment
-comment|/*  * Special device null operation  */
-end_comment
-
-begin_macro
-name|spec_nullop
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
