@@ -4457,7 +4457,16 @@ name|cam_sim
 modifier|*
 name|psim
 parameter_list|)
-block|{           }
+block|{
+name|trm_Interrupt
+argument_list|(
+name|cam_sim_softc
+argument_list|(
+name|psim
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
