@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.15 1997/08/07 15:33:47 steve Exp $"
+literal|"$Id: ls.c,v 1.16 1997/08/07 22:28:23 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2329,23 +2329,9 @@ return|;
 if|if
 condition|(
 name|a_info
-operator|==
+operator|!=
 name|b_info
-condition|)
-return|return
-operator|(
-name|sortfcn
-argument_list|(
-operator|*
-name|a
-argument_list|,
-operator|*
-name|b
-argument_list|)
-operator|)
-return|;
-if|if
-condition|(
+operator|&&
 operator|(
 operator|*
 name|a
@@ -2354,7 +2340,11 @@ operator|->
 name|fts_level
 operator|==
 name|FTS_ROOTLEVEL
+operator|&&
+operator|!
+name|f_listdir
 condition|)
+block|{
 if|if
 condition|(
 name|a_info
@@ -2366,7 +2356,6 @@ operator|(
 literal|1
 operator|)
 return|;
-elseif|else
 if|if
 condition|(
 name|b_info
@@ -2379,20 +2368,7 @@ operator|-
 literal|1
 operator|)
 return|;
-else|else
-return|return
-operator|(
-name|sortfcn
-argument_list|(
-operator|*
-name|a
-argument_list|,
-operator|*
-name|b
-argument_list|)
-operator|)
-return|;
-else|else
+block|}
 return|return
 operator|(
 name|sortfcn
