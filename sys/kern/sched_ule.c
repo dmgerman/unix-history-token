@@ -691,20 +691,9 @@ name|kg
 parameter_list|,
 name|ke
 parameter_list|)
-value|SCHED_INTERACTIVE(kg)
+define|\
+value|(ke->ke_thread->td_priority< PRI_MIN_TIMESHARE || SCHED_INTERACTIVE(kg))
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|(ke->ke_thread->td_priority< PRI_MIN_TIMESHARE || SCHED_INTERACTIVE(kg))
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Cpu percentage computation macros and defines.  *  * SCHED_CPU_TIME:	Number of seconds to average the cpu usage across.  * SCHED_CPU_TICKS:	Number of hz ticks to average the cpu usage across.  */
