@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mixer.c,v 1.7 1997/09/29 06:38:49 charnier Exp $"
+literal|"$Id: mixer.c,v 1.8 1997/10/01 06:34:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,9 +540,8 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|1
+literal|2
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|argv
@@ -552,6 +551,8 @@ index|]
 argument_list|,
 literal|"-f"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|name
