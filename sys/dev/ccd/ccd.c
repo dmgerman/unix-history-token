@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.37.2.1 1999/02/18 22:06:00 ken Exp $ */
+comment|/* $Id: ccd.c,v 1.37.2.2 1999/03/11 19:21:31 dg Exp $ */
 end_comment
 
 begin_comment
@@ -5917,6 +5917,15 @@ sizeof|sizeof
 argument_list|(
 name|ccd
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * And remove the devstat entry. 		 */
+name|devstat_remove_entry
+argument_list|(
+operator|&
+name|cs
+operator|->
+name|device_stats
 argument_list|)
 expr_stmt|;
 comment|/* This must be atomic. */
