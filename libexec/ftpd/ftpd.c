@@ -5578,6 +5578,22 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+name|p
+operator|+=
+name|strspn
+argument_list|(
+name|p
+argument_list|,
+literal|" \t"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|&&
+operator|*
+name|p
+condition|)
 block|{
 if|if
 condition|(
