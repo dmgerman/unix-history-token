@@ -583,9 +583,6 @@ name|av
 condition|)
 block|{
 case|case
-literal|'U'
-case|:
-case|case
 literal|'u'
 case|:
 operator|++
