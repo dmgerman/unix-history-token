@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.1 (Berkeley) 81/02/28"
+literal|"@(#)main.c	4.2 (Berkeley) 82/04/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|opendir
+name|dirhdr
 modifier|*
 name|firstod
 init|=
@@ -1532,7 +1532,7 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|opendir
+name|dirhdr
 modifier|*
 name|od
 decl_stmt|;
@@ -1577,12 +1577,11 @@ name|printf
 argument_list|(
 literal|"\t%d: %s\n"
 argument_list|,
-name|fileno
-argument_list|(
 name|od
 operator|->
 name|dirfc
-argument_list|)
+operator|->
+name|dd_fd
 argument_list|,
 name|od
 operator|->

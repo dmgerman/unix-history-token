@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.2 (Berkeley) 82/03/14"
+literal|"@(#)dosys.c	4.3 (Berkeley) 82/04/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,7 +361,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|opendir
+name|dirhdr
 modifier|*
 name|od
 decl_stmt|;
@@ -387,16 +387,21 @@ name|dirfc
 operator|!=
 name|NULL
 condition|)
-comment|/* fclose(od->dirfc); */
-name|close
+block|{
+name|closedir
 argument_list|(
 name|od
 operator|->
 name|dirfc
-operator|->
-name|_file
 argument_list|)
 expr_stmt|;
+name|od
+operator|->
+name|dirfc
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -594,12 +599,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
