@@ -121,7 +121,7 @@ comment|/* 	 * Defer signals to protect the thread list from access 	 * by the s
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Unlock the garbage collector mutex, now that the garbage collector 	 * can't be: 	 */
+comment|/* 	 * Unlock the garbage collector mutex, now that the garbage collector 	 * can't be run: 	 */
 if|if
 condition|(
 name|pthread_mutex_unlock
@@ -282,7 +282,7 @@ name|__LINE__
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * The thread return value and error are set by the thread we're 		 * joining to when it exits or detaches:  		 */
+comment|/* 		 * The thread return value and error are set by the thread we're 		 * joining to when it exits or detaches: 		 */
 name|ret
 operator|=
 name|curthread
