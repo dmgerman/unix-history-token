@@ -115,7 +115,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/io.h"
+file|"machine/io.h"
 end_include
 
 begin_include
