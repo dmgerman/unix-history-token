@@ -511,13 +511,17 @@ operator|=
 name|cwd
 expr_stmt|;
 block|}
+comment|/* EWS: dcanon frees its argument; can't just use str2short */
 name|cp
 operator|=
 name|dcanon
 argument_list|(
+name|Strsave
+argument_list|(
 name|str2short
 argument_list|(
 name|tcp
+argument_list|)
 argument_list|)
 argument_list|,
 name|STRNULL
