@@ -616,6 +616,28 @@ argument_list|,
 literal|"bad tab stop spec"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nstops
+operator|==
+sizeof|sizeof
+argument_list|(
+name|tabstops
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tabstops
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"too many tab stops"
+argument_list|)
+expr_stmt|;
 name|tabstops
 index|[
 name|nstops
