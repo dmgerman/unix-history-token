@@ -308,18 +308,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_open_t
-name|tunopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_close_t
-name|tunclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|tunoutput
 name|__P
@@ -347,24 +335,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_rdwr_t
-name|tunread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|tunwrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_ioctl_t
-name|tunioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|tunifioctl
 name|__P
@@ -379,12 +349,6 @@ operator|,
 name|caddr_t
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_select_t
-name|tunselect
 decl_stmt|;
 end_decl_stmt
 
