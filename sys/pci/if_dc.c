@@ -8935,12 +8935,6 @@ name|DC_TX_STORENFWD
 expr_stmt|;
 name|sc
 operator|->
-name|dc_flags
-operator||=
-name|DC_TX_ALIGN
-expr_stmt|;
-name|sc
-operator|->
 name|dc_pmode
 operator|=
 name|DC_PMODE_MII
