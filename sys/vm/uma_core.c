@@ -850,6 +850,10 @@ name|bucketdisable
 operator|=
 literal|0
 expr_stmt|;
+name|bucketdisable
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
