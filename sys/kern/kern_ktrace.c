@@ -837,6 +837,12 @@ condition|(
 name|error
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * don't let p_tracep get ripped out from under us 	 */
 if|if
 condition|(
@@ -935,6 +941,12 @@ name|p_traceflag
 operator|&=
 operator|~
 name|KTRFAC_ACTIVE
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 block|}
 end_function

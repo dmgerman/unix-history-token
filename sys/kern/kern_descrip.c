@@ -7926,6 +7926,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -8049,6 +8055,12 @@ expr_stmt|;
 name|ffree
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
