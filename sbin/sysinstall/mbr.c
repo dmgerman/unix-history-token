@@ -1046,26 +1046,11 @@ name|int
 name|fd
 decl_stmt|;
 comment|/*      * If installing to the whole disk      * then clobber any existing bootcode.      */
-name|sprintf
+name|TellEm
 argument_list|(
-name|scratch
-argument_list|,
-literal|"\nLoading MBR code from %s\n"
+literal|"Loading MBR code from %s"
 argument_list|,
 name|bootcode
-argument_list|)
-expr_stmt|;
-name|dialog_msgbox
-argument_list|(
-name|TITLE
-argument_list|,
-name|scratch
-argument_list|,
-literal|5
-argument_list|,
-literal|60
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|fd
