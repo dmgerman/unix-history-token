@@ -1608,7 +1608,7 @@ if|if
 condition|(
 name|getenv
 argument_list|(
-literal|"debug.acpi.disable"
+literal|"debug.acpi.avoid"
 argument_list|)
 operator|!=
 name|NULL
