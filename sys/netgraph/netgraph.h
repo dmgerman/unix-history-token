@@ -622,7 +622,7 @@ name|ng_findhook_t
 modifier|*
 name|findhook
 decl_stmt|;
-comment|/* only if you have 23000 hooks */
+comment|/* only if you have lots of hooks */
 name|ng_connect_t
 modifier|*
 name|connect
@@ -637,7 +637,7 @@ name|ng_rcvdata_t
 modifier|*
 name|rcvdataq
 decl_stmt|;
-comment|/* or here if been queued */
+comment|/* or here if being queued */
 name|ng_disconnect_t
 modifier|*
 name|disconnect
@@ -1075,9 +1075,6 @@ name|struct
 name|ng_mesg
 modifier|*
 name|msg
-parameter_list|,
-name|int
-name|len
 parameter_list|,
 specifier|const
 name|char
