@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.1	%G%	*/
+comment|/*	tm.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -745,19 +745,12 @@ init|;
 condition|;
 control|)
 block|{
-name|tcommand
-argument_list|(
-name|dev
-argument_list|,
-name|NOP
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|t_erreg
+name|TMADDR
+operator|->
+name|tmer
 operator|&
 name|RWS
 operator|)
@@ -1053,23 +1046,6 @@ name|daddr_t
 modifier|*
 name|p
 decl_stmt|;
-name|tcommand
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|,
-name|NOP
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|t_erreg
-operator|&
-name|RWS
-condition|)
 name|tmwaitrws
 argument_list|(
 name|bp
@@ -1701,12 +1677,6 @@ name|TMADDR
 operator|->
 name|tmcs
 expr_stmt|;
-name|TMADDR
-operator|->
-name|tmcs
-operator|=
-name|IENABLE
-expr_stmt|;
 name|t_erreg
 operator|=
 name|TMADDR
@@ -1849,7 +1819,7 @@ name|tmtab
 operator|.
 name|b_errcnt
 operator|<
-literal|3
+literal|7
 condition|)
 block|{
 if|if
@@ -1871,8 +1841,10 @@ argument_list|)
 expr_stmt|;
 else|else
 name|t_blkno
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
+comment|/* ???????? */
 if|if
 condition|(
 name|tm_ubinfo
@@ -1917,7 +1889,7 @@ name|bp
 argument_list|,
 name|t_erreg
 argument_list|,
-literal|0
+name|t_dsreg
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2712,6 +2684,22 @@ operator|-=
 name|blk
 expr_stmt|;
 block|}
+operator|(
+operator|(
+expr|struct
+name|uba_regs
+operator|*
+operator|)
+name|PHYSUBA0
+operator|)
+operator|->
+name|uba_dpr
+index|[
+literal|1
+index|]
+operator||=
+name|BNE
+expr_stmt|;
 block|}
 end_block
 
@@ -2741,7 +2729,6 @@ decl_stmt|;
 name|tmwait
 argument_list|()
 expr_stmt|;
-comment|/* Flush buffered data path 0 */
 operator|(
 operator|(
 expr|struct
@@ -2755,26 +2742,9 @@ name|uba_dpr
 index|[
 literal|1
 index|]
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|uba_regs
-operator|*
-operator|)
-name|PHYSUBA0
-operator|)
-operator|->
-name|uba_dpr
-index|[
-literal|1
-index|]
-operator|=
+operator||=
 name|BNE
 expr_stmt|;
-comment|/* Map unibus address 0 to section of interest */
 name|io
 operator|=
 operator|(
@@ -2868,9 +2838,8 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|short
 name|s
-decl_stmt|;
+expr_stmt|;
 do|do
 name|s
 operator|=
