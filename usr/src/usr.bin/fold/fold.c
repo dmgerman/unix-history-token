@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fold.c	4.1 (Berkeley) %G%"
+literal|"@(#)fold.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,13 +115,11 @@ operator|<=
 literal|'9'
 condition|)
 name|fold
-operator|=
-operator|*
+operator|*=
 literal|10
 operator|,
 name|fold
-operator|=
-operator|+
+operator|+=
 operator|*
 name|argv
 index|[
@@ -364,13 +362,11 @@ case|case
 literal|'\t'
 case|:
 name|col
-operator|=
-operator|+
+operator|+=
 literal|8
 expr_stmt|;
 name|col
-operator|=
-operator|&
+operator|&=
 operator|~
 literal|7
 expr_stmt|;
