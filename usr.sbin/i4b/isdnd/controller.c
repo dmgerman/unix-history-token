@@ -129,6 +129,8 @@ block|,
 literal|"Eicon.Diehl DIVA 2.0 / 2.02 ISA PnP"
 block|,
 literal|"Compaq Microcom 610"
+block|,
+literal|"AVM Fritz!Card PCI Version 2"
 block|, 	}
 decl_stmt|;
 specifier|static
