@@ -258,6 +258,7 @@ argument_list|,
 operator|&
 name|_time_using_locale
 argument_list|,
+operator|&
 name|time_locale_buf
 argument_list|,
 literal|"LC_TIME"
