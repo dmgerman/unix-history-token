@@ -417,64 +417,6 @@ name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Enter a loop to process each thread in the linked 		 * list that is sigwait-ing on a signal.  Since POSIX 		 * doesn't specify which thread will get the signal 		 * if there are multiple waiters, we'll give it to the 		 * first one we find. 		 */
-for|for
-control|(
-name|pthread
-operator|=
-name|_thread_link_list
-init|;
-name|pthread
-operator|!=
-name|NULL
-condition|;
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|pthread
-operator|->
-name|state
-operator|==
-name|PS_SIGWAIT
-operator|)
-operator|&&
-name|sigismember
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|sigmask
-argument_list|,
-name|sig
-argument_list|)
-condition|)
-block|{
-comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-comment|/* Return the signal number: */
-name|pthread
-operator|->
-name|signo
-operator|=
-name|sig
-expr_stmt|;
-comment|/* 				 * Do not attempt to deliver this signal 				 * to other threads. 				 */
-return|return;
-block|}
-block|}
 comment|/* Check if the signal is not being ignored: */
 if|if
 condition|(
@@ -596,9 +538,6 @@ case|case
 name|PS_SIGTHREAD
 case|:
 case|case
-name|PS_SIGWAIT
-case|:
-case|case
 name|PS_SUSPENDED
 case|:
 comment|/* Nothing to do here. */
@@ -649,6 +588,9 @@ name|PS_SLEEP_WAIT
 case|:
 case|case
 name|PS_SELECT_WAIT
+case|:
+case|case
+name|PS_SIGWAIT
 case|:
 if|if
 condition|(
