@@ -2554,11 +2554,6 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 		 * An aio daemon switches its 		 * address space while running. 		 * Perform a quick check whether 		 * a process has P_SYSTEM. 		 */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2571,15 +2566,13 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|PROC_UNLOCK
+continue|continue;
+comment|/* 		 * Do not swapout a process that 		 * is waiting for VM data 		 * structures as there is a possible 		 * deadlock.  Test this first as 		 * this may block. 		 * 		 * Lock the map until swapout 		 * finishes, or a thread of this 		 * process may attempt to alter 		 * the map. 		 */
+name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
-comment|/* 		 * Do not swapout a process that 		 * is waiting for VM data 		 * structures as there is a possible 		 * deadlock.  Test this first as 		 * this may block. 		 * 		 * Lock the map until swapout 		 * finishes, or a thread of this 		 * process may attempt to alter 		 * the map. 		 */
 name|vm
 operator|=
 name|p
@@ -2679,12 +2672,6 @@ condition|)
 goto|goto
 name|nextproc2
 goto|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|p
@@ -2694,12 +2681,16 @@ condition|)
 block|{
 default|default:
 comment|/* Don't swap out processes in any sort 			 * of 'special' state. */
-goto|goto
-name|nextproc
-goto|;
+break|break;
 case|case
 name|PRS_NORMAL
 case|:
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 comment|/* 			 * do not swapout a realtime process 			 * Check all the thread groups.. 			 */
 name|FOREACH_KSEGRP_IN_PROC
 argument_list|(
@@ -2877,7 +2868,6 @@ goto|goto
 name|retry
 goto|;
 block|}
-block|}
 name|nextproc
 label|:
 name|mtx_unlock_spin
@@ -2886,6 +2876,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+block|}
 name|nextproc2
 label|:
 name|PROC_UNLOCK
