@@ -258,6 +258,14 @@ comment|/* #undef AUDIO_CHU */
 end_comment
 
 begin_comment
+comment|/* PARSE kernel PLL PPS support */
+end_comment
+
+begin_comment
+comment|/* #undef PPS_SYNC */
+end_comment
+
+begin_comment
 comment|/* ACTS modem service */
 end_comment
 
@@ -304,9 +312,12 @@ begin_comment
 comment|/* PPS auxiliary interface for ATOM */
 end_comment
 
-begin_comment
-comment|/* #undef PPS_SAMPLE */
-end_comment
+begin_define
+define|#
+directive|define
+name|PPS_SAMPLE
+value|1
+end_define
 
 begin_comment
 comment|/* Datum/Bancomm bc635/VME interface */
@@ -314,89 +325,6 @@ end_comment
 
 begin_comment
 comment|/* #undef CLOCK_BANC */
-end_comment
-
-begin_comment
-comment|/* ELV/DCF7000 clock */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_DCF7000 */
-end_comment
-
-begin_comment
-comment|/* HOPF 6021 clock */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_HOPF6021 */
-end_comment
-
-begin_comment
-comment|/* Meinberg clocks */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_MEINBERG */
-end_comment
-
-begin_comment
-comment|/* DCF77 raw time code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOCK_RAWDCF
-value|1
-end_define
-
-begin_comment
-comment|/* RCC 8000 clock */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_RCC8000 */
-end_comment
-
-begin_comment
-comment|/* Schmid DCF77 clock */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_SCHMID */
-end_comment
-
-begin_comment
-comment|/* Trimble GPS receiver/TAIP protocol */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_TRIMTAIP */
-end_comment
-
-begin_comment
-comment|/* Trimble GPS receiver/TSIP protocol */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_TRIMTSIP */
-end_comment
-
-begin_comment
-comment|/* WHARTON 400A Series protocol */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_WHARTON_400A */
-end_comment
-
-begin_comment
-comment|/* VARITEXT protocol */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_VARITEXT */
 end_comment
 
 begin_comment
@@ -408,11 +336,46 @@ comment|/* #undef CLOCK_COMPUTIME */
 end_comment
 
 begin_comment
+comment|/* Chronolog K-series WWVB receiver */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_CHRONOLOG */
+end_comment
+
+begin_comment
 comment|/* Datum Programmable Time System */
 end_comment
 
 begin_comment
 comment|/* #undef CLOCK_DATUM */
+end_comment
+
+begin_comment
+comment|/* ELV/DCF7000 clock */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_DCF7000 */
+end_comment
+
+begin_comment
+comment|/* Dumb generic hh:mm:ss local clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_DUMBCLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* Forum Graphic GPS datating station driver */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_FG */
 end_comment
 
 begin_comment
@@ -429,6 +392,14 @@ end_comment
 
 begin_comment
 comment|/* #undef CLOCK_HEATH */
+end_comment
+
+begin_comment
+comment|/* HOPF 6021 clock */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_HOPF6021 */
 end_comment
 
 begin_comment
@@ -475,6 +446,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Meinberg clocks */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_MEINBERG */
+end_comment
+
+begin_comment
 comment|/* EES M201 MSF receiver */
 end_comment
 
@@ -502,6 +481,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Motorola UT Oncore GPS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_ONCORE
+value|1
+end_define
+
+begin_comment
 comment|/* Palisade clock */
 end_comment
 
@@ -521,15 +511,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* PARSE kernel PLL PPS support */
+comment|/* Conrad parallel port radio clock */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PPS_SYNC
-value|1
-end_define
+begin_comment
+comment|/* #undef CLOCK_PCF */
+end_comment
 
 begin_comment
 comment|/* PCL 720 clock support */
@@ -556,6 +543,33 @@ comment|/* #undef CLOCK_PTBACTS */
 end_comment
 
 begin_comment
+comment|/* DCF77 raw time code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_RAWDCF
+value|1
+end_define
+
+begin_comment
+comment|/* RCC 8000 clock */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_RCC8000 */
+end_comment
+
+begin_comment
+comment|/* Schmid DCF77 clock */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_SCHMID */
+end_comment
+
+begin_comment
 comment|/* clock thru shared memory */
 end_comment
 
@@ -564,15 +578,12 @@ comment|/* #undef CLOCK_SHM */
 end_comment
 
 begin_comment
-comment|/* Motorola UT Oncore GPS */
+comment|/* Spectracom 8170/Netclock/2 WWVB receiver */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CLOCK_ONCORE
-value|1
-end_define
+begin_comment
+comment|/* #undef CLOCK_SPECTRACOM */
+end_comment
 
 begin_comment
 comment|/* KSI/Odetics TPRO/S GPS receiver/IRIG interface */
@@ -591,27 +602,27 @@ comment|/* #undef CLOCK_TRAK */
 end_comment
 
 begin_comment
+comment|/* Trimble GPS receiver/TAIP protocol */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_TRIMTAIP */
+end_comment
+
+begin_comment
+comment|/* Trimble GPS receiver/TSIP protocol */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_TRIMTSIP */
+end_comment
+
+begin_comment
 comment|/* Kinemetrics/TrueTime receivers */
 end_comment
 
 begin_comment
 comment|/* #undef CLOCK_TRUETIME */
-end_comment
-
-begin_comment
-comment|/* USNO modem service */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_USNO */
-end_comment
-
-begin_comment
-comment|/* Spectracom 8170/Netclock/2 WWVB receiver */
-end_comment
-
-begin_comment
-comment|/* #undef CLOCK_WWVB */
 end_comment
 
 begin_comment
@@ -623,23 +634,36 @@ comment|/* #undef CLOCK_ULINK */
 end_comment
 
 begin_comment
-comment|/* Chronolog K-series WWVB receiver */
+comment|/* USNO modem service */
 end_comment
 
 begin_comment
-comment|/* #undef CLOCK_CHRONOLOG */
+comment|/* #undef CLOCK_USNO */
 end_comment
 
 begin_comment
-comment|/* Dumb generic hh:mm:ss local clock */
+comment|/* WHARTON 400A Series protocol */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CLOCK_DUMBCLOCK
-value|1
-end_define
+begin_comment
+comment|/* #undef CLOCK_WHARTON_400A */
+end_comment
+
+begin_comment
+comment|/* WWV audio driver */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_WWV */
+end_comment
+
+begin_comment
+comment|/* VARITEXT protocol */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_VARITEXT */
+end_comment
 
 begin_comment
 comment|/* define if we need to declare int errno; */
@@ -974,12 +998,9 @@ begin_comment
 comment|/* do we want the CHU driver? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CLOCK_CHU
-value|1
-end_define
+begin_comment
+comment|/* #undef CLOCK_CHU */
+end_comment
 
 begin_comment
 comment|/* do we have the ppsclock streams module? */
@@ -1142,6 +1163,21 @@ comment|/* #undef NLIST_EXTRA_INDIRECTION */
 end_comment
 
 begin_comment
+comment|/* Other needed NLIST stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NLIST_STRUCT
+value|1
+end_define
+
+begin_comment
+comment|/* #undef NLIST_NAME_UNION */
+end_comment
+
+begin_comment
 comment|/* Should we recommend a minimum value for tickadj? */
 end_comment
 
@@ -1294,6 +1330,17 @@ end_comment
 begin_comment
 comment|/* #undef TERMIOS_NEEDS__SVID3 */
 end_comment
+
+begin_comment
+comment|/* Do we have support for SHMEM_STATUS? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONCORE_SHMEM_STATUS
+value|1
+end_define
 
 begin_comment
 comment|/* adjtime()? */
@@ -1457,6 +1504,10 @@ end_comment
 
 begin_comment
 comment|/* #undef DECL_STIME_0 */
+end_comment
+
+begin_comment
+comment|/* #undef DECL_STIME_1 */
 end_comment
 
 begin_comment
@@ -1851,9 +1902,12 @@ begin_comment
 comment|/* Define if you have the sched_setscheduler function.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SCHED_SETSCHEDULER */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SCHED_SETSCHEDULER
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the setlinebuf function.  */
@@ -2211,13 +2265,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<netinet/ip.h> header file.  */
+comment|/* Define if you have the<netinet/in_systm.h> header file.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_NETINET_IP_H
+name|HAVE_NETINET_IN_SYSTM_H
 value|1
 end_define
 
@@ -2764,7 +2818,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.0.98f"
+value|"4.0.99b"
 end_define
 
 begin_comment
