@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.112 2000/04/25 14:28:14 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.118 2000/05/30 16:56:54 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -5888,6 +5888,35 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_suspend
+operator|!=
+name|PWR_RESUME
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: interrupt while not operating ignored\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|status
 operator|=
 name|UREAD2
