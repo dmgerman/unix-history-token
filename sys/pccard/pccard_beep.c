@@ -261,7 +261,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|pccard_beep_select
 parameter_list|(
 name|enum
@@ -269,10 +269,28 @@ name|beepstate
 name|state
 parameter_list|)
 block|{
+if|if
+condition|(
+name|state
+operator|==
+name|BEEP_ON
+operator|||
+name|state
+operator|==
+name|BEEP_OFF
+condition|)
+block|{
 name|allow_beep
 operator|=
 name|state
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 
