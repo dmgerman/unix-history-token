@@ -3210,6 +3210,24 @@ value|0x00008000
 end_define
 
 begin_comment
+comment|/*  * There are the recommended IPG nibble counter settings  * specified in the Adaptec manual for full duplex and  * half duplex operation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SF_IPGT_FDX
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SF_IPGT_HDX
+value|0x11
+end_define
+
+begin_comment
 comment|/*  * RX filter registers 0x6000 to 0x6FFF  */
 end_comment
 
@@ -4573,6 +4591,12 @@ name|sf_ldata
 decl_stmt|;
 name|int
 name|sf_tx_cnt
+decl_stmt|;
+name|u_int8_t
+name|sf_link
+decl_stmt|;
+name|int
+name|sf_if_flags
 decl_stmt|;
 name|struct
 name|callout_handle
