@@ -1339,7 +1339,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"%s: read %u specifications"
+literal|"%s: read %lu specifications"
 argument_list|,
 name|file
 argument_list|,
