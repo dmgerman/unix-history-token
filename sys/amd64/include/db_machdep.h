@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$Id: db_machdep.h,v 1.5 1994/10/02 19:36:30 phk Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$Id: db_machdep.h,v 1.6 1994/10/19 21:13:51 bde Exp $  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_DB_MACHDEP_H_
+name|_MACHINE_DB_MACHDEP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_DB_MACHDEP_H_
+name|_MACHINE_DB_MACHDEP_H_
 end_define
 
 begin_comment
@@ -213,18 +213,6 @@ parameter_list|)
 value|((regs)->tf_eflags |=  PSL_T)
 end_define
 
-begin_comment
-comment|/* #define	IS_BREAKPOINT_TRAP(type, code)	((type) == T_INT3) */
-end_comment
-
-begin_comment
-comment|/* #define IS_WATCHPOINT_TRAP(type, code)	((type) == T_WATCHPOINT) */
-end_comment
-
-begin_comment
-comment|/* using the FreeBSD values, rather than the Mach ones: */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -237,6 +225,10 @@ parameter_list|)
 value|((type) == T_BPTFLT)
 end_define
 
+begin_comment
+comment|/*  * Watchpoints are not supported.  The debug exception type is in %dr6  * and not yet in the args to this macro.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -246,7 +238,7 @@ name|type
 parameter_list|,
 name|code
 parameter_list|)
-value|((type) == T_KDBTRAP)
+value|0
 end_define
 
 begin_define
@@ -480,7 +472,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I386_DB_MACHDEP_H_ */
+comment|/* !_MACHINE_DB_MACHDEP_H_ */
 end_comment
 
 end_unit
