@@ -250,10 +250,20 @@ name|ut_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOCALHACK
-comment|/* we trim the first three characters off here.. see sample.ppp.conf */
+comment|/*      * if the first three chacters are "pap" trim them off before doing      * utmp entry (see sample.ppp-pap-dialup       */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+literal|"pap"
+argument_list|,
+name|dstsystem
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
@@ -281,8 +291,7 @@ name|ut_line
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 operator|(
 name|void
 operator|)
@@ -302,9 +311,6 @@ name|ut_line
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOCALHACK */
 operator|(
 name|void
 operator|)
