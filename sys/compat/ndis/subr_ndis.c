@@ -2314,7 +2314,7 @@ name|patch
 decl_stmt|;
 name|patch
 operator|=
-name|ntoskrnl_functbl
+name|ndis_functbl
 expr_stmt|;
 while|while
 condition|(
