@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xtend.c,v 1.7 1999/08/08 07:05:46 stark Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1399,6 +1399,10 @@ argument_list|,
 operator|&
 name|fs
 argument_list|)
+operator|&&
+name|User
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
