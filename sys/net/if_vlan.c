@@ -229,7 +229,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|vlan_clone_destroy
 parameter_list|(
 name|struct
@@ -378,6 +378,8 @@ argument_list|,
 name|vlan_clone_create
 argument_list|,
 name|vlan_clone_destroy
+argument_list|,
+literal|0
 argument_list|,
 name|IF_MAXUNIT
 argument_list|)
@@ -1032,7 +1034,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|vlan_clone_destroy
 parameter_list|(
 name|struct
@@ -1089,11 +1091,6 @@ argument_list|,
 name|M_VLAN
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

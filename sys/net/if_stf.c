@@ -519,7 +519,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|stf_clone_destroy
 parameter_list|(
 name|struct
@@ -545,6 +545,8 @@ argument_list|,
 name|stf_clone_create
 argument_list|,
 name|stf_clone_destroy
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -743,7 +745,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|stf_clone_destroy
 parameter_list|(
 name|ifp
@@ -812,11 +814,6 @@ argument_list|,
 name|M_STF
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

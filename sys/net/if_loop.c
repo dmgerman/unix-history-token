@@ -411,7 +411,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|lo_clone_destroy
 parameter_list|(
 name|struct
@@ -473,13 +473,15 @@ name|lo_clone_create
 argument_list|,
 name|lo_clone_destroy
 argument_list|,
+literal|1
+argument_list|,
 name|IF_MAXUNIT
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|lo_clone_destroy
 parameter_list|(
 name|ifp
@@ -501,18 +503,20 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-comment|/* 	 * Prevent lo0 from being destroyed. 	 */
-if|if
-condition|(
+comment|/* XXX: destroying lo0 will lead to panics. */
+name|KASSERT
+argument_list|(
 name|loif
-operator|==
+operator|!=
 name|ifp
-condition|)
-return|return
+argument_list|,
 operator|(
-name|EINVAL
+literal|"%s: destroying lo0"
+operator|,
+name|__func__
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|bpfdetach
 argument_list|(
 name|ifp
@@ -537,11 +541,6 @@ argument_list|,
 name|M_LO
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -734,9 +733,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|int
-name|err
-decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -755,32 +751,6 @@ name|if_clone_attach
 argument_list|(
 operator|&
 name|lo_cloner
-argument_list|)
-expr_stmt|;
-comment|/* Create lo0 */
-name|err
-operator|=
-name|if_clone_create
-argument_list|(
-literal|"lo0"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"lo0"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|err
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"%s: can't create lo0"
-operator|,
-name|__func__
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;

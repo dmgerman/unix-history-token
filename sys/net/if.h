@@ -120,6 +120,10 @@ name|ifc_namelen
 decl_stmt|;
 comment|/* length of name */
 name|int
+name|ifc_minifs
+decl_stmt|;
+comment|/* minimum number of interfaces */
+name|int
 name|ifc_maxunit
 decl_stmt|;
 comment|/* maximum unit number */
@@ -146,7 +150,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|ifc_destroy
@@ -172,10 +176,12 @@ name|create
 parameter_list|,
 name|destroy
 parameter_list|,
+name|minifs
+parameter_list|,
 name|maxunit
 parameter_list|)
 define|\
-value|{ { 0 }, name, sizeof(name) - 1, maxunit, NULL, 0, create, destroy }
+value|{ { 0 }, name, sizeof(name) - 1, minifs, maxunit, NULL, 0, create, destroy }
 end_define
 
 begin_endif
