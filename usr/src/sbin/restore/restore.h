@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	restore.h	3.10	85/01/18	*/
+comment|/*	restore.h	3.11	85/02/18	*/
 end_comment
 
 begin_include
@@ -381,6 +381,17 @@ end_define
 
 begin_comment
 comment|/* entry has been given a temporary name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXISTED
+value|0x0040
+end_define
+
+begin_comment
+comment|/* directory already existed during extract */
 end_comment
 
 begin_comment

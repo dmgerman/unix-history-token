@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.19	(Berkeley)	85/02/13"
+literal|"@(#)dirs.c	3.20	(Berkeley)	85/02/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -2377,6 +2377,24 @@ operator|==
 name|NIL
 condition|)
 continue|continue;
+if|if
+condition|(
+name|ep
+operator|->
+name|e_flags
+operator|&
+name|EXISTED
+condition|)
+block|{
+name|ep
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|NEW
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|node

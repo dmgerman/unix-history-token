@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.18	(Berkeley)	85/01/18"
+literal|"@(#)utilities.c	3.19	(Berkeley)	85/02/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,6 +498,12 @@ operator|<
 literal|0
 condition|)
 block|{
+name|np
+operator|->
+name|e_flags
+operator||=
+name|EXISTED
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1403,6 +1409,24 @@ argument_list|(
 name|flagbuf
 argument_list|,
 literal|"|KEEP"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ep
+operator|->
+name|e_flags
+operator|&
+name|EXISTED
+condition|)
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|flagbuf
+argument_list|,
+literal|"|EXISTED"
 argument_list|)
 expr_stmt|;
 return|return
