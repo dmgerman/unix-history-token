@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1364,6 +1364,9 @@ name|fdesc
 operator|-=
 literal|3
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|fdesc
@@ -1404,6 +1407,8 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|io
 operator|->
 name|i_offset
@@ -1475,6 +1480,9 @@ name|size
 decl_stmt|,
 name|diff
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|fdesc
@@ -1491,6 +1499,8 @@ name|getchar
 argument_list|()
 operator|)
 return|;
+endif|#
+directive|endif
 name|fdesc
 operator|-=
 literal|3
@@ -1662,6 +1672,10 @@ operator|->
 name|i_offset
 operator|/
 name|DEV_BSIZE
+operator|+
+name|io
+operator|->
+name|i_boff
 expr_stmt|;
 name|off
 operator|=
@@ -1857,6 +1871,9 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|fdesc
@@ -1901,6 +1918,8 @@ name|i
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|fdesc
 operator|-=
 literal|3
@@ -2137,6 +2156,9 @@ argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|off
@@ -2226,6 +2248,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 name|size
 operator|-=
 name|off
@@ -2264,7 +2288,12 @@ operator|--
 name|size
 condition|)
 do|;
+ifndef|#
+directive|ifndef
+name|SMALL
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -3368,7 +3397,7 @@ name|badspec
 label|:
 name|printf
 argument_list|(
-literal|"malformed device specification\nusage: device(adaptor, controller, drive, partition)file\n"
+literal|"malformed device specification\nusage: device(adaptor, controller, drive, partition)file -or-<device><unit><partitionletter>:<file>\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3603,6 +3632,9 @@ name|int
 name|fdesc
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|SMALL
 name|struct
 name|iob
 modifier|*
@@ -3675,6 +3707,8 @@ name|i_flgs
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -3848,6 +3882,9 @@ block|}
 endif|#
 directive|endif
 comment|/* SMALL */
+ifndef|#
+directive|ifndef
+name|i386
 name|exit
 argument_list|()
 block|{
@@ -3857,6 +3894,8 @@ literal|"Exit called"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|_stop
 argument_list|(
 argument|s
