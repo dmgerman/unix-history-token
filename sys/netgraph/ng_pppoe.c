@@ -203,13 +203,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ng_connect_t
-name|ng_pppoe_connect
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|ng_rcvdata_t
 name|ng_pppoe_rcvdata
 decl_stmt|;
@@ -465,11 +458,6 @@ operator|.
 name|newhook
 operator|=
 name|ng_pppoe_newhook
-block|,
-operator|.
-name|connect
-operator|=
-name|ng_pppoe_connect
 block|,
 operator|.
 name|rcvdata
@@ -6493,28 +6481,6 @@ argument_list|,
 name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * This is called once we've already connected a new hook to the other node.  * It gives us a chance to balk at the last minute.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|ng_pppoe_connect
-parameter_list|(
-name|hook_p
-name|hook
-parameter_list|)
-block|{
-comment|/* be really amiable and just say "YUP that's OK by me! " */
 return|return
 operator|(
 literal|0
