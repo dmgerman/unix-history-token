@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	1.1 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	1.2 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -110,6 +110,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|readonly
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Will be unable to rewrite file */
+end_comment
+
+begin_decl_stmt
+name|int
 name|noreset
 decl_stmt|;
 end_decl_stmt
@@ -148,6 +158,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Output temp file buffer */
+end_comment
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|pipef
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pipe file we have opened */
 end_comment
 
 begin_decl_stmt
