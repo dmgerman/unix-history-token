@@ -151,49 +151,40 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|getstathz
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|humantime
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|long
-operator|,
+parameter_list|,
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -476,10 +467,6 @@ case|case
 literal|0
 case|:
 comment|/* child */
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|execvp
 argument_list|(
 operator|*
@@ -488,33 +475,22 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|warn
+name|err
 argument_list|(
+name|errno
+operator|==
+name|ENOENT
+condition|?
+literal|127
+else|:
+literal|126
+argument_list|,
 literal|"%s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
-name|_exit
-argument_list|(
-literal|127
-argument_list|)
-expr_stmt|;
-comment|/* POSIX: utility could not be found */
-else|else
-name|_exit
-argument_list|(
-literal|126
-argument_list|)
-expr_stmt|;
-comment|/* POSIX: utility could not be invoked */
 comment|/* NOTREACHED */
 block|}
 comment|/* parent */
@@ -1114,8 +1090,8 @@ name|exitonsig
 argument_list|,
 name|SIG_DFL
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|perror
 argument_list|(
