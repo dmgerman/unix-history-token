@@ -81,6 +81,9 @@ decl_stmt|;
 name|pid_t
 name|ret
 decl_stmt|;
+name|int
+name|errsave
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -160,6 +163,11 @@ name|flags
 operator|&
 name|PTHREAD_SCOPE_SYSTEM
 condition|)
+block|{
+name|errsave
+operator|=
+name|errno
+expr_stmt|;
 name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
@@ -170,6 +178,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|errsave
+expr_stmt|;
+block|}
 block|}
 comment|/* Return the process ID: */
 return|return
