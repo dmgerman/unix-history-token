@@ -1523,14 +1523,14 @@ break|break;
 case|case
 literal|'s'
 case|:
-comment|/* 16-bit integer */
+comment|/* 16-bit integer passed as an int */
 name|i
 operator|=
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|u_short
+name|int
 argument_list|)
 expr_stmt|;
 name|stack
@@ -1880,14 +1880,14 @@ break|break;
 case|case
 literal|'s'
 case|:
-comment|/* 16-bit integer */
+comment|/* 16-bit integer passed as an int */
 name|i
 operator|=
 name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|u_short
+name|int
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2482,9 +2482,6 @@ name|pda
 operator|->
 name|node
 argument_list|,
-operator|(
-name|u_int16_t
-operator|)
 literal|1
 argument_list|)
 operator|)
