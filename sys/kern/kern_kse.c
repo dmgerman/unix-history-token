@@ -6856,7 +6856,7 @@ condition|(
 operator|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
 name|PS_NEEDSIGCHK
 operator|)
