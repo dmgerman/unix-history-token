@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exp.c	5.4 (Berkeley) %G%"
+literal|"@(#)exp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2073,7 +2073,7 @@ name|faket
 operator|.
 name|t_dtyp
 operator|=
-name|TCOM
+name|NODE_COMMAND
 expr_stmt|;
 name|faket
 operator|.

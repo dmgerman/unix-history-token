@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,16 +60,6 @@ end_include
 begin_comment
 comment|/*  * C shell  *  * Bill Joy, UC Berkeley  * October, 1978; May 1980  *  * Jim Kulp, IIASA, Laxenburg Austria  * April, 1980  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|isdir
-parameter_list|(
-name|d
-parameter_list|)
-value|((d.st_mode& S_IFMT) == S_IFDIR)
-end_define
 
 begin_typedef
 typedef|typedef
@@ -545,24 +535,8 @@ name|reslab
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|setexit
-parameter_list|()
-value|((void) setjmp(reslab))
-end_define
-
-begin_define
-define|#
-directive|define
-name|reset
-parameter_list|()
-value|longjmp(reslab, 0)
-end_define
-
 begin_comment
-comment|/* Should use structure assignment here */
+comment|/* Should use structure assignment here. */
 end_comment
 
 begin_define
@@ -572,7 +546,7 @@ name|getexit
 parameter_list|(
 name|a
 parameter_list|)
-value|bcopy((char *)reslab, (char *)(a), sizeof reslab)
+value|bcopy((void *)reslab, (void *)(a), sizeof(reslab))
 end_define
 
 begin_define
@@ -582,7 +556,7 @@ name|resexit
 parameter_list|(
 name|a
 parameter_list|)
-value|bcopy(((char *)(a)), (char *)reslab, sizeof reslab)
+value|bcopy(((void *)(a)), (void *)reslab, sizeof(reslab))
 end_define
 
 begin_decl_stmt
@@ -821,7 +795,7 @@ value|DODOL|DOEXCL
 end_define
 
 begin_comment
-comment|/*  * Labuf implements a general buffer for lookahead during lexical operations.  * Text which is to be placed in the input stream can be stuck here.  * We stick parsed ahead $ constructs during initial input,  * process id's from `$$', and modified variable values (from qualifiers  * during expansion in sh.dol.c) here.  */
+comment|/*  * Labuf implements a general buffer for lookahead during lexical operations.  * Text which is to be placed in the input stream can be stuck here.  We stick  * parsed ahead $ constructs during initial input, process id's from `$$',  * and modified variable values (from qualifiers during expansion in sh.dol.c)  * here.  */
 end_comment
 
 begin_decl_stmt
@@ -841,21 +815,121 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Parser structure  *  * Each command is parsed to a tree of command structures and  * flags are set bottom up during this process, to be propagated down  * as needed during the semantics/exeuction pass (sh.sem.c).  */
+comment|/*  * Parser structure  *  * Each command is parsed to a tree of command structures and flags are set  * bottom up during this process, to be propagated down as needed during the  * semantics/exeuction pass (sh.sem.c).  */
 end_comment
 
 begin_struct
 struct|struct
 name|command
 block|{
+define|#
+directive|define
+name|NODE_COMMAND
+value|1
+comment|/* t_dcom<t_dlef>t_drit	*/
+define|#
+directive|define
+name|NODE_PAREN
+value|2
+comment|/* ( t_dspr )<t_dlef>t_drit	*/
+define|#
+directive|define
+name|NODE_PIPE
+value|3
+comment|/* t_dlef | t_drit		*/
+define|#
+directive|define
+name|NODE_LIST
+value|4
+comment|/* t_dlef ; t_drit		*/
+define|#
+directive|define
+name|NODE_OR
+value|5
+comment|/* t_dlef || t_drit		*/
+define|#
+directive|define
+name|NODE_AND
+value|6
+comment|/* t_dlef&& t_drit		*/
 name|short
 name|t_dtyp
 decl_stmt|;
-comment|/* Type of node */
+comment|/* Node type */
+define|#
+directive|define
+name|F_SAVE
+value|(F_NICE|F_TIME|F_NOHUP)
+comment|/* save these when re-doing */
+define|#
+directive|define
+name|F_AMPERSAND
+value|0x0001
+comment|/* executes in background	*/
+define|#
+directive|define
+name|F_APPEND
+value|0x0002
+comment|/* output is redirected>>	*/
+define|#
+directive|define
+name|F_NICE
+value|0x0004
+comment|/* t_nice is meaningful */
+define|#
+directive|define
+name|F_NOFORK
+value|0x0008
+comment|/* don't fork, last ()ized cmd	*/
+define|#
+directive|define
+name|F_NOHUP
+value|0x0010
+comment|/* nohup this command */
+define|#
+directive|define
+name|F_NOINTERRUPT
+value|0x0020
+comment|/* should be immune from intr's */
+define|#
+directive|define
+name|F_OVERWRITE
+value|0x0040
+comment|/* output was !			*/
+define|#
+directive|define
+name|F_PIPEIN
+value|0x0080
+comment|/* input is a pipe		*/
+define|#
+directive|define
+name|F_PIPEOUT
+value|0x0100
+comment|/* output is a pipe		*/
+define|#
+directive|define
+name|F_READ
+value|0x0200
+comment|/* input redirection is<<	*/
+define|#
+directive|define
+name|F_REPEAT
+value|0x0400
+comment|/* reexec aft if, repeat,...	*/
+define|#
+directive|define
+name|F_STDERR
+value|0x0800
+comment|/* redirect unit 2 with unit 1	*/
+define|#
+directive|define
+name|F_TIME
+value|0x1000
+comment|/* time this command */
 name|short
 name|t_dflg
 decl_stmt|;
-comment|/* Flags, e.g. FAND|... */
+comment|/* flags */
 union|union
 block|{
 name|char
@@ -923,364 +997,140 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|TCOM
-value|1
-end_define
-
 begin_comment
-comment|/* t_dcom<t_dlef>t_drit	*/
+comment|/* Parser tokens. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TPAR
-value|2
-end_define
-
-begin_comment
-comment|/* ( t_dspr )<t_dlef>t_drit	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TFIL
-value|3
-end_define
-
-begin_comment
-comment|/* t_dlef | t_drit		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TLST
-value|4
-end_define
-
-begin_comment
-comment|/* t_dlef ; t_drit		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TOR
-value|5
-end_define
-
-begin_comment
-comment|/* t_dlef || t_drit		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TAND
-value|6
-end_define
-
-begin_comment
-comment|/* t_dlef&& t_drit		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FSAVE
-value|(FNICE|FTIME|FNOHUP)
-end_define
-
-begin_comment
-comment|/* save these when re-doing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FAND
-value|(1<<0)
-end_define
-
-begin_comment
-comment|/* executes in background	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FCAT
-value|(1<<1)
-end_define
-
-begin_comment
-comment|/* output is redirected>>	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPIN
-value|(1<<2)
-end_define
-
-begin_comment
-comment|/* input is a pipe		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPOU
-value|(1<<3)
-end_define
-
-begin_comment
-comment|/* output is a pipe		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPAR
-value|(1<<4)
-end_define
-
-begin_comment
-comment|/* don't fork, last ()ized cmd	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FINT
-value|(1<<5)
-end_define
-
-begin_comment
-comment|/* should be immune from intr's */
-end_comment
-
-begin_comment
-comment|/* spare */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDIAG
-value|(1<<7)
-end_define
-
-begin_comment
-comment|/* redirect unit 2 with unit 1	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FANY
-value|(1<<8)
-end_define
-
-begin_comment
-comment|/* output was !			*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FHERE
-value|(1<<9)
-end_define
-
-begin_comment
-comment|/* input redirection is<<	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FREDO
-value|(1<<10)
-end_define
-
-begin_comment
-comment|/* reexec aft if, repeat,...	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FNICE
-value|(1<<11)
-end_define
-
-begin_comment
-comment|/* t_nice is meaningful */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FNOHUP
-value|(1<<12)
-end_define
-
-begin_comment
-comment|/* nohup this command */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTIME
-value|(1<<13)
-end_define
-
-begin_comment
-comment|/* time this command */
-end_comment
-
-begin_comment
-comment|/*  * The keywords for the parser  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ZBREAK
+name|T_BREAK
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZBRKSW
+name|T_BRKSW
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZCASE
+name|T_CASE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZDEFAULT
+name|T_DEFAULT
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZELSE
+name|T_ELSE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZEND
+name|T_END
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZENDIF
+name|T_ENDIF
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZENDSW
+name|T_ENDSW
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZEXIT
+name|T_EXIT
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZFOREACH
+name|T_FOREACH
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZGOTO
+name|T_GOTO
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZIF
+name|T_IF
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZLABEL
+name|T_LABEL
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZLET
+name|T_LET
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZSET
+name|T_SET
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZSWITCH
+name|T_SWITCH
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZTEST
+name|T_TEST
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZTHEN
+name|T_THEN
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|ZWHILE
+name|T_WHILE
 value|18
 end_define
 
@@ -1672,6 +1522,7 @@ name|xalloc
 parameter_list|(
 name|i
 parameter_list|)
+define|\
 value|((alloctmp = malloc(i)) ? alloctmp : (char *)nomem(i))
 end_define
 
@@ -1684,6 +1535,7 @@ name|p
 parameter_list|,
 name|i
 parameter_list|)
+define|\
 value|((alloctmp = realloc(p, i)) ? alloctmp : (char *)nomem(i))
 end_define
 

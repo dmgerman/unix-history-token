@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	5.9 (Berkeley) %G%"
+literal|"@(#)sem.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FAND
+name|F_AMPERSAND
 operator|)
 operator|&&
 name|wanttty
@@ -171,7 +171,7 @@ name|t_dtyp
 condition|)
 block|{
 case|case
-name|TCOM
+name|NODE_COMMAND
 case|:
 if|if
 condition|(
@@ -224,7 +224,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FREDO
+name|F_REPEAT
 operator|)
 operator|==
 literal|0
@@ -249,7 +249,7 @@ condition|)
 return|return;
 comment|/* fall into... */
 case|case
-name|TPAR
+name|NODE_PAREN
 case|:
 if|if
 condition|(
@@ -257,7 +257,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPOU
+name|F_PIPEOUT
 condition|)
 name|mypipe
 argument_list|(
@@ -271,7 +271,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FHERE
+name|F_READ
 condition|)
 block|{
 operator|(
@@ -321,7 +321,7 @@ name|t
 operator|->
 name|t_dtyp
 operator|==
-name|TCOM
+name|NODE_COMMAND
 condition|)
 if|if
 condition|(
@@ -405,7 +405,7 @@ name|t
 operator|->
 name|t_dflg
 operator||=
-name|FNICE
+name|F_NICE
 expr_stmt|;
 block|}
 else|else
@@ -431,7 +431,7 @@ name|t
 operator|->
 name|t_dflg
 operator||=
-name|FNICE
+name|F_NICE
 expr_stmt|;
 block|}
 else|else
@@ -465,7 +465,7 @@ name|t
 operator|->
 name|t_dflg
 operator||=
-name|FNOHUP
+name|F_NOHUP
 expr_stmt|;
 name|lshift
 argument_list|(
@@ -508,7 +508,7 @@ name|t
 operator|->
 name|t_dflg
 operator||=
-name|FTIME
+name|F_TIME
 expr_stmt|;
 name|lshift
 argument_list|(
@@ -531,7 +531,7 @@ name|t
 operator|->
 name|t_dtyp
 operator|==
-name|TCOM
+name|NODE_COMMAND
 condition|?
 name|isbfunc
 argument_list|(
@@ -554,7 +554,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FTIME
+name|F_TIME
 operator|)
 operator|||
 operator|(
@@ -562,7 +562,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPAR
+name|F_NOFORK
 operator|)
 operator|==
 literal|0
@@ -576,13 +576,13 @@ operator|->
 name|t_dflg
 operator|&
 operator|(
-name|FPOU
+name|F_PIPEOUT
 operator||
-name|FAND
+name|F_AMPERSAND
 operator||
-name|FNICE
+name|F_NICE
 operator||
-name|FNOHUP
+name|F_NOHUP
 operator|)
 operator|)
 operator|)
@@ -596,16 +596,16 @@ name|t
 operator|->
 name|t_dtyp
 operator|==
-name|TPAR
+name|NODE_PAREN
 operator|||
 name|t
 operator|->
 name|t_dflg
 operator|&
 operator|(
-name|FREDO
+name|F_REPEAT
 operator||
-name|FAND
+name|F_AMPERSAND
 operator|)
 operator|||
 name|bifunc
@@ -965,7 +965,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 operator|)
 operator|||
@@ -1106,7 +1106,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 condition|)
 block|{
@@ -1190,7 +1190,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FNOHUP
+name|F_NOHUP
 condition|)
 operator|(
 name|void
@@ -1208,7 +1208,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FNICE
+name|F_NICE
 condition|)
 operator|(
 name|void
@@ -1246,7 +1246,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPIN
+name|F_PIPEIN
 condition|)
 block|{
 operator|(
@@ -1279,7 +1279,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPOU
+name|F_PIPEOUT
 operator|)
 operator|==
 literal|0
@@ -1317,7 +1317,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FAND
+name|F_AMPERSAND
 operator|)
 operator|==
 literal|0
@@ -1343,7 +1343,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPOU
+name|F_PIPEOUT
 condition|)
 block|{
 operator|(
@@ -1397,7 +1397,7 @@ name|t
 operator|->
 name|t_dtyp
 operator|!=
-name|TPAR
+name|NODE_PAREN
 condition|)
 block|{
 name|doexec
@@ -1467,7 +1467,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 expr_stmt|;
 name|execute
 argument_list|(
@@ -1482,7 +1482,7 @@ name|exitstat
 argument_list|()
 expr_stmt|;
 case|case
-name|TFIL
+name|NODE_PIPE
 case|:
 name|t
 operator|->
@@ -1490,7 +1490,7 @@ name|t_dcar
 operator|->
 name|t_dflg
 operator||=
-name|FPOU
+name|F_PIPEOUT
 operator||
 operator|(
 name|t
@@ -1498,13 +1498,13 @@ operator|->
 name|t_dflg
 operator|&
 operator|(
-name|FPIN
+name|F_PIPEIN
 operator||
-name|FAND
+name|F_AMPERSAND
 operator||
-name|FDIAG
+name|F_STDERR
 operator||
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 operator|)
 expr_stmt|;
@@ -1527,7 +1527,7 @@ name|t_dcdr
 operator|->
 name|t_dflg
 operator||=
-name|FPIN
+name|F_PIPEIN
 operator||
 operator|(
 name|t
@@ -1535,13 +1535,13 @@ operator|->
 name|t_dflg
 operator|&
 operator|(
-name|FPOU
+name|F_PIPEOUT
 operator||
-name|FAND
+name|F_AMPERSAND
 operator||
-name|FPAR
+name|F_NOFORK
 operator||
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 operator|)
 expr_stmt|;
@@ -1571,7 +1571,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TLST
+name|NODE_LIST
 case|:
 if|if
 condition|(
@@ -1590,7 +1590,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 expr_stmt|;
 name|execute
 argument_list|(
@@ -1610,7 +1610,7 @@ name|t_dcar
 operator|->
 name|t_dflg
 operator|&
-name|FAND
+name|F_AMPERSAND
 operator|&&
 name|t
 operator|->
@@ -1623,7 +1623,7 @@ name|t_dcdr
 operator|->
 name|t_dflg
 operator|&
-name|FAND
+name|F_AMPERSAND
 operator|)
 operator|==
 literal|0
@@ -1650,9 +1650,9 @@ operator|->
 name|t_dflg
 operator|&
 operator|(
-name|FPAR
+name|F_NOFORK
 operator||
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 expr_stmt|;
 name|execute
@@ -1667,10 +1667,10 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|TOR
+name|NODE_OR
 case|:
 case|case
-name|TAND
+name|NODE_AND
 case|:
 if|if
 condition|(
@@ -1689,7 +1689,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 expr_stmt|;
 name|execute
 argument_list|(
@@ -1719,7 +1719,7 @@ name|t
 operator|->
 name|t_dtyp
 operator|==
-name|TAND
+name|NODE_AND
 operator|)
 condition|)
 return|return;
@@ -1742,9 +1742,9 @@ operator|->
 name|t_dflg
 operator|&
 operator|(
-name|FPAR
+name|F_NOFORK
 operator||
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 expr_stmt|;
 name|execute
@@ -1759,7 +1759,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 	 * Fall through for all breaks from switch 	 * 	 * If there will be no more executions of this 	 * command, flush all file descriptors. 	 * Places that turn on the FREDO bit are responsible 	 * for doing donefds after the last re-execution 	 */
+comment|/* 	 * Fall through for all breaks from switch. 	 * 	 * If there will be no more executions of this command, flush all 	 * file descriptors.  Places that turn on the F_REPEAT bit are 	 * responsible for doing donefds after the last re-execution 	 */
 if|if
 condition|(
 name|didfds
@@ -1770,7 +1770,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FREDO
+name|F_REPEAT
 operator|)
 condition|)
 name|donefds
@@ -1902,7 +1902,7 @@ operator|||
 operator|(
 name|flags
 operator|&
-name|FREDO
+name|F_REPEAT
 operator|)
 condition|)
 return|return;
@@ -1911,13 +1911,13 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|FHERE
+name|F_READ
 operator|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* FHERE already done */
+comment|/* F_READ already done */
 operator|(
 name|void
 operator|)
@@ -1972,7 +1972,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|FPIN
+name|F_PIPEIN
 condition|)
 block|{
 operator|(
@@ -2015,7 +2015,7 @@ condition|(
 operator|(
 name|flags
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 operator|&&
 name|tpgrp
@@ -2091,7 +2091,7 @@ operator|!
 operator|(
 name|flags
 operator|&
-name|FCAT
+name|F_APPEND
 operator|)
 operator|||
 name|open
@@ -2114,7 +2114,7 @@ operator|!
 operator|(
 name|flags
 operator|&
-name|FANY
+name|F_OVERWRITE
 operator|)
 operator|&&
 name|adrof
@@ -2127,7 +2127,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|FCAT
+name|F_APPEND
 condition|)
 name|Perror
 argument_list|(
@@ -2163,7 +2163,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|FPOU
+name|F_PIPEOUT
 condition|)
 operator|(
 name|void
@@ -2197,7 +2197,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|FDIAG
+name|F_STDERR
 condition|)
 operator|(
 name|void

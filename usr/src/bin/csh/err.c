@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)err.c	5.3 (Berkeley) %G%"
+literal|"@(#)err.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,8 +258,12 @@ operator|&
 name|tpgrp
 argument_list|)
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Unwind */
 block|}

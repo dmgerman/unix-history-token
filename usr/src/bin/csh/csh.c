@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.18 (Berkeley) %G%"
+literal|"@(#)csh.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1306,8 +1306,13 @@ argument_list|)
 expr_stmt|;
 comment|/* while signals not ready */
 comment|/* 	 * Set an exit here in case of an interrupt or error reading 	 * the shell start-up scripts. 	 */
-name|setexit
-argument_list|()
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|reslab
+argument_list|)
 expr_stmt|;
 name|haderr
 operator|=
@@ -2056,8 +2061,13 @@ name|SIGINT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|setexit
-argument_list|()
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|reslab
+argument_list|)
 expr_stmt|;
 name|reenter
 operator|++
@@ -2767,7 +2777,7 @@ condition|)
 block|{
 name|search
 argument_list|(
-name|ZGOTO
+name|T_GOTO
 argument_list|,
 literal|0
 argument_list|,
@@ -2808,8 +2818,12 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -2896,8 +2910,13 @@ name|t
 operator|=
 literal|0
 expr_stmt|;
-name|setexit
-argument_list|()
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|reslab
+argument_list|)
 expr_stmt|;
 name|justpr
 operator|=
@@ -2963,8 +2982,12 @@ argument_list|(
 name|osetexit
 argument_list|)
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|haderr
@@ -3118,8 +3141,12 @@ if|if
 condition|(
 name|justpr
 condition|)
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|alias
 argument_list|(

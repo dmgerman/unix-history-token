@@ -1284,9 +1284,11 @@ operator|<
 literal|0
 operator|||
 operator|!
-name|isdir
+name|S_ISDIR
 argument_list|(
 name|stb
+operator|.
+name|st_mode
 argument_list|)
 condition|)
 block|{

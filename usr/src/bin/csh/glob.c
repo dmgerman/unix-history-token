@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	5.11 (Berkeley) %G%"
+literal|"@(#)glob.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2528,7 +2528,7 @@ name|faket
 operator|.
 name|t_dtyp
 operator|=
-name|TCOM
+name|NODE_COMMAND
 expr_stmt|;
 name|faket
 operator|.
@@ -2714,7 +2714,7 @@ name|t
 operator|->
 name|t_dflg
 operator||=
-name|FPAR
+name|F_NOFORK
 expr_stmt|;
 operator|(
 name|void

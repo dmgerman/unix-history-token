@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.13 (Berkeley) %G%"
+literal|"@(#)proc.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1839,7 +1839,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FAND
+name|F_AMPERSAND
 condition|?
 name|PRUNNING
 else|:
@@ -1853,7 +1853,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FTIME
+name|F_TIME
 condition|)
 name|pp
 operator|->
@@ -1886,7 +1886,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPOU
+name|F_PIPEOUT
 condition|)
 block|{
 name|pp
@@ -1901,7 +1901,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FDIAG
+name|F_STDERR
 condition|)
 name|pp
 operator|->
@@ -2185,7 +2185,7 @@ name|t_dtyp
 condition|)
 block|{
 case|case
-name|TPAR
+name|NODE_PAREN
 case|:
 name|pads
 argument_list|(
@@ -2206,7 +2206,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TCOM
+name|NODE_COMMAND
 case|:
 for|for
 control|(
@@ -2244,16 +2244,16 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|TOR
+name|NODE_OR
 case|:
 case|case
-name|TAND
+name|NODE_AND
 case|:
 case|case
-name|TFIL
+name|NODE_PIPE
 case|:
 case|case
-name|TLST
+name|NODE_LIST
 case|:
 name|padd
 argument_list|(
@@ -2270,7 +2270,7 @@ name|t_dtyp
 condition|)
 block|{
 case|case
-name|TOR
+name|NODE_OR
 case|:
 name|pads
 argument_list|(
@@ -2279,7 +2279,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TAND
+name|NODE_AND
 case|:
 name|pads
 argument_list|(
@@ -2288,7 +2288,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TFIL
+name|NODE_PIPE
 case|:
 name|pads
 argument_list|(
@@ -2297,7 +2297,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TLST
+name|NODE_LIST
 case|:
 name|pads
 argument_list|(
@@ -2322,7 +2322,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPIN
+name|F_PIPEIN
 operator|)
 operator|==
 literal|0
@@ -2339,7 +2339,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FHERE
+name|F_READ
 operator|)
 condition|?
 literal|"<< "
@@ -2362,7 +2362,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FPOU
+name|F_PIPEOUT
 operator|)
 operator|==
 literal|0
@@ -2379,7 +2379,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FCAT
+name|F_APPEND
 operator|)
 condition|?
 literal|">>"
@@ -2393,7 +2393,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FDIAG
+name|F_STDERR
 condition|)
 name|pads
 argument_list|(
@@ -5335,7 +5335,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 operator|)
 operator|||
@@ -5532,7 +5532,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FINT
+name|F_NOINTERRUPT
 operator|)
 condition|)
 block|{
@@ -5611,14 +5611,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* gave tty away */
-comment|/* 		 * Nohup and nice apply only to TCOM's but it would be 		 * nice (?!?) if you could say "nohup (foo;bar)" 		 * Then the parser would have to know about nice/nohup/time 		 */
+comment|/* 		 * Nohup and nice apply only to NODE_COMMAND's but it would be 		 * nice (?!?) if you could say "nohup (foo;bar)".  Then the 		 * parser would have to know about nice/nohup/time. 		 */
 if|if
 condition|(
 name|t
 operator|->
 name|t_dflg
 operator|&
-name|FNOHUP
+name|F_NOHUP
 condition|)
 operator|(
 name|void
@@ -5636,7 +5636,7 @@ name|t
 operator|->
 name|t_dflg
 operator|&
-name|FNICE
+name|F_NICE
 condition|)
 operator|(
 name|void

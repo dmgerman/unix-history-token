@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.8 (Berkeley) %G%"
+literal|"@(#)lex.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5094,8 +5094,12 @@ name|doneinp
 operator|=
 literal|1
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5360,8 +5364,12 @@ argument_list|(
 literal|"\nUse \"exit\" to leave csh.\n"
 argument_list|)
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5382,8 +5390,12 @@ name|doneinp
 operator|=
 literal|1
 expr_stmt|;
-name|reset
-argument_list|()
+name|longjmp
+argument_list|(
+name|reslab
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|sincereal
