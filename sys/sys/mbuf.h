@@ -1085,7 +1085,7 @@ name|MCLFREE1
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
+value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	KASSERT(mclrefcnt[mtocl(_mp)]> 0, ("freeing free cluster"));	\ 	if (--mclrefcnt[mtocl(_mp)] == 0) {				\ 		_mp->mcl_next = mclfree;				\ 		mclfree = _mp;						\ 		mbstat.m_clfree++;					\ 		MCLWAKEUP();						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1131,7 +1131,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	mbstat.m_mtypes[_mm->m_type]--;					\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbstat.m_mtypes[MT_FREE]++;					\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
+value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	mbstat.m_mtypes[_mm->m_type]--;					\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbstat.m_mtypes[MT_FREE]++;					\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
 end_define
 
 begin_comment
