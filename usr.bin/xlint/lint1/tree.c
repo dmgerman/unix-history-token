@@ -4,7 +4,7 @@ comment|/*	$NetBSD: tree.c,v 1.12 1995/10/02 17:37:57 jpo Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -4660,7 +4660,7 @@ argument_list|(
 name|rn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Print some warnings for comparisions of unsigned values with 	 * constants lower than or equal to null. This must be done 	 * before promote() because otherwise unsigned char and unsigned 	 * short would be promoted to int. Also types are tested to be 	 * CHAR, which would also become int. 	 */
+comment|/* 	 * Print some warnings for comparisons of unsigned values with 	 * constants lower than or equal to null. This must be done 	 * before promote() because otherwise unsigned char and unsigned 	 * short would be promoted to int. Also types are tested to be 	 * CHAR, which would also become int. 	 */
 if|if
 condition|(
 name|mp
@@ -6654,7 +6654,7 @@ case|:
 case|case
 name|NE
 case|:
-comment|/* 		 * Accept some things which are allowed with EQ and NE, 		 * but not with ordered comparisions. 		 */
+comment|/* 		 * Accept some things which are allowed with EQ and NE, 		 * but not with ordered comparisons. 		 */
 if|if
 condition|(
 name|lt
@@ -7677,7 +7677,7 @@ operator|)
 operator|=
 literal|"'void *'"
 expr_stmt|;
-comment|/* ANSI C forbids comparision of %s with %s */
+comment|/* ANSI C forbids comparison of %s with %s */
 name|warning
 argument_list|(
 literal|274
@@ -8672,7 +8672,7 @@ if|#
 directive|if
 literal|0
 block|} else if (mp->m_comp&& op != EQ&& op != NE) { 		if (eflag)
-comment|/* dubious comparisions of enums */
+comment|/* dubious comparisons of enums */
 block|warning(243, mp->m_name);
 endif|#
 directive|endif
@@ -20188,7 +20188,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for ordered comparisions of unsigned values with 0.  */
+comment|/*  * Check for ordered comparisons of unsigned values with 0.  */
 end_comment
 
 begin_function
@@ -20326,7 +20326,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* nonportable character comparision, op %s */
+comment|/* nonportable character comparison, op %s */
 name|warning
 argument_list|(
 literal|230
@@ -20385,7 +20385,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* nonportable character comparision, op %s */
+comment|/* nonportable character comparison, op %s */
 name|warning
 argument_list|(
 literal|230
@@ -20436,7 +20436,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* comparision of %s with %s, op %s */
+comment|/* comparison of %s with %s, op %s */
 name|warning
 argument_list|(
 literal|162
@@ -20476,7 +20476,7 @@ name|LE
 operator|)
 condition|)
 block|{
-comment|/* comparision of %s with %s, op %s */
+comment|/* comparison of %s with %s, op %s */
 name|warning
 argument_list|(
 literal|162
@@ -20537,7 +20537,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* comparision of %s with %s, op %s */
+comment|/* comparison of %s with %s, op %s */
 name|warning
 argument_list|(
 literal|162
@@ -20577,7 +20577,7 @@ name|GE
 operator|)
 condition|)
 block|{
-comment|/* comparision of %s with %s, op %s */
+comment|/* comparison of %s with %s, op %s */
 name|warning
 argument_list|(
 literal|162
