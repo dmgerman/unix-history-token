@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	From Id: lpt.c,v 1.55.2.1 1996/11/12 09:08:38 phk Exp  *	$Id: nlpt.c,v 1.2 1997/08/16 14:05:31 msmith Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	From Id: lpt.c,v 1.55.2.1 1996/11/12 09:08:38 phk Exp  *	$Id: nlpt.c,v 1.3 1997/08/28 10:15:11 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -10,12 +10,6 @@ end_comment
 begin_comment
 comment|/*  * Updated for ppbus by Nicolas Souchu  * [Mon Jul 28 1997]  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -39,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -101,12 +89,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -116,19 +98,13 @@ directive|include
 file|<machine/lpt.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*KERNEL */
+comment|/*KERNEL*/
 end_comment
 
 begin_include
@@ -282,6 +258,56 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|LPT_NAME
+value|"nlpt"
+end_define
+
+begin_comment
+comment|/* our official name */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|timeout_t
+name|nlptout
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|nlpt_port_test
+parameter_list|(
+name|struct
+name|lpt_data
+modifier|*
+name|sc
+parameter_list|,
+name|u_char
+name|data
+parameter_list|,
+name|u_char
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|nlpt_detect
+parameter_list|(
+name|struct
+name|lpt_data
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Make ourselves visible as a ppbus driver  */
 end_comment
@@ -325,6 +351,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|nlpt_drvinit
+parameter_list|(
+name|void
+modifier|*
+name|unused
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -342,7 +380,7 @@ name|nlptprobe
 block|,
 name|nlptattach
 block|,
-literal|"nlpt"
+name|LPT_NAME
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -611,7 +649,7 @@ name|nommap
 block|,
 name|nostrat
 block|,
-literal|"nlpt"
+name|LPT_NAME
 block|,
 name|NULL
 block|,
@@ -629,13 +667,13 @@ parameter_list|(
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 parameter_list|,
 name|int
 name|how
 parameter_list|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator||=
@@ -646,7 +684,7 @@ operator|(
 name|ppb_request_bus
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -665,10 +703,10 @@ parameter_list|(
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 parameter_list|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -680,7 +718,7 @@ operator|(
 name|ppb_release_bus
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -701,7 +739,7 @@ parameter_list|(
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 parameter_list|,
 name|u_char
 name|data
@@ -724,7 +762,7 @@ expr_stmt|;
 name|ppb_wdtr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -747,7 +785,7 @@ operator|=
 name|ppb_rdtr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -798,7 +836,7 @@ parameter_list|(
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 parameter_list|)
 block|{
 name|int
@@ -827,7 +865,7 @@ name|error
 operator|=
 name|lpt_request_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|PPB_DONTWAIT
 argument_list|)
@@ -836,7 +874,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nlpt: cannot alloc ppbus (%d)!\n"
+name|LPT_NAME
+literal|": cannot alloc ppbus (%d)!\n"
 argument_list|,
 name|error
 argument_list|)
@@ -863,7 +902,7 @@ condition|(
 operator|!
 name|nlpt_port_test
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|data
 argument_list|,
@@ -889,7 +928,7 @@ condition|(
 operator|!
 name|nlpt_port_test
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|data
 argument_list|,
@@ -934,7 +973,7 @@ condition|(
 operator|!
 name|nlpt_port_test
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|data
 argument_list|,
@@ -979,7 +1018,7 @@ condition|(
 operator|!
 name|nlpt_port_test
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|data
 argument_list|,
@@ -1002,7 +1041,7 @@ comment|/* write 0's to control and data ports */
 name|ppb_wdtr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -1012,7 +1051,7 @@ expr_stmt|;
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -1021,7 +1060,7 @@ argument_list|)
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1052,9 +1091,9 @@ block|{
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 decl_stmt|;
-name|lpt
+name|sc
 operator|=
 operator|(
 expr|struct
@@ -1077,12 +1116,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|lpt
+name|sc
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nlpt: cannot malloc!\n"
+name|LPT_NAME
+literal|": cannot malloc!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1093,7 +1133,7 @@ return|;
 block|}
 name|bzero
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1107,27 +1147,27 @@ index|[
 name|nlpt
 index|]
 operator|=
-name|lpt
+name|sc
 expr_stmt|;
 comment|/* 	 * lpt dependent initialisation. 	 */
-name|lpt
+name|sc
 operator|->
 name|lpt_unit
 operator|=
 name|nlpt
 expr_stmt|;
 comment|/* 	 * ppbus dependent initialisation. 	 */
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 operator|.
 name|id_unit
 operator|=
-name|lpt
+name|sc
 operator|->
 name|lpt_unit
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 operator|.
@@ -1135,7 +1175,7 @@ name|ppb
 operator|=
 name|ppb
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 operator|.
@@ -1149,13 +1189,13 @@ condition|(
 operator|!
 name|nlpt_detect
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 condition|)
 block|{
 name|free
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|M_TEMP
 argument_list|)
@@ -1173,7 +1213,7 @@ expr_stmt|;
 return|return
 operator|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 operator|)
@@ -1195,7 +1235,7 @@ block|{
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 init|=
 name|lptdata
 index|[
@@ -1210,7 +1250,8 @@ decl_stmt|;
 comment|/* 	 * Report ourselves 	 */
 name|printf
 argument_list|(
-literal|"nlpt%d:<generic printer> on ppbus %d\n"
+name|LPT_NAME
+literal|"%d:<generic printer> on ppbus %d\n"
 argument_list|,
 name|dev
 operator|->
@@ -1225,7 +1266,7 @@ operator|->
 name|adapter_unit
 argument_list|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_primed
 operator|=
@@ -1239,7 +1280,7 @@ name|error
 operator|=
 name|lpt_request_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|PPB_DONTWAIT
 argument_list|)
@@ -1248,7 +1289,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nlpt: cannot alloc ppbus (%d)!\n"
+name|LPT_NAME
+literal|": cannot alloc ppbus (%d)!\n"
 argument_list|,
 name|error
 argument_list|)
@@ -1262,7 +1304,7 @@ block|}
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -1274,7 +1316,7 @@ name|nlprintf
 argument_list|(
 literal|"oldirq %x\n"
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 argument_list|)
@@ -1284,13 +1326,13 @@ condition|(
 name|ppb_get_irq
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|=
@@ -1302,7 +1344,8 @@ name|LP_ENABLE_IRQ
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nlpt%d: Interrupt-driven port\n"
+name|LPT_NAME
+literal|"%d: Interrupt-driven port\n"
 argument_list|,
 name|dev
 operator|->
@@ -1312,7 +1355,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|=
@@ -1320,7 +1363,8 @@ literal|0
 expr_stmt|;
 name|nlprintf
 argument_list|(
-literal|"nlpt%d: Polled port\n"
+name|LPT_NAME
+literal|"%d: Polled port\n"
 argument_list|,
 name|dev
 operator|->
@@ -1332,14 +1376,14 @@ name|nlprintf
 argument_list|(
 literal|"irq %x\n"
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 argument_list|)
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1365,7 +1409,8 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"nlpt%d"
+name|LPT_NAME
+literal|"%d"
 argument_list|,
 name|unit
 argument_list|)
@@ -1391,7 +1436,8 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"lpctl%d"
+name|LPT_NAME
+literal|"%d.ctl"
 argument_list|,
 name|unit
 argument_list|)
@@ -1411,12 +1457,18 @@ specifier|static
 name|void
 name|nlptout
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
-parameter_list|)
-block|{
+name|sc
+init|=
+name|arg
+decl_stmt|;
 name|int
 name|pl
 decl_stmt|;
@@ -1427,7 +1479,7 @@ argument_list|,
 name|ppb_rstr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -1435,21 +1487,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
 name|OPEN
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|>
@@ -1457,11 +1509,11 @@ name|hz
 operator|/
 name|LPTOUTMAX
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|=
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|>
@@ -1471,24 +1523,21 @@ name|LPTOUTMAX
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|nlptout
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -1497,13 +1546,13 @@ name|TOUT
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
 name|EERROR
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -1513,7 +1562,7 @@ expr_stmt|;
 comment|/* 	 * Avoid possible hangs do to missed interrupts 	 */
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 condition|)
@@ -1522,7 +1571,7 @@ comment|/* if we cannot allocate the bus NOW, retry later */
 if|if
 condition|(
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
@@ -1533,20 +1582,20 @@ literal|0
 operator|&&
 name|lpt_request_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|PPB_DONTWAIT
 argument_list|)
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|>
@@ -1554,11 +1603,11 @@ name|hz
 operator|/
 name|LPTOUTMAX
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|=
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|>
@@ -1568,17 +1617,14 @@ name|LPTOUTMAX
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|nlptout
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 argument_list|)
@@ -1592,7 +1638,7 @@ argument_list|()
 expr_stmt|;
 name|nlptintr
 argument_list|(
-name|lpt
+name|sc
 operator|->
 name|lpt_unit
 argument_list|)
@@ -1605,7 +1651,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -1617,7 +1663,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1651,7 +1697,7 @@ block|{
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 decl_stmt|;
 name|int
 name|s
@@ -1683,7 +1729,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|lpt
+name|sc
 operator|=
 name|lptdata
 index|[
@@ -1692,16 +1738,17 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 condition|)
 block|{
 name|nlprintf
 argument_list|(
-literal|"nlpt: still open %x\n"
+name|LPT_NAME
+literal|": still open %x\n"
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_state
 argument_list|)
@@ -1713,13 +1760,13 @@ operator|)
 return|;
 block|}
 else|else
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator||=
 name|INIT
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|=
@@ -1734,14 +1781,14 @@ expr_stmt|;
 comment|/* Check for open with BYPASS flag set. */
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|&
 name|LP_BYPASS
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|=
@@ -1757,7 +1804,7 @@ if|if
 condition|(
 name|lpt_request_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|PPB_WAIT
 operator||
@@ -1776,9 +1823,10 @@ argument_list|()
 expr_stmt|;
 name|nlprintf
 argument_list|(
-literal|"nlpt flags 0x%x\n"
+name|LPT_NAME
+literal|" flags 0x%x\n"
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 argument_list|)
@@ -1786,20 +1834,20 @@ expr_stmt|;
 comment|/* set IRQ status according to ENABLE_IRQ flag */
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
 name|LP_ENABLE_IRQ
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator||=
 name|LP_USE_IRQ
 expr_stmt|;
 else|else
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&=
@@ -1810,7 +1858,7 @@ comment|/* init printer */
 if|if
 condition|(
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|&
@@ -1823,14 +1871,14 @@ block|{
 if|if
 condition|(
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|&
 name|LP_PRIMEOPEN
 operator|)
 operator|||
-name|lpt
+name|sc
 operator|->
 name|sc_primed
 operator|==
@@ -1840,14 +1888,14 @@ block|{
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_primed
 operator|++
@@ -1862,7 +1910,7 @@ block|}
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -1894,7 +1942,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|=
@@ -1907,7 +1955,7 @@ argument_list|,
 name|ppb_rstr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -1915,7 +1963,7 @@ argument_list|)
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1932,7 +1980,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
 name|LPPRI
 operator||
@@ -1948,7 +1996,7 @@ operator|!=
 name|EWOULDBLOCK
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|=
@@ -1961,7 +2009,7 @@ argument_list|)
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1978,7 +2026,7 @@ operator|(
 name|ppb_rstr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -2003,7 +2051,7 @@ name|LPS_NERR
 operator|)
 condition|)
 do|;
-name|lpt
+name|sc
 operator|->
 name|sc_control
 operator|=
@@ -2013,13 +2061,13 @@ name|LPC_NINIT
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|&
 name|LP_AUTOLF
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_control
 operator||=
@@ -2028,13 +2076,13 @@ expr_stmt|;
 comment|/* enable interrupt if interrupt-driven */
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
 name|LP_USE_IRQ
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_control
 operator||=
@@ -2043,22 +2091,22 @@ expr_stmt|;
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_control
 argument_list|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|=
 name|OPEN
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_inbuf
 operator|=
@@ -2067,7 +2115,7 @@ argument_list|(
 name|BUFSIZE
 argument_list|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|=
@@ -2081,7 +2129,7 @@ expr_stmt|;
 comment|/* release the bus, nlptout() will try to allocate it later */
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* only use timeout if using interrupt */
@@ -2089,21 +2137,21 @@ name|nlprintf
 argument_list|(
 literal|"irq %x\n"
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
 name|LP_USE_IRQ
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator||=
@@ -2111,18 +2159,15 @@ name|TOUT
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|nlptout
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|=
@@ -2173,7 +2218,7 @@ block|{
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 init|=
 name|lptdata
 index|[
@@ -2191,7 +2236,7 @@ name|err
 decl_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|&
@@ -2203,7 +2248,7 @@ goto|;
 if|if
 condition|(
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
@@ -2217,7 +2262,7 @@ name|err
 operator|=
 name|lpt_request_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|PPB_WAIT
 operator||
@@ -2230,7 +2275,7 @@ operator|(
 name|err
 operator|)
 return|;
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -2243,7 +2288,7 @@ condition|(
 operator|(
 operator|!
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
@@ -2252,7 +2297,7 @@ operator|)
 operator|)
 operator|&&
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
@@ -2265,7 +2310,7 @@ operator|(
 name|ppb_rstr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -2289,7 +2334,7 @@ operator||
 name|LPS_NERR
 operator|)
 operator|||
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 condition|)
@@ -2301,7 +2346,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
 name|LPPRI
 operator||
@@ -2318,7 +2363,7 @@ break|break;
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -2327,25 +2372,25 @@ argument_list|)
 expr_stmt|;
 name|brelse
 argument_list|(
-name|lpt
+name|sc
 operator|->
 name|sc_inbuf
 argument_list|)
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 name|end_close
 label|:
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|=
 literal|0
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|=
@@ -2376,7 +2421,7 @@ parameter_list|(
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 parameter_list|)
 block|{
 name|int
@@ -2397,7 +2442,7 @@ expr_stmt|;
 comment|/* loop for every character .. */
 while|while
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|>
@@ -2409,17 +2454,17 @@ name|ch
 operator|=
 operator|*
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_cp
 operator|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_cp
 operator|++
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|--
@@ -2433,7 +2478,7 @@ literal|0
 init|;
 name|NOT_READY
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 operator|&&
 name|spin
@@ -2464,7 +2509,7 @@ while|while
 condition|(
 name|NOT_READY
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 condition|)
 block|{
@@ -2495,11 +2540,12 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
 name|LPPRI
 argument_list|,
-literal|"lptpoll"
+name|LPT_NAME
+literal|"poll"
 argument_list|,
 name|tic
 argument_list|)
@@ -2523,7 +2569,7 @@ comment|/* output data */
 name|ppb_wdtr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
@@ -2534,11 +2580,11 @@ comment|/* strobe */
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_control
 operator||
@@ -2548,11 +2594,11 @@ expr_stmt|;
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_control
 argument_list|)
@@ -2599,7 +2645,7 @@ decl_stmt|;
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 init|=
 name|lptdata
 index|[
@@ -2614,7 +2660,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_flags
 operator|&
@@ -2632,7 +2678,7 @@ if|if
 condition|(
 name|lpt_request_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|,
 name|PPB_WAIT
 operator||
@@ -2644,7 +2690,7 @@ operator|(
 name|EINTR
 operator|)
 return|;
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -2669,11 +2715,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_cp
 operator|=
-name|lpt
+name|sc
 operator|->
 name|sc_inbuf
 operator|->
@@ -2683,7 +2729,7 @@ name|b_addr
 expr_stmt|;
 name|uiomove
 argument_list|(
-name|lpt
+name|sc
 operator|->
 name|sc_cp
 argument_list|,
@@ -2692,7 +2738,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|=
@@ -2701,7 +2747,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|>
@@ -2709,7 +2755,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
@@ -2727,7 +2773,7 @@ comment|/* give it one */
 if|if
 condition|(
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
@@ -2741,7 +2787,7 @@ name|nlprintf
 argument_list|(
 literal|"\nC %d. "
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 argument_list|)
@@ -2753,7 +2799,7 @@ argument_list|()
 expr_stmt|;
 name|nlptintr
 argument_list|(
-name|lpt
+name|sc
 operator|->
 name|lpt_unit
 argument_list|)
@@ -2774,7 +2820,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
@@ -2790,20 +2836,21 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|,
 name|LPPRI
 operator||
 name|PCATCH
 argument_list|,
-literal|"lpwrite"
+name|LPT_NAME
+literal|"write"
 argument_list|,
 literal|0
 argument_list|)
 operator|)
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator||=
@@ -2821,7 +2868,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
@@ -2829,7 +2876,7 @@ name|LP_USE_IRQ
 operator|)
 operator|&&
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|)
@@ -2844,12 +2891,12 @@ name|err
 operator|=
 name|nlpt_pushbytes
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2876,6 +2923,7 @@ comment|/*  * nlptintr -- handle printer interrupts which occur when the printer
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|nlptintr
 parameter_list|(
@@ -2886,7 +2934,7 @@ block|{
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 init|=
 name|lptdata
 index|[
@@ -2917,7 +2965,7 @@ operator|=
 name|ppb_rstr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|)
@@ -2943,12 +2991,12 @@ operator|==
 name|LP_READY
 condition|)
 block|{
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|=
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator||
@@ -2958,7 +3006,7 @@ operator|&
 operator|~
 name|EERROR
 expr_stmt|;
-name|lpt
+name|sc
 operator|->
 name|sc_backoff
 operator|=
@@ -2968,22 +3016,22 @@ name|LPTOUTINITIAL
 expr_stmt|;
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 condition|)
 block|{
 comment|/* send char */
-comment|/*nlprintf("%x ", *lpt->sc_cp); */
+comment|/*nlprintf("%x ", *sc->sc_cp); */
 name|ppb_wdtr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
 operator|*
-name|lpt
+name|sc
 operator|->
 name|sc_cp
 operator|++
@@ -2992,11 +3040,11 @@ expr_stmt|;
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_control
 operator||
@@ -3007,11 +3055,11 @@ comment|/* DELAY(X) */
 name|ppb_wctr
 argument_list|(
 operator|&
-name|lpt
+name|sc
 operator|->
 name|lpt_dev
 argument_list|,
-name|lpt
+name|sc
 operator|->
 name|sc_control
 argument_list|)
@@ -3021,7 +3069,7 @@ if|if
 condition|(
 operator|--
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_xfercnt
 operator|)
@@ -3031,7 +3079,7 @@ condition|)
 return|return;
 block|}
 comment|/* 		 * No more data waiting for printer. 		 * Wakeup is not done if write call was interrupted. 		 */
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&=
@@ -3040,14 +3088,14 @@ name|OBUSY
 expr_stmt|;
 name|lpt_release_ppbus
 argument_list|(
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
@@ -3059,7 +3107,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|lpt
+name|sc
 argument_list|)
 expr_stmt|;
 name|nlprintf
@@ -3089,14 +3137,14 @@ name|LPS_NERR
 operator|)
 operator|&&
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator|&
 name|OPEN
 operator|)
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_state
 operator||=
@@ -3145,7 +3193,7 @@ decl_stmt|;
 name|struct
 name|lpt_data
 modifier|*
-name|lpt
+name|sc
 decl_stmt|;
 name|u_int
 name|unit
@@ -3162,7 +3210,7 @@ name|u_char
 name|old_sc_irq
 decl_stmt|;
 comment|/* old printer IRQ status */
-name|lpt
+name|sc
 operator|=
 name|lptdata
 index|[
@@ -3179,7 +3227,7 @@ name|LPT_IRQ
 case|:
 if|if
 condition|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
@@ -3189,7 +3237,7 @@ block|{
 comment|/* 			 * NOTE: 			 * If the IRQ status is changed, 			 * this will only be visible on the 			 * next open. 			 * 			 * If interrupt status changes, 			 * this gets syslog'd. 			 */
 name|old_sc_irq
 operator|=
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 expr_stmt|;
@@ -3204,7 +3252,7 @@ name|data
 operator|==
 literal|0
 condition|)
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&=
@@ -3214,7 +3262,7 @@ name|LP_ENABLE_IRQ
 operator|)
 expr_stmt|;
 else|else
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator||=
@@ -3224,7 +3272,7 @@ if|if
 condition|(
 name|old_sc_irq
 operator|!=
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 condition|)
@@ -3232,17 +3280,13 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"lpt%c switched to %s mode\n"
+name|LPT_NAME
+literal|"%d: switched to %s mode\n"
 argument_list|,
-operator|(
-name|char
-operator|)
 name|unit
-operator|+
-literal|'0'
 argument_list|,
 operator|(
-name|lpt
+name|sc
 operator|->
 name|sc_irq
 operator|&
