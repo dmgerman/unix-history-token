@@ -1865,9 +1865,15 @@ comment|/* (o) Kernel trace points. */
 name|struct
 name|vnode
 modifier|*
-name|p_tracep
+name|p_tracevp
 decl_stmt|;
 comment|/* (c + o) Trace to vnode. */
+name|struct
+name|ucred
+modifier|*
+name|p_tracecred
+decl_stmt|;
+comment|/* (o) Credentials to trace with. */
 name|sigset_t
 name|p_siglist
 decl_stmt|;

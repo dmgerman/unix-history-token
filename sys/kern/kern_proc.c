@@ -2774,7 +2774,7 @@ name|ki_tracep
 operator|=
 name|p
 operator|->
-name|p_tracep
+name|p_tracevp
 expr_stmt|;
 name|mtx_lock
 argument_list|(
