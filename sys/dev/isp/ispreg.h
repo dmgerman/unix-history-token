@@ -109,6 +109,20 @@ begin_comment
 comment|/* same as BIU block */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SBUS_REGSIZE
+value|0x450
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_REGSIZE
+value|0x100
+end_define
+
 begin_comment
 comment|/*  * NB:	The *_BLOCK definitions have no specific hardware meaning.  *	They serve simply to note to the MD layer which block of  *	registers offsets are being accessed.  */
 end_comment
