@@ -13765,7 +13765,11 @@ name|S_IWUSR
 condition|)
 name|dac_granted
 operator||=
+operator|(
 name|VWRITE
+operator||
+name|VAPPEND
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -13825,7 +13829,11 @@ name|S_IWGRP
 condition|)
 name|dac_granted
 operator||=
+operator|(
 name|VWRITE
+operator||
+name|VAPPEND
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -13875,7 +13883,11 @@ name|S_IWOTH
 condition|)
 name|dac_granted
 operator||=
+operator|(
 name|VWRITE
+operator||
+name|VAPPEND
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -14077,7 +14089,11 @@ argument_list|)
 condition|)
 name|cap_granted
 operator||=
+operator|(
 name|VWRITE
+operator||
+name|VAPPEND
+operator|)
 expr_stmt|;
 if|if
 condition|(
