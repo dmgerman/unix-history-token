@@ -74,6 +74,12 @@ begin_struct
 struct|struct
 name|snoop
 block|{
+name|LIST_ENTRY
+argument_list|(
+argument|snoop
+argument_list|)
+name|snp_list
+expr_stmt|;
 name|dev_t
 name|snp_target
 decl_stmt|;
