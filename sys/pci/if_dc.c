@@ -11175,12 +11175,9 @@ name|bzero
 argument_list|(
 name|ptr
 argument_list|,
-sizeof|sizeof
-argument_list|(
 name|DC_RXLEN
 operator|*
 literal|5
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Copy all the bytes from the bogus buffers. */
