@@ -934,11 +934,14 @@ name|shargv
 index|[
 literal|4
 index|]
-init|=
-block|{
-literal|"/bin/sh"
-block|}
 decl_stmt|;
+name|shargv
+index|[
+literal|0
+index|]
+operator|=
+name|shellPath
+expr_stmt|;
 name|shargv
 index|[
 literal|1
@@ -1000,10 +1003,6 @@ name|shargv
 index|[
 literal|4
 index|]
-init|=
-block|{
-literal|"/bin/sh"
-block|}
 decl_stmt|;
 if|if
 condition|(
@@ -1020,6 +1019,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|shargv
+index|[
+literal|0
+index|]
+operator|=
+name|shellPath
+expr_stmt|;
 name|shargv
 index|[
 literal|1
@@ -2102,6 +2108,10 @@ comment|/* Number of targets not remade due to errors */
 name|CompatInit
 argument_list|()
 expr_stmt|;
+name|Shell_Init
+argument_list|()
+expr_stmt|;
+comment|/* Set up shell. */
 if|if
 condition|(
 name|signal

@@ -334,6 +334,22 @@ name|Shell
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|shellPath
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|shellName
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * If REMOTE is defined then these things need exposed, otherwise they are  * static to job.c!  */
 end_comment
@@ -438,6 +454,15 @@ end_decl_stmt
 begin_comment
 comment|/* Number of jobs that may run */
 end_comment
+
+begin_function_decl
+name|void
+name|Shell_Init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
