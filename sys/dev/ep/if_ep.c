@@ -1552,6 +1552,13 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bus_child_present
+argument_list|(
+name|dev
+argument_list|)
+condition|)
 name|epstop
 argument_list|(
 name|sc
