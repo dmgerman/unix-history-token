@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)signal.c	5.2 (Berkeley) %G%"
+literal|"@(#)signal.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,11 +442,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|sigs
 operator|=
 literal|0
