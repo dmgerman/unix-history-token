@@ -1736,7 +1736,7 @@ name|soshutdown
 argument_list|(
 name|so
 argument_list|,
-literal|2
+name|SHUT_RDWR
 argument_list|)
 expr_stmt|;
 name|soclose
