@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.30 1996/01/24 21:09:18 phk Exp $ */
+comment|/* $Id: if_ppp.c,v 1.31 1996/02/06 18:51:12 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -229,12 +229,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_pppvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
 end_include
 
 begin_ifdef

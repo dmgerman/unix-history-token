@@ -141,12 +141,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
