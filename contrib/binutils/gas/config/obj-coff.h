@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -407,11 +407,46 @@ directive|ifdef
 name|TC_SH
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|COFF_WITH_PE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|"coff/sh.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"pe-shl"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -419,6 +454,47 @@ directive|define
 name|TARGET_FORMAT
 define|\
 value|(shl							\    ? (sh_small ? "coff-shl-small" : "coff-shl")		\    : (sh_small ? "coff-sh-small" : "coff-sh"))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_MIPS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|COFF_WITH_PE
+end_define
+
+begin_include
+include|#
+directive|include
+file|"coff/mipspe.h"
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_FORMAT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"pe-mips"
 end_define
 
 begin_endif
@@ -498,6 +574,72 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_TIC80
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"coff/tic80.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"coff-tic80"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALIGNMENT_IN_S_FLAGS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_MCORE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"coff/mcore.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_FORMAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"pe-mcore"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Targets may also set this.  Also, if BFD_ASSEMBLER is defined, this    will already have been defined.  */
 end_comment
@@ -544,8 +686,7 @@ name|coff_obj_symbol_new_hook
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -620,7 +761,7 @@ begin_define
 define|#
 directive|define
 name|TC_SYMFIELD_TYPE
-value|struct symbol *
+value|symbolS *
 end_define
 
 begin_define
@@ -656,7 +797,19 @@ name|SYM_AUXENT
 parameter_list|(
 name|S
 parameter_list|)
-value|(&coffsymbol ((S)->bsym)->native[1].u.auxent)
+define|\
+value|(&coffsymbol (symbol_get_bfdsym (S))->native[1].u.auxent)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYM_AUXINFO
+parameter_list|(
+name|S
+parameter_list|)
+define|\
+value|(&coffsymbol (symbol_get_bfdsym (S))->native[1])
 end_define
 
 begin_define
@@ -690,7 +843,8 @@ name|S_GET_NUMBER_AUXILIARY
 parameter_list|(
 name|s
 parameter_list|)
-value|(coffsymbol((s)->bsym)->native->u.syment.n_numaux)
+define|\
+value|(coffsymbol (symbol_get_bfdsym (s))->native->u.syment.n_numaux)
 end_define
 
 begin_comment
@@ -730,8 +884,7 @@ name|S_SET_DATA_TYPE
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|int
@@ -747,8 +900,7 @@ name|S_SET_STORAGE_CLASS
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|int
@@ -764,8 +916,7 @@ name|S_GET_STORAGE_CLASS
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -779,12 +930,10 @@ name|SA_SET_SYM_ENDNDX
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -1231,7 +1380,7 @@ name|SF_GET
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->sy_flags)
+value|(*symbol_get_obj (s))
 end_define
 
 begin_define
@@ -1241,7 +1390,7 @@ name|SF_GET_DEBUG
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->bsym->flags& BSF_DEBUGGING)
+value|(symbol_get_bfdsym (s)->flags& BSF_DEBUGGING)
 end_define
 
 begin_define
@@ -1251,7 +1400,7 @@ name|SF_SET_DEBUG
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->bsym->flags |= BSF_DEBUGGING)
+value|(symbol_get_bfdsym (s)->flags |= BSF_DEBUGGING)
 end_define
 
 begin_define
@@ -1714,8 +1863,7 @@ name|coff_add_linesym
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -1750,8 +1898,7 @@ name|coff_frob_symbol
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|int
@@ -1831,6 +1978,12 @@ parameter_list|)
 value|coff_frob_symbol(S,&P)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|obj_adjust_symtab
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1838,6 +1991,11 @@ name|obj_adjust_symtab
 parameter_list|()
 value|coff_adjust_symtab()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1859,8 +2017,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|coff_last_function
 decl_stmt|;
@@ -1869,6 +2026,12 @@ end_decl_stmt
 begin_comment
 comment|/* Forward the segment of a forwarded symbol, handle assignments that    just copy symbol values, etc.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OBJ_COPY_SYMBOL_ATTRIBUTES
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -1906,6 +2069,11 @@ parameter_list|)
 define|\
 value|(SF_GET_GET_SEGMENT (dest)&& S_GET_SEGMENT (dest) == SEG_UNKNOWN \    ? (S_SET_SEGMENT (dest, S_GET_SEGMENT (src)), 0) \    : 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2242,6 +2410,48 @@ name|s
 parameter_list|)
 value|(strlen(S_GET_NAME(s))> 8 ? 1 : 0)
 end_define
+
+begin_comment
+comment|/* True if a symbol is defined as weak.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|S_IS_WEAK
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|((s)->sy_symbol.ost_entry.n_sclass == C_NT_WEAK \    || (s)->sy_symbol.ost_entry.n_sclass == C_WEAKEXT)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_IS_WEAK
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|((s)->sy_symbol.ost_entry.n_sclass == C_WEAKEXT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Accessors */
@@ -4211,8 +4421,7 @@ name|s_get_segment
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 name|ptr
 operator|)
@@ -4276,8 +4485,7 @@ name|tc_coff_symbol_emit_hook
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -4398,6 +4606,34 @@ begin_comment
 comment|/* not BFD_ASSEMBLER */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|pseudo_typeS
+name|coff_pseudo_table
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|obj_pop_insert
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|obj_pop_insert
+parameter_list|()
+value|pop_insert (coff_pseudo_table)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* In COFF, if a symbol is defined using .def/.val SYM/.endef, it's OK    to redefine the symbol later on.  This can happen if C symbols use    a prefix, and a symbol is defined both with and without the prefix,    as in start/_start/__start in gcc/libgcc1-test.c.  */
 end_comment
@@ -4449,6 +4685,25 @@ parameter_list|(
 name|seg
 parameter_list|)
 value|obj_coff_init_stab_section (seg)
+end_define
+
+begin_comment
+comment|/* Store the number of relocations in the section aux entry.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_SECTION_RELOCS
+parameter_list|(
+name|sec
+parameter_list|,
+name|relocs
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|SA_SET_SCN_NRELOC (section_symbol (sec), n)
 end_define
 
 begin_endif

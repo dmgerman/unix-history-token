@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Opcode table for the ARC.    Copyright 1994, 1995, 1997, 1998 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Opcode table for the ARC.    Copyright (c) 1994, 1995, 1997, 1998 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,13 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ansidecl.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"opcode/arc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opintl.h"
 end_include
 
 begin_ifndef
@@ -3539,7 +3545,10 @@ block|{
 operator|*
 name|errmsg
 operator|=
+name|_
+argument_list|(
 literal|"unable to fit different valued constants into instruction"
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3567,7 +3576,10 @@ condition|)
 operator|*
 name|errmsg
 operator|=
+name|_
+argument_list|(
 literal|"auxiliary register not allowed here"
+argument_list|)
 expr_stmt|;
 else|else
 block|{
@@ -3612,11 +3624,15 @@ operator|>
 literal|60
 condition|)
 block|{
+comment|/* xgettext:c-format */
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
+name|_
+argument_list|(
 literal|"invalid register number `%d'"
+argument_list|)
 argument_list|,
 name|reg
 operator|->
@@ -4081,11 +4097,15 @@ operator|>
 name|maxval
 condition|)
 block|{
+comment|/* xgettext:c-format */
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
+name|_
+argument_list|(
 literal|"value won't fit in range %ld - %ld"
+argument_list|)
 argument_list|,
 name|minval
 argument_list|,
@@ -4466,7 +4486,10 @@ condition|)
 operator|*
 name|errmsg
 operator|=
+name|_
+argument_list|(
 literal|"branch address not on 4 byte boundary"
+argument_list|)
 expr_stmt|;
 name|insn
 operator||=

@@ -6,6 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__write_h__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__write_h__
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|TC_I960
 end_ifndef
 
@@ -226,6 +238,27 @@ decl_stmt|;
 name|unsigned
 name|fx_line
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USING_CGEN
+struct|struct
+block|{
+comment|/* CGEN_INSN entry for this instruction.  */
+specifier|const
+name|struct
+name|cgen_insn
+modifier|*
+name|insn
+decl_stmt|;
+comment|/* Target specific data, usually reloc number.  */
+name|int
+name|opinfo
+decl_stmt|;
+block|}
+name|fx_cgen
+struct|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TC_FIX_TYPE
@@ -714,6 +747,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __write_h__ */
+end_comment
 
 begin_comment
 comment|/* end of write.h */

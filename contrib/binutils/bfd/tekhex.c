@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright (C) 1992, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -2289,6 +2289,7 @@ name|locationp
 decl_stmt|;
 name|file_ptr
 name|offset
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_size_type
 name|count
@@ -3695,9 +3696,11 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|boolean
 name|exec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -3790,6 +3793,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|ignore_abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asymbol
 modifier|*
@@ -3826,6 +3830,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|ignore_abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|filep
@@ -3991,6 +3996,13 @@ define|#
 directive|define
 name|tekhex_bfd_relax_section
 value|bfd_generic_relax_section
+end_define
+
+begin_define
+define|#
+directive|define
+name|tekhex_bfd_gc_sections
+value|bfd_generic_gc_sections
 end_define
 
 begin_define
@@ -4205,6 +4217,8 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+name|NULL
 block|,
 operator|(
 name|PTR

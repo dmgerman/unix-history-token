@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.h - Header file for the frag concept.    Copyright (C) 1987, 92, 93, 94, 95, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.h - Header file for the frag concept.    Copyright (C) 1987, 92, 93, 94, 95, 97, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ begin_struct
 struct|struct
 name|frag
 block|{
-comment|/* Object file address. */
+comment|/* Object file address (as an octet offset). */
 name|addressT
 name|fr_address
 decl_stmt|;
@@ -50,17 +50,16 @@ name|frag
 modifier|*
 name|fr_next
 decl_stmt|;
-comment|/* (Fixed) number of chars we know we have.  May be 0. */
+comment|/* (Fixed) number of octets we know we have.  May be 0. */
 name|offsetT
 name|fr_fix
 decl_stmt|;
-comment|/* (Variable) number of chars after above.  May be 0. */
+comment|/* (Variable) number of octets after above.  May be 0. */
 name|offsetT
 name|fr_var
 decl_stmt|;
 comment|/* For variable-length tail. */
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|fr_symbol
 decl_stmt|;
@@ -96,16 +95,19 @@ name|USING_CGEN
 comment|/* Don't include this unless using CGEN to keep frag size down.  */
 struct|struct
 block|{
+comment|/* CGEN_INSN entry for this instruction.  */
 specifier|const
 name|struct
 name|cgen_insn
 modifier|*
 name|insn
 decl_stmt|;
-name|unsigned
-name|char
+comment|/* Index into operand table.  */
+name|int
 name|opindex
-decl_stmt|,
+decl_stmt|;
+comment|/* Target specific data, usually reloc number.  */
+name|int
 name|opinfo
 decl_stmt|;
 block|}
@@ -169,6 +171,19 @@ begin_decl_stmt
 specifier|extern
 name|addressT
 name|frag_now_fix
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|addressT
+name|frag_now_fix_octets
 name|PARAMS
 argument_list|(
 operator|(

@@ -76,6 +76,41 @@ name|x
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|obj_fix_adjustable
+parameter_list|(
+name|fixP
+parameter_list|)
+value|v850_fix_adjustable(fixP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION
+parameter_list|(
+name|fixp
+parameter_list|)
+value|v850_force_relocation(fixp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|v850_force_relocation
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Permit temporary numeric labels.  */
 end_comment
@@ -194,6 +229,26 @@ name|ELF_TC_SPECIAL_SECTIONS
 define|\
 value|{ ".sdata",	SHT_PROGBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_GPREL	}, \   { ".rosdata",	SHT_PROGBITS,		SHF_ALLOC +             SHF_V850_GPREL	}, \   { ".sbss",	SHT_NOBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_GPREL	}, \   { ".scommon",	SHT_V850_SCOMMON, 	SHF_ALLOC + SHF_WRITE + SHF_V850_GPREL	}, \   { ".tdata",	SHT_PROGBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_EPREL	}, \   { ".tbss",	SHT_NOBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_EPREL	}, \   { ".tcommon",	SHT_V850_TCOMMON,	SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".zdata",	SHT_PROGBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".rozdata",	SHT_PROGBITS,		SHF_ALLOC +             SHF_V850_R0REL	}, \   { ".zbss",	SHT_NOBITS,	  	SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".zcommon",	SHT_V850_ZCOMMON, 	SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".call_table_data",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE },	   \   { ".call_table_text",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_EXECINSTR },
 end_define
+
+begin_define
+define|#
+directive|define
+name|MD_PCREL_FROM_SECTION
+parameter_list|(
+name|fixP
+parameter_list|,
+name|section
+parameter_list|)
+value|v850_pcrel_from_section (fixP, section)
+end_define
+
+begin_function_decl
+specifier|extern
+name|long
+name|v850_pcrel_from_section
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-z8k.h    Copyright (C) 1987-1992, 93, 95, 1997 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-z8k.h    Copyright (C) 1987-1992, 93, 95, 97, 1998 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -14,6 +14,29 @@ define|#
 directive|define
 name|TARGET_BYTES_BIG_ENDIAN
 value|1
+end_define
+
+begin_if
+if|#
+directive|if
+name|ANSI_PROTOTYPES
+end_if
+
+begin_struct_decl
+struct_decl|struct
+name|internal_reloc
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|WORKING_DOT_WORD
 end_define
 
 begin_ifndef
@@ -96,6 +119,27 @@ name|c
 parameter_list|)
 value|tc_reloc_mangle(a,b,c)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tc_reloc_mangle
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|,
+expr|struct
+name|internal_reloc
+operator|*
+operator|,
+name|bfd_vma
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

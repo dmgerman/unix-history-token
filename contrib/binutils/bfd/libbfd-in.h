@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libbfd.h is a GENERATED file.  Don't change it; instead, ** change libbfd-in.h or the other BFD source files processed to ** generate this file.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libbfd.h is a GENERATED file.  Don't change it; instead, ** change libbfd-in.h or the other BFD source files processed to ** generate this file.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1520,6 +1520,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bfd_nolink_bfd_gc_sections
+define|\
+value|((boolean (*) \     PARAMS ((bfd *, struct bfd_link_info *))) \    bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bfd_nolink_bfd_link_hash_table_create
 define|\
 value|((struct bfd_link_hash_table *(*) PARAMS ((bfd *))) bfd_nullvoidptr)
@@ -1706,6 +1714,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Find the neaderst line using DWARF 1 debugging information.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_dwarf1_find_nearest_line
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|*
+operator|,
+name|bfd_vma
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Find the nearest line using DWARF 2 debugging information.  */
 end_comment
 
@@ -1741,6 +1790,9 @@ operator|,
 name|unsigned
 name|int
 operator|*
+operator|,
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2401,6 +2453,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Check that endianness of input and output file match.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_generic_verify_endian_match
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -2462,6 +2535,76 @@ name|BFD_FAIL
 parameter_list|()
 define|\
 value|{ bfd_assert(__FILE__,__LINE__); }
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_bfd_abort
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if gcc>= 2.6, we can give a function name, too */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|6
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__PRETTY_FUNCTION__
+value|((char *) NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|abort
+end_undef
+
+begin_define
+define|#
+directive|define
+name|abort
+parameter_list|()
+value|_bfd_abort (__FILE__, __LINE__, __PRETTY_FUNCTION__)
 end_define
 
 begin_decl_stmt

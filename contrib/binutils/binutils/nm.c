@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1291,6 +1291,13 @@ name|lineno_cache_rel_bfd
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|OPTION_TARGET
+value|200
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1499,7 +1506,7 @@ name|required_argument
 block|,
 literal|0
 block|,
-literal|200
+name|OPTION_TARGET
 block|}
 block|,
 block|{
@@ -1576,7 +1583,10 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"\ Usage: %s [-aABCDglnopPrsuvV] [-t radix] [--radix=radix] [--target=bfdname]\n\        [--debug-syms] [--extern-only] [--print-armap] [--print-file-name]\n\        [--numeric-sort] [--no-sort] [--reverse-sort] [--size-sort]\n\        [--undefined-only] [--portability] [-f {bsd,sysv,posix}]\n\        [--format={bsd,sysv,posix}] [--demangle] [--no-demangle] [--dynamic]\n\        [--defined-only] [--line-numbers]\n\        [--version] [--help]\n\        [file...]\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1598,7 +1608,12 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"Report bugs to bug-gnu-utils@gnu.org\n"
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1703,20 +1718,14 @@ name|radix
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: invalid radix\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"%s: invalid radix"
+argument_list|)
 argument_list|,
 name|radix
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1778,20 +1787,14 @@ name|FORMAT_SYSV
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: invalid output format\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"%s: invalid output format"
+argument_list|)
 argument_list|,
 name|f
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1832,6 +1835,38 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|program_name
 operator|=
 operator|*
@@ -2041,7 +2076,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|200
+name|OPTION_TARGET
 case|:
 comment|/* --target */
 name|target
@@ -2145,12 +2180,6 @@ condition|(
 name|show_stats
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|char
 modifier|*
 name|lim
@@ -2164,13 +2193,12 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-name|fprintf
+name|non_fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: data size %ld\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"data size %ld"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -3934,9 +3962,12 @@ name|HAS_SYMS
 operator|)
 condition|)
 block|{
-name|printf
+name|non_fatal
 argument_list|(
-literal|"No symbols in \"%s\".\n"
+name|_
+argument_list|(
+literal|"%s: no symbols"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -3983,11 +4014,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|non_fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no symbols\n"
+name|_
+argument_list|(
+literal|"%s: no symbols"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(
@@ -5597,7 +5629,10 @@ name|undefined_only
 condition|)
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nUndefined symbols from %s:\n\n"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -5605,14 +5640,20 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nSymbols from %s:\n\n"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\ Name                  Value   Class        Type         Size   Line  Section\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5690,6 +5731,7 @@ parameter_list|)
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{ }
 end_function
@@ -5704,6 +5746,7 @@ parameter_list|)
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{ }
 end_function
@@ -5727,6 +5770,7 @@ parameter_list|)
 name|char
 modifier|*
 name|archive
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|CONST
 name|char
@@ -5774,7 +5818,10 @@ name|undefined_only
 condition|)
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nUndefined symbols from %s[%s]:\n\n"
+argument_list|)
 argument_list|,
 name|archive
 argument_list|,
@@ -5784,7 +5831,10 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nSymbols from %s[%s]:\n\n"
+argument_list|)
 argument_list|,
 name|archive
 argument_list|,
@@ -5793,7 +5843,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\ Name                  Value   Class        Type         Size   Line  Section\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6164,11 +6217,12 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|bfd_is_undefined_symclass
+argument_list|(
 name|info
 operator|->
 name|type
-operator|==
-literal|'U'
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -6301,11 +6355,12 @@ expr_stmt|;
 comment|/* Name */
 if|if
 condition|(
+name|bfd_is_undefined_symclass
+argument_list|(
 name|info
 operator|->
 name|type
-operator|==
-literal|'U'
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -6418,11 +6473,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bfd_is_undefined_symclass
+argument_list|(
 name|info
 operator|->
 name|type
-operator|==
-literal|'U'
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -6513,7 +6569,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\nArchive index:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|everprinted

@@ -22,6 +22,42 @@ file|"libbfd.h"
 end_include
 
 begin_decl_stmt
+specifier|const
+name|bfd_arch_info_type
+name|bfd_i386_arch_intel_syntax
+init|=
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_i386
+block|,
+name|bfd_mach_i386_i386_intel_syntax
+block|,
+literal|"i386:intel"
+block|,
+literal|"i386:intel"
+block|,
+literal|3
+block|,
+name|true
+block|,
+name|bfd_default_compatible
+block|,
+name|bfd_default_scan
+block|,
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|bfd_arch_info_type
@@ -53,7 +89,8 @@ name|bfd_default_compatible
 block|,
 name|bfd_default_scan
 block|,
-literal|0
+operator|&
+name|bfd_i386_arch_intel_syntax
 block|, }
 decl_stmt|;
 end_decl_stmt

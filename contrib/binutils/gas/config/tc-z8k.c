@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-z8k.c -- Assemble code for the Zilog Z800n    Copyright (C) 1992, 93, 94, 95, 96, 1997 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-z8k.c -- Assemble code for the Zilog Z800n    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 1999 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1095,7 +1095,10 @@ literal|14
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"register rr%d, out of range."
+argument_list|)
 argument_list|,
 name|regno
 argument_list|)
@@ -1141,7 +1144,10 @@ literal|7
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"register rh%d, out of range."
+argument_list|)
 argument_list|,
 name|regno
 argument_list|)
@@ -1187,7 +1193,10 @@ literal|7
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"register rl%d, out of range."
+argument_list|)
 argument_list|,
 name|regno
 argument_list|)
@@ -1238,7 +1247,10 @@ literal|12
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"register rq%d, out of range."
+argument_list|)
 argument_list|,
 name|regno
 argument_list|)
@@ -1275,7 +1287,10 @@ literal|15
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"register r%d, out of range."
+argument_list|)
 argument_list|,
 name|regno
 argument_list|)
@@ -1339,7 +1354,10 @@ name|O_absent
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"missing operand"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|new
@@ -1396,7 +1414,10 @@ else|else
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"expected %c"
+argument_list|)
 argument_list|,
 name|what
 argument_list|)
@@ -1449,7 +1470,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"register is wrong size for a word %s"
+argument_list|)
 argument_list|,
 name|string
 argument_list|)
@@ -1503,7 +1527,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"register is wrong size for address %s"
+argument_list|)
 argument_list|,
 name|string
 argument_list|)
@@ -2615,7 +2642,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Missing ) in ra(rb)"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3759,7 +3789,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"operand %s0x%x out of range."
+argument_list|)
 argument_list|,
 name|string
 argument_list|,
@@ -4305,7 +4338,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"immediate must be 1 or 2"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4314,7 +4350,10 @@ else|else
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"immediate 1 or 2 expected"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4425,7 +4464,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"can't use R0 here"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4788,7 +4830,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"can't find opcode "
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4824,7 +4869,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"unknown opcode"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4973,7 +5021,10 @@ literal|0x0
 expr_stmt|;
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't find opcode to match operands"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5006,7 +5057,10 @@ argument_list|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"call to tc_crawl_symbol_chain \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5051,7 +5105,10 @@ argument_list|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"call to tc_headers_hook \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5189,7 +5246,10 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+name|_
+argument_list|(
 literal|"Bad call to MD_ATOF()"
+argument_list|)
 return|;
 block|}
 name|t
@@ -5364,7 +5424,10 @@ else|else
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"invalid architecture -z%s"
+argument_list|)
 argument_list|,
 name|arg
 argument_list|)
@@ -5400,7 +5463,10 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"\ Z8K options:\n\ -z8001			generate segmented code\n\ -z8002			generate unsegmented code\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5409,12 +5475,6 @@ end_function
 begin_escape
 end_escape
 
-begin_decl_stmt
-name|int
-name|md_short_jump_size
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|tc_aout_fix_to_chars
@@ -5422,92 +5482,14 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"call to tc_aout_fix_to_chars \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|abort
 argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|md_create_short_jump
-parameter_list|(
-name|ptr
-parameter_list|,
-name|from_addr
-parameter_list|,
-name|to_addr
-parameter_list|,
-name|frag
-parameter_list|,
-name|to_symbol
-parameter_list|)
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-name|addressT
-name|from_addr
-decl_stmt|;
-name|addressT
-name|to_addr
-decl_stmt|;
-name|fragS
-modifier|*
-name|frag
-decl_stmt|;
-name|symbolS
-modifier|*
-name|to_symbol
-decl_stmt|;
-block|{
-name|as_fatal
-argument_list|(
-literal|"failed sanity check."
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|md_create_long_jump
-parameter_list|(
-name|ptr
-parameter_list|,
-name|from_addr
-parameter_list|,
-name|to_addr
-parameter_list|,
-name|frag
-parameter_list|,
-name|to_symbol
-parameter_list|)
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-name|addressT
-name|from_addr
-decl_stmt|,
-name|to_addr
-decl_stmt|;
-name|fragS
-modifier|*
-name|frag
-decl_stmt|;
-name|symbolS
-modifier|*
-name|to_symbol
-decl_stmt|;
-block|{
-name|as_fatal
-argument_list|(
-literal|"failed sanity check."
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5536,7 +5518,10 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"call to md_convert_frag \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|abort
@@ -5791,12 +5776,6 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|md_long_jump_size
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|md_estimate_size_before_relax
@@ -5817,7 +5796,10 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"call tomd_estimate_size_before_relax \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|abort
@@ -5890,8 +5872,7 @@ name|tc_coff_symbol_emit_hook
 parameter_list|(
 name|s
 parameter_list|)
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|s
 decl_stmt|;
@@ -5967,7 +5948,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't subtract symbols in different sections %s %s"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for MIPS BSD (a.out) binaries.    Copyright (C) 1993, 94, 95, 97, 1998 Free Software Foundation, Inc.    Written by Ralph Campbell.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for MIPS BSD (a.out) binaries.    Copyright (C) 1993, 94, 95, 97, 98, 1999 Free Software Foundation, Inc.    Written by Ralph Campbell.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -152,6 +152,7 @@ value|MY(set_arch_mach)(ABFD, N_MACHTYPE (EXEC)); \   MY(choose_reloc_size)(ABFD
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|MY
 parameter_list|(
@@ -281,6 +282,7 @@ file|"aout-target.h"
 end_include
 
 begin_function
+specifier|static
 name|void
 name|MY
 function|(
@@ -671,6 +673,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -683,6 +686,7 @@ name|symbol
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -879,6 +883,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -890,10 +895,12 @@ name|symbol
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
 name|input_section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
@@ -903,6 +910,7 @@ name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|bfd_vma
@@ -1610,6 +1618,14 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|aout_mips_big_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|const
 name|bfd_target
 name|aout_mips_little_vec
@@ -1783,11 +1799,14 @@ argument_list|(
 name|_bfd_nodynamic
 argument_list|)
 block|,
+operator|&
+name|aout_mips_big_vec
+block|,
 operator|(
 name|PTR
 operator|)
 name|MY_backend_data
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1965,11 +1984,14 @@ argument_list|(
 name|_bfd_nodynamic
 argument_list|)
 block|,
+operator|&
+name|aout_mips_little_vec
+block|,
 operator|(
 name|PTR
 operator|)
 name|MY_backend_data
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

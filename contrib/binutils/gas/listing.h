@@ -106,6 +106,14 @@ end_endif
 begin_define
 define|#
 directive|define
+name|LISTING_EOF
+parameter_list|()
+value|LISTING_NEWLINE()
+end_define
+
+begin_define
+define|#
+directive|define
 name|LISTING_SKIP_COND
 parameter_list|()
 value|((listing& LISTING_NOCOND) != 0)

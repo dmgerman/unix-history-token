@@ -122,7 +122,10 @@ condition|)
 block|{
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't open a bfd on stdout %s "
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -146,7 +149,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"FATAL: Can't create %s"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -223,7 +229,10 @@ argument_list|)
 expr_stmt|;
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"FATAL: Can't close %s\n"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -249,7 +258,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"FATAL: Can't close %s\n"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -289,13 +301,16 @@ parameter_list|)
 name|char
 modifier|*
 name|where
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|long
 name|length
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|abort
@@ -390,7 +405,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"FATAL: Can't create %s"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -427,7 +445,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"FATAL: Can't close %s"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -502,14 +523,20 @@ comment|/* if ( EOF == (putc( *where, stdoutput )) ) */
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"Failed to emit an object byte"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't continue"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

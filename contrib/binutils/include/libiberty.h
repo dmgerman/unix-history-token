@@ -43,6 +43,7 @@ name|char
 operator|*
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* Free a vector returned by buildargv.  */
 specifier|extern
@@ -71,6 +72,7 @@ operator|*
 operator|*
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* Return the last component of a path name.  Note that we can't use a    prototype here because the parameter is declared inconsistently    across different systems, sometimes as "char *" and sometimes as    "const char *" */
 if|#
@@ -83,6 +85,26 @@ operator|||
 name|defined
 argument_list|(
 name|__linux__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN32__
 argument_list|)
 specifier|extern
 name|char
@@ -122,6 +144,7 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* Check whether two file descriptors refer to the same file.  */
 specifier|extern
@@ -135,6 +158,18 @@ name|fd1
 operator|,
 name|int
 name|fd2
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Get the working directory.  The result is cached, so don't call    chdir() between calls to getpwd().  */
+specifier|extern
+name|char
+modifier|*
+name|getpwd
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -160,6 +195,22 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
+decl_stmt|;
+comment|/* Return a temporary file name or NULL if unable to create one.  */
+specifier|extern
+name|char
+modifier|*
+name|make_temp_file
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* Allocate memory filled with spaces.  Allocates using malloc.  */
 specifier|extern
@@ -283,9 +334,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|/* Exit, calling all the functions registered with xatexit.  */
-ifndef|#
-directive|ifndef
-name|__GNUC__
 specifier|extern
 name|void
 name|xexit
@@ -296,23 +344,8 @@ name|int
 name|status
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
-else|#
-directive|else
-typedef|typedef
-name|void
-name|libiberty_voidfn
-name|PARAMS
-typedef|((
-name|int
-name|status
-typedef|));
-specifier|__volatile__
-name|libiberty_voidfn
-name|xexit
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* Set the program name used by xmalloc.  */
 specifier|extern
 name|void
@@ -334,6 +367,10 @@ comment|/* Get a definition for size_t.  */
 include|#
 directive|include
 file|<stddef.h>
+comment|/* Get a definition for va_list.  */
+include|#
+directive|include
+file|<stdarg.h>
 endif|#
 directive|endif
 specifier|extern
@@ -345,8 +382,9 @@ operator|(
 name|size_t
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
-comment|/* Reallocate memory without fail.  This works like xmalloc.     FIXME: We do not declare the parameter types for the same reason as    xmalloc.  */
+comment|/* Reallocate memory without fail.  This works like xmalloc.  Note,    realloc type functions are not suitable for attribute malloc since    they may return the same address across multiple calls. */
 specifier|extern
 name|PTR
 name|xrealloc
@@ -358,6 +396,20 @@ operator|,
 name|size_t
 operator|)
 argument_list|)
+decl_stmt|;
+comment|/* Allocate memory without fail and set it to zero.  This works like    xmalloc.  */
+specifier|extern
+name|PTR
+name|xcalloc
+name|PARAMS
+argument_list|(
+operator|(
+name|size_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* Copy a string into a memory buffer without fail.  */
 specifier|extern
@@ -372,6 +424,24 @@ name|char
 operator|*
 operator|)
 argument_list|)
+name|ATTRIBUTE_MALLOC
+decl_stmt|;
+comment|/* Copy an existing memory buffer to a new memory buffer without fail.  */
+specifier|extern
+name|PTR
+name|xmemdup
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|PTR
+operator|,
+name|size_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* hex character manipulation routines */
 define|#
@@ -485,6 +555,51 @@ operator|*
 operator|,
 name|int
 operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Like sprintf but provides a pointer to malloc'd storage, which must    be freed by the caller.  */
+specifier|extern
+name|int
+name|asprintf
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF_2
+decl_stmt|;
+comment|/* Like vsprintf but provides a pointer to malloc'd storage, which    must be freed by the caller.  */
+specifier|extern
+name|int
+name|vasprintf
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|va_list
+operator|)
+argument_list|)
+name|ATTRIBUTE_PRINTF
+argument_list|(
+literal|2
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 ifdef|#

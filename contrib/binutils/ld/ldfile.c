@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1991, 92, 93, 94, 95, 1998 Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Linker file opening and searching.    Copyright (C) 1991, 92, 93, 94, 95, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -294,35 +294,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
-name|ldfile_open_file_search
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|arch
-operator|,
-name|lang_input_statement_type
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-name|lib
-operator|,
-specifier|const
-name|char
-operator|*
-name|suffix
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|FILE
 modifier|*
 name|try_open
@@ -450,35 +421,45 @@ if|if
 condition|(
 name|trace_file_tries
 condition|)
-name|info_msg
-argument_list|(
-literal|"attempt to open %s %s\n"
-argument_list|,
-name|attempt
-argument_list|,
-name|entry
-operator|->
-name|the_bfd
-operator|==
-name|NULL
-condition|?
-literal|"failed"
-else|:
-literal|"succeeded"
-argument_list|)
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|entry
 operator|->
 name|the_bfd
-operator|!=
+operator|==
 name|NULL
 condition|)
-return|return
-name|true
-return|;
+name|info_msg
+argument_list|(
+name|_
+argument_list|(
+literal|"attempt to open %s failed\n"
+argument_list|)
+argument_list|,
+name|attempt
+argument_list|)
+expr_stmt|;
 else|else
+name|info_msg
+argument_list|(
+name|_
+argument_list|(
+literal|"attempt to open %s succeeded\n"
+argument_list|)
+argument_list|,
+name|attempt
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|entry
+operator|->
+name|the_bfd
+operator|==
+name|NULL
+condition|)
 block|{
 if|if
 condition|(
@@ -489,7 +470,10 @@ name|bfd_error_invalid_target
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: invalid BFD target `%s'\n"
+argument_list|)
 argument_list|,
 name|entry
 operator|->
@@ -500,6 +484,115 @@ return|return
 name|false
 return|;
 block|}
+comment|/* If we are searching for this file, see if the architecture is      compatible with the output file.  If it isn't, keep searching.      If we can't open the file as an object file, stop the search      here.  */
+if|if
+condition|(
+name|entry
+operator|->
+name|search_dirs_flag
+condition|)
+block|{
+name|bfd
+modifier|*
+name|check
+decl_stmt|;
+if|if
+condition|(
+name|bfd_check_format
+argument_list|(
+name|entry
+operator|->
+name|the_bfd
+argument_list|,
+name|bfd_archive
+argument_list|)
+condition|)
+name|check
+operator|=
+name|bfd_openr_next_archived_file
+argument_list|(
+name|entry
+operator|->
+name|the_bfd
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|check
+operator|=
+name|entry
+operator|->
+name|the_bfd
+expr_stmt|;
+if|if
+condition|(
+name|check
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|bfd_check_format
+argument_list|(
+name|check
+argument_list|,
+name|bfd_object
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|bfd_arch_get_compatible
+argument_list|(
+name|check
+argument_list|,
+name|output_bfd
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%P: skipping incompatible %s when searching for %s"
+argument_list|)
+argument_list|,
+name|attempt
+argument_list|,
+name|entry
+operator|->
+name|local_sym_name
+argument_list|)
+expr_stmt|;
+name|bfd_close
+argument_list|(
+name|entry
+operator|->
+name|the_bfd
+argument_list|)
+expr_stmt|;
+name|entry
+operator|->
+name|the_bfd
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+block|}
+block|}
+return|return
+name|true
+return|;
 block|}
 end_function
 
@@ -508,7 +601,6 @@ comment|/* Search for and open the file specified by ENTRY.  If it is an    arch
 end_comment
 
 begin_function
-specifier|static
 name|boolean
 name|ldfile_open_file_search
 parameter_list|(
@@ -861,6 +953,50 @@ name|entry
 argument_list|)
 condition|)
 return|return;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|entry
+operator|->
+name|filename
+argument_list|,
+name|entry
+operator|->
+name|local_sym_name
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%F%P: cannot open %s for %s: %E\n"
+argument_list|)
+argument_list|,
+name|entry
+operator|->
+name|filename
+argument_list|,
+name|entry
+operator|->
+name|local_sym_name
+argument_list|)
+expr_stmt|;
+else|else
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%F%P: cannot open %s: %E\n"
+argument_list|)
+argument_list|,
+name|entry
+operator|->
+name|local_sym_name
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -927,17 +1063,32 @@ condition|)
 return|return;
 endif|#
 directive|endif
-block|}
+if|if
+condition|(
+name|ldemul_find_potential_libraries
+argument_list|(
+name|arch
+operator|->
+name|name
+argument_list|,
+name|entry
+argument_list|)
+condition|)
+return|return;
 block|}
 name|einfo
 argument_list|(
-literal|"%F%P: cannot open %s: %E\n"
+name|_
+argument_list|(
+literal|"%F%P: cannot find %s\n"
+argument_list|)
 argument_list|,
 name|entry
 operator|->
 name|local_sym_name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -998,18 +1149,21 @@ name|NULL
 condition|)
 name|info_msg
 argument_list|(
-literal|"cannot find script file "
+name|_
+argument_list|(
+literal|"cannot find script file %s\n"
+argument_list|)
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 else|else
 name|info_msg
 argument_list|(
-literal|"opened script file "
-argument_list|)
-expr_stmt|;
-name|info_msg
+name|_
 argument_list|(
-literal|"%s\n"
+literal|"opened script file %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -1063,18 +1217,21 @@ name|NULL
 condition|)
 name|info_msg
 argument_list|(
-literal|"cannot find script file "
+name|_
+argument_list|(
+literal|"cannot find script file %s\n"
+argument_list|)
+argument_list|,
+name|buff
 argument_list|)
 expr_stmt|;
 else|else
 name|info_msg
 argument_list|(
-literal|"opened script file "
-argument_list|)
-expr_stmt|;
-name|info_msg
+name|_
 argument_list|(
-literal|"%s\n"
+literal|"opened script file %s\n"
+argument_list|)
 argument_list|,
 name|buff
 argument_list|)
@@ -1248,7 +1405,10 @@ argument_list|)
 expr_stmt|;
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: cannot open linker script file %s: %E\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -1403,7 +1563,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: unknown architecture: %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -1469,7 +1632,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: target architecture respecified\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1688,7 +1854,10 @@ else|else
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: cannot represent machine `%s'\n"
+argument_list|)
 argument_list|,
 name|string
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 1998 Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@zfe.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 98, 99, 2000 Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@zfe.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -328,7 +328,10 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"\ Usage: %s [-CfsHV] [-b bfdname] [--target=bfdname]\n\        [-e executable] [--exe=executable] [--demangle]\n\        [--basenames] [--functions] [addr addr ...]\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -350,7 +353,12 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"Report bugs to bug-gnu-utils@gnu.org\n"
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit
@@ -531,10 +539,14 @@ name|section
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|bfd_vma
 name|vma
+decl_stmt|;
+name|bfd_size_type
+name|size
 decl_stmt|;
 if|if
 condition|(
@@ -571,6 +583,22 @@ condition|(
 name|pc
 operator|<
 name|vma
+condition|)
+return|return;
+name|size
+operator|=
+name|bfd_get_section_size_before_reloc
+argument_list|(
+name|section
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pc
+operator|>=
+name|vma
+operator|+
+name|size
 condition|)
 return|return;
 name|found
@@ -741,6 +769,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|functionname
+operator|==
+name|NULL
+operator|||
 operator|*
 name|functionname
 operator|==
@@ -814,6 +846,10 @@ block|}
 if|if
 condition|(
 name|base_names
+operator|&&
+name|filename
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
@@ -847,6 +883,10 @@ argument_list|(
 literal|"%s:%u\n"
 argument_list|,
 name|filename
+condition|?
+name|filename
+else|:
+literal|"??"
 argument_list|,
 name|line
 argument_list|)
@@ -926,7 +966,10 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: can not get addresses from archive"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
@@ -1044,6 +1087,38 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|program_name
 operator|=
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Coff file dumper.    Copyright (C) 1994 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Coff file dumper.    Copyright (C) 1994, 95, 98, 99, 2000 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -43,50 +43,6 @@ directive|define
 name|PROGRAM_VERSION
 value|"1.0"
 end_define
-
-begin_function
-name|char
-modifier|*
-name|xcalloc
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-name|int
-name|a
-decl_stmt|;
-name|int
-name|b
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|r
-init|=
-name|xmalloc
-argument_list|(
-name|a
-operator|*
-name|b
-argument_list|)
-decl_stmt|;
-name|memset
-argument_list|(
-name|r
-argument_list|,
-literal|0
-argument_list|,
-name|a
-operator|*
-name|b
-argument_list|)
-expr_stmt|;
-return|return
-name|r
-return|;
-block|}
-end_function
 
 begin_decl_stmt
 specifier|static
@@ -271,7 +227,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"#lines %d "
+argument_list|)
 argument_list|,
 name|p
 operator|->
@@ -1754,7 +1713,10 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: Print a human readable interpretation of a SYSROFF object file\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1847,6 +1809,38 @@ literal|0
 block|}
 block|}
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|program_name
 operator|=
 name|av
@@ -1902,7 +1896,10 @@ literal|'V'
 case|:
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"GNU %s version %s\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|,
@@ -1951,18 +1948,12 @@ operator|!
 name|input_file
 condition|)
 block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no input file specified\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"no input file specified"
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -31,6 +31,12 @@ directive|include
 file|"sb.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"listing.h"
+end_include
+
 begin_comment
 comment|/*  * O/S independent module to supply buffers of sanitised source code  * to rest of assembler.  We get sanitised input data of arbitrary length.  * We break these buffers on line boundaries, recombine pieces that  * were broken across buffers, and return a buffer of full lines to  * the caller.  * The last partial line begins the next buffer we build and return to caller.  * The buffer returned to caller is preceeded by BEFORE_STRING and followed  * by AFTER_STRING, as sentinels. The last character before AFTER_STRING  * is a newline.  * Also looks after line numbers, for e.g. error messages.  */
 end_comment
@@ -181,6 +187,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Should we do a conditional check on from_sb? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|from_sb_is_expansion
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The number of nested sb structures we have included.  */
 end_comment
 
@@ -293,6 +312,10 @@ decl_stmt|;
 name|sb
 name|from_sb
 decl_stmt|;
+name|int
+name|from_sb_is_expansion
+decl_stmt|;
+comment|/* Should we do a conditional check? */
 name|struct
 name|input_save
 modifier|*
@@ -483,6 +506,12 @@ name|from_sb
 operator|=
 name|from_sb
 expr_stmt|;
+name|saved
+operator|->
+name|from_sb_is_expansion
+operator|=
+name|from_sb_is_expansion
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|saved
@@ -656,6 +685,12 @@ operator|=
 name|saved
 operator|->
 name|from_sb
+expr_stmt|;
+name|from_sb_is_expansion
+operator|=
+name|saved
+operator|->
+name|from_sb_is_expansion
 expr_stmt|;
 name|partial_where
 operator|=
@@ -868,7 +903,10 @@ index|]
 condition|?
 name|filename
 else|:
+name|_
+argument_list|(
 literal|"{standard input}"
+argument_list|)
 expr_stmt|;
 name|physical_input_line
 operator|=
@@ -937,6 +975,8 @@ parameter_list|(
 name|from
 parameter_list|,
 name|position
+parameter_list|,
+name|is_expansion
 parameter_list|)
 name|sb
 modifier|*
@@ -945,6 +985,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|position
+decl_stmt|;
+name|int
+name|is_expansion
 decl_stmt|;
 block|{
 if|if
@@ -955,12 +998,29 @@ name|max_macro_nest
 condition|)
 name|as_fatal
 argument_list|(
-literal|"macros nested too deeply"
+name|_
+argument_list|(
+literal|"buffers nested too deeply"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
 name|macro_nest
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|md_macro_start
+if|if
+condition|(
+name|is_expansion
+condition|)
+block|{
+name|md_macro_start
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|next_saved_file
 operator|=
 name|input_scrub_push
@@ -973,6 +1033,10 @@ argument_list|(
 operator|&
 name|from_sb
 argument_list|)
+expr_stmt|;
+name|from_sb_is_expansion
+operator|=
+name|is_expansion
 expr_stmt|;
 if|if
 condition|(
@@ -1082,11 +1146,26 @@ operator|&
 name|from_sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|from_sb_is_expansion
+condition|)
+block|{
 name|cond_finish_check
 argument_list|(
 name|macro_nest
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|md_macro_end
+comment|/* allow the target to clean up per-macro expansion data */
+name|md_macro_end
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 operator|--
 name|macro_nest
 expr_stmt|;
@@ -1291,7 +1370,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"partial line at end of file ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|partial_where
@@ -1385,10 +1467,17 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Partial line at end of file ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Tell the listing we've finished the file.  */
+name|LISTING_EOF
+argument_list|()
+expr_stmt|;
 comment|/* If we should pop to another file at EOF, do it. */
 if|if
 condition|(

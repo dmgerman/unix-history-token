@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld-emul.h - Linker emulation header file    Copyright 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
+comment|/* ld-emul.h - Linker emulation header file    Copyright 1991, 92, 93, 94, 95, 96, 97, 1998, 2000 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifndef
@@ -188,6 +188,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|ldemul_list_emulation_options
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ldemul_get_script
@@ -280,6 +294,21 @@ begin_decl_stmt
 specifier|extern
 name|boolean
 name|ldemul_unrecognized_file
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|lang_input_statement_struct
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|ldemul_recognized_file
 name|PARAMS
 argument_list|(
 operator|(
@@ -415,6 +444,24 @@ name|PARAMS
 argument_list|(
 operator|(
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ldemul_find_potential_libraries
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|lang_input_statement_struct
 operator|*
 operator|)
 argument_list|)
@@ -665,6 +712,50 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
+expr|struct
+name|lang_input_statement_struct
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Run to list the command line options which parse_args handles.  */
+name|void
+argument_list|(
+argument|* list_options
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Run to specially handle files which *are* recognized as object      files or archives.  Return true if the file was handled.  */
+name|boolean
+argument_list|(
+argument|*recognized_file
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|lang_input_statement_struct
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Called when looking for libraries in a directory specified      via a linker command line option or linker script option.      Files that match the pattern "lib*.a" have already been scanned.      (For VMS files matching ":lib*.a" have also been scanned).  */
+name|int
+argument_list|(
+argument|* find_potential_libraries
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
 expr|struct
 name|lang_input_statement_struct
 operator|*

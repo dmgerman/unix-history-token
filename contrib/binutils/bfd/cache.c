@@ -647,7 +647,31 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Create the file.  Unlink it first, for the convenience of              operating systems which worry about overwriting running              binaries.  */
+comment|/* Create the file.  	     Some operating systems won't let us overwrite a running 	     binary.  For them, we want to unlink the file first.  	     However, gcc 2.95 will create temporary files using 	     O_EXCL and tight permissions to prevent other users from 	     substituting other .o files during the compilation.  gcc 	     will then tell the assembler to use the newly created 	     file as an output file.  If we unlink the file here, we 	     open a brief window when another user could still 	     substitute a file.  	     So we unlink the output file if and only if it has 	     non-zero size.  */
+name|struct
+name|stat
+name|s
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|abfd
+operator|->
+name|filename
+argument_list|,
+operator|&
+name|s
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|s
+operator|.
+name|st_size
+operator|!=
+literal|0
+condition|)
 name|unlink
 argument_list|(
 name|abfd

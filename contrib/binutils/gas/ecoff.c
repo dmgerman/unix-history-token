@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF debugging support.    Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF debugging support.    Copyright (C) 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,6 +12,12 @@ end_include
 begin_comment
 comment|/* This file is compiled conditionally for those targets which use    ECOFF debugging information (e.g., MIPS ECOFF, MIPS ELF, Alpha    ECOFF).  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"ecoff.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -29,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"coff/symconst.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ecoff.h"
 end_include
 
 begin_include
@@ -3869,6 +3869,10 @@ modifier|*
 name|symbolP
 decl_stmt|;
 block|{
+name|OBJ_SYMFIELD_TYPE
+modifier|*
+name|obj
+decl_stmt|;
 comment|/* Make sure that we have a file pointer, but only if we have seen a      file.  If we haven't seen a file, then this is a probably special      symbol created by md_begin which may required special handling at      some point.  Creating a dummy file with a dummy name is certainly      wrong.  */
 if|if
 condition|(
@@ -3897,19 +3901,26 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|obj
+operator|=
+name|symbol_get_obj
+argument_list|(
 name|symbolP
+argument_list|)
+expr_stmt|;
+name|obj
 operator|->
 name|ecoff_file
 operator|=
 name|cur_file_ptr
 expr_stmt|;
-name|symbolP
+name|obj
 operator|->
 name|ecoff_symbol
 operator|=
 name|NULL
 expr_stmt|;
-name|symbolP
+name|obj
 operator|->
 name|ecoff_extern_size
 operator|=
@@ -4138,7 +4149,10 @@ name|PAGE_USIZE
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"String too big (%lu bytes)"
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -4287,7 +4301,10 @@ name|err
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Inserting \"%s\" into string hash table: %s"
+argument_list|)
 argument_list|,
 name|str
 argument_list|,
@@ -4435,7 +4452,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no current file pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vp
@@ -4528,7 +4548,10 @@ operator|*
 operator|)
 name|NULL
 condition|)
+name|symbol_get_obj
+argument_list|(
 name|sym_value
+argument_list|)
 operator|->
 name|ecoff_symbol
 operator|=
@@ -4881,7 +4904,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"too many st_End's"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5290,7 +5316,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no current file pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vp
@@ -5397,7 +5426,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no current file pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vp
@@ -5543,7 +5575,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no current file pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vp
@@ -6332,7 +6367,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no current file pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|hash_ptr
@@ -6477,7 +6515,10 @@ name|err
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Inserting \"%s\" into tag hash table: %s"
+argument_list|)
 argument_list|,
 name|tag
 argument_list|,
@@ -6863,7 +6904,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"no current file pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vp
@@ -6970,9 +7014,10 @@ argument_list|(
 name|func
 argument_list|)
 expr_stmt|;
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
@@ -7097,6 +7142,28 @@ block|}
 block|}
 end_function
 
+begin_function
+name|symbolS
+modifier|*
+name|ecoff_get_cur_proc_sym
+parameter_list|()
+block|{
+return|return
+operator|(
+name|cur_proc_ptr
+condition|?
+name|cur_proc_ptr
+operator|->
+name|sym
+operator|->
+name|as_sym
+else|:
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -7186,7 +7253,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"fake .file after real one"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|as_where
@@ -7479,7 +7549,10 @@ literal|2
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Filename goes over one page boundary."
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Push the start of the filename. We assume that the filename          will be stored at string offset 1.  */
@@ -8056,7 +8129,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".begin directive without a preceding .file directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8077,7 +8153,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".begin directive without a preceding .ent directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8190,7 +8269,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".bend directive without a preceding .file directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8211,7 +8293,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".bend directive without a preceding .ent directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8248,7 +8333,10 @@ name|NULL
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".bend directive names unknown symbol"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -8433,7 +8521,10 @@ name|NULL
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".def pseudo-op used inside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8446,7 +8537,10 @@ literal|'\0'
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Empty symbol name in .def; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -8598,7 +8692,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".dim pseudo-op used outside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8657,7 +8754,10 @@ literal|';'
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Badly formed .dim directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8695,7 +8795,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Too many .dim entries"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8756,7 +8859,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".scl pseudo-op used outside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8825,7 +8931,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".size pseudo-op used outside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8884,7 +8993,10 @@ literal|';'
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Badly formed .size directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8922,7 +9034,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Too many .size entries"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8991,7 +9106,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".type pseudo-op used outside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9058,7 +9176,10 @@ block|{
 comment|/* FIXME: We could handle this by setting the continued bit.              There would still be a limit: the .type argument can not              be infinite.  */
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"The type of %s is too complex; it will be simplified"
+argument_list|)
 argument_list|,
 name|coff_sym_name
 argument_list|)
@@ -9109,7 +9230,10 @@ expr_stmt|;
 else|else
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Unrecognized .type argument"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|val
@@ -9243,7 +9367,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".tag pseudo-op used outside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9330,7 +9457,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".val pseudo-op used outside of .def/.endef; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9361,7 +9491,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|".val expression is too copmlex"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9445,7 +9578,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".endef pseudo-op used before .def; ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9542,7 +9678,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Bad COFF debugging info"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9775,7 +9914,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"No tag specified for %s"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -9867,7 +10009,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Bad COFF debugging information"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10087,7 +10232,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".end directive without a preceding .file directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10108,7 +10256,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".end directive without a preceding .ent directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10141,7 +10292,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".end directive has no name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -10174,7 +10328,10 @@ name|NULL
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".end directive names unknown symbol"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -10309,7 +10466,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"second .ent directive found before .end directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10342,7 +10502,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".ent directive has no name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -10388,6 +10551,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -10481,7 +10648,10 @@ operator|=
 name|get_absolute_expression
 argument_list|()
 expr_stmt|;
+name|symbol_get_obj
+argument_list|(
 name|symbolp
+argument_list|)
 operator|->
 name|ecoff_extern_size
 operator|=
@@ -10530,7 +10700,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"No way to handle .file within .ent/.end section"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10605,7 +10778,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".fmask outside of .ent"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10626,7 +10802,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Bad .fmask directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|--
@@ -10693,7 +10872,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".frame outside of .ent"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10734,7 +10916,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Bad .frame directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|--
@@ -10814,7 +10999,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".mask outside of .ent"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10835,7 +11023,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Bad .mask directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|--
@@ -10906,7 +11097,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".loc before .file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -10923,7 +11117,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".loc outside of .text"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -11265,6 +11462,16 @@ begin_comment
 comment|/* Parse .weakext directives.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_MIPS
+end_ifndef
+
+begin_comment
+comment|/* For TC_MIPS use the version in tc-mips.c. */
+end_comment
+
 begin_function
 name|void
 name|ecoff_directive_weakext
@@ -11331,7 +11538,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Ignoring attempt to redefine symbol `%s'."
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -11381,7 +11591,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad .weakext directive"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -11389,11 +11602,13 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+name|symbol_set_value_expression
+argument_list|(
 name|symbolP
-operator|->
-name|sy_value
-operator|=
+argument_list|,
+operator|&
 name|exp
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -11407,6 +11622,15 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not TC_MIPS */
+end_comment
 
 begin_escape
 end_escape
@@ -11501,7 +11725,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|".stab%c is not supported"
+argument_list|)
 argument_list|,
 name|what
 argument_list|)
@@ -11528,7 +11755,10 @@ literal|0
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".stab%c: ignoring non-zero other field"
+argument_list|)
 argument_list|,
 name|what
 argument_list|)
@@ -11629,7 +11859,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Line number (%d) for .stab%c directive cannot fit in index field (20 bits)"
+argument_list|)
 argument_list|,
 name|desc
 argument_list|,
@@ -11710,6 +11943,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|input_line_pointer
 argument_list|)
@@ -11768,7 +12005,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Illegal .stab%c directive, bad character"
+argument_list|)
 argument_list|,
 name|what
 argument_list|)
@@ -11886,7 +12126,10 @@ name|NULL
 condition|)
 name|hold
 operator|=
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_symbol
 expr_stmt|;
@@ -11920,7 +12163,10 @@ operator|*
 operator|)
 name|NULL
 condition|)
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_symbol
 operator|=
@@ -12061,13 +12307,10 @@ block|}
 comment|/* Double check weak symbols.  */
 if|if
 condition|(
+name|S_IS_WEAK
+argument_list|(
 name|sym
-operator|->
-name|bsym
-operator|->
-name|flags
-operator|&
-name|BSF_WEAK
+argument_list|)
 condition|)
 block|{
 if|if
@@ -12079,7 +12322,10 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Symbol `%s' can not be both weak and common"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -12443,6 +12689,12 @@ decl_stmt|;
 name|lineno_list_t
 name|first
 decl_stmt|;
+name|lineno_list_t
+modifier|*
+name|local_first_lineno
+init|=
+name|first_lineno
+decl_stmt|;
 if|if
 condition|(
 name|linecntptr
@@ -12501,9 +12753,13 @@ name|totcount
 operator|=
 literal|0
 expr_stmt|;
-comment|/* For some reason the address of the first procedure is ignored      when reading line numbers.  This doesn't matter if the address of      the first procedure is 0, but when gcc is generating MIPS      embedded PIC code, it will put strings in the .text section      before the first procedure.  We cope by inserting a dummy line if      the address of the first procedure is not 0.  Hopefully this      won't screw things up too badly.  */
+comment|/* For some reason the address of the first procedure is ignored      when reading line numbers.  This doesn't matter if the address of      the first procedure is 0, but when gcc is generating MIPS      embedded PIC code, it will put strings in the .text section      before the first procedure.  We cope by inserting a dummy line if      the address of the first procedure is not 0.  Hopefully this      won't screw things up too badly.         Don't do this for ECOFF assembly source line numbers.  They work      without this extra attention.  */
 if|if
 condition|(
+name|debug_type
+operator|!=
+name|DEBUG_ECOFF
+operator|&&
 name|first_proc_ptr
 operator|!=
 operator|(
@@ -12512,7 +12768,7 @@ operator|*
 operator|)
 name|NULL
 operator|&&
-name|first_lineno
+name|local_first_lineno
 operator|!=
 operator|(
 name|lineno_list_t
@@ -12554,7 +12810,7 @@ name|first
 operator|.
 name|file
 operator|=
-name|first_lineno
+name|local_first_lineno
 operator|->
 name|file
 expr_stmt|;
@@ -12562,7 +12818,7 @@ name|first
 operator|.
 name|proc
 operator|=
-name|first_lineno
+name|local_first_lineno
 operator|->
 name|proc
 expr_stmt|;
@@ -12589,9 +12845,9 @@ name|first
 operator|.
 name|next
 operator|=
-name|first_lineno
+name|local_first_lineno
 expr_stmt|;
-name|first_lineno
+name|local_first_lineno
 operator|=
 operator|&
 name|first
@@ -12601,7 +12857,7 @@ for|for
 control|(
 name|l
 operator|=
-name|first_lineno
+name|local_first_lineno
 init|;
 name|l
 operator|!=
@@ -13760,7 +14016,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".begin/.bend in different segments"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sym_ptr
@@ -13993,9 +14252,10 @@ block|{
 if|if
 condition|(
 operator|(
+name|symbol_get_bfdsym
+argument_list|(
 name|as_sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator|&
@@ -14039,24 +14299,30 @@ name|as_sym
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
+name|valueT
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|symbol_get_obj
+argument_list|(
 name|as_sym
+argument_list|)
 operator|->
 name|ecoff_extern_size
+expr_stmt|;
+if|if
+condition|(
+name|s
 operator|==
 literal|0
 operator|||
-operator|(
-name|as_sym
-operator|->
-name|ecoff_extern_size
+name|s
 operator|>
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
 argument_list|)
-operator|)
 condition|)
 name|sc
 operator|=
@@ -14076,9 +14342,7 @@ name|asym
 operator|.
 name|value
 operator|=
-name|as_sym
-operator|->
-name|ecoff_extern_size
+name|s
 expr_stmt|;
 block|}
 ifdef|#
@@ -14088,9 +14352,7 @@ name|S_SET_SIZE
 argument_list|(
 name|as_sym
 argument_list|,
-name|as_sym
-operator|->
-name|ecoff_extern_size
+name|s
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14635,7 +14897,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".begin/.bend in different segments"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sym_ptr
@@ -14780,7 +15045,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".begin/.bend in different segments"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sym_ptr
@@ -14959,7 +15227,10 @@ operator|*
 operator|)
 name|NULL
 operator|&&
+name|symbol_get_obj
+argument_list|(
 name|as_sym
+argument_list|)
 operator|->
 name|ecoff_symbol
 operator|==
@@ -16659,7 +16930,10 @@ control|)
 block|{
 if|if
 condition|(
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_symbol
 operator|==
@@ -16687,9 +16961,21 @@ name|sym
 argument_list|)
 condition|)
 block|{
+name|struct
+name|localsym
+modifier|*
+name|lsym
+decl_stmt|;
+name|lsym
+operator|=
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_symbol
+expr_stmt|;
+name|lsym
 operator|->
 name|ecoff_sym
 operator|.
@@ -16699,9 +16985,7 @@ name|value
 operator|=
 literal|0
 expr_stmt|;
-name|sym
-operator|->
-name|ecoff_symbol
+name|lsym
 operator|->
 name|ecoff_sym
 operator|.
@@ -16714,9 +16998,7 @@ name|int
 operator|)
 name|st_Nil
 expr_stmt|;
-name|sym
-operator|->
-name|ecoff_symbol
+name|lsym
 operator|->
 name|ecoff_sym
 operator|.
@@ -16729,9 +17011,7 @@ name|int
 operator|)
 name|sc_Nil
 expr_stmt|;
-name|sym
-operator|->
-name|ecoff_symbol
+name|lsym
 operator|->
 name|ecoff_sym
 operator|.
@@ -16747,7 +17027,10 @@ argument_list|(
 name|sym
 argument_list|,
 operator|&
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_symbol
 operator|->
@@ -16968,13 +17251,19 @@ control|)
 block|{
 if|if
 condition|(
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_symbol
 operator|!=
 name|NULL
 operator|||
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_file
 operator|==
@@ -16985,9 +17274,10 @@ operator|)
 name|NULL
 operator|||
 operator|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator|&
@@ -16999,7 +17289,10 @@ condition|)
 continue|continue;
 name|cur_file_ptr
 operator|=
+name|symbol_get_obj
+argument_list|(
 name|sym
+argument_list|)
 operator|->
 name|ecoff_file
 expr_stmt|;
@@ -17118,7 +17411,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Missing .end or .bend at end of file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|end_warning
@@ -19430,7 +19726,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"GP prologue size exceeds field size, using 0 instead"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cur_proc_ptr
@@ -19473,24 +19772,29 @@ end_function
 begin_function
 name|void
 name|ecoff_generate_asm_lineno
-parameter_list|(
-name|filename
-parameter_list|,
+parameter_list|()
+block|{
+name|unsigned
+name|int
 name|lineno
-parameter_list|)
-specifier|const
+decl_stmt|;
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|int
-name|lineno
-decl_stmt|;
-block|{
 name|lineno_list_t
 modifier|*
 name|list
 decl_stmt|;
+name|as_where
+argument_list|(
+operator|&
+name|filename
+argument_list|,
+operator|&
+name|lineno
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|current_stabs_filename
@@ -19641,6 +19945,18 @@ name|next
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|void
+name|ecoff_generate_asm_lineno
+parameter_list|()
+block|{ }
 end_function
 
 begin_endif

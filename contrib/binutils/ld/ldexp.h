@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldexp.h -    Copyright 1991, 1992, 1993 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ldexp.h -    Copyright 1991, 92, 93, 94, 95, 1998 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -32,7 +32,7 @@ modifier|*
 name|section
 decl_stmt|;
 name|boolean
-name|valid
+name|valid_p
 decl_stmt|;
 block|}
 name|etree_value_type
@@ -65,6 +65,8 @@ block|,
 name|etree_unspec
 block|,
 name|etree_value
+block|,
+name|etree_assert
 block|,
 name|etree_rel
 block|}
@@ -193,6 +195,24 @@ name|value
 decl_stmt|;
 block|}
 name|rel
+struct|;
+struct|struct
+block|{
+name|node_type
+name|type
+decl_stmt|;
+name|union
+name|etree_union
+modifier|*
+name|child
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|message
+decl_stmt|;
+block|}
+name|assert_s
 struct|;
 block|}
 name|etree_type
@@ -370,6 +390,24 @@ name|char
 operator|*
 operator|,
 name|etree_type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|etree_type
+modifier|*
+name|exp_assert
+name|PARAMS
+argument_list|(
+operator|(
+name|etree_type
+operator|*
+operator|,
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)

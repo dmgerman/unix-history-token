@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -416,7 +416,10 @@ decl_stmt|;
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"cannot create floating-point number"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|words
@@ -527,7 +530,7 @@ modifier|*
 name|str
 decl_stmt|;
 comment|/* Text to convert to binary. */
-name|char
+name|int
 name|what_kind
 decl_stmt|;
 comment|/* 'd', 'f', 'g', 'h' */
@@ -1667,7 +1670,7 @@ operator|+
 name|exponent_bits
 operator|+
 literal|1
-operator|>=
+operator|>
 name|precision
 operator|*
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1841,7 +1844,7 @@ expr_stmt|;
 if|if
 condition|(
 name|prec_bits
-operator|>
+operator|>=
 name|LITTLENUM_NUMBER_OF_BITS
 condition|)
 block|{
@@ -1912,6 +1915,45 @@ name|mask
 index|[
 name|tmp_bits
 index|]
+operator|||
+operator|(
+name|prec_bits
+operator|!=
+operator|(
+name|precision
+operator|*
+name|LITTLENUM_NUMBER_OF_BITS
+operator|-
+name|exponent_bits
+operator|-
+literal|1
+operator|)
+ifdef|#
+directive|ifdef
+name|TC_I386
+comment|/* An extended precision float with only the integer 			 bit set would be invalid.  That must be converted 			 to the smallest normalized number.  */
+operator|&&
+operator|!
+operator|(
+name|precision
+operator|==
+name|X_PRECISION
+operator|&&
+name|prec_bits
+operator|==
+operator|(
+name|precision
+operator|*
+name|LITTLENUM_NUMBER_OF_BITS
+operator|-
+name|exponent_bits
+operator|-
+literal|2
+operator|)
+operator|)
+endif|#
+directive|endif
+operator|)
 condition|)
 block|{
 name|unsigned
@@ -2007,6 +2049,30 @@ operator|++
 operator|=
 name|word1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TC_I386
+comment|/* Set the integer bit in the extended precision format. 		     This cannot happen on the m68k where the mantissa 		     just overflows into the integer bit above.  */
+if|if
+condition|(
+name|precision
+operator|==
+name|X_PRECISION
+condition|)
+operator|*
+name|lp
+operator|++
+operator|=
+literal|1
+operator|<<
+operator|(
+name|LITTLENUM_NUMBER_OF_BITS
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|lp
@@ -2021,24 +2087,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-operator|(
-operator|*
-name|lp
-operator|&
-name|mask
-index|[
-name|prec_bits
-index|]
-operator|)
-operator|!=
-name|mask
-index|[
-name|prec_bits
-index|]
-condition|)
+else|else
 operator|*
 name|lp
 operator|+=
@@ -2196,12 +2245,6 @@ name|lp
 operator|--
 init|;
 name|carry
-operator|&&
-operator|(
-name|lp
-operator|>=
-name|words
-operator|)
 condition|;
 name|lp
 operator|--
@@ -2223,6 +2266,13 @@ name|carry
 operator|>>=
 name|LITTLENUM_NUMBER_OF_BITS
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|==
+name|words
+condition|)
+break|break;
 block|}
 if|if
 condition|(
@@ -2347,7 +2397,7 @@ comment|/* This routine is a real kludge.  Someone really should do it better,  
 end_comment
 
 begin_endif
-unit|static void int_to_gen (x)      long x; {   char buf[20];   char *bufp;    sprintf (buf, "%ld", x);   bufp =&buf[0];   if (atof_generic (&bufp, ".", EXP_CHARS,&generic_floating_point_number))     as_bad ("Error converting number to floating point (Exponent overflow?)"); }
+unit|static void int_to_gen (x)      long x; {   char buf[20];   char *bufp;    sprintf (buf, "%ld", x);   bufp =&buf[0];   if (atof_generic (&bufp, ".", EXP_CHARS,&generic_floating_point_number))     as_bad (_("Error converting number to floating point (Exponent overflow?)")); }
 endif|#
 directive|endif
 end_endif

@@ -7,11 +7,17 @@ begin_comment
 comment|/* This function is in the public domain.  --Mike Stump. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEED_on_exit
-end_ifndef
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ON_EXIT
+end_ifdef
 
 begin_function_decl
 name|int

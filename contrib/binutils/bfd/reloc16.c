@@ -255,6 +255,8 @@ argument_list|,
 name|reloc
 operator|->
 name|address
+argument_list|,
+name|true
 argument_list|)
 operator|)
 condition|)
@@ -640,7 +642,7 @@ name|another_pass
 init|=
 literal|0
 decl_stmt|;
-comment|/* Allocate and initialize the shrinks array for this section.  */
+comment|/* Allocate and initialize the shrinks array for this section.          The last element is used as an accumlator of shrinks.  */
 name|shrinks
 operator|=
 operator|(
@@ -649,7 +651,11 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
 name|reloc_count
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -663,7 +669,11 @@ name|shrinks
 argument_list|,
 literal|0
 argument_list|,
+operator|(
 name|reloc_count
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -754,7 +764,7 @@ operator|+
 literal|1
 init|;
 name|j
-operator|<
+operator|<=
 name|reloc_count
 condition|;
 name|j
@@ -780,6 +790,13 @@ condition|(
 name|another_pass
 condition|)
 do|;
+name|shrink
+operator|=
+name|shrinks
+index|[
+name|reloc_count
+index|]
+expr_stmt|;
 name|free
 argument_list|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ANSI and traditional C compatability macros    Copyright 1991, 1992, 1996 Free Software Foundation, Inc.    This file is part of the GNU C Library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ANSI and traditional C compatability macros    Copyright 1991, 1992, 1996, 1999 Free Software Foundation, Inc.    This file is part of the GNU C Library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -84,6 +84,12 @@ name|LONG_DOUBLE
 value|long double
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_GCC
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -111,6 +117,15 @@ directive|define
 name|SIGNED
 value|signed
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! IN_GCC */
+end_comment
 
 begin_define
 define|#
@@ -154,6 +169,12 @@ end_define
 begin_comment
 comment|/* These are obsolete.  Do not use.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_GCC
+end_ifndef
 
 begin_define
 define|#
@@ -219,6 +240,15 @@ parameter_list|)
 value|name(void)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! IN_GCC */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -249,6 +279,12 @@ name|LONG_DOUBLE
 value|double
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_GCC
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -261,6 +297,27 @@ define|#
 directive|define
 name|NOARGS
 end_define
+
+begin_define
+define|#
+directive|define
+name|VOLATILE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGNED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IN_GCC */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -282,18 +339,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|VOLATILE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIGNED
-end_define
 
 begin_define
 define|#
@@ -330,6 +375,12 @@ end_define
 begin_comment
 comment|/* These are obsolete.  Do not use.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IN_GCC
+end_ifndef
 
 begin_define
 define|#
@@ -399,7 +450,292 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ! IN_GCC */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* ANSI C.  */
+end_comment
+
+begin_comment
+comment|/* Using MACRO(x,y) in cpp #if conditionals does not work with some    older preprocessors.  Thus we can't define something like this:  #define HAVE_GCC_VERSION(MAJOR, MINOR) \   (__GNUC__> (MAJOR) || (__GNUC__ == (MAJOR)&& __GNUC_MINOR__>= (MINOR)))  and then test "#if HAVE_GCC_VERSION(2,7)".  So instead we use the macro below and test it against specific values.  */
+end_comment
+
+begin_comment
+comment|/* This macro simplifies testing whether we are using gcc, and if it    is of a particular minimum version. (Both major& minor numbers are    significant.)  This macro will evaluate to 0 if we are not using    gcc at all.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_VERSION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_VERSION
+value|(__GNUC__ * 1000 + __GNUC_MINOR__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GCC_VERSION */
+end_comment
+
+begin_comment
+comment|/* Define macros for some gcc attributes.  This permits us to use the    macros freely, and know that they will come into play for the    version of gcc in which they are supported.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|<
+literal|2007
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Attribute __malloc__ on functions was valid as of gcc 2.96. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_MALLOC
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|2096
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_MALLOC
+value|__attribute__ ((__malloc__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_MALLOC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 2.96 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_MALLOC */
+end_comment
+
+begin_comment
+comment|/* Attributes on labels were valid as of gcc 2.93. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_UNUSED_LABEL
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|2093
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_UNUSED_LABEL
+value|ATTRIBUTE_UNUSED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_UNUSED_LABEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 2.93 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_UNUSED_LABEL */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_UNUSED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_UNUSED
+value|__attribute__ ((__unused__))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_UNUSED */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NORETURN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NORETURN
+value|__attribute__ ((__noreturn__))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_NORETURN */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_PRINTF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|__attribute__ ((__format__ (__printf__, m, n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PRINTF_1
+value|ATTRIBUTE_PRINTF(1, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PRINTF_2
+value|ATTRIBUTE_PRINTF(2, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PRINTF_3
+value|ATTRIBUTE_PRINTF(3, 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PRINTF_4
+value|ATTRIBUTE_PRINTF(4, 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PRINTF_5
+value|ATTRIBUTE_PRINTF(5, 6)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_PRINTF */
 end_comment
 
 begin_endif

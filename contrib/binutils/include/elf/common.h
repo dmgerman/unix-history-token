@@ -246,89 +246,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_NETBSD
-value|2
-end_define
-
-begin_comment
-comment|/* NetBSD */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ELFOSABI_LINUX
 value|3
 end_define
 
 begin_comment
 comment|/* GNU/Linux */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_HURD
-value|4
-end_define
-
-begin_comment
-comment|/* GNU/Hurd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_SOLARIS
-value|6
-end_define
-
-begin_comment
-comment|/* Solaris */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_MONTEREY
-value|7
-end_define
-
-begin_comment
-comment|/* Monterey */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_IRIX
-value|8
-end_define
-
-begin_comment
-comment|/* IRIX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_FREEBSD
-value|9
-end_define
-
-begin_comment
-comment|/* FreeBSD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELFOSABI_TRU64
-value|10
-end_define
-
-begin_comment
-comment|/* TRU64 UNIX */
 end_comment
 
 begin_define

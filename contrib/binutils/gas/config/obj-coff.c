@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -77,6 +77,177 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_ln
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_def
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_endef
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_dim
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_line
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_size
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_scl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_tag
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_val
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_type
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_ident
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_coff_loc
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* This is used to hold the symbol built by a sequence of pseudo-ops    from .def and .endef.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -485,7 +656,10 @@ condition|)
 block|{
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"Inserting \"%s\" into structure table failed: %s"
+argument_list|)
 argument_list|,
 name|name
 argument_list|,
@@ -626,6 +800,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -648,6 +823,129 @@ name|s_lcomm
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Handle .weak.  This is a GNU extension.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|obj_coff_weak
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+name|symbolS
+modifier|*
+name|symbolP
+decl_stmt|;
+do|do
+block|{
+name|name
+operator|=
+name|input_line_pointer
+expr_stmt|;
+name|c
+operator|=
+name|get_symbol_end
+argument_list|()
+expr_stmt|;
+name|symbolP
+operator|=
+name|symbol_find_or_make
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+operator|*
+name|input_line_pointer
+operator|=
+name|c
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMLER
+name|S_SET_WEAK
+argument_list|(
+name|symbolP
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|TE_PE
+name|S_SET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|,
+name|C_NT_WEAK
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|S_SET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|,
+name|C_WEAKEXT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|c
+operator|==
+literal|','
+condition|)
+block|{
+name|input_line_pointer
+operator|++
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|==
+literal|'\n'
+condition|)
+name|c
+operator|=
+literal|'\n'
+expr_stmt|;
+block|}
+block|}
+do|while
+condition|(
+name|c
+operator|==
+literal|','
+condition|)
+do|;
+name|demand_empty_rest_of_line
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -775,9 +1073,10 @@ operator|=
 operator|&
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -789,9 +1088,10 @@ name|p
 operator|=
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|val
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -853,9 +1153,10 @@ operator|=
 operator|&
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -867,9 +1168,10 @@ name|p
 operator|=
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|val
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -912,9 +1214,10 @@ block|{
 return|return
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -946,9 +1249,10 @@ decl_stmt|;
 block|{
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -981,9 +1285,10 @@ block|{
 return|return
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -1015,9 +1320,10 @@ decl_stmt|;
 block|{
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -1089,6 +1395,7 @@ argument_list|(
 name|normal
 argument_list|)
 condition|)
+block|{
 comment|/* take the most we have */
 name|S_SET_NUMBER_AUXILIARY
 argument_list|(
@@ -1100,6 +1407,7 @@ name|debug
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|S_GET_NUMBER_AUXILIARY
@@ -1111,70 +1419,34 @@ literal|0
 condition|)
 block|{
 comment|/* Move all the auxiliary information.  */
-comment|/* @@ How many fields do we want to preserve?  Would it make more 	 sense to pick and choose those we want to copy?  Should look 	 into this further....  [raeburn:19920512.2209EST]  */
-name|alent
-modifier|*
-name|linenos
-decl_stmt|;
-name|linenos
-operator|=
-name|coffsymbol
-argument_list|(
-name|normal
-operator|->
-name|bsym
-argument_list|)
-operator|->
-name|lineno
-expr_stmt|;
 name|memcpy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|coffsymbol
+name|SYM_AUXINFO
 argument_list|(
 name|normal
-operator|->
-name|bsym
 argument_list|)
-operator|->
-name|native
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|coffsymbol
+name|SYM_AUXINFO
 argument_list|(
 name|debug
-operator|->
-name|bsym
 argument_list|)
-operator|->
-name|native
 argument_list|,
+operator|(
 name|S_GET_NUMBER_AUXILIARY
 argument_list|(
 name|debug
 argument_list|)
 operator|*
-name|AUXESZ
-argument_list|)
-expr_stmt|;
-name|coffsymbol
+sizeof|sizeof
 argument_list|(
-name|normal
-operator|->
-name|bsym
+operator|*
+name|SYM_AUXINFO
+argument_list|(
+name|debug
 argument_list|)
-operator|->
-name|lineno
-operator|=
-name|linenos
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Move the debug flags. */
@@ -1206,6 +1478,7 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
+comment|/* BFD converts filename to a .file symbol with an aux entry.  It      also handles chaining.  */
 name|symbolP
 operator|=
 name|symbol_new
@@ -1234,9 +1507,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|symbol_get_bfdsym
+argument_list|(
 name|symbolP
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator|=
@@ -1383,13 +1657,6 @@ modifier|*
 name|symbolP
 decl_stmt|;
 block|{
-name|char
-name|underscore
-init|=
-literal|0
-decl_stmt|;
-comment|/* Symbol has leading _ */
-block|{
 name|long
 name|sz
 init|=
@@ -1428,9 +1695,10 @@ argument_list|)
 expr_stmt|;
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symbolP
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|native
@@ -1441,7 +1709,6 @@ operator|*
 operator|)
 name|s
 expr_stmt|;
-block|}
 name|S_SET_DATA_TYPE
 argument_list|(
 name|symbolP
@@ -1477,9 +1744,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|underscore
-operator|&&
 name|S_IS_LOCAL
 argument_list|(
 name|symbolP
@@ -1578,6 +1842,27 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|num
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* Zero is used as an end marker in the file.  */
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"Line numbers must be positive integers\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|num
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|new_line
 operator|->
 name|next
@@ -1636,9 +1921,10 @@ condition|)
 block|{
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|current_lineno_sym
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|lineno
@@ -1690,7 +1976,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".ln pseudo-op inside .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -1777,6 +2066,219 @@ block|}
 end_function
 
 begin_comment
+comment|/* .loc is essentially the same as .ln; parse it for assembler    compatibility.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|obj_coff_loc
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|int
+name|lineno
+decl_stmt|;
+comment|/* FIXME: Why do we need this check?  We need it for ECOFF, but why      do we need it for COFF?  */
+if|if
+condition|(
+name|now_seg
+operator|!=
+name|text_section
+condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".loc outside of .text"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|def_symbol_in_progress
+operator|!=
+name|NULL
+condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".loc pseudo-op inside .def/.endef: ignored."
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+comment|/* Skip the file number.  */
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+name|get_absolute_expression
+argument_list|()
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+name|lineno
+operator|=
+name|get_absolute_expression
+argument_list|()
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_LISTING
+block|{
+specifier|extern
+name|int
+name|listing
+decl_stmt|;
+if|if
+condition|(
+name|listing
+condition|)
+block|{
+name|lineno
+operator|+=
+name|coff_line_base
+operator|-
+literal|1
+expr_stmt|;
+name|listing_source_line
+argument_list|(
+name|lineno
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+name|add_lineno
+argument_list|(
+name|frag_now
+argument_list|,
+name|frag_now_fix
+argument_list|()
+argument_list|,
+name|lineno
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Handle the .ident pseudo-op.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|obj_coff_ident
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|segT
+name|current_seg
+init|=
+name|now_seg
+decl_stmt|;
+name|subsegT
+name|current_subseg
+init|=
+name|now_subseg
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TE_PE
+block|{
+name|segT
+name|sec
+decl_stmt|;
+comment|/* We could put it in .comment, but that creates an extra section        that shouldn't be loaded into memory, which requires linker        changes...  For now, until proven otherwise, use .rdata.  */
+name|sec
+operator|=
+name|subseg_new
+argument_list|(
+literal|".rdata$zzz"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|bfd_set_section_flags
+argument_list|(
+name|stdoutput
+argument_list|,
+name|sec
+argument_list|,
+operator|(
+operator|(
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+operator||
+name|SEC_READONLY
+operator||
+name|SEC_DATA
+operator|)
+operator|&
+name|bfd_applicable_section_flags
+argument_list|(
+name|stdoutput
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|subseg_new
+argument_list|(
+literal|".comment"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|stringer
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|subseg_set
+argument_list|(
+name|current_seg
+argument_list|,
+name|current_subseg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *			def()  *  * Handle .def directives.  *  * One might ask : why can't we symbol_new if the symbol does not  * already exist and fill it with debug information.  Because of  * the C_EFCN special symbol. It would clobber the value of the  * function symbol before we have a chance to notice that it is  * a C_EFCN. And a second reason is that the code is more clear this  * way. (at least I think it is :-).  *  */
 end_comment
 
@@ -1805,6 +2307,7 @@ name|what
 parameter_list|)
 name|int
 name|what
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -1834,7 +2337,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".def pseudo-op used inside of .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -1923,12 +2429,13 @@ argument_list|(
 name|symbol_name_copy
 argument_list|)
 expr_stmt|;
+name|symbol_set_frag
+argument_list|(
 name|def_symbol_in_progress
-operator|->
-name|sy_frag
-operator|=
+argument_list|,
 operator|&
 name|zero_address_frag
+argument_list|)
 expr_stmt|;
 name|S_SET_VALUE
 argument_list|(
@@ -1976,6 +2483,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -1996,7 +2504,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".endef pseudo-op used outside of .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2087,21 +2598,19 @@ argument_list|)
 expr_stmt|;
 name|name
 operator|=
-name|bfd_asymbol_name
+name|S_GET_NAME
 argument_list|(
 name|def_symbol_in_progress
-operator|->
-name|bsym
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|name
 index|[
-literal|1
+literal|0
 index|]
 operator|==
-literal|'b'
+literal|'.'
 operator|&&
 name|name
 index|[
@@ -2109,8 +2618,27 @@ literal|2
 index|]
 operator|==
 literal|'f'
+operator|&&
+name|name
+index|[
+literal|3
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
+switch|switch
+condition|(
+name|name
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'b'
+case|:
+comment|/* .bf */
 if|if
 condition|(
 operator|!
@@ -2119,13 +2647,15 @@ argument_list|()
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"`%s' symbol without preceding function"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*	    SA_SET_SYM_LNNO (def_symbol_in_progress, 12345);*/
-comment|/* Will need relocating */
+comment|/* Will need relocating.  */
 name|SF_SET_PROCESS
 argument_list|(
 name|def_symbol_in_progress
@@ -2134,6 +2664,33 @@ expr_stmt|;
 name|clear_function
 argument_list|()
 expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|TE_PE
+case|case
+literal|'e'
+case|:
+comment|/* .ef */
+comment|/* The MS compilers output the actual endline, not the 		   function-relative one... we want to match without 		   changing the assembler input.  */
+name|SA_SET_SYM_LNNO
+argument_list|(
+name|def_symbol_in_progress
+argument_list|,
+operator|(
+name|SA_GET_SYM_LNNO
+argument_list|(
+name|def_symbol_in_progress
+argument_list|)
+operator|+
+name|coff_line_base
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
 block|}
 block|}
 break|break;
@@ -2198,6 +2755,17 @@ case|case
 name|C_EXT
 case|:
 case|case
+name|C_WEAKEXT
+case|:
+ifdef|#
+directive|ifdef
+name|TE_PE
+case|case
+name|C_NT_WEAK
+case|:
+endif|#
+directive|endif
+case|case
 name|C_STAT
 case|:
 case|case
@@ -2205,6 +2773,7 @@ name|C_LABEL
 case|:
 comment|/* Valid but set somewhere else (s_comm, s_lcomm, colon) */
 break|break;
+default|default:
 case|case
 name|C_USTATIC
 case|:
@@ -2216,7 +2785,10 @@ name|C_ULABEL
 case|:
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected storage class %d"
+argument_list|)
 argument_list|,
 name|S_GET_STORAGE_CLASS
 argument_list|(
@@ -2227,7 +2799,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* switch on storage class */
-comment|/* Now that we have built a debug symbol, try to find if we should      merge with an existing symbol or not.  If a symbol is C_EFCN or      SEG_ABSOLUTE or untagged SEG_DEBUG it never merges. */
+comment|/* Now that we have built a debug symbol, try to find if we should      merge with an existing symbol or not.  If a symbol is C_EFCN or      absolute_section or untagged SEG_DEBUG it never merges.  We also      don't merge labels, which are in a different namespace, nor      symbols which have not yet been defined since they are typically      unique, nor do we merge tags with non-tags.  */
 comment|/* Two cases for functions.  Either debug followed by definition or      definition followed by debug.  For definition first, we will      merge the debug symbol into the definition.  For debug first, the      lineno entry MUST point to the definition function or else it      will point off into space when obj_crawl_symbol_chain() merges      the debug symbol into the real symbol.  Therefor, let's presume      the debug symbol is a real function reference. */
 comment|/* FIXME-SOON If for some reason the definition label/symbol is      never seen, this will probably leave an undefined symbol at link      time. */
 if|if
@@ -2238,6 +2810,13 @@ name|def_symbol_in_progress
 argument_list|)
 operator|==
 name|C_EFCN
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|def_symbol_in_progress
+argument_list|)
+operator|==
+name|C_LABEL
 operator|||
 operator|(
 operator|!
@@ -2270,6 +2849,12 @@ argument_list|)
 operator|==
 name|absolute_section
 operator|||
+operator|!
+name|symbol_constant_p
+argument_list|(
+name|def_symbol_in_progress
+argument_list|)
+operator|||
 operator|(
 name|symbolP
 operator|=
@@ -2285,14 +2870,37 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+name|SF_GET_TAG
+argument_list|(
+name|def_symbol_in_progress
+argument_list|)
+operator|!=
+name|SF_GET_TAG
+argument_list|(
+name|symbolP
+argument_list|)
 condition|)
 block|{
+comment|/* If it already is at the end of the symbol list, do nothing */
 if|if
 condition|(
 name|def_symbol_in_progress
 operator|!=
 name|symbol_lastP
 condition|)
+block|{
+name|symbol_remove
+argument_list|(
+name|def_symbol_in_progress
+argument_list|,
+operator|&
+name|symbol_rootP
+argument_list|,
+operator|&
+name|symbol_lastP
+argument_list|)
+expr_stmt|;
 name|symbol_append
 argument_list|(
 name|def_symbol_in_progress
@@ -2306,6 +2914,7 @@ operator|&
 name|symbol_lastP
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2503,6 +3112,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -2517,7 +3127,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".dim pseudo-op used outside of .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2576,7 +3189,10 @@ break|break;
 default|default:
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"badly formed .dim directive ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* intentional fallthrough */
@@ -2608,6 +3224,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -2661,7 +3278,7 @@ name|SA_SET_SYM_LNNO
 argument_list|(
 name|def_symbol_in_progress
 argument_list|,
-name|coff_line_base
+name|this_base
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2699,7 +3316,7 @@ operator|(
 name|unsigned
 name|int
 operator|)
-name|coff_line_base
+name|this_base
 argument_list|)
 expr_stmt|;
 block|}
@@ -2717,6 +3334,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -2728,7 +3346,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".size pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2767,6 +3388,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -2778,7 +3400,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".scl pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2810,6 +3435,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -2828,7 +3454,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".tag pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2887,7 +3516,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"tag not found for .tag %s"
+argument_list|)
 argument_list|,
 name|symbol_name
 argument_list|)
@@ -2919,6 +3551,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -2930,7 +3563,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".type pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -2987,6 +3623,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -2998,7 +3635,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".val pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -3051,11 +3691,12 @@ literal|"."
 argument_list|)
 condition|)
 block|{
+name|symbol_set_frag
+argument_list|(
 name|def_symbol_in_progress
-operator|->
-name|sy_frag
-operator|=
+argument_list|,
 name|frag_now
+argument_list|)
 expr_stmt|;
 name|S_SET_VALUE
 argument_list|(
@@ -3084,17 +3725,16 @@ name|symbol_name
 argument_list|)
 condition|)
 block|{
-name|def_symbol_in_progress
-operator|->
-name|sy_value
+name|expressionS
+name|exp
+decl_stmt|;
+name|exp
 operator|.
 name|X_op
 operator|=
 name|O_symbol
 expr_stmt|;
-name|def_symbol_in_progress
-operator|->
-name|sy_value
+name|exp
 operator|.
 name|X_add_symbol
 operator|=
@@ -3103,21 +3743,25 @@ argument_list|(
 name|symbol_name
 argument_list|)
 expr_stmt|;
-name|def_symbol_in_progress
-operator|->
-name|sy_value
+name|exp
 operator|.
 name|X_op_symbol
 operator|=
 name|NULL
 expr_stmt|;
-name|def_symbol_in_progress
-operator|->
-name|sy_value
+name|exp
 operator|.
 name|X_add_number
 operator|=
 literal|0
+expr_stmt|;
+name|symbol_set_value_expression
+argument_list|(
+name|def_symbol_in_progress
+argument_list|,
+operator|&
+name|exp
+argument_list|)
 expr_stmt|;
 comment|/* If the segment is undefined when the forward reference is 	     resolved, then copy the segment id from the forward 	     symbol.  */
 name|SF_SET_GET_SEGMENT
@@ -3125,8 +3769,9 @@ argument_list|(
 name|def_symbol_in_progress
 argument_list|)
 expr_stmt|;
+comment|/* FIXME: gcc can generate address expressions here in 	     unusual cases (search for "obscure" in sdbout.c).  We 	     just ignore the offset here, thus generating incorrect 	     debugging information.  We ignore the rest of the line 	     just below.  */
 block|}
-comment|/* Otherwise, it is the name of a non debug symbol and its value will be calculated later. */
+comment|/* Otherwise, it is the name of a non debug symbol and its value          will be calculated later. */
 operator|*
 name|input_line_pointer
 operator|=
@@ -3289,8 +3934,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|S_IS_WEAK
+argument_list|(
+name|symp
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|TE_PE
+name|S_SET_STORAGE_CLASS
+argument_list|(
+name|symp
+argument_list|,
+name|C_NT_WEAK
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|S_SET_STORAGE_CLASS
+argument_list|(
+name|symp
+argument_list|,
+name|C_WEAKEXT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+if|if
+condition|(
 operator|!
 name|S_IS_DEFINED
+argument_list|(
+name|symp
+argument_list|)
+operator|&&
+operator|!
+name|S_IS_WEAK
 argument_list|(
 name|symp
 argument_list|)
@@ -3514,7 +4195,10 @@ literal|0
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"mismatched .eb"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3563,22 +4247,10 @@ argument_list|)
 expr_stmt|;
 name|auxp
 operator|=
-operator|&
-name|coffsymbol
+name|SYM_AUXENT
 argument_list|(
 name|symp
-operator|->
-name|bsym
 argument_list|)
-operator|->
-name|native
-index|[
-literal|1
-index|]
-operator|.
-name|u
-operator|.
-name|auxent
 expr_stmt|;
 name|memset
 argument_list|(
@@ -3627,7 +4299,10 @@ literal|0
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"C_EFCN symbol out of scope"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SA_SET_SYM_FSIZE
@@ -3694,9 +4369,10 @@ argument_list|(
 name|symp
 argument_list|)
 condition|)
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator||=
@@ -3704,6 +4380,32 @@ name|BSF_FUNCTION
 expr_stmt|;
 comment|/* more ... */
 block|}
+comment|/* Double check weak symbols.  */
+if|if
+condition|(
+name|S_IS_WEAK
+argument_list|(
+name|symp
+argument_list|)
+operator|&&
+name|S_IS_COMMON
+argument_list|(
+name|symp
+argument_list|)
+condition|)
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"Symbol `%s' can not be both weak and common"
+argument_list|)
+argument_list|,
+name|S_GET_NAME
+argument_list|(
+name|symp
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SF_GET_TAG
@@ -3736,15 +4438,17 @@ comment|/* This is pretty horrible, but we have to set *punt correctly in      o
 if|if
 condition|(
 operator|!
+name|symbol_used_in_reloc_p
+argument_list|(
 name|symp
-operator|->
-name|sy_used_in_reloc
+argument_list|)
 operator|&&
 operator|(
 operator|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator|&
@@ -3761,10 +4465,11 @@ name|symp
 argument_list|)
 operator|&&
 operator|!
+name|symbol_get_tc
+argument_list|(
 name|symp
+argument_list|)
 operator|->
-name|sy_tc
-operator|.
 name|output
 operator|&&
 name|S_GET_STORAGE_CLASS
@@ -3799,9 +4504,10 @@ name|punt
 operator|&&
 operator|(
 operator|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 operator|->
 name|flags
 operator|&
@@ -3855,15 +4561,29 @@ condition|(
 name|next_set_end
 operator|!=
 name|NULL
-operator|&&
-operator|!
-operator|*
-name|punt
 condition|)
+block|{
+if|if
+condition|(
+name|set_end
+operator|!=
+name|NULL
+condition|)
+name|as_warn
+argument_list|(
+literal|"Warning: internal error: forgetting to set endndx of %s"
+argument_list|,
+name|S_GET_NAME
+argument_list|(
+name|set_end
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|set_end
 operator|=
 name|next_set_end
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3912,9 +4632,10 @@ if|if
 condition|(
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|lineno
@@ -3941,9 +4662,10 @@ operator|*
 operator|)
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|lineno
@@ -3974,9 +4696,10 @@ operator|*
 operator|)
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|lineno
@@ -4004,9 +4727,10 @@ argument_list|)
 expr_stmt|;
 name|coffsymbol
 argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
 name|symp
-operator|->
-name|bsym
+argument_list|)
 argument_list|)
 operator|->
 name|lineno
@@ -4067,6 +4791,8 @@ operator|->
 name|frag
 operator|->
 name|fr_address
+operator|/
+name|OCTETS_PER_BYTE
 expr_stmt|;
 name|l
 index|[
@@ -4101,6 +4827,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -4108,6 +4835,7 @@ name|sec
 decl_stmt|;
 name|PTR
 name|x
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -4229,6 +4957,7 @@ argument_list|(
 name|sec
 argument_list|)
 expr_stmt|;
+comment|/* This is an estimate; we'll plug in the real value using      SET_SECTION_RELOCS later */
 name|SA_SET_SCN_NRELOC
 argument_list|(
 name|secsym
@@ -4268,7 +4997,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * implement the .section pseudo op:  *	.section name {, "flags"}  *                ^         ^  *                |         +--- optional flags: 'b' for bss  *                |                              'i' for info  *                +-- section name               'l' for lib  *                                               'n' for noload  *                                               'o' for over  *                                               'w' for data  *						 'd' (apparently m88k for data)  *                                               'x' for text  *						 'r' for read-only data  * But if the argument is not a quoted string, treat it as a  * subsegment number.  */
+comment|/*  * implement the .section pseudo op:  *	.section name {, "flags"}  *                ^         ^  *                |         +--- optional flags: 'b' for bss  *                |                              'i' for info  *                +-- section name               'l' for lib  *                                               'n' for noload  *                                               'o' for over  *                                               'w' for data  *						 'd' (apparently m88k for data)  *                                               'x' for text  *						 'r' for read-only data  *						 's' for shared data (PE)  * But if the argument is not a quoted string, treat it as a  * subsegment number.  */
 end_comment
 
 begin_function
@@ -4279,6 +5008,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* Strip out the section name */
@@ -4361,7 +5091,7 @@ literal|0
 expr_stmt|;
 name|flags
 operator|=
-name|SEC_NO_FLAGS
+name|SEC_LOAD
 expr_stmt|;
 if|if
 condition|(
@@ -4444,6 +5174,13 @@ break|break;
 case|case
 literal|'d'
 case|:
+name|flags
+operator||=
+name|SEC_DATA
+operator||
+name|SEC_LOAD
+expr_stmt|;
+comment|/* fall through */
 case|case
 literal|'w'
 case|:
@@ -4459,6 +5196,8 @@ case|:
 name|flags
 operator||=
 name|SEC_CODE
+operator||
+name|SEC_LOAD
 expr_stmt|;
 break|break;
 case|case
@@ -4467,6 +5206,14 @@ case|:
 name|flags
 operator||=
 name|SEC_READONLY
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|flags
+operator||=
+name|SEC_SHARED
 expr_stmt|;
 break|break;
 case|case
@@ -4483,7 +5230,10 @@ case|:
 comment|/* STYP_OVER */
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unsupported section attribute '%c'"
+argument_list|)
 argument_list|,
 operator|*
 name|input_line_pointer
@@ -4493,7 +5243,10 @@ break|break;
 default|default:
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unknown section attribute '%c'"
+argument_list|)
 argument_list|,
 operator|*
 name|input_line_pointer
@@ -4536,6 +5289,28 @@ operator|!=
 name|SEC_NO_FLAGS
 condition|)
 block|{
+name|flagword
+name|oldflags
+decl_stmt|;
+name|oldflags
+operator|=
+name|bfd_get_section_flags
+argument_list|(
+name|stdoutput
+argument_list|,
+name|sec
+argument_list|)
+expr_stmt|;
+name|oldflags
+operator|&=
+name|SEC_LINK_ONCE
+operator||
+name|SEC_LINK_DUPLICATES
+expr_stmt|;
+name|flags
+operator||=
+name|oldflags
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4550,7 +5325,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"error setting flags for \"%s\": %s"
+argument_list|)
 argument_list|,
 name|bfd_section_name
 argument_list|(
@@ -4627,7 +5405,19 @@ name|n_entries
 decl_stmt|,
 name|mask
 decl_stmt|;
-comment|/* The COFF back end in BFD requires that all section sizes be      rounded up to multiples of the corresponding section alignments.      Seems kinda silly to me, but that's the way it is.  */
+name|bfd_vma
+name|align_power
+init|=
+operator|(
+name|bfd_vma
+operator|)
+name|sec
+operator|->
+name|alignment_power
+operator|+
+name|OCTETS_PER_BYTE_POWER
+decl_stmt|;
+comment|/* The COFF back end in BFD requires that all section sizes be      rounded up to multiples of the corresponding section alignments,      supposedly because standard COFF has no other way of encoding alignment      for sections.  If your COFF flavor has a different way of encoding      section alignment, then skip this step, as TICOFF does. */
 name|size
 operator|=
 name|bfd_get_section_size_before_reloc
@@ -4643,16 +5433,18 @@ name|bfd_vma
 operator|)
 literal|1
 operator|<<
-operator|(
-name|bfd_vma
-operator|)
-name|sec
-operator|->
-name|alignment_power
+name|align_power
 operator|)
 operator|-
 literal|1
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TICOFF
+argument_list|)
 if|if
 condition|(
 name|size
@@ -4681,7 +5473,12 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* If the section size is non-zero, the section symbol needs an aux      entry associated with it, indicating the size.  We don't know      all the values yet; coff_frob_symbol will fill them in later.  */
+ifndef|#
+directive|ifndef
+name|TICOFF
 if|if
 condition|(
 name|size
@@ -4700,6 +5497,8 @@ name|sec
 operator|==
 name|bss_section
 condition|)
+endif|#
+directive|endif
 block|{
 name|symbolS
 modifier|*
@@ -5069,7 +5868,10 @@ control|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"0x%lx: \"%s\" type = %ld, class = %d, segment = %d\n"
+argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -5222,7 +6024,7 @@ value|((a)< (b)? (a) : (b))
 end_define
 
 begin_comment
-comment|/* This vector is used to turn an internal segment into a section #    suitable for insertion into a coff symbol table  */
+comment|/* This vector is used to turn a gas internal segment number into a    section number suitable for insertion into a coff symbol table.    This must correspond to seg_info_off_by_4.  */
 end_comment
 
 begin_decl_stmt
@@ -5606,19 +6408,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|void
-name|obj_coff_ident
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|obj_coff_section
 name|PARAMS
@@ -5631,278 +6420,153 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Section stuff     We allow more than just the standard 3 sections, infact, we allow    40 sections, (though the usual three have to be there).     This structure performs the mappings for us: */
+comment|/* When not using BFD_ASSEMBLER, we permit up to 40 sections.     This array maps a COFF section number into a gas section number.    Because COFF uses negative section numbers, you must add 4 to the    COFF section number when indexing into this array; this is done via    the SEG_INFO_FROM_SECTION_NUMBER macro.  This must correspond to    seg_N_TYPE.  */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|segT
-name|seg_t
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-block|}
-name|seg_info_type
-typedef|;
-end_typedef
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|seg_info_type
+name|segT
 name|seg_info_off_by_4
 index|[]
 init|=
 block|{
-block|{
 name|SEG_PTV
-block|,  }
 block|,
-block|{
 name|SEG_NTV
-block|,  }
 block|,
-block|{
 name|SEG_DEBUG
-block|, }
 block|,
-block|{
 name|SEG_ABSOLUTE
-block|,  }
 block|,
-block|{
 name|SEG_UNKNOWN
-block|,	 }
 block|,
-block|{
 name|SEG_E0
-block|}
 block|,
-block|{
 name|SEG_E1
-block|}
 block|,
-block|{
 name|SEG_E2
-block|}
 block|,
-block|{
 name|SEG_E3
-block|}
 block|,
-block|{
 name|SEG_E4
-block|}
 block|,
-block|{
 name|SEG_E5
-block|}
 block|,
-block|{
 name|SEG_E6
-block|}
 block|,
-block|{
 name|SEG_E7
-block|}
 block|,
-block|{
 name|SEG_E8
-block|}
 block|,
-block|{
 name|SEG_E9
-block|}
 block|,
-block|{
 name|SEG_E10
-block|}
 block|,
-block|{
 name|SEG_E11
-block|}
 block|,
-block|{
 name|SEG_E12
-block|}
 block|,
-block|{
 name|SEG_E13
-block|}
 block|,
-block|{
 name|SEG_E14
-block|}
 block|,
-block|{
 name|SEG_E15
-block|}
 block|,
-block|{
 name|SEG_E16
-block|}
 block|,
-block|{
 name|SEG_E17
-block|}
 block|,
-block|{
 name|SEG_E18
-block|}
 block|,
-block|{
 name|SEG_E19
-block|}
 block|,
-block|{
 name|SEG_E20
-block|}
 block|,
-block|{
 name|SEG_E21
-block|}
 block|,
-block|{
 name|SEG_E22
-block|}
 block|,
-block|{
 name|SEG_E23
-block|}
 block|,
-block|{
 name|SEG_E24
-block|}
 block|,
-block|{
 name|SEG_E25
-block|}
 block|,
-block|{
 name|SEG_E26
-block|}
 block|,
-block|{
 name|SEG_E27
-block|}
 block|,
-block|{
 name|SEG_E28
-block|}
 block|,
-block|{
 name|SEG_E29
-block|}
 block|,
-block|{
 name|SEG_E30
-block|}
 block|,
-block|{
 name|SEG_E31
-block|}
 block|,
-block|{
 name|SEG_E32
-block|}
 block|,
-block|{
 name|SEG_E33
-block|}
 block|,
-block|{
 name|SEG_E34
-block|}
 block|,
-block|{
 name|SEG_E35
-block|}
 block|,
-block|{
 name|SEG_E36
-block|}
 block|,
-block|{
 name|SEG_E37
-block|}
 block|,
-block|{
 name|SEG_E38
-block|}
 block|,
-block|{
 name|SEG_E39
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|40
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|41
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|42
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|43
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|44
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|45
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|0
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|0
-block|}
 block|,
-block|{
 operator|(
 name|segT
 operator|)
 literal|0
-block|}
 block|,
-block|{
 name|SEG_REGISTER
-block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5996,8 +6660,6 @@ name|ost_entry
 operator|.
 name|n_scnum
 argument_list|)
-operator|.
-name|seg_t
 return|;
 block|}
 end_function
@@ -6019,6 +6681,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|unsigned
 name|int
@@ -6068,7 +6731,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Out of step\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|size
@@ -6782,13 +7448,19 @@ name|file
 argument_list|,
 name|line
 argument_list|,
+name|_
+argument_list|(
 literal|"unresolved relocation"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad relocation: symbol `%s' not in symbol table"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -7050,6 +7722,7 @@ decl_stmt|;
 name|object_headers
 modifier|*
 name|h
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|unsigned
 name|long
@@ -7938,7 +8611,10 @@ literal|0
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bfd_coff_swap_scnhdr_out failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bfd_write
@@ -8280,7 +8956,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".ln pseudo-op inside .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8395,6 +9074,7 @@ name|what
 parameter_list|)
 name|int
 name|what
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8424,7 +9104,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".def pseudo-op used inside of .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8618,6 +9301,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -8640,7 +9324,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".endef pseudo-op used outside of .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -8749,7 +9436,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"`.bf' symbol without preceding function\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8854,6 +9544,17 @@ case|case
 name|C_EXT
 case|:
 case|case
+name|C_WEAKEXT
+case|:
+ifdef|#
+directive|ifdef
+name|TE_PE
+case|case
+name|C_NT_WEAK
+case|:
+endif|#
+directive|endif
+case|case
 name|C_STAT
 case|:
 case|case
@@ -8872,7 +9573,10 @@ name|C_ULABEL
 case|:
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unexpected storage class %d"
+argument_list|)
 argument_list|,
 name|S_GET_STORAGE_CLASS
 argument_list|(
@@ -9173,6 +9877,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -9187,7 +9892,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".dim pseudo-op used outside of .def/.endef: ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9246,7 +9954,10 @@ break|break;
 default|default:
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"badly formed .dim directive ignored"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* intentional fallthrough */
@@ -9278,6 +9989,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -9395,6 +10107,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -9406,7 +10119,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".size pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9445,6 +10161,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -9456,7 +10173,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".scl pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9488,6 +10208,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -9506,7 +10227,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".tag pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9568,7 +10292,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"tag not found for .tag %s"
+argument_list|)
 argument_list|,
 name|symbol_name
 argument_list|)
@@ -9600,6 +10327,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -9611,7 +10339,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".type pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9668,6 +10399,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -9679,7 +10411,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|".val pseudo-op used outside of .def/.endef ignored."
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|demand_empty_rest_of_line
@@ -9806,7 +10541,7 @@ argument_list|(
 name|def_symbol_in_progress
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: gcc can generate address expressions 	     here in unusual cases (search for "obscure" 	     in sdbout.c).  We just ignore the offset 	     here, thus generating incorrect debugging 	     information.  We ignore the rest of the 	     line just below.  */
+comment|/* FIXME: gcc can generate address expressions here in 	     unusual cases (search for "obscure" in sdbout.c).  We 	     just ignore the offset here, thus generating incorrect 	     debugging information.  We ignore the rest of the line 	     just below.  */
 block|}
 comment|/* Otherwise, it is the name of a non debug symbol and 	 its value will be calculated later. */
 operator|*
@@ -10078,10 +10813,32 @@ name|symbolP
 argument_list|)
 operator|==
 name|C_EXT
+ifdef|#
+directive|ifdef
+name|TE_PE
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|C_NT_WEAK
+endif|#
+directive|endif
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|C_WEAKEXT
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"%s: global symbols not supported in common sections"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -10386,7 +11143,10 @@ literal|0
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"mismatched .eb"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -10518,7 +11278,10 @@ literal|0
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"C_EFCN symbol out of scope"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|SA_SET_SYM_FSIZE
@@ -10765,15 +11528,35 @@ argument_list|(
 name|symbolP
 argument_list|)
 operator|&&
+operator|(
 name|S_GET_STORAGE_CLASS
 argument_list|(
 name|symbolP
 argument_list|)
 operator|==
 name|C_EXT
+ifdef|#
+directive|ifdef
+name|TE_PE
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|C_NT_WEAK
+endif|#
+directive|endif
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|C_WEAKEXT
+operator|)
 condition|)
 block|{
-comment|/* C_EXT&& !SF_GET_FUNCTION(symbolP))  */
 comment|/* if external, Remove from the list */
 name|symbolS
 modifier|*
@@ -10839,12 +11622,33 @@ argument_list|(
 name|symbolP
 argument_list|)
 operator|&&
+operator|(
 name|S_GET_STORAGE_CLASS
 argument_list|(
 name|symbolP
 argument_list|)
 operator|==
 name|C_EXT
+ifdef|#
+directive|ifdef
+name|TE_PE
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|C_NT_WEAK
+endif|#
+directive|endif
+operator|||
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symbolP
+argument_list|)
+operator|==
+name|C_NT_WEAK
+operator|)
 condition|)
 block|{
 name|symbolS
@@ -11179,6 +11983,7 @@ decl_stmt|;
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|unsigned
@@ -12028,7 +12833,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"FATAL: Can't create %s"
+argument_list|)
 argument_list|,
 name|out_file_name
 argument_list|)
@@ -12137,7 +12945,14 @@ argument_list|(
 name|now_seg
 argument_list|)
 argument_list|,
+name|subseg_text_p
+argument_list|(
+name|now_seg
+argument_list|)
+condition|?
 name|NOP_OPCODE
+else|:
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -12835,7 +13650,7 @@ if|#
 directive|if
 literal|0
 comment|/* Recent changes to write need this, but where it should      go is up to Ken.. */
-block|if (bfd_close_all_done (abfd) == false)     as_fatal ("Can't close %s: %s", out_file_name, 	      bfd_errmsg (bfd_get_error ()));
+block|if (bfd_close_all_done (abfd) == false)     as_fatal (_("Can't close %s: %s"), out_file_name, 	      bfd_errmsg (bfd_get_error ()));
 else|#
 directive|else
 block|{
@@ -12963,7 +13778,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Too many new sections; can't add \"%s\""
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -13043,6 +13861,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* Strip out the section name */
@@ -13284,7 +14103,10 @@ break|break;
 default|default:
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"unknown section attribute '%c'"
+argument_list|)
 argument_list|,
 operator|*
 name|input_line_pointer
@@ -13344,6 +14166,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|subseg_new
@@ -13366,6 +14189,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -13403,6 +14227,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|segT
@@ -13989,6 +14814,21 @@ name|symbolP
 decl_stmt|;
 name|symbolP
 operator|=
+name|symbol_find_base
+argument_list|(
+name|name
+argument_list|,
+name|DO_NOT_STRIP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|symbolP
+operator|==
+name|NULL
+condition|)
+name|symbolP
+operator|=
 name|symbol_new
 argument_list|(
 name|name
@@ -14001,6 +14841,24 @@ operator|&
 name|zero_address_frag
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* Mmmm.  I just love violating interfaces.  Makes me feel...dirty.  */
+name|S_SET_SEGMENT
+argument_list|(
+name|symbolP
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
+name|symbolP
+operator|->
+name|sy_frag
+operator|=
+operator|&
+name|zero_address_frag
+expr_stmt|;
+block|}
 name|S_SET_STORAGE_CLASS
 argument_list|(
 name|symbolP
@@ -14382,6 +15240,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|s_lcomm
@@ -14393,11 +15252,11 @@ return|return;
 if|#
 directive|if
 literal|0
-block|char *name;   char c;   int temp;   char *p;    symbolS *symbolP;    name = input_line_pointer;    c = get_symbol_end ();   p = input_line_pointer;   *p = c;   SKIP_WHITESPACE ();   if (*input_line_pointer != ',')     {       as_bad ("Expected comma after name");       ignore_rest_of_line ();       return;     }   if (*input_line_pointer == '\n')     {       as_bad ("Missing size expression");       return;     }   input_line_pointer++;   if ((temp = get_absolute_expression ())< 0)     {       as_warn ("lcomm length (%d.)<0! Ignored.", temp);       ignore_rest_of_line ();       return;     }   *p = 0;    symbolP = symbol_find_or_make(name);    if (S_GET_SEGMENT(symbolP) == SEG_UNKNOWN&&       S_GET_VALUE(symbolP) == 0)     {       if (! need_pass_2) 	{ 	  char *p; 	  segT current_seg = now_seg;
+block|char *name;   char c;   int temp;   char *p;    symbolS *symbolP;    name = input_line_pointer;    c = get_symbol_end ();   p = input_line_pointer;   *p = c;   SKIP_WHITESPACE ();   if (*input_line_pointer != ',')     {       as_bad (_("Expected comma after name"));       ignore_rest_of_line ();       return;     }   if (*input_line_pointer == '\n')     {       as_bad (_("Missing size expression"));       return;     }   input_line_pointer++;   if ((temp = get_absolute_expression ())< 0)     {       as_warn (_("lcomm length (%d.)<0! Ignored."), temp);       ignore_rest_of_line ();       return;     }   *p = 0;    symbolP = symbol_find_or_make(name);    if (S_GET_SEGMENT(symbolP) == SEG_UNKNOWN&&       S_GET_VALUE(symbolP) == 0)     {       if (! need_pass_2) 	{ 	  char *p; 	  segT current_seg = now_seg;
 comment|/* save current seg     */
 block|subsegT current_subseg = now_subseg;  	  subseg_set (SEG_E2, 1); 	  symbolP->sy_frag = frag_now; 	  p = frag_var(rs_org, 1, 1, (relax_substateT)0, symbolP, 		       (offsetT) temp, (char *) 0); 	  *p = 0; 	  subseg_set (current_seg, current_subseg);
 comment|/* restore current seg */
-block|S_SET_SEGMENT(symbolP, SEG_E2); 	  S_SET_STORAGE_CLASS(symbolP, C_STAT); 	}     }   else     as_bad("Symbol %s already defined", name);    demand_empty_rest_of_line();
+block|S_SET_SEGMENT(symbolP, SEG_E2); 	  S_SET_STORAGE_CLASS(symbolP, C_STAT); 	}     }   else     as_bad(_("Symbol %s already defined"), name);    demand_empty_rest_of_line();
 endif|#
 directive|endif
 block|}
@@ -14741,7 +15600,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"No 'bal' entry point for leafproc %s"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -15054,7 +15916,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"Negative of non-absolute symbol %s"
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -15113,7 +15978,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"callj to difference of 2 symbols"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -15295,7 +16163,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"Can't emit reloc {- %s-seg symbol \"%s\"} @ file address %ld."
+argument_list|)
 argument_list|,
 name|segment_name
 argument_list|(
@@ -15538,7 +16409,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"can't use COBR format with external label"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fixP
@@ -15706,6 +16580,34 @@ endif|#
 directive|endif
 block|}
 comment|/* if pcrel */
+ifdef|#
+directive|ifdef
+name|MD_APPLY_FIX3
+name|md_apply_fix3
+argument_list|(
+name|fixP
+argument_list|,
+operator|(
+name|valueT
+operator|*
+operator|)
+operator|&
+name|add_number
+argument_list|,
+name|this_segment_type
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|md_apply_fix
+argument_list|(
+name|fixP
+argument_list|,
+name|add_number
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -15840,7 +16742,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"Value of %ld too large for field of %d bytes at 0x%lx"
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -15892,7 +16797,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"Signed .word overflow; switch may be too large; %ld at 0x%lx"
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -15916,35 +16824,6 @@ endif|#
 directive|endif
 block|}
 comment|/* not a bit fix */
-comment|/* Once this fix has been applied, we don't have to output 	 anything nothing more need be done.  */
-ifdef|#
-directive|ifdef
-name|MD_APPLY_FIX3
-name|md_apply_fix3
-argument_list|(
-name|fixP
-argument_list|,
-operator|(
-name|valueT
-operator|*
-operator|)
-operator|&
-name|add_number
-argument_list|,
-name|this_segment_type
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|md_apply_fix
-argument_list|(
-name|fixP
-argument_list|,
-name|add_number
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* For each fixS in this segment. */
 block|}
@@ -16360,7 +17239,7 @@ end_comment
 begin_decl_stmt
 specifier|const
 name|pseudo_typeS
-name|obj_pseudo_table
+name|coff_pseudo_table
 index|[]
 init|=
 block|{
@@ -16404,6 +17283,19 @@ block|,
 literal|0
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+block|{
+literal|"loc"
+block|,
+name|obj_coff_loc
+block|,
+literal|0
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"appline"
 block|,
@@ -16494,6 +17386,22 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"weak"
+block|,
+name|obj_coff_weak
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ident"
+block|,
+name|obj_coff_ident
+block|,
+literal|0
+block|}
+block|,
 ifndef|#
 directive|ifndef
 name|BFD_ASSEMBLER
@@ -16529,14 +17437,6 @@ block|,
 literal|0
 block|}
 block|,
-block|{
-literal|"ident"
-block|,
-name|obj_coff_ident
-block|,
-literal|0
-block|}
-block|,
 else|#
 directive|else
 block|{
@@ -16548,15 +17448,6 @@ literal|0
 block|}
 block|,
 comment|/* For sun386i cc (?) */
-block|{
-literal|"ident"
-block|,
-name|s_ignore
-block|,
-literal|0
-block|}
-block|,
-comment|/* we don't yet handle this. */
 endif|#
 directive|endif
 block|{
@@ -16591,6 +17482,10 @@ endif|#
 directive|endif
 block|{
 name|NULL
+block|,
+name|NULL
+block|,
+literal|0
 block|}
 comment|/* end sentinel */
 block|}
@@ -16598,7 +17493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* obj_pseudo_table */
+comment|/* coff_pseudo_table */
 end_comment
 
 begin_escape
@@ -16614,6 +17509,19 @@ begin_comment
 comment|/* Support for a COFF emulation.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|coff_pop_insert
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -16622,38 +17530,8 @@ parameter_list|()
 block|{
 name|pop_insert
 argument_list|(
-name|obj_pseudo_table
+name|coff_pseudo_table
 argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|coff_sec_sym_ok_for_reloc
-parameter_list|(
-name|sec
-parameter_list|)
-name|asection
-modifier|*
-name|sec
-decl_stmt|;
-block|{
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|no_func
-parameter_list|()
-block|{
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -16669,62 +17547,56 @@ name|bfd_target_coff_flavour
 block|,
 literal|0
 block|,
+comment|/* dfl_leading_underscore */
 literal|1
 block|,
+comment|/* emit_section_symbols */
 name|coff_frob_symbol
 block|,
-name|no_func
+literal|0
 block|,
+comment|/* frob_file */
 name|coff_frob_file_after_relocs
 block|,
 literal|0
 block|,
+comment|/* s_get_size */
 literal|0
 block|,
+comment|/* s_set_size */
 literal|0
 block|,
+comment|/* s_get_align */
 literal|0
 block|,
+comment|/* s_set_align */
 literal|0
 block|,
-if|#
-directive|if
+comment|/* s_get_other */
 literal|0
-block|obj_generate_asm_lineno,
-else|#
-directive|else
-name|no_func
 block|,
-endif|#
-directive|endif
-if|#
-directive|if
+comment|/* s_get_desc */
 literal|0
-block|obj_stab,
-else|#
-directive|else
-name|no_func
 block|,
-endif|#
-directive|endif
-name|coff_sec_sym_ok_for_reloc
+comment|/* copy_symbol_attributes */
+literal|0
 block|,
+comment|/* generate_asm_lineno */
+literal|0
+block|,
+comment|/* process_stab */
+literal|0
+block|,
+comment|/* sec_sym_ok_for_reloc */
 name|coff_pop_insert
 block|,
-if|#
-directive|if
 literal|0
-block|obj_set_ext,
-else|#
-directive|else
-name|no_func
 block|,
-endif|#
-directive|endif
+comment|/* ecoff_set_ext */
 name|coff_obj_read_begin_hook
 block|,
 name|coff_obj_symbol_new_hook
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mri.c -- handle MRI style linker scripts    Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* mri.c -- handle MRI style linker scripts    Copyright (C) 1991, 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1043,10 +1043,18 @@ name|p
 operator|->
 name|name
 argument_list|,
+name|false
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
+name|NULL
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1088,10 +1096,18 @@ name|aptr
 operator|->
 name|name
 argument_list|,
+name|false
+argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
+name|NULL
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1109,6 +1125,8 @@ name|lang_output_section_phdr_list
 operator|*
 operator|)
 name|NULL
+argument_list|,
+literal|"*default*"
 argument_list|)
 expr_stmt|;
 name|p
@@ -1408,7 +1426,10 @@ else|else
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: unknown format type %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -71,18 +71,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TC_RELOC
-parameter_list|(
-name|X
-parameter_list|,
-name|Y
-parameter_list|)
-value|(((X) != BFD_RELOC_386_PLT32&& \ 	   (X) != BFD_RELOC_386_GOTOFF&& \ 	   (X) != BFD_RELOC_386_GOT32&& \ 	   (X) != BFD_RELOC_386_GOTPC) ? Y : X)
-end_define
-
-begin_define
-define|#
-directive|define
 name|tc_fix_adjustable
 parameter_list|(
 name|X
@@ -128,7 +116,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|((FIX)->fx_r_type != BFD_RELOC_386_PLT32 \&& (FIX)->fx_r_type != BFD_RELOC_386_GOT32 \&& (FIX)->fx_r_type != BFD_RELOC_386_GOTPC)
+value|((FIX)->fx_r_type != BFD_RELOC_386_PLT32			\&& (FIX)->fx_r_type != BFD_RELOC_386_GOT32			\&& (FIX)->fx_r_type != BFD_RELOC_386_GOTPC			\&& ((FIX)->fx_addsy == NULL					\        || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)			\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy))))
 end_define
 
 begin_define
@@ -141,19 +129,13 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OBJ_AOUT
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|TE_NetBSD
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 value|"a.out-i386-netbsd"
 end_define
 
@@ -171,7 +153,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 value|"a.out-i386-bsd"
 end_define
 
@@ -189,7 +171,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 value|"a.out-i386-linux"
 end_define
 
@@ -207,7 +189,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 value|"a.out-mach3"
 end_define
 
@@ -225,7 +207,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 value|"a.out-i386-dynix"
 end_define
 
@@ -237,13 +219,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_FORMAT
+name|AOUT_TARGET_FORMAT
 value|"a.out-i386"
 end_define
 
@@ -252,14 +234,76 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|defined
+argument_list|(
+name|OBJ_MAYBE_ELF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OBJ_MAYBE_COFF
+argument_list|)
+operator|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|OBJ_MAYBE_ELF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OBJ_MAYBE_AOUT
+argument_list|)
+operator|)
+expr|\
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|OBJ_MAYBE_COFF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OBJ_MAYBE_AOUT
+argument_list|)
+operator|)
+operator|)
+end_if
 
-begin_comment
-comment|/* OBJ_AOUT */
-end_comment
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|i386_target_format
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|i386_target_format ()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifdef
 ifdef|#
@@ -282,35 +326,14 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OBJ_MAYBE_ELF
+name|OBJ_AOUT
 end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_MAYBE_COFF
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|i386_target_format
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|i386_target_format ()
+value|AOUT_TARGET_FORMAT
 end_define
 
 begin_endif
@@ -370,16 +393,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_FORCE_RELOCATION
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)->fx_r_type==7)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TC_COFF_FIX2RTYPE
 parameter_list|(
 name|fixP
@@ -427,6 +440,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_GO32
+end_ifdef
+
+begin_comment
+comment|/* DJGPP now expects some sections to be 2**4 aligned.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUB_SEGMENT_ALIGN
+parameter_list|(
+name|SEG
+parameter_list|)
+define|\
+value|((strcmp (obj_segment_name (SEG), ".text") == 0			\     || strcmp (obj_segment_name (SEG), ".data") == 0			\     || strcmp (obj_segment_name (SEG), ".bss") == 0			\     || strncmp (obj_segment_name (SEG), ".gnu.linkonce.t", 15) == 0	\     || strncmp (obj_segment_name (SEG), ".gnu.linkonce.d", 15) == 0	\     || strncmp (obj_segment_name (SEG), ".gnu.linkonce.r", 15) == 0)	\    ? 4									\    : 2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -436,6 +475,11 @@ name|SEG
 parameter_list|)
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -503,6 +547,31 @@ begin_comment
 comment|/* ! BFD_ASSEMBLER */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION
+parameter_list|(
+name|fixp
+parameter_list|)
+value|tc_i386_force_relocation(fixp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tc_i386_force_relocation
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -565,6 +634,12 @@ directive|ifndef
 name|TE_PE
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TE_GO32
+end_ifndef
+
 begin_comment
 comment|/* Local labels starts with .L */
 end_comment
@@ -578,6 +653,11 @@ name|name
 parameter_list|)
 value|(name[0] == '.' \&& (name[1] == 'L' || name[1] == 'X' || name[1] == '.'))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -643,6 +723,22 @@ begin_comment
 comment|/* not used */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|extra_symbol_chars
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_symbol_chars
+value|extra_symbol_chars
+end_define
+
 begin_define
 define|#
 directive|define
@@ -657,23 +753,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_PREFIXES
-value|5
-end_define
-
-begin_comment
-comment|/* max prefixes per opcode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAX_IMMEDIATE_OPERANDS
 value|2
 end_define
 
 begin_comment
-comment|/* max immediates per insn */
+comment|/* max immediates per insn (lcall, ljmp) */
 end_comment
 
 begin_define
@@ -684,7 +769,57 @@ value|2
 end_define
 
 begin_comment
-comment|/* max memory ref per insn (lcall uses 2) */
+comment|/* max memory refs per insn (string ops) */
+end_comment
+
+begin_comment
+comment|/* Prefixes will be emitted in the order defined below.    WAIT_PREFIX must be the first prefix since FWAIT is really is an    instruction, and so must come before any prefixes. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAIT_PREFIX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKREP_PREFIX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDR_PREFIX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_PREFIX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEG_PREFIX
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PREFIXES
+value|5
+end_define
+
+begin_comment
+comment|/* max prefixes per opcode */
 end_comment
 
 begin_comment
@@ -710,13 +845,6 @@ define|#
 directive|define
 name|ABSOLUTE_PREFIX
 value|'*'
-end_define
-
-begin_define
-define|#
-directive|define
-name|PREFIX_SEPERATOR
-value|'/'
 end_define
 
 begin_define
@@ -784,29 +912,65 @@ name|NO_BASE_REGISTER
 value|EBP_REG_NUM
 end_define
 
+begin_define
+define|#
+directive|define
+name|NO_BASE_REGISTER_16
+value|6
+end_define
+
 begin_comment
-comment|/* these are the att as opcode suffixes, making movl --> mov, for example */
+comment|/* these are the instruction mnemonic suffixes.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DWORD_OPCODE_SUFFIX
-value|'l'
-end_define
-
-begin_define
-define|#
-directive|define
-name|WORD_OPCODE_SUFFIX
+name|WORD_MNEM_SUFFIX
 value|'w'
 end_define
 
 begin_define
 define|#
 directive|define
-name|BYTE_OPCODE_SUFFIX
+name|BYTE_MNEM_SUFFIX
 value|'b'
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHORT_MNEM_SUFFIX
+value|'s'
+end_define
+
+begin_define
+define|#
+directive|define
+name|LONG_MNEM_SUFFIX
+value|'l'
+end_define
+
+begin_comment
+comment|/* Intel Syntax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LONG_DOUBLE_MNEM_SUFFIX
+value|'x'
+end_define
+
+begin_comment
+comment|/* Intel Syntax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWORD_MNEM_SUFFIX
+value|'d'
 end_define
 
 begin_comment
@@ -839,15 +1003,79 @@ value|'\0'
 end_define
 
 begin_comment
-comment|/*   When an operand is read in it is classified by its type.  This type includes   all the possible ways an operand can be used.  Thus, '%eax' is both 'register   # 0' and 'The Accumulator'.  In our language this is expressed by OR'ing   'Reg32' (any 32 bit register) and 'Acc' (the accumulator).   Operands are classified so that we can match given operand types with   the opcode table in i386-opcode.h.   */
+comment|/* Intel Syntax */
+end_comment
+
+begin_comment
+comment|/* Values 0-4 map onto scale factor */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|Unknown
-value|0x0
+name|BYTE_PTR
+value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|WORD_PTR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWORD_PTR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|QWORD_PTR
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|XWORD_PTR
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHORT
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|OFFSET_FLAT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAT
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|NONE_FOUND
+value|8
+end_define
+
+begin_comment
+comment|/*   When an operand is read in it is classified by its type.  This type includes   all the possible ways an operand can be used.  Thus, '%eax' is both 'register   # 0' and 'The Accumulator'.  In our language this is expressed by OR'ing   'Reg32' (any 32 bit register) and 'Acc' (the accumulator).   Operands are classified so that we can match given operand types with   the opcode table in opcode/i386.h.   */
+end_comment
 
 begin_comment
 comment|/* register */
@@ -884,28 +1112,6 @@ end_define
 
 begin_comment
 comment|/* 32 bit reg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Reg
-value|(Reg8|Reg16|Reg32)
-end_define
-
-begin_comment
-comment|/* gen'l register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WordReg
-value|(Reg16|Reg32)
-end_define
-
-begin_comment
-comment|/* for push/pop operands */
 end_comment
 
 begin_comment
@@ -967,30 +1173,19 @@ begin_comment
 comment|/* 1 bit immediate */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ImmUnknown
-value|Imm32
-end_define
-
-begin_comment
-comment|/* for unknown expressions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Imm
-value|(Imm8|Imm8S|Imm16|Imm32)
-end_define
-
-begin_comment
-comment|/* gen'l immediate */
-end_comment
-
 begin_comment
 comment|/* memory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BaseIndex
+value|0x100
+end_define
+
+begin_comment
+comment|/* Disp8,16,32 are used in different ways, depending on the    instruction.  For jumps, they specify the size of the PC relative    displacement, for baseindex type instructions, they specify the    size of the offset relative to the base register, and for memory    offset instructions such as `mov 1234,%al' they specify the size of    the offset relative to the segment base.  */
 end_comment
 
 begin_define
@@ -1001,7 +1196,7 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* 8 bit displacement (for jumps) */
+comment|/* 8 bit displacement */
 end_comment
 
 begin_define
@@ -1026,6 +1221,207 @@ begin_comment
 comment|/* 32 bit displacement */
 end_comment
 
+begin_comment
+comment|/* specials */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|InOutPortReg
+value|0x1000
+end_define
+
+begin_comment
+comment|/* register to hold in/out port addr = dx */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ShiftCount
+value|0x2000
+end_define
+
+begin_comment
+comment|/* register to hold shift cound = cl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Control
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Debug
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Debug register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Test
+value|0x10000
+end_define
+
+begin_comment
+comment|/* Test register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FloatReg
+value|0x20000
+end_define
+
+begin_comment
+comment|/* Float register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FloatAcc
+value|0x40000
+end_define
+
+begin_comment
+comment|/* Float stack top %st(0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SReg2
+value|0x80000
+end_define
+
+begin_comment
+comment|/* 2 bit segment register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SReg3
+value|0x100000
+end_define
+
+begin_comment
+comment|/* 3 bit segment register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Acc
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Accumulator %al or %ax or %eax */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JumpAbsolute
+value|0x400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RegMMX
+value|0x800000
+end_define
+
+begin_comment
+comment|/* MMX register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RegXMM
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* XMM registers in PIII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EsSeg
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* String insn operand with fixed es segment */
+end_comment
+
+begin_comment
+comment|/* InvMem is for instructions with a modrm byte that only allow a    general register encoding in the i.tm.mode and i.tm.regmem fields,    eg. control reg moves.  They really ought to support a memory form,    but don't, so we add an InvMem flag to the register operand to    indicate that it should be encoded in the i.tm.regmem field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|InvMem
+value|0x4000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|Reg
+value|(Reg8|Reg16|Reg32)
+end_define
+
+begin_comment
+comment|/* gen'l register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WordReg
+value|(Reg16|Reg32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ImplicitRegister
+value|(InOutPortReg|ShiftCount|Acc|FloatAcc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Imm
+value|(Imm8|Imm8S|Imm16|Imm32)
+end_define
+
+begin_comment
+comment|/* gen'l immediate */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1040,254 +1436,72 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DispUnknown
-value|Disp32
-end_define
-
-begin_comment
-comment|/* for unknown size displacements */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Mem8
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Mem16
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Mem32
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BaseIndex
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Mem
-value|(Disp|Mem8|Mem16|Mem32|BaseIndex)
+name|AnyMem
+value|(Disp|BaseIndex|InvMem)
 end_define
 
 begin_comment
 comment|/* General memory */
 end_comment
 
+begin_comment
+comment|/* The following aliases are defined because the opcode table    carefully specifies the allowed memory types for each instruction.    At the moment we can only tell a memory reference size by the    instruction suffix, so there's not much point in defining Mem8,    Mem16, Mem32 and Mem64 opcode modifiers - We might as well just use    the suffix directly to check memory operands.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLongMem
+value|AnyMem
+end_define
+
+begin_comment
+comment|/* 64 bits (or more) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LongMem
+value|AnyMem
+end_define
+
+begin_comment
+comment|/* 32 bit memory ref */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ShortMem
+value|AnyMem
+end_define
+
+begin_comment
+comment|/* 16 bit memory ref */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WordMem
-value|(Mem16|Mem32|Disp|BaseIndex)
+value|AnyMem
 end_define
+
+begin_comment
+comment|/* 16 or 32 bit memory ref */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ByteMem
-value|(Mem8|Disp|BaseIndex)
+value|AnyMem
 end_define
 
 begin_comment
-comment|/* specials */
+comment|/* 8 bit memory ref */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|InOutPortReg
-value|0x10000
-end_define
-
-begin_comment
-comment|/* register to hold in/out port addr = dx */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ShiftCount
-value|0x20000
-end_define
-
-begin_comment
-comment|/* register to hold shift cound = cl */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Control
-value|0x40000
-end_define
-
-begin_comment
-comment|/* Control register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Debug
-value|0x80000
-end_define
-
-begin_comment
-comment|/* Debug register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Test
-value|0x100000
-end_define
-
-begin_comment
-comment|/* Test register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FloatReg
-value|0x200000
-end_define
-
-begin_comment
-comment|/* Float register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FloatAcc
-value|0x400000
-end_define
-
-begin_comment
-comment|/* Float stack top %st(0) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SReg2
-value|0x800000
-end_define
-
-begin_comment
-comment|/* 2 bit segment register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SReg3
-value|0x1000000
-end_define
-
-begin_comment
-comment|/* 3 bit segment register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Acc
-value|0x2000000
-end_define
-
-begin_comment
-comment|/* Accumulator %al or %ax or %eax */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ImplicitRegister
-value|(InOutPortReg|ShiftCount|Acc|FloatAcc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|JumpAbsolute
-value|0x4000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Abs8
-value|0x08000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Abs16
-value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Abs32
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|Abs
-value|(Abs8|Abs16|Abs32)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RegMMX
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* MMX register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Byte
-value|(Reg8|Imm8|Imm8S)
-end_define
-
-begin_define
-define|#
-directive|define
-name|Word
-value|(Reg16|Imm16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWord
-value|(Reg32|Imm32)
-end_define
 
 begin_define
 define|#
@@ -1297,7 +1511,7 @@ parameter_list|(
 name|num
 parameter_list|)
 define|\
-value|fits_in_signed_byte(num) ? (Disp8|Disp32|Abs8|Abs32) : (Disp32|Abs32)
+value|(fits_in_signed_byte(num) ? (Disp8|Disp32) : Disp32)
 end_define
 
 begin_typedef
@@ -1314,20 +1528,20 @@ name|unsigned
 name|int
 name|operands
 decl_stmt|;
-comment|/* base_opcode is the fundamental opcode byte with a optional prefix(es). */
+comment|/* base_opcode is the fundamental opcode byte without optional      prefix(es).  */
 name|unsigned
 name|int
 name|base_opcode
 decl_stmt|;
-comment|/* extension_opcode is the 3 bit extension for group<n> insns.      If this template has no extension opcode (the usual case) use None */
+comment|/* extension_opcode is the 3 bit extension for group<n> insns.      This field is also used to store the 8-bit opcode suffix for the      AMD 3DNow! instructions.      If this template has no extension opcode (the usual case) use None */
 name|unsigned
-name|char
+name|int
 name|extension_opcode
 decl_stmt|;
 define|#
 directive|define
 name|None
-value|0xff
+value|0xffff
 comment|/* If no extension_opcode is possible. */
 comment|/* the bits in opcode_modifier are used to generate the final opcode from      the base_opcode.  These bits also are used to detect alternate forms of      the same instruction */
 name|unsigned
@@ -1339,22 +1553,21 @@ define|#
 directive|define
 name|W
 value|0x1
-comment|/* set if operands are words or dwords */
+comment|/* set if operands can be words or dwords 				   encoded the canonical way */
 define|#
 directive|define
 name|D
 value|0x2
-comment|/* D = 0 if Reg --> Regmem; D = 1 if Regmem --> Reg */
-comment|/* direction flag for floating insns:  MUST BE 0x400 */
+comment|/* D = 0 if Reg --> Regmem; 				   D = 1 if Regmem --> Reg:    MUST BE 0x2 */
 define|#
 directive|define
-name|FloatD
-value|0x400
-comment|/* shorthand */
+name|Modrm
+value|0x4
 define|#
 directive|define
-name|DW
-value|(D|W)
+name|FloatR
+value|0x8
+comment|/* src/dest swap for floats:   MUST BE 0x8 */
 define|#
 directive|define
 name|ShortForm
@@ -1362,88 +1575,124 @@ value|0x10
 comment|/* register is in low 3 bits of opcode */
 define|#
 directive|define
-name|ShortFormW
+name|FloatMF
 value|0x20
-comment|/* ShortForm and W bit is 0x8 */
-define|#
-directive|define
-name|Seg2ShortForm
-value|0x40
-comment|/* encoding of load segment reg insns */
-define|#
-directive|define
-name|Seg3ShortForm
-value|0x80
-comment|/* fs/gs segment register insns. */
+comment|/* FP insn memory format bit, sized by 0x4 */
 define|#
 directive|define
 name|Jump
-value|0x100
+value|0x40
 comment|/* special case for jump insns. */
+define|#
+directive|define
+name|JumpDword
+value|0x80
+comment|/* call and jump */
+define|#
+directive|define
+name|JumpByte
+value|0x100
+comment|/* loop and jecxz */
 define|#
 directive|define
 name|JumpInterSegment
 value|0x200
 comment|/* special case for intersegment leaps/calls */
-comment|/* 0x400 CANNOT BE USED since it's already used by FloatD above */
 define|#
 directive|define
-name|DONT_USE
+name|FloatD
 value|0x400
+comment|/* direction for float insns:  MUST BE 0x400 */
 define|#
 directive|define
-name|NoModrm
+name|Seg2ShortForm
 value|0x800
+comment|/* encoding of load segment reg insns */
 define|#
 directive|define
-name|Modrm
+name|Seg3ShortForm
 value|0x1000
+comment|/* fs/gs segment register insns. */
 define|#
 directive|define
-name|imulKludge
+name|Size16
 value|0x2000
+comment|/* needs size prefix if in 32-bit mode */
 define|#
 directive|define
-name|JumpByte
+name|Size32
 value|0x4000
+comment|/* needs size prefix if in 16-bit mode */
 define|#
 directive|define
-name|JumpDword
+name|IgnoreSize
 value|0x8000
+comment|/* instruction ignores operand size prefix */
 define|#
 directive|define
-name|ReverseRegRegmem
+name|DefaultSize
 value|0x10000
+comment|/* default insn size depends on mode */
 define|#
 directive|define
-name|Data16
+name|No_bSuf
 value|0x20000
-comment|/* needs data prefix if in 32-bit mode */
+comment|/* b suffix on instruction illegal */
 define|#
 directive|define
-name|Data32
+name|No_wSuf
 value|0x40000
-comment|/* needs data prefix if in 16-bit mode */
+comment|/* w suffix on instruction illegal */
 define|#
 directive|define
-name|iclrKludge
+name|No_lSuf
 value|0x80000
-comment|/* used to convert clr to xor */
+comment|/* l suffix on instruction illegal */
+define|#
+directive|define
+name|No_sSuf
+value|0x100000
+comment|/* s suffix on instruction illegal */
+define|#
+directive|define
+name|No_dSuf
+value|0x200000
+comment|/* d suffix on instruction illegal */
+define|#
+directive|define
+name|No_xSuf
+value|0x400000
+comment|/* x suffix on instruction illegal */
 define|#
 directive|define
 name|FWait
-value|0x100000
+value|0x800000
 comment|/* instruction needs FWAIT */
-comment|/* (opcode_modifier& COMES_IN_ALL_SIZES) is true if the      instuction comes in byte, word, and dword sizes and is encoded into      machine code in the canonical way. */
 define|#
 directive|define
-name|COMES_IN_ALL_SIZES
-value|(W)
-comment|/* (opcode_modifier& COMES_IN_BOTH_DIRECTIONS) indicates that the      source and destination operands can be reversed by setting either      the D (for integer insns) or the FloatD (for floating insns) bit      in base_opcode. */
+name|IsString
+value|0x1000000
+comment|/* quick test for string instructions */
 define|#
 directive|define
-name|COMES_IN_BOTH_DIRECTIONS
-value|(D|FloatD)
+name|regKludge
+value|0x2000000
+comment|/* fake an extra reg operand for clr, imul */
+define|#
+directive|define
+name|IsPrefix
+value|0x4000000
+comment|/* opcode is a prefix */
+define|#
+directive|define
+name|ImmExt
+value|0x8000000
+comment|/* instruction has extension in 8 bit imm */
+define|#
+directive|define
+name|Ugh
+value|0x80000000
+comment|/* deprecated fp insn, gets a warning */
 comment|/* operand_types[i] describes the type of operand i.  This is made      by OR'ing together all of the possible type masks.  (e.g.      'operand_types[i] = Reg|Imm' specifies that operand i can be      either a register or an immediate operand */
 name|unsigned
 name|int
@@ -1465,10 +1714,12 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|template
 modifier|*
 name|start
 decl_stmt|;
+specifier|const
 name|template
 modifier|*
 name|end
@@ -1521,27 +1772,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* these are for prefix name --> prefix code hash lookup */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-modifier|*
-name|prefix_name
-decl_stmt|;
-name|unsigned
-name|char
-name|prefix_code
-decl_stmt|;
-block|}
-name|prefix_entry
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* 386 operand encoding bytes:  see 386 book for details of this. */
 end_comment
 
@@ -1550,21 +1780,18 @@ typedef|typedef
 struct|struct
 block|{
 name|unsigned
+name|int
 name|regmem
-range|:
-literal|3
 decl_stmt|;
 comment|/* codes register or memory operand */
 name|unsigned
+name|int
 name|reg
-range|:
-literal|3
 decl_stmt|;
 comment|/* codes register operand (or extended opcode) */
 name|unsigned
+name|int
 name|mode
-range|:
-literal|2
 decl_stmt|;
 comment|/* how to interpret regmem& reg */
 block|}
@@ -1582,21 +1809,15 @@ struct|struct
 block|{
 name|unsigned
 name|base
-range|:
-literal|3
 decl_stmt|;
 name|unsigned
 name|index
-range|:
-literal|3
 decl_stmt|;
 name|unsigned
 name|scale
-range|:
-literal|2
 decl_stmt|;
 block|}
-name|base_index_byte
+name|sib_byte
 typedef|;
 end_typedef
 
@@ -1696,47 +1917,6 @@ name|TC_GENERIC_RELAX_TABLE
 value|md_relax_table
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_16bit_code
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|md_maybe_text
-parameter_list|()
-define|\
-value|((bfd_get_section_flags (stdoutput, now_seg)& SEC_CODE) != 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|md_maybe_text
-parameter_list|()
-define|\
-value|(now_seg != data_section&& now_seg != bss_section)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1753,7 +1933,7 @@ parameter_list|,
 name|around
 parameter_list|)
 define|\
-value|if ((n)&& !need_pass_2							\&& (!(fill) || ((char)*(fill) == (char)0x90&& (len) == 1))		\&& md_maybe_text ())						\   {									\     char *p;								\     p = frag_var (rs_align_code, 15, 1, (relax_substateT) max,		\ 		  (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x90;								\     goto around;							\   }
+value|if ((n)&& !need_pass_2							\&& (!(fill) || ((char)*(fill) == (char)0x90&& (len) == 1))		\&& subseg_text_p (now_seg))						\   {									\     char *p;								\     p = frag_var (rs_align_code, 15, 1, (relax_substateT) max,		\ 		  (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x90;								\     goto around;							\   }
 end_define
 
 begin_decl_stmt

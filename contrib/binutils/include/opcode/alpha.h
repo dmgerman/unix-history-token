@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* alpha.h -- Header file for Alpha opcode table    Copyright 1996 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>,    patterned after the PPC opcode table written by Ian Lance Taylor.  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* alpha.h -- Header file for Alpha opcode table    Copyright 1996, 1999 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>,    patterned after the PPC opcode table written by Ian Lance Taylor.  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -70,7 +70,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|int
+name|unsigned
 name|alpha_num_opcodes
 decl_stmt|;
 end_decl_stmt
@@ -119,6 +119,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AXP_OPCODE_EV6
+value|0x0008
+end_define
+
+begin_comment
+comment|/* EV6 specific PALcode insns.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AXP_OPCODE_BWX
 value|0x0100
 end_define
@@ -153,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|AXP_OPCODE_NOPAL
-value|(~(AXP_OPCODE_EV4|AXP_OPCODE_EV5))
+value|(~(AXP_OPCODE_EV4|AXP_OPCODE_EV5|AXP_OPCODE_EV6))
 end_define
 
 begin_comment
@@ -268,7 +279,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|int
+name|unsigned
 name|alpha_num_operands
 decl_stmt|;
 end_decl_stmt

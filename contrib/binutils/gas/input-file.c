@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_file.c - Deal with Input Files -    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* input_file.c - Deal with Input Files -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -40,7 +40,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
-operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -392,7 +393,10 @@ name|stdin
 expr_stmt|;
 name|file_name
 operator|=
+name|_
+argument_list|(
 literal|"{standard input}"
+argument_list|)
 expr_stmt|;
 comment|/* For error messages. */
 block|}
@@ -409,7 +413,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't open %s for reading."
+argument_list|)
 argument_list|,
 name|file_name
 argument_list|)
@@ -579,21 +586,18 @@ specifier|static
 name|int
 name|input_file_get
 parameter_list|(
-name|from
+name|buf
+parameter_list|,
+name|buflen
 parameter_list|)
 name|char
 modifier|*
-modifier|*
-name|from
+name|buf
+decl_stmt|;
+name|int
+name|buflen
 decl_stmt|;
 block|{
-specifier|static
-name|char
-name|buf
-index|[
-name|BUFFER_SIZE
-index|]
-decl_stmt|;
 name|int
 name|size
 decl_stmt|;
@@ -608,8 +612,7 @@ argument_list|(
 name|char
 argument_list|)
 argument_list|,
-sizeof|sizeof
-name|buf
+name|buflen
 argument_list|,
 name|f_in
 argument_list|)
@@ -623,7 +626,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't read from %s"
+argument_list|)
 argument_list|,
 name|file_name
 argument_list|)
@@ -633,11 +639,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-operator|*
-name|from
-operator|=
-name|buf
-expr_stmt|;
 return|return
 name|size
 return|;
@@ -725,7 +726,10 @@ condition|)
 block|{
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't read from %s"
+argument_list|)
 argument_list|,
 name|file_name
 argument_list|)
@@ -756,7 +760,10 @@ argument_list|)
 condition|)
 name|as_perror
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't close %s"
+argument_list|)
 argument_list|,
 name|file_name
 argument_list|)

@@ -14,7 +14,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|L_tmpname
+name|L_tmpnam
 value|100
 end_define
 

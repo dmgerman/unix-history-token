@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sysdep.h"
 end_include
 

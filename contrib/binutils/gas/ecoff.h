@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ecoff.h -- header file for ECOFF debugging support    Copyright (C) 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.    Contributed by Cygnus Support.    Put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ecoff.h -- header file for ECOFF debugging support    Copyright (C) 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Cygnus Support.    Put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ECOFF_DEBUGGING
-end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -20,6 +14,12 @@ define|#
 directive|define
 name|GAS_ECOFF_H
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ECOFF_DEBUGGING
+end_ifdef
 
 begin_include
 include|#
@@ -91,8 +91,7 @@ name|ecoff_symbol_new_hook
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -110,8 +109,7 @@ name|ecoff_frob_symbol
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -477,8 +475,7 @@ name|obj_ecoff_set_ext
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|EXTR
@@ -532,7 +529,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This routine is called from read.c to generate line number for .s    file.  */
+comment|/* This function returns the symbol associated with the current proc.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|symbolS
+modifier|*
+name|ecoff_get_cur_proc_sym
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ECOFF_DEBUGGING */
+end_comment
+
+begin_comment
+comment|/* This routine is called from read.c to generate line number for .s file.  */
 end_comment
 
 begin_decl_stmt
@@ -542,11 +566,7 @@ name|ecoff_generate_asm_lineno
 name|PARAMS
 argument_list|(
 operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -559,15 +579,6 @@ end_endif
 
 begin_comment
 comment|/* ! GAS_ECOFF_H */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ECOFF_DEBUGGING */
 end_comment
 
 end_unit

@@ -55,7 +55,7 @@ parameter_list|)
 name|PTR
 name|s1
 decl_stmt|;
-name|CONST
+specifier|const
 name|PTR
 name|s2
 decl_stmt|;

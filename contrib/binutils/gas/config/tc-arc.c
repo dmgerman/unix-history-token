@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-arc.c -- Assembler for the ARC    Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* tc-arc.c -- Assembler for the ARC    Copyright (C) 1994, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_include
@@ -500,7 +500,10 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"\ ARC options:\n\ -EB			generate big endian output\n\ -EL			generate little endian output\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -536,7 +539,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"could not set architecture and machine"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Assume the base cpu.  This call is necessary because we need to      initialize `arc_operand_map' which may be needed before we see the      first insn.  */
@@ -590,7 +596,10 @@ name|NULL
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"virtual memory exhausted"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -607,7 +616,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"could not set architecture and machine"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* This initializes a few things in arc-opc.c that we need.      This must be called before the various arc_xxx_supported fns.  */
@@ -964,7 +976,10 @@ name|char
 modifier|*
 name|err
 init|=
+name|_
+argument_list|(
 literal|"operand out of range (%s not between %ld and %ld)"
+argument_list|)
 decl_stmt|;
 name|char
 name|buf
@@ -1461,7 +1476,10 @@ literal|0
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"unknown syntax format character `%c'"
+argument_list|)
 argument_list|,
 operator|*
 name|syn
@@ -1804,7 +1822,10 @@ name|MAX_SUFFIXES
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"too many suffixes"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1912,7 +1933,10 @@ name|O_illegal
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"illegal operand"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1926,7 +1950,10 @@ name|O_absent
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"missing operand"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1976,7 +2003,10 @@ name|MAX_FIXUPS
 condition|)
 name|as_fatal
 argument_list|(
+name|_
+argument_list|(
 literal|"too many fixups"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fixups
@@ -2211,7 +2241,10 @@ literal|'\0'
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"junk at end of line: `%s'"
+argument_list|)
 argument_list|,
 name|str
 argument_list|)
@@ -2346,7 +2379,10 @@ name|limm_p
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"8 byte instruction in delay slot"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2359,7 +2395,10 @@ name|limm_p
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"8 byte jump instruction with delay slot"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|in_delay_slot_p
@@ -2387,7 +2426,10 @@ name|prev_insn_needs_cc_nop_p
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"conditional branch follows set of flags"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|prev_insn_needs_cc_nop_p
@@ -2671,7 +2713,10 @@ comment|/* Try the next entry.  */
 block|}
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad instruction `%s'"
+argument_list|)
 argument_list|,
 name|start
 argument_list|)
@@ -2749,7 +2794,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"expected comma after symbol-name"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -2775,7 +2823,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|".COMMon length (%d.)<0! Ignored."
+argument_list|)
 argument_list|,
 name|temp
 argument_list|)
@@ -2822,7 +2873,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"ignoring attempt to re-define symbol"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -2852,7 +2906,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Length of .comm \"%s\" is already %ld. Not changed to %d."
+argument_list|)
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -2874,9 +2931,10 @@ block|}
 block|}
 name|assert
 argument_list|(
+name|symbol_get_frag
+argument_list|(
 name|symbolP
-operator|->
-name|sy_frag
+argument_list|)
 operator|==
 operator|&
 name|zero_address_frag
@@ -2892,7 +2950,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"expected comma after common length"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -2932,7 +2993,10 @@ literal|0
 expr_stmt|;
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Common alignment negative; 0 assumed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3006,19 +3070,21 @@ argument_list|)
 operator|==
 name|bss_section
 condition|)
+name|symbol_get_frag
+argument_list|(
 name|symbolP
-operator|->
-name|sy_frag
+argument_list|)
 operator|->
 name|fr_symbol
 operator|=
 literal|0
 expr_stmt|;
+name|symbol_set_frag
+argument_list|(
 name|symbolP
-operator|->
-name|sy_frag
-operator|=
+argument_list|,
 name|frag_now
+argument_list|)
 expr_stmt|;
 name|p
 operator|=
@@ -3192,7 +3258,10 @@ literal|'\0'
 expr_stmt|;
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad .common segment %s"
+argument_list|)
 argument_list|,
 name|input_line_pointer
 operator|+
@@ -3249,7 +3318,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|".cpu command must appear before any instructions"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -3303,7 +3375,10 @@ name|arc_mach_type
 condition|)
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|".cpu conflicts with previous value"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3330,7 +3405,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"could not set architecture and machine"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3339,7 +3417,10 @@ name|bad_cpu
 label|:
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"bad .cpu op"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line
@@ -3359,7 +3440,7 @@ comment|/* The .rename pseudo-op.  This is used by gcc to implement    -mmangle-
 end_comment
 
 begin_endif
-unit|static void arc_rename (ignore)      int ignore; {   char *name,*new;   char c;   symbolS *sym;   int len;    name = input_line_pointer;   c = get_symbol_end ();   sym = symbol_find_or_make (name);   *input_line_pointer = c;    if (*input_line_pointer != ',')     {       as_bad ("missing rename string");       ignore_rest_of_line ();       return;     }   ++input_line_pointer;   SKIP_WHITESPACE ();    name = input_line_pointer;   c = get_symbol_end ();   if (*name == '\0')     {       *input_line_pointer = c;       as_bad ("invalid symbol to rename to");       ignore_rest_of_line ();       return;     }   new = (char *) xmalloc (strlen (name) + 1);   strcpy (new, name);   *input_line_pointer = c;   sym->sy_tc.real_name = new;    demand_empty_rest_of_line (); }
+unit|static void arc_rename (ignore)      int ignore; {   char *name,*new;   char c;   symbolS *sym;   int len;    name = input_line_pointer;   c = get_symbol_end ();   sym = symbol_find_or_make (name);   *input_line_pointer = c;    if (*input_line_pointer != ',')     {       as_bad (_("missing rename string"));       ignore_rest_of_line ();       return;     }   ++input_line_pointer;   SKIP_WHITESPACE ();    name = input_line_pointer;   c = get_symbol_end ();   if (*name == '\0')     {       *input_line_pointer = c;       as_bad (_("invalid symbol to rename to"));       ignore_rest_of_line ();       return;     }   new = (char *) xmalloc (strlen (name) + 1);   strcpy (new, name);   *input_line_pointer = c;   symbol_get_tc (sym)->real_name = new;    demand_empty_rest_of_line (); }
 endif|#
 directive|endif
 end_endif
@@ -3461,7 +3542,10 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+name|_
+argument_list|(
 literal|"bad call to md_atof"
+argument_list|)
 return|;
 block|}
 name|t
@@ -3761,7 +3845,10 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"missing ')' in %-op"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3917,7 +4004,10 @@ else|else
 block|{
 name|as_bad
 argument_list|(
+name|_
+argument_list|(
 literal|"expression too complex for %%st"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4208,23 +4298,19 @@ name|X_op_symbol
 operator|!=
 name|NULL
 operator|&&
+name|symbol_constant_p
+argument_list|(
 name|exp
 operator|->
 name|X_op_symbol
-operator|->
-name|sy_value
-operator|.
-name|X_op
-operator|==
-name|O_constant
+argument_list|)
 operator|&&
+name|S_GET_VALUE
+argument_list|(
 name|exp
 operator|->
 name|X_op_symbol
-operator|->
-name|sy_value
-operator|.
-name|X_add_number
+argument_list|)
 operator|==
 literal|2
 operator|&&
@@ -4244,25 +4330,19 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
+name|symbol_constant_p
+argument_list|(
 name|exp
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_value
-operator|.
-name|X_op
-operator|==
-name|O_constant
+argument_list|)
 operator|||
+name|symbol_equated_p
+argument_list|(
 name|exp
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_value
-operator|.
-name|X_op
-operator|==
-name|O_symbol
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -4304,25 +4384,30 @@ name|X_add_symbol
 operator|!=
 name|NULL
 operator|&&
+operator|(
+name|symbol_get_value_expression
+argument_list|(
 name|exp
 operator|->
 name|X_add_symbol
+argument_list|)
 operator|->
-name|sy_value
-operator|.
 name|X_op
 operator|==
 name|O_subtract
+operator|)
 condition|)
 block|{
 operator|*
 name|expnew
 operator|=
+operator|*
+name|symbol_get_value_expression
+argument_list|(
 name|exp
 operator|->
 name|X_add_symbol
-operator|->
-name|sy_value
+argument_list|)
 expr_stmt|;
 return|return
 name|data_p
@@ -4498,7 +4583,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"expression too complex"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4815,7 +4903,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"unresolved expression that must be resolved"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fixP
@@ -4995,12 +5086,31 @@ name|reloc
 operator|->
 name|sym_ptr_ptr
 operator|=
-operator|&
+operator|(
+name|asymbol
+operator|*
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|asymbol
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|reloc
+operator|->
+name|sym_ptr_ptr
+operator|=
+name|symbol_get_bfdsym
+argument_list|(
 name|fixP
 operator|->
 name|fx_addsy
-operator|->
-name|bsym
+argument_list|)
 expr_stmt|;
 name|reloc
 operator|->
@@ -5052,7 +5162,10 @@ name|fixP
 operator|->
 name|fx_line
 argument_list|,
+name|_
+argument_list|(
 literal|"internal error: can't export reloc type %d (`%s')"
+argument_list|)
 argument_list|,
 name|fixP
 operator|->
@@ -5117,7 +5230,7 @@ comment|/* Set the real name if the .rename pseudo-op was used.    Return 1 if t
 end_comment
 
 begin_endif
-unit|int arc_frob_symbol (sym)      symbolS *sym; {   if (sym->sy_tc.real_name != (char *) NULL)     S_SET_NAME (sym, sym->sy_tc.real_name);    return 0; }
+unit|int arc_frob_symbol (sym)      symbolS *sym; {   if (symbol_get_tc (sym)->real_name != (char *) NULL)     S_SET_NAME (sym, symbol_get_tc (sym)->real_name);    return 0; }
 endif|#
 directive|endif
 end_endif

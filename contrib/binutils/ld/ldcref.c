@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldcref.c -- output a cross reference table    Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>  This file is part of GLD, the Gnu Linker.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ldcref.c -- output a cross reference table    Copyright (C) 1996, 97, 98, 99, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>  This file is part of GLD, the Gnu Linker.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -543,6 +543,7 @@ name|section
 decl_stmt|;
 name|bfd_vma
 name|value
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -576,7 +577,10 @@ argument_list|)
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%P: bfd_hash_table_init of cref table failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cref_initialized
@@ -606,7 +610,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%P: cref_hash_lookup failed: %E\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -927,26 +934,43 @@ modifier|*
 modifier|*
 name|csym_end
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|msg
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+name|_
+argument_list|(
 literal|"\nCross Reference Table\n\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|msg
+operator|=
+name|_
+argument_list|(
+literal|"Symbol"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Symbol"
+literal|"%s"
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 name|len
 operator|=
-sizeof|sizeof
-expr|"Symbol"
-operator|-
-literal|1
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -970,7 +994,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+name|_
+argument_list|(
 literal|"File\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -983,7 +1010,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+name|_
+argument_list|(
 literal|"No symbols\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1470,6 +1500,7 @@ name|h
 decl_stmt|;
 name|PTR
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -1526,7 +1557,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P: symbol `%T' missing from main hash table\n"
+argument_list|)
 argument_list|,
 name|h
 operator|->
@@ -1808,7 +1842,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read symbols; %E\n"
+argument_list|)
 argument_list|,
 name|ref
 operator|->
@@ -1846,7 +1883,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read symbols: %E\n"
+argument_list|)
 argument_list|,
 name|ref
 operator|->
@@ -2168,7 +2208,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read relocs: %E\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -2215,7 +2258,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%B%F: could not read relocs: %E\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|)
@@ -2307,7 +2353,10 @@ block|{
 comment|/* We found a reloc for the symbol.  The symbol is defined              in OUTSECNAME.  This reloc is from a section which is              mapped into a section from which references to OUTSECNAME              are prohibited.  We must report an error.  */
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%C: prohibited cross reference from %s to `%T' in %s\n"
+argument_list|)
 argument_list|,
 name|abfd
 argument_list|,

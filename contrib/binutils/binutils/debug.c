@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* debug.c -- Handle generic debugging information.    Copyright (C) 1995, 1996 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* debug.c -- Handle generic debugging information.    Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1164,6 +1164,30 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* During debug_get_real_type, a linked list of these structures is    kept on the stack to avoid infinite recursion.  */
+end_comment
+
+begin_struct
+struct|struct
+name|debug_type_real_list
+block|{
+comment|/* Next type on list.  */
+name|struct
+name|debug_type_real_list
+modifier|*
+name|next
+decl_stmt|;
+comment|/* The type we are checking.  */
+name|struct
+name|debug_type
+modifier|*
+name|t
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Local functions.  */
 end_comment
 
@@ -1276,6 +1300,10 @@ operator|(
 name|PTR
 operator|,
 name|debug_type
+operator|,
+expr|struct
+name|debug_type_real_list
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1576,6 +1604,7 @@ name|struct
 name|debug_handle
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|debug_namespace
@@ -1785,7 +1814,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_add_to_current_namespace: no current file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2135,7 +2167,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_start_source: no debug_set_filename call"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2380,7 +2415,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_record_function: no debug_set_filename call"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2615,7 +2653,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_record_parameter: no current function"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2763,7 +2804,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_end_function: no current function"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2783,7 +2827,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_end_function: some blocks were not closed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2874,7 +2921,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_start_block: no current block"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3028,7 +3078,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_end_block: no current block"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3052,7 +3105,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_end_block: attempt to close top level block"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3136,7 +3192,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_record_line: no current unit"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3349,17 +3408,22 @@ name|name
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* FIXME */
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_start_common_block: not implemented"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3382,17 +3446,22 @@ name|name
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* FIXME */
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_end_common_block: not implemented"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3734,23 +3803,30 @@ name|addr
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_type
 name|type
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_vma
 name|addr
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* FIXME.  */
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_record_label not implemented"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3858,7 +3934,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_record_variable: no current file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3914,7 +3993,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_record_variable: no current block"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4041,6 +4123,7 @@ name|struct
 name|debug_handle
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|enum
 name|debug_type_kind
@@ -6138,7 +6221,10 @@ break|break;
 default|default:
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_make_undefined_type: unsupported kind"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6202,6 +6288,7 @@ name|visibility
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_type
 name|type
@@ -6303,6 +6390,7 @@ name|visibility
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -6427,6 +6515,7 @@ name|visibility
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -6536,6 +6625,7 @@ name|variants
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -6625,6 +6715,7 @@ name|context
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -6751,6 +6842,7 @@ name|volatilep
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
@@ -6926,11 +7018,14 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_name_type: no current file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|DEBUG_TYPE_NULL
 return|;
 block|}
 name|t
@@ -7020,7 +7115,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|DEBUG_TYPE_NULL
 return|;
 name|nm
 operator|->
@@ -7119,7 +7214,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_tag_type: no current file"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7159,7 +7257,10 @@ name|type
 return|;
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_tag_type: extra tag attempted"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7253,7 +7354,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|DEBUG_TYPE_NULL
 return|;
 name|nm
 operator|->
@@ -7295,6 +7396,7 @@ name|size
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_type
 name|type
@@ -7322,7 +7424,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Warning: changing type size from %d to %d\n"
+argument_list|)
 argument_list|,
 name|type
 operator|->
@@ -7398,7 +7503,10 @@ condition|)
 block|{
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_find_named_type: no current compilation unit"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7791,7 +7899,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get a base type.  */
+comment|/* Get a base type.  We build a linked list on the stack to avoid    crashing if the type is defined circularly.  */
 end_comment
 
 begin_function
@@ -7804,6 +7912,8 @@ parameter_list|(
 name|handle
 parameter_list|,
 name|type
+parameter_list|,
+name|list
 parameter_list|)
 name|PTR
 name|handle
@@ -7811,7 +7921,21 @@ decl_stmt|;
 name|debug_type
 name|type
 decl_stmt|;
+name|struct
+name|debug_type_real_list
+modifier|*
+name|list
+decl_stmt|;
 block|{
+name|struct
+name|debug_type_real_list
+modifier|*
+name|l
+decl_stmt|;
+name|struct
+name|debug_type_real_list
+name|rl
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -7823,6 +7947,86 @@ default|default:
 return|return
 name|type
 return|;
+case|case
+name|DEBUG_KIND_INDIRECT
+case|:
+case|case
+name|DEBUG_KIND_NAMED
+case|:
+case|case
+name|DEBUG_KIND_TAGGED
+case|:
+break|break;
+block|}
+for|for
+control|(
+name|l
+operator|=
+name|list
+init|;
+name|l
+operator|!=
+name|NULL
+condition|;
+name|l
+operator|=
+name|l
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|l
+operator|->
+name|t
+operator|==
+name|type
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"debug_get_real_type: circular debug information for %s\n"
+argument_list|)
+argument_list|,
+name|debug_get_type_name
+argument_list|(
+name|handle
+argument_list|,
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+block|}
+name|rl
+operator|.
+name|next
+operator|=
+name|list
+expr_stmt|;
+name|rl
+operator|.
+name|t
+operator|=
+name|type
+expr_stmt|;
+switch|switch
+condition|(
+name|type
+operator|->
+name|kind
+condition|)
+block|{
+comment|/* The default case is just here to avoid warnings.  */
+default|default:
 case|case
 name|DEBUG_KIND_INDIRECT
 case|:
@@ -7852,6 +8056,9 @@ operator|.
 name|kindirect
 operator|->
 name|slot
+argument_list|,
+operator|&
+name|rl
 argument_list|)
 return|;
 return|return
@@ -7875,6 +8082,9 @@ operator|.
 name|knamed
 operator|->
 name|type
+argument_list|,
+operator|&
+name|rl
 argument_list|)
 return|;
 block|}
@@ -7918,8 +8128,19 @@ argument_list|(
 name|handle
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NULL
+condition|)
+return|return
+name|DEBUG_KIND_ILLEGAL
+return|;
 return|return
 name|type
 operator|->
@@ -8174,8 +8395,19 @@ argument_list|(
 name|handle
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NULL
+condition|)
+return|return
+name|DEBUG_TYPE_NULL
+return|;
 switch|switch
 condition|(
 name|type
@@ -8259,8 +8491,19 @@ argument_list|(
 name|handle
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 switch|switch
 condition|(
 name|type
@@ -8358,8 +8601,19 @@ argument_list|(
 name|handle
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 switch|switch
 condition|(
 name|type
@@ -8453,8 +8707,19 @@ argument_list|(
 name|handle
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 switch|switch
 condition|(
 name|type
@@ -8510,6 +8775,7 @@ name|field
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_field
 name|field
@@ -8552,6 +8818,7 @@ name|field
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_field
 name|field
@@ -8592,6 +8859,7 @@ name|field
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_field
 name|field
@@ -8644,6 +8912,7 @@ name|field
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_field
 name|field
@@ -8697,6 +8966,7 @@ name|field
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_field
 name|field
@@ -8735,6 +9005,7 @@ name|field
 parameter_list|)
 name|PTR
 name|handle
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|debug_field
 name|field
@@ -9427,6 +9698,8 @@ specifier|const
 name|char
 modifier|*
 name|tag
+init|=
+name|NULL
 decl_stmt|;
 comment|/* If we have a name for this type, just output it.  We only output      typedef names after they have been defined.  We output type tags      whenever we are not actually defining them.  */
 if|if
@@ -9530,8 +9803,27 @@ operator|)
 name|info
 argument_list|,
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|real
+operator|==
+name|NULL
+condition|)
+return|return
+call|(
+modifier|*
+name|fns
+operator|->
+name|empty_type
+call|)
+argument_list|(
+name|fhandle
+argument_list|)
+return|;
 name|id
 operator|=
 literal|0
@@ -9667,10 +9959,6 @@ name|info
 operator|->
 name|mark
 expr_stmt|;
-name|tag
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|name
@@ -9718,7 +10006,10 @@ name|DEBUG_KIND_ILLEGAL
 case|:
 name|debug_error
 argument_list|(
+name|_
+argument_list|(
 literal|"debug_write_type: illegal type encountered"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13628,6 +13919,7 @@ name|a2
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -13643,6 +13935,13 @@ name|a2
 argument_list|)
 condition|)
 break|break;
+operator|++
+name|a1
+expr_stmt|;
+operator|++
+name|a2
+expr_stmt|;
+block|}
 name|ret
 operator|=
 operator|*
@@ -14068,6 +14367,7 @@ name|a2
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -14083,6 +14383,13 @@ name|a2
 argument_list|)
 condition|)
 break|break;
+operator|++
+name|a1
+expr_stmt|;
+operator|++
+name|a2
+expr_stmt|;
+block|}
 name|ret
 operator|=
 operator|*
@@ -14547,6 +14854,8 @@ argument_list|,
 name|f1
 operator|->
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|,
 name|debug_get_real_type
@@ -14559,6 +14868,8 @@ argument_list|,
 name|f2
 operator|->
 name|type
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 condition|)

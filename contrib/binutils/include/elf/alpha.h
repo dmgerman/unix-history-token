@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ALPHA ELF support for BFD.    Copyright (C) 1996 Free Software Foundation, Inc.     By Eric Youngdale,<eric@aib.com>.  No processor supplement available    for this platform.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ALPHA ELF support for BFD.    Copyright (C) 1996, 1998 Free Software Foundation, Inc.     By Eric Youngdale,<eric@aib.com>.  No processor supplement available    for this platform.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -113,136 +113,191 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Alpha relocs.  */
+comment|/* Special values for the st_other field in the symbol table.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_ALPHA_NONE
-value|0
+name|STO_ALPHA_NOPV
+value|0x80
 end_define
+
+begin_define
+define|#
+directive|define
+name|STO_ALPHA_STD_GPLOAD
+value|0x88
+end_define
+
+begin_include
+include|#
+directive|include
+file|"elf/reloc-macros.h"
+end_include
+
+begin_comment
+comment|/* Alpha relocs.  */
+end_comment
+
+begin_macro
+name|START_RELOC_NUMBERS
+argument_list|(
+argument|elf_alpha_reloc_type
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_NONE
+argument_list|,
+literal|0
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* No reloc */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_REFLONG
-value|1
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_REFLONG
+argument_list|,
+literal|1
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Direct 32 bit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_REFQUAD
-value|2
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_REFQUAD
+argument_list|,
+literal|2
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Direct 64 bit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_GPREL32
-value|3
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_GPREL32
+argument_list|,
+literal|3
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* GP relative 32 bit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_LITERAL
-value|4
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_LITERAL
+argument_list|,
+literal|4
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* GP relative 16 bit w/optimization */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_LITUSE
-value|5
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_LITUSE
+argument_list|,
+literal|5
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Optimization hint for LITERAL */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_GPDISP
-value|6
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_GPDISP
+argument_list|,
+literal|6
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Add displacement to GP */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_BRADDR
-value|7
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_BRADDR
+argument_list|,
+literal|7
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* PC+4 relative 23 bit shifted */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_HINT
-value|8
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_HINT
+argument_list|,
+literal|8
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* PC+4 relative 16 bit shifted */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_SREL16
-value|9
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_SREL16
+argument_list|,
+literal|9
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* PC relative 16 bit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_SREL32
-value|10
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_SREL32
+argument_list|,
+literal|10
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* PC relative 32 bit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_SREL64
-value|11
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_SREL64
+argument_list|,
+literal|11
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* PC relative 64 bit */
@@ -252,160 +307,196 @@ begin_comment
 comment|/* Inherited these from ECOFF, but they are not particularly useful    and are depreciated.  And not implemented in the BFD, btw.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_OP_PUSH
-value|12
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_OP_PUSH
+argument_list|,
+literal|12
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* OP stack push */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_OP_STORE
-value|13
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_OP_STORE
+argument_list|,
+literal|13
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* OP stack pop and store */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_OP_PSUB
-value|14
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_OP_PSUB
+argument_list|,
+literal|14
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* OP stack subtract */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_OP_PRSHIFT
-value|15
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_OP_PRSHIFT
+argument_list|,
+literal|15
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* OP stack right shift */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_GPVALUE
-value|16
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_GPVALUE
+argument_list|,
+literal|16
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_GPRELHIGH
-value|17
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_GPRELHIGH
+argument_list|,
+literal|17
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_GPRELLOW
-value|18
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_GPRELLOW
+argument_list|,
+literal|18
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_IMMED_GP_16
-value|19
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_IMMED_GP_16
+argument_list|,
+literal|19
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_IMMED_GP_HI32
-value|20
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_IMMED_GP_HI32
+argument_list|,
+literal|20
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_IMMED_SCN_HI32
-value|21
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_IMMED_SCN_HI32
+argument_list|,
+literal|21
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_IMMED_BR_HI32
-value|22
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_IMMED_BR_HI32
+argument_list|,
+literal|22
+argument_list|)
+end_macro
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_IMMED_LO32
-value|23
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_IMMED_LO32
+argument_list|,
+literal|23
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* These relocations are specific to shared libraries.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_COPY
-value|24
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_COPY
+argument_list|,
+literal|24
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Copy symbol at runtime */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_GLOB_DAT
-value|25
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_GLOB_DAT
+argument_list|,
+literal|25
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Create GOT entry */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_JMP_SLOT
-value|26
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_JMP_SLOT
+argument_list|,
+literal|26
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Create PLT entry */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_RELATIVE
-value|27
-end_define
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ALPHA_RELATIVE
+argument_list|,
+literal|27
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* Adjust by program base */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|R_ALPHA_max
-value|28
-end_define
+begin_macro
+name|EMPTY_RELOC
+argument_list|(
+argument|R_ALPHA_max
+argument_list|)
+end_macro
+
+begin_macro
+name|END_RELOC_NUMBERS
+end_macro
 
 begin_endif
 endif|#

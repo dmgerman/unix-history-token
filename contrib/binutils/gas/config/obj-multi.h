@@ -1,7 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hi */
+comment|/* Multiple object format emulation.    Copyright (C) 1995, 96, 97, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OBJ_MULTI_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_OBJ_MULTI_H
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_HEADER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|OBJ_HEADER
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -19,6 +48,7 @@ begin_define
 define|#
 directive|define
 name|OUTPUT_FLAVOR
+define|\
 value|(this_format->flavor)
 end_define
 
@@ -31,35 +61,42 @@ name|S
 parameter_list|,
 name|P
 parameter_list|)
-value|(this_format->frob_symbol)(S,&(P))
+define|\
+value|(*this_format->frob_symbol) (S,&(P))
 end_define
 
 begin_define
 define|#
 directive|define
 name|obj_frob_file
-value|(this_format->frob_file)
+parameter_list|()
+define|\
+value|(this_format->frob_file				\ 	 ? (*this_format->frob_file) ()			\ 	 : (void) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|obj_frob_file_after_relocs
-value|(this_format->frob_file_after_relocs)
+parameter_list|()
+define|\
+value|(this_format->frob_file_after_relocs		\ 	 ? (*this_format->frob_file_after_relocs) ()	\ 	 : (void) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|obj_ecoff_set_ext
-value|(this_format->ecoff_set_ext)
+define|\
+value|(*this_format->ecoff_set_ext)
 end_define
 
 begin_define
 define|#
 directive|define
 name|obj_pop_insert
-value|(this_format->pop_insert)
+define|\
+value|(*this_format->pop_insert)
 end_define
 
 begin_define
@@ -67,92 +104,134 @@ define|#
 directive|define
 name|obj_read_begin_hook
 parameter_list|()
-value|(this_format->read_begin_hook?this_format->read_begin_hook():(void)0)
+define|\
+value|(this_format->read_begin_hook			\ 	 ? (*this_format->read_begin_hook) ()		\ 	 : (void) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|obj_symbol_new_hook
-value|(this_format->symbol_new_hook)
+parameter_list|(
+name|S
+parameter_list|)
+define|\
+value|(this_format->symbol_new_hook			\ 	 ? (*this_format->symbol_new_hook) (S)		\ 	 : (void) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|obj_sec_sym_ok_for_reloc
-value|(this_format->sec_sym_ok_for_reloc)
+parameter_list|(
+name|A
+parameter_list|)
+define|\
+value|(this_format->sec_sym_ok_for_reloc		\ 	 ? (*this_format->sec_sym_ok_for_reloc) (A)	\ 	 : 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|S_GET_SIZE
-value|(this_format->s_get_size)
+define|\
+value|(*this_format->s_get_size)
 end_define
 
 begin_define
 define|#
 directive|define
 name|S_SET_SIZE
-value|(this_format->s_set_size)
+define|\
+value|(*this_format->s_set_size)
 end_define
 
 begin_define
 define|#
 directive|define
 name|S_GET_ALIGN
-value|(this_format->s_get_align)
+define|\
+value|(*this_format->s_get_align)
 end_define
 
 begin_define
 define|#
 directive|define
 name|S_SET_ALIGN
-value|(this_format->s_set_align)
+define|\
+value|(*this_format->s_set_align)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_GET_OTHER
+define|\
+value|(*this_format->s_get_other)
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_GET_DESC
+define|\
+value|(*this_format->s_get_desc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OBJ_COPY_SYMBOL_ATTRIBUTES
-value|(this_format->copy_symbol_attributes)
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|(this_format->copy_symbol_attributes		\ 	 ? (*this_format->copy_symbol_attributes) (d, s) \ 	 : (void) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OBJ_PROCESS_STAB
-value|(this_format->process_stab)
+parameter_list|(
+name|SEG
+parameter_list|,
+name|W
+parameter_list|,
+name|S
+parameter_list|,
+name|T
+parameter_list|,
+name|O
+parameter_list|,
+name|D
+parameter_list|)
+define|\
+value|(this_format->process_stab			\ 	 ? (*this_format->process_stab) (SEG,W,S,T,O,D)	\ 	 : (void) 0)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OBJ_MAYBE_ECOFF
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|OBJ_MAYBE_ELF
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|TC_MIPS
-argument_list|)
-operator|)
-end_if
+end_ifdef
 
-begin_define
-define|#
-directive|define
-name|ECOFF_DEBUGGING
-value|1
-end_define
+begin_comment
+comment|/* We need OBJ_SYMFIELD_TYPE so that symbol_get_obj is defined in symbol.c    We also need various STAB defines for stab.c  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"obj-elf.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -160,109 +239,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FIXME: What's the story here?  Why do we have to define    OBJ_SYMFIELD_TYPE both here and in obj-elf.h?  */
+comment|/* !OBJ_HEADER */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_MAYBE_ELF
-end_ifdef
-
-begin_struct
-struct|struct
-name|elf_obj_sy
-block|{
-name|expressionS
-modifier|*
-name|size
-decl_stmt|;
-name|char
-modifier|*
-name|versioned_name
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|OBJ_SYMFIELD_TYPE
-value|struct elf_obj_sy
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELF_TARGET_SYMBOL_FIELDS
-value|int local:1;
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ELF_TARGET_SYMBOL_FIELDS
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ECOFF_DEBUGGING
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|efdr
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|localsym
-struct_decl|;
-end_struct_decl
-
-begin_define
-define|#
-directive|define
-name|ECOFF_DEBUG_TARGET_SYMBOL_FIELDS
-value|struct efdr *ecoff_file; struct localsym *ecoff_symbol; valueT ecoff_extern_size;
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ECOFF_DEBUG_TARGET_SYMBOL_FIELDS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|TARGET_SYMBOL_FIELDS
-define|\
-value|ELF_TARGET_SYMBOL_FIELDS \ 	ECOFF_DEBUG_TARGET_SYMBOL_FIELDS
-end_define
+begin_comment
+comment|/* _OBJ_MULTI_H */
+end_comment
 
 end_unit
 

@@ -49,7 +49,7 @@ parameter_list|,
 name|length
 parameter_list|)
 specifier|register
-name|CONST
+specifier|const
 name|PTR
 name|src_void
 decl_stmt|;
@@ -60,14 +60,14 @@ name|size_t
 name|length
 decl_stmt|;
 block|{
-name|CONST
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|src
 init|=
 operator|(
-name|CONST
+specifier|const
 name|unsigned
 name|char
 operator|*

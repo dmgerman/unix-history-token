@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.h -> header file for expr.c    Copyright (C) 1987, 92-97, 1998 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* expr.h -> header file for expr.c    Copyright (C) 1987, 92-98, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -102,6 +102,42 @@ block|,
 comment|/* (X_add_symbol || X_op_symbol) + X_add_number.  */
 name|O_logical_or
 block|,
+comment|/* X_op_symbol [ X_add_symbol ] */
+name|O_index
+block|,
+comment|/* machine dependent operators */
+name|O_md1
+block|,
+name|O_md2
+block|,
+name|O_md3
+block|,
+name|O_md4
+block|,
+name|O_md5
+block|,
+name|O_md6
+block|,
+name|O_md7
+block|,
+name|O_md8
+block|,
+name|O_md9
+block|,
+name|O_md10
+block|,
+name|O_md11
+block|,
+name|O_md12
+block|,
+name|O_md13
+block|,
+name|O_md14
+block|,
+name|O_md15
+block|,
+name|O_md16
+block|,
 comment|/* this must be the largest value */
 name|O_max
 block|}
@@ -115,14 +151,12 @@ struct|struct
 name|expressionS
 block|{
 comment|/* The main symbol.  */
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|X_add_symbol
 decl_stmt|;
 comment|/* The second symbol, if needed.  */
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|X_op_symbol
 decl_stmt|;
@@ -137,14 +171,13 @@ name|__GNUC__
 name|operatorT
 name|X_op
 range|:
-literal|5
+literal|8
 decl_stmt|;
 else|#
 directive|else
 name|unsigned
+name|char
 name|X_op
-range|:
-literal|5
 decl_stmt|;
 endif|#
 directive|endif
@@ -154,6 +187,12 @@ name|int
 name|X_unsigned
 range|:
 literal|1
+decl_stmt|;
+comment|/* 7 additional bits can be defined if needed.  */
+comment|/* Machine dependent field */
+name|unsigned
+name|short
+name|X_md
 decl_stmt|;
 block|}
 name|expressionS
@@ -247,6 +286,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|expr_set_precedence
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|segT
 name|expr
 name|PARAMS
@@ -279,8 +331,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|make_expr_symbol
 name|PARAMS
@@ -301,8 +352,7 @@ name|expr_symbol_where
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|char
@@ -319,8 +369,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|expr_build_uconstant
 name|PARAMS
@@ -334,8 +383,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|expr_build_unary
 name|PARAMS
@@ -343,8 +391,7 @@ argument_list|(
 operator|(
 name|operatorT
 operator|,
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|)
 argument_list|)
@@ -353,8 +400,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|symbol
+name|symbolS
 modifier|*
 name|expr_build_binary
 name|PARAMS
@@ -362,13 +408,25 @@ argument_list|(
 operator|(
 name|operatorT
 operator|,
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
-expr|struct
-name|symbol
+name|symbolS
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|symbolS
+modifier|*
+name|expr_build_dot
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -151,6 +151,34 @@ begin_comment
 comment|/* ! BFD_ASSEMBLER */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|pseudo_typeS
+name|aout_pseudo_table
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|obj_pop_insert
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|obj_pop_insert
+parameter_list|()
+value|pop_insert (aout_pseudo_table)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* SYMBOL TABLE */
 end_comment
@@ -190,7 +218,8 @@ name|S
 parameter_list|,
 name|V
 parameter_list|)
-value|(aout_symbol((S)->bsym)->other = (V))
+define|\
+value|(aout_symbol (symbol_get_bfdsym (S))->other = (V))
 end_define
 
 begin_define
@@ -202,7 +231,8 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|(aout_symbol((S)->bsym)->type = (T))
+define|\
+value|(aout_symbol (symbol_get_bfdsym (S))->type = (T))
 end_define
 
 begin_define
@@ -214,7 +244,8 @@ name|S
 parameter_list|,
 name|D
 parameter_list|)
-value|(aout_symbol((S)->bsym)->desc = (D))
+define|\
+value|(aout_symbol (symbol_get_bfdsym (S))->desc = (D))
 end_define
 
 begin_define
@@ -224,7 +255,8 @@ name|S_GET_OTHER
 parameter_list|(
 name|S
 parameter_list|)
-value|(aout_symbol((S)->bsym)->other)
+define|\
+value|(aout_symbol (symbol_get_bfdsym (S))->other)
 end_define
 
 begin_define
@@ -234,7 +266,8 @@ name|S_GET_TYPE
 parameter_list|(
 name|S
 parameter_list|)
-value|(aout_symbol((S)->bsym)->type)
+define|\
+value|(aout_symbol (symbol_get_bfdsym (S))->type)
 end_define
 
 begin_define
@@ -244,7 +277,8 @@ name|S_GET_DESC
 parameter_list|(
 name|S
 parameter_list|)
-value|(aout_symbol((S)->bsym)->desc)
+define|\
+value|(aout_symbol (symbol_get_bfdsym (S))->desc)
 end_define
 
 begin_decl_stmt
@@ -287,8 +321,7 @@ name|obj_aout_frob_symbol
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|symbol
+name|symbolS
 operator|*
 operator|,
 name|int
@@ -1076,6 +1109,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|obj_read_begin_hook
+parameter_list|()
+value|{;}
+end_define
 
 begin_define
 define|#

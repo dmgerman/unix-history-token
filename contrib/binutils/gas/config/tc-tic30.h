@@ -54,6 +54,12 @@ name|TARGET_BYTES_BIG_ENDIAN
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|WORKING_DOT_WORD
+end_define
+
 begin_decl_stmt
 name|char
 modifier|*
