@@ -227,12 +227,46 @@ directive|include
 file|<pci/if_xlreg.h>
 end_include
 
+begin_comment
+comment|/*   * TX Checksumming is disabled by default for two reasons:  * - TX Checksumming will occasionally produce corrupt packets  * - TX Checksumming seems to reduce performance  *  * Only 905B/C cards were reported to have this problem, it is possible  * that later chips _may_ be immune.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XL905B_TXCSUM_BROKEN
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XL905B_TXCSUM_BROKEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|XL905B_CSUM_FEATURES
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|XL905B_CSUM_FEATURES
 value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Various supported device vendors/types and their names.  */
@@ -6656,12 +6690,25 @@ name|if_hwassist
 operator|=
 name|XL905B_CSUM_FEATURES
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XL905B_TXCSUM_BROKEN
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_RXCSUM
+expr_stmt|;
+else|#
+directive|else
 name|ifp
 operator|->
 name|if_capabilities
 operator||=
 name|IFCAP_HWCSUM
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|ifp
@@ -10791,6 +10838,9 @@ name|status
 operator|=
 name|XL_TXSTAT_RND_DEFEAT
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|XL905B_TXCSUM_BROKEN
 if|if
 condition|(
 name|m_head
@@ -10843,6 +10893,8 @@ operator||=
 name|XL_TXSTAT_UDPCKSUM
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|->
 name|xl_ptr
