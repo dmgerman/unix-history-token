@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)context.c	3.2 83/11/22"
+literal|"@(#)context.c	3.3 83/12/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,7 @@ literal|0
 expr_stmt|;
 name|cx
 operator|.
-name|x_baderr
+name|x_noerrwin
 operator|=
 literal|0
 expr_stmt|;

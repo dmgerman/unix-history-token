@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)context.h	3.1 83/11/22  */
+comment|/*  *	@(#)context.h	3.2 83/12/07  */
 end_comment
 
 begin_struct
@@ -29,22 +29,19 @@ name|FILE
 modifier|*
 name|X_fp
 decl_stmt|;
+name|short
+name|X_lineno
+decl_stmt|;
 name|char
 name|X_bol
 decl_stmt|;
-name|int
-name|X_lineno
-decl_stmt|;
-name|int
-name|X_errlineno
+name|char
+name|X_noerrwin
 decl_stmt|;
 name|struct
 name|ww
 modifier|*
 name|X_errwin
-decl_stmt|;
-name|char
-name|X_baderr
 decl_stmt|;
 block|}
 name|x_f
@@ -131,13 +128,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|x_errlineno
-value|x_un.x_f.X_errlineno
-end_define
-
-begin_define
-define|#
-directive|define
 name|x_bol
 value|x_un.x_f.X_bol
 end_define
@@ -152,8 +142,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|x_baderr
-value|x_un.x_f.X_baderr
+name|x_noerrwin
+value|x_un.x_f.X_noerrwin
 end_define
 
 begin_define
