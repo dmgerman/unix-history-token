@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -309,19 +309,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOUNT_AFS
-value|13
+name|MOUNT_ISOFS
+value|14
 end_define
 
 begin_comment
-comment|/* Andrew Filesystem */
+comment|/* ISO9660 (aka CDROM) Filesystem */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MOUNT_MAXTYPE
-value|13
+value|14
 end_define
 
 begin_define
@@ -354,8 +354,12 @@ value|\ 	"kernfs",
 comment|/* 11 MOUNT_KERNFS */
 value|\ 	"procfs",
 comment|/* 12 MOUNT_PROCFS */
+value|\ 	"afs",
+comment|/* 13 MOUNT_AFS */
+value|\ 	"iso9660fs",
+comment|/* 14 MOUNT_ISOFS */
 value|\ 	0,
-comment|/* 13 MOUNT_SPARE */
+comment|/* 15 MOUNT_SPARE */
 value|\ }
 end_define
 
@@ -1254,6 +1258,16 @@ directive|include
 file|<net/radix.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_comment
+comment|/* XXX for AF_MAX */
+end_comment
+
 begin_comment
 comment|/*  * Network address lookup element  */
 end_comment
@@ -1280,6 +1294,34 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Network export information  */
+end_comment
+
+begin_struct
+struct|struct
+name|netexport
+block|{
+name|struct
+name|netcred
+name|ne_defexported
+decl_stmt|;
+comment|/* Default export */
+name|struct
+name|radix_node_head
+modifier|*
+name|ne_rtable
+index|[
+name|AF_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* Individual exports */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
@@ -1288,6 +1330,51 @@ end_endif
 begin_comment
 comment|/* KERNEL */
 end_comment
+
+begin_comment
+comment|/*  * Export arguments for local filesystem mount calls.  */
+end_comment
+
+begin_struct
+struct|struct
+name|export_args
+block|{
+name|int
+name|ex_flags
+decl_stmt|;
+comment|/* export related flags */
+name|uid_t
+name|ex_root
+decl_stmt|;
+comment|/* mapping for root uid */
+name|struct
+name|ucred
+name|ex_anon
+decl_stmt|;
+comment|/* mapping for anonymous user */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_addr
+decl_stmt|;
+comment|/* net address to which exported */
+name|int
+name|ex_addrlen
+decl_stmt|;
+comment|/* and the net address length */
+name|struct
+name|sockaddr
+modifier|*
+name|ex_mask
+decl_stmt|;
+comment|/* mask of valid bits in saddr */
+name|int
+name|ex_masklen
+decl_stmt|;
+comment|/* and the smask length */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Arguments to mount UFS-based filesystems  */
@@ -1302,39 +1389,11 @@ modifier|*
 name|fspec
 decl_stmt|;
 comment|/* block special device to mount */
-name|int
-name|exflags
-decl_stmt|;
-comment|/* export related flags */
-name|uid_t
-name|exroot
-decl_stmt|;
-comment|/* mapping for root uid */
 name|struct
-name|ucred
-name|anon
+name|export_args
+name|export
 decl_stmt|;
-comment|/* mapping for anonymous user */
-name|struct
-name|sockaddr
-modifier|*
-name|saddr
-decl_stmt|;
-comment|/* net address to which exported */
-name|int
-name|slen
-decl_stmt|;
-comment|/* and the net address length */
-name|struct
-name|sockaddr
-modifier|*
-name|smask
-decl_stmt|;
-comment|/* mask of valid bits in saddr */
-name|int
-name|msklen
-decl_stmt|;
-comment|/* and the smask length */
+comment|/* network export information */
 block|}
 struct|;
 end_struct
@@ -1355,13 +1414,18 @@ name|mfs_args
 block|{
 name|char
 modifier|*
-name|name
+name|fspec
 decl_stmt|;
 comment|/* name to export for statfs */
+name|struct
+name|export_args
+name|export
+decl_stmt|;
+comment|/* if exported MFSes are supported */
 name|caddr_t
 name|base
 decl_stmt|;
-comment|/* base address of file system in memory */
+comment|/* base of file system in memory */
 name|u_long
 name|size
 decl_stmt|;
@@ -1377,6 +1441,91 @@ end_endif
 
 begin_comment
 comment|/* MFS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISOFS
+end_ifdef
+
+begin_comment
+comment|/*  * Arguments to mount ISO 9660 filesystems.  */
+end_comment
+
+begin_struct
+struct|struct
+name|iso_args
+block|{
+name|char
+modifier|*
+name|fspec
+decl_stmt|;
+comment|/* block special device to mount */
+name|struct
+name|export_args
+name|export
+decl_stmt|;
+comment|/* network export info */
+name|int
+name|flags
+decl_stmt|;
+comment|/* mounting flags, see below */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_NORRIP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* disable Rock Ridge Ext.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_GENS
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* enable generation numbers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_EXTATT
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* enable extended attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_NOTRANS
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* disable filename translation */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ISOFS */
 end_comment
 
 begin_ifdef
@@ -1844,6 +1993,73 @@ comment|/*  * exported vnode operations  */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|mount
+modifier|*
+name|getvfs
+name|__P
+argument_list|(
+operator|(
+name|fsid_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* return vfs given fsid */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vfs_export
+comment|/* process mount export info */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+expr|struct
+name|netexport
+operator|*
+operator|,
+expr|struct
+name|export_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|netcred
+modifier|*
+name|vfs_export_lookup
+comment|/* lookup host in fs export list */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+expr|struct
+name|netexport
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|vfs_lock
 name|__P
@@ -1852,7 +2068,6 @@ operator|(
 expr|struct
 name|mount
 operator|*
-name|mp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1860,6 +2075,24 @@ end_decl_stmt
 
 begin_comment
 comment|/* lock a vfs */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vfs_mountedon
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* is a vfs mounted on vp */
 end_comment
 
 begin_decl_stmt
@@ -1871,7 +2104,6 @@ operator|(
 expr|struct
 name|mount
 operator|*
-name|mp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1879,26 +2111,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* unlock a vfs */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|mount
-modifier|*
-name|getvfs
-name|__P
-argument_list|(
-operator|(
-name|fsid_t
-operator|*
-name|fsid
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return vfs given fsid */
 end_comment
 
 begin_extern
