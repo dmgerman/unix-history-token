@@ -2485,8 +2485,10 @@ name|mask
 operator|)
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFN
 argument_list|(
+literal|2
+argument_list|,
 operator|(
 literal|"usb: sleeping on %p\n"
 operator|,
