@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.dem
 end_comment
 
 begin_comment
-comment|/*  * Network parameters, used twice in sotfc to store what we want and what  * we have.  *  * The current parameters are ONLY valid in a function called from the runq  * and should not be accessed directly from ioctls.  */
+comment|/*  * Network parameters, used twice in softc to store what we want and what  * we have.  *  * The current parameters are ONLY valid in a function called from the runq  * and should not be accessed directly from ioctls.  */
 end_comment
 
 begin_struct
@@ -26,6 +26,19 @@ decl_stmt|;
 name|int
 name|np_promisc
 decl_stmt|;
+comment|/* Promiscious mode status	*/
+name|int
+name|np_framing
+decl_stmt|;
+comment|/* Packet framing types		*/
+name|int
+name|np_auth
+decl_stmt|;
+comment|/* Authentication status	*/
+name|int
+name|np_havenet
+decl_stmt|;
+comment|/* True if we have a network	*/
 block|}
 struct|;
 end_struct
@@ -171,14 +184,17 @@ modifier|*
 name|irq_handle
 decl_stmt|;
 comment|/* Handle for irq handler */
+name|u_int8_t
+name|sc_ccsinuse
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* ccss' in use -- not for tx	*/
 name|u_char
 name|sc_gone
 decl_stmt|;
 comment|/* 1 = Card bailed out		*/
-name|int
-name|framing
-decl_stmt|;
-comment|/* Packet framing types		*/
 name|struct
 name|ray_ecf_startup_v5
 name|sc_ecf_startup
@@ -203,17 +219,6 @@ name|ray_nw_param
 name|sc_d
 decl_stmt|;
 comment|/* desired network params	*/
-name|int
-name|sc_havenet
-decl_stmt|;
-comment|/* true if we have a network	*/
-name|u_int8_t
-name|sc_ccsinuse
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* ccss' in use -- not for tx	*/
 name|int
 name|sc_checkcounters
 decl_stmt|;
@@ -361,21 +366,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Framing types  */
-end_comment
-
-begin_comment
-comment|/* XXX maybe better as part of the if structure? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_FRAMING_WEBGEAR
-value|0
-end_define
 
 begin_comment
 comment|/*  * Macro's and constants  */
@@ -631,6 +621,60 @@ name|n
 parameter_list|)
 define|\
 value|SRAM_WRITE_REGION((sc), (off) + offsetof(struct s, f), (p), (n))
+end_define
+
+begin_comment
+comment|/* Framing types */
+end_comment
+
+begin_comment
+comment|/* XXX maybe better as part of the if structure? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_FRAMING_ENCAPSULATION
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_FRAMING_TRANSLATION
+value|1
+end_define
+
+begin_comment
+comment|/* Authentication states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_AUTH_UNAUTH
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_AUTH_WAITING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_AUTH_AUTH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_AUTH_NEEDED
+value|3
 end_define
 
 begin_comment
@@ -917,6 +961,24 @@ parameter_list|)
 value|do {			\     (error) = ray_com_runq_add((sc), (com), (ncom), (mesg));		\     if ((error) == ENXIO) {						\ 	    RAY_COM_FREE((com), (ncom));				\ 	    return (error);						\     } else if ((error)&& ((error) != ENXIO))				\ 	    RAY_PRINTF(sc, "got error from runq 0x%x", (error));	\ } while (0)
 end_define
 
+begin_comment
+comment|/*  * There are a number of entry points into the ray_init_xxx routines.  * These can be classed into two types: a) those that happen as a result  * of a change to the cards operating parameters (e.g. BSSID change), and  * b) those that happen as a result of a change to the interface parameters  * (e.g. a change to the IP address). The second set of entries need not  * send a command to the card when the card is IFF_RUNNING. The  * RAY_COM_FCHKRUNNING flags indicates when the RUNNING flag should be  * checked, and this macro does the necessary check and command abort.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_COM_CHKRUNNING
+parameter_list|(
+name|sc
+parameter_list|,
+name|com
+parameter_list|,
+name|ifp
+parameter_list|)
+value|do {				\     if (((com)->c_flags& RAY_COM_FCHKRUNNING)&&			\ 	((ifp)->if_flags& IFF_RUNNING)) {				\ 	    ray_com_runq_done(sc);					\ 	    return;							\ } } while (0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1016,6 +1078,39 @@ end_endif
 
 begin_comment
 comment|/* RAY_RECERR */
+end_comment
+
+begin_comment
+comment|/* XXX this should be in CCSERR but don't work - probably need to use ##ifp->(iferrcounter)++;						\*/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RAY_CCSERR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RAY_CCSERR
+parameter_list|(
+name|sc
+parameter_list|,
+name|status
+parameter_list|,
+name|iferrcounter
+parameter_list|)
+value|do {			\     struct ifnet *ifp =&(sc)->arpcom.ac_if;				\     char *ss[] = RAY_CCS_STATUS_STRINGS;				\     if ((status) != RAY_CCS_STATUS_COMPLETE) {				\ 	if (ifp->if_flags& IFF_DEBUG) {				\ 	    device_printf((sc)->dev,					\ 	        "%s(%d) ECF command completed with status %s\n",	\ 		__FUNCTION__ , __LINE__ , ss[(status)]);		\ } } } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RAY_CCSERR */
 end_comment
 
 begin_ifndef

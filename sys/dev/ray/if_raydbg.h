@@ -8,13 +8,13 @@ comment|/*  * Debugging odds and odds  */
 end_comment
 
 begin_comment
-comment|/*  * RAY_DEBUG settings  *  *	RECERR		Recoverable error's, deprecated use RAY_RECERR macro  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	MBUF		MBUFs dumped - needs one of TX, RX, MGT, or CTL  *	RX		packet types reported  *	CM		common memory re-mapping  *	COM		new command sleep/wakeup  *	STOP		driver detaching  *	CTL		CTL packets  *	MGT		MGT packets  *	TX		TX routine info  *	DCOM		dump comq entries  */
+comment|/*  * RAY_DEBUG settings  *  *	AUTH		Authentication  *	SUBR		Subroutine entry  *	BOOTPARAM	Startup CM dump  *	STARTJOIN	State transitions for start/join  *	CCS		CCS info  *	IOCTL		IOCTL calls  *	MBUF		MBUFs dumped - needs one of TX, RX, MGT, or CTL  *	RX		packet types reported  *	CM		common memory re-mapping  *	COM		new command sleep/wakeup  *	STOP		driver detaching  *	CTL		CTL packets  *	MGT		MGT packets  *	TX		TX routine info  *	DCOM		dump comq entries  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAY_DBG_RECERR
+name|RAY_DBG_AUTH
 value|0x0001
 end_define
 
@@ -291,6 +291,36 @@ end_comment
 
 begin_comment
 comment|/*  * These override macros defined in if_ray.c to turn them into  * debugging ones.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|RAY_DEBUG
+end_if
+
+begin_define
+define|#
+directive|define
+name|RAY_RECERR
+parameter_list|(
+name|sc
+parameter_list|,
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\ 	__FUNCTION__ , __LINE__ , ##args);				\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RAY_DEBUG */
 end_comment
 
 begin_if

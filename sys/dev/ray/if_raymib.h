@@ -1102,6 +1102,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|RAY_MIB_CUR_FRAMING
+value|67
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DES_FRAMING
+value|68
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAY_MIB_LASTUSER
 value|45
 end_define
@@ -1110,7 +1124,7 @@ begin_define
 define|#
 directive|define
 name|RAY_MIB_MAX
-value|66
+value|68
 end_define
 
 begin_comment
@@ -1121,14 +1135,14 @@ begin_define
 define|#
 directive|define
 name|RAY_MIB_STRINGS
-value|{		\ 	"Network type",			\ 	"AP status",			\ 	"SSID",				\ 	"Scan mode",			\ 	"APM mode",			\ 	"MAC address",			\ 	"Fragmentation threshold",	\ 	"Dwell time",			\ 	"Beacon period",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET",		\ 	"Firmware version",		\ 	"Current BSS Id",		\ 	"Current INITED",		\ 	"Current DEF_TXRATE",		\ 	"Current ENCRYPT",		\ 	"Current NET_TYPE",		\ 	"Current SSID",			\ 	"Current PRIV_START",		\ 	"Current PRIV_JOIN",		\ 	"Desired BSSID",		\ 	"Desired INITED",		\ 	"Desired DEF_TXRATE",		\ 	"Desired ENCRYPT",		\ 	"Desired NET_TYPE",		\ 	"Desired SSID",			\ 	"Desired PRIV_START",		\ 	"Desired PRIV_JOIN",		\ 	"Current AP_STATUS",		\ 	"Current PROMISC",		\ 	"Desired AP_STATUS",		\ 	"Desired PROMISC"		\ }
+value|{		\ 	"Network type",			\ 	"AP status",			\ 	"SSID",				\ 	"Scan mode",			\ 	"APM mode",			\ 	"MAC address",			\ 	"Fragmentation threshold",	\ 	"Dwell time",			\ 	"Beacon period",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET",		\ 	"Firmware version",		\ 	"Current BSS Id",		\ 	"Current INITED",		\ 	"Current DEF_TXRATE",		\ 	"Current ENCRYPT",		\ 	"Current NET_TYPE",		\ 	"Current SSID",			\ 	"Current PRIV_START",		\ 	"Current PRIV_JOIN",		\ 	"Desired BSSID",		\ 	"Desired INITED",		\ 	"Desired DEF_TXRATE",		\ 	"Desired ENCRYPT",		\ 	"Desired NET_TYPE",		\ 	"Desired SSID",			\ 	"Desired PRIV_START",		\ 	"Desired PRIV_JOIN",		\ 	"Current AP_STATUS",		\ 	"Current PROMISC",		\ 	"Desired AP_STATUS",		\ 	"Desired PROMISC",		\ 	"Current FRAMING",		\ 	"Desired FRAMING"		\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_HELP_STRINGS
-value|{			\ 	"0 Ad hoc, 1 Infrastructure",		\ 	"0 Station, 1 Access Point",		\ 	"",					\ 	"0 Passive, 1 Active",			\ 	"0 Off, 1 On",				\ 	"",					\ 	"Bytes",				\ 	"DWELL_TIME",				\ 	"BEACON_PERIOD",			\ 	"DTIM_INTERVAL",			\ 	"MAX_RETRY",				\ 	"ACK_TIMO",				\ 	"SIFS",					\ 	"DIFS",					\ 	"PIFS",					\ 	"RTS_THRESH",				\ 	"SCAN_DWELL",				\ 	"SCAN_MAX_DWELL",			\ 	"ASSOC_TIMO",				\ 	"ADHOC_SCAN_CYCLE",			\ 	"INFRA_SCAN_CYCLE",			\ 	"INFRA_SUPER_SCAN_CYCLE",		\ 	"PROMISC",				\ 	"UNIQ_WORD",				\ 	"SLOT_TIME",				\ 	"ROAM_LOW_SNR_THRESH",			\ 	"LOW_SNR_COUNT",			\ 	"INFRA_MISSED_BEACON_COUNT",		\ 	"ADHOC_MISSED_BEACON_COUNT",		\ 	"COUNTRY_CODE",				\ 	"HOP_SEQ",				\ 	"HOP_SEQ_LEN",				\ 	"CW_MAX",				\ 	"CW_MIN",				\ 	"NOISE_FILTER_GAIN",			\ 	"NOISE_LIMIT_OFFSET",			\ 	"RSSI_THRESH_OFFSET",			\ 	"BUSY_THRESH_OFFSET",			\ 	"SYNC_THRESH",				\ 	"TEST_MODE",				\ 	"TEST_MIN_CHAN",			\ 	"TEST_MAX_CHAN",			\ 	"ALLOW_PROBE_RESP",			\ 	"PRIVACY_MUST_START",			\ 	"PRIVACY_CAN_JOIN",			\ 	"BASIC_RATE_SET",			\ 	"",					\ 	"",					\ 	"0 Joined a net, 1 Created a net",	\ 	"Current DEF_TXRATE",			\ 	"Current ENCRYPT",			\ 	"Current NET_TYPE",			\ 	"",					\ 	"Current PRIV_START",			\ 	"Current PRIV_JOIN",			\ 	"",					\ 	"N/A",					\ 	"Desired DEF_TXRATE",			\ 	"Desired ENCRYPT",			\ 	"Desired NET_TYPE",			\ 	"",					\ 	"Desired PRIV_START",			\ 	"Desired PRIV_JOIN",			\ 	"Current AP_STATUS",			\ 	"Current PROMISC",			\ 	"Desired AP_STATUS",			\ 	"Desired PROMISC"			\ }
+value|{			\ 	"0 Ad hoc, 1 Infrastructure",		\ 	"0 Station, 1 Access Point",		\ 	"",					\ 	"0 Passive, 1 Active",			\ 	"0 Off, 1 On",				\ 	"",					\ 	"Bytes",				\ 	"DWELL_TIME",				\ 	"BEACON_PERIOD",			\ 	"DTIM_INTERVAL",			\ 	"MAX_RETRY",				\ 	"ACK_TIMO",				\ 	"SIFS",					\ 	"DIFS",					\ 	"PIFS",					\ 	"RTS_THRESH",				\ 	"SCAN_DWELL",				\ 	"SCAN_MAX_DWELL",			\ 	"ASSOC_TIMO",				\ 	"ADHOC_SCAN_CYCLE",			\ 	"INFRA_SCAN_CYCLE",			\ 	"INFRA_SUPER_SCAN_CYCLE",		\ 	"PROMISC",				\ 	"UNIQ_WORD",				\ 	"SLOT_TIME",				\ 	"ROAM_LOW_SNR_THRESH",			\ 	"LOW_SNR_COUNT",			\ 	"INFRA_MISSED_BEACON_COUNT",		\ 	"ADHOC_MISSED_BEACON_COUNT",		\ 	"COUNTRY_CODE",				\ 	"HOP_SEQ",				\ 	"HOP_SEQ_LEN",				\ 	"CW_MAX",				\ 	"CW_MIN",				\ 	"NOISE_FILTER_GAIN",			\ 	"NOISE_LIMIT_OFFSET",			\ 	"RSSI_THRESH_OFFSET",			\ 	"BUSY_THRESH_OFFSET",			\ 	"SYNC_THRESH",				\ 	"TEST_MODE",				\ 	"TEST_MIN_CHAN",			\ 	"TEST_MAX_CHAN",			\ 	"ALLOW_PROBE_RESP",			\ 	"PRIVACY_MUST_START",			\ 	"PRIVACY_CAN_JOIN",			\ 	"BASIC_RATE_SET",			\ 	"",					\ 	"",					\ 	"0 Joined a net, 1 Created a net",	\ 	"Current DEF_TXRATE",			\ 	"Current ENCRYPT",			\ 	"Current NET_TYPE",			\ 	"",					\ 	"Current PRIV_START",			\ 	"Current PRIV_JOIN",			\ 	"",					\ 	"N/A",					\ 	"Desired DEF_TXRATE",			\ 	"Desired ENCRYPT",			\ 	"Desired NET_TYPE",			\ 	"",					\ 	"Desired PRIV_START",			\ 	"Desired PRIV_JOIN",			\ 	"Current AP_STATUS",			\ 	"Current PROMISC",			\ 	"Desired AP_STATUS",			\ 	"Desired PROMISC",			\ 	"Current FRAMING",			\ 	"Desired FRAMING"			\ }
 end_define
 
 begin_comment
@@ -1300,8 +1314,12 @@ value|\ {RAY_V4|RAY_V5,	1, 	1},
 comment|/* RAY_MIB_CUR_PROMISC */
 value|\ {RAY_V4|RAY_V5,	1, 	1},
 comment|/* RAY_MIB_DES_AP_STATUS */
-value|\ {RAY_V4|RAY_V5,	1, 	1}
+value|\ {RAY_V4|RAY_V5,	1, 	1},
 comment|/* RAY_MIB_DES_PROMISC */
+value|\ {RAY_V4|RAY_V5,	1, 	1},
+comment|/* RAY_MIB_CUR_FRAMING */
+value|\ {RAY_V4|RAY_V5,	1, 	1}
+comment|/* RAY_MIB_DES_FRAMING */
 value|\ }
 end_define
 
@@ -1310,11 +1328,11 @@ comment|/*  * MIB values  *  * I've included comments as to where the numbers ha
 end_comment
 
 begin_comment
-comment|/* XXX Obtained by raycontrol _before_ downloading  * # /sys/dev/ray/raycontrol/raycontrol -i ray0  * Firmware version                4  * Network type                    0x01    0 Ad hoc, 1 Infrastructure  * AP status                       0x00    0 Station, 1 Access Point  * SSID                                                              * Scan mode                       0x01    0 Passive, 1 Active  * APM mode                        0x00    0 Off, 1 On  * MAC address                     00:00:8f:48:e4:44  * Fragmentation threshold         0x0200  FRAG_THRESH  * Dwell tIME                      0x01    DWELL_TIME  * Beacon period                   0x01    BEACON_PERIOD  * DTIM_INTERVAL                   0x05    DTIM_INTERVAL  * MAX_RETRY                       0x03    MAX_RETRY  * ACK_TIMO                        0x8c    ACK_TIMO  * SIFS                            0x1e    SIFS  * DIFS                            0x82    DIFS  * PIFS                            0xce    PIFS  * RTS_THRESH                      0x0100  RTS_THRESH  * SCAN_DWELL                      0xfc18  SCAN_DWELL  * SCAN_MAX_DWELL                  0xc180  SCAN_MAX_DWELL  * ASSOC_TIMO                      0x05    ASSOC_TIMO  * ADHOC_SCAN_CYCLE                0x04    ADHOC_SCAN_CYCLE  * INFRA_SCAN_CYCLE                0x02    INFRA_SCAN_CYCLE  * INFRA_SUPER_SCAN_CYCLE          0x04    INFRA_SUPER_SCAN_CYCLE  * PROMISC                         0x00    PROMISC  * UNIQ_WORD                       0x0cbd  UNIQ_WORD  * SLOT_TIME                       0x4e    SLOT_TIME  * ROAM_LOW_SNR_THRESH             0x20    ROAM_LOW_SNR_THRESH  * LOW_SNR_COUNT                   0x04    LOW_SNR_COUNT  * INFRA_MISSED_BEACON_COUNT       0x04    INFRA_MISSED_BEACON_COUNT  * ADHOC_MISSED_BEACON_COUNT       0x04    ADHOC_MISSED_BEACON_COUNT  * COUNTRY_CODE                    0x01    COUNTRY_CODE  * HOP_SEQ                         0x07    HOP_SEQ  * HOP_SEQ_LEN                     0x4e    HOP_SEQ_LEN  * CW_MAX                          0x3f    CW_MAX  * CW_MIN                          0x0f    CW_MIN  * NOISE_FILTER_GAIN               0x00    NOISE_FILTER_GAIN  * NOISE_LIMIT_OFFSET              0x00    NOISE_LIMIT_OFFSET  * RSSI_THRESH_OFFSET              0x70    RSSI_THRESH_OFFSET  * BUSY_THRESH_OFFSET              0x70    BUSY_THRESH_OFFSET  * SYNC_THRESH                     0x07    SYNC_THRESH  * TEST_MODE                       0x00    TEST_MODE  * TEST_MIN_CHAN                   0x02    TEST_MIN_CHAN  * TEST_MAX_CHAN                   0x02    TEST_MAX_CHAN */
+comment|/* Obtained by raycontrol _before_ downloading  *  * WebGear Aviator  *  * # raycontrol -i ray0  * Firmware version                4  * Network type                    0x01    0 Ad hoc, 1 Infrastructure  * AP status                       0x00    0 Station, 1 Access Point  * SSID                                                              * Scan mode                       0x01    0 Passive, 1 Active  * APM mode                        0x00    0 Off, 1 On  * MAC address                     00:00:8f:48:e4:44  * Fragmentation threshold         0x0200  FRAG_THRESH  * Dwell tIME                      0x01    DWELL_TIME  * Beacon period                   0x01    BEACON_PERIOD  * DTIM_INTERVAL                   0x05    DTIM_INTERVAL  * MAX_RETRY                       0x03    MAX_RETRY  * ACK_TIMO                        0x8c    ACK_TIMO  * SIFS                            0x1e    SIFS  * DIFS                            0x82    DIFS  * PIFS                            0xce    PIFS  * RTS_THRESH                      0x0100  RTS_THRESH  * SCAN_DWELL                      0xfc18  SCAN_DWELL  * SCAN_MAX_DWELL                  0xc180  SCAN_MAX_DWELL  * ASSOC_TIMO                      0x05    ASSOC_TIMO  * ADHOC_SCAN_CYCLE                0x04    ADHOC_SCAN_CYCLE  * INFRA_SCAN_CYCLE                0x02    INFRA_SCAN_CYCLE  * INFRA_SUPER_SCAN_CYCLE          0x04    INFRA_SUPER_SCAN_CYCLE  * PROMISC                         0x00    PROMISC  * UNIQ_WORD                       0x0cbd  UNIQ_WORD  * SLOT_TIME                       0x4e    SLOT_TIME  * ROAM_LOW_SNR_THRESH             0x20    ROAM_LOW_SNR_THRESH  * LOW_SNR_COUNT                   0x04    LOW_SNR_COUNT  * INFRA_MISSED_BEACON_COUNT       0x04    INFRA_MISSED_BEACON_COUNT  * ADHOC_MISSED_BEACON_COUNT       0x04    ADHOC_MISSED_BEACON_COUNT  * COUNTRY_CODE                    0x01    COUNTRY_CODE  * HOP_SEQ                         0x07    HOP_SEQ  * HOP_SEQ_LEN                     0x4e    HOP_SEQ_LEN  * CW_MAX                          0x3f    CW_MAX  * CW_MIN                          0x0f    CW_MIN  * NOISE_FILTER_GAIN               0x00    NOISE_FILTER_GAIN  * NOISE_LIMIT_OFFSET              0x00    NOISE_LIMIT_OFFSET  * RSSI_THRESH_OFFSET              0x70    RSSI_THRESH_OFFSET  * BUSY_THRESH_OFFSET              0x70    BUSY_THRESH_OFFSET  * SYNC_THRESH                     0x07    SYNC_THRESH  * TEST_MODE                       0x00    TEST_MODE  * TEST_MIN_CHAN                   0x02    TEST_MIN_CHAN  * TEST_MAX_CHAN                   0x02    TEST_MAX_CHAN  *  * Raylink  * Firmware version          	5  * Network type              	0x01	0 Ad hoc, 1 Infrastructure  * AP status                 	0x00	0 Station, 1 Access Point  * SSID                      	ESSID1                          	  * Scan mode                 	0x01	0 Passive, 1 Active  * APM mode                  	0x00	0 Off, 1 On  * MAC address               	00:00:8f:a8:17:06	  * Fragmentation threshold   	0x7fff	Bytes  * Dwell time                	0x0080	DWELL_TIME  * Beacon period             	0x0100	BEACON_PERIOD  * DTIM_INTERVAL             	0x01	DTIM_INTERVAL  * MAX_RETRY                 	0x1f	MAX_RETRY  * ACK_TIMO                  	0x86	ACK_TIMO  * SIFS                      	0x1c	SIFS  * DIFS                      	0x82	DIFS  * PIFS                      	0x4e	PIFS  * RTS_THRESH                	0x7fff	RTS_THRESH  * SCAN_DWELL                	0x04e2	SCAN_DWELL  * SCAN_MAX_DWELL            	0x38a4	SCAN_MAX_DWELL  * ASSOC_TIMO                	0x05	ASSOC_TIMO  * ADHOC_SCAN_CYCLE          	0x08	ADHOC_SCAN_CYCLE  * INFRA_SCAN_CYCLE          	0x02	INFRA_SCAN_CYCLE  * INFRA_SUPER_SCAN_CYCLE    	0x08	INFRA_SUPER_SCAN_CYCLE  * PROMISC                   	0x00	PROMISC  * UNIQ_WORD                 	0x0cbd	UNIQ_WORD  * SLOT_TIME                 	0x32	SLOT_TIME  * ROAM_LOW_SNR_THRESH       	0xff	ROAM_LOW_SNR_THRESH  * LOW_SNR_COUNT             	0xff	LOW_SNR_COUNT  * INFRA_MISSED_BEACON_COUNT 	0x02	INFRA_MISSED_BEACON_COUNT  * ADHOC_MISSED_BEACON_COUNT 	0xff	ADHOC_MISSED_BEACON_COUNT  * COUNTRY_CODE              	0x01	COUNTRY_CODE  * HOP_SEQ                   	0x0b	HOP_SEQ  * HOP_SEQ_LEN               	0x55	HOP_SEQ_LEN  * CW_MAX                    	0x003f	CW_MAX  * CW_MIN                    	0x000f	CW_MIN  * NOISE_FILTER_GAIN         	0x04	NOISE_FILTER_GAIN  * NOISE_LIMIT_OFFSET        	0x08	NOISE_LIMIT_OFFSET  * RSSI_THRESH_OFFSET        	0x28	RSSI_THRESH_OFFSET  * BUSY_THRESH_OFFSET        	0x28	BUSY_THRESH_OFFSET  * SYNC_THRESH               	0x07	SYNC_THRESH  * TEST_MODE                 	0x00	TEST_MODE  * TEST_MIN_CHAN             	0x02	TEST_MIN_CHAN  * TEST_MAX_CHAN             	0x02	TEST_MAX_CHAN  * ALLOW_PROBE_RESP          	0x00	ALLOW_PROBE_RESP  * PRIVACY_MUST_START        	0x00	PRIVACY_MUST_START  * PRIVACY_CAN_JOIN          	0x00	PRIVACY_CAN_JOIN  * BASIC_RATE_SET            	0x02	BASIC_RATE_SET  */
 end_comment
 
 begin_comment
-comment|/*  * mib_net_type  *  * DOC		0x01	- Defines network type for Start and Join  *			- Network commands.  *  * Symb		0x00	- Adhoc is safer and I ain't got an AP  */
+comment|/*  * mib_net_type  *  * DOC		0x01	- Defines network type for Start and Join  *			- Network commands.  *  * As the V4 cards don't do infra we have to use adhoc. For V5 cards  * we follow standard FreeBSD practise and use infrastructure mode.  */
 end_comment
 
 begin_define
@@ -1334,8 +1352,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_NET_TYPE_DEFAULT
+name|RAY_MIB_NET_TYPE_V4
 value|RAY_MIB_NET_TYPE_ADHOC
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_NET_TYPE_V5
+value|RAY_MIB_NET_TYPE_INFRA
 end_define
 
 begin_comment
@@ -1359,7 +1384,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_AP_STATUS_DEFAULT
+name|RAY_MIB_AP_STATUS_V4
+value|RAY_MIB_AP_STATUS_TERMINAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_AP_STATUS_V5
 value|RAY_MIB_AP_STATUS_TERMINAL
 end_define
 
@@ -1377,15 +1409,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_SSID_NOT_WINDOWS
-value|"WIRELESS_NETWORK"
+name|RAY_MIB_SSID_RAYLINK
+value|"ESSID1"
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAY_MIB_SSID_DEFAULT
+name|RAY_MIB_SSID_V4
 value|RAY_MIB_SSID_WINDOWS
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SSID_V5
+value|RAY_MIB_SSID_RAYLINK
 end_define
 
 begin_comment
@@ -1409,7 +1448,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_SCAN_MODE_DEFAULT
+name|RAY_MIB_SCAN_MODE_V4
+value|RAY_MIB_SCAN_MODE_ACTIVE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SCAN_MODE_V5
 value|RAY_MIB_SCAN_MODE_ACTIVE
 end_define
 
@@ -1434,7 +1480,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_APM_MODE_DEFAULT
+name|RAY_MIB_APM_MODE_V4
+value|RAY_MIB_APM_MODE_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_APM_MODE_V5
 value|RAY_MIB_APM_MODE_NONE
 end_define
 
@@ -1470,7 +1523,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_FRAG_THRESH_DEFAULT
+name|RAY_MIB_FRAG_THRESH_V4
+value|RAY_MIB_FRAG_THRESH_DISABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_FRAG_THRESH_V5
 value|RAY_MIB_FRAG_THRESH_DISABLE
 end_define
 
@@ -1535,7 +1595,7 @@ begin_define
 define|#
 directive|define
 name|RAY_MIB_BEACON_PERIOD_V5
-value|RAY_MIB_DWELL_TIME_V5
+value|(2*RAY_MIB_DWELL_TIME_V5)
 end_define
 
 begin_comment
@@ -1559,7 +1619,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_DTIM_INTERVAL_DEFAULT
+name|RAY_MIB_DTIM_INTERVAL_V4
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DTIM_INTERVAL_V5
 value|0x01
 end_define
 
@@ -1584,8 +1651,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_MAX_RETRY_DEFAULT
+name|RAY_MIB_MAX_RETRY_V4
 value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_MAX_RETRY_V5
+value|0x1f
 end_define
 
 begin_comment
@@ -1609,8 +1683,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_ACK_TIMO_DEFAULT
+name|RAY_MIB_ACK_TIMO_V4
 value|0xa3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ACK_TIMO_V5
+value|0x86
 end_define
 
 begin_comment
@@ -1634,8 +1715,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_SIFS_DEFAULT
+name|RAY_MIB_SIFS_V4
 value|0x1d
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SIFS_V5
+value|0x1c
 end_define
 
 begin_comment
@@ -1659,7 +1747,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_DIFS_DEFAULT
+name|RAY_MIB_DIFS_V4
+value|0x82
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_DIFS_V5
 value|0x82
 end_define
 
@@ -1723,7 +1818,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_RTS_THRESH_DEFAULT
+name|RAY_MIB_RTS_THRESH_V4
+value|RAY_MIB_RTS_THRESH_DISABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_RTS_THRESH_V5
 value|RAY_MIB_RTS_THRESH_DISABLE
 end_define
 
@@ -1812,7 +1914,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_ASSOC_TIMO_DEFAULT
+name|RAY_MIB_ASSOC_TIMO_V4
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ASSOC_TIMO_V5
 value|0x05
 end_define
 
@@ -1837,7 +1946,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_ADHOC_SCAN_CYCLE_DEFAULT
+name|RAY_MIB_ADHOC_SCAN_CYCLE_V4
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ADHOC_SCAN_CYCLE_V5
 value|0x08
 end_define
 
@@ -1862,7 +1978,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_INFRA_SCAN_CYCLE_DEFAULT
+name|RAY_MIB_INFRA_SCAN_CYCLE_V4
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_SCAN_CYCLE_V5
 value|0x02
 end_define
 
@@ -1887,7 +2010,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_INFRA_SUPER_SCAN_CYCLE_DEFAULT
+name|RAY_MIB_INFRA_SUPER_SCAN_CYCLE_V4
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_SUPER_SCAN_CYCLE_V5
 value|0x08
 end_define
 
@@ -1912,7 +2042,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_PROMISC_DEFAULT
+name|RAY_MIB_PROMISC_V4
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_PROMISC_V5
 value|0x00
 end_define
 
@@ -1937,7 +2074,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_UNIQ_WORD_DEFAULT
+name|RAY_MIB_UNIQ_WORD_V4
+value|0x0cbd
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_UNIQ_WORD_V5
 value|0x0cbd
 end_define
 
@@ -2001,7 +2145,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_ROAM_LOW_SNR_THRESH_DEFAULT
+name|RAY_MIB_ROAM_LOW_SNR_THRESH_V4
+value|RAY_MIB_ROAM_LOW_SNR_THRESH_DISABLED
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ROAM_LOW_SNR_THRESH_V5
 value|RAY_MIB_ROAM_LOW_SNR_THRESH_DISABLED
 end_define
 
@@ -2033,7 +2184,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_LOW_SNR_COUNT_DEFAULT
+name|RAY_MIB_LOW_SNR_COUNT_V4
+value|RAY_MIB_LOW_SNR_COUNT_DISABLED
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_LOW_SNR_COUNT_V5
 value|RAY_MIB_LOW_SNR_COUNT_DISABLED
 end_define
 
@@ -2058,8 +2216,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_INFRA_MISSED_BEACON_COUNT_DEFAULT
+name|RAY_MIB_INFRA_MISSED_BEACON_COUNT_V4
 value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFRA_MISSED_BEACON_COUNT_V5
+value|0x02
 end_define
 
 begin_comment
@@ -2090,7 +2255,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_DEFAULT
+name|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_V4
+value|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_DISABLED
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_V5
 value|RAY_MIB_ADHOC_MISSED_BEACON_COUNT_DISABLED
 end_define
 
@@ -2178,7 +2350,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_COUNTRY_CODE_DEFAULT
+name|RAY_MIB_COUNTRY_CODE_V4
+value|RAY_MIB_COUNTRY_CODE_USA
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_COUNTRY_CODE_V5
 value|RAY_MIB_COUNTRY_CODE_USA
 end_define
 
@@ -2203,8 +2382,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAY_MIB_HOP_SEQ_DEFAULT
+name|RAY_MIB_HOP_SEQ_V4
 value|0x0b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_HOP_SEQ_V5
+value|0x04
 end_define
 
 begin_comment
@@ -2238,10 +2424,6 @@ directive|define
 name|RAY_MIB_HOP_SEQ_LEN_V5
 value|0x4f
 end_define
-
-begin_comment
-comment|/* XXX need to update these to the spec. XXX */
-end_comment
 
 begin_comment
 comment|/*  * All from here down are the same in Linux/NetBSD and seem to be sane.  */
