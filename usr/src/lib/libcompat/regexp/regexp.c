@@ -616,6 +616,9 @@ literal|"NULL argument"
 argument_list|)
 expr_stmt|;
 comment|/* First pass: determine size, legality. */
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|exp
@@ -637,6 +640,8 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* aid grep */
+endif|#
+directive|endif
 name|regparse
 operator|=
 operator|(
