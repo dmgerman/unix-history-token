@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	5.8 (Berkeley) %G%"
+literal|"@(#)parser.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4105,12 +4105,37 @@ name|c
 operator|==
 literal|'\\'
 condition|)
+block|{
 name|c
 operator|=
 name|pgetc
 argument_list|()
 expr_stmt|;
 comment|/* XXX - compat with old /bin/sh */
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\\'
+operator|&&
+name|c
+operator|!=
+literal|'`'
+operator|&&
+name|c
+operator|!=
+literal|'$'
+condition|)
+block|{
+name|pungetc
+argument_list|()
+expr_stmt|;
+name|c
+operator|=
+literal|'\\'
+expr_stmt|;
+block|}
+block|}
 switch|switch
 condition|(
 name|syntax
