@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.4 (Berkeley) %G%"
+literal|"@(#)setup.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -622,6 +622,88 @@ operator|.
 name|fs_minfree
 operator|=
 literal|10
+expr_stmt|;
+name|sbdirty
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_interleave
+operator|<
+literal|1
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"IMPOSSIBLE INTERLEAVE=%d IN SUPERBLOCK"
+argument_list|,
+name|sblock
+operator|.
+name|fs_interleave
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"SET TO DEFAULT"
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_interleave
+operator|=
+literal|1
+expr_stmt|;
+name|sbdirty
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_npsect
+operator|<
+name|sblock
+operator|.
+name|fs_nsect
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"IMPOSSIBLE NPSECT=%d IN SUPERBLOCK"
+argument_list|,
+name|sblock
+operator|.
+name|fs_npsect
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"SET TO DEFAULT"
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_npsect
+operator|=
+name|sblock
+operator|.
+name|fs_nsect
 expr_stmt|;
 name|sbdirty
 argument_list|()
