@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_types.h>
 end_include
 
@@ -754,12 +760,6 @@ end_endif
 begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_comment
 comment|/*  * Most of these functions have the side effect of setting errno, so they  * are not declared as __pure2.  (XXX: this point needs to be revisited,  * since C99 doesn't require the mistake of setting errno, and we mostly  * don't set it anyway.  In C99, pragmas and functions for changing the  * rounding mode affect the purity of these functions.)  */
