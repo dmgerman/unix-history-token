@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: gethostnamadr.c,v 1.2 1994/08/09 20:23:14 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3119,7 +3119,7 @@ operator|!
 name|service_done
 condition|)
 block|{
-name|init_service
+name|init_services
 argument_list|()
 expr_stmt|;
 block|}
