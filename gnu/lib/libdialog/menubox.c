@@ -6,13 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"dialog.priv.h"
+file|<dialog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dialog.h>
+file|"dialog.priv.h"
 end_include
 
 begin_function_decl
