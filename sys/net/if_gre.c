@@ -1706,7 +1706,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* impossible */
+comment|/* mbuf allocation failed */
 name|_IF_DROP
 argument_list|(
 operator|&
@@ -1908,7 +1908,7 @@ name|sc
 operator|->
 name|route
 argument_list|,
-literal|0
+name|IP_FORWARDING
 argument_list|,
 operator|(
 expr|struct
