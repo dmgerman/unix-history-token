@@ -167,15 +167,17 @@ function_decl|(
 modifier|*
 name|pthread_func_t
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_typedef
 
 begin_decl_stmt
 specifier|extern
 name|pthread_func_t
+modifier|*
 name|__thr_jtable
-index|[]
 index|[]
 decl_stmt|;
 end_decl_stmt
