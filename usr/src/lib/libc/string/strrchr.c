@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strrchr.c	5.4 (Berkeley) %G%"
+literal|"@(#)strrchr.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_function
@@ -73,7 +73,6 @@ name|p
 parameter_list|,
 name|ch
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
@@ -81,46 +80,16 @@ decl_stmt|,
 name|ch
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|save
-decl_stmt|;
-for|for
-control|(
-name|save
-operator|=
-name|NULL
-init|;
-condition|;
-operator|++
-name|p
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-name|ch
-condition|)
-name|save
-operator|=
-name|p
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|*
-name|p
-condition|)
 return|return
 operator|(
-name|save
+name|rindex
+argument_list|(
+name|p
+argument_list|,
+name|ch
+argument_list|)
 operator|)
 return|;
-block|}
-comment|/* NOTREACHED */
 block|}
 end_function
 
