@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	5.9 (Berkeley) %G%"
+literal|"@(#)glob.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1840,6 +1840,10 @@ name|gl_pathv
 operator|=
 literal|0
 expr_stmt|;
+name|gargc
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -1890,7 +1894,7 @@ name|globv
 operator|.
 name|gl_pathc
 operator|==
-literal|0
+name|gargc
 condition|)
 block|{
 if|if
@@ -1947,6 +1951,12 @@ expr_stmt|;
 name|gappend
 operator|=
 name|GLOB_APPEND
+expr_stmt|;
+name|gargc
+operator|=
+name|globv
+operator|.
+name|gl_pathc
 expr_stmt|;
 block|}
 do|while
