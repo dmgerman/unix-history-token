@@ -50,6 +50,26 @@ name|HAVE_LONG_LONG
 end_undef
 
 begin_comment
+comment|/* Define if we have "tm_zone" in "struct tm".  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_TM_ZONE
+end_undef
+
+begin_comment
+comment|/* Define if we have a global "char * []" "tzname" variable.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_TZNAME
+end_undef
+
+begin_comment
 comment|/* Define if we have "tm_isdst" in "struct tm".  */
 end_comment
 
@@ -67,6 +87,16 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_DAYLIGHT
+end_undef
+
+begin_comment
+comment|/* Define if we have a mkstemp */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_MKSTEMP
 end_undef
 
 begin_comment

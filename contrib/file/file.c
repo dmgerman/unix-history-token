@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"file.h"
 end_include
 
 begin_include
@@ -30,24 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_comment
 comment|/* for MAXPATHLEN */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
 
 begin_include
 include|#
@@ -162,6 +150,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<getopt.h>
+end_include
+
+begin_comment
+comment|/* for long options (is this portable?)*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -171,12 +180,6 @@ end_include
 begin_comment
 comment|/* for byte swapping */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"file.h"
-end_include
 
 begin_include
 include|#
@@ -193,7 +196,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.59 2001/07/23 00:02:32 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.66 2002/07/03 19:00:41 christos Exp $"
 argument_list|)
 end_macro
 
@@ -235,6 +238,50 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__EMX__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|apptypeName
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|int
+name|os2_apptype
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fn
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|nb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __EMX__ */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -389,33 +436,48 @@ begin_comment
 comment|/* line number in the magic file	*/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|unwrap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|fn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_H
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|help
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -424,26 +486,23 @@ literal|0
 end_if
 
 begin_endif
-unit|static int	byteconv4	__P((int, int, int)); static short	byteconv2	__P((int, int, int));
+unit|static int	byteconv4(int, int, int); static short	byteconv2(int, int, int);
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|__P
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 index|[]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * main - parse arguments and handle options  */
@@ -453,18 +512,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -504,6 +559,181 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+define|#
+directive|define
+name|OPTSTRING
+value|"bcdf:ikm:nsvzCL"
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_H
+name|int
+name|longindex
+decl_stmt|;
+specifier|static
+name|struct
+name|option
+name|long_options
+index|[]
+init|=
+block|{
+block|{
+literal|"version"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"brief"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'b'
+block|}
+block|,
+block|{
+literal|"checking-printout"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'c'
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'d'
+block|}
+block|,
+block|{
+literal|"files-from"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|'f'
+block|}
+block|,
+block|{
+literal|"mime"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'i'
+block|}
+block|,
+block|{
+literal|"keep-going"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'k'
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|S_IFLNK
+block|{
+literal|"dereference"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'L'
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+literal|"magic-file"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|'m'
+block|}
+block|,
+block|{
+literal|"uncompress"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'z'
+block|}
+block|,
+block|{
+literal|"no-buffer"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'n'
+block|}
+block|,
+block|{
+literal|"special-files"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"compile"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'C'
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|, 	}
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|LC_CTYPE
@@ -515,6 +745,21 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* makes islower etc work for other langs */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__EMX__
+comment|/* sh-like wildcard expansion! Shouldn't hurt at least ... */
+name|_wildcard
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -645,6 +890,9 @@ name|usermagic
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|HAVE_GETOPT_H
 while|while
 condition|(
 operator|(
@@ -656,17 +904,63 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcdf:ikm:nsvzCL"
+name|OPTSTRING
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
+else|#
+directive|else
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getopt_long
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|OPTSTRING
+argument_list|,
+name|long_options
+argument_list|,
+operator|&
+name|longindex
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|c
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_H
+case|case
+literal|0
+case|:
+if|if
+condition|(
+name|longindex
+operator|==
+literal|1
+condition|)
+name|help
+argument_list|()
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'b'
 case|:
@@ -1021,12 +1315,10 @@ specifier|static
 name|void
 name|unwrap
 parameter_list|(
-name|fn
-parameter_list|)
 name|char
 modifier|*
 name|fn
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1206,7 +1498,7 @@ comment|/*  * byteconv4  * Input:  *	from		4 byte quantity to convert  *	same		w
 end_comment
 
 begin_comment
-unit|static int byteconv4(from, same, big_endian) 	int from; 	int same; 	int big_endian; { 	if (same) 		return from; 	else if (big_endian) {
+unit|static int byteconv4(int from, int same, int big_endian) { 	if (same) 		return from; 	else if (big_endian) {
 comment|/* lsb -> msb conversion on msb */
 end_comment
 
@@ -1221,7 +1513,7 @@ comment|/*  * byteconv2  * Same as byteconv4, but for shorts  */
 end_comment
 
 begin_comment
-unit|static short byteconv2(from, same, big_endian) 	int from; 	int same; 	int big_endian; { 	if (same) 		return from; 	else if (big_endian) {
+unit|static short byteconv2(int from, int same, int big_endian) { 	if (same) 		return from; 	else if (big_endian) {
 comment|/* lsb -> msb conversion on msb */
 end_comment
 
@@ -1244,18 +1536,14 @@ begin_function
 name|void
 name|process
 parameter_list|(
-name|inname
-parameter_list|,
-name|wid
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|inname
-decl_stmt|;
+parameter_list|,
 name|int
 name|wid
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -1532,6 +1820,8 @@ name|match
 operator|=
 name|tryit
 argument_list|(
+name|inname
+argument_list|,
 name|buf
 argument_list|,
 name|nbytes
@@ -1683,30 +1973,55 @@ begin_function
 name|int
 name|tryit
 parameter_list|(
-name|buf
+specifier|const
+name|char
+modifier|*
+name|fn
 parameter_list|,
-name|nb
-parameter_list|,
-name|zflag
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|nb
-decl_stmt|,
-name|zflag
-decl_stmt|;
+parameter_list|,
+name|int
+name|zfl
+parameter_list|)
 block|{
+comment|/* 	 * The main work is done here! 	 * We have the file name and/or the data buffer to be identified.  	 */
+ifdef|#
+directive|ifdef
+name|__EMX__
+comment|/* 	 * Ok, here's the right place to add a call to some os-specific 	 * routine, e.g. 	 */
+if|if
+condition|(
+name|os2_apptype
+argument_list|(
+name|fn
+argument_list|,
+name|buf
+argument_list|,
+name|nb
+argument_list|)
+operator|==
+literal|1
+condition|)
+return|return
+literal|'o'
+return|;
+endif|#
+directive|endif
 comment|/* try compression stuff */
 if|if
 condition|(
-name|zflag
+name|zfl
 operator|&&
 name|zmagic
 argument_list|(
+name|fn
+argument_list|,
 name|buf
 argument_list|,
 name|nb
@@ -1744,6 +2059,10 @@ return|;
 comment|/* abandon hope, all ye who remain here */
 name|ckfputs
 argument_list|(
+name|iflag
+condition|?
+literal|"application/octet-stream"
+else|:
 literal|"data"
 argument_list|,
 name|stdout
@@ -1759,7 +2078,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -1785,6 +2106,21 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_H
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"Try `file --help' for more information.\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|1
@@ -1792,6 +2128,56 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_H
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|help
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|puts
+argument_list|(
+literal|"Usage: file [OPTION]... [FILE]...\n"
+literal|"Determine file type of FILEs.\n"
+literal|"\n"
+literal|"  -m, --magic-file LIST      use LIST as a colon-separated list of magic\n"
+literal|"                               number files\n"
+literal|"  -z, --uncompress           try to look inside compressed files\n"
+literal|"  -b, --brief                do not prepend filenames to output lines\n"
+literal|"  -c, --checking-printout    print the parsed form of the magic file, use in\n"
+literal|"                               conjunction with -m to debug a new magic file\n"
+literal|"                               before installing it\n"
+literal|"  -f, --files-from FILE      read the filenames to be examined from FILE\n"
+literal|"  -i, --mime                 output mime type strings\n"
+literal|"  -k, --keep-going           don't stop at the first match\n"
+literal|"  -L, --dereference          causes symlinks to be followed\n"
+literal|"  -n, --no-buffer            do not buffer output\n"
+literal|"  -s, --special-files        treat special (block/char devices) files as\n"
+literal|"                             ordinary ones\n"
+literal|"      --help                 display this help and exit\n"
+literal|"      --version              output version information and exit\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
