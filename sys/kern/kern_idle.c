@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/mutex.h>
 end_include
 
@@ -157,35 +163,6 @@ include|#
 directive|include
 file|<machine/globals.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP_DEBUG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -363,9 +340,14 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|int
 name|count
 decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -380,6 +362,9 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|count
 operator|=
 literal|0
@@ -396,7 +381,22 @@ operator|==
 literal|0
 condition|)
 block|{
+else|#
+directive|else
+while|while
+condition|(
+name|procrunnable
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 comment|/* 		 * This is a good place to put things to be done in 		 * the background, including sanity checks. 		 */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|count
@@ -412,6 +412,16 @@ literal|"idle_proc: timed out waiting"
 literal|" for a process"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|vm_page_zero_idle
+argument_list|()
+operator|!=
+literal|0
+condition|)
+continue|continue;
 comment|/* call out to any cpu-becoming-idle events */
 name|EVENTHANDLER_FAST_INVOKE
 argument_list|(
