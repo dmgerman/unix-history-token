@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	5.3 (Berkeley) %G%"
+literal|"@(#)sem.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,6 +624,7 @@ decl_stmt|;
 name|int
 name|omask
 decl_stmt|;
+comment|/*  			 * Prepare for the vfork by saving everything 			 * that the child corrupts before it exec's. 			 * Note that in some signal implementations 			 * which keep the signal info in user space 			 * (e.g. Sun's) it will also be necessary to  			 * save and restore the current sigvec's for 			 * the signals the child touches before it 			 * exec's. 			 */
 name|omask
 operator|=
 name|sigblock
@@ -714,6 +715,7 @@ condition|(
 name|pid
 condition|)
 block|{
+comment|/* parent */
 name|child
 operator|=
 name|ochild
@@ -800,6 +802,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* child */
 comment|/* this is from pfork() */
 name|int
 name|pgrp
@@ -1080,13 +1083,6 @@ name|PRIO_PROCESS
 argument_list|,
 literal|0
 argument_list|,
-name|getpriority
-argument_list|(
-name|PRIO_PROCESS
-argument_list|,
-literal|0
-argument_list|)
-operator|+
 name|t
 operator|->
 name|t_nice
