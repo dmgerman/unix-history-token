@@ -3,31 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1988-1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print bootp packets.  *  * This file was copied from tcpdump-2.1.1 and modified.  * There is an e-mail list for tcpdump:<tcpdump@ee.lbl.gov>  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: print-bootp.c,v 1.1.1.1 1994/09/10 14:44:55 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 93/10/10<gwr@mc.com> New data-driven option print routine. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -51,6 +26,27 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* for struct timeval in net/if.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -91,6 +87,14 @@ end_include
 begin_comment
 comment|/* These decode the vendor data. */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|printfn
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1069,14 +1073,6 @@ name|KNOWN_OPTIONS
 value|(sizeof(rfc1048_opts) / sizeof(rfc1048_opts[0]))
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|print_string
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
@@ -1105,8 +1101,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|len
-decl_stmt|,
-name|j
 decl_stmt|;
 name|u_int32
 name|ul
@@ -1824,12 +1818,6 @@ modifier|*
 name|zp
 decl_stmt|;
 comment|/* points one past last non-zero byte */
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 comment|/* Setup end pointer */
 name|ep
 operator|=

@@ -243,10 +243,6 @@ name|vp
 init|=
 name|buf
 decl_stmt|;
-name|char
-modifier|*
-name|tmpstr
-decl_stmt|;
 specifier|static
 name|char
 name|noroom
@@ -907,7 +903,7 @@ literal|0
 comment|/* 		 * XXX - Too much magic.  The user can always set the hostname 		 * to the short version in the bootptab file. -gwr 		 */
 block|if ((len + 2)> bytesleft) {
 comment|/* 			 * Not enough room for full (domain-qualified) hostname, try 			 * stripping it down to just the first field (host). 			 */
-block|tmpstr = hp->hostname->string; 			len = 0; 			while (*tmpstr&& (*tmpstr != '.')) { 				tmpstr++; 				len++; 			} 		}
+block|char *tmpstr = hp->hostname->string; 			len = 0; 			while (*tmpstr&& (*tmpstr != '.')) { 				tmpstr++; 				len++; 			} 		}
 endif|#
 directive|endif
 name|NEED

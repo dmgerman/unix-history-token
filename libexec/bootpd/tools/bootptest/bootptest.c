@@ -51,6 +51,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/utsname.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -69,6 +75,23 @@ end_include
 begin_comment
 comment|/* inet_ntoa */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_UNISTD
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -139,8 +162,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|"getether.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"patchlevel.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|send_request
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -301,15 +338,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|hostname
-index|[
-literal|64
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 modifier|*
 name|sndbuf
 decl_stmt|;
@@ -329,6 +357,20 @@ end_decl_stmt
 begin_comment
 comment|/* Receive packet buffer */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|utsname
+name|my_uname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Vendor magic cookies for CMU and RFC1048  */
@@ -389,6 +431,7 @@ comment|/*  * Initialization such as command-line processing is done, then  * th
 end_comment
 
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -447,8 +490,6 @@ decl_stmt|;
 comment|/* Socket file descriptor */
 name|int
 name|n
-decl_stmt|,
-name|tolen
 decl_stmt|,
 name|fromlen
 decl_stmt|,
@@ -524,6 +565,41 @@ argument_list|)
 operator|==
 name|BP_MINPKTSZ
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uname
+argument_list|(
+operator|&
+name|my_uname
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: can't get hostname\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|hostname
+operator|=
+name|my_uname
+operator|.
+name|nodename
 expr_stmt|;
 name|sndbuf
 operator|=
@@ -1158,6 +1234,10 @@ name|ifr
 operator|->
 name|ifr_name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|eaddr
 argument_list|)
 condition|)
@@ -1207,16 +1287,6 @@ block|}
 else|else
 block|{
 comment|/* Fill in the client IP address. */
-name|gethostname
-argument_list|(
-name|hostname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hostname
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|hep
 operator|=
 name|gethostbyname
@@ -1691,20 +1761,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|send_request
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|int
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* Print the request packet. */
 name|printf
@@ -1779,7 +1845,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out a filename (or other ascii string).  * Return true if truncated.  */
@@ -1816,11 +1882,15 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
