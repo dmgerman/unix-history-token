@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.36 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.37 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.36 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.37 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1071,7 +1071,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * We do at least one level of search if 	 *	- there is no dot and RES_DEFNAME is set, or 	 *	- there is at least one dot, there is no trailing dot, 	 *	  and RES_DNSRCH is set. 	 */
+comment|/* 	**  If there is at least one dot, start by searching the 	**  unmodified name.  This lets us get "vse.CS" in Czechoslovakia 	**  instead of CS.Berkeley.EDU. 	*/
 name|ret
 operator|=
 operator|-
@@ -1079,6 +1079,117 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|n
+operator|>=
+literal|1
+condition|)
+block|{
+comment|/* 		**  Try the unmodified name. 		*/
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getcanonname: trying %s\n"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|res_query
+argument_list|(
+name|host
+argument_list|,
+name|C_IN
+argument_list|,
+name|qtype
+argument_list|,
+operator|&
+name|answer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|answer
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|>
+literal|0
+condition|)
+block|{
+name|cp
+operator|=
+name|host
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\tYES\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|8
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\tNO: h_errno=%d\n"
+argument_list|,
+name|h_errno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNREFUSED
+condition|)
+block|{
+comment|/* no server -- try again later */
+name|h_errno
+operator|=
+name|TRY_AGAIN
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+block|}
+block|}
+comment|/* 	**  We do at least one level of search if 	**	- there is no dot and RES_DEFNAME is set, or 	**	- there is at least one dot, there is no trailing dot, 	**	  and RES_DNSRCH is set. 	*/
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+operator|&&
+operator|(
 operator|(
 name|n
 operator|==
@@ -1107,6 +1218,7 @@ operator|.
 name|options
 operator|&
 name|RES_DNSRCH
+operator|)
 operator|)
 condition|)
 block|{
@@ -1223,7 +1335,7 @@ argument_list|,
 name|h_errno
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If no server present, give up. 			 * If name isn't found in this domain, 			 * keep trying higher domains in the search list 			 * (if that's enabled). 			 * On a NO_DATA error, keep trying, otherwise 			 * a wildcard entry of another type could keep us 			 * from finding this entry higher in the domain. 			 * If we get some other error (negative answer or 			 * server failure), then stop searching up, 			 * but try the input name below in case it's fully-qualified. 			 */
+comment|/* 			 * If no server present, give up. 			 * If name isn't found in this domain, 			 * keep trying higher domains in the search list 			 * (if that's enabled). 			 * On a NO_DATA error, keep trying, otherwise 			 * a wildcard entry of another type could keep us 			 * from finding this entry higher in the domain. 			 * If we get some other error (negative answer or 			 * server failure), then stop searching up, 			 * but try the input name below in case it's 			 * fully-qualified. 			 */
 if|if
 condition|(
 name|errno
@@ -1283,6 +1395,10 @@ if|if
 condition|(
 name|ret
 operator|<
+literal|0
+operator|&&
+name|n
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1366,8 +1482,14 @@ argument_list|,
 name|h_errno
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
+name|ret
+operator|<=
+literal|0
+operator|&&
 name|h_errno
 operator|!=
 name|NO_DATA
@@ -1375,8 +1497,6 @@ condition|)
 return|return
 name|FALSE
 return|;
-block|}
-block|}
 comment|/* find first satisfactory answer */
 name|hp
 operator|=
