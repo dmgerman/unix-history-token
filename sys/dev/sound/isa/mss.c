@@ -10441,7 +10441,6 @@ break|break;
 case|case
 name|MD_OPTI930
 case|:
-comment|/* XXX should use proper bus calls */
 name|port_wr
 argument_list|(
 name|mss
