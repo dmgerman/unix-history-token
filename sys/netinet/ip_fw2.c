@@ -26,6 +26,16 @@ begin_comment
 comment|/*  * Implement IP packet firewall (new version)  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -76,6 +86,11 @@ end_endif
 begin_comment
 comment|/* INET */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
