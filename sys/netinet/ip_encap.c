@@ -1003,6 +1003,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*lint -sem(encap_add, custodial(1)) */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1109,9 +1113,6 @@ modifier|*
 name|ep
 decl_stmt|;
 name|int
-name|error
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|s
@@ -1145,10 +1146,6 @@ name|dst
 argument_list|)
 condition|)
 block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -1164,10 +1161,6 @@ operator|->
 name|sa_len
 condition|)
 block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -1187,10 +1180,6 @@ operator|->
 name|sa_family
 condition|)
 block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -1313,10 +1302,6 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|error
-operator|=
-name|EEXIST
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -1344,10 +1329,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -1448,10 +1429,6 @@ argument_list|(
 name|ep
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1547,9 +1524,6 @@ modifier|*
 name|ep
 decl_stmt|;
 name|int
-name|error
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|s
@@ -1563,15 +1537,9 @@ condition|(
 operator|!
 name|func
 condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 name|ep
 operator|=
 name|malloc
@@ -1594,15 +1562,9 @@ name|ep
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
 goto|goto
 name|fail
 goto|;
-block|}
 name|bzero
 argument_list|(
 name|ep
@@ -1648,10 +1610,6 @@ name|encap_add
 argument_list|(
 name|ep
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
 expr_stmt|;
 name|splx
 argument_list|(
