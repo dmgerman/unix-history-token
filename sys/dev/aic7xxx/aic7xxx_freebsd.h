@@ -92,7 +92,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|AHC_SUPPORT_PCI
+name|AHC_PCI_CONFIG
 value|1
 end_define
 
@@ -1922,7 +1922,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AHC_SUPPORT_PCI
+name|AHC_PCI_CONFIG
 end_ifdef
 
 begin_function_decl
@@ -2148,6 +2148,37 @@ return|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AHC_POWER_STATE_D0
+block|,
+name|AHC_POWER_STATE_D1
+block|,
+name|AHC_POWER_STATE_D2
+block|,
+name|AHC_POWER_STATE_D3
+block|}
+name|ahc_power_state
+typedef|;
+end_typedef
+
+begin_function_decl
+name|void
+name|ahc_power_state_change
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|ahc_power_state
+name|new_state
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -2177,6 +2208,9 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|int
+name|irq
 parameter_list|)
 function_decl|;
 end_function_decl

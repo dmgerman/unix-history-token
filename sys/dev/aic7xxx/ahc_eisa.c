@@ -685,6 +685,9 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|int
+name|irq
 parameter_list|)
 block|{
 name|int
