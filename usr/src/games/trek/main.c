@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,30 +306,18 @@ condition|)
 goto|goto
 name|badflag
 goto|;
-if|if
-condition|(
-name|scanf
+name|prio
+operator|=
+name|atoi
 argument_list|(
-operator|-
-literal|1
-argument_list|,
-operator|&
 name|av
 index|[
 literal|0
 index|]
-index|[
+operator|+
 literal|2
-index|]
-argument_list|,
-literal|"%d"
-argument_list|,
-operator|&
-name|prio
 argument_list|)
-operator|>
-literal|0
-condition|)
+expr_stmt|;
 break|break;
 default|default:
 name|badflag
