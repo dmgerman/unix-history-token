@@ -1524,7 +1524,7 @@ call|)
 argument_list|(
 name|ioflag
 operator|>>
-literal|16
+name|IO_SEQSHIFT
 argument_list|)
 operator|*
 name|biosize
