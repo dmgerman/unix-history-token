@@ -363,7 +363,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|R0
+name|LOCL_R0
 parameter_list|(
 name|a
 parameter_list|,
@@ -379,13 +379,13 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|{ \ 	a+=((k)+(t)+F((b),(c),(d))); \ 	a=ROTATE(a,s); \ 	a+=b; };\  #define R1(a,b,c,d,k,s,t) { \ 	a+=((k)+(t)+G((b),(c),(d))); \ 	a=ROTATE(a,s); \ 	a+=b; };
+value|{ \ 	a+=((k)+(t)+F((b),(c),(d))); \ 	a=ROTATE(a,s); \ 	a+=b; };\  #define LOCL_R1(a,b,c,d,k,s,t) { \ 	a+=((k)+(t)+G((b),(c),(d))); \ 	a=ROTATE(a,s); \ 	a+=b; };
 end_define
 
 begin_define
 define|#
 directive|define
-name|R2
+name|LOCL_R2
 parameter_list|(
 name|a
 parameter_list|,
@@ -407,7 +407,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|R3
+name|LOCL_R3
 parameter_list|(
 name|a
 parameter_list|,

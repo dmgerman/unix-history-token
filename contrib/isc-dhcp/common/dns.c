@@ -4,7 +4,7 @@ comment|/* dns.c     Domain Name Service subroutines. */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Nominum, Inc.  * To learn more about the Internet Software Consortium, see  * ``http://www.isc.org/''.  To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
+comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  * Copyright (c) 2001-2003 by Internet Software Consortium  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *   Internet Systems Consortium, Inc.  *   950 Charter Street  *   Redwood City, CA 94063  *<info@isc.org>  *   http://www.isc.org/  *  * This software has been written for Internet Systems Consortium  * by Ted Lemon in cooperation with Nominum, Inc.  * To learn more about Internet Systems Consortium, see  * ``http://www.isc.org/''.  To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: dns.c,v 1.35.2.13 2002/11/17 02:26:57 dhankins Exp $ Copyright (c) 2001-2002 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dns.c,v 1.35.2.16 2004/06/17 20:54:38 dhankins Exp $ Copyright (c) 2004 Internet Systems Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -2158,53 +2158,12 @@ condition|)
 return|return
 name|ISC_R_INVALIDARG
 return|;
-ifndef|#
-directive|ifndef
-name|NO_SNPRINTF
-name|snprintf
-argument_list|(
-name|ddns_address
-argument_list|,
-literal|16
-argument_list|,
-literal|"%d.%d.%d.%d"
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|0
-index|]
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|1
-index|]
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|2
-index|]
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|/* %Audit% Cannot exceed 16 bytes. %2004.06.17,Safe% */
 name|sprintf
 argument_list|(
 name|ddns_address
 argument_list|,
-literal|"%d.%d.%d.%d"
+literal|"%u.%u.%u.%u"
 argument_list|,
 name|ddns_addr
 operator|.
@@ -2235,8 +2194,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * When a DHCP client or server intends to update an A RR, it first 	 * prepares a DNS UPDATE query which includes as a prerequisite the 	 * assertion that the name does not exist.  The update section of the 	 * query attempts to add the new name and its IP address mapping (an A 	 * RR), and the DHCID RR with its unique client-identity. 	 *   -- "Interaction between DHCP and DNS" 	 */
 name|ISC_LIST_INIT
 argument_list|(
@@ -3033,53 +2990,12 @@ condition|)
 return|return
 name|ISC_R_INVALIDARG
 return|;
-ifndef|#
-directive|ifndef
-name|NO_SNPRINTF
-name|snprintf
-argument_list|(
-name|ddns_address
-argument_list|,
-literal|16
-argument_list|,
-literal|"%d.%d.%d.%d"
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|0
-index|]
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|1
-index|]
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|2
-index|]
-argument_list|,
-name|ddns_addr
-operator|.
-name|iabuf
-index|[
-literal|3
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|/* %Audit% Cannot exceed 16 bytes. %2004.06.17,Safe% */
 name|sprintf
 argument_list|(
 name|ddns_address
 argument_list|,
-literal|"%d.%d.%d.%d"
+literal|"%u.%u.%u.%u"
 argument_list|,
 name|ddns_addr
 operator|.
@@ -3110,8 +3026,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * The entity chosen to handle the A record for this client (either the 	 * client or the server) SHOULD delete the A record that was added when 	 * the lease was made to the client. 	 * 	 * In order to perform this delete, the updater prepares an UPDATE 	 * query which contains two prerequisites.  The first prerequisite 	 * asserts that the DHCID RR exists whose data is the client identity 	 * described in Section 4.3. The second prerequisite asserts that the 	 * data in the A RR contains the IP address of the lease that has 	 * expired or been released. 	 *   -- "Interaction between DHCP and DNS" 	 */
 name|ISC_LIST_INIT
 argument_list|(
