@@ -1147,12 +1147,11 @@ block|{
 comment|/* 				 * Save directory entry's inode number and 				 * reclen in ndp->ni_ufs area, and release 				 * directory buffer. 				 */
 if|if
 condition|(
-name|DT_ISWHT
-argument_list|(
 name|ep
 operator|->
 name|d_type
-argument_list|)
+operator|==
+name|DT_WHT
 condition|)
 block|{
 name|slotstatus
@@ -3367,21 +3366,6 @@ name|d_ino
 operator|=
 name|WINO
 expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|->
-name|d_type
-operator|==
-name|DT_DIR
-condition|)
-name|ep
-operator|->
-name|d_type
-operator|=
-name|DT_WHTD
-expr_stmt|;
-else|else
 name|ep
 operator|->
 name|d_type
