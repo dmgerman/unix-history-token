@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,11 @@ name|flags
 decl_stmt|,
 name|fd
 decl_stmt|;
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
 switch|switch
 condition|(
 name|which
@@ -664,15 +669,20 @@ operator|)
 operator|<
 literal|0
 operator|&&
-name|flags
-operator|&
-name|O_CREAT
+name|xargc
+operator|>
+name|which
 condition|)
 name|adbprintf
 argument_list|(
-literal|"cannot open `%s'\n"
+literal|"cannot open `%s': %s\n"
 argument_list|,
 name|fname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
