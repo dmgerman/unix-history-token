@@ -3007,6 +3007,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|wpipe
+operator|->
+name|pipe_map
+operator|.
+name|npages
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
