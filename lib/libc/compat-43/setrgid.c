@@ -57,8 +57,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MESSAGE
+value|": warning: this program uses setrgid(), which doesn't do anything\r\n(but used to)\r\n"
+end_define
 
 begin_function
 name|int
@@ -82,9 +89,35 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-name|warnx
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+name|writye
 argument_list|(
-literal|"this program uses setrgid(), which doesn't do anything\r\n(but used to)\r"
+literal|2
+argument_list|,
+name|__progname
+argument_list|,
+name|strlen
+argument_list|(
+name|__progname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|MESSAGE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|MESSAGE
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

@@ -24,7 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gets.c	5.3 (Berkeley) 1/20/91"
+literal|"From: @(#)gets.c	5.3 (Berkeley) 1/20/91"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,8 +62,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MESSAGE
+value|": warning: this program uses gets(), which is unsafe.\r\n"
+end_define
 
 begin_function
 name|char
@@ -86,9 +103,35 @@ operator|!
 name|warned
 condition|)
 block|{
-name|warnx
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+name|write
 argument_list|(
-literal|"this program uses gets(), which is unsafe.\r"
+literal|2
+argument_list|,
+name|__progname
+argument_list|,
+name|strlen
+argument_list|(
+name|__progname
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|MESSAGE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|MESSAGE
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|warned
