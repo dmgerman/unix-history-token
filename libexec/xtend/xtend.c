@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xtend.c,v 1.3.2.1 1997/12/18 07:37:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
