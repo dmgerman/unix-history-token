@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.60 (Berkeley) %G%"
+literal|"@(#)main.c	5.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1956,6 +1956,68 @@ argument_list|,
 name|FALSE
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* set protocol */
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+operator|&&
+operator|(
+operator|(
+name|p
+operator|=
+operator|*
+operator|++
+name|av
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|)
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Bad -p (protocol) flag"
+argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
+expr_stmt|;
+name|av
+operator|--
+expr_stmt|;
+break|break;
+block|}
+name|define
+argument_list|(
+literal|'r'
+argument_list|,
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
