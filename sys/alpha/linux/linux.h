@@ -1191,57 +1191,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_F_GETLK
+name|LINUX_F_SETOWN
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_SETLK
+name|LINUX_F_GETOWN
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_SETLKW
+name|LINUX_F_GETLK
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_SETOWN
+name|LINUX_F_SETLK
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_GETOWN
+name|LINUX_F_SETLKW
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_RDLCK
-value|0
+name|LINUX_F_SETSIG
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_WRLCK
+name|LINUX_F_GETSIG
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_F_RDLCK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_F_UNLCK
+name|LINUX_F_WRLCK
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_F_UNLCK
+value|8
 end_define
 
 begin_comment
