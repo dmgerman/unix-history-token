@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.31.1.1
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -123,10 +123,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ForceMail
-operator|=
-name|TRUE
-expr_stmt|;
+comment|/* ForceMail = TRUE; */
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
 condition|(
@@ -593,7 +590,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
+comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		returnto -- the queue of people to send the message to. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
 end_comment
 
 begin_decl_stmt
@@ -602,6 +599,17 @@ name|bool
 name|SendBody
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAXRETURNS
+value|6
+end_define
+
+begin_comment
+comment|/* max depth of returning messages */
+end_comment
 
 begin_macro
 name|returntosender
@@ -636,9 +644,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|ADDRESS
-name|to_addr
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -685,6 +690,47 @@ name|ENVELOPE
 name|errenvelope
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|returndepth
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+operator|++
+name|returndepth
+operator|>=
+name|MAXRETURNS
+condition|)
+block|{
+if|if
+condition|(
+name|returndepth
+operator|!=
+name|MAXRETURNS
+condition|)
+name|syserr
+argument_list|(
+literal|"returntosender: infinite recursion on %s"
+argument_list|,
+name|returnto
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+comment|/* don't "unrecurse" and fake a clean exit */
+comment|/* returndepth--; */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_if
 
 begin_expr_stmt
 name|NoAlias
@@ -784,28 +830,6 @@ comment|/* fake up an address header for the from person */
 end_comment
 
 begin_expr_stmt
-name|bmove
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|returnto
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|to_addr
-argument_list|,
-sizeof|sizeof
-name|to_addr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|expand
 argument_list|(
 literal|"$n"
@@ -854,6 +878,9 @@ name|ExitStat
 operator|=
 name|EX_SOFTWARE
 expr_stmt|;
+name|returndepth
+operator|--
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -864,31 +891,11 @@ block|}
 end_if
 
 begin_expr_stmt
-name|to_addr
-operator|.
-name|q_next
-operator|=
-name|NULL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|to_addr
-operator|.
-name|q_flags
-operator|&=
-operator|~
-name|QDONTSEND
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ee
 operator|->
 name|e_sendqueue
 operator|=
-operator|&
-name|to_addr
+name|returnto
 expr_stmt|;
 end_expr_stmt
 
@@ -928,40 +935,26 @@ comment|/* actually deliver the error message */
 end_comment
 
 begin_expr_stmt
-name|i
-operator|=
-name|deliver
-argument_list|(
-operator|&
-name|to_addr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* if the error message was "queued", make that happen */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QQUEUEUP
-argument_list|,
-name|to_addr
-operator|.
-name|q_flags
-argument_list|)
-condition|)
-name|queueup
+name|sendall
 argument_list|(
 name|ee
 argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
+
+begin_comment
+comment|/* do any closing error processing */
+end_comment
+
+begin_expr_stmt
+name|checkerrors
+argument_list|(
+name|ee
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* restore state */
@@ -976,31 +969,15 @@ name|e_parent
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|i
-operator|!=
-literal|0
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"Can't return mail to %s"
-argument_list|,
-name|to_addr
-operator|.
-name|q_paddr
-argument_list|)
+begin_expr_stmt
+name|returndepth
+operator|--
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_if
+end_expr_stmt
+
+begin_comment
+comment|/* should check for delivery errors here */
+end_comment
 
 begin_return
 return|return

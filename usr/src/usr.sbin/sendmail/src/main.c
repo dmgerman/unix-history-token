@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.78.1.1
+literal|3.79
 operator|%
 name|G
 operator|%
@@ -1925,6 +1925,8 @@ end_comment
 begin_expr_stmt
 name|sendall
 argument_list|(
+name|CurEnv
+argument_list|,
 name|Mode
 operator|==
 name|MD_VERIFY
@@ -2371,6 +2373,11 @@ end_macro
 
 begin_block
 block|{
+name|CurEnv
+operator|=
+operator|&
+name|MainEnvelope
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2380,6 +2387,7 @@ name|Debug
 operator|>
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n====finis: stat %d sendreceipt %d FatalErrors %d\n"
@@ -2393,6 +2401,7 @@ argument_list|,
 name|FatalErrors
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DEBUG
@@ -2422,14 +2431,13 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* mail back the transcript on errors */
-if|if
-condition|(
-name|FatalErrors
-condition|)
-name|savemail
-argument_list|()
+comment|/* do error handling */
+name|checkerrors
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
+comment|/* now clean up bookeeping information */
 if|if
 condition|(
 name|Transcript
@@ -2446,38 +2454,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|CurEnv
 operator|->
 name|e_queueup
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|QUEUE
-name|queueup
-argument_list|(
-name|CurEnv
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-else|QUEUE
-name|syserr
-argument_list|(
-literal|"finis: trying to queue %s"
-argument_list|,
-name|CurEnv
-operator|->
-name|e_df
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|QUEUE
-block|}
-else|else
 operator|(
 name|void
 operator|)
@@ -3553,6 +3534,12 @@ expr_stmt|;
 name|e
 operator|->
 name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+name|e
+operator|->
+name|e_errorqueue
 operator|=
 name|NULL
 expr_stmt|;

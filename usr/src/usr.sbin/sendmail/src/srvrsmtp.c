@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -787,6 +787,8 @@ expr_stmt|;
 comment|/* send to all recipients */
 name|sendall
 argument_list|(
+name|CurEnv
+argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;

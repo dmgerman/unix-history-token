@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.71.1.1		%G%"
+literal|"@(#)sendmail.h	3.72		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,6 +888,11 @@ modifier|*
 name|e_sendqueue
 decl_stmt|;
 comment|/* list of message recipients */
+name|ADDRESS
+modifier|*
+name|e_errorqueue
+decl_stmt|;
+comment|/* the queue for error responses */
 name|long
 name|e_msgsize
 decl_stmt|;
