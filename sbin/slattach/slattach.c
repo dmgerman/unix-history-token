@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  * Hacks to support "-a|c|n" flags on the command line which enable VJ  * header compresion and disable ICMP.  * If this is good all rights go to B& L Jolitz, otherwise send your  * comments to Reagan (/dev/null).  *  * nerd@percival.rain.com (Michael Galassi) 92.09.03  *  * Hacked to change from sgtty to POSIX termio style serial line control  * and added flag to enable cts/rts style flow control.  *  * blymn@awadi.com.au (Brett Lymn) 93.04.04  *  * Put slattach in it's own process group so it can't be killed  * accidentally. Close the connection on SIGHUP and SIGINT. Write a  * syslog entry upon opening and closing the connection.  Rich Murphey  * and Brad Huntting.  *  * Add '-r command' option: runs 'command' upon recieving SIGHUP  * resulting from loss of carrier.  Log any errors after forking.  * Rich 8/13/93  *  * This version of slattach includes many changes by David Greenman, Brian  * Smith, Chris Bradley, and me (Michael Galassi).  None of them are  * represented as functional anywhere outside of RAINet though they do work  * for us.  Documentation is limited to the usage message for now.  If you  * make improovments please pass them back.  *  * Added '-u UCMD' which runs 'UCMD<old><new>' whenever the slip  * unit number changes where<old> and<new> are the old and new unit  * numbers, respectively.  Also added the '-z' option which forces  * invocation of the redial command (-r CMD) upon startup regardless  * of whether the com driver claims (sometimes mistakenly) that  * carrier is present. Also added '-e ECMD' which runs ECMD before  * exiting.  */
+comment|/*  * Hacks to support "-a|c|n" flags on the command line which enable VJ  * header compresion and disable ICMP.  * If this is good all rights go to B& L Jolitz, otherwise send your  * comments to Reagan (/dev/null).  *  * nerd@percival.rain.com (Michael Galassi) 92.09.03  *  * Hacked to change from sgtty to POSIX termio style serial line control  * and added flag to enable cts/rts style flow control.  *  * blymn@awadi.com.au (Brett Lymn) 93.04.04  *  * Put slattach in it's own process group so it can't be killed  * accidentally. Close the connection on SIGHUP and SIGINT. Write a  * syslog entry upon opening and closing the connection.  Rich Murphey  * and Brad Huntting.  *  * Add '-r command' option: runs 'command' upon recieving SIGHUP  * resulting from loss of carrier.  Log any errors after forking.  * Rich 8/13/93  *  * This version of slattach includes many changes by David Greenman, Brian  * Smith, Chris Bradley, and me (Michael Galassi).  None of them are  * represented as functional anywhere outside of RAINet though they do work  * for us.  Documentation is limited to the usage message for now.  If you  * make improovments please pass them back.  *  * Added '-u UCMD' which runs 'UCMD<old><new>' whenever the slip  * unit number changes where<old> and<new> are the old and new unit  * numbers, respectively.  Also added the '-z' option which forces  * invocation of the redial command (-r CMD) upon startup regardless  * of whether the com driver claims (sometimes mistakenly) that  * carrier is present. Also added '-e ECMD' which runs ECMD before  * exiting.  *  * marc@escargot.rain.com (Marc Frajola) 93/09/10  *  * Minor fixes to allow passive SLIP links to work (connections with  * modem control that do not have an associated dial command). Added  * code to re-check for carrier after dial command has been executed.  * Added SIGTERM handler to properly handle normal kill signals. Fixed  * bug in logic that caused message about no -u command to be logged  * even when -u was specified and the sl number changes. Tried to get  * rid of redundant syslog()'s to minimize console log output. Improved  * logging of improper command line options or number of command  * arguments. Removed spurious newline characters from syslog() calls.  */
 end_comment
 
 begin_ifndef
@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.9 1993/09/14 12:10:48 jkh Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.10 1993/09/15 02:39:40 smace Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,13 +162,6 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MSR_DCD
-value|0x80
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -212,6 +205,17 @@ end_function_decl
 
 begin_comment
 comment|/* SIGINT handler */
+end_comment
+
+begin_function_decl
+name|void
+name|sigterm_handler
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* SIGTERM handler */
 end_comment
 
 begin_function_decl
@@ -310,6 +314,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* non-zero iff we watch carrier. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|comstate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TIOCMGET current state of serial driver */
 end_comment
 
 begin_decl_stmt
@@ -444,7 +458,7 @@ name|char
 name|usage_str
 index|[]
 init|=
-literal|"\ usage: %s [-achlnz] [-e command] [-r command] [-s speed] [-u command] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n"
+literal|"\ usage: %s [-acfhlnz] [-e command] [-r command] [-s speed] [-u command] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -463,9 +477,6 @@ parameter_list|)
 block|{
 name|int
 name|option
-decl_stmt|;
-name|int
-name|comstate
 decl_stmt|;
 name|char
 name|name
@@ -493,7 +504,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ace:hlnr:s:u:z"
+literal|"ace:fhlnr:s:u:z"
 argument_list|)
 operator|)
 operator|!=
@@ -627,10 +638,19 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Invalid option -- '%c'\n"
+argument_list|,
+name|option
+argument_list|)
+expr_stmt|;
 case|case
 literal|'?'
 case|:
-default|default:
 name|fprintf
 argument_list|(
 name|stderr
@@ -665,6 +685,59 @@ index|[
 name|optind
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|optind
+operator|<
+operator|(
+name|argc
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Too many args, first='%s'\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|optind
+operator|>
+operator|(
+name|argc
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Not enough args\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dev
@@ -826,12 +899,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ioctl(TIOCSCTTY) failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ioctl(TIOCSCTTY) failed: %s: %m"
 argument_list|)
 expr_stmt|;
 comment|/* Make us the foreground process group associated with the 	   slip line which is our controlling terminal. */
@@ -851,12 +919,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"tcsetpgrp failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"tcsetpgrp failed: %s: %m"
 argument_list|)
 expr_stmt|;
 comment|/* upon INT log a timestamp and exit.  */
@@ -878,12 +941,29 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGINT handler: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
+literal|"cannot install SIGINT handler: %s: %m"
 argument_list|)
+expr_stmt|;
+comment|/* upon TERM log a timestamp and exit.  */
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|sigterm_handler
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"cannot install SIGTERM handler: %s: %m"
 argument_list|)
 expr_stmt|;
 comment|/* upon HUP redial and reconnect.  */
@@ -905,12 +985,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"cannot install SIGHUP handler: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"cannot install SIGHUP handler: %s: %m"
 argument_list|)
 expr_stmt|;
 name|setup_line
@@ -953,7 +1028,7 @@ operator|!
 operator|(
 name|comstate
 operator|&
-name|MSR_DCD
+name|TIOCM_CD
 operator|)
 condition|)
 block|{
@@ -974,11 +1049,19 @@ control|(
 init|;
 condition|;
 control|)
+block|{
+name|sigset_t
+name|mask
+init|=
+literal|0
+decl_stmt|;
 name|sigsuspend
 argument_list|(
-literal|0L
+operator|&
+name|mask
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1069,14 +1152,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|syslog
 argument_list|(
-literal|"ioctl(TIOCSDTR)"
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
+name|LOG_ERR
+argument_list|,
+literal|"ioctl(TIOCSDTR): %m"
 argument_list|)
 expr_stmt|;
 name|exit_handler
@@ -1211,26 +1291,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|new_unit
-operator|!=
-name|unit
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"slip unit changed from sl%d to sl%d, but no -u CMD was specified!"
-argument_list|)
-expr_stmt|;
-name|exit_handler
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|s
 operator|=
 operator|(
@@ -1266,7 +1326,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"configuring sl%d, invoking: %s"
 argument_list|,
-name|unit
+name|new_unit
 argument_list|,
 name|s
 argument_list|)
@@ -1286,11 +1346,33 @@ operator|=
 name|new_unit
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|new_unit
+operator|!=
+name|unit
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"slip unit changed from sl%d to sl%d, but no -u CMD was specified!"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sl%d connected to %s at %d b/s"
+literal|"sl%d connected to %s at %d baud"
 argument_list|,
 name|unit
 argument_list|,
@@ -1299,6 +1381,7 @@ argument_list|,
 name|speed
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1311,6 +1394,8 @@ name|void
 name|sighup_handler
 parameter_list|()
 block|{
+name|again
+label|:
 comment|/* reset discipline */
 if|if
 condition|(
@@ -1364,18 +1449,123 @@ argument_list|(
 name|redial_cmd
 argument_list|)
 expr_stmt|;
+comment|/* Now check again for carrier (dial command is done): */
+if|if
+condition|(
+operator|!
+operator|(
+name|modem_control
+operator|&
+name|CLOCAL
+operator|)
+condition|)
+block|{
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCMGET
+argument_list|,
+operator|&
+name|comstate
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|comstate
+operator|&
+name|TIOCM_CD
+operator|)
+condition|)
+block|{
+comment|/* check for carrier */
+comment|/* force a redial if no carrier */
+goto|goto
+name|again
+goto|;
+block|}
+block|}
 block|}
 else|else
 block|{
+comment|/* 		 * No redial command. 		 * 		 * If modem control, just wait for carrier before 		 * falling through to setup_line() and attach_line(). 		 * If no modem control, just fall through immediately. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|modem_control
+operator|&
+name|CLOCAL
+operator|)
+condition|)
+block|{
+name|int
+name|carrier
+init|=
+literal|0
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Warning: No redial phone number or command."
+literal|"Waiting for carrier on %s (sl%d)"
 argument_list|,
 name|dev
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
+comment|/* Now wait for carrier before attaching line: */
+while|while
+condition|(
+operator|!
+name|carrier
+condition|)
+block|{
+comment|/* 			 * Don't burn the CPU checking for carrier; 			 * carrier must be polled since there is no 			 * way to have a signal sent when carrier 			 * goes high (SIGHUP can only be sent when 			 * carrier is dropped); so add space between 			 * checks for carrier: 			 */
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* Check for carrier present on tty port: */
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|TIOCMGET
+argument_list|,
+operator|&
+name|comstate
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|comstate
+operator|&
+name|TIOCM_CD
+condition|)
+block|{
+name|carrier
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Carrier now present on %s (sl%d)"
+argument_list|,
+name|dev
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|setup_line
 argument_list|()
@@ -1400,6 +1590,34 @@ argument_list|(
 name|LOG_NOTICE
 argument_list|,
 literal|"sl%d on %s caught SIGINT, exiting."
+argument_list|,
+name|unit
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Signal handler for SIGTERM.  We just log and exit. */
+end_comment
+
+begin_function
+name|void
+name|sigterm_handler
+parameter_list|()
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"sl%d on %s caught SIGTERM, exiting."
 argument_list|,
 name|unit
 argument_list|,
