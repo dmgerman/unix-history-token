@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.12 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,7 +359,7 @@ condition|)
 block|{
 name|printblurb
 argument_list|(
-literal|"flat.blurb"
+name|FLAT_BLURB
 argument_list|)
 expr_stmt|;
 block|}
@@ -500,7 +500,7 @@ condition|)
 block|{
 name|printblurb
 argument_list|(
-literal|"callg.blurb"
+name|CALLG_BLURB
 argument_list|)
 expr_stmt|;
 block|}
@@ -2931,12 +2931,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|pathname
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|FILE
 modifier|*
 name|blurbfile
@@ -2944,22 +2938,11 @@ decl_stmt|;
 name|int
 name|input
 decl_stmt|;
-name|sprintf
-argument_list|(
-name|pathname
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|BLURBLIB
-argument_list|,
-name|blurbname
-argument_list|)
-expr_stmt|;
 name|blurbfile
 operator|=
 name|fopen
 argument_list|(
-name|pathname
+name|blurbname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2973,7 +2956,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|pathname
+name|blurbname
 argument_list|)
 expr_stmt|;
 return|return;
