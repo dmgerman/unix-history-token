@@ -964,6 +964,7 @@ name|idx
 decl_stmt|;
 name|int
 name|size
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1309,6 +1310,7 @@ name|first
 decl_stmt|;
 name|int
 name|nsecs
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -1871,6 +1873,7 @@ name|struct
 name|coff_ofile
 modifier|*
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_section
@@ -1931,6 +1934,7 @@ name|struct
 name|coff_ofile
 modifier|*
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_section
@@ -2225,6 +2229,7 @@ name|struct
 name|coff_ofile
 modifier|*
 name|ptr
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_section
@@ -2627,6 +2632,7 @@ name|struct
 name|coff_section
 modifier|*
 name|section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_scope
@@ -2785,11 +2791,13 @@ name|struct
 name|coff_section
 modifier|*
 name|section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_scope
 modifier|*
 name|scope
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|type
@@ -4284,6 +4292,7 @@ name|struct
 name|coff_section
 modifier|*
 name|section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_symbol
@@ -5705,6 +5714,7 @@ name|struct
 name|coff_ofile
 modifier|*
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_sfile
@@ -5873,6 +5883,7 @@ name|struct
 name|coff_ofile
 modifier|*
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|coff_sfile
@@ -5881,6 +5892,7 @@ name|sfile
 decl_stmt|;
 name|int
 name|n
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|#
@@ -6292,6 +6304,7 @@ name|sfile
 decl_stmt|;
 name|int
 name|n
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -7104,6 +7117,7 @@ name|struct
 name|coff_sfile
 modifier|*
 name|sfile
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|first
@@ -7221,6 +7235,7 @@ name|struct
 name|coff_sfile
 modifier|*
 name|sfile
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|first

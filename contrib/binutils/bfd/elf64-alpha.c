@@ -62,7 +62,7 @@ name|NO_COFF_LINENOS
 end_define
 
 begin_comment
-comment|/* Get the ECOFF swapping routines.  Needed for the debug information. */
+comment|/* Get the ECOFF swapping routines.  Needed for the debug information.  */
 end_comment
 
 begin_include
@@ -127,12 +127,17 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|boolean
-name|elf64_alpha_mkobject
+name|int
+name|alpha_elf_dynamic_symbol_p
 name|PARAMS
 argument_list|(
 operator|(
-name|bfd
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
 operator|*
 operator|)
 argument_list|)
@@ -329,6 +334,20 @@ name|arelent
 operator|*
 operator|,
 name|Elf64_Internal_Rela
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|elf64_alpha_mkobject
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
 operator|*
 operator|)
 argument_list|)
@@ -1103,18 +1122,158 @@ begin_comment
 comment|/* Should we do dynamic things to this symbol?  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|int
 name|alpha_elf_dynamic_symbol_p
 parameter_list|(
 name|h
 parameter_list|,
 name|info
 parameter_list|)
-define|\
-value|((((info)->shared&& !(info)->symbolic)				\     || (((h)->elf_link_hash_flags					\& (ELF_LINK_HASH_DEF_DYNAMIC | ELF_LINK_HASH_REF_REGULAR))	\         == (ELF_LINK_HASH_DEF_DYNAMIC | ELF_LINK_HASH_REF_REGULAR))	\     || (h)->root.type == bfd_link_hash_undefweak			\     || (h)->root.type == bfd_link_hash_defweak)				\&& (h)->dynindx != -1)
-end_define
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|h
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|dynindx
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|ELF_ST_VISIBILITY
+argument_list|(
+name|h
+operator|->
+name|other
+argument_list|)
+operator|!=
+name|STV_DEFAULT
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_undefweak
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_defweak
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+operator|(
+name|info
+operator|->
+name|shared
+operator|&&
+operator|!
+name|info
+operator|->
+name|symbolic
+operator|)
+operator|||
+operator|(
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+operator|(
+name|ELF_LINK_HASH_DEF_DYNAMIC
+operator||
+name|ELF_LINK_HASH_REF_REGULAR
+operator|)
+operator|)
+operator|==
+operator|(
+name|ELF_LINK_HASH_DEF_DYNAMIC
+operator||
+name|ELF_LINK_HASH_REF_REGULAR
+operator|)
+operator|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Create an entry in a Alpha ELF linker hash table.  */
@@ -2510,7 +2669,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* The high bits of a 32-bit displacement to the starting address of the      current section (the relocation target is ignored); the low bits are       supplied in the subsequent R_ALPHA_IMMED_LO32 relocs.  */
+comment|/* The high bits of a 32-bit displacement to the starting address of the      current section (the relocation target is ignored); the low bits are      supplied in the subsequent R_ALPHA_IMMED_LO32 relocs.  */
 comment|/* XXX: Not implemented.  */
 name|HOWTO
 argument_list|(
@@ -2639,7 +2798,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* Misc ELF relocations. */
+comment|/* Misc ELF relocations.  */
 comment|/* A dynamic relocation to copy the target into our .dynbss section.  */
 comment|/* Not generated, as all Alpha objects use PIC, so it is not needed.  It      is present because every other ELF has one, but should not be used      because .dynbss is an ugly thing.  */
 name|HOWTO
@@ -3428,7 +3587,7 @@ block|,
 name|R_ALPHA_SREL64
 block|}
 block|,
-comment|/* The BFD_RELOC_ALPHA_USER_* relocations are used by the assembler to process    the explicit !<reloc>!sequence relocations, and are mapped into the normal    relocations at the end of processing. */
+comment|/* The BFD_RELOC_ALPHA_USER_* relocations are used by the assembler to process    the explicit !<reloc>!sequence relocations, and are mapped into the normal    relocations at the end of processing.  */
 block|{
 name|BFD_RELOC_ALPHA_USER_LITERAL
 block|,
@@ -3627,7 +3786,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* These functions do relaxation for Alpha ELF.      Currently I'm only handling what I can do with existing compiler    and assembler support, which means no instructions are removed,    though some may be nopped.  At this time GCC does not emit enough    information to do all of the relaxing that is possible.  It will    take some not small amount of work for that to happen.     There are a couple of interesting papers that I once read on this    subject, that I cannot find references to at the moment, that    related to Alpha in particular.  They are by David Wall, then of    DEC WRL.  */
+comment|/* These functions do relaxation for Alpha ELF.     Currently I'm only handling what I can do with existing compiler    and assembler support, which means no instructions are removed,    though some may be nopped.  At this time GCC does not emit enough    information to do all of the relaxing that is possible.  It will    take some not small amount of work for that to happen.     There are a couple of interesting papers that I once read on this    subject, that I cannot find references to at the moment, that    related to Alpha in particular.  They are by David Wall, then of    DEC WRL.  */
 end_comment
 
 begin_define
@@ -4110,7 +4269,7 @@ operator|->
 name|r_addend
 expr_stmt|;
 block|}
-comment|/* A little preparation for the loop... */
+comment|/* A little preparation for the loop...  */
 name|disp
 operator|=
 name|symval
@@ -4118,38 +4277,6 @@ operator|-
 name|info
 operator|->
 name|gp
-expr_stmt|;
-name|fits16
-operator|=
-operator|(
-name|disp
-operator|>=
-operator|-
-operator|(
-name|bfd_signed_vma
-operator|)
-literal|0x8000
-operator|&&
-name|disp
-operator|<
-literal|0x8000
-operator|)
-expr_stmt|;
-name|fits32
-operator|=
-operator|(
-name|disp
-operator|>=
-operator|-
-operator|(
-name|bfd_signed_vma
-operator|)
-literal|0x80000000
-operator|&&
-name|disp
-operator|<
-literal|0x7fff8000
-operator|)
 expr_stmt|;
 for|for
 control|(
@@ -4177,6 +4304,12 @@ block|{
 name|unsigned
 name|int
 name|insn
+decl_stmt|;
+name|int
+name|insn_disp
+decl_stmt|;
+name|bfd_signed_vma
+name|xdisp
 decl_stmt|;
 name|insn
 operator|=
@@ -4215,19 +4348,74 @@ literal|1
 case|:
 comment|/* MEM FORMAT */
 comment|/* We can always optimize 16-bit displacements.  */
+comment|/* Extract the displacement from the instruction, sign-extending 	     it if necessary, then test whether it is within 16 or 32 bits 	     displacement from GP.  */
+name|insn_disp
+operator|=
+name|insn
+operator|&
+literal|0x0000ffff
+expr_stmt|;
+if|if
+condition|(
+name|insn_disp
+operator|&
+literal|0x00008000
+condition|)
+name|insn_disp
+operator||=
+literal|0xffff0000
+expr_stmt|;
+comment|/* Negative: sign-extend.  */
+name|xdisp
+operator|=
+name|disp
+operator|+
+name|insn_disp
+expr_stmt|;
+name|fits16
+operator|=
+operator|(
+name|xdisp
+operator|>=
+operator|-
+operator|(
+name|bfd_signed_vma
+operator|)
+literal|0x00008000
+operator|&&
+name|xdisp
+operator|<
+literal|0x00008000
+operator|)
+expr_stmt|;
+name|fits32
+operator|=
+operator|(
+name|xdisp
+operator|>=
+operator|-
+operator|(
+name|bfd_signed_vma
+operator|)
+literal|0x80000000
+operator|&&
+name|xdisp
+operator|<
+literal|0x7fff8000
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|fits16
 condition|)
 block|{
-comment|/* FIXME: sanity check the insn for mem format with 		 zero addend.  */
-comment|/* Take the op code and dest from this insn, take the base  		 register from the literal insn.  Leave the offset alone.  */
+comment|/* Take the op code and dest from this insn, take the base 		 register from the literal insn.  Leave the offset alone.  */
 name|insn
 operator|=
 operator|(
 name|insn
 operator|&
-literal|0xffe00000
+literal|0xffe0ffff
 operator|)
 operator||
 operator|(
@@ -4305,7 +4493,7 @@ literal|6
 operator|)
 condition|)
 block|{
-comment|/* FIXME: sanity check that lit insn Ra is mem insn Rb, and 		 that mem_insn disp is zero.  */
+comment|/* FIXME: sanity check that lit insn Ra is mem insn Rb.  */
 name|irel
 operator|->
 name|r_info
@@ -4546,7 +4734,7 @@ name|Elf_Internal_Rela
 modifier|*
 name|xrel
 decl_stmt|;
-comment|/* Preserve branch prediction call stack when possible. */
+comment|/* Preserve branch prediction call stack when possible.  */
 if|if
 condition|(
 operator|(
@@ -4699,7 +4887,7 @@ name|all_optimized
 operator|=
 name|false
 expr_stmt|;
-comment|/* ??? If target gp == current gp we can eliminate the gp reload. 	       This does depend on every place a gp could be reloaded will 	       be, which currently happens for all code produced by gcc, but 	       not necessarily by hand-coded assembly, or if sibling calls 	       are enabled in gcc.   	       Perhaps conditionalize this on a flag being set in the target 	       object file's header, and have gcc set it?  */
+comment|/* ??? If target gp == current gp we can eliminate the gp reload. 	       This does depend on every place a gp could be reloaded will 	       be, which currently happens for all code produced by gcc, but 	       not necessarily by hand-coded assembly, or if sibling calls 	       are enabled in gcc.  	       Perhaps conditionalize this on a flag being set in the target 	       object file's header, and have gcc set it?  */
 block|}
 break|break;
 block|}
@@ -4830,9 +5018,13 @@ comment|/* If the function has the same gp, and we can identify that the      fu
 comment|/* If the symbol is marked NOPV, we are being told the function never      needs its procedure value.  */
 if|if
 condition|(
+operator|(
 name|info
 operator|->
 name|other
+operator|&
+name|STO_ALPHA_STD_GPLOAD
+operator|)
 operator|==
 name|STO_ALPHA_NOPV
 condition|)
@@ -4843,9 +5035,13 @@ comment|/* If the symbol is marked STD_GP, we are being told the function does  
 elseif|else
 if|if
 condition|(
+operator|(
 name|info
 operator|->
 name|other
+operator|&
+name|STO_ALPHA_STD_GPLOAD
+operator|)
 operator|==
 name|STO_ALPHA_STD_GPLOAD
 condition|)
@@ -4869,7 +5065,7 @@ decl_stmt|;
 name|bfd_vma
 name|ofs
 decl_stmt|;
-comment|/* Load the relocations from the section that the target symbol is in. */
+comment|/* Load the relocations from the section that the target symbol is in.  */
 if|if
 condition|(
 name|info
@@ -5038,7 +5234,7 @@ name|tsec_free
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* We've now determined that we can skip an initial gp load.  Verify       that the call and the target use the same gp.   */
+comment|/* We've now determined that we can skip an initial gp load.  Verify      that the call and the target use the same gp.   */
 if|if
 condition|(
 name|info
@@ -5301,7 +5497,7 @@ name|n_local_got_entries
 operator|-=
 literal|1
 expr_stmt|;
-comment|/* ??? Search forward through this basic block looking for insns      that use the target register.  Stop after an insn modifying the      register is seen, or after a branch or call.       Any such memory load insn may be substituted by a load directly      off the GP.  This allows the memory load insn to be issued before      the calculated GP register would otherwise be ready.        Any such jsr insn can be replaced by a bsr if it is in range.       This would mean that we'd have to _add_ relocations, the pain of      which gives one pause.  */
+comment|/* ??? Search forward through this basic block looking for insns      that use the target register.  Stop after an insn modifying the      register is seen, or after a branch or call.       Any such memory load insn may be substituted by a load directly      off the GP.  This allows the memory load insn to be issued before      the calculated GP register would otherwise be ready.       Any such jsr insn can be replaced by a bsr if it is in range.       This would mean that we'd have to _add_ relocations, the pain of      which gives one pause.  */
 return|return
 name|true
 return|;
@@ -5974,7 +6170,7 @@ name|bfd_com_section_ptr
 expr_stmt|;
 else|else
 continue|continue;
-comment|/* who knows. */
+comment|/* who knows.  */
 name|info
 operator|.
 name|h
@@ -8372,6 +8568,38 @@ name|asection
 modifier|*
 name|msec
 decl_stmt|;
+if|if
+condition|(
+name|_bfd_dwarf2_find_nearest_line
+argument_list|(
+name|abfd
+argument_list|,
+name|section
+argument_list|,
+name|symbols
+argument_list|,
+name|offset
+argument_list|,
+name|filename_ptr
+argument_list|,
+name|functionname_ptr
+argument_list|,
+name|line_ptr
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|dwarf2_find_line_info
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
 name|msec
 operator|=
 name|bfd_get_section_by_name
@@ -10639,9 +10867,17 @@ argument_list|,
 name|sreloc
 argument_list|,
 operator|(
+operator|(
+name|sec
+operator|->
+name|flags
+operator|&
+operator|(
 name|SEC_ALLOC
 operator||
 name|SEC_LOAD
+operator|)
+operator|)
 operator||
 name|SEC_HAS_CONTENTS
 operator||
@@ -10673,7 +10909,7 @@ condition|(
 name|h
 condition|)
 block|{
-comment|/* Since we havn't seen all of the input symbols yet, we 		 don't know whether we'll actually need a dynamic relocation 		 entry for this reloc.  So make a record of it.  Once we 		 find out if this thing needs dynamic relocation we'll 		 expand the relocation sections by the appropriate amount. */
+comment|/* Since we havn't seen all of the input symbols yet, we 		 don't know whether we'll actually need a dynamic relocation 		 entry for this reloc.  So make a record of it.  Once we 		 find out if this thing needs dynamic relocation we'll 		 expand the relocation sections by the appropriate amount.  */
 name|struct
 name|alpha_elf_reloc_entry
 modifier|*
@@ -13916,6 +14152,12 @@ condition|)
 return|return
 name|false
 return|;
+name|info
+operator|->
+name|flags
+operator||=
+name|DF_TEXTREL
+expr_stmt|;
 block|}
 block|}
 return|return
@@ -14237,7 +14479,7 @@ name|relocateable
 condition|)
 block|{
 comment|/* This is a relocateable link.  We don't have to change 	     anything, unless the reloc is against a section symbol, 	     in which case we have to adjust according to where the 	     section symbol winds up in the output section.  */
-comment|/* The symbol associated with GPDISP and LITUSE is  	     immaterial.  Only the addend is significant.  */
+comment|/* The symbol associated with GPDISP and LITUSE is 	     immaterial.  Only the addend is significant.  */
 if|if
 condition|(
 name|r_type
@@ -19589,7 +19831,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* ECOFF swapping routines.  These are used when dealing with the    .mdebug section, which is in the ECOFF debugging format.  Copied    from elf32-mips.c. */
+comment|/* ECOFF swapping routines.  These are used when dealing with the    .mdebug section, which is in the ECOFF debugging format.  Copied    from elf32-mips.c.  */
 end_comment
 
 begin_decl_stmt
@@ -19705,6 +19947,96 @@ end_decl_stmt
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Use a non-standard hash bucket size of 8.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|elf_size_info
+name|alpha_elf_size_info
+init|=
+block|{
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Ehdr
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Phdr
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Shdr
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Rel
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Rela
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Sym
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Dyn
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Note
+argument_list|)
+block|,
+literal|8
+block|,
+literal|1
+block|,
+literal|64
+block|,
+literal|8
+block|,
+name|ELFCLASS64
+block|,
+name|EV_CURRENT
+block|,
+name|bfd_elf64_write_out_phdrs
+block|,
+name|bfd_elf64_write_shdrs_and_ehdr
+block|,
+name|bfd_elf64_write_relocs
+block|,
+name|bfd_elf64_swap_symbol_out
+block|,
+name|bfd_elf64_slurp_reloc_table
+block|,
+name|bfd_elf64_slurp_symbol_table
+block|,
+name|bfd_elf64_swap_dyn_in
+block|,
+name|bfd_elf64_swap_dyn_out
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -19909,8 +20241,16 @@ define|\
 value|&elf64_alpha_ecoff_debug_swap
 end_define
 
+begin_define
+define|#
+directive|define
+name|elf_backend_size_info
+define|\
+value|alpha_elf_size_info
+end_define
+
 begin_comment
-comment|/*  * A few constants that determine how the .plt section is set up.  */
+comment|/* A few constants that determine how the .plt section is set up.  */
 end_comment
 
 begin_define

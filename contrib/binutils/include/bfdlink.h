@@ -384,6 +384,10 @@ comment|/* true if BFD should generate a relocateable object file.  */
 name|boolean
 name|relocateable
 decl_stmt|;
+comment|/* true if BFD should generate relocation information in the final executable.  */
+name|boolean
+name|emitrelocations
+decl_stmt|;
 comment|/* true if BFD should generate a "task linked" object file,      similar to relocatable but also with globals converted to statics. */
 name|boolean
 name|task_link
@@ -411,6 +415,10 @@ decl_stmt|;
 comment|/* true if BFD should generate errors for undefined symbols      even if generating a shared object.  */
 name|boolean
 name|no_undefined
+decl_stmt|;
+comment|/* true if BFD should allow undefined symbols in shared objects even      when no_undefined is set to disallow undefined symbols.  The net      result will be that undefined symbols in regular objects will      still trigger an error, but undefined symbols in shared objects      will be ignored.  The implementation of no_undefined makes the      assumption that the runtime linker will choke on undefined      symbols.  However there is at least one system (BeOS) where      undefined symbols in shared libraries is normal since the kernel      patches them at load time to select which function is most      appropriate for the current architecture.  I.E. dynamically      select an appropriate memset function.  Apparently it is also      normal for HPPA shared libraries to have undefined symbols.  */
+name|boolean
+name|allow_shlib_undefined
 decl_stmt|;
 comment|/* Which symbols to strip.  */
 name|enum
@@ -483,6 +491,18 @@ specifier|const
 name|char
 modifier|*
 name|fini_function
+decl_stmt|;
+comment|/* true if the new ELF dynamic tags are enabled. */
+name|boolean
+name|new_dtags
+decl_stmt|;
+comment|/* May be used to set DT_FLAGS for ELF. */
+name|bfd_vma
+name|flags
+decl_stmt|;
+comment|/* May be used to set DT_FLAGS_1 for ELF. */
+name|bfd_vma
+name|flags_1
 decl_stmt|;
 block|}
 struct|;

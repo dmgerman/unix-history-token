@@ -1328,12 +1328,29 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_EXTERN_BIG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_EXTERN_BIG
 value|((unsigned int) 0x80)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_EXTERN_LITTLE
+end_ifndef
 
 begin_define
 define|#
@@ -1342,12 +1359,34 @@ name|RELOC_EXT_BITS_EXTERN_LITTLE
 value|((unsigned int) 0x01)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_BIG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_TYPE_BIG
 value|((unsigned int) 0x1F)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_SH_BIG
+end_ifndef
 
 begin_define
 define|#
@@ -1356,6 +1395,17 @@ name|RELOC_EXT_BITS_TYPE_SH_BIG
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_LITTLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1363,12 +1413,28 @@ name|RELOC_EXT_BITS_TYPE_LITTLE
 value|((unsigned int) 0xF8)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_SH_LITTLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_TYPE_SH_LITTLE
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Bytes per relocation entry */

@@ -297,7 +297,7 @@ name|parse_args
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|unsigned
 operator|,
 name|char
 operator|*

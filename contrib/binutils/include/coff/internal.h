@@ -226,7 +226,7 @@ name|unsigned
 name|short
 name|f_target_id
 decl_stmt|;
-comment|/* (TIc80 specific)		*/
+comment|/* (TI COFF specific)		*/
 block|}
 struct|;
 end_struct
@@ -379,12 +379,23 @@ name|PE_DEF_SECTION_ALIGNMENT
 value|0x1000
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PE_DEF_FILE_ALIGNMENT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|PE_DEF_FILE_ALIGNMENT
 value|0x200
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -973,7 +984,7 @@ comment|/* weak symbol -- GNU extension */
 end_comment
 
 begin_comment
-comment|/* New storage classes for TIc80 */
+comment|/* New storage classes for TI COFF */
 end_comment
 
 begin_define
@@ -1437,6 +1448,11 @@ name|long
 name|s_align
 decl_stmt|;
 comment|/* used on I960			*/
+name|unsigned
+name|char
+name|s_page
+decl_stmt|;
+comment|/* TI COFF load page            */
 block|}
 struct|;
 end_struct

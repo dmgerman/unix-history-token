@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Demangler for IA64 / g++ standard C++ ABI.    Copyright (C) 2000 CodeSourcery LLC.    Written by Alex Samuel<samuel@codesourcery.com>.      This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Demangler for IA64 / g++ V3 ABI.    Copyright (C) 2000 Free Software Foundation, Inc.    Written by Alex Samuel<samuel@codesourcery.com>.      This file is part of GNU CC.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file implements demangling of C++ names mangled according to    the IA64 / g++ standard C++ ABI.  Use the cp_demangle function to    demangle a mangled name, or compile with the preprocessor macro    STANDALONE_DEMANGLER defined to create a demangling filter    executable.  */
+comment|/* This file implements demangling of C++ names mangled according to    the IA64 / g++ V3 ABI.  Use the cp_demangle function to    demangle a mangled name, or compile with the preprocessor macro    STANDALONE_DEMANGLER defined to create a demangling filter    executable (functionally similar to c++filt, but includes this    demangler only).  */
 end_comment
 
 begin_ifdef
@@ -164,6 +164,17 @@ value|(((CHAR)>= 'a'&& (CHAR)<= 'z')                                     \    ||
 end_define
 
 begin_comment
+comment|/* The prefix prepended by GCC to an identifier represnting the    anonymous namespace.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ANONYMOUS_NAMESPACE_PREFIX
+value|"_GLOBAL_"
+end_define
+
+begin_comment
 comment|/* If flag_verbose is zero, some simplifications will be made to the    output to make it easier to read and supress details that are    generally not of interest to the average C++ programmer.    Otherwise, the demangled representation will attempt to convey as    much information as the mangled form.  */
 end_comment
 
@@ -186,17 +197,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* String_list_t is an extended form of dyn_string_t which provides a link    field.  A string_list_t may safely be cast to and used as a    dyn_string_t.  */
+comment|/* String_list_t is an extended form of dyn_string_t which provides a    link field and a caret position for additions to the string.  A    string_list_t may safely be cast to and used as a dyn_string_t.  */
 end_comment
 
 begin_struct
 struct|struct
 name|string_list_def
 block|{
+comment|/* The dyn_string; must be first.  */
 name|struct
 name|dyn_string
 name|string
 decl_stmt|;
+comment|/* The position at which additional text is added to this string      (using the result_add* macros).  This value is an offset from the      end of the string, not the beginning (and should be      non-positive).  */
+name|int
+name|caret_position
+decl_stmt|;
+comment|/* The next string in the list.  */
 name|struct
 name|string_list_def
 modifier|*
@@ -227,10 +244,6 @@ comment|/* The demangled text of the substitution.  */
 name|dyn_string_t
 name|text
 decl_stmt|;
-comment|/* The template parameter that this represents, indexed from zero.      If this is not a template paramter number, the value is      NOT_TEMPLATE_PARM.  */
-name|int
-name|template_parm_number
-decl_stmt|;
 comment|/* Whether this substitution represents a template item.  */
 name|int
 name|template_p
@@ -240,13 +253,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|NOT_TEMPLATE_PARM
-value|(-1)
-end_define
 
 begin_comment
 comment|/* Data structure representing a template argument list.  */
@@ -483,11 +489,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|status_t
-name|result_close_template_list
+name|result_add_separated_char
 name|PARAMS
 argument_list|(
 operator|(
 name|demangling_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -540,8 +548,6 @@ name|PARAMS
 argument_list|(
 operator|(
 name|demangling_t
-operator|,
-name|int
 operator|,
 name|int
 operator|,
@@ -880,54 +886,126 @@ value|(&(DM)->result->string)
 end_define
 
 begin_comment
-comment|/* Appends a dyn_string_t to the demangled result.  */
+comment|/* Returns the position at which new text is inserted into the    demangled result.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|result_append_string
+name|result_caret_pos
+parameter_list|(
+name|DM
+parameter_list|)
+define|\
+value|(result_length (DM) +                                                 \    ((string_list_t) result_string (DM))->caret_position)
+end_define
+
+begin_comment
+comment|/* Adds a dyn_string_t to the demangled result.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|result_add_string
 parameter_list|(
 name|DM
 parameter_list|,
 name|STRING
 parameter_list|)
 define|\
-value|(dyn_string_append (&(DM)->result->string, (STRING))                  \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+value|(dyn_string_insert (&(DM)->result->string,                            \ 		      result_caret_pos (DM), (STRING))                  \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
 end_define
 
 begin_comment
-comment|/* Appends NUL-terminated string CSTR to the demangled result.  */
+comment|/* Adds NUL-terminated string CSTR to the demangled result.    */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|result_append
+name|result_add
 parameter_list|(
 name|DM
 parameter_list|,
 name|CSTR
 parameter_list|)
 define|\
-value|(dyn_string_append_cstr (&(DM)->result->string, (CSTR))               \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+value|(dyn_string_insert_cstr (&(DM)->result->string,                       \ 			   result_caret_pos (DM), (CSTR))               \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
 end_define
 
 begin_comment
-comment|/* Appends character CHAR to the demangled result.  */
+comment|/* Adds character CHAR to the demangled result.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|result_append_char
+name|result_add_char
 parameter_list|(
 name|DM
 parameter_list|,
 name|CHAR
 parameter_list|)
 define|\
-value|(dyn_string_append_char (&(DM)->result->string, (CHAR))               \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+value|(dyn_string_insert_char (&(DM)->result->string,                       \ 			   result_caret_pos (DM), (CHAR))               \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+end_define
+
+begin_comment
+comment|/* Inserts a dyn_string_t to the demangled result at position POS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|result_insert_string
+parameter_list|(
+name|DM
+parameter_list|,
+name|POS
+parameter_list|,
+name|STRING
+parameter_list|)
+define|\
+value|(dyn_string_insert (&(DM)->result->string, (POS), (STRING))           \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+end_define
+
+begin_comment
+comment|/* Inserts NUL-terminated string CSTR to the demangled result at    position POS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|result_insert
+parameter_list|(
+name|DM
+parameter_list|,
+name|POS
+parameter_list|,
+name|CSTR
+parameter_list|)
+define|\
+value|(dyn_string_insert_cstr (&(DM)->result->string, (POS), (CSTR))        \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+end_define
+
+begin_comment
+comment|/* Inserts character CHAR to the demangled result at position POS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|result_insert_char
+parameter_list|(
+name|DM
+parameter_list|,
+name|POS
+parameter_list|,
+name|CHAR
+parameter_list|)
+define|\
+value|(dyn_string_insert_char (&(DM)->result->string, (POS), (CHAR))        \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
 end_define
 
 begin_comment
@@ -946,18 +1024,27 @@ value|dyn_string_length (&(DM)->result->string)
 end_define
 
 begin_comment
-comment|/* Appends a space to the demangled result if the last character is    not a space.  */
+comment|/* Appends a (less-than, greater-than) character to the result in DM    to (open, close) a template argument or parameter list.  Appends a    space first if necessary to prevent spurious elision of angle    brackets with the previous character.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|result_append_space
+name|result_open_template_list
 parameter_list|(
 name|DM
 parameter_list|)
-define|\
-value|(dyn_string_append_space (&(DM)->result->string)                      \    ? STATUS_OK : STATUS_ALLOCATION_FAILED)
+value|result_add_separated_char(DM, '<')
+end_define
+
+begin_define
+define|#
+directive|define
+name|result_close_template_list
+parameter_list|(
+name|DM
+parameter_list|)
+value|result_add_separated_char(DM, '>')
 end_define
 
 begin_comment
@@ -1138,6 +1225,12 @@ name|string_list_def
 argument_list|)
 argument_list|)
 decl_stmt|;
+name|s
+operator|->
+name|caret_position
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -1212,69 +1305,82 @@ block|}
 end_function
 
 begin_comment
-comment|/* Appends a greater-than character to the demangled result.  If the    last character is a greater-than character, a space is inserted    first, so that the two greater-than characters don't look like a    right shift token.  */
+comment|/* Appends CHARACTER to the demangled result.  If the current trailing    character of the result is CHARACTER, a space is inserted first.  */
 end_comment
 
 begin_function
 specifier|static
 name|status_t
-name|result_close_template_list
+name|result_add_separated_char
 parameter_list|(
 name|dm
+parameter_list|,
+name|character
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
-block|{
-name|dyn_string_t
-name|s
-init|=
-operator|&
-name|dm
-operator|->
-name|result
-operator|->
-name|string
+name|int
+name|character
 decl_stmt|;
-comment|/* Add a space if the last character is already a closing angle      bracket, so that a nested template arg list doesn't look like      it's closed with a right-shift operator.  */
-if|if
-condition|(
-name|dyn_string_last_char
-argument_list|(
-name|s
-argument_list|)
-operator|==
-literal|'>'
-condition|)
 block|{
+name|char
+modifier|*
+name|result
+init|=
+name|dyn_string_buf
+argument_list|(
+name|result_string
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|int
+name|caret_pos
+init|=
+name|result_caret_pos
+argument_list|(
+name|dm
+argument_list|)
+decl_stmt|;
+comment|/* Add a space if the last character is already the character we      want to add.  */
 if|if
 condition|(
-operator|!
-name|dyn_string_append_char
+name|caret_pos
+operator|>
+literal|0
+operator|&&
+name|result
+index|[
+name|caret_pos
+operator|-
+literal|1
+index|]
+operator|==
+name|character
+condition|)
+name|RETURN_IF_ERROR
 argument_list|(
-name|s
+name|result_add_char
+argument_list|(
+name|dm
 argument_list|,
 literal|' '
 argument_list|)
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-block|}
-comment|/* Add closing angle brackets.  */
-if|if
-condition|(
-operator|!
-name|dyn_string_append_char
-argument_list|(
-name|s
-argument_list|,
-literal|'>'
 argument_list|)
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
+expr_stmt|;
+comment|/* Add the character.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add_char
+argument_list|(
+name|dm
+argument_list|,
+name|character
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|STATUS_OK
 return|;
@@ -1375,6 +1481,163 @@ block|}
 end_function
 
 begin_comment
+comment|/* Returns the current value of the caret for the result string.  The    value is an offet from the end of the result string.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|result_get_caret
+parameter_list|(
+name|dm
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|(
+name|string_list_t
+operator|)
+name|result_string
+argument_list|(
+name|dm
+argument_list|)
+operator|)
+operator|->
+name|caret_position
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Sets the value of the caret for the result string, counted as an    offet from the end of the result string.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|result_set_caret
+parameter_list|(
+name|dm
+parameter_list|,
+name|position
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+name|int
+name|position
+decl_stmt|;
+block|{
+operator|(
+operator|(
+name|string_list_t
+operator|)
+name|result_string
+argument_list|(
+name|dm
+argument_list|)
+operator|)
+operator|->
+name|caret_position
+operator|=
+name|position
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Shifts the position of the next addition to the result by    POSITION_OFFSET.  A negative value shifts the caret to the left.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|result_shift_caret
+parameter_list|(
+name|dm
+parameter_list|,
+name|position_offset
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+name|int
+name|position_offset
+decl_stmt|;
+block|{
+operator|(
+operator|(
+name|string_list_t
+operator|)
+name|result_string
+argument_list|(
+name|dm
+argument_list|)
+operator|)
+operator|->
+name|caret_position
+operator|+=
+name|position_offset
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns non-zero if the character that comes right before the place    where text will be added to the result is a space.  In this case,    the caller should supress adding another space.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|result_previous_char_is_space
+parameter_list|(
+name|dm
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|result
+init|=
+name|dyn_string_buf
+argument_list|(
+name|result_string
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|int
+name|pos
+init|=
+name|result_caret_pos
+argument_list|(
+name|dm
+argument_list|)
+decl_stmt|;
+return|return
+name|pos
+operator|>
+literal|0
+operator|&&
+name|result
+index|[
+name|pos
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Returns the start position of a fragment of the demangled result    that will be a substitution candidate.  Should be called at the    start of productions that can add substitutions.  */
 end_comment
 
@@ -1390,7 +1653,7 @@ name|dm
 decl_stmt|;
 block|{
 return|return
-name|result_length
+name|result_caret_pos
 argument_list|(
 name|dm
 argument_list|)
@@ -1399,7 +1662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Adds the suffix of the current demangled result of DM starting at    START_POSITION as a potential substitution.  If TEMPLATE_P is    non-zero, this potential substitution is a template-id.       If TEMPLATE_PARM_NUMBER is not NOT_TEMPLATE_PARM, the substitution    is for that particular<template-param>, and is distinct from other    otherwise-identical types and other<template-param>s with    different indices.  */
+comment|/* Adds the suffix of the current demangled result of DM starting at    START_POSITION as a potential substitution.  If TEMPLATE_P is    non-zero, this potential substitution is a template-id.  */
 end_comment
 
 begin_function
@@ -1412,8 +1675,6 @@ parameter_list|,
 name|start_position
 parameter_list|,
 name|template_p
-parameter_list|,
-name|template_parm_number
 parameter_list|)
 name|demangling_t
 name|dm
@@ -1423,9 +1684,6 @@ name|start_position
 decl_stmt|;
 name|int
 name|template_p
-decl_stmt|;
-name|int
-name|template_parm_number
 decl_stmt|;
 block|{
 name|dyn_string_t
@@ -1468,7 +1726,7 @@ name|result
 argument_list|,
 name|start_position
 argument_list|,
-name|result_length
+name|result_caret_pos
 argument_list|(
 name|dm
 argument_list|)
@@ -1482,61 +1740,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|STATUS_ALLOCATION_FAILED
-return|;
-block|}
-comment|/* Check whether SUBSTITUTION already occurs.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|dm
-operator|->
-name|num_substitutions
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|dyn_string_eq
-argument_list|(
-name|dm
-operator|->
-name|substitutions
-index|[
-name|i
-index|]
-operator|.
-name|text
-argument_list|,
-name|substitution
-argument_list|)
-operator|&&
-name|dm
-operator|->
-name|substitutions
-index|[
-name|i
-index|]
-operator|.
-name|template_parm_number
-operator|==
-name|template_parm_number
-condition|)
-comment|/* Found SUBSTITUTION already present.  */
-block|{
-comment|/* Callers expect this function to take ownership of 	   SUBSTITUTION, so delete it.  */
-name|dyn_string_delete
-argument_list|(
-name|substitution
-argument_list|)
-expr_stmt|;
-return|return
-name|STATUS_OK
 return|;
 block|}
 comment|/* If there's no room for the new entry, grow the array.  */
@@ -1554,10 +1757,25 @@ block|{
 name|size_t
 name|new_array_size
 decl_stmt|;
+if|if
+condition|(
+name|dm
+operator|->
+name|substitutions_allocated
+operator|>
+literal|0
+condition|)
 name|dm
 operator|->
 name|substitutions_allocated
 operator|*=
+literal|2
+expr_stmt|;
+else|else
+name|dm
+operator|->
+name|substitutions_allocated
+operator|=
 literal|2
 expr_stmt|;
 name|new_array_size
@@ -1611,6 +1829,13 @@ return|;
 block|}
 block|}
 comment|/* Add the substitution to the array.  */
+name|i
+operator|=
+name|dm
+operator|->
+name|num_substitutions
+operator|++
+expr_stmt|;
 name|dm
 operator|->
 name|substitutions
@@ -1632,22 +1857,6 @@ operator|.
 name|template_p
 operator|=
 name|template_p
-expr_stmt|;
-name|dm
-operator|->
-name|substitutions
-index|[
-name|i
-index|]
-operator|.
-name|template_parm_number
-operator|=
-name|template_parm_number
-expr_stmt|;
-operator|++
-name|dm
-operator|->
-name|num_substitutions
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2708,6 +2917,9 @@ name|PARAMS
 argument_list|(
 operator|(
 name|demangling_t
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2803,6 +3015,45 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|status_t
+name|demangle_nv_offset
+name|PARAMS
+argument_list|(
+operator|(
+name|demangling_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|status_t
+name|demangle_v_offset
+name|PARAMS
+argument_list|(
+operator|(
+name|demangling_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|status_t
+name|demangle_call_offset
+name|PARAMS
+argument_list|(
+operator|(
+name|demangling_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|status_t
 name|demangle_special_name
 name|PARAMS
 argument_list|(
@@ -2834,6 +3085,11 @@ name|PARAMS
 argument_list|(
 operator|(
 name|demangling_t
+operator|,
+name|int
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2890,6 +3146,7 @@ operator|(
 name|demangling_t
 operator|,
 name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2905,6 +3162,7 @@ operator|(
 name|demangling_t
 operator|,
 name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2934,6 +3192,9 @@ name|PARAMS
 argument_list|(
 operator|(
 name|demangling_t
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2947,9 +3208,6 @@ name|PARAMS
 argument_list|(
 operator|(
 name|demangling_t
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3044,9 +3302,6 @@ name|demangling_t
 operator|,
 name|int
 operator|*
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3097,6 +3352,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|status_t
@@ -3114,6 +3375,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* When passed to demangle_bare_function_type, indicates that the    function's return type is not encoded before its parameter types.  */
 end_comment
@@ -3122,7 +3388,7 @@ begin_define
 define|#
 directive|define
 name|BFT_NO_RETURN_TYPE
-value|-1
+value|NULL
 end_define
 
 begin_comment
@@ -3272,7 +3538,7 @@ name|dm
 decl_stmt|;
 block|{
 name|int
-name|template_p
+name|encode_return_type
 decl_stmt|;
 name|int
 name|start_position
@@ -3303,7 +3569,7 @@ expr_stmt|;
 comment|/* Remember where the name starts.  If it turns out to be a template      function, we'll have to insert the return type here.  */
 name|start_position
 operator|=
-name|result_length
+name|result_caret_pos
 argument_list|(
 name|dm
 argument_list|)
@@ -3336,11 +3602,11 @@ argument_list|(
 name|dm
 argument_list|,
 operator|&
-name|template_p
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If there's anything left, the name was a function name, with 	 maybe its return type, and its parameters types, following.  */
+comment|/* If there's anything left, the name was a function name, with 	 maybe its return type, and its parameter types, following.  */
 if|if
 condition|(
 operator|!
@@ -3359,7 +3625,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|template_p
+name|encode_return_type
 condition|)
 comment|/* Template functions have their return type encoded.  The 	       return type should be inserted at start_position.  */
 name|RETURN_IF_ERROR
@@ -3368,6 +3634,7 @@ name|demangle_bare_function_type
 argument_list|(
 name|dm
 argument_list|,
+operator|&
 name|start_position
 argument_list|)
 argument_list|)
@@ -3411,19 +3678,16 @@ name|demangle_name
 parameter_list|(
 name|dm
 parameter_list|,
-name|template_p
+name|encode_return_type
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
 name|int
 modifier|*
-name|template_p
+name|encode_return_type
 decl_stmt|;
 block|{
-name|int
-name|special_std_substitution
-decl_stmt|;
 name|int
 name|start
 init|=
@@ -3431,6 +3695,25 @@ name|substitution_start
 argument_list|(
 name|dm
 argument_list|)
+decl_stmt|;
+name|char
+name|peek
+init|=
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+decl_stmt|;
+name|int
+name|is_std_substitution
+init|=
+literal|0
+decl_stmt|;
+comment|/* Generally, the return type is encoded if the function is a      template-id, and suppressed otherwise.  There are a few cases,      though, in which the return type is not encoded even for a      templated function.  In these cases, this flag is set.  */
+name|int
+name|suppress_return_type
+init|=
+literal|0
 decl_stmt|;
 name|DEMANGLE_TRACE
 argument_list|(
@@ -3441,10 +3724,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|peek_char
-argument_list|(
-name|dm
-argument_list|)
+name|peek
 condition|)
 block|{
 case|case
@@ -3457,7 +3737,7 @@ name|demangle_nested_name
 argument_list|(
 name|dm
 argument_list|,
-name|template_p
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3472,6 +3752,11 @@ argument_list|(
 name|dm
 argument_list|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|encode_return_type
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3506,7 +3791,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -3519,53 +3804,28 @@ argument_list|(
 name|demangle_unqualified_name
 argument_list|(
 name|dm
+argument_list|,
+operator|&
+name|suppress_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|is_std_substitution
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
-block|{
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_substitution
 argument_list|(
 name|dm
 argument_list|,
-name|template_p
-argument_list|,
-operator|&
-name|special_std_substitution
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|special_std_substitution
-condition|)
-block|{
-comment|/* This was the magic `std::' substitution.  We can have 		 a<nested-name> or one of the unscoped names 		 following.  */
-name|RETURN_IF_ERROR
-argument_list|(
-name|result_append
-argument_list|(
-name|dm
-argument_list|,
-literal|"::"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|demangle_name
-argument_list|(
-name|dm
-argument_list|,
-name|template_p
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* Check if a template argument list immediately follows. 	 If so, then we just demangled an<unqualified-template-name>.  */
 if|if
 condition|(
@@ -3577,6 +3837,11 @@ operator|==
 literal|'I'
 condition|)
 block|{
+comment|/* A template name of the form std::<unqualified-name> is a              substitution candidate.  */
+if|if
+condition|(
+name|is_std_substitution
+condition|)
 name|RETURN_IF_ERROR
 argument_list|(
 name|substitution_add
@@ -3586,11 +3851,10 @@ argument_list|,
 name|start
 argument_list|,
 literal|0
-argument_list|,
-name|NOT_TEMPLATE_PARM
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Demangle the<template-args> here.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_template_args
@@ -3599,7 +3863,19 @@ name|dm
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|*
+name|encode_return_type
+operator|=
+operator|!
+name|suppress_return_type
+expr_stmt|;
 block|}
+else|else
+operator|*
+name|encode_return_type
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 comment|/* This is an<unscoped-name> or<unscoped-template-name>.  */
@@ -3608,6 +3884,9 @@ argument_list|(
 name|demangle_unqualified_name
 argument_list|(
 name|dm
+argument_list|,
+operator|&
+name|suppress_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3632,8 +3911,6 @@ argument_list|,
 name|start
 argument_list|,
 literal|0
-argument_list|,
-name|NOT_TEMPLATE_PARM
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3646,14 +3923,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|template_p
+name|encode_return_type
 operator|=
-literal|1
+operator|!
+name|suppress_return_type
 expr_stmt|;
 block|}
 else|else
 operator|*
-name|template_p
+name|encode_return_type
 operator|=
 literal|0
 expr_stmt|;
@@ -3666,7 +3944,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<nested-name>.<nested-name>       ::= N [<CV-qualifiers>]<prefix><component> E  */
+comment|/* Demangles and emits a<nested-name>.<nested-name>     ::= N [<CV-qualifiers>]<prefix><unqulified-name> E  */
 end_comment
 
 begin_function
@@ -3676,14 +3954,14 @@ name|demangle_nested_name
 parameter_list|(
 name|dm
 parameter_list|,
-name|template_p
+name|encode_return_type
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
 name|int
 modifier|*
-name|template_p
+name|encode_return_type
 decl_stmt|;
 block|{
 name|char
@@ -3728,18 +4006,20 @@ operator|==
 literal|'K'
 condition|)
 block|{
+name|dyn_string_t
+name|cv_qualifiers
+decl_stmt|;
 name|status_t
 name|status
 decl_stmt|;
-comment|/* Snarf up and emit CV qualifiers.  */
-name|dyn_string_t
+comment|/* Snarf up CV qualifiers.  */
 name|cv_qualifiers
-init|=
+operator|=
 name|dyn_string_new
 argument_list|(
 literal|24
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|cv_qualifiers
@@ -3756,15 +4036,47 @@ argument_list|,
 name|cv_qualifiers
 argument_list|)
 expr_stmt|;
+comment|/* Emit them, preceded by a space.  */
 name|status
 operator|=
-name|result_append_string
+name|result_add_char
+argument_list|(
+name|dm
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|status
+operator|=
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
 name|cv_qualifiers
 argument_list|)
 expr_stmt|;
+comment|/* The CV qualifiers that occur in a<nested-name> will be 	 qualifiers for member functions.  These are placed at the end 	 of the function.  Therefore, shift the caret to the left by 	 the length of the qualifiers, so other text is inserted 	 before them and they stay at the end.  */
+name|result_shift_caret
+argument_list|(
+name|dm
+argument_list|,
+operator|-
+name|dyn_string_length
+argument_list|(
+name|cv_qualifiers
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Clean up.  */
 name|dyn_string_delete
 argument_list|(
 name|cv_qualifiers
@@ -3775,14 +4087,6 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|result_append_space
-argument_list|(
-name|dm
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 name|RETURN_IF_ERROR
 argument_list|(
@@ -3790,11 +4094,11 @@ name|demangle_prefix
 argument_list|(
 name|dm
 argument_list|,
-name|template_p
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* No need to demangle the final<component>; demangle_prefix will      handle it.  */
+comment|/* No need to demangle the final<unqualified-name>; demangle_prefix      will handle it.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_char
@@ -3812,7 +4116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<prefix>.<prefix>            ::=<prefix><component>                         ::=<template-prefix><template-args> 			::= # empty 			::=<substitution><template-prefix>   ::=<prefix>                         ::=<substitution><component>         ::=<unqualified-name>                         ::=<local-name>  */
+comment|/* Demangles and emits a<prefix>.<prefix>            ::=<prefix><unqualified-name>                         ::=<template-prefix><template-args> 			::= # empty 			::=<substitution><template-prefix>   ::=<prefix>                         ::=<substitution>  */
 end_comment
 
 begin_function
@@ -3822,14 +4126,14 @@ name|demangle_prefix
 parameter_list|(
 name|dm
 parameter_list|,
-name|template_p
+name|encode_return_type
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
 name|int
 modifier|*
-name|template_p
+name|encode_return_type
 decl_stmt|;
 block|{
 name|int
@@ -3845,7 +4149,13 @@ name|nested
 init|=
 literal|0
 decl_stmt|;
-comment|/* TEMPLATE_P is updated as we decend the nesting chain.  After<template-args>, it is set to non-zero; after everything else it      is set to zero.  */
+comment|/* ENCODE_RETURN_TYPE is updated as we decend the nesting chain.      After<template-args>, it is set to non-zero; after everything      else it is set to zero.  */
+comment|/* Generally, the return type is encoded if the function is a      template-id, and suppressed otherwise.  There are a few cases,      though, in which the return type is not encoded even for a      templated function.  In these cases, this flag is set.  */
+name|int
+name|suppress_return_type
+init|=
+literal|0
+decl_stmt|;
 name|DEMANGLE_TRACE
 argument_list|(
 literal|"prefix"
@@ -3860,9 +4170,6 @@ condition|)
 block|{
 name|char
 name|peek
-decl_stmt|;
-name|int
-name|unused
 decl_stmt|;
 if|if
 condition|(
@@ -3880,6 +4187,17 @@ name|peek_char
 argument_list|(
 name|dm
 argument_list|)
+expr_stmt|;
+comment|/* We'll initialize suppress_return_type to false, and set it to true 	 if we end up demangling a constructor name.  However, make 	 sure we're not actually about to demangle template arguments 	 -- if so, this is the<template-args> following a<template-prefix>, so we'll want the previous flag value 	 around.  */
+if|if
+condition|(
+name|peek
+operator|!=
+literal|'I'
+condition|)
+name|suppress_return_type
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3922,7 +4240,7 @@ name|nested
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -3941,32 +4259,33 @@ name|peek
 operator|==
 literal|'S'
 condition|)
-comment|/* The substitution determines whether this is a 	       template-id.   */
+comment|/* The substitution determines whether this is a 	       template-id.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_substitution
 argument_list|(
 name|dm
 argument_list|,
-name|template_p
-argument_list|,
-operator|&
-name|unused
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
+comment|/* It's just a name.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_unqualified_name
 argument_list|(
 name|dm
+argument_list|,
+operator|&
+name|suppress_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
-name|template_p
+name|encode_return_type
 operator|=
 literal|0
 expr_stmt|;
@@ -3995,29 +4314,6 @@ operator|==
 literal|'I'
 condition|)
 block|{
-if|if
-condition|(
-operator|*
-name|template_p
-condition|)
-return|return
-name|STATUS_INTERNAL_ERROR
-return|;
-comment|/* The template name is a substitution candidate.  */
-name|RETURN_IF_ERROR
-argument_list|(
-name|substitution_add
-argument_list|(
-name|dm
-argument_list|,
-name|start
-argument_list|,
-literal|0
-argument_list|,
-name|NOT_TEMPLATE_PARM
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_template_args
@@ -4026,10 +4322,12 @@ name|dm
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Now we want to indicate to the caller that we've 	     demangled template arguments, thus the prefix was a<template-prefix>.  That's so that the caller knows to 	     demangle the function's return type, if this turns out to 	     be a function name.  But, if it's a member template 	     constructor or a templated conversion operator, report it 	     as untemplated.  Those never get encoded return types.  */
 operator|*
-name|template_p
+name|encode_return_type
 operator|=
-literal|1
+operator|!
+name|suppress_return_type
 expr_stmt|;
 block|}
 elseif|else
@@ -4047,6 +4345,19 @@ else|else
 return|return
 literal|"Unexpected character in<compound-name>."
 return|;
+if|if
+condition|(
+name|peek
+operator|!=
+literal|'S'
+operator|&&
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+operator|!=
+literal|'E'
+condition|)
 comment|/* Add a new substitution for the prefix thus far.  */
 name|RETURN_IF_ERROR
 argument_list|(
@@ -4057,9 +4368,7 @@ argument_list|,
 name|start
 argument_list|,
 operator|*
-name|template_p
-argument_list|,
-name|NOT_TEMPLATE_PARM
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4068,7 +4377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits an<unqualified-name>.  If the<unqualified-name> is a function and the first element in the    argument list should be taken to be its return type,    ENCODE_RETURN_TYPE is non-zero.<unqualified-name>  ::=<operator-name> 			::=<special-name>   			::=<source-name>  */
+comment|/* Demangles and emits an<unqualified-name>.  If this<unqualified-name> is for a special function type that should never    have its return type encoded (particularly, a constructor or    conversion operator), *SUPPRESS_RETURN_TYPE is set to 1; otherwise,    it is set to zero.<unqualified-name>  ::=<operator-name> 			::=<special-name>   			::=<source-name>  */
 end_comment
 
 begin_function
@@ -4077,9 +4386,15 @@ name|status_t
 name|demangle_unqualified_name
 parameter_list|(
 name|dm
+parameter_list|,
+name|suppress_return_type
 parameter_list|)
 name|demangling_t
 name|dm
+decl_stmt|;
+name|int
+modifier|*
+name|suppress_return_type
 decl_stmt|;
 block|{
 name|char
@@ -4096,6 +4411,12 @@ literal|"unqualified-name"
 argument_list|,
 name|dm
 argument_list|)
+expr_stmt|;
+comment|/* By default, don't force suppression of the return type (though      non-template functions still don't get a return type encoded).  */
+operator|*
+name|suppress_return_type
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4131,6 +4452,25 @@ block|{
 name|int
 name|num_args
 decl_stmt|;
+comment|/* Conversion operators never have a return type encoded.  */
+if|if
+condition|(
+name|peek
+operator|==
+literal|'c'
+operator|&&
+name|peek_char_next
+argument_list|(
+name|dm
+argument_list|)
+operator|==
+literal|'v'
+condition|)
+operator|*
+name|suppress_return_type
+operator|=
+literal|1
+expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_operator_name
@@ -4156,6 +4496,19 @@ name|peek
 operator|==
 literal|'D'
 condition|)
+block|{
+comment|/* Constructors never have a return type encoded.  */
+if|if
+condition|(
+name|peek
+operator|==
+literal|'C'
+condition|)
+operator|*
+name|suppress_return_type
+operator|=
+literal|1
+expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_ctor_dtor_name
@@ -4164,6 +4517,7 @@ name|dm
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 return|return
 literal|"Unexpected character in<unqualified-name>."
@@ -4242,7 +4596,7 @@ expr_stmt|;
 comment|/* Emit it.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -4587,6 +4941,88 @@ return|return
 name|STATUS_ALLOCATION_FAILED
 return|;
 block|}
+comment|/* GCC encodes anonymous namespaces using a `_GLOBAL_[_.$]N.'      followed by the source file name and some random characters.      Unless we're in strict mode, decipher these names appropriately.  */
+if|if
+condition|(
+operator|!
+name|flag_strict
+condition|)
+block|{
+name|char
+modifier|*
+name|name
+init|=
+name|dyn_string_buf
+argument_list|(
+name|identifier
+argument_list|)
+decl_stmt|;
+name|int
+name|prefix_length
+init|=
+name|strlen
+argument_list|(
+name|ANONYMOUS_NAMESPACE_PREFIX
+argument_list|)
+decl_stmt|;
+comment|/* Compare the first, fixed part.  */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+name|ANONYMOUS_NAMESPACE_PREFIX
+argument_list|,
+name|prefix_length
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|name
+operator|+=
+name|prefix_length
+expr_stmt|;
+comment|/* The next character might be a period, an underscore, or 	     dollar sign, depending on the target architecture's 	     assembler's capabilities.  After that comes an `N'.  */
+if|if
+condition|(
+operator|(
+operator|*
+name|name
+operator|==
+literal|'.'
+operator|||
+operator|*
+name|name
+operator|==
+literal|'_'
+operator|||
+operator|*
+name|name
+operator|==
+literal|'$'
+operator|)
+operator|&&
+operator|*
+operator|(
+name|name
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'N'
+condition|)
+comment|/* This looks like the anonymous namespace identifier. 	       Replace it with something comprehensible.  */
+name|dyn_string_copy_cstr
+argument_list|(
+name|identifier
+argument_list|,
+literal|"(anonymous namespace)"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 name|STATUS_OK
 return|;
@@ -4594,7 +5030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits an<operator-name>.  If SHORT_NAME is non-zero,    the short form is emitted; otherwise the full source form    (`operator +' etc.) is emitted.  *NUM_ARGS is set to the number of    operands that the operator takes.<operator-name>                   ::= nw        # new                              ::= na        # new[]                   ::= dl        # delete                           ::= da        # delete[]       		  ::= ps        # + (unary)                   ::= ng        # - (unary)                        ::= ad        #& (unary)                        ::= de        # * (unary)                        ::= co        # ~                                ::= pl        # +                                ::= mi        # -                                ::= ml        # *                                ::= dv        # /                                ::= rm        # %                                ::= an        #&                                ::= or        # |                                ::= eo        # ^                                ::= aS        # =                                ::= pL        # +=                               ::= mI        # -=                               ::= mL        # *=                               ::= dV        # /=                               ::= rM        # %=                               ::= aN        #&=                               ::= oR        # |=                               ::= eO        # ^=                               ::= ls        #<<                               ::= rs        #>>                               ::= lS        #<<=                              ::= rS        #>>=                              ::= eq        # ==                               ::= ne        # !=                               ::= lt        #<                                ::= gt        #>                                ::= le        #<=                               ::= ge        #>=                               ::= nt        # !                                ::= aa        #&&                               ::= oo        # ||                               ::= pp        # ++                               ::= mm        # --                               ::= cm        # ,                                ::= pm        # ->*                              ::= pt        # ->                               ::= cl        # ()                               ::= ix        # []                               ::= qu        # ?                   ::= sz        # sizeof                    ::= cv<type> # cast                           ::= vx<source-name>  # vendor extended operator  */
+comment|/* Demangles and emits an<operator-name>.  If SHORT_NAME is non-zero,    the short form is emitted; otherwise the full source form    (`operator +' etc.) is emitted.  *NUM_ARGS is set to the number of    operands that the operator takes.<operator-name>                   ::= nw        # new                              ::= na        # new[]                   ::= dl        # delete                           ::= da        # delete[]       		  ::= ps        # + (unary)                   ::= ng        # - (unary)                        ::= ad        #& (unary)                        ::= de        # * (unary)                        ::= co        # ~                                ::= pl        # +                                ::= mi        # -                                ::= ml        # *                                ::= dv        # /                                ::= rm        # %                                ::= an        #&                                ::= or        # |                                ::= eo        # ^                                ::= aS        # =                                ::= pL        # +=                               ::= mI        # -=                               ::= mL        # *=                               ::= dV        # /=                               ::= rM        # %=                               ::= aN        #&=                               ::= oR        # |=                               ::= eO        # ^=                               ::= ls        #<<                               ::= rs        #>>                               ::= lS        #<<=                              ::= rS        #>>=                              ::= eq        # ==                               ::= ne        # !=                               ::= lt        #<                                ::= gt        #>                                ::= le        #<=                               ::= ge        #>=                               ::= nt        # !                                ::= aa        #&&                               ::= oo        # ||                               ::= pp        # ++                               ::= mm        # --                               ::= cm        # ,                                ::= pm        # ->*                              ::= pt        # ->                               ::= cl        # ()                               ::= ix        # []                               ::= qu        # ?                   ::= sz        # sizeof                    ::= cv<type> # cast         		  ::= v [0-9]<source-name>  # vendor extended operator  */
 end_comment
 
 begin_function
@@ -4977,6 +5413,14 @@ literal|1
 block|}
 block|,
 block|{
+literal|"pt"
+block|,
+literal|"->"
+block|,
+literal|2
+block|}
+block|,
+block|{
 literal|"qu"
 block|,
 literal|"?"
@@ -5081,25 +5525,26 @@ argument_list|,
 name|dm
 argument_list|)
 expr_stmt|;
-comment|/* Is this a vendor extended operator?  */
+comment|/* Is this a vendor-extended operator?  */
 if|if
 condition|(
 name|c0
 operator|==
 literal|'v'
 operator|&&
+name|IS_DIGIT
+argument_list|(
 name|c1
-operator|==
-literal|'x'
+argument_list|)
 condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
-literal|"operator"
+literal|"operator "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5134,7 +5579,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5221,7 +5666,7 @@ name|short_name
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5231,7 +5676,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5293,7 +5738,430 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<special-name>.<special-name> ::= GV<object name>   # Guard variable                    ::= Th[n]<offset number> _<base name><base encoding>                                           # non-virtual base override thunk                    ::= Tv[n]<offset number> _<vcall offset number>                           _<base encoding>                                           # virtual base override thunk                    ::= TV<type>          # virtual table                    ::= TT<type>          # VTT                    ::= TI<type>          # typeinfo structure 		   ::= TS<type>          # typeinfo name       Also demangles the special g++ manglings,<special-name> ::= CT<type><offset number> _<base type>                                           # construction vtable 		   ::= TF<type>	  # typeinfo function (old ABI only) 		   ::= TJ<type>	  # java Class structure  */
+comment|/* Demangles and omits an<nv-offset>.<nv-offset> ::=<offset number>   # non-virtual base override  */
+end_comment
+
+begin_function
+specifier|static
+name|status_t
+name|demangle_nv_offset
+parameter_list|(
+name|dm
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+block|{
+name|dyn_string_t
+name|number
+decl_stmt|;
+name|status_t
+name|status
+init|=
+name|STATUS_OK
+decl_stmt|;
+name|DEMANGLE_TRACE
+argument_list|(
+literal|"h-offset"
+argument_list|,
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the offset.  */
+name|number
+operator|=
+name|dyn_string_new
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|number
+operator|==
+name|NULL
+condition|)
+return|return
+name|STATUS_ALLOCATION_FAILED
+return|;
+name|demangle_number_literally
+argument_list|(
+name|dm
+argument_list|,
+name|number
+argument_list|,
+literal|10
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Don't display the offset unless in verbose mode.  */
+if|if
+condition|(
+name|flag_verbose
+condition|)
+block|{
+name|status
+operator|=
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|" [nv:"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|status
+operator|=
+name|result_add_string
+argument_list|(
+name|dm
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|status
+operator|=
+name|result_add_char
+argument_list|(
+name|dm
+argument_list|,
+literal|']'
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Clean up.  */
+name|dyn_string_delete
+argument_list|(
+name|number
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+name|STATUS_OK
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Demangles and emits a<v-offset>.<v-offset>  ::=<offset number> _<virtual offset number> 			# virtual base override, with vcall offset  */
+end_comment
+
+begin_function
+specifier|static
+name|status_t
+name|demangle_v_offset
+parameter_list|(
+name|dm
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+block|{
+name|dyn_string_t
+name|number
+decl_stmt|;
+name|status_t
+name|status
+init|=
+name|STATUS_OK
+decl_stmt|;
+name|DEMANGLE_TRACE
+argument_list|(
+literal|"v-offset"
+argument_list|,
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the offset.  */
+name|number
+operator|=
+name|dyn_string_new
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|number
+operator|==
+name|NULL
+condition|)
+return|return
+name|STATUS_ALLOCATION_FAILED
+return|;
+name|demangle_number_literally
+argument_list|(
+name|dm
+argument_list|,
+name|number
+argument_list|,
+literal|10
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Don't display the offset unless in verbose mode.  */
+if|if
+condition|(
+name|flag_verbose
+condition|)
+block|{
+name|status
+operator|=
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|" [v:"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|status
+operator|=
+name|result_add_string
+argument_list|(
+name|dm
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|result_add_char
+argument_list|(
+name|dm
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+block|}
+name|dyn_string_delete
+argument_list|(
+name|number
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the separator.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_char
+argument_list|(
+name|dm
+argument_list|,
+literal|'_'
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the vcall offset.  */
+name|number
+operator|=
+name|dyn_string_new
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|number
+operator|==
+name|NULL
+condition|)
+return|return
+name|STATUS_ALLOCATION_FAILED
+return|;
+name|demangle_number_literally
+argument_list|(
+name|dm
+argument_list|,
+name|number
+argument_list|,
+literal|10
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Don't display the vcall offset unless in verbose mode.  */
+if|if
+condition|(
+name|flag_verbose
+condition|)
+block|{
+name|status
+operator|=
+name|result_add_string
+argument_list|(
+name|dm
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|status
+operator|=
+name|result_add_char
+argument_list|(
+name|dm
+argument_list|,
+literal|']'
+argument_list|)
+expr_stmt|;
+block|}
+name|dyn_string_delete
+argument_list|(
+name|number
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+name|STATUS_OK
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Demangles and emits a<call-offset>.<call-offset> ::= h<nv-offset> _ 		  ::= v<v-offset> _  */
+end_comment
+
+begin_function
+specifier|static
+name|status_t
+name|demangle_call_offset
+parameter_list|(
+name|dm
+parameter_list|)
+name|demangling_t
+name|dm
+decl_stmt|;
+block|{
+name|DEMANGLE_TRACE
+argument_list|(
+literal|"call-offset"
+argument_list|,
+name|dm
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+condition|)
+block|{
+case|case
+literal|'h'
+case|:
+name|advance_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the offset.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_nv_offset
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the separator.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_char
+argument_list|(
+name|dm
+argument_list|,
+literal|'_'
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|advance_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the offset.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_v_offset
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the separator.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_char
+argument_list|(
+name|dm
+argument_list|,
+literal|'_'
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+return|return
+literal|"Unrecognized<call-offset>."
+return|;
+block|}
+return|return
+name|STATUS_OK
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Demangles and emits a<special-name>.<special-name> ::= GV<object name>   # Guard variable                    ::= TV<type>          # virtual table                    ::= TT<type>          # VTT                    ::= TI<type>          # typeinfo structure 		   ::= TS<type>          # typeinfo name       Other relevant productions include thunks:<special-name> ::= T<call-offset><base encoding>  			 # base is the nominal target function of thunk<special-name> ::= Tc<call-offset><call-offset><base encoding> 			 # base is the nominal target function of thunk 			 # first call-offset is 'this' adjustment 			 # second call-offset is result adjustment     where<call-offset>  ::= h<nv-offset> _ 		   ::= v<v-offset> _     Also demangles the special g++ manglings,<special-name> ::= TC<type><offset number> _<base type>                                           # construction vtable 		   ::= TF<type>	  # typeinfo function (old ABI only) 		   ::= TJ<type>	  # java Class structure  */
 end_comment
 
 begin_function
@@ -5353,7 +6221,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5411,7 +6279,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5439,7 +6307,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5467,7 +6335,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5495,7 +6363,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5523,7 +6391,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5551,7 +6419,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5579,7 +6447,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5587,74 +6455,12 @@ literal|"non-virtual thunk"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Demangle and emit the offset.  */
-name|number
-operator|=
-name|dyn_string_new
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|number
-operator|==
-name|NULL
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-name|demangle_number_literally
-argument_list|(
-name|dm
-argument_list|,
-name|number
-argument_list|,
-literal|10
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Don't display the offset unless in verbose mode.  */
-if|if
-condition|(
-name|flag_verbose
-condition|)
-block|{
-name|status
-operator|=
-name|result_append_char
-argument_list|(
-name|dm
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_string
-argument_list|(
-name|dm
-argument_list|,
-name|number
-argument_list|)
-expr_stmt|;
-block|}
-name|dyn_string_delete
-argument_list|(
-name|number
-argument_list|)
-expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|status
+name|demangle_nv_offset
+argument_list|(
+name|dm
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Demangle the separator.  */
@@ -5671,7 +6477,7 @@ expr_stmt|;
 comment|/* Demangle and emit the target name and function type.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -5699,161 +6505,20 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
-literal|"virtual thunk "
+literal|"virtual thunk"
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Demangle and emit the offset.  */
-name|number
-operator|=
-name|dyn_string_new
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|number
-operator|==
-name|NULL
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-name|demangle_number_literally
-argument_list|(
-name|dm
-argument_list|,
-name|number
-argument_list|,
-literal|10
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Don't display the offset unless in verbose mode.  */
-if|if
-condition|(
-name|flag_verbose
-condition|)
-block|{
-name|status
-operator|=
-name|result_append_string
-argument_list|(
-name|dm
-argument_list|,
-name|number
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|result_append_char
-argument_list|(
-name|dm
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-block|}
-name|dyn_string_delete
-argument_list|(
-name|number
 argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-comment|/* Demangle the separator.  */
-name|RETURN_IF_ERROR
-argument_list|(
-name|demangle_char
+name|demangle_v_offset
 argument_list|(
 name|dm
-argument_list|,
-literal|'_'
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Demangle and emit the vcall offset.  */
-name|number
-operator|=
-name|dyn_string_new
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|number
-operator|==
-name|NULL
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-name|demangle_number_literally
-argument_list|(
-name|dm
-argument_list|,
-name|number
-argument_list|,
-literal|10
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Don't display the vcall offset unless in verbose mode.  */
-if|if
-condition|(
-name|flag_verbose
-condition|)
-block|{
-name|status
-operator|=
-name|result_append_string
-argument_list|(
-name|dm
-argument_list|,
-name|number
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_char
-argument_list|(
-name|dm
-argument_list|,
-literal|' '
-argument_list|)
-expr_stmt|;
-block|}
-name|dyn_string_delete
-argument_list|(
-name|number
-argument_list|)
-expr_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|status
 argument_list|)
 expr_stmt|;
 comment|/* Demangle the separator.  */
@@ -5870,11 +6535,66 @@ expr_stmt|;
 comment|/* Demangle and emit the target function.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
-literal|"to "
+literal|" to "
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_encoding
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+comment|/* Covariant return thunk.  */
+name|advance_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|"covariant return thunk"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_call_offset
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_call_offset
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Demangle and emit the target function.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|" to "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5907,7 +6627,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -6012,7 +6732,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -6028,7 +6748,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -6048,7 +6768,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -6062,7 +6782,7 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -6100,7 +6820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<ctor-dtor-name>.<ctor-dtor-name>                    ::= C1  # complete object (in-charge) ctor                    ::= C2  # base object (not-in-charge) ctor                    ::= C3  # complete object (in-charge) allocating ctor                    ::= C4  # base object (not-in-charge) allocating ctor                    ::= D0  # deleting (in-charge) dtor                    ::= D1  # complete object (in-charge) dtor                    ::= D2  # base object (not-in-charge) dtor  */
+comment|/* Demangles and emits a<ctor-dtor-name>.<ctor-dtor-name>                    ::= C1  # complete object (in-charge) ctor                    ::= C2  # base object (not-in-charge) ctor                    ::= C3  # complete object (in-charge) allocating ctor                    ::= D0  # deleting (in-charge) dtor                    ::= D1  # complete object (in-charge) dtor                    ::= D2  # base object (not-in-charge) dtor  */
 end_comment
 
 begin_function
@@ -6127,9 +6847,7 @@ literal|"in-charge"
 block|,
 literal|"not-in-charge"
 block|,
-literal|"in-charge allocating"
-block|,
-literal|"not-in-charge allocating"
+literal|"allocating"
 block|}
 decl_stmt|;
 specifier|static
@@ -6193,14 +6911,14 @@ argument_list|(
 name|dm
 argument_list|)
 operator|>
-literal|'4'
+literal|'3'
 condition|)
 return|return
 literal|"Unrecognized constructor."
 return|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -6227,7 +6945,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -6237,7 +6955,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -6250,7 +6968,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -6295,7 +7013,7 @@ literal|"Unrecognized destructor."
 return|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -6305,7 +7023,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -6332,7 +7050,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -6342,7 +7060,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -6355,7 +7073,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -6376,7 +7094,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle pointer, reference, and pointer-to-member cases for    demangle_type.  All consecutive `P's, `R's, and 'M's are joined to    build a pointer/reference type.  We snarf all these, plus the    following<type>, all at once since we need to know whether we have    a pointer to data or pointer to function to construct the right    output syntax.  C++'s pointer syntax is hairy.<type> ::= P<type>             ::= R<type>             ::=<pointer-to-member-type><pointer-to-member-type> ::= M</class/ type></member/ type>  */
+comment|/* Handle pointer, reference, and pointer-to-member cases for    demangle_type.  All consecutive `P's, `R's, and 'M's are joined to    build a pointer/reference type.  We snarf all these, plus the    following<type>, all at once since we need to know whether we have    a pointer to data or pointer to function to construct the right    output syntax.  C++'s pointer syntax is hairy.       This function adds substitution candidates for every nested    pointer/reference type it processes, including the outermost, final    type, assuming the substitution starts at SUBSTITUTION_START in the    demangling result.  For example, if this function demangles    `PP3Foo', it will add a substitution for `Foo', `Foo*', and    `Foo**', in that order.     *INSERT_POS is a quantity used internally, when this function calls    itself recursively, to figure out where to insert pointer    punctuation on the way up.  On entry to this function, INSERT_POS    should point to a temporary value, but that value need not be    initialized.<type> ::= P<type>             ::= R<type>             ::=<pointer-to-member-type><pointer-to-member-type> ::= M</class/ type></member/ type>  */
 end_comment
 
 begin_function
@@ -6385,25 +7103,29 @@ name|status_t
 name|demangle_type_ptr
 parameter_list|(
 name|dm
+parameter_list|,
+name|insert_pos
+parameter_list|,
+name|substitution_start
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
-block|{
-name|char
-name|next
+name|int
+modifier|*
+name|insert_pos
 decl_stmt|;
+name|int
+name|substitution_start
+decl_stmt|;
+block|{
 name|status_t
 name|status
 decl_stmt|;
-comment|/* Collect pointer symbols into this string.  */
-name|dyn_string_t
-name|symbols
+name|int
+name|is_substitution_candidate
 init|=
-name|dyn_string_new
-argument_list|(
-literal|10
-argument_list|)
+literal|1
 decl_stmt|;
 name|DEMANGLE_TRACE
 argument_list|(
@@ -6412,90 +7134,108 @@ argument_list|,
 name|dm
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|symbols
-operator|==
-name|NULL
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
 comment|/* Scan forward, collecting pointers and references into symbols,      until we hit something else.  Then emit the type.  */
-while|while
+switch|switch
 condition|(
-literal|1
-condition|)
-block|{
-name|next
-operator|=
 name|peek_char
 argument_list|(
 name|dm
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|next
-operator|==
-literal|'P'
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|dyn_string_append_char
+case|case
+literal|'P'
+case|:
+comment|/* A pointer.  Snarf the `P'.  */
+name|advance_char
 argument_list|(
-name|symbols
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the underlying type.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_type_ptr
+argument_list|(
+name|dm
+argument_list|,
+name|insert_pos
+argument_list|,
+name|substitution_start
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Insert an asterisk where we're told to; it doesn't 	 necessarily go at the end.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_insert_char
+argument_list|(
+name|dm
+argument_list|,
+operator|*
+name|insert_pos
 argument_list|,
 literal|'*'
 argument_list|)
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
+argument_list|)
+expr_stmt|;
+comment|/* The next (outermost) pointer or reference character should go 	 after this one.  */
+operator|++
+operator|(
+operator|*
+name|insert_pos
+operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+comment|/* A reference.  Snarf the `R'.  */
 name|advance_char
 argument_list|(
 name|dm
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|next
-operator|==
-literal|'R'
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|dyn_string_append_char
+comment|/* Demangle the underlying type.  */
+name|RETURN_IF_ERROR
 argument_list|(
-name|symbols
+name|demangle_type_ptr
+argument_list|(
+name|dm
+argument_list|,
+name|insert_pos
+argument_list|,
+name|substitution_start
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Insert an ampersand where we're told to; it doesn't 	 necessarily go at the end.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_insert_char
+argument_list|(
+name|dm
+argument_list|,
+operator|*
+name|insert_pos
 argument_list|,
 literal|'&'
 argument_list|)
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-name|advance_char
-argument_list|(
-name|dm
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|next
-operator|==
+comment|/* The next (outermost) pointer or reference character should go 	 after this one.  */
+operator|++
+operator|(
+operator|*
+name|insert_pos
+operator|)
+expr_stmt|;
+break|break;
+case|case
 literal|'M'
-condition|)
+case|:
 block|{
-comment|/* Pointer-to-member.  */
+comment|/* A pointer-to-member.  */
 name|dyn_string_t
 name|class_type
 decl_stmt|;
@@ -6532,38 +7272,6 @@ argument_list|(
 name|dm
 argument_list|)
 expr_stmt|;
-comment|/* Build the pointer-to-member notation.  It comes before 	     other pointer and reference qualifiers -- */
-if|if
-condition|(
-operator|!
-name|dyn_string_prepend_cstr
-argument_list|(
-name|symbols
-argument_list|,
-literal|"::*"
-argument_list|)
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-if|if
-condition|(
-operator|!
-name|dyn_string_prepend
-argument_list|(
-name|symbols
-argument_list|,
-name|class_type
-argument_list|)
-condition|)
-return|return
-name|STATUS_ALLOCATION_FAILED
-return|;
-name|dyn_string_delete
-argument_list|(
-name|class_type
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|peek_char
@@ -6573,8 +7281,41 @@ argument_list|)
 operator|==
 literal|'F'
 condition|)
-continue|continue;
-comment|/* Demangle the type of the pointed-to member.  */
+comment|/* A pointer-to-member function.  We want output along the 	   lines of `void (C::*) (int, int)'.  Demangle the function 	   type, which would in this case give `void () (int, int)' 	   and set *insert_pos to the spot between the first 	   parentheses.  */
+name|status
+operator|=
+name|demangle_type_ptr
+argument_list|(
+name|dm
+argument_list|,
+name|insert_pos
+argument_list|,
+name|substitution_start
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+operator|==
+literal|'A'
+condition|)
+comment|/* A pointer-to-member array variable.  We want output that 	   looks like `int (Klass::*) [10]'.  Demangle the array type 	   as `int () [10]', and set *insert_pos to the spot between 	   the parentheses.  */
+name|status
+operator|=
+name|demangle_array_type
+argument_list|(
+name|dm
+argument_list|,
+name|insert_pos
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* A pointer-to-member variable.  Demangle the type of the              pointed-to member.  */
 name|status
 operator|=
 name|demangle_type
@@ -6589,70 +7330,50 @@ name|STATUS_NO_ERROR
 argument_list|(
 name|status
 argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_space
+operator|&&
+operator|!
+name|result_previous_char_is_space
 argument_list|(
 name|dm
 argument_list|)
-expr_stmt|;
-comment|/* Add the pointer-to-member syntax, and other pointer and 	     reference symbols.  */
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
-name|symbols
+literal|' '
 argument_list|)
 expr_stmt|;
-comment|/* Clean up.  */
-name|dyn_string_delete
+comment|/* The pointer-to-member notation (e.g. `C::*') follows the              member's type.  */
+operator|*
+name|insert_pos
+operator|=
+name|result_caret_pos
 argument_list|(
-name|symbols
+name|dm
 argument_list|)
 expr_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-return|return
-name|STATUS_OK
-return|;
 block|}
-elseif|else
+comment|/* Build the pointer-to-member notation.  */
 if|if
 condition|(
-name|next
-operator|==
-literal|'F'
-condition|)
-block|{
-comment|/* Ooh, tricky, a pointer-to-function.  */
-name|int
-name|position
-init|=
-name|result_length
+name|STATUS_NO_ERROR
 argument_list|(
-name|dm
+name|status
 argument_list|)
-decl_stmt|;
+condition|)
 name|status
 operator|=
-name|result_append_char
+name|result_insert
 argument_list|(
 name|dm
 argument_list|,
-literal|'('
+operator|*
+name|insert_pos
+argument_list|,
+literal|"::*"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6664,32 +7385,31 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_insert_string
 argument_list|(
 name|dm
 argument_list|,
-name|symbols
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_char
-argument_list|(
-name|dm
+operator|*
+name|insert_pos
 argument_list|,
-literal|')'
+name|class_type
 argument_list|)
 expr_stmt|;
+comment|/* There may be additional levels of (pointer or reference) 	 indirection in this type.  If so, the `*' and `&' should be 	 added after the pointer-to-member notation (e.g. `C::*&' for 	 a reference to a pointer-to-member of class C).  */
+operator|*
+name|insert_pos
+operator|+=
+name|dyn_string_length
+argument_list|(
+name|class_type
+argument_list|)
+operator|+
+literal|3
+expr_stmt|;
+comment|/* Clean up. */
 name|dyn_string_delete
 argument_list|(
-name|symbols
+name|class_type
 argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
@@ -6697,71 +7417,115 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'F'
+case|:
+comment|/* Ooh, tricky, a pointer-to-function.  When we demangle the 	 function type, the return type should go at the very 	 beginning.  */
+operator|*
+name|insert_pos
+operator|=
+name|result_caret_pos
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* The parentheses indicate this is a function pointer or 	 reference type.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|"()"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Now demangle the function type.  The return type will be 	 inserted before the `()', and the argument list will go after 	 it.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_function_type
 argument_list|(
 name|dm
 argument_list|,
-name|position
+name|insert_pos
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-name|STATUS_OK
-return|;
-block|}
-else|else
-block|{
-comment|/* No more pointe or reference tokens.  Finish up.  */
-name|status
-operator|=
+comment|/* We should now have something along the lines of  	 `void () (int, int)'.  The pointer or reference characters 	 have to inside the first set of parentheses.  *insert_pos has 	 already been updated to point past the end of the return 	 type.  Move it one character over so it points inside the 	 `()'.  */
+operator|++
+operator|(
+operator|*
+name|insert_pos
+operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+comment|/* An array pointer or reference.  demangle_array_type will figure 	 out where the asterisks and ampersands go.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_array_type
+argument_list|(
+name|dm
+argument_list|,
+name|insert_pos
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* No more pointer or reference tokens; this is therefore a 	 pointer to data.  Finish up by demangling the underlying 	 type.  */
+name|RETURN_IF_ERROR
+argument_list|(
 name|demangle_type
 argument_list|(
 name|dm
 argument_list|)
+argument_list|)
 expr_stmt|;
+comment|/* The pointer or reference characters follow the underlying 	 type, as in `int*&'.  */
+operator|*
+name|insert_pos
+operator|=
+name|result_caret_pos
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+comment|/* Because of the production<type> ::=<substitution>, 	 demangle_type will already have added the underlying type as 	 a substitution candidate.  Don't do it again.  */
+name|is_substitution_candidate
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
+name|is_substitution_candidate
 condition|)
-name|status
-operator|=
-name|result_append_string
+name|RETURN_IF_ERROR
+argument_list|(
+name|substitution_add
 argument_list|(
 name|dm
 argument_list|,
-name|symbols
+name|substitution_start
+argument_list|,
+literal|0
 argument_list|)
-expr_stmt|;
-name|dyn_string_delete
-argument_list|(
-name|symbols
-argument_list|)
-expr_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|status
 argument_list|)
 expr_stmt|;
 return|return
 name|STATUS_OK
 return|;
 block|}
-block|}
-block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<type>.<type> ::=<builtin-type> 	   ::=<function-type> 	   ::=<class-enum-type> 	   ::=<array-type> 	   ::=<pointer-to-member-type> 	   ::=<template-param>            ::=<CV-qualifiers><type> 	   ::= P<type>   # pointer-to 	   ::= R<type>   # reference-to 	   ::= C<type>   # complex pair (C 2000) 	   ::= G<type>   # imaginary (C 2000) 	   ::= U<source-name><type>     # vendor extended type qualifier 	   ::=<substitution>  */
+comment|/* Demangles and emits a<type>.<type> ::=<builtin-type> 	   ::=<function-type> 	   ::=<class-enum-type> 	   ::=<array-type> 	   ::=<pointer-to-member-type> 	   ::=<template-param> 	   ::=<template-template-param><template-args>            ::=<CV-qualifiers><type> 	   ::= P<type>   # pointer-to 	   ::= R<type>   # reference-to 	   ::= C<type>   # complex pair (C 2000) 	   ::= G<type>   # imaginary (C 2000) 	   ::= U<source-name><type>     # vendor extended type qualifier 	   ::=<substitution>  */
 end_comment
 
 begin_function
@@ -6795,15 +7559,7 @@ name|char
 name|peek_next
 decl_stmt|;
 name|int
-name|template_p
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|special_std_substitution
-decl_stmt|;
-name|int
-name|is_builtin_type
+name|encode_return_type
 init|=
 literal|0
 decl_stmt|;
@@ -6816,9 +7572,13 @@ name|dm
 argument_list|)
 decl_stmt|;
 name|int
-name|template_parm
+name|insert_pos
+decl_stmt|;
+comment|/* A<type> can be a<substitution>; therefore, this<type> is a      substitution candidate unless a special condition holds (see      below).  */
+name|int
+name|is_substitution_candidate
 init|=
-name|NOT_TEMPLATE_PARM
+literal|1
 decl_stmt|;
 name|DEMANGLE_TRACE
 argument_list|(
@@ -6854,10 +7614,11 @@ argument_list|(
 name|dm
 argument_list|,
 operator|&
-name|template_p
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Lower-case letters begin<builtin-type>s, except for `r', which      denotes restrict.  */
 elseif|else
 if|if
 condition|(
@@ -6868,6 +7629,10 @@ operator|&&
 name|peek
 operator|<=
 literal|'z'
+operator|&&
+name|peek
+operator|!=
+literal|'r'
 condition|)
 block|{
 name|RETURN_IF_ERROR
@@ -6878,9 +7643,10 @@ name|dm
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|is_builtin_type
+comment|/* Built-in types are not substitution candidates.  */
+name|is_substitution_candidate
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -6898,6 +7664,7 @@ case|:
 case|case
 literal|'K'
 case|:
+comment|/* CV-qualifiers (including restrict).  We have to demangle 	   them off to the side, since C++ syntax puts them in a funny 	   place for qualified pointer and reference types.  */
 block|{
 name|status_t
 name|status
@@ -6910,6 +7677,14 @@ argument_list|(
 literal|24
 argument_list|)
 decl_stmt|;
+name|int
+name|old_caret_position
+init|=
+name|result_get_caret
+argument_list|(
+name|dm
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|cv_qualifiers
@@ -6919,6 +7694,7 @@ condition|)
 return|return
 name|STATUS_ALLOCATION_FAILED
 return|;
+comment|/* Decode all adjacent CV qualifiers.  */
 name|demangle_CV_qualifiers
 argument_list|(
 name|dm
@@ -6926,103 +7702,28 @@ argument_list|,
 name|cv_qualifiers
 argument_list|)
 expr_stmt|;
-comment|/* If the qualifiers apply to a pointer or reference, they 	     need to come after the whole qualified type.  */
-if|if
-condition|(
-name|peek_char
-argument_list|(
-name|dm
-argument_list|)
-operator|==
-literal|'P'
-operator|||
-name|peek_char
-argument_list|(
-name|dm
-argument_list|)
-operator|==
-literal|'R'
-condition|)
-block|{
+comment|/* Emit them, and shift the caret left so that the 	     underlying type will be emitted before the qualifiers.  */
 name|status
 operator|=
-name|demangle_type
-argument_list|(
-name|dm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_space
-argument_list|(
-name|dm
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
 name|cv_qualifiers
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Otherwise, the qualifiers come first.  */
-else|else
-block|{
-name|status
-operator|=
-name|result_append_string
+name|result_shift_caret
 argument_list|(
 name|dm
 argument_list|,
+operator|-
+name|dyn_string_length
+argument_list|(
 name|cv_qualifiers
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|result_append_space
-argument_list|(
-name|dm
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-name|status
-operator|=
-name|demangle_type
-argument_list|(
-name|dm
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Clean up.  */
 name|dyn_string_delete
 argument_list|(
 name|cv_qualifiers
@@ -7031,6 +7732,42 @@ expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
 name|status
+argument_list|)
+expr_stmt|;
+comment|/* Also prepend a blank, if needed.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_add_char
+argument_list|(
+name|dm
+argument_list|,
+literal|' '
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result_shift_caret
+argument_list|(
+name|dm
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the underlying type.  It will be emitted before 	     the CV qualifiers, since we moved the caret.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_type
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Put the caret back where it was previously.  */
+name|result_set_caret
+argument_list|(
+name|dm
+argument_list|,
+name|old_caret_position
 argument_list|)
 expr_stmt|;
 block|}
@@ -7049,6 +7786,8 @@ argument_list|(
 name|demangle_array_type
 argument_list|(
 name|dm
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7056,17 +7795,50 @@ break|break;
 case|case
 literal|'T'
 case|:
+comment|/* It's either a<template-param> or a<template-template-param>.  In either case, demangle the 	   `T' token first.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_template_param
 argument_list|(
 name|dm
-argument_list|,
-operator|&
-name|template_parm
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Check for a template argument list; if one is found, it's a<template-template-param> ::=<template-param>                                        ::=<substitution>  */
+if|if
+condition|(
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+operator|==
+literal|'I'
+condition|)
+block|{
+comment|/* Add a substitution candidate.  The template parameter 	       `T' token is a substitution candidate by itself, 	       without the template argument list.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|substitution_add
+argument_list|(
+name|dm
+argument_list|,
+name|start
+argument_list|,
+name|encode_return_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Now demangle the template argument list.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_template_args
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* The entire type, including the template template 	       parameter and its argument list, will be added as a 	       substitution candidate below.  */
+block|}
 break|break;
 case|case
 literal|'S'
@@ -7090,6 +7862,7 @@ name|peek_next
 operator|==
 literal|'_'
 condition|)
+block|{
 name|RETURN_IF_ERROR
 argument_list|(
 name|demangle_substitution
@@ -7097,22 +7870,75 @@ argument_list|(
 name|dm
 argument_list|,
 operator|&
-name|template_p
-argument_list|,
-operator|&
-name|special_std_substitution
+name|encode_return_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* The substituted name may have been a template name. 	       Check if template arguments follow, and if so, demangle 	       them.  */
+if|if
+condition|(
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+operator|==
+literal|'I'
+condition|)
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_template_args
+argument_list|(
+name|dm
 argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+comment|/* A substitution token is not itself a substitution 		 candidate.  (However, if the substituted template is 		 instantiated, the resulting type is.)  */
+name|is_substitution_candidate
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Now some trickiness.  We have a special substitution 	       here.  Often, the special substitution provides the 	       name of a template that's subsequently instantiated, 	       for instance `SaIcE' => std::allocator<char>.  In these 	       cases we need to add a substitution candidate for the 	       entire<class-enum-type> and thus don't want to clear 	       the is_substitution_candidate flag.  	       However, it's possible that what we have here is a 	       substitution token representing an entire type, such as 	       `Ss' => std::string.  In this case, we mustn't add a 	       new substitution candidate for this substitution token. 	       To detect this case, remember where the start of the 	       substitution token is.  */
+specifier|const
+name|char
+modifier|*
+name|next
+init|=
+name|dm
+operator|->
+name|next
+decl_stmt|;
+comment|/* Now demangle the<class-enum-type>.  */
+name|RETURN_IF_ERROR
+argument_list|(
 name|demangle_class_enum_type
 argument_list|(
 name|dm
 argument_list|,
 operator|&
-name|template_p
+name|encode_return_type
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If all that was just demangled is the two-character 	       special substitution token, supress the addition of a 	       new candidate for it.  */
+if|if
+condition|(
+name|dm
+operator|->
+name|next
+operator|==
+name|next
+operator|+
+literal|2
+condition|)
+name|is_substitution_candidate
+operator|=
+literal|0
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'P'
@@ -7128,8 +7954,18 @@ argument_list|(
 name|demangle_type_ptr
 argument_list|(
 name|dm
+argument_list|,
+operator|&
+name|insert_pos
+argument_list|,
+name|start
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* demangle_type_ptr adds all applicable substitution 	   candidates.  */
+name|is_substitution_candidate
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -7138,7 +7974,7 @@ case|:
 comment|/* A C99 complex type.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -7166,7 +8002,7 @@ case|:
 comment|/* A C99 imaginary type.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -7191,7 +8027,7 @@ break|break;
 case|case
 literal|'U'
 case|:
-comment|/* Vendor extended type qualifier.  */
+comment|/* Vendor-extended type qualifier.  */
 name|advance_char
 argument_list|(
 name|dm
@@ -7207,7 +8043,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -7229,13 +8065,11 @@ return|return
 literal|"Unexpected character in<type>."
 return|;
 block|}
-comment|/* Unqualified builin types are not substitution candidates.  */
 if|if
 condition|(
-operator|!
-name|is_builtin_type
+name|is_substitution_candidate
 condition|)
-comment|/* Add a new substitution for the type. If this type was a<template-param>, pass its index since from the point of        substitutions, a<template-param> token is a substitution        candidate distinct from the type that is substituted for it.  */
+comment|/* Add a new substitution for the type. If this type was a<template-param>, pass its index since from the point of        substitutions; a<template-param> token is a substitution        candidate distinct from the type that is substituted for it.  */
 name|RETURN_IF_ERROR
 argument_list|(
 name|substitution_add
@@ -7244,9 +8078,7 @@ name|dm
 argument_list|,
 name|start
 argument_list|,
-name|template_p
-argument_list|,
-name|template_parm
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7450,7 +8282,7 @@ literal|"Unrecognized<builtin-type> code."
 return|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -7613,7 +8445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<function-type> FUNCTION_NAME_POS is the    position in the result string of the start of the function    identifier, at which the function's return type will be inserted.<function-type> ::= F [Y]<bare-function-type> E  */
+comment|/* Demangles and emits a<function-type>.  *FUNCTION_NAME_POS is the    position in the result string of the start of the function    identifier, at which the function's return type will be inserted;    *FUNCTION_NAME_POS is updated to position past the end of the    function's return type.<function-type> ::= F [Y]<bare-function-type> E  */
 end_comment
 
 begin_function
@@ -7629,6 +8461,7 @@ name|demangling_t
 name|dm
 decl_stmt|;
 name|int
+modifier|*
 name|function_name_pos
 decl_stmt|;
 block|{
@@ -7666,7 +8499,7 @@ name|flag_verbose
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -7723,6 +8556,7 @@ name|demangling_t
 name|dm
 decl_stmt|;
 name|int
+modifier|*
 name|return_type_pos
 decl_stmt|;
 block|{
@@ -7750,7 +8584,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -7826,7 +8660,21 @@ name|dyn_string_append_space
 argument_list|(
 name|return_type
 argument_list|)
-operator|||
+condition|)
+name|status
+operator|=
+name|STATUS_ALLOCATION_FAILED
+expr_stmt|;
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|dyn_string_insert
 argument_list|(
@@ -7835,6 +8683,7 @@ argument_list|(
 name|dm
 argument_list|)
 argument_list|,
+operator|*
 name|return_type_pos
 argument_list|,
 name|return_type
@@ -7844,6 +8693,16 @@ name|status
 operator|=
 name|STATUS_ALLOCATION_FAILED
 expr_stmt|;
+else|else
+operator|*
+name|return_type_pos
+operator|+=
+name|dyn_string_length
+argument_list|(
+name|return_type
+argument_list|)
+expr_stmt|;
+block|}
 name|dyn_string_delete
 argument_list|(
 name|return_type
@@ -7867,15 +8726,14 @@ argument_list|)
 operator|==
 literal|'v'
 condition|)
-block|{
 comment|/* Consume the v.  */
 name|advance_char
 argument_list|(
 name|dm
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
+else|else
+block|{
 comment|/* Separate parameter types by commas.  */
 if|if
 condition|(
@@ -7885,7 +8743,7 @@ literal|0
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -7903,13 +8761,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 operator|++
 name|sequence
 expr_stmt|;
 block|}
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -7917,6 +8776,27 @@ literal|')'
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* We should have demangled at least one parameter type (which would      be void, for a function that takes no parameters), plus the      return type, if we were supposed to demangle that.  */
+if|if
+condition|(
+name|sequence
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|"Missing function return type."
+return|;
+elseif|else
+if|if
+condition|(
+name|sequence
+operator|==
+literal|0
+condition|)
+return|return
+literal|"Missing function parameter."
+return|;
 return|return
 name|STATUS_OK
 return|;
@@ -7924,7 +8804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<class-enum-type>.  *TEMPLATE_P is set to    non-zero if the type is a template-id, zero otherwise.<class-enum-type> ::=<name>  */
+comment|/* Demangles and emits a<class-enum-type>.  *ENCODE_RETURN_TYPE is set to    non-zero if the type is a template-id, zero otherwise.<class-enum-type> ::=<name>  */
 end_comment
 
 begin_function
@@ -7934,14 +8814,14 @@ name|demangle_class_enum_type
 parameter_list|(
 name|dm
 parameter_list|,
-name|template_p
+name|encode_return_type
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
 name|int
 modifier|*
-name|template_p
+name|encode_return_type
 decl_stmt|;
 block|{
 name|DEMANGLE_TRACE
@@ -7957,7 +8837,7 @@ name|demangle_name
 argument_list|(
 name|dm
 argument_list|,
-name|template_p
+name|encode_return_type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7968,7 +8848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits an<array-type>.<array-type> ::= A [<dimension number>] _<element type>  */
+comment|/* Demangles and emits an<array-type>.       If PTR_INSERT_POS is not NULL, the array type is formatted as a    pointer or reference to an array, except that asterisk and    ampersand punctuation is omitted (since it's not know at this    point).  *PTR_INSERT_POS is set to the position in the demangled    name at which this punctuation should be inserted.  For example,    `A10_i' is demangled to `int () [10]' and *PTR_INSERT_POS points    between the parentheses.     If PTR_INSERT_POS is NULL, the array type is assumed not to be    pointer- or reference-qualified.  Then, for example, `A10_i' is    demangled simply as `int[10]'.<array-type> ::= A [<dimension number>] _<element type>                    ::= A<dimension expression> _<element type>  */
 end_comment
 
 begin_function
@@ -7977,22 +8857,83 @@ name|status_t
 name|demangle_array_type
 parameter_list|(
 name|dm
+parameter_list|,
+name|ptr_insert_pos
 parameter_list|)
 name|demangling_t
 name|dm
 decl_stmt|;
+name|int
+modifier|*
+name|ptr_insert_pos
+decl_stmt|;
 block|{
 name|status_t
 name|status
+init|=
+name|STATUS_OK
 decl_stmt|;
 name|dyn_string_t
 name|array_size
 init|=
+name|NULL
+decl_stmt|;
+name|char
+name|peek
+decl_stmt|;
+name|DEMANGLE_TRACE
+argument_list|(
+literal|"array-type"
+argument_list|,
+name|dm
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_char
+argument_list|(
+name|dm
+argument_list|,
+literal|'A'
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Demangle the array size into array_size.  */
+name|peek
+operator|=
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peek
+operator|==
+literal|'_'
+condition|)
+comment|/* Array bound is omitted.  This is a C99-style VLA.  */
+empty_stmt|;
+elseif|else
+if|if
+condition|(
+name|IS_DIGIT
+argument_list|(
+name|peek_char
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* It looks like a constant array bound.  */
+name|array_size
+operator|=
 name|dyn_string_new
 argument_list|(
 literal|10
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|array_size
@@ -8002,23 +8943,6 @@ condition|)
 return|return
 name|STATUS_ALLOCATION_FAILED
 return|;
-name|status
-operator|=
-name|demangle_char
-argument_list|(
-name|dm
-argument_list|,
-literal|'A'
-argument_list|)
-expr_stmt|;
-comment|/* Demangle the array size into array_size.  */
-if|if
-condition|(
-name|STATUS_NO_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
 name|status
 operator|=
 name|demangle_number_literally
@@ -8032,6 +8956,38 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Anything is must be an expression for a nont-constant array 	 bound.  This happens if the array type occurs in a template 	 and the array bound references a template parameter.  */
+name|RETURN_IF_ERROR
+argument_list|(
+name|result_push
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_expression
+argument_list|(
+name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|array_size
+operator|=
+operator|(
+name|dyn_string_t
+operator|)
+name|result_pop
+argument_list|(
+name|dm
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* array_size may have been allocated by now, so we can't use      RETURN_IF_ERROR until it's been deallocated.  */
 comment|/* Demangle the base type of the array.  */
 if|if
 condition|(
@@ -8063,6 +9019,42 @@ argument_list|(
 name|dm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr_insert_pos
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* This array is actually part of an pointer- or 	 reference-to-array type.  Format appropriately, except we 	 don't know which and how much punctuation to use.  */
+if|if
+condition|(
+name|STATUS_NO_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|status
+operator|=
+name|result_add
+argument_list|(
+name|dm
+argument_list|,
+literal|" () "
+argument_list|)
+expr_stmt|;
+comment|/* Let the caller know where to insert the punctuation.  */
+operator|*
+name|ptr_insert_pos
+operator|=
+name|result_caret_pos
+argument_list|(
+name|dm
+argument_list|)
+operator|-
+literal|2
+expr_stmt|;
+block|}
 comment|/* Emit the array dimension syntax.  */
 if|if
 condition|(
@@ -8073,7 +9065,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -8086,10 +9078,14 @@ name|STATUS_NO_ERROR
 argument_list|(
 name|status
 argument_list|)
+operator|&&
+name|array_size
+operator|!=
+name|NULL
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -8105,13 +9101,19 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
 literal|']'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|array_size
+operator|!=
+name|NULL
+condition|)
 name|dyn_string_delete
 argument_list|(
 name|array_size
@@ -8129,7 +9131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<template-param>.  The zero-indexed position    in the parameter list is placed in *TEMPLATE_PARM_NUMBER.<template-param> ::= T_       # first template parameter                      ::= T<parameter-2 number> _  */
+comment|/* Demangles and emits a<template-param>.<template-param> ::= T_       # first template parameter                      ::= T<parameter-2 number> _  */
 end_comment
 
 begin_function
@@ -8138,15 +9140,9 @@ name|status_t
 name|demangle_template_param
 parameter_list|(
 name|dm
-parameter_list|,
-name|template_parm_number
 parameter_list|)
 name|demangling_t
 name|dm
-decl_stmt|;
-name|int
-modifier|*
-name|template_parm_number
 decl_stmt|;
 block|{
 name|int
@@ -8255,7 +9251,7 @@ literal|"Template parameter number out of bounds."
 return|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -8265,28 +9261,6 @@ operator|)
 name|arg
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|peek_char
-argument_list|(
-name|dm
-argument_list|)
-operator|==
-literal|'I'
-condition|)
-name|RETURN_IF_ERROR
-argument_list|(
-name|demangle_template_args
-argument_list|(
-name|dm
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|*
-name|template_parm_number
-operator|=
-name|parm_number
 expr_stmt|;
 return|return
 name|STATUS_OK
@@ -8378,11 +9352,9 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_open_template_list
 argument_list|(
 name|dm
-argument_list|,
-literal|'<'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8402,7 +9374,7 @@ expr_stmt|;
 else|else
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -8437,7 +9409,7 @@ expr_stmt|;
 comment|/* Emit it in the demangled name.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -8624,7 +9596,7 @@ literal|'0'
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -8641,7 +9613,7 @@ literal|'1'
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -8712,7 +9684,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -8733,7 +9705,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -8758,7 +9730,7 @@ comment|/* ...else code == ' ', so fall through to represent this 	 literal's ty
 block|}
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -8776,7 +9748,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -8822,7 +9794,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -8943,6 +9915,16 @@ argument_list|(
 name|demangle_expression
 argument_list|(
 name|dm
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RETURN_IF_ERROR
+argument_list|(
+name|demangle_char
+argument_list|(
+name|dm
+argument_list|,
+literal|'E'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9090,7 +10072,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -9120,7 +10102,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -9138,7 +10120,7 @@ argument_list|)
 condition|)
 name|status
 operator|=
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -9158,7 +10140,7 @@ expr_stmt|;
 comment|/* Emit its second (if binary) or only (if unary) operand.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -9176,7 +10158,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -9194,7 +10176,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9212,7 +10194,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -9273,7 +10255,7 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9318,9 +10300,6 @@ argument_list|(
 name|dm
 argument_list|)
 decl_stmt|;
-name|int
-name|unused
-decl_stmt|;
 name|DEMANGLE_TRACE
 argument_list|(
 literal|"expr-primary"
@@ -9339,9 +10318,6 @@ argument_list|(
 name|demangle_template_param
 argument_list|(
 name|dm
-argument_list|,
-operator|&
-name|unused
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9411,7 +10387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Demangles and emits a<substitution>.  Sets *TEMPLATE_P to non-zero    if the substitution is the name of a template, zero otherwise.  If    the substitution token is St, which corresponds to the `::std::'    namespace and can appear in a non-nested name, sets    *SPECIAL_STD_SUBSTITUTION to non-zero; zero otherwise.<substitution> ::= S<seq-id> _                     ::= S_                      ::= St   # ::std::                     ::= Sa   # ::std::allocator                     ::= Sb   # ::std::basic_string                     ::= Ss   # ::std::basic_string<char, 				    		   ::std::char_traits<char>, 						   ::std::allocator<char>>                     ::= Si   # ::std::basic_istream<char,                                                       std::char_traits<char>>                     ::= So   # ::std::basic_ostream<char,                                                       std::char_traits<char>>                     ::= Sd   # ::std::basic_iostream<char,                                                       std::char_traits<char>> */
+comment|/* Demangles and emits a<substitution>.  Sets *TEMPLATE_P to non-zero    if the substitution is the name of a template, zero otherwise.<substitution> ::= S<seq-id> _                     ::= S_                      ::= St   # ::std::                     ::= Sa   # ::std::allocator                     ::= Sb   # ::std::basic_string                     ::= Ss   # ::std::basic_string<char, 				    		   ::std::char_traits<char>, 						   ::std::allocator<char>>                     ::= Si   # ::std::basic_istream<char,                                                       std::char_traits<char>>                     ::= So   # ::std::basic_ostream<char,                                                       std::char_traits<char>>                     ::= Sd   # ::std::basic_iostream<char,                                                      std::char_traits<char>> */
 end_comment
 
 begin_function
@@ -9422,8 +10398,6 @@ parameter_list|(
 name|dm
 parameter_list|,
 name|template_p
-parameter_list|,
-name|special_std_substitution
 parameter_list|)
 name|demangling_t
 name|dm
@@ -9431,10 +10405,6 @@ decl_stmt|;
 name|int
 modifier|*
 name|template_p
-decl_stmt|;
-name|int
-modifier|*
-name|special_std_substitution
 decl_stmt|;
 block|{
 name|int
@@ -9462,11 +10432,6 @@ argument_list|,
 literal|'S'
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|*
-name|special_std_substitution
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Scan the substitution sequence index.  A missing number denotes      the first index.  */
 name|peek
@@ -9544,7 +10509,7 @@ literal|'t'
 case|:
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9552,18 +10517,13 @@ literal|"std"
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|special_std_substitution
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'a'
 case|:
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9586,7 +10546,7 @@ literal|'b'
 case|:
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9615,7 +10575,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9632,7 +10592,7 @@ else|else
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9662,7 +10622,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9679,7 +10639,7 @@ else|else
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9709,7 +10669,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9726,7 +10686,7 @@ else|else
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9756,7 +10716,7 @@ condition|)
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9773,7 +10733,7 @@ else|else
 block|{
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9856,7 +10816,7 @@ return|;
 comment|/* Emit the substitution text.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_string
+name|result_add_string
 argument_list|(
 name|dm
 argument_list|,
@@ -9932,11 +10892,11 @@ argument_list|)
 expr_stmt|;
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
-literal|"'s "
+literal|"::"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9953,7 +10913,7 @@ block|{
 comment|/* Local character string literal.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -9983,16 +10943,6 @@ block|{
 name|int
 name|unused
 decl_stmt|;
-name|RETURN_IF_ERROR
-argument_list|(
-name|result_append
-argument_list|(
-name|dm
-argument_list|,
-literal|"local "
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Local name for some other entity.  Demangle its name.  */
 name|RETURN_IF_ERROR
 argument_list|(
@@ -10042,7 +10992,7 @@ name|int
 name|suppress_first
 decl_stmt|;
 block|{
-comment|/* Output for<discriminator>s to the demangled name is completely      supressed if not in verbose mode.  */
+comment|/* Output for<discriminator>s to the demangled name is completely      suppressed if not in verbose mode.  */
 if|if
 condition|(
 name|peek_char
@@ -10065,7 +11015,7 @@ name|flag_verbose
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -10140,7 +11090,7 @@ condition|)
 comment|/* A missing digit correspond to one.  */
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -10155,7 +11105,7 @@ name|flag_verbose
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append_char
+name|result_add_char
 argument_list|(
 name|dm
 argument_list|,
@@ -10177,7 +11127,7 @@ name|flag_verbose
 condition|)
 name|RETURN_IF_ERROR
 argument_list|(
-name|result_append
+name|result_add
 argument_list|(
 name|dm
 argument_list|,
@@ -10368,6 +11318,12 @@ begin_comment
 comment|/* Demangle TYPE_NAME into RESULT, which must be an initialized    dyn_string_t.  On success, returns STATUS_OK.  On failiure, returns    an error message, and the contents of RESULT are unchanged.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
 begin_function
 specifier|static
 name|status_t
@@ -10488,12 +11444,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_LIBGCC2
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -10520,7 +11470,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ABI-mandated entry point in the C++ runtime library for performing    demangling.  MANGLED_NAME is a NUL-terminated character string    containing the name to be demangled.       OUTPUT_BUFFER is a region of memory, allocated with malloc, of    *LENGTH bytes, into which the demangled name is stored.  If    OUTPUT_BUFFER is not long enough, it is expanded using realloc.    OUTPUT_BUFFER may instead be NULL; in that case, the demangled name    is placed in a region of memory allocated with malloc.       If LENGTH is non-NULL, the length of the buffer conaining the    demangled name, is placed in *LENGTH.       The return value is a pointer to the start of the NUL-terminated    demangled name, or NULL if the demangling fails.  The caller is    responsible for deallocating this memory using free.       *STATUS is set to one of the following values:       0: The demangling operation succeeded.      -1: A memory allocation failiure occurred.      -2: MANGLED_NAME is not a valid name under the C++ ABI mangling rules.      -3: One of the arguments is invalid.     The demagling is performed using the C++ ABI mangling rules, with    GNU extensions.  */
+comment|/* ia64 ABI-mandated entry point in the C++ runtime library for performing    demangling.  MANGLED_NAME is a NUL-terminated character string    containing the name to be demangled.       OUTPUT_BUFFER is a region of memory, allocated with malloc, of    *LENGTH bytes, into which the demangled name is stored.  If    OUTPUT_BUFFER is not long enough, it is expanded using realloc.    OUTPUT_BUFFER may instead be NULL; in that case, the demangled name    is placed in a region of memory allocated with malloc.       If LENGTH is non-NULL, the length of the buffer conaining the    demangled name, is placed in *LENGTH.       The return value is a pointer to the start of the NUL-terminated    demangled name, or NULL if the demangling fails.  The caller is    responsible for deallocating this memory using free.       *STATUS is set to one of the following values:       0: The demangling operation succeeded.      -1: A memory allocation failiure occurred.      -2: MANGLED_NAME is not a valid name under the C++ ABI mangling rules.      -3: One of the arguments is invalid.     The demagling is performed using the C++ ABI mangling rules, with    GNU extensions.  */
 end_comment
 
 begin_function
@@ -10802,7 +11752,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|cplus_demangle_new_abi
+name|cplus_demangle_v3
 parameter_list|(
 name|mangled
 parameter_list|)
@@ -10812,19 +11762,40 @@ modifier|*
 name|mangled
 decl_stmt|;
 block|{
-comment|/* Create a dyn_string to hold the demangled name.  */
 name|dyn_string_t
 name|demangled
-init|=
+decl_stmt|;
+name|status_t
+name|status
+decl_stmt|;
+comment|/* If this isn't a mangled name, don't pretend to demangle it.  */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|mangled
+argument_list|,
+literal|"_Z"
+argument_list|,
+literal|2
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Create a dyn_string to hold the demangled name.  */
+name|demangled
+operator|=
 name|dyn_string_new
 argument_list|(
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* Attempt the demangling.  */
-name|status_t
 name|status
-init|=
+operator|=
 name|cp_demangle
 argument_list|(
 operator|(
@@ -10835,7 +11806,7 @@ name|mangled
 argument_list|,
 name|demangled
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|STATUS_NO_ERROR
@@ -10945,7 +11916,7 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|(IS_ALPHA (CHAR) || IS_DIGIT (CHAR) || (CHAR) == '_')
+value|(IS_ALPHA (CHAR) || IS_DIGIT (CHAR)                                   \    || (CHAR) == '_' || (CHAR) == '.' || (CHAR) == '$')
 end_define
 
 begin_comment
@@ -10995,8 +11966,6 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"Options:\n"
-argument_list|,
-name|program_name
 argument_list|)
 expr_stmt|;
 name|fprintf

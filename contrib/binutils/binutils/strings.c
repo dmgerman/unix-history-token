@@ -155,7 +155,7 @@ name|isgraphic
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c))
+value|(isascii (c)&& (isprint (c) || (c) == '\t'))
 end_define
 
 begin_else
@@ -170,7 +170,7 @@ name|isgraphic
 parameter_list|(
 name|c
 parameter_list|)
-value|(isprint (c))
+value|(isprint (c) || (c) == '\t')
 end_define
 
 begin_endif

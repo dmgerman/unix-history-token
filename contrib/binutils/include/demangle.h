@@ -122,8 +122,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DMGL_GNU_NEW_ABI
+name|DMGL_GNU_V3
 value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMGL_GNAT
+value|(1<< 15)
 end_define
 
 begin_comment
@@ -134,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|DMGL_STYLE_MASK
-value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM|DMGL_HP|DMGL_EDG|DMGL_GNU_NEW_ABI)
+value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM|DMGL_HP|DMGL_EDG|DMGL_GNU_V3|DMGL_JAVA|DMGL_GNAT)
 end_define
 
 begin_comment
@@ -174,9 +181,17 @@ name|edg_demangling
 init|=
 name|DMGL_EDG
 block|,
-name|gnu_new_abi_demangling
+name|gnu_v3_demangling
 init|=
-name|DMGL_GNU_NEW_ABI
+name|DMGL_GNU_V3
+block|,
+name|java_demangling
+init|=
+name|DMGL_JAVA
+block|,
+name|gnat_demangling
+init|=
+name|DMGL_GNAT
 block|}
 name|current_demangling_style
 enum|;
@@ -231,8 +246,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|GNU_NEW_ABI_DEMANGLING_STYLE_STRING
-value|"gnu-new-abi"
+name|GNU_V3_DEMANGLING_STYLE_STRING
+value|"gnu-v3"
+end_define
+
+begin_define
+define|#
+directive|define
+name|JAVA_DEMANGLING_STYLE_STRING
+value|"java"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNAT_DEMANGLING_STYLE_STRING
+value|"gnat"
 end_define
 
 begin_comment
@@ -291,8 +320,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|GNU_NEW_ABI_DEMANGLING
-value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNU_NEW_ABI)
+name|GNU_V3_DEMANGLING
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNU_V3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|JAVA_DEMANGLING
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_JAVA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNAT_DEMANGLING
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNAT)
 end_define
 
 begin_comment
@@ -440,14 +483,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* New-ABI demangling entry point, defined in cp-demangle.c.  */
+comment|/* V3 ABI demangling entry point, defined in cp-demangle.c.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|cplus_demangle_new_abi
+name|cplus_demangle_v3
 name|PARAMS
 argument_list|(
 operator|(

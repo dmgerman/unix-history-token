@@ -166,6 +166,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|obj_coff_strings_written
+parameter_list|(
+name|bfd
+parameter_list|)
+value|(coff_data (bfd)->strings_written)
+end_define
+
+begin_define
+define|#
+directive|define
 name|obj_coff_local_toc_table
 parameter_list|(
 name|bfd
@@ -252,6 +262,10 @@ comment|/* If this is true, the strings may not be freed.  */
 name|boolean
 name|keep_strings
 decl_stmt|;
+comment|/* If this is true, the strings have been written out already.  */
+name|boolean
+name|strings_written
+decl_stmt|;
 comment|/* is this a PE format coff file */
 name|int
 name|pe
@@ -276,6 +290,10 @@ decl_stmt|;
 comment|/* Used by coff_find_nearest_line.  */
 name|PTR
 name|line_info
+decl_stmt|;
+comment|/* A place to stash dwarf2 info for this bfd. */
+name|PTR
+name|dwarf2_find_line_info
 decl_stmt|;
 comment|/* The timestamp from the COFF file header.  */
 name|long
@@ -356,6 +374,10 @@ block|{
 comment|/* Basic COFF information.  */
 name|coff_data_type
 name|coff
+decl_stmt|;
+comment|/* True if this is an XCOFF64 file. */
+name|boolean
+name|xcoff64
 decl_stmt|;
 comment|/* True if a large a.out header should be generated.  */
 name|boolean
@@ -2540,6 +2562,13 @@ name|unsigned
 name|int
 name|_bfd_coff_default_section_alignment_power
 decl_stmt|;
+name|boolean
+name|_bfd_coff_force_symnames_in_strings
+decl_stmt|;
+name|unsigned
+name|int
+name|_bfd_coff_debug_string_prefix_length
+decl_stmt|;
 name|void
 argument_list|(
 argument|*_bfd_coff_swap_filehdr_in
@@ -3578,6 +3607,28 @@ name|sym
 parameter_list|)
 define|\
 value|((coff_backend_info (abfd)->_bfd_coff_symname_in_debug) (abfd, sym))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_coff_force_symnames_in_strings
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(coff_backend_info (abfd)->_bfd_coff_force_symnames_in_strings)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_coff_debug_string_prefix_length
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(coff_backend_info (abfd)->_bfd_coff_debug_string_prefix_length)
 end_define
 
 begin_define

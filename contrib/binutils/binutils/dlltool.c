@@ -774,6 +774,28 @@ directive|ifdef
 name|DLLTOOL_ARM
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DLLTOOL_ARM_EPOC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mname
+init|=
+literal|"arm-epoc"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -784,6 +806,11 @@ init|=
 literal|"arm"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1886,7 +1913,7 @@ define|#
 directive|define
 name|MARM_EPOC
 value|9
-literal|"arm"
+literal|"arm-epoc"
 block|,
 literal|".byte"
 block|,
@@ -2762,6 +2789,9 @@ case|:
 case|case
 name|MMCORE_ELF_LE
 case|:
+case|case
+name|MARM_EPOC
+case|:
 break|break;
 default|default:
 comment|/* xgettext:c-format */
@@ -2828,6 +2858,9 @@ case|:
 case|case
 name|MMCORE_ELF_LE
 case|:
+case|case
+name|MARM_EPOC
+case|:
 return|return
 literal|".rva\t"
 return|;
@@ -2892,6 +2925,9 @@ name|MMCORE_ELF
 case|:
 case|case
 name|MMCORE_ELF_LE
+case|:
+case|case
+name|MARM_EPOC
 case|:
 break|break;
 case|case

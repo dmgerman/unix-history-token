@@ -1126,6 +1126,15 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
 operator|!
 name|abfd
 operator|->
@@ -1195,6 +1204,14 @@ name|SEC_LOAD
 operator||
 name|SEC_ALLOC
 operator|)
+operator|)
+operator|&&
+operator|(
+name|s
+operator|->
+name|_raw_size
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -1271,9 +1288,17 @@ name|SEC_HAS_CONTENTS
 operator||
 name|SEC_ALLOC
 operator|)
+operator|||
+operator|(
+name|s
+operator|->
+name|_raw_size
+operator|==
+literal|0
+operator|)
 condition|)
 continue|continue;
-comment|/* If attempting to generate a binary file from a bfd with 	     LMA's all over the place, huge (sparse?) binary files may 	     result.  This condition attempts to detect this situation 	     and print a warning.  Better heuristics would be nice to 	     have. */
+comment|/* If attempting to generate a binary file from a bfd with 	     LMA's all over the place, huge (sparse?) binary files may 	     result.  This condition attempts to detect this situation 	     and print a warning.  Better heuristics would be nice to 	     have.  */
 if|if
 condition|(
 name|s

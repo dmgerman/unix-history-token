@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS ELF support for BFD.    Copyright (C) 1993, 1994, 1995, 1996, 1998 Free Software Foundation, Inc.     By Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>, from    information in the System V Application Binary Interface, MIPS    Processor Supplement.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS ELF support for BFD.    Copyright (C) 1993, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     By Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>, from    information in the System V Application Binary Interface, MIPS    Processor Supplement.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -486,6 +486,9 @@ end_macro
 
 begin_macro
 name|END_RELOC_NUMBERS
+argument_list|(
+argument|R_MIPS_maxext
+argument_list|)
 end_macro
 
 begin_comment
@@ -603,6 +606,39 @@ value|0x30000000
 end_define
 
 begin_comment
+comment|/* -mips5 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_5
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* -mips32 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_32
+value|0x50000000
+end_define
+
+begin_comment
+comment|/* -mips64 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_64
+value|0x60000000
+end_define
+
+begin_comment
 comment|/* The ABI of the file.  Also see EF_MIPS_ABI2 above. */
 end_comment
 
@@ -705,6 +741,20 @@ define|#
 directive|define
 name|E_MIPS_MACH_4111
 value|0x00880000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_MACH_MIPS32_4K
+value|0x00890000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_MACH_SB1
+value|0x008a0000
 end_define
 
 begin_escape

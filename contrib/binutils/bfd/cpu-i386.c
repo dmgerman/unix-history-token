@@ -58,6 +58,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|bfd_arch_info_type
+name|bfd_x86_64_arch_intel_syntax
+init|=
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_i386
+block|,
+name|bfd_mach_x86_64_intel_syntax
+block|,
+literal|"x86_64:intel"
+block|,
+literal|"x86_64:intel"
+block|,
+literal|3
+block|,
+name|true
+block|,
+name|bfd_default_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|bfd_i386_arch_intel_syntax
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|bfd_arch_info_type
@@ -90,7 +127,44 @@ block|,
 name|bfd_default_scan
 block|,
 operator|&
-name|bfd_i386_arch_intel_syntax
+name|bfd_x86_64_arch_intel_syntax
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|bfd_arch_info_type
+name|bfd_x86_64_arch
+init|=
+block|{
+literal|64
+block|,
+comment|/* 32 bits in a word */
+literal|64
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_i386
+block|,
+name|bfd_mach_x86_64
+block|,
+literal|"x86_64"
+block|,
+literal|"x86_64"
+block|,
+literal|3
+block|,
+name|true
+block|,
+name|bfd_default_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|i8086_arch
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -127,8 +201,8 @@ block|,
 name|bfd_default_scan
 block|,
 operator|&
-name|i8086_arch
-block|, }
+name|bfd_x86_64_arch
+block|}
 decl_stmt|;
 end_decl_stmt
 

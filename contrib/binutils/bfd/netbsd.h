@@ -4,7 +4,7 @@ comment|/* BFD back-end definitions used by all NetBSD targets.    Copyright (C)
 end_comment
 
 begin_comment
-comment|/* Check for our machine type (part of magic number). */
+comment|/* Check for our machine type (part of magic number).  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is the normal load address for executables. */
+comment|/* This is the normal load address for executables.  */
 end_comment
 
 begin_define
@@ -54,7 +54,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Determine if this is a shared library using the flags. */
+comment|/* Determine if this is a shared library using the flags.  */
 end_comment
 
 begin_define
@@ -79,7 +79,7 @@ parameter_list|(
 name|exec
 parameter_list|)
 define|\
-value|((enum machine_type)(((exec).a_info>> 16)& 0x03ff))
+value|((enum machine_type) (((exec).a_info>> 16)& 0x03ff))
 end_define
 
 begin_define
@@ -107,7 +107,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|((exec).a_info = ((magic)& 0xffff) \ 	 | (((int)(type)& 0x3ff)<< 16) \ 	 | (((flags)& 0x3f)<< 24))
+value|((exec).a_info = ((magic)& 0xffff) \ 	 | (((int) (type)& 0x3ff)<< 16) \ 	 | (((flags)& 0x3f)<< 24))
 end_define
 
 begin_define
@@ -120,7 +120,7 @@ parameter_list|,
 name|machtype
 parameter_list|)
 define|\
-value|((exec).a_info = \          ((exec).a_info& 0xfb00ffff) | ((((int)(machtype))&0x3ff)<< 16))
+value|((exec).a_info = \          ((exec).a_info& 0xfb00ffff) | ((((int) (machtype))&0x3ff)<< 16))
 end_define
 
 begin_define

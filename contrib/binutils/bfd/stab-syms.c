@@ -17,7 +17,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Value doesn't matter. */
+comment|/* Value doesn't matter.  */
 end_comment
 
 begin_include
@@ -64,7 +64,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* These are not really stab symbols, but it is    convenient to have them here for the sake of nm.    For completeness, we could also add N_TEXT etc, but those    are never needed, since nm treats those specially. */
+comment|/* These are not really stab symbols, but it is    convenient to have them here for the sake of nm.    For completeness, we could also add N_TEXT etc, but those    are never needed, since nm treats those specially.  */
 end_comment
 
 begin_define
@@ -81,7 +81,7 @@ comment|/* Data set element symbol */
 value|\   __define_name (N_SETB, "SETB")
 comment|/* Bss set element symbol */
 value|\   __define_name (N_SETV, "SETV")
-comment|/* Pointer to set vector in data area. */
+comment|/* Pointer to set vector in data area.  */
 value|\   __define_name (N_INDR, "INDR") \   __define_name (N_WARNING, "WARNING")
 end_define
 

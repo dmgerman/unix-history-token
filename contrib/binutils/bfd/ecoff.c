@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1727,10 +1727,6 @@ begin_comment
 comment|/* Get the BFD flags to use for a section.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|flagword
 name|_bfd_ecoff_styp_to_sec_flags
@@ -2343,10 +2339,6 @@ end_function
 
 begin_comment
 comment|/* Read in and swap the important symbolic information for an ECOFF    object file.  This is called by gdb via the read_debug_info entry    point in the backend structure.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -6027,7 +6019,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-comment|/* Print array bounds reversed (ie, in the order the C 		   programmer writes them).  C is such a fun language.... */
+comment|/* Print array bounds reversed (ie, in the order the C 		   programmer writes them).  C is such a fun language....  */
 while|while
 condition|(
 name|i
@@ -6238,10 +6230,6 @@ begin_comment
 comment|/* Return information about ECOFF symbol SYMBOL in RET.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|void
 name|_bfd_ecoff_get_symbol_info
@@ -6278,10 +6266,6 @@ end_function
 
 begin_comment
 comment|/* Return whether this is a local label.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -8007,10 +7991,6 @@ begin_comment
 comment|/* Provided a BFD, a section and an offset into the section, calculate    and return the name of the source file and the line nearest to the    wanted location.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|boolean
 name|_bfd_ecoff_find_nearest_line
@@ -8820,10 +8800,6 @@ end_function
 
 begin_comment
 comment|/* Get the size of the section headers.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -14412,7 +14388,7 @@ name|stridx
 operator|+
 name|padit
 expr_stmt|;
-comment|/* Include 8 bytes to store symdefsize and stringsize in output. */
+comment|/* Include 8 bytes to store symdefsize and stringsize in output.  */
 name|mapsize
 operator|=
 name|symdefsize
@@ -14588,7 +14564,7 @@ literal|0
 block|hdr.ar_mode[0] = '0';
 else|#
 directive|else
-comment|/* Building gcc ends up extracting the armap as a file - twice. */
+comment|/* Building gcc ends up extracting the armap as a file - twice.  */
 name|hdr
 operator|.
 name|ar_mode
@@ -20276,7 +20252,7 @@ decl_stmt|;
 name|boolean
 name|strip
 decl_stmt|;
-comment|/* We need to check if this symbol is being stripped. */
+comment|/* We need to check if this symbol is being stripped.  */
 if|if
 condition|(
 name|h

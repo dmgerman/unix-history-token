@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic stabs parsing for gas.    Copyright (C) 1989, 90, 91, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Generic stabs parsing for gas.    Copyright (C) 1989, 90, 91, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|"ecoff.h"
 end_include
 
 begin_comment
-comment|/* We need this, despite the apparent object format dependency, since    it defines stab types, which all object formats can use now. */
+comment|/* We need this, despite the apparent object format dependency, since    it defines stab types, which all object formats can use now.  */
 end_comment
 
 begin_include
@@ -36,6 +36,18 @@ include|#
 directive|include
 file|"aout/stab_gnu.h"
 end_include
+
+begin_comment
+comment|/* Holds whether the assembler is generating stabs line debugging    information or not.  Potentially used by md_cleanup function.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|outputting_stabs_line_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -321,7 +333,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Ordinary case. */
+comment|/* Ordinary case.  */
 name|p
 operator|=
 name|frag_more
@@ -407,31 +419,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|void
-name|aout_process_stab
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Here instead of obj-aout.c because other formats use it too.  */
+end_comment
 
 begin_function
-specifier|static
 name|void
 name|aout_process_stab
 parameter_list|(
@@ -583,7 +575,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This can handle different kinds of stabs (s,n,d) and different    kinds of stab sections. */
+comment|/* This can handle different kinds of stabs (s,n,d) and different    kinds of stab sections.  */
 end_comment
 
 begin_function
@@ -1275,7 +1267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Regular stab directive. */
+comment|/* Regular stab directive.  */
 end_comment
 
 begin_function
@@ -1301,7 +1293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "Extended stabs", used in Solaris only now. */
+comment|/* "Extended stabs", used in Solaris only now.  */
 end_comment
 
 begin_function
@@ -1469,6 +1461,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -1667,48 +1660,15 @@ modifier|*
 name|hold
 decl_stmt|;
 name|char
-modifier|*
-name|buf
-init|=
-name|xmalloc
-argument_list|(
-literal|2
-operator|*
-name|strlen
-argument_list|(
-name|file
-argument_list|)
-operator|+
-literal|10
-argument_list|)
-decl_stmt|;
-name|char
 name|sym
 index|[
 literal|30
 index|]
 decl_stmt|;
-comment|/* Rather than try to do this in some efficient fashion, we just      generate a string and then parse it again.  That lets us use the      existing stabs hook, which expect to see a string, rather than      inventing new ones.  */
-name|hold
-operator|=
-name|input_line_pointer
-expr_stmt|;
-if|if
-condition|(
-name|last_file
-operator|==
-name|NULL
-operator|||
-name|strcmp
-argument_list|(
-name|last_file
-argument_list|,
-name|file
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
 name|char
 modifier|*
 name|tmp
@@ -1732,6 +1692,27 @@ name|bufp
 init|=
 name|buf
 decl_stmt|;
+if|if
+condition|(
+name|last_file
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|last_file
+argument_list|,
+name|file
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* Rather than try to do this in some efficient fashion, we just      generate a string and then parse it again.  That lets us use the      existing stabs hook, which expect to see a string, rather than      inventing new ones.  */
+name|hold
+operator|=
+name|input_line_pointer
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|sym
@@ -1745,6 +1726,28 @@ argument_list|)
 expr_stmt|;
 operator|++
 name|label_count
+expr_stmt|;
+comment|/* Allocate enough space for the file name (possibly extended with      doubled up backslashes), the symbol name, and the other characters      that make up a stabs file directive.  */
+name|bufp
+operator|=
+name|buf
+operator|=
+name|xmalloc
+argument_list|(
+literal|2
+operator|*
+name|strlen
+argument_list|(
+name|file
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|sym
+argument_list|)
+operator|+
+literal|12
+argument_list|)
 expr_stmt|;
 operator|*
 name|bufp
@@ -1790,7 +1793,7 @@ name|tmp
 argument_list|)
 operator|)
 decl_stmt|;
-comment|/* double all backslashes, since demand_copy_C_string (used by              s_stab to extract the part in quotes) will try to replace them as              escape sequences.  backslash may appear in a filespec. */
+comment|/* Double all backslashes, since demand_copy_C_string (used by 	 s_stab to extract the part in quotes) will try to replace them as 	 escape sequences.  backslash may appear in a filespec.  */
 name|strncpy
 argument_list|(
 name|bufp
@@ -1864,15 +1867,14 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-block|}
-name|input_line_pointer
-operator|=
-name|hold
-expr_stmt|;
 name|free
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|input_line_pointer
+operator|=
+name|hold
 expr_stmt|;
 block|}
 end_function
@@ -1912,6 +1914,11 @@ index|[
 literal|30
 index|]
 decl_stmt|;
+comment|/* Let the world know that we are in the middle of generating a      piece of stabs line debugging information.  */
+name|outputting_stabs_line_debug
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Rather than try to do this in some efficient fashion, we just      generate a string and then parse it again.  That lets us use the      existing stabs hook, which expect to see a string, rather than      inventing new ones.  */
 name|hold
 operator|=
@@ -2028,6 +2035,10 @@ expr_stmt|;
 name|input_line_pointer
 operator|=
 name|hold
+expr_stmt|;
+name|outputting_stabs_line_debug
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

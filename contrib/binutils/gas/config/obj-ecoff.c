@@ -82,6 +82,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ecoff_separate_stab_sections
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* These are the pseudo-ops we support in this file.  Only those    relating to debugging information are supported here.     The following pseudo-ops from the Kane and Heinrich MIPS book    should be defined here, but are currently unsupported: .aent,    .bgnb, .endb, .verstamp, .vreg.     The following pseudo-ops from the Kane and Heinrich MIPS book are    MIPS CPU specific, and should be defined by tc-mips.c: .alias,    .extern, .galive, .gjaldef, .gjrlive, .livereg, .noalias, .option,    .rdata, .sdata, .set.     The following pseudo-ops from the Kane and Heinrich MIPS book are    not MIPS CPU specific, but are also not ECOFF specific.  I have    only listed the ones which are not already in read.c.  It's not    completely clear where these should be defined, but tc-mips.c is    probably the most reasonable place: .asciiz, .asm0, .endr, .err,    .half, .lab, .repeat, .struct, .weakext.  */
 end_comment
@@ -259,7 +272,7 @@ block|,
 ifndef|#
 directive|ifndef
 name|TC_MIPS
-comment|/* For TC_MIPS, tc-mips.c adds this. */
+comment|/* For TC_MIPS, tc-mips.c adds this.  */
 block|{
 literal|"weakext"
 block|,
@@ -1089,6 +1102,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|ecoff_separate_stab_sections
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -1101,13 +1126,22 @@ block|,
 literal|0
 block|,
 comment|/* dfl_leading_underscore */
+comment|/* FIXME: A comment why emit_section_symbols is different here (1) from      the single-format definition (0) would be in order.  */
 literal|1
 block|,
 comment|/* emit_section_symbols */
+literal|0
+block|,
+comment|/* begin */
+name|ecoff_new_file
+block|,
 name|obj_ecoff_frob_symbol
 block|,
 name|ecoff_frob_file
 block|,
+literal|0
+block|,
+comment|/* frob_file_before_adjust */
 literal|0
 block|,
 comment|/* frob_file_after_relocs */
@@ -1128,7 +1162,19 @@ block|,
 comment|/* s_get_other */
 literal|0
 block|,
+comment|/* s_set_other */
+literal|0
+block|,
 comment|/* s_get_desc */
+literal|0
+block|,
+comment|/* s_set_desc */
+literal|0
+block|,
+comment|/* s_get_type */
+literal|0
+block|,
+comment|/* s_set_type */
 literal|0
 block|,
 comment|/* copy_symbol_attributes */
@@ -1136,6 +1182,11 @@ name|ecoff_generate_asm_lineno
 block|,
 name|ecoff_stab
 block|,
+name|ecoff_separate_stab_sections
+block|,
+literal|0
+block|,
+comment|/* init_stab_section */
 name|ecoff_sec_sym_ok_for_reloc
 block|,
 name|ecoff_pop_insert
@@ -1145,7 +1196,7 @@ block|,
 name|ecoff_read_begin_hook
 block|,
 name|ecoff_symbol_new_hook
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -221,7 +221,7 @@ argument_list|)
 operator|->
 name|vma
 expr_stmt|;
-comment|/* Adjust only by whole pages. */
+comment|/* Adjust only by whole pages.  */
 name|adjust
 operator|&=
 operator|~
@@ -784,7 +784,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENTRY_CAN_BE_ZERO
-comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)    * means that it isn't obvious if EXEC_P should be set.    * All of the following must be true for an executable:    * There must be no relocations, the bfd can be neither an    * archive nor an archive element, and the file must be executable. */
+comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)    * means that it isn't obvious if EXEC_P should be set.    * All of the following must be true for an executable:    * There must be no relocations, the bfd can be neither an    * archive nor an archive element, and the file must be executable.  */
 if|if
 condition|(
 name|exec
@@ -987,10 +987,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|static

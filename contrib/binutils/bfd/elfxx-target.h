@@ -1114,6 +1114,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_section_flags
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_section_flags
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|elf_backend_section_from_phdr
 end_ifndef
 
@@ -1740,6 +1758,12 @@ name|_bfd_elfNN_size_info
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INCLUDED_TARGET_FILE
+end_ifndef
+
 begin_expr_stmt
 specifier|static
 name|CONST
@@ -1774,6 +1798,8 @@ block|,
 name|elf_backend_section_processing
 block|,
 name|elf_backend_section_from_shdr
+block|,
+name|elf_backend_section_flags
 block|,
 name|elf_backend_section_from_phdr
 block|,
@@ -1866,6 +1892,11 @@ name|elf_backend_want_dynbss
 block|}
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Forward declaration for use when initialising alternative_target field.  */

@@ -5434,7 +5434,7 @@ argument_list|)
 operator|->
 name|sym_hashes
 expr_stmt|;
-comment|/* On the Alpha, the .lita section must be addressable by the global      pointer.  To support large programs, we need to allow multiple      global pointers.  This works as long as each input .lita section      is<64KB big.  This implies that when producing relocatable      output, the .lita section is limited to 64KB. . */
+comment|/* On the Alpha, the .lita section must be addressable by the global      pointer.  To support large programs, we need to allow multiple      global pointers.  This works as long as each input .lita section      is<64KB big.  This implies that when producing relocatable      output, the .lita section is limited to 64KB. .  */
 name|lita_sec
 operator|=
 name|symndx_to_section
@@ -7504,10 +7504,6 @@ begin_comment
 comment|/* Do final adjustments to the filehdr and the aouthdr.  This routine    sets the dynamic bits in the file header.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -8042,7 +8038,7 @@ name|left
 operator|=
 name|size
 expr_stmt|;
-comment|/* I don't know what the next eight bytes are for. */
+comment|/* I don't know what the next eight bytes are for.  */
 if|if
 condition|(
 name|bfd_read
@@ -8414,7 +8410,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Pad to an even boundary... 	 Note that last_file->origin can be odd in the case of 	 BSD-4.4-style element with a long odd size. */
+comment|/* Pad to an even boundary... 	 Note that last_file->origin can be odd in the case of 	 BSD-4.4-style element with a long odd size.  */
 name|filestart
 operator|=
 name|last_file
@@ -8691,6 +8687,10 @@ block|,
 name|false
 block|,
 literal|4
+block|,
+name|false
+block|,
+literal|2
 block|,
 name|alpha_ecoff_swap_filehdr_in
 block|,

@@ -95,28 +95,14 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* Stubs that do something close enough.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|textdomain
-parameter_list|(
-name|String
-parameter_list|)
-value|(String)
-end_define
-
 begin_define
 define|#
 directive|define
 name|gettext
 parameter_list|(
-name|String
+name|Msgid
 parameter_list|)
-value|(String)
+value|(Msgid)
 end_define
 
 begin_define
@@ -124,11 +110,11 @@ define|#
 directive|define
 name|dgettext
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Message
+name|Msgid
 parameter_list|)
-value|(Message)
+value|(Msgid)
 end_define
 
 begin_define
@@ -136,26 +122,44 @@ define|#
 directive|define
 name|dcgettext
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Message
+name|Msgid
 parameter_list|,
-name|Type
+name|Category
 parameter_list|)
-value|(Message)
+value|(Msgid)
 end_define
+
+begin_define
+define|#
+directive|define
+name|textdomain
+parameter_list|(
+name|Domainname
+parameter_list|)
+value|while (0)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|bindtextdomain
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Directory
+name|Dirname
 parameter_list|)
-value|(Domain)
+value|while (0)
 end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_define
 define|#
@@ -409,7 +413,7 @@ comment|/* If true, build MIPS embedded PIC relocation tables in the output     
 name|boolean
 name|embedded_relocs
 decl_stmt|;
-comment|/* If true, force generation of a file with a .exe file. */
+comment|/* If true, force generation of a file with a .exe file.  */
 name|boolean
 name|force_exe_suffix
 decl_stmt|;
@@ -527,10 +531,15 @@ decl_stmt|;
 name|boolean
 name|stats
 decl_stmt|;
+comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
+name|boolean
+name|unique_orphan_sections
+decl_stmt|;
+name|unsigned
 name|int
 name|split_by_reloc
 decl_stmt|;
-name|boolean
+name|bfd_size_type
 name|split_by_file
 decl_stmt|;
 block|}

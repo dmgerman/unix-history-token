@@ -1340,7 +1340,7 @@ name|__A_MAGIC_SET__
 end_define
 
 begin_comment
-comment|/* Enable Sparc-specific hacks in coffcode.h. */
+comment|/* Enable Sparc-specific hacks in coffcode.h.  */
 end_comment
 
 begin_define

@@ -279,8 +279,30 @@ begin_comment
 comment|/* Subroutine of choose_temp_base.    If BASE is non-NULL, return it.    Otherwise it checks if DIR is a usable directory.    If success, DIR is returned.    Otherwise NULL is returned.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|try
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|try
@@ -289,6 +311,7 @@ name|dir
 parameter_list|,
 name|base
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -347,6 +370,7 @@ modifier|*
 name|choose_temp_base
 parameter_list|()
 block|{
+specifier|const
 name|char
 modifier|*
 name|base
@@ -594,6 +618,7 @@ modifier|*
 name|suffix
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|base

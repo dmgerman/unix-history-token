@@ -544,6 +544,10 @@ directive|include
 file|<libintl.h>
 end_include
 
+begin_comment
+comment|/* Note the use of dgetext() and PACKAGE here, rather than gettext().     This is because the code in this directory is used to build a library which    will be linked with code in other directories to form programs.  We want to    maintain a seperate translation file for this directory however, rather    than being forced to merge it with that of any program linked to libbfd.    This is a library, so it cannot depend on the catalog currently loaded.     In order to do this, we have to make sure that when we extract messages we    use the OPCODES domain rather than the domain of the program that included    the bfd library, (eg OBJDUMP).  Hence we use dgettext (PACKAGE, String)    and define PACKAGE to be 'bfd'.  (See the code in configure).  */
+end_comment
+
 begin_define
 define|#
 directive|define

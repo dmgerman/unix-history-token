@@ -52,7 +52,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* On AUX, a STYP_NOLOAD|STYP_BSS section is part of a shared library. */
+comment|/* On AUX, a STYP_NOLOAD|STYP_BSS section is part of a shared library.  */
 end_comment
 
 begin_define
@@ -151,7 +151,7 @@ file|"coff-m68k.c"
 end_include
 
 begin_comment
-comment|/* We need non-absolute symbols to override absolute symbols.  This    mirrors Apple's "solution" to let a static library symbol override    a shared library symbol.  On the whole not a good thing, given how    shared libraries work here, but can work if you are careful with    what you include in the shared object. */
+comment|/* We need non-absolute symbols to override absolute symbols.  This    mirrors Apple's "solution" to let a static library symbol override    a shared library symbol.  On the whole not a good thing, given how    shared libraries work here, but can work if you are careful with    what you include in the shared object.  */
 end_comment
 
 begin_function

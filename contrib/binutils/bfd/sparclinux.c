@@ -355,7 +355,7 @@ value|(strncmp (name, GOT_REF_PREFIX, sizeof GOT_REF_PREFIX - 1) == 0)
 end_define
 
 begin_comment
-comment|/* See if a symbol name is a reference to the procedure linkage table. */
+comment|/* See if a symbol name is a reference to the procedure linkage table.  */
 end_comment
 
 begin_ifndef
@@ -1912,7 +1912,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-comment|/* h2 does not follow indirect symbols. */
+comment|/* h2 does not follow indirect symbols.  */
 name|h2
 operator|=
 name|linux_link_hash_lookup
@@ -2214,7 +2214,7 @@ name|is_plt
 expr_stmt|;
 block|}
 block|}
-comment|/* Quick and dirty way of stripping these symbols from the         symtab. */
+comment|/* Quick and dirty way of stripping these symbols from the         symtab.  */
 if|if
 condition|(
 name|bfd_is_abs_section
@@ -2293,7 +2293,7 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* First find the fixups... */
+comment|/* First find the fixups...  */
 name|linux_link_hash_traverse
 argument_list|(
 name|linux_hash_table

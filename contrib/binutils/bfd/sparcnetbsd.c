@@ -17,7 +17,7 @@ name|TARGET_IS_BIG_ENDIAN_P
 end_define
 
 begin_comment
-comment|/* SPARC chips use either 4K or 8K pages, but object files always    assume 8K page alignment so they will work on either one. */
+comment|/* SPARC chips use either 4K or 8K pages, but object files always    assume 8K page alignment so they will work on either one.  */
 end_comment
 
 begin_define

@@ -1220,6 +1220,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct

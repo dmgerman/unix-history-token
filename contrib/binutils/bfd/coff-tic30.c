@@ -226,7 +226,7 @@ value|tic30_coff_reloc_type_lookup
 end_define
 
 begin_comment
-comment|/* For the case statement use the code values used in tc_gen_reloc to    map to the howto table entries that match those in both the aout    and coff implementations. */
+comment|/* For the case statement use the code values used in tc_gen_reloc to    map to the howto table entries that match those in both the aout    and coff implementations.  */
 end_comment
 
 begin_function
@@ -418,7 +418,7 @@ value|dst->r_stuff[0] = 'S'; \ dst->r_stuff[1] = 'C';
 end_define
 
 begin_comment
-comment|/* Code to turn a r_type into a howto ptr, uses the above howto table. */
+comment|/* Code to turn a r_type into a howto ptr, uses the above howto table.  */
 end_comment
 
 begin_function

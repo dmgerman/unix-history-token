@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
 end_include
 
 begin_ifdef

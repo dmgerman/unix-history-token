@@ -35,6 +35,20 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|abort
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
