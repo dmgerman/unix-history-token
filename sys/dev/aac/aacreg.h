@@ -2508,7 +2508,7 @@ name|struct
 name|aac_AifEventNotify
 name|EN
 decl_stmt|;
-comment|/* Event notify structure */
+comment|/* Event notify */
 name|struct
 name|aac_AifJobProgressReport
 name|PR
@@ -2521,6 +2521,14 @@ name|u_int8_t
 name|AR
 index|[
 name|AAC_AIF_REPORT_MAX_SIZE
+index|]
+decl_stmt|;
+name|u_int8_t
+name|data
+index|[
+name|AAC_FIB_DATASIZE
+operator|-
+literal|8
 index|]
 decl_stmt|;
 block|}
