@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.4 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.5 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.4 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.5 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1217,7 +1217,7 @@ name|searchlist
 index|[
 name|MAXDNSRCH
 operator|+
-literal|1
+literal|2
 index|]
 decl_stmt|;
 if|if
