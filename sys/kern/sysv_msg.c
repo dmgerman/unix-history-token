@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.10 1995/12/14 08:31:51 phk Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.11 1995/12/15 05:00:27 peter Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Implementation of SVID messages  *  * Author:  Daniel Boulet  *  * Copyright 1993 Daniel Boulet and RTMX Inc.  *  * This system call was implemented by Daniel Boulet under contract from RTMX.  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_sysvipc.h"
+end_include
 
 begin_include
 include|#

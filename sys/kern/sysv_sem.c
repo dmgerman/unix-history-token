@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.13 1995/12/27 15:24:19 joerg Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.14 1995/12/28 01:31:38 jkh Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Implementation of SVID semaphores  *  * Author:  Daniel Boulet  *  * This software is provided ``AS IS'' without any warranties of any kind.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_sysvipc.h"
+end_include
 
 begin_include
 include|#
