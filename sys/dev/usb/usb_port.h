@@ -12,6 +12,10 @@ comment|/*	$FreeBSD$       */
 end_comment
 
 begin_comment
+comment|/* Also already merged from NetBSD:  *	$NetBSD: usb_port.h,v 1.57 2002/09/27 20:42:01 thorpej Exp $  *	$NetBSD: usb_port.h,v 1.58 2002/10/01 01:25:26 thorpej Exp $  */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -273,12 +277,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_DNAME
+parameter_list|(
+name|dname
+parameter_list|)
+value|dname
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_DECLARE_DRIVER
 parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match)(struct device *, struct cfdata *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+value|int __CONCAT(dname,_match)(struct device *, struct cfdata *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ extern struct cfdriver __CONCAT(dname,_cd); \ \ CFATTACH_DECL(USB_DNAME(dname), \     sizeof(struct ___CONCAT(dname,_softc)), \     ___CONCAT(dname,_match), \     ___CONCAT(dname,_attach), \     ___CONCAT(dname,_detach), \     ___CONCAT(dname,_activate))
 end_define
 
 begin_define
@@ -982,7 +996,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|int __CONCAT(dname,_match)(struct device *, void *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
+value|int __CONCAT(dname,_match)(struct device *, void *, void *); \ void __CONCAT(dname,_attach)(struct device *, struct device *, void *); \ int __CONCAT(dname,_detach)(struct device *, int); \ int __CONCAT(dname,_activate)(struct device *, enum devact); \ \ struct cfdriver __CONCAT(dname,_cd) = { \ 	NULL, #dname, DV_DULL \ }; \ \ const struct cfattach __CONCAT(dname,_ca) = { \ 	sizeof(struct __CONCAT(dname,_softc)), \ 	__CONCAT(dname,_match), \ 	__CONCAT(dname,_attach), \ 	__CONCAT(dname,_detach), \ 	__CONCAT(dname,_activate), \ }
 end_define
 
 begin_define

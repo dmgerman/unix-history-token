@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.59 2002/09/23 05:51:20 simonb Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.61 2002/10/01 01:25:25 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -366,28 +366,22 @@ begin_comment
 comment|/* Create the driver instance for the hub connected to hub case */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|cfattach
-name|uhub_uhub_ca
-init|=
-block|{
-sizeof|sizeof
+begin_macro
+name|CFATTACH_DECL
 argument_list|(
-expr|struct
-name|uhub_softc
+argument|uhub_uhub
+argument_list|,
+argument|sizeof(struct uhub_softc)
+argument_list|,
+argument|uhub_match
+argument_list|,
+argument|uhub_attach
+argument_list|,
+argument|uhub_detach
+argument_list|,
+argument|uhub_activate
 argument_list|)
-block|,
-name|uhub_match
-block|,
-name|uhub_attach
-block|,
-name|uhub_detach
-block|,
-name|uhub_activate
-block|}
-decl_stmt|;
-end_decl_stmt
+end_macro
 
 begin_elif
 elif|#
