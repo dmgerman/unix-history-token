@@ -946,7 +946,8 @@ decl_stmt|;
 name|list_entry
 name|k_dpclistentry
 decl_stmt|;
-name|kdpc_func
+name|void
+modifier|*
 name|k_deferedfunc
 decl_stmt|;
 name|void

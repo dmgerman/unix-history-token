@@ -7637,10 +7637,6 @@ name|arg
 expr_stmt|;
 name|dpcfunc
 operator|=
-operator|(
-name|__stdcall
-name|kdpc_func
-operator|)
 name|dpc
 operator|->
 name|k_deferedfunc

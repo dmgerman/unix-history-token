@@ -4192,7 +4192,8 @@ name|void
 modifier|*
 name|nwi_ctx
 decl_stmt|;
-name|ndis_proc
+name|void
+modifier|*
 name|nwi_func
 decl_stmt|;
 name|uint8_t

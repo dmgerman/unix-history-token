@@ -12280,10 +12280,6 @@ name|ctx
 expr_stmt|;
 name|workfunc
 operator|=
-operator|(
-name|__stdcall
-name|ndis_proc
-operator|)
 name|work
 operator|->
 name|nwi_func
