@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)testdb.c	5.1 (Berkeley) %G%"
+literal|"@(#)testdb.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,18 +388,10 @@ name|close
 goto|;
 name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|rec
 operator|.
 name|data
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|nitem
 argument_list|,
@@ -409,6 +401,7 @@ name|nitem
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Theoretically possible for lseek to be seeking to -1.  Not 	 * that it's something to lie awake nights about, however. 	 */
 name|errno
 operator|=
 literal|0
@@ -426,7 +419,7 @@ name|nitem
 operator|.
 name|n_value
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
