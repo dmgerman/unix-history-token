@@ -480,6 +480,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_HITACHI
+value|0x04a4
+end_define
+
+begin_comment
+comment|/* Hitachi, Ltd. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ACERP
 value|0x04a5
 end_define
@@ -5260,6 +5271,21 @@ end_define
 
 begin_comment
 comment|/* WinTV USB FM */
+end_comment
+
+begin_comment
+comment|/* Hitachi, Ltd. products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_HITACHI_DVDCAM_USB
+value|0x001e
+end_define
+
+begin_comment
+comment|/* DVDCAM USB HS Interface */
 end_comment
 
 begin_comment

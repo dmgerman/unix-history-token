@@ -2048,6 +2048,18 @@ literal|"WinTV USB FM"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_HITACHI
+block|,
+name|USB_PRODUCT_HITACHI_DVDCAM_USB
+block|,
+literal|0
+block|,
+literal|"Hitachi, Ltd."
+block|,
+literal|"DVDCAM USB HS Interface"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_HP
 block|,
 name|USB_PRODUCT_HP_895C
@@ -6291,6 +6303,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Compaq Computers"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_HITACHI
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Hitachi, Ltd."
 block|,
 name|NULL
 block|, 	}
