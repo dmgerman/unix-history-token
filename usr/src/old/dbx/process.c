@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.9 %G%"
+literal|"@(#)process.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|MAXNCMDARGS
-value|10
+value|100
 end_define
 
 begin_comment
