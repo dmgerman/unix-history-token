@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/bin/mkdir/mkdir.c,v 1.4 1993/07/20 22:27:08 jtc Exp $"
+literal|"$Header: /home/cvs/386BSD/src/bin/mkdir/mkdir.c,v 1.2 1993/07/21 22:54:09 conklin Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,6 +419,10 @@ operator|*
 name|p
 operator|==
 literal|'/'
+operator|&&
+name|p
+operator|!=
+name|path
 condition|)
 block|{
 name|ch
