@@ -4400,13 +4400,6 @@ name|OBJT_DEVICE
 expr_stmt|;
 name|handle
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
 name|vp
 operator|->
 name|v_rdev
