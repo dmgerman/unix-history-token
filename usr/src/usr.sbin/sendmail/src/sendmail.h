@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.88		%G%"
+literal|"@(#)sendmail.h	3.89		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1733,43 +1733,6 @@ end_define
 
 begin_comment
 comment|/* default operation mode */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  Options ** **	These are assorted options that can be set from the configuration **	file. */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|Option
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* miscellaneous option values */
-end_comment
-
-begin_comment
-comment|/* option values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPT_QUEUEALL
-value|'q'
-end_define
-
-begin_comment
-comment|/* force all messages to queue */
 end_comment
 
 begin_escape

@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.115
+literal|3.116
 operator|%
 name|G
 operator|%
@@ -515,16 +515,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	** Crack argv. 	*/
+comment|/* 	**  Do initial configuration. 	**	This involves deciding what our configuration file will 	**	be and then running it.  Later we will parse the rest of 	**	the arguments, some of which may override the configuration 	**	file. 	**		Notice the problem here: user configuration files 	**		will override the command line options.  Ugh. 	*/
 end_comment
 
-begin_while
-while|while
+begin_if
+if|if
 condition|(
-operator|--
 name|argc
 operator|>
-literal|0
+literal|1
 operator|&&
 operator|(
 name|p
@@ -539,6 +538,90 @@ index|]
 operator|==
 literal|'-'
 condition|)
+block|{
+comment|/* trim off special leading parameters */
+if|if
+condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'C'
+condition|)
+block|{
+comment|/* set configuration file */
+name|ConfFile
+operator|=
+operator|&
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|ConfFile
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|ConfFile
+operator|=
+literal|"sendmail.cf"
+expr_stmt|;
+name|safecf
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+block|}
+end_if
+
+begin_comment
+comment|/* now run the system configuration file */
+end_comment
+
+begin_expr_stmt
+name|readcf
+argument_list|(
+name|ConfFile
+argument_list|,
+name|safecf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* 	** Crack argv. 	*/
+end_comment
+
+begin_for
+for|for
+control|(
+init|;
+operator|--
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|(
+name|p
+operator|=
+operator|*
+name|argv
+operator|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|;
+name|argv
+operator|++
+control|)
 block|{
 switch|switch
 condition|(
@@ -901,32 +984,6 @@ case|case
 literal|'C'
 case|:
 comment|/* select configuration file */
-if|if
-condition|(
-name|p
-index|[
-literal|2
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|ConfFile
-operator|=
-literal|"sendmail.cf"
-expr_stmt|;
-else|else
-name|ConfFile
-operator|=
-operator|&
-name|p
-index|[
-literal|2
-index|]
-expr_stmt|;
-name|safecf
-operator|=
-name|FALSE
-expr_stmt|;
 break|break;
 case|case
 literal|'A'
@@ -1261,7 +1318,7 @@ comment|/* at Eric Schmidt's suggestion, this will not be an error.... 			syserr
 break|break;
 block|}
 block|}
-end_while
+end_for
 
 begin_comment
 comment|/* 	**  Do basic initialization. 	**	Read system control file. 	**	Extract special fields for local use. 	*/
@@ -1300,16 +1357,6 @@ endif|#
 directive|endif
 endif|LOG
 end_endif
-
-begin_expr_stmt
-name|readcf
-argument_list|(
-name|ConfFile
-argument_list|,
-name|safecf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* our name for SMTP codes */
