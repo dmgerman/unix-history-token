@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.18 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.19 %G%  */
 end_comment
 
 begin_define
@@ -747,6 +747,16 @@ parameter_list|(
 name|sp
 parameter_list|)
 value|(((struct strdesc *)(sp)->s_name)->sd_stroff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRPLACE
+parameter_list|(
+name|sp
+parameter_list|)
+value|(((struct strdesc *)(sp)->s_name)->sd_place)
 end_define
 
 begin_define
