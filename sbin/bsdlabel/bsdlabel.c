@@ -587,19 +587,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|disklabel
-modifier|*
-name|readlabel
-argument_list|()
-decl_stmt|,
-modifier|*
-name|makebootarea
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|bootarea
 index|[
@@ -4599,12 +4586,6 @@ name|stat
 decl_stmt|,
 name|omask
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|omask
 operator|=
 name|sigblock
