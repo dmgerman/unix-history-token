@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.31 (Berkeley) %G%"
+literal|"@(#)fts.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,18 +297,29 @@ value|1
 end_define
 
 begin_comment
-comment|/* from fts_children */
+comment|/* fts_children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BNAMES
+value|2
+end_define
+
+begin_comment
+comment|/* fts_children, names only */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BREAD
-value|2
+value|3
 end_define
 
 begin_comment
-comment|/* from fts_read */
+comment|/* fts_read */
 end_comment
 
 begin_decl_stmt
@@ -378,6 +389,25 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+comment|/* Options check. */
+if|if
+condition|(
+name|options
+operator|&
+operator|~
+name|FTS_OPTIONMASK
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Allocate/initialize the stream */
 if|if
 condition|(
@@ -1388,6 +1418,41 @@ name|p
 operator|)
 return|;
 block|}
+comment|/* Rebuild if only got the names and now traversing. */
+if|if
+condition|(
+name|sp
+operator|->
+name|fts_child
+operator|&&
+name|sp
+operator|->
+name|fts_options
+operator|&
+name|FTS_NAMEONLY
+condition|)
+block|{
+name|sp
+operator|->
+name|fts_options
+operator|&=
+operator|~
+name|FTS_NAMEONLY
+expr_stmt|;
+name|fts_lfree
+argument_list|(
+name|sp
+operator|->
+name|fts_child
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|fts_child
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 		 * Cd to the subdirectory, reading it if haven't already.  If 		 * the read fails for any reason, or the directory is empty, 		 * the fts_info field of the current node is set by fts_build. 		 * If have already read and now fail to chdir, whack the list 		 * to make the names come out right, and set the parent state 		 * so the application will eventually get an error condition. 		 * If haven't read and fail to chdir, check to see if we're 		 * at the root node -- if so, we have to get back or the root 		 * node may be inaccessible. 		 */
 if|if
 condition|(
@@ -1994,6 +2059,37 @@ name|int
 name|instr
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|instr
+operator|&&
+name|instr
+operator|!=
+name|FTS_AGAIN
+operator|&&
+name|instr
+operator|!=
+name|FTS_FOLLOW
+operator|&&
+name|instr
+operator|!=
+name|FTS_NOINSTR
+operator|&&
+name|instr
+operator|!=
+name|FTS_SKIP
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|p
 operator|->
 name|fts_instr
@@ -2014,11 +2110,16 @@ modifier|*
 name|fts_children
 parameter_list|(
 name|sp
+parameter_list|,
+name|instr
 parameter_list|)
 specifier|register
 name|FTS
 modifier|*
 name|sp
+decl_stmt|;
+name|int
+name|instr
 decl_stmt|;
 block|{
 specifier|register
@@ -2029,6 +2130,25 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+if|if
+condition|(
+name|instr
+operator|&&
+name|instr
+operator|!=
+name|FTS_NAMEONLY
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Set current node pointer. */
 name|p
 operator|=
@@ -2099,6 +2219,29 @@ operator|->
 name|fts_child
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|instr
+operator|==
+name|FTS_NAMEONLY
+condition|)
+block|{
+name|sp
+operator|->
+name|fts_options
+operator||=
+name|FTS_NAMEONLY
+expr_stmt|;
+name|instr
+operator|=
+name|BNAMES
+expr_stmt|;
+block|}
+else|else
+name|instr
+operator|=
+name|BCHILD
+expr_stmt|;
 comment|/* 	 * If using chdir on a relative path and called BEFORE fts_read does 	 * its chdir to the root of a traversal, we can lose -- we need to 	 * chdir into the subdirectory, and we don't know where the current 	 * directory is, so we can't get back so that the upcoming chdir by 	 * fts_read will work. 	 */
 if|if
 condition|(
@@ -2132,7 +2275,7 @@ name|fts_build
 argument_list|(
 name|sp
 argument_list|,
-name|BCHILD
+name|instr
 argument_list|)
 operator|)
 return|;
@@ -2166,7 +2309,7 @@ name|fts_build
 argument_list|(
 name|sp
 argument_list|,
-name|BCHILD
+name|instr
 argument_list|)
 expr_stmt|;
 if|if
@@ -2325,8 +2468,19 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Nlinks is the number of possible entries of type directory in the 	 * directory if we're cheating on stat calls, 0 if we're not doing 	 * any stat calls at all, -1 if we're doing stats on everything. 	 */
+if|if
+condition|(
+name|type
+operator|==
+name|BNAMES
+condition|)
 name|nlinks
 operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|ISSET
 argument_list|(
 name|FTS_NOSTAT
@@ -2336,7 +2490,9 @@ name|ISSET
 argument_list|(
 name|FTS_PHYSICAL
 argument_list|)
-condition|?
+condition|)
+name|nlinks
+operator|=
 name|cur
 operator|->
 name|fts_nlink
@@ -2351,7 +2507,10 @@ literal|0
 else|:
 literal|2
 operator|)
-else|:
+expr_stmt|;
+else|else
+name|nlinks
+operator|=
 operator|-
 literal|1
 expr_stmt|;
