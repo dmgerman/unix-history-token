@@ -851,30 +851,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/*      * Evaluate resources      */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_RESOURCES
-operator|,
-literal|"parsing EC resources\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|acpi_parse_resources
-argument_list|(
-name|sc
-operator|->
-name|ec_dev
-argument_list|,
-name|sc
-operator|->
-name|ec_handle
-argument_list|,
-operator|&
-name|acpi_res_parse_set
-argument_list|)
-expr_stmt|;
 comment|/*       * Attach bus resources      */
 name|sc
 operator|->
