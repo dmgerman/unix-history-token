@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.7 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_define
@@ -365,15 +371,15 @@ name|y
 index|]
 index|[
 name|x
-operator|++
 index|]
 operator|=
 name|c
 expr_stmt|;
 if|if
 condition|(
+operator|++
 name|x
-operator|>
+operator|>=
 name|win
 operator|->
 name|_maxx
@@ -389,7 +395,7 @@ if|if
 condition|(
 operator|++
 name|y
-operator|>
+operator|>=
 name|win
 operator|->
 name|_maxy
@@ -464,8 +470,11 @@ name|SYNCH_IN
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|NONL
+name|origtermio
+operator|.
+name|c_oflag
+operator|&
+name|ONLCR
 condition|)
 name|x
 operator|=
