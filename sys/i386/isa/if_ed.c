@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.51 1994/10/17 21:16:37 phk Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.52 1994/10/19 01:58:58 wollman Exp $  */
 end_comment
 
 begin_include
@@ -425,6 +425,50 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ed_probe_generic8390
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ed_probe_WD80x3
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ed_probe_3Com
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ed_probe_Novell
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ds_getmcaf
 parameter_list|()
@@ -755,58 +799,51 @@ modifier|*
 name|isa_dev
 decl_stmt|;
 block|{
-name|struct
-name|ed_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|ed_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-decl_stmt|;
 name|int
 name|nports
 decl_stmt|;
-if|if
-condition|(
 name|nports
 operator|=
 name|ed_probe_WD80x3
 argument_list|(
 name|isa_dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nports
 condition|)
 return|return
 operator|(
 name|nports
 operator|)
 return|;
-if|if
-condition|(
 name|nports
 operator|=
 name|ed_probe_3Com
 argument_list|(
 name|isa_dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nports
 condition|)
 return|return
 operator|(
 name|nports
 operator|)
 return|;
-if|if
-condition|(
 name|nports
 operator|=
 name|ed_probe_Novell
 argument_list|(
 name|isa_dev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nports
 condition|)
 return|return
 operator|(
@@ -2116,6 +2153,7 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|sc
 operator|->
 name|type
@@ -2150,6 +2188,7 @@ operator|->
 name|type
 operator|==
 name|ED_TYPE_WD8013EBT
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -2461,7 +2500,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ed%d: failed to clear shared memory at %x - check configuration\n"
+literal|"ed%d: failed to clear shared memory at %lx - check configuration\n"
 argument_list|,
 name|isa_dev
 operator|->
@@ -2617,8 +2656,6 @@ name|memsize
 decl_stmt|;
 name|u_char
 name|isa16bit
-decl_stmt|,
-name|sum
 decl_stmt|;
 name|sc
 operator|->
@@ -3442,7 +3479,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ed%d: failed to clear shared memory at %x - check configuration\n"
+literal|"ed%d: failed to clear shared memory at %lx - check configuration\n"
 argument_list|,
 name|isa_dev
 operator|->
@@ -3517,10 +3554,6 @@ name|romdata
 index|[
 literal|16
 index|]
-decl_stmt|,
-name|isa16bit
-init|=
-literal|0
 decl_stmt|,
 name|tmp
 decl_stmt|;
@@ -5026,9 +5059,6 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
-name|u_char
-name|command
-decl_stmt|;
 comment|/* address not known */
 if|if
 condition|(
@@ -6115,8 +6145,6 @@ index|]
 decl_stmt|;
 name|u_char
 name|boundry
-decl_stmt|,
-name|current
 decl_stmt|;
 name|u_short
 name|len
@@ -6526,6 +6554,7 @@ expr_stmt|;
 comment|/* 	 * loop until there are no more new interrupts 	 */
 while|while
 condition|(
+operator|(
 name|isr
 operator|=
 name|inb
@@ -6536,6 +6565,9 @@ name|nic_addr
 operator|+
 name|ED_P0_ISR
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * reset all the bits that we are 'acknowledging' by writing a 		 * '1' to each bit position that was set (writing a '1' 		 * *clears* the bit) 		 */
