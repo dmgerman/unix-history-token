@@ -2179,7 +2179,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|ssh_put_password
+name|packet_put_cstring
 argument_list|(
 name|password
 argument_list|)
@@ -4014,7 +4014,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-name|ssh_put_password
+name|packet_put_cstring
 argument_list|(
 name|response
 argument_list|)
