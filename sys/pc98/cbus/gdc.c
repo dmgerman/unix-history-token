@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -67,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fbio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -229,6 +241,14 @@ decl_stmt|,
 modifier|*
 name|res_gmem2
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FB_INSTALL_CDEV
+name|genfb_softc_t
+name|gensc
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|gdc_softc_t
 typedef|;
@@ -410,7 +430,7 @@ comment|/* poll */
 name|nopoll
 block|,
 comment|/* mmap */
-name|nommap
+name|gdcmmap
 block|,
 comment|/* strategy */
 name|nostrategy
@@ -635,7 +655,10 @@ literal|0
 argument_list|,
 name|GDC_MKMINOR
 argument_list|(
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
@@ -1619,9 +1642,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|gdc_softc_t
@@ -1678,7 +1701,7 @@ name|flag
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1699,9 +1722,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|gdc_softc_t
@@ -1734,7 +1757,7 @@ name|flag
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1860,9 +1883,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|gdc_softc_t
@@ -1897,7 +1920,7 @@ name|arg
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
