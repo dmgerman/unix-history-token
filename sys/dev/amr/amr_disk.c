@@ -160,7 +160,7 @@ comment|/* open */
 name|amrd_open
 block|,
 comment|/* close */
-name|noclose
+name|nullclose
 block|,
 comment|/* read */
 name|physread
