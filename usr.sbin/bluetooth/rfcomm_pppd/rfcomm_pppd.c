@@ -213,6 +213,8 @@ decl_stmt|,
 name|server
 decl_stmt|,
 name|service
+decl_stmt|,
+name|regsp
 decl_stmt|;
 name|pid_t
 name|pid
@@ -246,6 +248,10 @@ name|service
 operator|=
 literal|0
 expr_stmt|;
+name|regsp
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Parse command line arguments */
 while|while
 condition|(
@@ -258,7 +264,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:cC:dhl:su:"
+literal|"a:cC:dhl:sSu:"
 argument_list|)
 operator|)
 operator|!=
@@ -430,6 +436,15 @@ literal|'s'
 case|:
 comment|/* server */
 name|server
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* Register SP service as well as LAN service */
+name|regsp
 operator|=
 literal|1
 expr_stmt|;
@@ -1160,6 +1175,94 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Register SP (Serial Port) service on the same RFCOMM channel 		 * if requested. It appears that some cell phones are using so 		 * called "callback mechanism". In this scenario user is trying 		 * to connect his cell phone to the Internet, and, user's host 		 * computer is acting as the gateway server. It seems that it 		 * is not possible to tell the phone to just connect and start 		 * using the LAN service. Instead the user's host computer must 		 * "jump start" the phone by connecting to the phone's SP 		 * service. What happens next is the phone kills the existing 		 * connection and opens another connection back to the user's 		 * host computer. The phone really wants to use LAN service, 		 * but for whatever reason it looks for SP service on the 		 * user's host computer. This brain damaged behavior was 		 * reported for Nokia 6600 and Sony/Ericsson P900. Both phones 		 * are Symbian-based phones. Perhaps this is a Symbian problem? 		 */
+if|if
+condition|(
+name|regsp
+condition|)
+block|{
+name|sdp_sp_profile_t
+name|sp
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|sp
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sp
+operator|.
+name|server_channel
+operator|=
+name|channel
+expr_stmt|;
+if|if
+condition|(
+name|sdp_register_service
+argument_list|(
+name|ss
+argument_list|,
+name|SDP_SERVICE_CLASS_SERIAL_PORT
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|sp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sp
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Unable to register SP "
+expr|\
+literal|"service with local SDP daemon. "
+expr|\
+literal|"%s (%d)"
+argument_list|,
+name|strerror
+argument_list|(
+name|sdp_error
+argument_list|(
+name|ss
+argument_list|)
+argument_list|)
+argument_list|,
+name|sdp_error
+argument_list|(
+name|ss
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 for|for
 control|(
 name|done
@@ -1826,6 +1929,8 @@ expr|\
 literal|"\t-l label     Use PPP label (required)\n"
 expr|\
 literal|"\t-s           Act as a server\n"
+expr|\
+literal|"\t-S           Register Serial Port service (server mode only)\n"
 expr|\
 literal|"\t-u N         Tell PPP to operate on /dev/tunN (client mode only)\n"
 expr|\
