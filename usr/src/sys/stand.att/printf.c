@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -343,14 +343,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'D'
-case|:
-name|lflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 literal|'d'
 case|:
 name|ul
@@ -404,14 +396,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'O'
-case|:
-name|lflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 literal|'o'
 case|:
 name|ul
@@ -441,14 +425,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'U'
-case|:
-name|lflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 literal|'u'
 case|:
 name|ul
@@ -477,14 +453,6 @@ literal|10
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'X'
-case|:
-name|lflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
 case|case
 literal|'x'
 case|:
