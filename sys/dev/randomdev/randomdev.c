@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Mark Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Mark R V Murray  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kobj.h>
 end_include
 
 begin_include
@@ -114,14 +114,14 @@ end_include
 begin_decl_stmt
 specifier|static
 name|d_read_t
-name|randomread
+name|random_read
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_write_t
-name|randomwrite
+name|random_write
 decl_stmt|;
 end_decl_stmt
 
@@ -168,10 +168,10 @@ operator|)
 name|nullop
 block|,
 comment|/* read */
-name|randomread
+name|random_read
 block|,
 comment|/* write */
-name|randomwrite
+name|random_write
 block|,
 comment|/* ioctl */
 name|noioctl
@@ -214,46 +214,28 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|dev_t
-name|randomdev
+name|random_dev
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|dev_t
-name|urandomdev
+name|urandom_dev
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Buffer used by uiomove(9) */
+end_comment
 
 begin_decl_stmt
 specifier|static
 name|void
 modifier|*
-name|buf
+name|random_buf
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|randominit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|state
-name|state
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This is mostly academic at the moment; as Yarrow gets extended, it will    become more relevant */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -303,7 +285,7 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|state
+name|random_state
 operator|.
 name|gengateinterval
 argument_list|,
@@ -314,10 +296,112 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_random_yarrow
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bins
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|random_state
+operator|.
+name|bins
+argument_list|,
+literal|10
+argument_list|,
+literal|"Execution time tuner"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_random_yarrow
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|fastthresh
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|random_state
+operator|.
+name|pool
+index|[
+literal|0
+index|]
+operator|.
+name|thresh
+argument_list|,
+literal|100
+argument_list|,
+literal|"Fast pool reseed threshhold"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_random_yarrow
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|slowthresh
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|random_state
+operator|.
+name|pool
+index|[
+literal|1
+index|]
+operator|.
+name|thresh
+argument_list|,
+literal|100
+argument_list|,
+literal|"Slow pool reseed threshhold"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_random_yarrow
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|slowoverthresh
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|random_state
+operator|.
+name|slowoverthresh
+argument_list|,
+literal|2
+argument_list|,
+literal|"Slow pool over-threshhold reseed count"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
-name|randomread
+name|random_read
 parameter_list|(
 name|dev_t
 name|dev
@@ -352,7 +436,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|buf
+name|random_buf
 operator|=
 operator|(
 name|void
@@ -384,7 +468,7 @@ name|ret
 operator|=
 name|read_random
 argument_list|(
-name|buf
+name|random_buf
 argument_list|,
 name|c
 argument_list|)
@@ -393,7 +477,7 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-name|buf
+name|random_buf
 argument_list|,
 name|ret
 argument_list|,
@@ -403,7 +487,7 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|buf
+name|random_buf
 argument_list|,
 name|M_TEMP
 argument_list|)
@@ -417,7 +501,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|randomwrite
+name|random_write
 parameter_list|(
 name|dev_t
 name|dev
@@ -439,7 +523,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|buf
+name|random_buf
 operator|=
 operator|(
 name|void
@@ -478,7 +562,7 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-name|buf
+name|random_buf
 argument_list|,
 name|c
 argument_list|,
@@ -490,11 +574,11 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* write_random(buf, c); */
+comment|/* write_random(random_buf, c); */
 block|}
 name|free
 argument_list|(
-name|buf
+name|random_buf
 argument_list|,
 name|M_TEMP
 argument_list|)
@@ -538,7 +622,7 @@ argument_list|(
 literal|"random:<entropy source>\n"
 argument_list|)
 expr_stmt|;
-name|randomdev
+name|random_dev
 operator|=
 name|make_dev
 argument_list|(
@@ -556,7 +640,7 @@ argument_list|,
 literal|"random"
 argument_list|)
 expr_stmt|;
-name|urandomdev
+name|urandom_dev
 operator|=
 name|make_dev
 argument_list|(
@@ -574,7 +658,7 @@ argument_list|,
 literal|"urandom"
 argument_list|)
 expr_stmt|;
-name|randominit
+name|random_init
 argument_list|()
 expr_stmt|;
 return|return
@@ -583,14 +667,17 @@ return|;
 case|case
 name|MOD_UNLOAD
 case|:
+name|random_deinit
+argument_list|()
+expr_stmt|;
 name|destroy_dev
 argument_list|(
-name|randomdev
+name|random_dev
 argument_list|)
 expr_stmt|;
 name|destroy_dev
 argument_list|(
-name|urandomdev
+name|urandom_dev
 argument_list|)
 expr_stmt|;
 return|return
