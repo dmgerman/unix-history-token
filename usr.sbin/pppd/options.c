@@ -3946,9 +3946,10 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|usage_string
+index|[]
 init|=
 literal|"\ pppd version %s patch level %d%s\n\ Usage: %s [ options ], where options are:\n\<device>	Communicate over the named device\n\<speed>		Set the baud rate to<speed>\n\<loc>:<rem>	Set the local and/or remote interface IP\n\ 			addresses.  Either one may be omitted.\n\ 	asyncmap<n>	Set the desired async map to hex<n>\n\ 	auth		Require authentication from peer\n\         connect<p>     Invoke shell command<p> to set up the serial line\n\ 	crtscts		Use hardware RTS/CTS flow control\n\ 	defaultroute	Add default route through interface\n\ 	file<f>	Take options from file<f>\n\ 	modem		Use modem control lines\n\ 	mru<n>		Set MRU value to<n> for negotiation\n\ See pppd(8) for more options.\n\ "
 decl_stmt|;
@@ -9153,7 +9154,7 @@ name|mask
 decl_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
 name|inet_aton
 argument_list|(
 operator|*
@@ -9162,10 +9163,6 @@ argument_list|,
 operator|&
 name|mask
 argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
 operator|||
 operator|(
 name|netmask
@@ -10939,7 +10936,7 @@ name|deflate
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX copy over settings for switch compatability */
+comment|/* XXX copy over settings for switch compatibility */
 name|ccp_wantoptions
 index|[
 literal|0
