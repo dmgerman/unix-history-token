@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.22 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.23 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.22 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.23 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|pidf
+decl_stmt|;
+name|int
+name|socksize
 decl_stmt|;
 specifier|extern
 name|void
@@ -526,7 +529,7 @@ name|NETINET
 case|case
 name|AF_INET
 case|:
-name|t
+name|socksize
 operator|=
 sizeof|sizeof
 name|DaemonAddr
@@ -542,7 +545,7 @@ name|NETISO
 case|case
 name|AF_ISO
 case|:
-name|t
+name|socksize
 operator|=
 sizeof|sizeof
 name|DaemonAddr
@@ -553,7 +556,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|t
+name|socksize
 operator|=
 sizeof|sizeof
 name|DaemonAddr
@@ -571,7 +574,7 @@ name|DaemonAddr
 operator|.
 name|sa
 argument_list|,
-name|t
+name|socksize
 argument_list|)
 operator|<
 literal|0
