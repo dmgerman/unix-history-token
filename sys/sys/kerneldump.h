@@ -140,6 +140,10 @@ define|#
 directive|define
 name|KERNELDUMPMAGIC
 value|"FreeBSD Kernel Dump"
+define|#
+directive|define
+name|KERNELDUMPMAGIC_CLEARED
+value|"Cleared Kernel Dump"
 name|char
 name|architecture
 index|[
