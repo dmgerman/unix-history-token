@@ -2373,9 +2373,8 @@ operator|&&
 operator|!
 name|KEY_UNDEFINED
 argument_list|(
-name|ni
-operator|->
-name|ni_ucastkey
+operator|*
+name|key
 argument_list|)
 operator|)
 condition|)
