@@ -387,11 +387,16 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
 name|struct
 name|vnode
 modifier|*
 name|vtmp
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|exitlist
 modifier|*
