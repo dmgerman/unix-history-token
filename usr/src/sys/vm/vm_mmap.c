@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2025,7 +2025,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|}
@@ -2259,7 +2259,7 @@ block|{
 name|caddr_t
 name|addr
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|}
