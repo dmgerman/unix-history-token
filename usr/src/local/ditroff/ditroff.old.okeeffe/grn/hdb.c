@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hdb.c	1.1	(Berkeley) 83/07/09  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
+comment|/*	hdb.c	1.2	(Berkeley) 83/07/21  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
 end_comment
 
 begin_include
