@@ -5284,6 +5284,19 @@ literal|0
 block|simple_unlock(&pg->mdpage.pvh_slock); 	PMAP_HEAD_TO_MAP_UNLOCK();
 endif|#
 directive|endif
+if|if
+condition|(
+name|maskbits
+operator|&
+name|PVF_WRITE
+condition|)
+name|vm_page_flag_clear
+argument_list|(
+name|pg
+argument_list|,
+name|PG_WRITEABLE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|count
@@ -5710,6 +5723,27 @@ name|md
 operator|.
 name|uro_mappings
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|pg
+operator|->
+name|md
+operator|.
+name|pv_list
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|vm_page_flag_clear
+argument_list|(
+name|pg
+argument_list|,
+name|PG_WRITEABLE
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -12656,6 +12690,9 @@ literal|0
 block|PMAP_MAP_TO_HEAD_LOCK(); 	pmap_acquire_pmap_lock(pm);
 endif|#
 directive|endif
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_update
 argument_list|(
 name|pm
@@ -13218,6 +13255,9 @@ name|mappings
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|flushall
