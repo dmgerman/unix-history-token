@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.49.2.1 1999/02/25 18:36:32 wollman Exp $ */
+comment|/* $Id: main.c,v 1.49.2.2 1999/07/02 08:57:05 green Exp $ */
 end_comment
 
 begin_include
@@ -146,7 +146,7 @@ name|stderr
 argument_list|,
 literal|"usage: fetch [-ADHILMNPRTVablmnpqrstv] [-o outputfile] "
 literal|"[-S bytes]\n"
-literal|"             [-f file -h host [-c dir] | URL]"
+literal|"             [-f file -h host [-c dir] | URL]\n"
 argument_list|)
 expr_stmt|;
 name|exit
