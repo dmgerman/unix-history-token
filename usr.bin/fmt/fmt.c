@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fmt.c,v 1.9 1997/07/03 07:19:46 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,8 +652,24 @@ literal|0
 decl_stmt|,
 name|cbufsize
 init|=
-literal|0
+name|CHUNKSIZE
 decl_stmt|;
+name|canonb
+operator|=
+name|malloc
+argument_list|(
+name|CHUNKSIZE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|canonb
+operator|==
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|center
