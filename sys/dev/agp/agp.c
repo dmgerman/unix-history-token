@@ -309,6 +309,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+comment|/* FIXME: This is most likely not correct as it doesn't flush CPU  	 * write caches, but we don't have a facility to do that and  	 * this is all linux does, too */
+name|alpha_mb
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
