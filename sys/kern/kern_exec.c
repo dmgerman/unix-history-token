@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -3827,6 +3839,33 @@ operator|=
 name|curthread
 expr_stmt|;
 comment|/* XXXKSE */
+ifdef|#
+directive|ifdef
+name|MAC
+name|error
+operator|=
+name|mac_check_vnode_exec
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|imgp
+operator|->
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* Get file attributes */
 name|error
 operator|=
