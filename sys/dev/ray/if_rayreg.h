@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayreg.h,v 1.6 2000/03/12 22:52:00 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayreg.h,v 1.7 2000/03/21 14:26:38 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ value|(RAY_CCR + 0x02)
 end_define
 
 begin_comment
-comment|/* not in hw */
+comment|/* not used by hw */
 end_comment
 
 begin_define
@@ -254,8 +254,15 @@ begin_comment
 comment|/*  * CCS register bits  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RAY_CCS_NORMAL
+value|0x00
+end_define
+
 begin_comment
-comment|/* XXX the linux driver indicates bit 0 is the irq bit */
+comment|/* normal operation */
 end_comment
 
 begin_define
@@ -277,7 +284,11 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*  * HCSI register bits  *  * the host can only clear this bit.  */
+comment|/* when written powers down card */
+end_comment
+
+begin_comment
+comment|/*  * HCSIR bits  *  * the host can only clear this bit.  */
 end_comment
 
 begin_define
@@ -292,7 +303,7 @@ comment|/* indicates an interrupt */
 end_comment
 
 begin_comment
-comment|/*  * ECFI register values  */
+comment|/*  * ECFIR values  */
 end_comment
 
 begin_define
@@ -307,7 +318,7 @@ comment|/* interrupt the card */
 end_comment
 
 begin_comment
-comment|/*  * authorization register 0 values  *    -- used for testing/programming the card (unused)  */
+comment|/*  * AR0 values  * used for testing/programming the card (unused)  */
 end_comment
 
 begin_define
@@ -318,7 +329,7 @@ value|0x57
 end_define
 
 begin_comment
-comment|/*  * authorization register 1 values  *	-- used for testing/programming the card (unused)  */
+comment|/*  * AR1 values  * used for testing/programming the card (unused)  */
 end_comment
 
 begin_define
@@ -329,7 +340,18 @@ value|0x82
 end_define
 
 begin_comment
-comment|/*  * PMR bits -- these are used to program the card (unused)  */
+comment|/*  * PMR bits   * these are used to program the card (unused)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_PMR_NORMAL
+value|0x00
+end_define
+
+begin_comment
+comment|/* normal operation */
 end_comment
 
 begin_define
@@ -366,7 +388,18 @@ comment|/* read access to the MSLE prom */
 end_comment
 
 begin_comment
-comment|/*  * TMR bits -- get access to test modes (unused)  */
+comment|/*  * TMR bits  * get access to test modes (unused)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_TMR_NORMAL
+value|0x00
+end_define
+
+begin_comment
+comment|/* normal operation */
 end_comment
 
 begin_define
@@ -673,6 +706,14 @@ name|RAY_ECFS_CARD_OK
 value|RAY_ECFS_TEST_COMPLETE
 end_define
 
+begin_define
+define|#
+directive|define
+name|RAY_ECFS_PRINTFB
+define|\
+value|"\020"			\ 	"\001RESERVED0"		\ 	"\002PROC_SELF_TEST"	\ 	"\003PROG_MEM_CHECKSUM"	\ 	"\004DATA_MEM_TEST"	\ 	"\005RX_CALIBRATION"	\ 	"\006FW_VERSION_COMPAT"	\ 	"\007RERSERVED1"	\ 	"\010TEST_COMPLETE"
+end_define
+
 begin_comment
 comment|/*  * Firmware build codes  */
 end_comment
@@ -728,7 +769,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RAY_CMD_START_PARAMS
+name|RAY_CMD_DOWNLOAD_PARAMS
 value|0x01
 end_define
 
