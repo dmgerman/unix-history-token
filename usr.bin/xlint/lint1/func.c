@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cgram.tab.h"
+file|"y.tab.h"
 end_include
 
 begin_comment

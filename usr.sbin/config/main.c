@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"config.tab.h"
+file|"y.tab.h"
 end_include
 
 begin_include
