@@ -7754,6 +7754,18 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|so
+operator|->
+name|so_error
+condition|)
+comment|/* temporary udp error */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 name|kn
@@ -7989,6 +8001,18 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|so
+operator|->
+name|so_error
+condition|)
+comment|/* temporary udp error */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|(
