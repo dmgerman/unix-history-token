@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.3 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2595,13 +2595,6 @@ argument_list|(
 name|net
 argument_list|,
 literal|2
-argument_list|)
-expr_stmt|;
-name|kill
-argument_list|(
-literal|0
-argument_list|,
-name|SIGKILL
 argument_list|)
 expr_stmt|;
 name|exit

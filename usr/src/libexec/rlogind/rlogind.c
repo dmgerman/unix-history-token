@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.7 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1810,13 +1810,6 @@ argument_list|(
 name|netf
 argument_list|,
 literal|2
-argument_list|)
-expr_stmt|;
-name|kill
-argument_list|(
-literal|0
-argument_list|,
-name|SIGKILL
 argument_list|)
 expr_stmt|;
 name|exit
