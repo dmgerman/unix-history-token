@@ -3870,7 +3870,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PLONG
+name|PGTOK
 case|:
 operator|(
 name|void

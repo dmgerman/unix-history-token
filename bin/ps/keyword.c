@@ -1534,7 +1534,7 @@ argument_list|(
 name|ki_rssize
 argument_list|)
 block|,
-name|PLONG
+name|PGTOK
 block|,
 literal|"ld"
 block|,
@@ -2033,7 +2033,7 @@ argument_list|(
 name|ki_tsize
 argument_list|)
 block|,
-name|PLONG
+name|PGTOK
 block|,
 literal|"ld"
 block|,

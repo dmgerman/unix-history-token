@@ -36,7 +36,7 @@ name|ULONG
 block|,
 name|KPTR
 block|,
-name|PLONG
+name|PGTOK
 block|}
 enum|;
 end_enum
