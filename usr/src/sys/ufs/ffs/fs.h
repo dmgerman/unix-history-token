@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -444,11 +444,11 @@ name|long
 name|fs_state
 decl_stmt|;
 comment|/* validate fs_clean field */
-name|quad
+name|quad_t
 name|fs_qbmask
 decl_stmt|;
 comment|/* ~fs_bmask - for use with quad size */
-name|quad
+name|quad_t
 name|fs_qfmask
 decl_stmt|;
 comment|/* ~fs_fmask - for use with quad size */
