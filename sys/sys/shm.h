@@ -260,12 +260,18 @@ name|proc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vmspace
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|shmexit
 parameter_list|(
 name|struct
-name|proc
+name|vmspace
 modifier|*
 parameter_list|)
 function_decl|;

@@ -87,7 +87,7 @@ name|shmexit_hook
 function_decl|)
 parameter_list|(
 name|struct
-name|proc
+name|vmspace
 modifier|*
 parameter_list|)
 init|=
@@ -144,13 +144,11 @@ begin_function
 name|void
 name|shmexit
 parameter_list|(
-name|p
-parameter_list|)
 name|struct
-name|proc
+name|vmspace
 modifier|*
-name|p
-decl_stmt|;
+name|vm
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -160,7 +158,7 @@ name|NULL
 condition|)
 name|shmexit_hook
 argument_list|(
-name|p
+name|vm
 argument_list|)
 expr_stmt|;
 return|return;

@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/shm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1008,6 +1014,12 @@ name|KTR_VM
 argument_list|,
 literal|"vmspace_free: %p"
 argument_list|,
+name|vm
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Make sure any SysV shm is freed, it might not have been in 	 * exit1(). 	 */
+name|shmexit
+argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;

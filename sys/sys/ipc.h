@@ -378,6 +378,12 @@ name|proc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|vmspace
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|ipcperm
@@ -423,7 +429,7 @@ name|shmexit_hook
 function_decl|)
 parameter_list|(
 name|struct
-name|proc
+name|vmspace
 modifier|*
 parameter_list|)
 function_decl|;

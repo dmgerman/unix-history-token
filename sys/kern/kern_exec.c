@@ -3553,15 +3553,9 @@ operator|->
 name|sv_maxuser
 condition|)
 block|{
-if|if
-condition|(
-name|vmspace
-operator|->
-name|vm_shm
-condition|)
 name|shmexit
 argument_list|(
-name|p
+name|vmspace
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues

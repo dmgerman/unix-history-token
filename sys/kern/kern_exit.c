@@ -854,15 +854,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|vm
-operator|->
-name|vm_shm
-condition|)
 name|shmexit
 argument_list|(
-name|p
+name|vm
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
