@@ -221,112 +221,31 @@ end_include
 
 begin_decl_stmt
 name|int
-name|lineno
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* main RAW socket 	   */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_resolv
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* Would try to resolve all */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_acct
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* Show packet/byte count  */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_time
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* Show time stamps        */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_quiet
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* Be quiet in add and flush  */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_force
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* Don't ask for confirmation */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_pipe
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* this cmd refers to a pipe */
-end_comment
-
-begin_decl_stmt
-name|int
 name|do_sort
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+decl_stmt|,
 comment|/* field to sort results (0=no) */
-end_comment
-
-begin_decl_stmt
-name|int
 name|verbose
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -13128,11 +13047,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
-comment|/* XXX should be declared in<unistd.h> */
 if|if
 condition|(
 name|ac
@@ -13146,6 +13060,23 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Initialize globals. */
+name|do_resolv
+operator|=
+name|do_acct
+operator|=
+name|do_time
+operator|=
+name|do_quiet
+operator|=
+name|do_pipe
+operator|=
+name|do_sort
+operator|=
+name|verbose
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Set the force flag for non-interactive processes */
 name|do_force
 operator|=
@@ -13867,6 +13798,8 @@ name|i
 decl_stmt|,
 name|c
 decl_stmt|,
+name|lineno
+decl_stmt|,
 name|qflag
 decl_stmt|,
 name|pflag
@@ -13921,6 +13854,18 @@ condition|(
 name|ac
 operator|>
 literal|1
+operator|&&
+name|av
+index|[
+name|ac
+operator|-
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
 operator|&&
 name|access
 argument_list|(
