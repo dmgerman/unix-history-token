@@ -1135,6 +1135,25 @@ name|p
 operator|->
 name|p_acflag
 expr_stmt|;
+comment|/* 	 * Write the accounting information to the file. 	 */
+name|uc
+operator|=
+name|crhold
+argument_list|(
+name|acctcred
+argument_list|)
+expr_stmt|;
+name|vref
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|acct_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Eliminate any file size rlimit. 	 */
 if|if
 condition|(
@@ -1188,25 +1207,6 @@ operator|.
 name|rlim_cur
 operator|=
 name|RLIM_INFINITY
-expr_stmt|;
-comment|/* 	 * Write the accounting information to the file. 	 */
-name|uc
-operator|=
-name|crhold
-argument_list|(
-name|acctcred
-argument_list|)
-expr_stmt|;
-name|vref
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|acct_mtx
-argument_list|)
 expr_stmt|;
 name|VOP_LEASE
 argument_list|(
