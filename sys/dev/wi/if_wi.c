@@ -9892,6 +9892,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WI_HOSTAP
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_int32_t
@@ -10974,6 +10980,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WI_HOSTAP */
+end_comment
 
 begin_function
 specifier|static
