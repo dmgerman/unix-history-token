@@ -1097,15 +1097,6 @@ begin_comment
 comment|/* No message of desired type */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _POSIX_SOURCE */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1116,12 +1107,6 @@ end_define
 begin_comment
 comment|/* Value too large to be stored in data type */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
 
 begin_define
 define|#
