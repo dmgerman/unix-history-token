@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fil.c,v 2.0.1.7 1997/02/18 10:53:47 darrenr Exp $"
+literal|"$Id: fil.c,v 1.1.1.3 1997/04/03 10:10:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -263,13 +269,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip_fil.h"
+file|"ip_compat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
+file|"ip_fil.h"
 end_include
 
 begin_include
@@ -325,21 +331,16 @@ directive|include
 file|"ipf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ipt.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|opts
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|debug
-argument_list|()
-decl_stmt|,
-name|verbose
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -354,7 +355,7 @@ name|second
 parameter_list|,
 name|verb_pr
 parameter_list|)
-value|if (ex) { verbose verb_pr; second; }
+value|if (ex) { verbose verb_pr; \ 							  second; }
 end_define
 
 begin_define
@@ -368,7 +369,7 @@ name|second
 parameter_list|,
 name|verb_pr
 parameter_list|)
-value|if (ex) { debug verb_pr; second; }
+value|if (ex) { debug verb_pr; \ 							  second; }
 end_define
 
 begin_define
@@ -404,7 +405,37 @@ name|fi
 parameter_list|,
 name|m
 parameter_list|)
-value|fr_scanlist(p, ip, fi)
+value|fr_scanlist(p, ip, fi, m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEND_RESET
+parameter_list|(
+name|ip
+parameter_list|,
+name|qif
+parameter_list|,
+name|q
+parameter_list|,
+define|if)		send_reset(ip, if)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPLLOG
+parameter_list|(
+name|a
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|ipllog()
 end_define
 
 begin_if
@@ -416,8 +447,45 @@ end_if
 begin_define
 define|#
 directive|define
+name|ICMP_ERROR
+parameter_list|(
+name|b
+parameter_list|,
+name|ip
+parameter_list|,
+name|t
+parameter_list|,
+name|c
+parameter_list|,
+define|if, src) 	icmp_error(ip)
+end_define
+
+begin_define
+define|#
+directive|define
 name|bcmp
 value|memcmp
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ICMP_ERROR
+parameter_list|(
+name|b
+parameter_list|,
+name|ip
+parameter_list|,
+name|t
+parameter_list|,
+name|c
+parameter_list|,
+define|if, src) 	icmp_error(b, ip, if)
 end_define
 
 begin_endif
@@ -429,6 +497,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* #ifndef _KERNEL */
+end_comment
 
 begin_define
 define|#
@@ -492,78 +564,34 @@ parameter_list|)
 value|fr_scanlist(p, ip, fi, m)
 end_define
 
-begin_function_decl
-specifier|extern
-name|int
-name|send_reset
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|IPLLOG
+parameter_list|(
+name|a
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|ipllog(a, IPL_LOGIPF, c, d, e)
+end_define
 
 begin_if
 if|#
 directive|if
 name|SOLARIS
 end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|icmp_error
-argument_list|()
-decl_stmt|,
-name|ipfr_fastroute
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|kmutex_t
 name|ipf_mutex
-decl_stmt|,
-name|ipl_mutex
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|void
-name|ipfr_fastroute
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ipl_unreach
-decl_stmt|,
-name|ipllog
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|SOLARIS
-end_if
 
 begin_define
 define|#
@@ -572,7 +600,11 @@ name|SEND_RESET
 parameter_list|(
 name|ip
 parameter_list|,
-define|if, q)		send_reset(ip, qif, q)
+name|qif
+parameter_list|,
+name|q
+parameter_list|,
+define|if)	send_reset(ip, qif, q)
 end_define
 
 begin_define
@@ -599,11 +631,31 @@ end_else
 begin_define
 define|#
 directive|define
+name|FR_SCANLIST
+parameter_list|(
+name|p
+parameter_list|,
+name|ip
+parameter_list|,
+name|fi
+parameter_list|,
+name|m
+parameter_list|)
+value|fr_scanlist(p, ip, fi, m)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SEND_RESET
 parameter_list|(
 name|ip
 parameter_list|,
-define|if, q)		send_reset(ip)
+name|qif
+parameter_list|,
+name|q
+parameter_list|,
+define|if)	send_reset((struct tcpiphdr *)ip)
 end_define
 
 begin_if
@@ -661,6 +713,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -701,7 +758,7 @@ begin_define
 define|#
 directive|define
 name|IPF_NOMATCH
-value|(FR_NOMATCH)
+value|(FR_PASS|FR_NOMATCH)
 end_define
 
 begin_endif
@@ -814,6 +871,64 @@ name|frcache
 index|[
 literal|2
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|fr_makefrip
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fr_tcpudpchk
+name|__P
+argument_list|(
+operator|(
+name|frentry_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fr_scanlist
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1022,6 +1137,7 @@ comment|/*  * compact the IP header into a structure which contains just the inf
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fr_makefrip
 parameter_list|(
@@ -1851,6 +1967,7 @@ comment|/*  * check an IP packet for TCP/UDP characteristics such as ports and f
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fr_tcpudpchk
 parameter_list|(
@@ -2324,6 +2441,7 @@ comment|/*  * Check the input/output list of rules for a match and result.  * Co
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fr_scanlist
 parameter_list|(
@@ -2511,29 +2629,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fr
+operator|->
+name|fr_ifa
+operator|&&
+name|fr
+operator|->
+name|fr_ifa
+operator|!=
 name|fin
 operator|->
 name|fin_ifp
-operator|&&
-operator|*
-name|fr
-operator|->
-name|fr_ifname
-operator|&&
-name|strcasecmp
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|fin
-operator|->
-name|fin_ifp
-argument_list|,
-name|fr
-operator|->
-name|fr_ifname
-argument_list|)
 condition|)
 continue|continue;
 name|FR_VERBOSE
@@ -2976,7 +3082,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ipllog
+name|IPLLOG
 argument_list|(
 name|fr
 operator|->
@@ -3037,6 +3143,9 @@ name|fr
 operator|->
 name|fr_bytes
 operator|+=
+operator|(
+name|U_QUAD_T
+operator|)
 name|ip
 operator|->
 name|ip_len
@@ -3158,8 +3267,23 @@ else|#
 directive|else
 end_else
 
-begin_endif
+begin_operator
+operator|,
+end_operator
+
+begin_expr_stmt
+name|mp
+end_expr_stmt
+
+begin_decl_stmt
 unit|)
+name|char
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
 end_endif
@@ -3219,6 +3343,25 @@ name|pass
 decl_stmt|,
 name|changed
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|_KERNEL
+name|char
+modifier|*
+name|mc
+init|=
+name|mp
+decl_stmt|,
+modifier|*
+name|m
+init|=
+name|mp
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|_KERNEL
 if|#
 directive|if
 operator|!
@@ -3231,11 +3374,6 @@ operator|!
 name|defined
 argument_list|(
 name|__svr4__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
 argument_list|)
 specifier|register
 name|struct
@@ -3370,11 +3508,6 @@ directive|endif
 if|#
 directive|if
 name|SOLARIS
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
 name|mblk_t
 modifier|*
 name|mc
@@ -3388,6 +3521,8 @@ name|qif
 operator|->
 name|qf_m
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|fr_makefrip
@@ -3862,6 +3997,13 @@ operator|&&
 name|fr
 operator|->
 name|fr_func
+operator|&&
+operator|!
+operator|(
+name|pass
+operator|&
+name|FR_CALLNOW
+operator|)
 condition|)
 name|pass
 operator|=
@@ -4111,7 +4253,7 @@ label|:
 if|if
 condition|(
 operator|!
-name|ipllog
+name|IPLLOG
 argument_list|(
 name|pass
 argument_list|,
@@ -4300,6 +4442,8 @@ argument_list|,
 name|qif
 argument_list|,
 name|q
+argument_list|,
+name|ifp
 argument_list|)
 operator|==
 literal|0
@@ -4653,45 +4797,19 @@ directive|ifdef
 name|IPFILTER_LOG
 end_ifdef
 
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|)
-end_if
-
-begin_function
-specifier|static
-name|void
-name|ipllog
-parameter_list|()
-block|{
-name|verbose
-argument_list|(
-literal|"l"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|fr_copytolog
 parameter_list|(
+name|dev
+parameter_list|,
 name|buf
 parameter_list|,
 name|len
 parameter_list|)
+name|int
+name|dev
+decl_stmt|;
 name|char
 modifier|*
 name|buf
@@ -4700,6 +4818,33 @@ name|int
 name|len
 decl_stmt|;
 block|{
+specifier|register
+name|char
+modifier|*
+name|bufp
+init|=
+name|iplbuf
+index|[
+name|dev
+index|]
+decl_stmt|,
+modifier|*
+name|tp
+init|=
+name|iplt
+index|[
+name|dev
+index|]
+decl_stmt|,
+modifier|*
+name|hp
+init|=
+name|iplh
+index|[
+name|dev
+index|]
+decl_stmt|;
+specifier|register
 name|int
 name|clen
 decl_stmt|,
@@ -4708,23 +4853,23 @@ decl_stmt|;
 name|tail
 operator|=
 operator|(
-name|iplh
+name|hp
 operator|>=
-name|iplt
+name|tp
 operator|)
 condition|?
 operator|(
-name|iplbuf
+name|bufp
 operator|+
 name|IPLLOGSIZE
 operator|-
-name|iplh
+name|hp
 operator|)
 else|:
 operator|(
-name|iplt
+name|tp
 operator|-
-name|iplh
+name|hp
 operator|)
 expr_stmt|;
 name|clen
@@ -4740,7 +4885,7 @@ name|bcopy
 argument_list|(
 name|buf
 argument_list|,
-name|iplh
+name|hp
 argument_list|,
 name|clen
 argument_list|)
@@ -4753,7 +4898,7 @@ name|tail
 operator|-=
 name|clen
 expr_stmt|;
-name|iplh
+name|hp
 operator|+=
 name|clen
 expr_stmt|;
@@ -4763,22 +4908,22 @@ name|clen
 expr_stmt|;
 if|if
 condition|(
-name|iplh
+name|hp
 operator|==
-name|iplbuf
+name|bufp
 operator|+
 name|IPLLOGSIZE
 condition|)
 block|{
-name|iplh
+name|hp
 operator|=
-name|iplbuf
+name|bufp
 expr_stmt|;
 name|tail
 operator|=
-name|iplt
+name|tp
 operator|-
-name|iplh
+name|hp
 expr_stmt|;
 block|}
 if|if
@@ -4801,7 +4946,7 @@ name|bcopy
 argument_list|(
 name|buf
 argument_list|,
-name|iplh
+name|hp
 argument_list|,
 name|clen
 argument_list|)
@@ -4810,11 +4955,18 @@ name|len
 operator|-=
 name|clen
 expr_stmt|;
-name|iplh
+name|hp
 operator|+=
 name|clen
 expr_stmt|;
 block|}
+name|iplh
+index|[
+name|dev
+index|]
+operator|=
+name|hp
+expr_stmt|;
 return|return
 name|len
 return|;
