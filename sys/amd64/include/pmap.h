@@ -451,61 +451,26 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
+begin_define
+define|#
+directive|define
 name|PTmap
-index|[]
-decl_stmt|;
-end_decl_stmt
+value|((pt_entry_t *)(VADDR(0, 0, PTDPTDI, 0)))
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|pd_entry_t
-name|PDmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pdp_entry_t
-name|PDPmap
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pml4_entry_t
-name|PML4
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pdp_entry_t
-name|PDP
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pd_entry_t
+begin_define
+define|#
+directive|define
 name|PTD
-index|[]
-decl_stmt|;
-end_decl_stmt
+value|((pd_entry_t *)(VADDR(0, 0, PTDPTDI, PTDPTDI)))
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|pd_entry_t
+begin_define
+define|#
+directive|define
 name|PTDpde
-index|[]
-decl_stmt|;
-end_decl_stmt
+value|((pd_entry_t *)(VADDR(0, 0, PTDPTDI, PTDPTDI) + (PTDPTDI * sizeof(pd_entry_t))))
+end_define
 
 begin_decl_stmt
 specifier|extern
