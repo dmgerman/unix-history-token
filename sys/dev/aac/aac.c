@@ -1309,11 +1309,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|aac_initq_complete
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|aac_initq_bio
 argument_list|(
 name|sc

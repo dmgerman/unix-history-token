@@ -1122,14 +1122,6 @@ argument|aac_command
 argument_list|)
 name|aac_busy
 expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|aac_command
-argument_list|)
-name|aac_complete
-expr_stmt|;
-comment|/* commands which have been 						 * returned by the controller */
 name|struct
 name|bio_queue_head
 name|aac_bioq
@@ -1793,16 +1785,6 @@ argument_list|(
 name|busy
 argument_list|,
 name|AACQ_BUSY
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|AACQ_COMMAND_QUEUE
-argument_list|(
-name|complete
-argument_list|,
-name|AACQ_COMPLETE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
