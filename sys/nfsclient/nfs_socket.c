@@ -3738,6 +3738,10 @@ condition|(
 name|len
 operator|>
 name|NFS_MAXPACKET
+operator|||
+name|len
+operator|==
+literal|0
 condition|)
 block|{
 name|log
