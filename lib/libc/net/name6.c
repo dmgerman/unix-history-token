@@ -1065,7 +1065,7 @@ argument_list|()
 expr_stmt|;
 name|rval
 operator|=
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 operator|&
 name|hp
@@ -1817,7 +1817,7 @@ argument_list|()
 expr_stmt|;
 name|rval
 operator|=
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 operator|&
 name|hp
