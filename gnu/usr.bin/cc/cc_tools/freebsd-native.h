@@ -10,6 +10,19 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|FREEBSD_NATIVE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FREEBSD_NATIVE
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|SYSTEM_INCLUDE_DIR
 end_undef
 
