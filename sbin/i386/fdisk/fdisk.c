@@ -3111,7 +3111,7 @@ if|if
 condition|(
 name|ok
 argument_list|(
-literal|"Explicitly specifiy beg/end address ?"
+literal|"Explicitly specify beg/end address ?"
 argument_list|)
 condition|)
 block|{
