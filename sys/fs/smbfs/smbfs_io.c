@@ -1625,6 +1625,11 @@ name|int
 name|smbfs_doio
 parameter_list|(
 name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -1640,15 +1645,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|bp
-operator|->
-name|b_vp
-decl_stmt|;
 name|struct
 name|smbmount
 modifier|*

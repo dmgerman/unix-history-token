@@ -324,6 +324,11 @@ name|int
 name|smbfs_doio
 parameter_list|(
 name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 name|bp
