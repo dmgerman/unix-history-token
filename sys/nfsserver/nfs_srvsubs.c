@@ -144,7 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -1769,9 +1769,11 @@ name|cnp
 operator|->
 name|cn_pnbuf
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the name from the mbuf list to ndp->ni_pnbuf 	 * and set the various ndp fields appropriately. 	 */
@@ -2049,9 +2051,11 @@ block|{
 comment|/* 		 * Oh joy. For WebNFS, handle those pesky '%' escapes, 		 * and the 'native path' indicator. 		 */
 name|cp
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|fromcp
@@ -2100,7 +2104,7 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -2170,7 +2174,7 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -2197,7 +2201,7 @@ name|tocp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -2360,7 +2364,7 @@ operator||=
 name|HASBUF
 expr_stmt|;
 else|else
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -2441,9 +2445,11 @@ literal|1
 condition|)
 name|cp
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 else|else
@@ -2544,7 +2550,7 @@ name|ni_pathlen
 operator|>
 literal|1
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -2636,7 +2642,7 @@ operator|->
 name|ni_pathlen
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -2740,7 +2746,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,

@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -1769,7 +1769,7 @@ name|i
 decl_stmt|;
 name|nfsmount_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"NFSMOUNT"
 argument_list|,
@@ -1779,11 +1779,17 @@ expr|struct
 name|nfsmount
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|rpc_vers

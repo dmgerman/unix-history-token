@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -240,7 +240,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|vm_zone_t
+name|uma_zone_t
 name|nfsmount_zone
 decl_stmt|;
 end_decl_stmt
@@ -4736,9 +4736,11 @@ else|else
 block|{
 name|nmp
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|nfsmount_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -5083,7 +5085,7 @@ operator|->
 name|nm_cred
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|nfsmount_zone
 argument_list|,
@@ -5226,7 +5228,7 @@ operator|->
 name|nm_cred
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|nfsmount_zone
 argument_list|,

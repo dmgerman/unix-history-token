@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -121,7 +121,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|nfsnode_zone
 decl_stmt|;
 end_decl_stmt
@@ -628,7 +628,7 @@ parameter_list|)
 block|{
 name|nfsnode_zone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"NFSNODE"
 argument_list|,
@@ -638,11 +638,17 @@ expr|struct
 name|nfsnode
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|nfsnodehashtbl
@@ -893,9 +899,11 @@ expr_stmt|;
 comment|/* 	 * Allocate before getnewvnode since doing so afterward 	 * might cause a bogus v_data pointer to get dereferenced 	 * elsewhere if zalloc should block. 	 */
 name|np
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|nfsnode_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|error
@@ -938,7 +946,7 @@ name|npp
 operator|=
 literal|0
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|nfsnode_zone
 argument_list|,
@@ -1045,7 +1053,7 @@ name|nfs_node_hash_lock
 operator|=
 literal|0
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|nfsnode_zone
 argument_list|,
@@ -1604,7 +1612,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|nfsnode_zone
 argument_list|,
