@@ -2882,6 +2882,14 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
+name|_hw_bus
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
 name|_machdep
 argument_list|)
 expr_stmt|;
