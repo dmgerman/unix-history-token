@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.153 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.154 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -480,7 +480,7 @@ comment|/* **  Per-Operating System defines */
 end_comment
 
 begin_comment
-comment|/* **  HP-UX -- tested for 8.07, 9.00, and 9.01. */
+comment|/* **  HP-UX -- tested for 8.07, 9.00, and 9.01. ** **	If V4FS is defined, compile for HP-UX 10.0. */
 end_comment
 
 begin_ifdef
@@ -490,7 +490,7 @@ name|__hpux
 end_ifdef
 
 begin_comment
-comment|/* avoid m_flags conflict between db.h& sys/sysmacros.h on HP 300 */
+comment|/* common definitions for HP-UX 9.x and 10.x */
 end_comment
 
 begin_undef
@@ -498,6 +498,10 @@ undef|#
 directive|undef
 name|m_flags
 end_undef
+
+begin_comment
+comment|/* conflict between db.h& sys/sysmacros.h on HP 300 */
+end_comment
 
 begin_define
 define|#
@@ -576,53 +580,6 @@ name|GIDSET_T
 value|gid_t
 end_define
 
-begin_define
-define|#
-directive|define
-name|_PATH_UNIX
-value|"/hp-ux"
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILCF
-value|"/usr/lib/sendmail.cf"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IDENTPROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IDENTPROTO
-value|0
-end_define
-
-begin_comment
-comment|/* TCP/IP implementation is broken */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -672,6 +629,142 @@ modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|V4FS
+end_ifdef
+
+begin_comment
+comment|/* HP-UX 10.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/stand/vmunix"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/etc/mail/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/mail/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|1
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation fixed in 10.0 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HP-UX 9.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/hp-ux"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

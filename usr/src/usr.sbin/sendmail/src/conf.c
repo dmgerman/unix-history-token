@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.156 (Berkeley) %G%"
+literal|"@(#)conf.c	8.157 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7301,6 +7301,27 @@ block|,
 ifdef|#
 directive|ifdef
 name|__hpux
+ifdef|#
+directive|ifdef
+name|V4FS
+literal|"/usr/bin/rsh"
+block|,
+comment|/* restricted Bourne shell */
+literal|"/usr/bin/ksh"
+block|,
+comment|/* Korn shell */
+literal|"/usr/bin/rksh"
+block|,
+comment|/* restricted Korn shell */
+literal|"/usr/bin/pam"
+block|,
+literal|"/usr/bin/keysh"
+block|,
+comment|/* key shell (extended Korn shell) */
+literal|"/usr/bin/posix/sh"
+block|,
+else|#
+directive|else
 literal|"/bin/rsh"
 block|,
 comment|/* restricted Bourne shell */
@@ -7317,6 +7338,8 @@ block|,
 comment|/* key shell (extended Korn shell) */
 literal|"/bin/posix/sh"
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
