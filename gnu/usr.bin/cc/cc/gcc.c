@@ -1291,15 +1291,15 @@ block|,
 block|{
 literal|"@c"
 block|,
-literal|"cpp -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d}\         -undef -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs} \         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
+literal|"gcpp -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d}\         -undef -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs} \         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
 block|,
-literal|"%{!M:%{!MM:%{!E:cc1 %{!pipe:%g.i} %1 \ 		   %{!Q:-quiet} -dumpbase %b.c %{d*} %{m*} %{a}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} \ 		   %{traditional} %{v:-version} %{pg:-p} %{p} %{f*}\ 		   %{aux-info*}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\               %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\                       %{!pipe:%g.s} %A\n }}}}"
+literal|"%{!M:%{!MM:%{!E:gcc1 %{!pipe:%g.i} %1 \ 		   %{!Q:-quiet} -dumpbase %b.c %{d*} %{m*} %{a}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} \ 		   %{traditional} %{v:-version} %{pg:-p} %{p} %{f*}\ 		   %{aux-info*}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\               %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\                       %{!pipe:%g.s} %A\n }}}}"
 block|}
 block|,
 block|{
 literal|"-"
 block|,
-literal|"%{E:cpp -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d}\         -undef -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %W{o*}}\     %{!E:%e-E required when input is from standard input}"
+literal|"%{E:gcpp -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d}\         -undef -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %W{o*}}\     %{!E:%e-E required when input is from standard input}"
 block|}
 block|,
 block|{
@@ -1311,9 +1311,9 @@ block|,
 block|{
 literal|"@objective-c"
 block|,
-literal|"cpp -lang-objc %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d}\         -undef -D__OBJC__ -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
+literal|"gcpp -lang-objc %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d}\         -undef -D__OBJC__ -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
 block|,
-literal|"%{!M:%{!MM:%{!E:cc1obj %{!pipe:%g.i} %1 \ 		   %{!Q:-quiet} -dumpbase %b.m %{d*} %{m*} %{a}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} \ 		   %{traditional} %{v:-version} %{pg:-p} %{p} %{f*} \     		   -lang-objc %{gen-decls} \ 		   %{aux-info*}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\               %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\                       %{!pipe:%g.s} %A\n }}}}"
+literal|"%{!M:%{!MM:%{!E:gcc1obj %{!pipe:%g.i} %1 \ 		   %{!Q:-quiet} -dumpbase %b.m %{d*} %{m*} %{a}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} \ 		   %{traditional} %{v:-version} %{pg:-p} %{p} %{f*} \     		   -lang-objc %{gen-decls} \ 		   %{aux-info*}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\               %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\                       %{!pipe:%g.s} %A\n }}}}"
 block|}
 block|,
 block|{
@@ -1325,7 +1325,7 @@ block|,
 block|{
 literal|"@c-header"
 block|,
-literal|"%{!E:%eCompilation of header file requested} \     cpp %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	 %{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} \         -undef -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %W{o*}"
+literal|"%{!E:%eCompilation of header file requested} \     gcpp %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	 %{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} \         -undef -D__GNUC__=2 %{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %W{o*}"
 block|}
 block|,
 block|{
@@ -1349,9 +1349,9 @@ block|,
 block|{
 literal|"@c++"
 block|,
-literal|"cpp -lang-c++ %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} \ 	-undef -D__GNUC__=2 -D__GNUG__=2 -D__cplusplus \ 	%{ansi:-trigraphs -$ -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional} %{trigraphs}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
+literal|"gcpp -lang-c++ %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C++ does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} \ 	-undef -D__GNUC__=2 -D__GNUG__=2 -D__cplusplus \ 	%{ansi:-trigraphs -$ -D__STRICT_ANSI__} %{!undef:%{!ansi:%p} %P}\         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional} %{trigraphs}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
 block|,
-literal|"%{!M:%{!MM:%{!E:cc1plus %{!pipe:%g.i} %1 %2\ 		   %{!Q:-quiet} -dumpbase %b.cc %{d*} %{m*} %{a}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} %{traditional}\ 		   %{v:-version} %{pg:-p} %{p} %{f*} %{+e*}\ 		   %{aux-info*}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\               %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\                       %{!pipe:%g.s} %A\n }}}}"
+literal|"%{!M:%{!MM:%{!E:gcc1plus %{!pipe:%g.i} %1 %2\ 		   %{!Q:-quiet} -dumpbase %b.cc %{d*} %{m*} %{a}\ 		   %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} %{traditional}\ 		   %{v:-version} %{pg:-p} %{p} %{f*} %{+e*}\ 		   %{aux-info*}\ 		   %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 		   %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\               %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 		      %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\                       %{!pipe:%g.s} %A\n }}}}"
 block|}
 block|,
 block|{
@@ -1363,7 +1363,7 @@ block|,
 block|{
 literal|"@cpp-output"
 block|,
-literal|"cc1 %i %1 %{!Q:-quiet} %{d*} %{m*} %{a}\ 	%{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} %{traditional}\ 	%{v:-version} %{pg:-p} %{p} %{f*}\ 	%{aux-info*}\ 	%{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 	%{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\     %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\             %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o} %{!pipe:%g.s} %A\n }"
+literal|"gcc1 %i %1 %{!Q:-quiet} %{d*} %{m*} %{a}\ 	%{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} %{traditional}\ 	%{v:-version} %{pg:-p} %{p} %{f*}\ 	%{aux-info*}\ 	%{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 	%{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\     %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\             %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o} %{!pipe:%g.s} %A\n }"
 block|}
 block|,
 block|{
@@ -1375,7 +1375,7 @@ block|,
 block|{
 literal|"@c++-cpp-output"
 block|,
-literal|"cc1plus %i %1 %2 %{!Q:-quiet} %{d*} %{m*} %{a}\ 	    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} %{traditional}\ 	    %{v:-version} %{pg:-p} %{p} %{f*} %{+e*}\ 	    %{aux-info*}\ 	    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 	    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\        %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 	       %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\ 	       %{!pipe:%g.s} %A\n }"
+literal|"gcc1plus %i %1 %2 %{!Q:-quiet} %{d*} %{m*} %{a}\ 	    %{g*} %{O*} %{W*} %{w} %{pedantic*} %{ansi} %{traditional}\ 	    %{v:-version} %{pg:-p} %{p} %{f*} %{+e*}\ 	    %{aux-info*}\ 	    %{pg:%{fomit-frame-pointer:%e-pg and -fomit-frame-pointer are incompatible}}\ 	    %{S:%W{o*}%{!o*:-o %b.s}}%{!S:-o %{|!pipe:%g.s}} |\n\        %{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\ 	       %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\ 	       %{!pipe:%g.s} %A\n }"
 block|}
 block|,
 block|{
@@ -1399,7 +1399,7 @@ block|,
 block|{
 literal|"@assembler-with-cpp"
 block|,
-literal|"cpp -lang-asm %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{trigraphs} \         -undef -$ %{!undef:%p %P} -D__ASSEMBLER__ \         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.s}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
+literal|"gcpp -lang-asm %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{trigraphs} \         -undef -$ %{!undef:%p %P} -D__ASSEMBLER__ \         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %i %{!M:%{!MM:%{!E:%{!pipe:%g.s}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
 block|,
 literal|"%{!M:%{!MM:%{!E:%{!S:as %{R} %{j} %{J} %{h} %{d2} %a %Y\                     %{c:%W{o*}%{!o*:-o %w%b.o}}%{!c:-o %d%w%u.o}\ 		    %{!pipe:%g.s} %A\n }}}}"
 block|}
