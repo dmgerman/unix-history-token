@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getent.c	8.1 (Berkeley) %G%"
+literal|"@(#)getent.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|HAS_CGETENT
 name|char
 modifier|*
 name|dba
@@ -103,13 +106,22 @@ else|:
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_block
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__svr4__
+name|SOLARIS
 end_ifndef
 
 begin_comment
@@ -137,6 +149,9 @@ end_function
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|HAS_CGETENT
 name|char
 modifier|*
 name|answer
@@ -162,6 +177,15 @@ else|:
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_block
 
