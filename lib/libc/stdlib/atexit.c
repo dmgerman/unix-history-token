@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"atexit.h"
 end_include
 
@@ -119,7 +125,12 @@ condition|(
 operator|(
 name|p
 operator|=
-name|malloc
+operator|(
+expr|struct
+name|atexit
+operator|*
+operator|)
+name|sbrk
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -129,7 +140,13 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-name|NULL
+operator|(
+expr|struct
+name|atexit
+operator|*
+operator|)
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
