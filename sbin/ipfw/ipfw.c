@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ipfw.c,v 1.67 1999/05/29 08:12:38 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3208,7 +3208,7 @@ literal|"    [pipe] delete number ...\n"
 literal|"    [pipe] list [number ...]\n"
 literal|"    [pipe] show [number ...]\n"
 literal|"    zero [number ...]\n"
-literal|"    pipe number config [pipeconfig\n"
+literal|"    pipe number config [pipeconfig]\n"
 literal|"  rule:  action proto src dst extras...\n"
 literal|"    action:\n"
 literal|"      {allow|permit|accept|pass|deny|drop|reject|unreach code|\n"
@@ -3226,7 +3226,7 @@ literal|"    {established|setup}\n"
 literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg},...\n"
 literal|"    ipoptions [!]{ssrr|lsrr|rr|ts},...\n"
 literal|"    icmptypes {type[,type]}...\n"
-literal|"  pipecfg:\n"
+literal|"  pipeconfig:\n"
 literal|"    {bw|bandwidth}<number>{bit/s|Kbit/s|Mbit/s|Bytes/s|KBytes/s|MBytes/s}\n"
 literal|"    delay<milliseconds>\n"
 literal|"    queue<size>{packets|Bytes|KBytes}\n"
@@ -8799,7 +8799,13 @@ name|do_quiet
 condition|)
 name|printf
 argument_list|(
-literal|"Flushed all rules.\n"
+literal|"Flushed all %s.\n"
+argument_list|,
+name|do_pipe
+condition|?
+literal|"pipes"
+else|:
+literal|"rules"
 argument_list|)
 expr_stmt|;
 block|}
