@@ -14,63 +14,14 @@ file|<dev/pccbb/pccbbdevid.h>
 end_include
 
 begin_comment
-comment|/* CL-PD6832 CardBus defines */
+comment|/* CL-PD683x CardBus defines */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLPD6832_IO_BASE0
-value|0x002c
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_IO_LIMIT0
-value|0x0030
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_IO_BASE1
-value|0x0034
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_IO_LIMIT1
-value|0x0038
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_BRIDGE_CONTROL
-value|0x003c
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_LEGACY_16BIT_IOADDR
-value|0x0044
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_LEGACY_16BIT_IOENABLE
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_SOCKET
-value|0x004c
+name|CLPD6833_CFG_MISC_1
+value|0x98
 end_define
 
 begin_comment
@@ -81,29 +32,19 @@ begin_define
 define|#
 directive|define
 name|CLPD6832_BCR_MGMT_IRQ_ENA
-value|0x08000000
+value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|CLPD6832_BCR_ISA_IRQ
-value|0x00800000
+name|CLPD6833_CM1_MGMT_EXCA_ENA
+value|0x0001
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLPD6832_COMMAND_DEFAULTS
-value|0x00000045
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLPD6832_NUM_REGS
-value|2
-end_define
+begin_comment
+comment|/* Set ExCA, Clr PCI */
+end_comment
 
 begin_comment
 comment|/* End of CL-PD6832 defines */
@@ -122,6 +63,17 @@ end_define
 
 begin_comment
 comment|/* System Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI12XX_PCI_MULTIMEDIA_CONTROL
+value|0x84
+end_define
+
+begin_comment
+comment|/* Zoom Video */
 end_comment
 
 begin_define
