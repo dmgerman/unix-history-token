@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_udp.c,v 1.3.4.1 1995/08/04 19:37:31 davidg Exp $"
+literal|"$Id: clnt_udp.c,v 1.3.4.3 1996/06/05 02:49:03 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,6 +287,8 @@ name|struct
 name|cu_data
 modifier|*
 name|cu
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|timeval

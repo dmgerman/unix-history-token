@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_tcp.c,v 1.2 1995/05/30 05:41:18 rgrimes Exp $"
+literal|"$Id: clnt_tcp.c,v 1.2.4.2 1996/06/05 02:49:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,6 +279,8 @@ name|struct
 name|ct_data
 modifier|*
 name|ct
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|timeval
@@ -809,6 +811,10 @@ return|;
 name|fooy
 label|:
 comment|/* 	 * Something goofed, free stuff and barf 	 */
+if|if
+condition|(
+name|ct
+condition|)
 name|mem_free
 argument_list|(
 operator|(
@@ -823,6 +829,10 @@ name|ct_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|h
+condition|)
 name|mem_free
 argument_list|(
 operator|(
