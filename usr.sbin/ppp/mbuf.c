@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.19 1998/08/07 18:42:50 brian Exp $  *  */
+comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.20 1998/08/21 18:09:57 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -167,10 +167,6 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|u_char
-modifier|*
-name|p
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -193,11 +189,6 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -205,6 +196,8 @@ argument_list|(
 expr|struct
 name|mbuf
 argument_list|)
+operator|+
+name|cnt
 argument_list|)
 expr_stmt|;
 if|if
@@ -249,39 +242,6 @@ name|mbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|cnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-block|{
-name|log_Printf
-argument_list|(
-name|LogALERT
-argument_list|,
-literal|"failed to allocate memory: %d\n"
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
-name|AbortProgram
-argument_list|(
-name|EX_OSERR
-argument_list|)
-expr_stmt|;
-block|}
 name|MemMap
 index|[
 name|type
@@ -302,12 +262,6 @@ expr_stmt|;
 name|totalalloced
 operator|+=
 name|cnt
-expr_stmt|;
-name|bp
-operator|->
-name|base
-operator|=
-name|p
 expr_stmt|;
 name|bp
 operator|->
@@ -395,13 +349,6 @@ operator|-=
 name|bp
 operator|->
 name|size
-expr_stmt|;
-name|free
-argument_list|(
-name|bp
-operator|->
-name|base
-argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
