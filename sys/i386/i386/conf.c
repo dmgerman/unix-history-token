@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.59 1995/02/09 11:13:09 jkh Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.60 1995/02/09 11:59:40 jkh Exp $  */
 end_comment
 
 begin_include
@@ -69,6 +69,199 @@ name|swstrategy
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Lots of bogus defines for shorthand purposes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|noopen
+value|(d_open_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noclose
+value|(d_close_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noread
+value|(d_rdwr_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nowrite
+value|noread
+end_define
+
+begin_define
+define|#
+directive|define
+name|noioc
+value|(d_ioctl_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nostop
+value|(d_stop_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noreset
+value|(d_reset_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noselect
+value|(d_select_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nommap
+value|(d_mmap_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nostrat
+value|(d_strategy_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nodump
+value|(d_dump_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxopen
+value|(d_open_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxclose
+value|(d_close_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxread
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxwrite
+value|nxread
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxstrategy
+value|(d_strategy_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxioctl
+value|(d_ioctl_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxdump
+value|(d_dump_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxstop
+value|(d_stop_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxreset
+value|(d_reset_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxselect
+value|(d_select_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxmmap
+value|(d_mmap_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullopen
+value|(d_open_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullclose
+value|(d_close_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullstop
+value|(d_stop_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullreset
+value|(d_reset_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|zerosize
+value|(d_psize_t *)0
+end_define
+
 begin_function_decl
 name|int
 name|lkmenodev
@@ -129,7 +322,7 @@ begin_define
 define|#
 directive|define
 name|lkmsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_define
@@ -221,42 +414,42 @@ begin_define
 define|#
 directive|define
 name|wdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|wddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -323,42 +516,42 @@ begin_define
 define|#
 directive|define
 name|sdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|sddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -412,14 +605,14 @@ begin_define
 define|#
 directive|define
 name|stdump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|stsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_else
@@ -431,42 +624,42 @@ begin_define
 define|#
 directive|define
 name|stopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|stclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|ststrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|stioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|stdump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|stsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -522,7 +715,7 @@ begin_define
 define|#
 directive|define
 name|cddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_else
@@ -534,42 +727,42 @@ begin_define
 define|#
 directive|define
 name|cdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|cddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -625,7 +818,7 @@ begin_define
 define|#
 directive|define
 name|mcddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_else
@@ -637,42 +830,42 @@ begin_define
 define|#
 directive|define
 name|mcdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -728,7 +921,7 @@ begin_define
 define|#
 directive|define
 name|scddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_else
@@ -740,42 +933,42 @@ begin_define
 define|#
 directive|define
 name|scdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|scdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|scdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|scdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|scddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|scdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -831,7 +1024,7 @@ begin_define
 define|#
 directive|define
 name|pcddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_else
@@ -843,42 +1036,42 @@ begin_define
 define|#
 directive|define
 name|pcdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -927,21 +1120,21 @@ begin_define
 define|#
 directive|define
 name|chopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|chclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|chioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -1008,42 +1201,42 @@ begin_define
 define|#
 directive|define
 name|wtopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtdump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -1093,14 +1286,14 @@ begin_define
 define|#
 directive|define
 name|fddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_else
@@ -1112,42 +1305,42 @@ begin_define
 define|#
 directive|define
 name|Fdopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|fddump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -1214,42 +1407,42 @@ begin_define
 define|#
 directive|define
 name|vnopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|vnclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|vnstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_define
 define|#
 directive|define
 name|vnioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|vndump
-value|(d_dump_t *)enxio
+value|nxdump
 end_define
 
 begin_define
 define|#
 directive|define
 name|vnsize
-value|(d_psize_t *)0
+value|zerosize
 end_define
 
 begin_endif
@@ -1261,28 +1454,28 @@ begin_define
 define|#
 directive|define
 name|swopen
-value|(d_open_t *)enodev
+value|noopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|swclose
-value|(d_close_t *)enodev
+value|noclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|swioctl
-value|(d_ioctl_t *)enodev
+value|noioc
 end_define
 
 begin_define
 define|#
 directive|define
 name|swdump
-value|(d_dump_t *)enodev
+value|nodump
 end_define
 
 begin_define
@@ -1547,42 +1740,18 @@ block|}
 block|,
 comment|/* block device 14 is reserved for local use */
 block|{
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|enxio
+name|nxopen
 block|,
-operator|(
-name|d_close_t
-operator|*
-operator|)
-name|enxio
+name|nxclose
 block|,
-operator|(
-name|d_strategy_t
-operator|*
-operator|)
-name|enxio
+name|nxstrategy
 block|,
-operator|(
-name|d_ioctl_t
-operator|*
-operator|)
-name|enxio
+name|nxioctl
 block|,
 comment|/*14*/
-operator|(
-name|d_dump_t
-operator|*
-operator|)
-name|enxio
+name|nxdump
 block|,
-operator|(
-name|d_psize_t
-operator|*
-operator|)
-literal|0
+name|zerosize
 block|,
 name|NULL
 block|}
@@ -1745,42 +1914,42 @@ begin_define
 define|#
 directive|define
 name|scopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|scclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|scread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|scwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|scioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|scmmap
-value|(d_mmap_t *)enxio
+value|nxmmap
 end_define
 
 begin_define
@@ -1808,7 +1977,11 @@ end_decl_stmt
 begin_decl_stmt
 name|d_rdwr_t
 name|cttyread
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|cttywrite
 decl_stmt|;
 end_decl_stmt
@@ -1915,7 +2088,11 @@ end_decl_stmt
 begin_decl_stmt
 name|d_rdwr_t
 name|ptcread
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|ptcwrite
 decl_stmt|;
 end_decl_stmt
@@ -1950,63 +2127,63 @@ begin_define
 define|#
 directive|define
 name|ptsopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptswrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptyioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
@@ -2020,14 +2197,14 @@ begin_define
 define|#
 directive|define
 name|ptcselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsstop
-value|(d_stop_t *)nullop
+value|nullstop
 end_define
 
 begin_endif
@@ -2124,42 +2301,42 @@ begin_define
 define|#
 directive|define
 name|bquopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|bquclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|bquread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|bquwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|bquselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|bquioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -2214,28 +2391,28 @@ begin_define
 define|#
 directive|define
 name|lptopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|lptclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|lptwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|lptioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -2292,137 +2469,35 @@ begin_define
 define|#
 directive|define
 name|twopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|twclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|twread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|twwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|twselect
-value|(d_select_t *)enxio
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"sb.h"
-end_include
-
-begin_comment
-comment|/* Sound Blaster */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|NSB
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-name|d_open_t
-name|sbopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_close_t
-name|sbclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_ioctl_t
-name|sbioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_rdwr_t
-name|sbread
-decl_stmt|,
-name|sbwrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_select_t
-name|sbselect
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|sbopen
-value|(d_open_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|sbclose
-value|(d_close_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|sbioctl
-value|(d_ioctl_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|sbread
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|sbwrite
-value|(d_rdwr_t *)enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|sbselect
-value|seltrue
+value|nxselect
 end_define
 
 begin_endif
@@ -2483,35 +2558,35 @@ begin_define
 define|#
 directive|define
 name|psmopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -2578,35 +2653,35 @@ begin_define
 define|#
 directive|define
 name|sndopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
@@ -2684,35 +2759,35 @@ begin_define
 define|#
 directive|define
 name|vaopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|vaclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|vaioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|varead
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|vawrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
@@ -2792,42 +2867,42 @@ begin_define
 define|#
 directive|define
 name|bpfopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -2882,28 +2957,28 @@ begin_define
 define|#
 directive|define
 name|spkropen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|spkrclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|spkrwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|spkrioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -2964,35 +3039,35 @@ begin_define
 define|#
 directive|define
 name|pcaopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcaclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcawrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcaioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|pcaselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_endif
@@ -3047,28 +3122,28 @@ begin_define
 define|#
 directive|define
 name|mseopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|mseclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|mseread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|mseselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_endif
@@ -3132,7 +3207,7 @@ begin_define
 define|#
 directive|define
 name|sioreset
-value|(d_reset_t *)enxio
+value|nxreset
 end_define
 
 begin_decl_stmt
@@ -3153,63 +3228,63 @@ begin_define
 define|#
 directive|define
 name|sioopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|siowrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|siostop
-value|(d_stop_t *)enxio
+value|nxstop
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioreset
-value|(d_reset_t *)enxio
+value|nxreset
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|sio_tty
-value|NULL
+value|(struct tty *)NULL
 end_define
 
 begin_endif
@@ -3267,7 +3342,7 @@ begin_define
 define|#
 directive|define
 name|summap
-value|(d_mmap_t *)enxio
+value|nxmmap
 end_define
 
 begin_decl_stmt
@@ -3285,56 +3360,56 @@ begin_define
 define|#
 directive|define
 name|suopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|suclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|suioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|suread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|suwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|suselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|summap
-value|(d_mmap_t *)enxio
+value|nxmmap
 end_define
 
 begin_define
 define|#
 directive|define
 name|sustrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_endif
@@ -3383,21 +3458,21 @@ begin_define
 define|#
 directive|define
 name|ukopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|ukclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|ukioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -3464,21 +3539,21 @@ begin_define
 define|#
 directive|define
 name|apmopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|apmclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|apmioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -3519,21 +3594,21 @@ begin_define
 define|#
 directive|define
 name|sockopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|sockclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|sockioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -3594,35 +3669,35 @@ begin_define
 define|#
 directive|define
 name|ctxopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctxclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctxread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctxwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|ctxioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -3680,7 +3755,7 @@ begin_define
 define|#
 directive|define
 name|sscmmap
-value|(d_mmap_t *)enxio
+value|nxmmap
 end_define
 
 begin_decl_stmt
@@ -3698,160 +3773,62 @@ begin_define
 define|#
 directive|define
 name|sscopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscmmap
-value|(d_mmap_t *)enxio
+value|nxmmap
 end_define
 
 begin_define
 define|#
 directive|define
 name|sscstrategy
-value|(d_strategy_t *)enxio
+value|nxstrategy
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|noopen
-value|(d_open_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noclose
-value|(d_close_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noread
-value|(d_rdwr_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nowrite
-value|noread
-end_define
-
-begin_define
-define|#
-directive|define
-name|noioc
-value|(d_ioctl_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nostop
-value|(d_stop_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noreset
-value|(d_reset_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|noselect
-value|(d_select_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nommap
-value|(d_mmap_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nostrat
-value|(d_strategy_t *)enodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|nullopen
-value|(d_open_t *)nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|nullclose
-value|(d_close_t *)nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|nullstop
-value|(d_stop_t *)nullop
-end_define
-
-begin_define
-define|#
-directive|define
-name|nullreset
-value|(d_reset_t *)nullop
-end_define
 
 begin_include
 include|#
@@ -3909,7 +3886,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|tty
-modifier|*
 name|cx_tty
 index|[]
 decl_stmt|;
@@ -3924,56 +3900,56 @@ begin_define
 define|#
 directive|define
 name|cxopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|cxclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|cxread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|cxwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|cxioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|cxstop
-value|(d_stop_t *)enxio
+value|nxstop
 end_define
 
 begin_define
 define|#
 directive|define
 name|cxselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_define
 define|#
 directive|define
 name|cx_tty
-value|NULL
+value|(struct tty *)NULL
 end_define
 
 begin_endif
@@ -4028,28 +4004,28 @@ begin_define
 define|#
 directive|define
 name|gpopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|gpclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|gpwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|gpioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -4104,28 +4080,28 @@ begin_define
 define|#
 directive|define
 name|gscopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|gscclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|gscread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|gscioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -4180,28 +4156,28 @@ begin_define
 define|#
 directive|define
 name|joyopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|joyclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|joyread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|joyioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_endif
@@ -4264,42 +4240,42 @@ begin_define
 define|#
 directive|define
 name|tunopen
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|tunclose
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|tunread
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|tunwrite
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
 define|#
 directive|define
 name|tunioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|tunselect
-value|(d_select_t *)enxio
+value|nxselect
 end_define
 
 begin_endif
@@ -4368,35 +4344,35 @@ begin_define
 define|#
 directive|define
 name|spigot_open
-value|(d_open_t *)enxio
+value|nxopen
 end_define
 
 begin_define
 define|#
 directive|define
 name|spigot_close
-value|(d_close_t *)enxio
+value|nxclose
 end_define
 
 begin_define
 define|#
 directive|define
 name|spigot_ioctl
-value|(d_ioctl_t *)enxio
+value|nxioctl
 end_define
 
 begin_define
 define|#
 directive|define
 name|spigot_read
-value|(d_rdwr_t *)enxio
+value|nxread
 end_define
 
 begin_define
 define|#
 directive|define
 name|spigot_write
-value|(d_rdwr_t *)enxio
+value|nxwrite
 end_define
 
 begin_define
@@ -4419,154 +4395,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This stuff from Heikki is kind of bizarre, and I'm not sure how I feel  * about it yet (I think I like it about as much as I can like anything in  * here). -jkh  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__CONCAT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__CONCAT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|x ## y
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|dev_decl
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|dev_decl
-parameter_list|(
-name|n
-parameter_list|,
-name|t
-parameter_list|)
-value|__CONCAT(__CONCAT(d_,t),_t)__CONCAT(n,t)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|dev_init
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|dev_init
-parameter_list|(
-name|c
-parameter_list|,
-name|n
-parameter_list|,
-name|t
-parameter_list|)
-define|\
-value|((c)> 0 ? __CONCAT(n,t) : (__CONCAT(__CONCAT(d_,t),_t)((*))) enxio)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|cdev_decl
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|cdev_decl
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|dev_decl(n,open); dev_decl(n,close); dev_decl(n,read); \ 	dev_decl(n,write); dev_decl(n,ioctl); dev_decl(n,stop); \ 	dev_decl(n,reset); dev_decl(n,select); dev_decl(n,mmap); \ 	dev_decl(n,strategy); extern struct tty __CONCAT(n,_tty)[]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* open, close, read, write, ioctl, stop, tty */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|dev_tty_init
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|dev_tty_init
-parameter_list|(
-name|c
-parameter_list|,
-name|n
-parameter_list|)
-value|(c> 0 ? __CONCAT(n,_tty) : 0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|cdev_tty_init
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|cdev_tty_init
-parameter_list|(
-name|c
-parameter_list|,
-name|n
-parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), dev_init(c,n,stop), \ 	(d_reset_t((*))) nullop, dev_tty_init(c,n), ttselect, \ 	(d_mmap_t((*))) enodev, 0 }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Cyclades serial driver */
 end_comment
 
@@ -4576,13 +4404,169 @@ directive|include
 file|"cy.h"
 end_include
 
-begin_expr_stmt
-name|cdev_decl
-argument_list|(
-name|cy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|#
+directive|if
+name|NCY
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|d_open_t
+name|cyopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
+name|cyclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_read_t
+name|cyread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_write_t
+name|cywrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|cyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_stop_t
+name|cystop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_reset_t
+name|cyreset
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|cyselect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_mmap_t
+name|cymmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|cystrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+name|cy_tty
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cyopen
+value|nxopen
+end_define
+
+begin_define
+define|#
+directive|define
+name|cyclose
+value|nxclose
+end_define
+
+begin_define
+define|#
+directive|define
+name|cyread
+value|nxread
+end_define
+
+begin_define
+define|#
+directive|define
+name|cywrite
+value|nxwrite
+end_define
+
+begin_define
+define|#
+directive|define
+name|cyioctl
+value|nxioctl
+end_define
+
+begin_define
+define|#
+directive|define
+name|cystop
+value|nxstop
+end_define
+
+begin_define
+define|#
+directive|define
+name|cyreset
+value|nxreset
+end_define
+
+begin_define
+define|#
+directive|define
+name|cyselect
+value|nxselect
+end_define
+
+begin_define
+define|#
+directive|define
+name|cymmap
+value|nxmmap
+end_define
+
+begin_define
+define|#
+directive|define
+name|cystrategy
+value|nxstrategy
+end_define
+
+begin_define
+define|#
+directive|define
+name|cy_tty
+value|(struct tty *)NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* open, close, read, write, ioctl, stop, reset, ttys, select, mmap, strat */
@@ -5119,62 +5103,26 @@ block|,
 comment|/*  * If you need a cdev major number for a driver that you intend to donate  * back to the group or release publically, please contact the FreeBSD team  * by sending mail to "FreeBSD-hackers@freefall.cdrom.com".  * If you assign one yourself it may conflict with someone else.  * Otherwise, simply use the one reserved for local use.  */
 comment|/* character device 20 is reserved for local use */
 block|{
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|enxio
+name|nxopen
 block|,
-operator|(
-name|d_close_t
-operator|*
-operator|)
-name|enxio
+name|nxclose
 block|,
-operator|(
-name|d_rdwr_t
-operator|*
-operator|)
-name|enxio
+name|nxread
 block|,
 comment|/*20*/
-operator|(
-name|d_rdwr_t
-operator|*
-operator|)
-name|enxio
+name|nxwrite
 block|,
-operator|(
-name|d_ioctl_t
-operator|*
-operator|)
-name|enxio
+name|nxioctl
 block|,
-operator|(
-name|d_stop_t
-operator|*
-operator|)
-name|enxio
+name|nxstop
 block|,
-operator|(
-name|d_reset_t
-operator|*
-operator|)
-name|enxio
+name|nxreset
 block|,
 name|NULL
 block|,
-operator|(
-name|d_select_t
-operator|*
-operator|)
-name|enxio
+name|nxselect
 block|,
-operator|(
-name|d_mmap_t
-operator|*
-operator|)
-name|enxio
+name|nxmmap
 block|,
 name|NULL
 block|}
@@ -5301,7 +5249,7 @@ name|nullreset
 block|,
 name|NULL
 block|,
-comment|/* vat driver */
+comment|/* vat */
 name|vaselect
 block|,
 name|nommap
@@ -5693,7 +5641,6 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/*framegrabber*/
 block|{
 name|sockopen
 block|,
@@ -5734,11 +5681,11 @@ name|cxioctl
 block|,
 name|cxstop
 block|,
-name|noreset
+name|nullreset
 block|,
 name|cx_tty
 block|,
-comment|/* cronyx-sigma */
+comment|/* cronyx */
 name|cxselect
 block|,
 name|nommap
@@ -5842,7 +5789,7 @@ name|nullreset
 block|,
 name|NULL
 block|,
-comment|/* panasonic cd */
+comment|/* pana cd */
 name|seltrue
 block|,
 name|nommap
@@ -5876,12 +5823,30 @@ block|,
 name|NULL
 block|}
 block|,
-name|cdev_tty_init
-argument_list|(
-name|NCY
-argument_list|,
-name|cy
-argument_list|)
+block|{
+name|cyopen
+block|,
+name|cyclose
+block|,
+name|cyread
+block|,
+name|cywrite
+block|,
+comment|/*48*/
+name|cyioctl
+block|,
+name|cystop
+block|,
+name|cyreset
+block|,
+name|cy_tty
+block|,
+name|cyselect
+block|,
+name|cymmap
+block|,
+name|cystrategy
+block|}
 block|,
 comment|/* cyclades */
 block|{
@@ -5911,63 +5876,27 @@ name|sscstrategy
 block|}
 block|,
 block|{
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|enxio
+name|nxopen
 block|,
-operator|(
-name|d_close_t
-operator|*
-operator|)
-name|enxio
+name|nxclose
 block|,
-operator|(
-name|d_rdwr_t
-operator|*
-operator|)
-name|enxio
+name|nxread
+block|,
+name|nxwrite
 block|,
 comment|/*50*/
-operator|(
-name|d_rdwr_t
-operator|*
-operator|)
-name|enxio
+name|nxioctl
 block|,
-operator|(
-name|d_ioctl_t
-operator|*
-operator|)
-name|enxio
+name|nxstop
 block|,
-operator|(
-name|d_stop_t
-operator|*
-operator|)
-name|enxio
-block|,
-comment|/* pcmcia */
-operator|(
-name|d_reset_t
-operator|*
-operator|)
-name|enxio
+name|nxreset
 block|,
 name|NULL
 block|,
-operator|(
-name|d_select_t
-operator|*
-operator|)
-name|enxio
+comment|/* pcmcia */
+name|nxselect
 block|,
-operator|(
-name|d_mmap_t
-operator|*
-operator|)
-name|enxio
+name|nxmmap
 block|,
 name|NULL
 block|}
