@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -413,10 +413,6 @@ name|dev_t
 name|va_rdev
 decl_stmt|;
 comment|/* device the special file represents */
-name|short
-name|va_pad
-decl_stmt|;
-comment|/* pad out to long */
 name|u_quad_t
 name|va_qbytes
 decl_stmt|;
@@ -2438,7 +2434,7 @@ name|bdevvp
 name|__P
 argument_list|(
 operator|(
-name|int
+name|dev_t
 name|dev
 operator|,
 expr|struct
@@ -2455,10 +2451,6 @@ begin_comment
 comment|/* check for special device aliases */
 end_comment
 
-begin_comment
-comment|/* XXX nvp_rdev should be type dev_t, not int */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|vnode
@@ -2472,7 +2464,7 @@ name|vnode
 operator|*
 name|vp
 operator|,
-name|int
+name|dev_t
 name|nvp_rdev
 operator|,
 expr|struct
@@ -2775,6 +2767,62 @@ name|vap
 parameter_list|)
 value|vattr_null(vap)
 end_define
+
+begin_decl_stmt
+name|void
+name|holdrele
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vattr_null
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vattr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vhold
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
