@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.8	%G%	*/
+comment|/*	kern_clock.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -122,6 +122,10 @@ begin_comment
 comment|/*  * Hardclock is called straight from  * the real time clock interrupt.  * We limit the work we do at real clock interrupt time to:  *	reloading clock  *	decrementing time to callouts  *	recording cpu time usage  *	modifying priority of current process  *	arrange for soft clock interrupt  *	kernel pc profiling  *  * At softclock interrupt time we:  *	implement callouts  *	maintain date  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  *  * On the vax softclock interrupts are implemented by  * software interrupts.  Note that we may have multiple softclock  * interrupts compressed into one (due to excessive interrupt load),  * but that hardclock interrupts should never be lost.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|hardclock
 argument_list|(
@@ -150,11 +154,6 @@ name|struct
 name|proc
 modifier|*
 name|pp
-decl_stmt|;
-specifier|register
-name|long
-modifier|*
-name|ip
 decl_stmt|;
 specifier|register
 name|int
@@ -555,6 +554,10 @@ end_comment
 
 begin_comment
 comment|/*  * Software clock interrupt.  * This routine is blocked by spl1(),  * which doesn't block device interrupts!  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
