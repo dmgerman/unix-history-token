@@ -3103,19 +3103,34 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vprint
+name|vn_printf
 parameter_list|(
-name|char
-modifier|*
-name|label
-parameter_list|,
 name|struct
 name|vnode
 modifier|*
 name|vp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|vprint
+parameter_list|(
+name|label
+parameter_list|,
+name|vp
+parameter_list|)
+value|vn_printf((vp), "%s\n", (label))
+end_define
 
 begin_function_decl
 name|int

@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -10274,48 +10280,49 @@ end_decl_stmt
 
 begin_function
 name|void
-name|vprint
+name|vn_printf
 parameter_list|(
-name|label
-parameter_list|,
-name|vp
-parameter_list|)
-name|char
-modifier|*
-name|label
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|char
 name|buf
 index|[
 literal|96
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|label
-operator|!=
-name|NULL
-condition|)
-name|printf
+name|va_start
 argument_list|(
-literal|"%s: %p: "
+name|ap
 argument_list|,
-name|label
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|vp
+name|fmt
 argument_list|)
 expr_stmt|;
-else|else
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%p: "
@@ -10329,7 +10336,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag %s, type %s\n    "
+literal|"tag %s, type %s\n"
 argument_list|,
 name|vp
 operator|->
@@ -10345,7 +10352,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"usecount %d, writecount %d, refcount %d mountedhere %p\n"
+literal|"    usecount %d, writecount %d, refcount %d mountedhere %p\n"
 argument_list|,
 name|vp
 operator|->
@@ -10367,6 +10374,13 @@ expr_stmt|;
 name|buf
 index|[
 literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|buf
+index|[
+literal|1
 index|]
 operator|=
 literal|'\0'
@@ -10476,24 +10490,13 @@ argument_list|,
 literal|"|VI_FREE"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|buf
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
 name|printf
 argument_list|(
-literal|"    flags (%s)"
+literal|"    flags (%s)\n"
 argument_list|,
-operator|&
 name|buf
-index|[
+operator|+
 literal|1
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -10511,9 +10514,27 @@ argument_list|(
 literal|" VI_LOCKed"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_object
+operator|!=
+name|NULL
+condition|)
+empty_stmt|;
 name|printf
 argument_list|(
-literal|"\n    "
+literal|"    v_object %p\n"
+argument_list|,
+name|vp
+operator|->
+name|v_object
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    "
 argument_list|)
 expr_stmt|;
 name|lockmgr_printinfo
