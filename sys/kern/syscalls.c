@@ -823,6 +823,171 @@ comment|/* 253 = issetugid */
 literal|"lchown"
 block|,
 comment|/* 254 = lchown */
+literal|"#255"
+block|,
+comment|/* 255 = nosys */
+literal|"#256"
+block|,
+comment|/* 256 = nosys */
+literal|"#257"
+block|,
+comment|/* 257 = nosys */
+literal|"#258"
+block|,
+comment|/* 258 = nosys */
+literal|"#259"
+block|,
+comment|/* 259 = nosys */
+literal|"#260"
+block|,
+comment|/* 260 = nosys */
+literal|"#261"
+block|,
+comment|/* 261 = nosys */
+literal|"#262"
+block|,
+comment|/* 262 = nosys */
+literal|"#263"
+block|,
+comment|/* 263 = nosys */
+literal|"#264"
+block|,
+comment|/* 264 = nosys */
+literal|"#265"
+block|,
+comment|/* 265 = nosys */
+literal|"#266"
+block|,
+comment|/* 266 = nosys */
+literal|"#267"
+block|,
+comment|/* 267 = nosys */
+literal|"#268"
+block|,
+comment|/* 268 = nosys */
+literal|"#269"
+block|,
+comment|/* 269 = nosys */
+literal|"#270"
+block|,
+comment|/* 270 = nosys */
+literal|"#271"
+block|,
+comment|/* 271 = nosys */
+literal|"#272"
+block|,
+comment|/* 272 = nosys */
+literal|"#273"
+block|,
+comment|/* 273 = nosys */
+literal|"#274"
+block|,
+comment|/* 274 = nosys */
+literal|"#275"
+block|,
+comment|/* 275 = nosys */
+literal|"#276"
+block|,
+comment|/* 276 = nosys */
+literal|"#277"
+block|,
+comment|/* 277 = nosys */
+literal|"#278"
+block|,
+comment|/* 278 = nosys */
+literal|"#279"
+block|,
+comment|/* 279 = nosys */
+literal|"#280"
+block|,
+comment|/* 280 = nosys */
+literal|"#281"
+block|,
+comment|/* 281 = nosys */
+literal|"#282"
+block|,
+comment|/* 282 = nosys */
+literal|"#283"
+block|,
+comment|/* 283 = nosys */
+literal|"#284"
+block|,
+comment|/* 284 = nosys */
+literal|"#285"
+block|,
+comment|/* 285 = nosys */
+literal|"#286"
+block|,
+comment|/* 286 = nosys */
+literal|"#287"
+block|,
+comment|/* 287 = nosys */
+literal|"#288"
+block|,
+comment|/* 288 = nosys */
+literal|"#289"
+block|,
+comment|/* 289 = nosys */
+literal|"#290"
+block|,
+comment|/* 290 = nosys */
+literal|"#291"
+block|,
+comment|/* 291 = nosys */
+literal|"#292"
+block|,
+comment|/* 292 = nosys */
+literal|"#293"
+block|,
+comment|/* 293 = nosys */
+literal|"#294"
+block|,
+comment|/* 294 = nosys */
+literal|"#295"
+block|,
+comment|/* 295 = nosys */
+literal|"#296"
+block|,
+comment|/* 296 = nosys */
+literal|"#297"
+block|,
+comment|/* 297 = nosys */
+literal|"#298"
+block|,
+comment|/* 298 = nosys */
+literal|"#299"
+block|,
+comment|/* 299 = nosys */
+literal|"modnext"
+block|,
+comment|/* 300 = modnext */
+literal|"modstat"
+block|,
+comment|/* 301 = modstat */
+literal|"modfnext"
+block|,
+comment|/* 302 = modfnext */
+literal|"modfind"
+block|,
+comment|/* 303 = modfind */
+literal|"kldload"
+block|,
+comment|/* 304 = kldload */
+literal|"kldunload"
+block|,
+comment|/* 305 = kldunload */
+literal|"kldfind"
+block|,
+comment|/* 306 = kldfind */
+literal|"kldnext"
+block|,
+comment|/* 307 = kldnext */
+literal|"kldstat"
+block|,
+comment|/* 308 = kldstat */
+literal|"kldfirstmod"
+block|,
+comment|/* 309 = kldfirstmod */
 block|}
 decl_stmt|;
 end_decl_stmt
