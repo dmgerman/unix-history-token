@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stat.h	4.3	82/02/27	*/
+comment|/*	stat.h	4.4	82/04/19	*/
 end_comment
 
 begin_struct
@@ -40,6 +40,9 @@ name|st_mtime
 decl_stmt|;
 name|time_t
 name|st_ctime
+decl_stmt|;
+name|long
+name|st_blksize
 decl_stmt|;
 block|}
 struct|;

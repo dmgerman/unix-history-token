@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	4.3	81/10/17	*/
+comment|/*	types.h	2.1	3/25/82	*/
+end_comment
+
+begin_comment
+comment|/*	types.h	4.4	82/04/19	*/
 end_comment
 
 begin_comment
@@ -125,7 +129,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|u_long
 name|ino_t
 typedef|;
 end_typedef

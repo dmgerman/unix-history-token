@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.11	82/03/27	*/
+comment|/* @(#)user.h 2.1 3/25/82 */
+end_comment
+
+begin_comment
+comment|/*	user.h	4.12	82/04/19	*/
 end_comment
 
 begin_ifdef
@@ -192,13 +196,6 @@ modifier|*
 name|u_rdir
 decl_stmt|;
 comment|/* root directory of current process */
-name|char
-name|u_dbuf
-index|[
-name|DIRSIZ
-index|]
-decl_stmt|;
-comment|/* current pathname component */
 name|caddr_t
 name|u_dirp
 decl_stmt|;
@@ -386,7 +383,9 @@ value|Ux_A.Ux_relflg
 name|char
 name|u_comm
 index|[
-name|DIRSIZ
+name|MAXNAMLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|time_t

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.13	81/05/09	*/
+comment|/*	buf.h	4.14	82/04/19	*/
+end_comment
+
+begin_comment
+comment|/*	buf.h	2.1	3/25/82	*/
 end_comment
 
 begin_comment
@@ -97,11 +101,23 @@ name|b_words
 decl_stmt|;
 comment|/* words for clearing */
 name|struct
-name|filsys
+name|fs
 modifier|*
-name|b_filsys
+name|b_fs
 decl_stmt|;
 comment|/* superblocks */
+name|struct
+name|csum
+modifier|*
+name|b_cs
+decl_stmt|;
+comment|/* superblock summary information */
+name|struct
+name|cg
+modifier|*
+name|b_cg
+decl_stmt|;
+comment|/* cylinder group block */
 name|struct
 name|dinode
 modifier|*
@@ -293,6 +309,15 @@ name|struct
 name|buf
 modifier|*
 name|alloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|buf
+modifier|*
+name|realloccg
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -1,18 +1,37 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.10	82/02/27	*/
+comment|/*	dinode.h	4.11	82/04/19	*/
 end_comment
 
 begin_comment
-comment|/*  * The I node is the focus of all file activity in UNIX.  * There is a unique inode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An inode is 'named' by its dev/inumber pair. (iget/iget.c)  * Data, from mode on, is read in from permanent inode on volume.  */
+comment|/*	inode.h	2.1	3/25/82	*/
+end_comment
+
+begin_comment
+comment|/*  * The I node is the focus of all file activity in UNIX.  * There is a unique inode allocated for each active file,  * each current directory, each mounted-on file, text file, and the root.  * An inode is 'named' by its dev/inumber pair. (iget/iget.c)  * Data in icommon is read in from permanent inode on volume.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NADDR
-value|13
+name|NDADDR
+value|8
 end_define
+
+begin_comment
+comment|/* direct addresses in inode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NIADDR
+value|2
+end_define
+
+begin_comment
+comment|/* indirect addresses in inode */
+end_comment
 
 begin_struct
 struct|struct
@@ -33,98 +52,283 @@ name|ino_t
 name|i_number
 decl_stmt|;
 comment|/* i number, 1-to-1 with device address */
-comment|/* begin read from disk */
-name|u_short
-name|i_mode
+name|long
+name|i_hlink
 decl_stmt|;
-name|short
-name|i_nlink
+comment|/* link in hash chain (iget/iput/ifind) */
+name|struct
+name|fs
+modifier|*
+name|i_fs
 decl_stmt|;
-comment|/* directory entries */
-name|short
-name|i_uid
-decl_stmt|;
-comment|/* owner */
-name|short
-name|i_gid
-decl_stmt|;
-comment|/* group of owner */
-name|off_t
-name|i_size
-decl_stmt|;
-comment|/* size of file */
+comment|/* file sys associated with this inode */
 union|union
 block|{
-struct|struct
-name|i_f
-block|{
-name|daddr_t
-name|if_addr
-index|[
-name|NADDR
-index|]
-decl_stmt|;
-comment|/* if normal file/directory */
 name|daddr_t
 name|if_lastr
 decl_stmt|;
 comment|/* last read (read-ahead) */
-block|}
-name|i_f
-struct|;
-struct|struct
-name|i_d
-block|{
-name|daddr_t
-name|id_rdev
-decl_stmt|;
-comment|/* i_addr[0] */
-block|}
-name|i_d
-struct|;
-struct|struct
-name|i_s
-block|{
 name|struct
 name|socket
 modifier|*
 name|is_socket
 decl_stmt|;
 block|}
-name|i_s
-struct|;
-define|#
-directive|define
-name|i_addr
-value|i_f.if_addr
-define|#
-directive|define
-name|i_lastr
-value|i_f.if_lastr
-define|#
-directive|define
-name|i_rdev
-value|i_d.id_rdev
-define|#
-directive|define
-name|i_socket
-value|i_s.is_socket
-block|}
 name|i_un
 union|;
-comment|/* end read from disk */
-name|short
-name|i_XXXXXX
+struct|struct
+name|icommon
+block|{
+name|u_short
+name|ic_mode
 decl_stmt|;
-comment|/* ### */
-comment|/* SHOULD USE POINTERS, NOT INDICES, FOR HAS CHAIN */
+comment|/*  0: mode and type of file */
 name|short
-name|i_hlink
+name|ic_nlink
 decl_stmt|;
-comment|/* link in hash chain (iget/iput/ifind) */
+comment|/*  2: number of links to file */
+name|short
+name|ic_uid
+decl_stmt|;
+comment|/*  4: owner's user id */
+name|short
+name|ic_gid
+decl_stmt|;
+comment|/*  6: owner's group id */
+name|off_t
+name|ic_size
+decl_stmt|;
+comment|/*  8: number of bytes in file */
+name|daddr_t
+name|ic_db
+index|[
+name|NDADDR
+index|]
+decl_stmt|;
+comment|/* 12: disk block addresses */
+name|daddr_t
+name|ic_ib
+index|[
+name|NIADDR
+index|]
+decl_stmt|;
+comment|/* 44: indirect blocks */
+name|time_t
+name|ic_atime
+decl_stmt|;
+comment|/* 52: time last accessed */
+name|time_t
+name|ic_mtime
+decl_stmt|;
+comment|/* 56: time last modified */
+name|time_t
+name|ic_ctime
+decl_stmt|;
+comment|/* 60: time created */
+block|}
+name|i_ic
+struct|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|dinode
+block|{
+union|union
+block|{
+name|struct
+name|icommon
+name|di_icom
+decl_stmt|;
+name|char
+name|di_size
+index|[
+literal|64
+index|]
+decl_stmt|;
+block|}
+name|di_un
+union|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|i_mode
+value|i_ic.ic_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_nlink
+value|i_ic.ic_nlink
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_uid
+value|i_ic.ic_uid
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_gid
+value|i_ic.ic_gid
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_size
+value|i_ic.ic_size
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_db
+value|i_ic.ic_db
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_ib
+value|i_ic.ic_ib
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_atime
+value|i_ic.ic_atime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_mtime
+value|i_ic.ic_mtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_ctime
+value|i_ic.ic_ctime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_rdev
+value|i_ic.ic_db[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_lastr
+value|i_un.if_lastr
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_socket
+value|is_socket
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_ic
+value|di_un.di_icom
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_mode
+value|di_ic.ic_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_nlink
+value|di_ic.ic_nlink
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_uid
+value|di_ic.ic_uid
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_gid
+value|di_ic.ic_gid
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_size
+value|di_ic.ic_size
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_db
+value|di_ic.ic_db
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_ib
+value|di_ic.ic_ib
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_atime
+value|di_ic.ic_atime
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_mtime
+value|di_ic.ic_mtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_ctime
+value|di_ic.ic_ctime
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_rdev
+value|di_ic.ic_db[0]
+end_define
 
 begin_ifdef
 ifdef|#
@@ -133,21 +337,41 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|inode
 modifier|*
 name|inode
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The inode table itself */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inode
 modifier|*
 name|inodeNINODE
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The end of the inode table */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|int
 name|ninode
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of slots in the table */
+end_comment
 
 begin_decl_stmt
 name|struct
