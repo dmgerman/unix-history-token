@@ -14,11 +14,11 @@ begin_define
 define|#
 directive|define
 name|WI_TIMEOUT
-value|(500000/WI_DELAY)
+value|(10000/WI_DELAY)
 end_define
 
 begin_comment
-comment|/* 500 ms */
+comment|/* 10 ms */
 end_comment
 
 begin_define

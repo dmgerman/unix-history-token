@@ -5036,6 +5036,11 @@ name|count
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|tmo
+init|=
+name|WI_TIMEOUT
+decl_stmt|;
 if|if
 condition|(
 name|count
@@ -5153,6 +5158,16 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|WI_CMD_INI
+condition|)
+name|tmo
+operator|*=
+literal|50
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5161,7 +5176,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|WI_TIMEOUT
+name|tmo
 condition|;
 name|i
 operator|++
@@ -9707,7 +9722,7 @@ condition|(
 name|ireq
 operator|->
 name|i_val
-operator|!=
+operator|>
 literal|0
 operator|||
 name|ireq
