@@ -2943,7 +2943,7 @@ expr_stmt|;
 if|if
 condition|(
 name|total_len
-operator|==
+operator|<=
 literal|1
 condition|)
 goto|goto
@@ -3336,17 +3336,7 @@ operator|->
 name|if_opackets
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_head
-operator|!=
-name|NULL
-condition|)
-name|kue_start
+name|usb_tx_done
 argument_list|(
 name|ifp
 argument_list|)
