@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)assorted.c	2.3 83/12/17"
+literal|"@(#)assorted.c	2.4 84/02/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,7 +569,7 @@ name|on
 operator|->
 name|specs
 operator|->
-name|gunL
+name|gunR
 expr_stmt|;
 name|car
 operator|=
@@ -577,7 +577,7 @@ name|on
 operator|->
 name|specs
 operator|->
-name|carL
+name|carR
 expr_stmt|;
 block|}
 else|else
@@ -588,7 +588,7 @@ name|on
 operator|->
 name|specs
 operator|->
-name|gunR
+name|gunL
 expr_stmt|;
 name|car
 operator|=
@@ -596,7 +596,7 @@ name|on
 operator|->
 name|specs
 operator|->
-name|carR
+name|carL
 expr_stmt|;
 block|}
 if|if
@@ -672,9 +672,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|?
-name|W_GUNL
-else|:
 name|W_GUNR
+else|:
+name|W_GUNL
 argument_list|,
 name|on
 argument_list|,
