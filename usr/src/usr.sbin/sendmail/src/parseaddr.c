@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.36 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +423,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|3
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|rewrite
@@ -430,6 +432,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|0
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  See if we resolved to a real mailer. 	*/
@@ -2056,6 +2060,17 @@ operator|(
 name|ONE
 operator|)
 return|;
+if|if
+condition|(
+name|c
+operator|==
+name|MACRODEXPAND
+condition|)
+return|return
+operator|(
+name|ONE
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|MACVALUE
@@ -2156,7 +2171,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
+comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. **		ruleset -- the ruleset to use for rewriting. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
 end_comment
 
 begin_define
@@ -2311,6 +2326,8 @@ parameter_list|(
 name|pvp
 parameter_list|,
 name|ruleset
+parameter_list|,
+name|e
 parameter_list|)
 name|char
 modifier|*
@@ -2319,6 +2336,11 @@ name|pvp
 decl_stmt|;
 name|int
 name|ruleset
+decl_stmt|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 name|nrw
@@ -2415,6 +2437,12 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* temporary space for rebuild */
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+parameter_list|()
+function_decl|;
 name|char
 name|tokbuf
 index|[
@@ -3117,6 +3145,117 @@ case|:
 comment|/* match zero tokens */
 continue|continue;
 block|}
+case|case
+name|MACRODEXPAND
+case|:
+comment|/* 				**  Match against run-time macro. 				**  This algorithm is broken for the 				**  general case (no recursive macros, 				**  improper tokenization) but should 				**  work for the usual cases. 				*/
+name|ap
+operator|=
+name|macvalue
+argument_list|(
+name|rp
+index|[
+literal|1
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|mlp
+operator|->
+name|first
+operator|=
+name|avp
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|21
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"rewrite: LHS $&%c => \"%s\"\n"
+argument_list|,
+name|rp
+index|[
+literal|1
+index|]
+argument_list|,
+name|ap
+operator|==
+name|NULL
+condition|?
+literal|"(NULL)"
+else|:
+name|ap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|==
+name|NULL
+condition|)
+break|break;
+while|while
+condition|(
+operator|*
+name|ap
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|avp
+operator|==
+name|NULL
+operator|||
+name|strncasecmp
+argument_list|(
+name|ap
+argument_list|,
+operator|*
+name|avp
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|avp
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* no match */
+name|avp
+operator|=
+name|mlp
+operator|->
+name|first
+expr_stmt|;
+goto|goto
+name|backup
+goto|;
+block|}
+name|ap
+operator|+=
+name|strlen
+argument_list|(
+operator|*
+name|avp
+operator|++
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* match */
+break|break;
 comment|/* 			**  We now have a variable length item.  It could 			**  be $+ or $* in which case no special checking 			**  is needed.  But a class match such as $=x must 			**  be verified. 			** 			**  As a speedup, if a variable length item is 			**  followed by a plain character token, we initially 			**  extend the match to the first such token we find. 			**  If the required character token cannot be found, 			**  we fail the match at this point. 			*/
 name|avp
 operator|=
@@ -5719,6 +5858,8 @@ argument_list|(
 name|tv
 argument_list|,
 literal|4
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* save the result for the command line/RCPT argument */
@@ -6535,6 +6676,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|3
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -6617,6 +6760,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|3
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -6638,6 +6783,8 @@ argument_list|(
 name|pvp
 argument_list|,
 name|rwset
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
@@ -6646,6 +6793,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|4
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
@@ -7126,6 +7275,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|5
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if

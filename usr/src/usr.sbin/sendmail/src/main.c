@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.53 (Berkeley) %G%"
+literal|"@(#)main.c	6.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3661,6 +3661,8 @@ name|atoi
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 while|while
@@ -4009,15 +4011,40 @@ begin_comment
 comment|/* 	**  Do basic system initialization and set the sender 	*/
 end_comment
 
+begin_comment
+comment|/* make sendmail immune from process group signals */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_JOB_CONTROL
+end_ifdef
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|setpgid
+argument_list|(
+literal|0
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|SYSTEM5
 end_ifndef
-
-begin_comment
-comment|/* make sendmail immune from process group signals */
-end_comment
 
 begin_expr_stmt
 operator|(
@@ -4032,6 +4059,11 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4573,7 +4605,7 @@ literal|'.'
 block|,
 name|CONDFI
 block|,
-comment|/* and finally the hostname lookup characters */
+comment|/* the hostname lookup characters */
 literal|'['
 block|,
 name|HOSTBEGIN
@@ -4589,6 +4621,11 @@ block|,
 literal|')'
 block|,
 name|LOOKUPEND
+block|,
+comment|/* miscellaneous control characters */
+literal|'&'
+block|,
+name|MACRODEXPAND
 block|,
 literal|'\0'
 block|}

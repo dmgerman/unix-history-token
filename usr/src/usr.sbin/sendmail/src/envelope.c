@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.29 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1661,7 +1661,16 @@ name|username
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	SuprErrs = TRUE; */
+if|if
+condition|(
+name|ConfigLevel
+operator|<
+literal|2
+condition|)
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
 name|delimchar
 operator|=
 name|internal
@@ -2271,6 +2280,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|3
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|rewrite
@@ -2278,6 +2289,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|1
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|rewrite
@@ -2285,6 +2298,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|4
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|cataddr
