@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rwhod.h	4.6	83/05/22	*/
+comment|/*	rwhod.h	4.7	83/05/25	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,9 @@ begin_struct
 struct|struct
 name|whod
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 name|char
 name|wd_vers
 decl_stmt|;
@@ -51,6 +54,8 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|wd_sendtime
 decl_stmt|;
