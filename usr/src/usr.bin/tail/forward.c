@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	5.8 (Berkeley) %G%"
+literal|"@(#)forward.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,7 +830,9 @@ argument_list|,
 operator|(
 name|size_t
 operator|)
-name|size
+name|sbp
+operator|->
+name|st_size
 argument_list|)
 condition|)
 block|{
