@@ -53,6 +53,27 @@ directive|include
 file|"string.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|COMPAT_UFS
+end_define
+
+begin_comment
+comment|/* DUX has old format file systems */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
