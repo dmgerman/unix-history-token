@@ -2505,7 +2505,7 @@ condition|;
 name|j
 operator|++
 control|)
-name|vm_page_unwire
+name|vm_page_unhold
 argument_list|(
 name|wpipe
 operator|->
@@ -2515,8 +2515,6 @@ name|ms
 index|[
 name|j
 index|]
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -2532,7 +2530,7 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
-name|vm_page_wire
+name|vm_page_hold
 argument_list|(
 name|m
 argument_list|)
@@ -2813,7 +2811,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|vm_page_unwire
+name|vm_page_unhold
 argument_list|(
 name|wpipe
 operator|->
@@ -2823,8 +2821,6 @@ name|ms
 index|[
 name|i
 index|]
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|wpipe
