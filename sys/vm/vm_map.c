@@ -8351,7 +8351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_check_protection:  *  *	Assert that the target map allows the specified  *	privilege on the entire address region given.  *	The entire region must be allocated.  */
+comment|/*  *	vm_map_check_protection:  *  *	Assert that the target map allows the specified privilege on the  *	entire address region given.  The entire region must be allocated.  *  *	WARNING!  This code does not and should not check whether the  *	contents of the region is accessible.  For example a smaller file  *	might be mapped into a larger address space.  *  *	NOTE!  This code is also called by munmap().  */
 end_comment
 
 begin_function

@@ -13368,11 +13368,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map an IO request into kernel virtual address space.  *  * All requests are (re)mapped into kernel VA space.  * Notice that we use b_bufsize for the size of the buffer  * to be mapped.  b_bcount might be modified by the driver.  */
+comment|/*  * Map an IO request into kernel virtual address space.  *  * All requests are (re)mapped into kernel VA space.  * Notice that we use b_bufsize for the size of the buffer  * to be mapped.  b_bcount might be modified by the driver.  *  * Note that even if the caller determines that the address space should  * be valid, a race or a smaller-file mapped into a larger space may  * actually cause vmapbuf() to fail, so all callers of vmapbuf() MUST  * check the return value.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|vmapbuf
 parameter_list|(
 name|struct
@@ -13391,6 +13391,8 @@ name|pa
 decl_stmt|;
 name|int
 name|pidx
+decl_stmt|,
+name|i
 decl_stmt|;
 name|struct
 name|vm_page
@@ -13468,6 +13470,10 @@ operator|++
 control|)
 block|{
 comment|/* 		 * Do the vm_fault if needed; do the copy-on-write thing 		 * when reading stuff off device into memory. 		 * 		 * NOTE! Must use pmap_extract() because addr may be in 		 * the userland address space, and kextract is only guarenteed 		 * to work for the kernland address space (see: sparc64 port). 		 */
+name|retry
+label|:
+name|i
+operator|=
 name|vm_fault_quick
 argument_list|(
 operator|(
@@ -13501,6 +13507,65 @@ else|:
 name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vmapbuf: warning, bad user address during I/O\n"
+argument_list|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|pidx
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|vm_page_unhold
+argument_list|(
+name|bp
+operator|->
+name|b_pages
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_pages
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|pa
 operator|=
 name|trunc_page
@@ -13522,11 +13587,16 @@ name|pa
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"vmapbuf: page not present"
+literal|"vmapbuf: warning, race against user address during I/O"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
@@ -13624,6 +13694,11 @@ operator|&
 name|PAGE_MASK
 operator|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

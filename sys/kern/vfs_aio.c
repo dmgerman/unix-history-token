@@ -5234,12 +5234,25 @@ name|doerror
 goto|;
 block|}
 block|}
-comment|/* Bring buffer into kernel space. */
+comment|/* 	 * Bring buffer into kernel space. 	 * 	 * Note that useracc() alone is not a  	 * sufficient test.  vmapbuf() can still fail 	 * due to a smaller file mapped into a larger 	 * area of VM, or if userland races against 	 * vmapbuf() after the useracc() check. 	 */
+if|if
+condition|(
 name|vmapbuf
 argument_list|(
 name|bp
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EFAULT
 expr_stmt|;
+goto|goto
+name|doerror
+goto|;
+block|}
 name|s
 operator|=
 name|splbio
