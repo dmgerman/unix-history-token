@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.26 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -869,7 +869,7 @@ operator|!
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -1023,7 +1023,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|tty
 operator|+
