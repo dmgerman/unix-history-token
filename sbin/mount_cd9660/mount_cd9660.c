@@ -295,12 +295,11 @@ name|ex_root
 operator|=
 name|DEFAULT_ROOTUID
 expr_stmt|;
-if|if
-condition|(
+comment|/* 	 * ISO 9660 filesystems are not writeable. 	 */
 name|mntflags
-operator|&
+operator||=
 name|MNT_RDONLY
-condition|)
+expr_stmt|;
 name|args
 operator|.
 name|export
@@ -308,15 +307,6 @@ operator|.
 name|ex_flags
 operator|=
 name|MNT_EXRDONLY
-expr_stmt|;
-else|else
-name|args
-operator|.
-name|export
-operator|.
-name|ex_flags
-operator|=
-literal|0
 expr_stmt|;
 name|args
 operator|.
