@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sortbib.c	4.4 (Berkeley) %G%"
+literal|"@(#)sortbib.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -286,14 +292,15 @@ argument_list|)
 expr_stmt|;
 name|tempfile
 operator|=
-name|_PATH_TMPS
-expr_stmt|;
-comment|/* tempfile for sorting keys */
 name|mktemp
 argument_list|(
-name|tempfile
+name|strdup
+argument_list|(
+name|_PATH_TMPS
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* tempfile for sorting keys */
 if|if
 condition|(
 name|signal
