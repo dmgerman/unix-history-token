@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.9.2.2 1996/05/05 18:00:30 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.9.2.3 1996/05/05 18:17:06 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -5894,7 +5894,7 @@ name|pp
 argument_list|,
 name|SBREAK
 argument_list|,
-name|SI_NOWAIT
+name|SI_WAIT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5907,7 +5907,7 @@ name|pp
 argument_list|,
 name|EBREAK
 argument_list|,
-name|SI_NOWAIT
+name|SI_WAIT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7068,7 +7068,7 @@ name|MR2_RTSCONT
 expr_stmt|;
 name|ccbp
 operator|->
-name|hi_mr1
+name|hi_mr2
 operator|=
 name|val
 expr_stmt|;
@@ -8619,6 +8619,12 @@ case|:
 case|case
 name|CONFIG
 case|:
+case|case
+name|SBREAK
+case|:
+case|case
+name|EBREAK
+case|:
 name|pp
 operator|->
 name|sp_pend
@@ -8696,7 +8702,7 @@ name|isopen
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Do break processing 			 */
+comment|/* 			 * Do input break processing 			 */
 if|if
 condition|(
 name|ccbp
@@ -9793,24 +9799,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|DPRINT
 argument_list|(
-literal|"si%d: bad char time value!!\n"
-argument_list|,
 operator|(
-name|int
+name|pp
+operator|,
+name|DBG_START
+operator|,
+literal|"bad char time value! %d\n"
+operator|,
+name|time
 operator|)
-name|SI_CARD
-argument_list|(
-name|tp
-operator|->
-name|t_dev
-argument_list|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|time
+operator|=
+name|hz
+operator|/
+literal|10
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -10253,6 +10260,7 @@ argument_list|()
 expr_stmt|;
 comment|/* Keep others out */
 comment|/* wait until it's finished what it was doing.. */
+comment|/* XXX: sits in IDLE_BREAK until something disturbs it or break 	 * is turned off. */
 while|while
 condition|(
 operator|(
@@ -10268,6 +10276,10 @@ operator|&&
 name|x
 operator|!=
 name|IDLE_CLOSE
+operator|&&
+name|x
+operator|!=
+name|IDLE_BREAK
 operator|&&
 name|x
 operator|!=
@@ -10337,17 +10349,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* it should now be in IDLE_OPEN, IDLE_CLOSE, or "cmd" */
+comment|/* it should now be in IDLE_{OPEN|CLOSE|BREAK}, or "cmd" */
 comment|/* if there was a pending command, cause a state-change wakeup */
-if|if
-condition|(
-name|pp
-operator|->
-name|sp_pend
-operator|!=
-name|IDLE_OPEN
-condition|)
-block|{
 switch|switch
 condition|(
 name|pp
@@ -10367,6 +10370,12 @@ case|:
 case|case
 name|CONFIG
 case|:
+case|case
+name|SBREAK
+case|:
+case|case
+name|EBREAK
+case|:
 name|wakeup
 argument_list|(
 operator|&
@@ -10378,7 +10387,6 @@ expr_stmt|;
 break|break;
 default|default:
 break|break;
-block|}
 block|}
 name|pp
 operator|->
@@ -10433,6 +10441,12 @@ operator|->
 name|hi_stat
 operator|!=
 name|IDLE_OPEN
+operator|&&
+name|ccbp
+operator|->
+name|hi_stat
+operator|!=
+name|IDLE_BREAK
 condition|)
 block|{
 if|if
