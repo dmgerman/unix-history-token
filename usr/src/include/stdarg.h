@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdarg.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdarg.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -25,7 +25,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|((type *)(ap += sizeof(type)< sizeof(int) ? \ 		abort() : sizeof(type)))[-1]
+value|((type *)(ap += sizeof(type)< sizeof(int) ? \ 		(abort(), 0) : sizeof(type)))[-1]
 end_define
 
 begin_define
