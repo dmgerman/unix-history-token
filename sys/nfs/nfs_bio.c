@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.9 (Berkeley) 3/30/95  * $Id: nfs_bio.c,v 1.63 1998/11/09 07:00:14 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.9 (Berkeley) 3/30/95  * $Id: nfs_bio.c,v 1.64 1998/12/07 21:58:43 archie Exp $  */
 end_comment
 
 begin_include
@@ -1121,9 +1121,10 @@ specifier|register
 name|int
 name|biosize
 decl_stmt|,
-name|diff
-decl_stmt|,
 name|i
+decl_stmt|;
+name|off_t
+name|diff
 decl_stmt|;
 name|struct
 name|buf
@@ -2007,6 +2008,9 @@ name|np
 operator|->
 name|n_size
 operator|-
+operator|(
+name|off_t
+operator|)
 name|lbn
 operator|*
 name|biosize
@@ -3866,11 +3870,14 @@ name|biosize
 expr_stmt|;
 if|if
 condition|(
-operator|(
+call|(
+name|off_t
+call|)
+argument_list|(
 name|lbn
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 name|biosize
 operator|>
@@ -3885,6 +3892,9 @@ name|np
 operator|->
 name|n_size
 operator|-
+operator|(
+name|off_t
+operator|)
 name|lbn
 operator|*
 name|biosize
@@ -3960,12 +3970,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|off_t
+operator|)
 name|bp
 operator|->
 name|b_blkno
 operator|*
 name|DEV_BSIZE
-operator|)
 operator|+
 name|bp
 operator|->
@@ -3975,7 +3986,6 @@ name|np
 operator|->
 name|n_size
 condition|)
-block|{
 name|bp
 operator|->
 name|b_dirtyend
@@ -3985,14 +3995,14 @@ operator|->
 name|n_size
 operator|-
 operator|(
+name|off_t
+operator|)
 name|bp
 operator|->
 name|b_blkno
 operator|*
 name|DEV_BSIZE
-operator|)
 expr_stmt|;
-block|}
 comment|/* 		 * If the new write will leave a contiguous dirty 		 * area, just update the b_dirtyoff and b_dirtyend, 		 * otherwise force a write rpc of the old dirty area. 		 */
 if|if
 condition|(
@@ -4715,13 +4725,13 @@ name|bp
 operator|->
 name|b_blkno
 operator|=
-operator|(
 name|bn
 operator|*
+operator|(
 name|biosize
-operator|)
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 block|}
 return|return
@@ -6217,18 +6227,17 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
+name|off_t
+operator|)
 name|bp
 operator|->
 name|b_blkno
 operator|*
 name|DEV_BSIZE
-operator|)
 operator|+
 name|bp
 operator|->
 name|b_dirtyend
-operator|)
 operator|>
 name|np
 operator|->
@@ -6243,12 +6252,13 @@ operator|->
 name|n_size
 operator|-
 operator|(
+name|off_t
+operator|)
 name|bp
 operator|->
 name|b_blkno
 operator|*
 name|DEV_BSIZE
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -6282,13 +6292,11 @@ operator|->
 name|uio_offset
 operator|=
 operator|(
-operator|(
 name|off_t
 operator|)
 name|bp
 operator|->
 name|b_blkno
-operator|)
 operator|*
 name|DEV_BSIZE
 operator|+
