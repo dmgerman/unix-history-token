@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * rogue.h  *  * This source herein may be modified and/or distributed by anybody who  * so desires, with the following restrictions:  *    1.)  This notice shall not be removed.  *    2.)  Credit shall not be taken for the creation of this source.  *    3.)  This code is not to be traded, sold, or used for personal  *         gain or profit.  *  *	@(#)rogue.h	5.1 (Berkeley) %G%  */
+comment|/*  * rogue.h  *  * This source herein may be modified and/or distributed by anybody who  * so desires, with the following restrictions:  *    1.)  This notice shall not be removed.  *    2.)  Credit shall not be taken for the creation of this source.  *    3.)  This code is not to be traded, sold, or used for personal  *         gain or profit.  *  *	@(#)rogue.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -879,14 +879,14 @@ begin_define
 define|#
 directive|define
 name|SCORE_FILE
-value|"/usr1/tims/.r/rogue.scores"
+value|"/usr/games/lib/rogue.scores"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LOCK_FILE
-value|"/usr1/tims/.r/rogue.lock"
+value|"/usr/games/lib/rogue.lock"
 end_define
 
 begin_define
