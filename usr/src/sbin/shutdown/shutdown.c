@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.8 (Berkeley) 81/06/11"
+literal|"@(#)shutdown.c	4.9 (Berkeley) 81/06/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1554,7 +1554,7 @@ decl_stmt|;
 specifier|register
 name|delay
 operator|=
-name|std
+name|sdt
 operator|-
 name|nowtime
 expr_stmt|;
