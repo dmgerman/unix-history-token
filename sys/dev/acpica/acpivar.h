@@ -403,8 +403,12 @@ operator|)
 return|;
 end_return
 
-begin_define
+begin_comment
 unit|}
+comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ACPI_IVAR_HANDLE
