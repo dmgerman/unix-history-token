@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.52 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.53 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -199,12 +205,6 @@ decl_stmt|,
 name|nfs_write
 argument_list|()
 decl_stmt|,
-name|vfs_noop
-argument_list|()
-decl_stmt|,
-name|vfs_nullop
-argument_list|()
-decl_stmt|,
 name|nfs_remove
 argument_list|()
 decl_stmt|,
@@ -261,6 +261,12 @@ argument_list|()
 decl_stmt|,
 name|nfs_advlock
 argument_list|()
+decl_stmt|,
+name|eopnotsupp
+argument_list|()
+decl_stmt|,
+name|seltrue
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -300,19 +306,19 @@ comment|/* read */
 name|nfs_write
 block|,
 comment|/* write */
-name|vfs_noop
+name|eopnotsupp
 block|,
 comment|/* ioctl */
-name|vfs_noop
+name|seltrue
 block|,
 comment|/* select */
-name|vfs_noop
+name|eopnotsupp
 block|,
 comment|/* mmap */
 name|nfs_fsync
 block|,
 comment|/* fsync */
-name|vfs_nullop
+name|nullop
 block|,
 comment|/* seek */
 name|nfs_remove
@@ -409,9 +415,6 @@ decl_stmt|,
 name|spec_badop
 argument_list|()
 decl_stmt|,
-name|spec_nullop
-argument_list|()
-decl_stmt|,
 name|spec_advlock
 argument_list|()
 decl_stmt|;
@@ -462,7 +465,7 @@ comment|/* select */
 name|spec_badop
 block|,
 comment|/* mmap */
-name|spec_nullop
+name|nullop
 block|,
 comment|/* fsync */
 name|spec_badop
@@ -564,9 +567,6 @@ decl_stmt|,
 name|fifo_badop
 argument_list|()
 decl_stmt|,
-name|fifo_nullop
-argument_list|()
-decl_stmt|,
 name|fifo_advlock
 argument_list|()
 decl_stmt|;
@@ -617,7 +617,7 @@ comment|/* select */
 name|fifo_badop
 block|,
 comment|/* mmap */
-name|fifo_nullop
+name|nullop
 block|,
 comment|/* fsync */
 name|fifo_badop
@@ -8550,15 +8550,6 @@ operator|&
 name|B_PHYS
 condition|)
 block|{
-name|bp
-operator|->
-name|b_rcred
-operator|=
-name|cr
-operator|=
-name|crget
-argument_list|()
-expr_stmt|;
 name|rp
 operator|=
 operator|(
@@ -8569,36 +8560,24 @@ operator|&
 name|B_DIRTY
 operator|)
 condition|?
-operator|&
-name|proc
-index|[
-literal|2
-index|]
+name|pageproc
 else|:
 name|bp
 operator|->
 name|b_proc
 expr_stmt|;
-name|cr
+name|bp
 operator|->
-name|cr_uid
+name|b_rcred
 operator|=
+name|cr
+operator|=
+name|crcopy
+argument_list|(
 name|rp
 operator|->
-name|p_uid
-expr_stmt|;
-name|cr
-operator|->
-name|cr_gid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Anything ?? */
-name|cr
-operator|->
-name|cr_ngroups
-operator|=
-literal|1
+name|p_ucred
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
