@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ypxfr_main.c,v 1.13 1996/01/06 19:59:41 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ypxfr_main.c,v 1.15 1996/01/10 17:41:55 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpcsvc/yp.h>
 end_include
 
@@ -113,7 +119,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypxfr_main.c,v 1.13 1996/01/06 19:59:41 wpaul Exp $"
+literal|"$Id: ypxfr_main.c,v 1.15 1996/01/10 17:41:55 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1304,6 +1310,12 @@ literal|"failed to get order number of %s: %s"
 argument_list|,
 name|ypxfr_mapname
 argument_list|,
+name|yp_errno
+operator|==
+name|YPXFR_SUCC
+condition|?
+literal|"map has order 0"
+else|:
 name|ypxfrerr_string
 argument_list|(
 name|yp_errno
@@ -1910,6 +1922,12 @@ literal|"failed to get order number of %s: %s"
 argument_list|,
 name|ypxfr_mapname
 argument_list|,
+name|yp_errno
+operator|==
+name|YPXFR_SUCC
+condition|?
+literal|"map has order 0"
+else|:
 name|ypxfrerr_string
 argument_list|(
 name|yp_errno
@@ -1942,7 +1960,6 @@ expr_stmt|;
 comment|/* 	 * Send a YPPROC_CLEAR to the local ypserv. 	 * The FreeBSD ypserv doesn't really need this, but we send it 	 * here anyway for the sake of consistency. 	 */
 if|if
 condition|(
-operator|!
 name|ypxfr_clear
 condition|)
 block|{
@@ -1957,8 +1974,14 @@ name|out
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|stat
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|stat
+operator|=
 name|callrpc
 argument_list|(
 literal|"localhost"
@@ -1986,18 +2009,28 @@ operator|*
 operator|)
 name|out
 argument_list|)
-operator|==
-name|NULL
+operator|)
+operator|!=
+name|RPC_SUCCESS
 condition|)
 block|{
 name|yp_error
 argument_list|(
-literal|"failed to send 'clear' to local ypserv"
+literal|"failed to send 'clear' to local ypserv: %s"
+argument_list|,
+name|clnt_sperrno
+argument_list|(
+operator|(
+expr|enum
+name|clnt_stat
+operator|)
+name|stat
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ypxfr_exit
 argument_list|(
-name|YPXFR_YPERR
+name|YPXFR_CLEAR
 argument_list|,
 operator|&
 name|ypxfr_temp_map
@@ -2005,41 +2038,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|unlink
-argument_list|(
-name|buf
-argument_list|)
-operator|==
-operator|-
-literal|1
-operator|&&
-name|errno
-operator|!=
-name|ENOENT
-condition|)
-block|{
-name|yp_error
-argument_list|(
-literal|"unlink(%s) failed: %s"
-argument_list|,
-name|buf
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ypxfr_exit
-argument_list|(
-name|YPXFR_FILE
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	 * Put the new map in place immediately. I'm not sure if the 	 * kernel does an unlink() and rename() atomically in the event 	 * that we move a new copy of a map over the top of an existing 	 * one, but there's less chance of a race condition happening 	 * than if we were to do the unlink() ourselves. 	 */
 if|if
 condition|(
 name|rename
