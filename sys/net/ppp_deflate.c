@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_deflate.c,v 1.3 1997/08/19 14:10:46 peter Exp $	*/
+comment|/*	$Id: ppp_deflate.c,v 1.4 1997/09/02 01:18:39 bde Exp $	*/
 end_comment
 
 begin_comment
@@ -127,7 +127,7 @@ begin_decl_stmt
 specifier|static
 name|void
 modifier|*
-name|zalloc
+name|z_alloc
 name|__P
 argument_list|(
 operator|(
@@ -147,7 +147,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|zfree
+name|z_free
 name|__P
 argument_list|(
 operator|(
@@ -489,7 +489,7 @@ end_comment
 begin_function
 name|void
 modifier|*
-name|zalloc
+name|z_alloc
 parameter_list|(
 name|notused
 parameter_list|,
@@ -535,7 +535,7 @@ end_function
 
 begin_function
 name|void
-name|zfree
+name|z_free
 parameter_list|(
 name|notused
 parameter_list|,
@@ -700,7 +700,7 @@ name|strm
 operator|.
 name|zalloc
 operator|=
-name|zalloc
+name|z_alloc
 expr_stmt|;
 name|state
 operator|->
@@ -708,7 +708,7 @@ name|strm
 operator|.
 name|zalloc_init
 operator|=
-name|zalloc
+name|z_alloc
 expr_stmt|;
 name|state
 operator|->
@@ -716,7 +716,7 @@ name|strm
 operator|.
 name|zfree
 operator|=
-name|zfree
+name|z_free
 expr_stmt|;
 if|if
 condition|(
@@ -2010,7 +2010,7 @@ name|strm
 operator|.
 name|zalloc
 operator|=
-name|zalloc
+name|z_alloc
 expr_stmt|;
 name|state
 operator|->
@@ -2018,7 +2018,7 @@ name|strm
 operator|.
 name|zalloc_init
 operator|=
-name|zalloc
+name|z_alloc
 expr_stmt|;
 name|state
 operator|->
@@ -2026,7 +2026,7 @@ name|strm
 operator|.
 name|zfree
 operator|=
-name|zfree
+name|z_free
 expr_stmt|;
 if|if
 condition|(
