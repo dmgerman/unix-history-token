@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw.c,v 1.10 1998/08/04 22:31:26 nate Exp $"
+literal|"$Id: pw.c,v 1.11 1999/01/08 10:52:38 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"pw.h"
-end_include
 
 begin_include
 include|#
@@ -57,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pw.h"
 end_include
 
 begin_decl_stmt
@@ -168,6 +168,76 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|pwf
+name|PWF
+init|=
+block|{
+literal|0
+block|,
+name|setpwent
+block|,
+name|endpwent
+block|,
+name|getpwent
+block|,
+name|getpwuid
+block|,
+name|getpwnam
+block|,
+name|pwdb
+block|,
+name|setgrent
+block|,
+name|endgrent
+block|,
+name|getgrent
+block|,
+name|getgrgid
+block|,
+name|getgrnam
+block|,
+name|grdb
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pwf
+name|VPWF
+init|=
+block|{
+literal|1
+block|,
+name|vsetpwent
+block|,
+name|vendpwent
+block|,
+name|vgetpwent
+block|,
+name|vgetpwuid
+block|,
+name|vgetpwnam
+block|,
+name|vpwdb
+block|,
+name|vsetgrent
+block|,
+name|vendgrent
+block|,
+name|vgetgrent
+block|,
+name|vgetgrgid
+block|,
+name|vgetgrnam
+block|,
+name|vgrdb
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|cargs
@@ -236,6 +306,12 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|char
+modifier|*
+name|config
+init|=
+name|NULL
+decl_stmt|;
 name|struct
 name|userconf
 modifier|*
@@ -256,28 +332,28 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"C:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NPy:Y"
+literal|"VC:qn:u:c:d:e:p:g:G:mk:s:oL:i:w:h:Db:NPy:Y"
 block|,
-literal|"C:qn:u:rY"
+literal|"VC:qn:u:rY"
 block|,
-literal|"C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
+literal|"VC:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
 block|,
-literal|"C:qn:u:FPa"
+literal|"VC:qn:u:FPa"
 block|,
-literal|"C:q"
+literal|"VC:q"
 block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"C:qn:g:h:M:pNPY"
+literal|"VC:qn:g:h:M:pNPY"
 block|,
-literal|"C:qn:g:Y"
+literal|"VC:qn:g:Y"
 block|,
-literal|"C:qn:g:l:h:FM:m:NPY"
+literal|"VC:qn:g:l:h:FM:m:NPY"
 block|,
-literal|"C:qn:g:FPa"
+literal|"VC:qn:g:FPa"
 block|,
-literal|"C:q"
+literal|"VC:q"
 block|}
 block|}
 decl_stmt|;
@@ -348,19 +424,83 @@ condition|(
 name|argc
 operator|>
 literal|1
-operator|&&
-operator|*
-name|argv
-index|[
-literal|1
-index|]
-operator|!=
-literal|'-'
 condition|)
 block|{
 name|int
 name|tmp
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+comment|/* 			 * Special case, allow pw -V<dir><operation> [args] for scripts etc. 			 */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'V'
+condition|)
+block|{
+name|optarg
+operator|=
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|optarg
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|optarg
+operator|=
+name|argv
+index|[
+literal|2
+index|]
+expr_stmt|;
+operator|++
+name|argv
+expr_stmt|;
+operator|--
+name|argc
+expr_stmt|;
+block|}
+name|addarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'V'
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -697,14 +837,12 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* 	 * Now, let's do the common initialisation 	 */
+comment|/* 	 * Set our base working path if not overridden 	 */
 end_comment
 
 begin_expr_stmt
-name|cnf
+name|config
 operator|=
-name|read_userconfig
-argument_list|(
 name|getarg
 argument_list|(
 operator|&
@@ -724,6 +862,106 @@ operator|->
 name|val
 else|:
 name|NULL
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|getarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'V'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+modifier|*
+name|etcpath
+init|=
+name|getarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'V'
+argument_list|)
+operator|->
+name|val
+decl_stmt|;
+if|if
+condition|(
+operator|*
+name|etcpath
+condition|)
+block|{
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Only override config location if -C not specified */
+name|config
+operator|=
+name|malloc
+argument_list|(
+name|MAXPATHLEN
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|config
+argument_list|,
+name|MAXPATHLEN
+argument_list|,
+literal|"%s/pw.conf"
+argument_list|,
+name|etcpath
+argument_list|)
+expr_stmt|;
+block|}
+name|memcpy
+argument_list|(
+operator|&
+name|PWF
+argument_list|,
+operator|&
+name|VPWF
+argument_list|,
+sizeof|sizeof
+name|PWF
+argument_list|)
+expr_stmt|;
+name|setpwdir
+argument_list|(
+name|etcpath
+argument_list|)
+expr_stmt|;
+name|setgrdir
+argument_list|(
+name|etcpath
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_if
+
+begin_comment
+comment|/* 	 * Now, let's do the common initialisation 	 */
+end_comment
+
+begin_expr_stmt
+name|cnf
+operator|=
+name|read_userconfig
+argument_list|(
+name|config
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1020,6 +1258,7 @@ init|=
 block|{
 block|{
 literal|"usage: pw useradd [name] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"  Adding users:\n"
@@ -1039,6 +1278,7 @@ literal|"\t-h fd          read password on fd\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 literal|"  Setting defaults:\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-D             set user defaults\n"
 literal|"\t-b dir         default home root dir\n"
 literal|"\t-e period      default expiry period\n"
@@ -1054,12 +1294,14 @@ literal|"\t-s shell       default shell\n"
 literal|"\t-y path        set NIS passwd file path\n"
 block|,
 literal|"usage: pw userdel [uid|name] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-Y             update NIS maps\n"
 literal|"\t-r             remove home& contents\n"
 block|,
 literal|"usage: pw usermod [uid|name] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if no user\n"
@@ -1081,6 +1323,7 @@ literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw usershow [uid|name] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-F             force print\n"
@@ -1088,11 +1331,13 @@ literal|"\t-P             prettier format\n"
 literal|"\t-a             print all users\n"
 block|,
 literal|"usage: pw usernext [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
 block|}
 block|,
 block|{
 literal|"usage: pw groupadd [group|gid] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-n group       group name\n"
@@ -1103,11 +1348,13 @@ literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw groupdel [group|gid] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-Y             update NIS maps\n"
 block|,
 literal|"usage: pw groupmod [group|gid] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if not exists\n"
@@ -1120,6 +1367,7 @@ literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw groupshow [group|gid] [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-F             force print\n"
@@ -1127,6 +1375,7 @@ literal|"\t-P             prettier format\n"
 literal|"\t-a             print all accounting groups\n"
 block|,
 literal|"usage: pw groupnext [switches]\n"
+literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-C config      configuration file\n"
 block|}
 block|}

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pw_nis.c,v 1.4 1997/10/10 06:23:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pwupd.h"
 end_include
 
 begin_include

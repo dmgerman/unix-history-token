@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_user.c,v 1.25 1999/01/04 14:07:53 billf Exp $"
+literal|"$Id: pw_user.c,v 1.26 1999/02/08 21:26:44 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|"bitmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pwupd.h"
 end_include
 
 begin_if
@@ -1055,7 +1049,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|p
 argument_list|)
@@ -1076,7 +1070,7 @@ operator|||
 operator|(
 name|grp
 operator|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 operator|(
 name|gid_t
@@ -1201,7 +1195,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|p
 argument_list|)
@@ -1222,7 +1216,7 @@ operator|||
 operator|(
 name|grp
 operator|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 operator|(
 name|gid_t
@@ -1693,7 +1687,7 @@ argument_list|)
 operator|!=
 name|NULL
 decl_stmt|;
-name|setpwent
+name|SETPWENT
 argument_list|()
 expr_stmt|;
 while|while
@@ -1701,7 +1695,7 @@ condition|(
 operator|(
 name|pwd
 operator|=
-name|getpwent
+name|GETPWENT
 argument_list|()
 operator|)
 operator|!=
@@ -1714,7 +1708,7 @@ argument_list|,
 name|pretty
 argument_list|)
 expr_stmt|;
-name|endpwent
+name|ENDPWENT
 argument_list|()
 expr_stmt|;
 return|return
@@ -1738,7 +1732,7 @@ name|NULL
 condition|)
 name|pwd
 operator|=
-name|getpwnam
+name|GETPWNAM
 argument_list|(
 name|pw_checkname
 argument_list|(
@@ -1866,7 +1860,7 @@ condition|)
 comment|/* Try harder */
 name|pwd
 operator|=
-name|getpwuid
+name|GETPWUID
 argument_list|(
 name|atoi
 argument_list|(
@@ -2044,7 +2038,14 @@ argument_list|,
 literal|"cannot remove user 'root'"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove skey record from /etc/skeykeys 			 */
+if|if
+condition|(
+operator|!
+name|PWALTDIR
+argument_list|()
+condition|)
+block|{
+comment|/* 				 * Remove skey record from /etc/skeykeys 		        	 */
 name|rmskey
 argument_list|(
 name|pwd
@@ -2052,7 +2053,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove crontabs 			 */
+comment|/* 				 * Remove crontabs 				 */
 name|sprintf
 argument_list|(
 name|file
@@ -2092,6 +2093,7 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 			 * Save these for later, since contents of pwd may be 			 * invalidated by deletion 			 */
 name|sprintf
@@ -2203,13 +2205,20 @@ operator|)
 name|uid
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove mail file 			 */
+if|if
+condition|(
+operator|!
+name|PWALTDIR
+argument_list|()
+condition|)
+block|{
+comment|/* 				 * Remove mail file 				 */
 name|remove
 argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove at jobs 			 */
+comment|/* 				 * Remove at jobs 				 */
 if|if
 condition|(
 name|getpwuid
@@ -2224,7 +2233,7 @@ argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove home directory and contents 			 */
+comment|/* 				 * Remove home directory and contents 				 */
 if|if
 condition|(
 name|getarg
@@ -2307,6 +2316,7 @@ else|:
 literal|"not completely "
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -2512,7 +2522,7 @@ operator|=
 operator|(
 name|gid_t
 operator|)
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|cnf
 operator|->
@@ -2901,7 +2911,7 @@ condition|(
 operator|(
 name|pwd
 operator|=
-name|getpwnam
+name|GETPWNAM
 argument_list|(
 name|a_name
 operator|->
@@ -3550,7 +3560,7 @@ condition|(
 operator|(
 name|pwd
 operator|=
-name|getpwnam
+name|GETPWNAM
 argument_list|(
 name|a_name
 operator|->
@@ -3573,7 +3583,7 @@ argument_list|)
 expr_stmt|;
 name|grp
 operator|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 name|pwd
 operator|->
@@ -3648,6 +3658,13 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|PWALTDIR
+argument_list|()
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|line
@@ -3675,7 +3692,7 @@ literal|0600
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Preserve contents& 								 * mtime */
+comment|/* Preserve contents& 									 * mtime */
 name|chown
 argument_list|(
 name|line
@@ -3689,7 +3706,7 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Send mail to the new user as well, if we are asked to 		 */
+comment|/* 			 * Send mail to the new user as well, if we are asked to 			 */
 if|if
 condition|(
 name|cnf
@@ -3816,9 +3833,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 comment|/* 	 * Finally, let's create and populate the user's home directory. Note 	 * that this also `works' for editing users if -m is used, but 	 * existing files will *not* be overwritten. 	 */
 if|if
 condition|(
+operator|!
+name|PWALTDIR
+argument_list|()
+operator|&&
 name|getarg
 argument_list|(
 name|args
@@ -3968,7 +3990,7 @@ condition|(
 operator|(
 name|pwd
 operator|=
-name|getpwuid
+name|GETPWUID
 argument_list|(
 name|uid
 argument_list|)
@@ -4048,7 +4070,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now, let's fill the bitmap from the password file 		 */
-name|setpwent
+name|SETPWENT
 argument_list|()
 expr_stmt|;
 while|while
@@ -4056,7 +4078,7 @@ condition|(
 operator|(
 name|pwd
 operator|=
-name|getpwent
+name|GETPWENT
 argument_list|()
 operator|)
 operator|!=
@@ -4069,7 +4091,7 @@ operator|->
 name|pw_uid
 operator|>=
 operator|(
-name|int
+name|uid_t
 operator|)
 name|cnf
 operator|->
@@ -4080,7 +4102,7 @@ operator|->
 name|pw_uid
 operator|<=
 operator|(
-name|int
+name|uid_t
 operator|)
 name|cnf
 operator|->
@@ -4100,7 +4122,7 @@ operator|->
 name|min_uid
 argument_list|)
 expr_stmt|;
-name|endpwent
+name|ENDPWENT
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Then apply the policy, with fallback to reuse if necessary 		 */
@@ -4266,7 +4288,7 @@ name|default_group
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check the given gid, if any 	 */
-name|setgrent
+name|SETGRENT
 argument_list|()
 expr_stmt|;
 if|if
@@ -4281,7 +4303,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|a_gid
 operator|->
@@ -4324,7 +4346,7 @@ operator|||
 operator|(
 name|grp
 operator|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 name|gid
 argument_list|)
@@ -4357,7 +4379,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|nam
 argument_list|)
@@ -4414,7 +4436,7 @@ expr_stmt|;
 comment|/* 		 * We need to auto-create a group with the user's name. We 		 * can send all the appropriate output to our sister routine 		 * bit first see if we can create a group with gid==uid so we 		 * can keep the user and group ids in sync. We purposely do 		 * NOT check the gid range if we can force the sync. If the 		 * user's name dups an existing group, then the group add 		 * function will happily handle that case for us and exit. 		 */
 if|if
 condition|(
-name|getgrgid
+name|GETGRGID
 argument_list|(
 name|prefer
 argument_list|)
@@ -4506,7 +4528,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|nam
 argument_list|)
@@ -4558,7 +4580,7 @@ name|t
 expr_stmt|;
 block|}
 block|}
-name|endgrent
+name|ENDGRENT
 argument_list|()
 expr_stmt|;
 return|return
@@ -5928,7 +5950,7 @@ name|group
 modifier|*
 name|grp
 init|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 name|pwd
 operator|->
@@ -6340,7 +6362,7 @@ argument_list|,
 name|pwexpire
 argument_list|)
 expr_stmt|;
-name|setgrent
+name|SETGRENT
 argument_list|()
 expr_stmt|;
 name|j
@@ -6352,7 +6374,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrent
+name|GETGRENT
 argument_list|()
 operator|)
 operator|!=
@@ -6418,7 +6440,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
-name|endgrent
+name|ENDGRENT
 argument_list|()
 expr_stmt|;
 name|printf

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pw_conf.c,v 1.7 1997/10/10 06:23:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"pw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pwupd.h"
 end_include
 
 begin_define
@@ -1361,7 +1355,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|||
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|q
 argument_list|)
