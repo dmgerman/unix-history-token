@@ -4503,7 +4503,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DECODE_BUAD */
+comment|/* DECODE_BAUD */
 end_comment
 
 begin_function
@@ -4564,7 +4564,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* DECODE_BUAD */
+comment|/* DECODE_BAUD */
 name|cfsetospeed
 argument_list|(
 operator|&
@@ -4575,7 +4575,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DECODE_BUAD */
+comment|/* DECODE_BAUD */
 block|}
 end_function
 
