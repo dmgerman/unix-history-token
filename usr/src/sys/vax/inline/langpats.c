@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.3 (Berkeley) %G%"
+literal|"@(#)langpats.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
