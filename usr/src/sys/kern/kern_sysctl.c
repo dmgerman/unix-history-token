@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3493,6 +3493,26 @@ name|p
 operator|->
 name|p_vmspace
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|pmap_resident_count
+name|ep
+operator|->
+name|e_vm
+operator|.
+name|vm_rssize
+operator|=
+name|pmap_resident_count
+argument_list|(
+operator|&
+name|vm
+operator|->
+name|vm_pmap
+argument_list|)
+expr_stmt|;
+comment|/*XXX*/
+else|#
+directive|else
 name|ep
 operator|->
 name|e_vm
@@ -3503,6 +3523,8 @@ name|vm
 operator|->
 name|vm_rssize
 expr_stmt|;
+endif|#
+directive|endif
 name|ep
 operator|->
 name|e_vm
