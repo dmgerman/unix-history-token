@@ -714,7 +714,6 @@ block|{
 case|case
 literal|1
 case|:
-return|return
 name|bus_space_write_1
 argument_list|(
 name|fm801
@@ -729,11 +728,11 @@ name|regno
 argument_list|,
 name|data
 argument_list|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
-return|return
 name|bus_space_write_2
 argument_list|(
 name|fm801
@@ -748,11 +747,11 @@ name|regno
 argument_list|,
 name|data
 argument_list|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|4
 case|:
-return|return
 name|bus_space_write_4
 argument_list|(
 name|fm801
@@ -767,9 +766,8 @@ name|regno
 argument_list|,
 name|data
 argument_list|)
-return|;
-default|default:
-return|return;
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
