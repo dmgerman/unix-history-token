@@ -280,8 +280,6 @@ sizeof|sizeof
 argument_list|(
 name|ctl_addr
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|!=
 literal|0
