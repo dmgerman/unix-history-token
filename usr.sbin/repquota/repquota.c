@@ -351,6 +351,16 @@ begin_comment
 comment|/* all filesystems */
 end_comment
 
+begin_decl_stmt
+name|int
+name|nflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* display user/group by id */
+end_comment
+
 begin_function_decl
 name|int
 name|hasquota
@@ -490,7 +500,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aguv"
+literal|"agnuv"
 argument_list|)
 operator|)
 operator|!=
@@ -514,6 +524,13 @@ case|case
 literal|'g'
 case|:
 name|gflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
 operator|++
 expr_stmt|;
 break|break;
@@ -580,6 +597,9 @@ block|}
 if|if
 condition|(
 name|gflag
+operator|&&
+operator|!
+name|nflag
 condition|)
 block|{
 name|setgrent
@@ -622,6 +642,9 @@ block|}
 if|if
 condition|(
 name|uflag
+operator|&&
+operator|!
+name|nflag
 condition|)
 block|{
 name|setpwent
@@ -900,9 +923,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: repquota [-v] [-g] [-u] -a"
+literal|"usage: repquota [-v] [-g] [-n] [-u] -a"
 argument_list|,
-literal|"       repquota [-v] [-g] [-u] filesystem ..."
+literal|"       repquota [-v] [-g] [-n] [-u] filesystem ..."
 argument_list|)
 expr_stmt|;
 name|exit
