@@ -898,6 +898,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|struct
+name|rtentry
+modifier|*
+name|dummy
+decl_stmt|;
+comment|/* 		 * rtrequest() would recursively call rtfree() without the 		 * dummy entry argument, causing duplicated free. 		 */
 name|rtrequest
 argument_list|(
 name|RTM_DELETE
@@ -925,7 +931,8 @@ name|rt
 operator|->
 name|rt_flags
 argument_list|,
-literal|0
+operator|&
+name|dummy
 argument_list|)
 expr_stmt|;
 block|}
