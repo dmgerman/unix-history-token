@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.104 1997/11/18 19:38:27 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.105 1997/11/22 03:37:28 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -549,6 +549,12 @@ name|cmd
 decl_stmt|;
 name|int
 name|n
+decl_stmt|,
+name|cmax
+decl_stmt|,
+name|dmax
+decl_stmt|,
+name|cols
 decl_stmt|;
 if|if
 condition|(
@@ -627,6 +633,93 @@ operator|-
 literal|1
 return|;
 block|}
+name|cmax
+operator|=
+name|dmax
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|cmd
+operator|=
+name|arg
+operator|->
+name|cmd
+init|;
+name|cmd
+operator|->
+name|func
+condition|;
+name|cmd
+operator|++
+control|)
+if|if
+condition|(
+name|cmd
+operator|->
+name|name
+operator|&&
+operator|(
+name|cmd
+operator|->
+name|lauth
+operator|&
+name|VarLocalAuth
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|cmd
+operator|->
+name|name
+argument_list|)
+operator|)
+operator|>
+name|cmax
+condition|)
+name|cmax
+operator|=
+name|n
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|cmd
+operator|->
+name|helpmes
+argument_list|)
+operator|)
+operator|>
+name|dmax
+condition|)
+name|dmax
+operator|=
+name|n
+expr_stmt|;
+block|}
+name|cols
+operator|=
+literal|80
+operator|/
+operator|(
+name|dmax
+operator|+
+name|cmax
+operator|+
+literal|3
+operator|)
+expr_stmt|;
 name|n
 operator|=
 literal|0
@@ -665,26 +758,49 @@ name|fprintf
 argument_list|(
 name|VarTerm
 argument_list|,
-literal|"  %-9s: %-20s\n"
+literal|" %-*.*s: %-*.*s"
+argument_list|,
+name|cmax
+argument_list|,
+name|cmax
 argument_list|,
 name|cmd
 operator|->
 name|name
+argument_list|,
+name|dmax
+argument_list|,
+name|dmax
 argument_list|,
 name|cmd
 operator|->
 name|helpmes
 argument_list|)
 expr_stmt|;
-name|n
+if|if
+condition|(
 operator|++
+name|n
+operator|%
+name|cols
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"\n"
+argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|n
-operator|&
-literal|1
+operator|%
+name|cols
+operator|!=
+literal|0
 condition|)
 name|fprintf
 argument_list|(
@@ -1820,7 +1936,7 @@ name|BgShellCommand
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Run a command in the background"
+literal|"Run a background command"
 block|,
 literal|"[!]bg command"
 block|}
@@ -2002,7 +2118,7 @@ name|ShowCommand
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show status and statistics"
+literal|"Show status and stats"
 block|,
 literal|"show var"
 block|}
@@ -2016,7 +2132,7 @@ name|TerminalCommand
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Enter to terminal mode"
+literal|"Enter terminal mode"
 block|,
 literal|"term"
 block|}
@@ -2986,7 +3102,7 @@ name|ShowAfilter
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show keep Alive filters"
+literal|"Show keep-alive filters"
 block|,
 literal|"show afilter option .."
 block|}
@@ -3000,7 +3116,7 @@ name|ShowAuthKey
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show auth name, key and algorithm"
+literal|"Show auth details"
 block|,
 literal|"show auth"
 block|}
@@ -3028,7 +3144,7 @@ name|ReportCompress
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show compression statistics"
+literal|"Show compression stats"
 block|,
 literal|"show compress"
 block|}
@@ -3070,7 +3186,7 @@ name|ReportHdlcStatus
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show HDLC error summary"
+literal|"Show HDLC errors"
 block|,
 literal|"show hdlc"
 block|}
@@ -3126,7 +3242,7 @@ name|ShowLoopback
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show current loopback setting"
+literal|"Show loopback setting"
 block|,
 literal|"show loopback"
 block|}
@@ -3140,7 +3256,7 @@ name|ShowLogLevel
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show current log level"
+literal|"Show log levels"
 block|,
 literal|"show log"
 block|}
@@ -3238,7 +3354,7 @@ name|ShowReconnect
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show Reconnect timer,tries"
+literal|"Show reconnect timer"
 block|,
 literal|"show reconnect"
 block|}
@@ -3252,7 +3368,7 @@ name|ShowRedial
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show Redial timeout value"
+literal|"Show Redial timeout"
 block|,
 literal|"show redial"
 block|}
@@ -3280,7 +3396,7 @@ name|ShowTimeout
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show Idle timeout value"
+literal|"Show Idle timeout"
 block|,
 literal|"show timeout"
 block|}
@@ -3294,7 +3410,7 @@ name|ShowStopped
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"Show STOPPED timeout value"
+literal|"Show STOPPED timeout"
 block|,
 literal|"show stopped"
 block|}
@@ -3622,7 +3738,7 @@ name|arg
 operator|.
 name|cmd
 operator|=
-name|cmd
+name|cmds
 expr_stmt|;
 name|arg
 operator|.
