@@ -45,21 +45,21 @@ index|[]
 init|=
 block|{
 comment|/* all files to create */
-name|_PATH_MONST
+name|_SPATH_MONST
 block|,
-name|_PATH_PEOPLE
+name|_SPATH_PEOPLE
 block|,
-name|_PATH_MESS
+name|_SPATH_MESS
 block|,
-name|_PATH_LASTDEAD
+name|_SPATH_LASTDEAD
 block|,
-name|_PATH_MOTD
+name|_SPATH_MOTD
 block|,
-name|_PATH_GOLD
+name|_SPATH_GOLD
 block|,
-name|_PATH_VOID
+name|_SPATH_VOID
 block|,
-name|_PATH_SCORE
+name|_SPATH_SCORE
 block|,
 name|NULL
 block|, }
@@ -224,7 +224,7 @@ argument_list|(
 operator|*
 name|filename
 argument_list|,
-name|_PATH_PEOPLE
+name|_SPATH_PEOPLE
 argument_list|)
 condition|)
 comment|/* do not reset character file if it already exists */
@@ -328,7 +328,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_VOID
+name|_SPATH_VOID
 argument_list|,
 literal|"w"
 argument_list|)
@@ -340,7 +340,7 @@ name|Error
 argument_list|(
 literal|"Cannot update %s.\n"
 argument_list|,
-name|_PATH_VOID
+name|_SPATH_VOID
 argument_list|)
 expr_stmt|;
 else|else
@@ -371,7 +371,7 @@ name|Monstfp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_MONST
+name|_SPATH_MONST
 argument_list|,
 literal|"w"
 argument_list|)
@@ -383,7 +383,7 @@ name|Error
 argument_list|(
 literal|"Cannot update %s.\n"
 argument_list|,
-name|_PATH_MONST
+name|_SPATH_MONST
 argument_list|)
 expr_stmt|;
 else|else
@@ -592,7 +592,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_MOTD
+name|_SPATH_MOTD
 argument_list|,
 literal|"w"
 argument_list|)
@@ -604,7 +604,7 @@ name|Error
 argument_list|(
 literal|"Cannot update %s.\n"
 argument_list|,
-name|_PATH_MOTD
+name|_SPATH_MOTD
 argument_list|)
 expr_stmt|;
 else|else
@@ -642,7 +642,7 @@ name|printf
 argument_list|(
 literal|"Phantasia destination directory:  %s\n"
 argument_list|,
-name|_PATH_PHANTDIR
+name|_SPATH_PHANTDIR
 argument_list|)
 expr_stmt|;
 name|printf
