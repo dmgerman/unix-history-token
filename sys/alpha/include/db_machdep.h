@@ -27,11 +27,22 @@ begin_comment
 comment|/*  * Machine-dependent defines for new kernel debugger.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KLD_MODULE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
