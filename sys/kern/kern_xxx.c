@@ -1166,16 +1166,12 @@ operator|->
 name|len
 operator|>
 name|domainnamelen
-operator|+
-literal|1
 condition|)
 name|uap
 operator|->
 name|len
 operator|=
 name|domainnamelen
-operator|+
-literal|1
 expr_stmt|;
 name|error
 operator|=
