@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.33 89/12/22$  *  *	@(#)hil.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -749,6 +749,10 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flags
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -758,16 +762,16 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|hilloop
@@ -852,6 +856,8 @@ operator|)
 return|;
 if|if
 condition|(
+name|p
+operator|&&
 operator|(
 name|p
 operator|->
