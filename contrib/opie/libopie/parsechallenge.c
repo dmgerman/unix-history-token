@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* parsechallenge.c: The _opieparsechallenge() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Created by cmetz for OPIE 2.3 using generator.c as a guide. */
+comment|/* parsechallenge.c: The __opieparsechallenge() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.32. Check for extended response sets. 		Change prefix to double underscore. 	Created by cmetz for OPIE 2.3 using generator.c as a guide. */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_opieparsechallenge
+name|__opieparsechallenge
 name|FUNCTION
 argument_list|(
 operator|(
@@ -99,6 +99,8 @@ operator|,
 name|sequence
 operator|,
 name|seed
+operator|,
+name|exts
 operator|)
 argument_list|,
 name|char
@@ -117,6 +119,10 @@ name|char
 operator|*
 operator|*
 name|seed
+name|AND
+name|int
+operator|*
+name|exts
 argument_list|)
 block|{
 name|char
@@ -302,7 +308,51 @@ operator|=
 name|buffer
 expr_stmt|;
 operator|*
+operator|(
 name|c
+operator|++
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|c
+operator|&&
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|c
+argument_list|)
+condition|)
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+name|c
+argument_list|,
+literal|"ext"
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+operator|*
+name|exts
+operator|=
+literal|1
+expr_stmt|;
+else|else
+operator|*
+name|exts
 operator|=
 literal|0
 expr_stmt|;
