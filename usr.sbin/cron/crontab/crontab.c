@@ -1103,11 +1103,9 @@ operator|!=
 name|ch
 condition|)
 block|{
-name|putc
+name|putchar
 argument_list|(
 name|ch
-argument_list|,
-name|NewCrontab
 argument_list|)
 expr_stmt|;
 break|break;
