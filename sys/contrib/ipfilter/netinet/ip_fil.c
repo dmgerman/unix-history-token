@@ -1403,7 +1403,7 @@ literal|199701
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|500011
 operator|)
@@ -1629,7 +1629,7 @@ literal|104200000
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|500011
 operator|)
@@ -1728,7 +1728,7 @@ literal|104200000
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|500011
 operator|)
@@ -2157,7 +2157,7 @@ literal|104200000
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|500011
 operator|)
@@ -2299,7 +2299,7 @@ literal|104200000
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|500011
 operator|)

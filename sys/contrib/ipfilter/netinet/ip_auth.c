@@ -308,7 +308,7 @@ literal|199802
 operator|)
 operator|||
 operator|(
-name|__FreeBSD_Version
+name|__FreeBSD_version
 operator|>=
 literal|400000
 operator|)
