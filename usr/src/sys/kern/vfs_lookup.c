@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	6.6	84/02/15	*/
+comment|/*	vfs_lookup.c	6.7	84/06/27	*/
 end_comment
 
 begin_include
@@ -488,7 +488,7 @@ operator|)
 operator|&&
 name|flag
 operator|!=
-name|LOOKUP
+name|DELETE
 condition|)
 block|{
 name|u
@@ -929,6 +929,24 @@ else|else
 block|{
 if|if
 condition|(
+name|ncp
+operator|->
+name|nc_id
+operator|!=
+name|ncp
+operator|->
+name|nc_ip
+operator|->
+name|i_id
+condition|)
+name|nchstats
+operator|.
+name|ncs_falsehits
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|*
 name|cp
 operator|==
@@ -1020,19 +1038,31 @@ expr_stmt|;
 if|if
 condition|(
 name|pdp
-operator|!=
+operator|==
 name|dp
 condition|)
-block|{
-name|ilock
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
 name|dp
 operator|->
 name|i_count
 operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dp
+operator|->
+name|i_count
+condition|)
+block|{
+name|dp
+operator|->
+name|i_count
+operator|++
+expr_stmt|;
+name|ilock
+argument_list|(
+name|dp
+argument_list|)
 expr_stmt|;
 name|iunlock
 argument_list|(
@@ -1041,11 +1071,18 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|igrab
+argument_list|(
 name|dp
-operator|->
-name|i_count
-operator|++
+argument_list|)
 expr_stmt|;
+name|iunlock
+argument_list|(
+name|pdp
+argument_list|)
+expr_stmt|;
+block|}
 name|u
 operator|.
 name|u_dent
@@ -1061,12 +1098,13 @@ goto|goto
 name|haveino
 goto|;
 block|}
-comment|/* 			 * last segment and we are renaming or deleting 			 * or otherwise don't want cache entry to exist 			 */
+else|else
 name|nchstats
 operator|.
 name|ncs_badhits
 operator|++
 expr_stmt|;
+comment|/* 			 * Last component and we are renaming or deleting, 			 * the cache entry is invalid, or otherwise don't 			 * want cache entry to exist. 			 */
 comment|/* remove from LRU chain */
 operator|*
 name|ncp
@@ -1105,20 +1143,6 @@ name|remque
 argument_list|(
 name|ncp
 argument_list|)
-expr_stmt|;
-comment|/* release ref on the inode */
-name|irele
-argument_list|(
-name|ncp
-operator|->
-name|nc_ip
-argument_list|)
-expr_stmt|;
-name|ncp
-operator|->
-name|nc_ip
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* insert at head of LRU list (first to grab) */
 name|ncp
@@ -2571,24 +2595,6 @@ block|}
 comment|/* 	 * insert name into cache (if we want it, and it isn't "." or "..") 	 * 	 * all other cases where making a cache entry would be wrong 	 * have already departed from the code sequence somewhere above. 	 */
 if|if
 condition|(
-name|bcmp
-argument_list|(
-name|u
-operator|.
-name|u_dent
-operator|.
-name|d_name
-argument_list|,
-literal|"."
-argument_list|,
-literal|2
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-operator|!
-name|isdotdot
-operator|&&
 name|docache
 condition|)
 block|{
@@ -2650,31 +2656,12 @@ argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-comment|/* drop hold on inode (if we had one) */
-if|if
-condition|(
-name|ncp
-operator|->
-name|nc_ip
-condition|)
-name|irele
-argument_list|(
-name|ncp
-operator|->
-name|nc_ip
-argument_list|)
-expr_stmt|;
 comment|/* grab the inode we just found */
 name|ncp
 operator|->
 name|nc_ip
 operator|=
 name|dp
-expr_stmt|;
-name|dp
-operator|->
-name|i_count
-operator|++
 expr_stmt|;
 comment|/* fill in cache info */
 name|ncp
@@ -2704,6 +2691,15 @@ operator|->
 name|i_dev
 expr_stmt|;
 comment|/* our device */
+name|ncp
+operator|->
+name|nc_id
+operator|=
+name|dp
+operator|->
+name|i_id
+expr_stmt|;
+comment|/* identifier */
 name|ncp
 operator|->
 name|nc_nlen

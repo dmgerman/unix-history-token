@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	6.6	84/05/24	*/
+comment|/*	ufs_vnops.c	6.7	84/06/27	*/
 end_comment
 
 begin_include
@@ -4300,6 +4300,13 @@ operator|=
 name|dp
 operator|->
 name|i_number
+expr_stmt|;
+name|dp
+operator|->
+name|i_id
+operator|=
+operator|++
+name|nextinodeid
 expr_stmt|;
 operator|(
 name|void
