@@ -158,7 +158,7 @@ comment|/*  * Structure defining a network interface.  *  * (Would like to call 
 end_comment
 
 begin_comment
-comment|/*  * NB: For FreeBSD, it is assumed that each NIC driver's softc starts with    * one of these structures, typically held within an arpcom structure.     *   *	struct<foo>_softc {  *		struct arpcom {  *			struct  ifnet ac_if;  *			...  *		}<arpcom> ;  *		...     *	};  *  * The assumption is used in a number of places, including many  * files in sys/net, device drivers, and sys/dev/mii.c:miibus_attach().  *   * Unfortunately devices' softc are opaque, so we depend on this layout  * to locate the struct ifnet from the softc in the generic code.  *   */
+comment|/*  * NB: For FreeBSD, it is assumed that each NIC driver's softc starts with    * one of these structures, typically held within an arpcom structure.     *   *	struct<foo>_softc {  *		struct arpcom {  *			struct  ifnet ac_if;  *			...  *		}<arpcom> ;  *		...     *	};  *  * The assumption is used in a number of places, including many  * files in sys/net, device drivers, and sys/dev/mii.c:miibus_attach().  *   * Unfortunately devices' softc are opaque, so we depend on this layout  * to locate the struct ifnet from the softc in the generic code.  *  * Note that not all fields are used by drivers in the FreeBSD source  * tree. However, who knows what third party software does with fields  * marked as "unused", such as if_ipending, if_done, and if_poll*,  * so any attemt to redefine their meaning might end up in binary  * compatibility problems, even if the size of struct ifnet, and  * the size and position of its fields do not change.  * We just have to live with that.  */
 end_comment
 
 begin_struct
