@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) 4/1/94  * $Id: ufs_vnops.c,v 1.7 1994/09/28 16:45:22 dfr Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_vnops.c	8.10 (Berkeley) 4/1/94  * $Id: ufs_vnops.c,v 1.8 1994/10/06 21:07:04 davidg Exp $  */
 end_comment
 
 begin_include
@@ -248,8 +248,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_makeinode
@@ -281,6 +279,10 @@ name|ap
 operator|->
 name|a_cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -346,8 +348,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_makeinode
@@ -373,6 +373,10 @@ name|ap
 operator|->
 name|a_cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -653,8 +657,6 @@ name|gp
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1543,8 +1545,7 @@ name|gid_t
 operator|)
 name|VNOVAL
 condition|)
-if|if
-condition|(
+block|{
 name|error
 operator|=
 name|ufs_chown
@@ -1563,12 +1564,17 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|vap
@@ -1591,8 +1597,6 @@ operator|(
 name|EISDIR
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_TRUNCATE
@@ -1609,6 +1613,10 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1776,8 +1784,6 @@ name|ts_nsec
 operator|/
 literal|1000
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_UPDATE
@@ -1792,6 +1798,10 @@ name|mtimeval
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1902,8 +1912,8 @@ operator|!=
 name|ip
 operator|->
 name|i_uid
-operator|&&
-operator|(
+condition|)
+block|{
 name|error
 operator|=
 name|suser
@@ -1915,13 +1925,17 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|cred
@@ -3685,14 +3699,16 @@ argument_list|)
 operator|)
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_LOCK
 argument_list|(
 name|fvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|abortit
@@ -3874,8 +3890,6 @@ name|tv
 operator|=
 name|time
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_UPDATE
@@ -3890,6 +3904,10 @@ name|tv
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -3964,8 +3982,6 @@ argument_list|(
 name|tvp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_checkpath
@@ -3978,6 +3994,10 @@ name|tcnp
 operator|->
 name|cn_cred
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -3999,8 +4019,6 @@ argument_list|(
 literal|"ufs_rename: lost to startdir"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|relookup
@@ -4012,6 +4030,10 @@ name|tvp
 argument_list|,
 name|tcnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -4101,8 +4123,6 @@ name|i_flag
 operator||=
 name|IN_CHANGE
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_UPDATE
@@ -4117,13 +4137,15 @@ name|tv
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_direnter
@@ -4134,6 +4156,10 @@ name|tdvp
 argument_list|,
 name|tcnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 if|if
@@ -4349,8 +4375,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_dirrewrite
@@ -4361,6 +4385,10 @@ name|ip
 argument_list|,
 name|tcnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -5118,8 +5146,6 @@ operator||=
 name|IFDIR
 expr_stmt|;
 comment|/* 	 * Must simulate part of ufs_makeinode here to acquire the inode, 	 * but not have it entered in the parent directory. The entry is 	 * made later after writing "." and ".." entries. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_VALLOC
@@ -5135,6 +5161,10 @@ argument_list|,
 operator|&
 name|tvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -5294,8 +5324,6 @@ name|i_flag
 operator||=
 name|IN_CHANGE
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_UPDATE
@@ -5310,6 +5338,10 @@ name|tv
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
@@ -5469,8 +5501,6 @@ name|IN_CHANGE
 expr_stmt|;
 block|}
 comment|/* Directory set up, now install it's entry in the parent directory. */
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_direnter
@@ -5481,6 +5511,10 @@ name|dvp
 argument_list|,
 name|cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|dp
@@ -5718,8 +5752,6 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Delete reference to directory before purging 	 * inode.  If we crash in between, the directory 	 * will be reattached to lost+found, 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_dirremove
@@ -5728,6 +5760,10 @@ name|dvp
 argument_list|,
 name|cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -5860,8 +5896,6 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_makeinode
@@ -5884,6 +5918,10 @@ name|ap
 operator|->
 name|a_cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -6871,14 +6909,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 name|start
 label|:
 while|while
@@ -7127,14 +7157,6 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -7384,8 +7406,6 @@ operator|->
 name|b_lblkno
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_BMAP
@@ -7405,6 +7425,10 @@ name|b_blkno
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|bp
@@ -7548,7 +7572,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_UFS, ino %d, on dev %d, %d"
+literal|"tag VT_UFS, ino %ld, on dev %d, %d"
 argument_list|,
 name|ip
 operator|->
@@ -7614,8 +7638,11 @@ operator|)
 return|;
 name|printf
 argument_list|(
-literal|"\towner pid %d"
+literal|"\towner pid %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_lockholder
@@ -7629,8 +7656,11 @@ name|i_lockwaiter
 condition|)
 name|printf
 argument_list|(
-literal|" waiting pid %d"
+literal|" waiting pid %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_lockwaiter
@@ -8308,8 +8338,6 @@ name|v_op
 operator|=
 name|specops
 expr_stmt|;
-if|if
-condition|(
 name|nvp
 operator|=
 name|checkalias
@@ -8322,6 +8350,10 @@ name|i_rdev
 argument_list|,
 name|mntp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nvp
 condition|)
 block|{
 comment|/* 			 * Discard unneeded vnode, but save its inode. 			 */
@@ -8551,8 +8583,6 @@ name|mode
 operator||=
 name|IFREG
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_VALLOC
@@ -8568,6 +8598,10 @@ argument_list|,
 operator|&
 name|tvp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|free
@@ -8779,8 +8813,6 @@ name|tv
 operator|=
 name|time
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_UPDATE
@@ -8795,12 +8827,14 @@ name|tv
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
 goto|;
-if|if
-condition|(
 name|error
 operator|=
 name|ufs_direnter
@@ -8811,6 +8845,10 @@ name|dvp
 argument_list|,
 name|cnp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|bad
