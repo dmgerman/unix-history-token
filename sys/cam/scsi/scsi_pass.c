@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/cam.h>
 end_include
 
@@ -1388,11 +1394,22 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Don't allow access when we're running at a high securelevel. 	 */
+name|error
+operator|=
+name|securelevel_gt
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|securelevel
-operator|>
-literal|1
+name|error
 condition|)
 block|{
 name|splx
@@ -1402,7 +1419,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EPERM
+name|error
 operator|)
 return|;
 block|}
