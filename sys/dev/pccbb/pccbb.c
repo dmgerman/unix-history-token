@@ -4128,8 +4128,9 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"WARNING: Resource left allocated!  "
-literal|"This is a bug... (rid=%x, type=%d, addr=%x)\n"
+literal|"Danger Will Robinson: Resource "
+literal|"left allocated!  This is a bug... "
+literal|"(rid=%x, type=%d, addr=%x)\n"
 argument_list|,
 name|rle
 operator|->
