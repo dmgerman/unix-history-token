@@ -690,6 +690,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_endif
 endif|#
 directive|endif
@@ -698,10 +702,6 @@ end_endif
 begin_comment
 comment|/* _OPIE */
 end_comment
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 begin_endif
 endif|#
