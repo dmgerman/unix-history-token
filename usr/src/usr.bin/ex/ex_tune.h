@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	ex_tune.h	7.5	83/07/02	*/
+comment|/*	ex_tune.h	7.6	84/04/10	*/
 end_comment
 
 begin_comment
@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|TAGSIZE
-value|32
+value|128
 end_define
 
 begin_comment

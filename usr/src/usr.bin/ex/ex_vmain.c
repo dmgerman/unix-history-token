@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	7.3	%G%"
+literal|"@(#)ex_vmain.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3111,6 +3111,24 @@ operator|*
 name|cp
 operator|==
 literal|'_'
+ifdef|#
+directive|ifdef
+name|LISPCODE
+operator|||
+operator|(
+name|value
+argument_list|(
+name|LISP
+argument_list|)
+operator|&&
+operator|*
+name|cp
+operator|==
+literal|'-'
+operator|)
+endif|#
+directive|endif
+endif|LISPCODE
 condition|)
 do|;
 operator|*
