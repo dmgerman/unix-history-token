@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_quota.c	8.2 (Berkeley) 12/30/93  * $Id: ufs_quota.c,v 1.4 1994/10/08 06:57:27 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_quota.c	8.2 (Berkeley) 12/30/93  * $Id: ufs_quota.c,v 1.5 1995/05/30 08:15:36 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -95,6 +95,155 @@ init|=
 name|INITQFNAMES
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|chkdqchg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|,
+name|long
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|chkiqchg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|,
+name|long
+operator|,
+expr|struct
+name|ucred
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dqget
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|u_long
+operator|,
+expr|struct
+name|ufsmount
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|dquot
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dqref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|dquot
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dqsync
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|dquot
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dqflush
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|chkdquot
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Set up the quotas for an inode.  *  * This routine completely defines the semantics of quotas.  * If other criterion want to be used to establish quotas, the  * MAXQUOTAS value in quotas.h should be increased, and the  * additional dquots set up here.  */
@@ -601,6 +750,7 @@ comment|/*  * Check for a valid change to a users allocation.  * Issue an error 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|chkdqchg
 parameter_list|(
@@ -1245,6 +1395,7 @@ comment|/*  * Check for a valid change to a users allocation.  * Issue an error 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|chkiqchg
 parameter_list|(
@@ -1539,6 +1690,7 @@ comment|/*  * On filesystems with quotas enabled, it is an error for a file to c
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|chkdquot
 parameter_list|(
@@ -3473,6 +3625,7 @@ comment|/*  * Code pertaining to management of the in-core dquot data structures
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dquot
 modifier|*
@@ -3482,6 +3635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|dqhash
 decl_stmt|;
@@ -3503,6 +3657,7 @@ comment|/* minimum free dquots desired */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dquot
 modifier|*
@@ -3518,6 +3673,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|long
 name|numdquot
 decl_stmt|,
@@ -3556,6 +3712,7 @@ comment|/*  * Obtain a dquot structure for the specified identifier and quota fi
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dqget
 parameter_list|(
@@ -4375,6 +4532,7 @@ comment|/*  * Obtain a reference to a dquot.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dqref
 parameter_list|(
@@ -4523,6 +4681,7 @@ comment|/*  * Update the disk quota in the quota file.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dqsync
 parameter_list|(
@@ -4869,6 +5028,7 @@ comment|/*  * Flush all entries from the cache for a particular vnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|dqflush
 parameter_list|(
