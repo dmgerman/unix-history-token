@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -597,6 +597,10 @@ operator|,
 name|daddr_t
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -624,14 +628,20 @@ name|getnewbuf
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
+name|slpflag
+operator|,
+name|int
+name|slptimeo
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|struct
+name|buf
+modifier|*
 name|incore
 name|__P
 argument_list|(
@@ -678,7 +688,7 @@ begin_define
 define|#
 directive|define
 name|B_WRITE
-value|0x000000
+value|0x00000000
 end_define
 
 begin_comment
@@ -689,7 +699,7 @@ begin_define
 define|#
 directive|define
 name|B_READ
-value|0x000001
+value|0x00000001
 end_define
 
 begin_comment
@@ -700,7 +710,7 @@ begin_define
 define|#
 directive|define
 name|B_DONE
-value|0x000002
+value|0x00000002
 end_define
 
 begin_comment
@@ -711,7 +721,7 @@ begin_define
 define|#
 directive|define
 name|B_ERROR
-value|0x000004
+value|0x00000004
 end_define
 
 begin_comment
@@ -722,7 +732,7 @@ begin_define
 define|#
 directive|define
 name|B_BUSY
-value|0x000008
+value|0x00000008
 end_define
 
 begin_comment
@@ -733,7 +743,7 @@ begin_define
 define|#
 directive|define
 name|B_PHYS
-value|0x000010
+value|0x00000010
 end_define
 
 begin_comment
@@ -744,7 +754,7 @@ begin_define
 define|#
 directive|define
 name|B_XXX
-value|0x000020
+value|0x00000020
 end_define
 
 begin_comment
@@ -755,7 +765,7 @@ begin_define
 define|#
 directive|define
 name|B_WANTED
-value|0x000040
+value|0x00000040
 end_define
 
 begin_comment
@@ -766,7 +776,7 @@ begin_define
 define|#
 directive|define
 name|B_AGE
-value|0x000080
+value|0x00000080
 end_define
 
 begin_comment
@@ -777,7 +787,7 @@ begin_define
 define|#
 directive|define
 name|B_ASYNC
-value|0x000100
+value|0x00000100
 end_define
 
 begin_comment
@@ -788,7 +798,7 @@ begin_define
 define|#
 directive|define
 name|B_DELWRI
-value|0x000200
+value|0x00000200
 end_define
 
 begin_comment
@@ -799,7 +809,7 @@ begin_define
 define|#
 directive|define
 name|B_TAPE
-value|0x000400
+value|0x00000400
 end_define
 
 begin_comment
@@ -810,7 +820,7 @@ begin_define
 define|#
 directive|define
 name|B_UAREA
-value|0x000800
+value|0x00000800
 end_define
 
 begin_comment
@@ -821,7 +831,7 @@ begin_define
 define|#
 directive|define
 name|B_PAGET
-value|0x001000
+value|0x00001000
 end_define
 
 begin_comment
@@ -832,7 +842,7 @@ begin_define
 define|#
 directive|define
 name|B_DIRTY
-value|0x002000
+value|0x00002000
 end_define
 
 begin_comment
@@ -843,7 +853,7 @@ begin_define
 define|#
 directive|define
 name|B_PGIN
-value|0x004000
+value|0x00004000
 end_define
 
 begin_comment
@@ -854,7 +864,7 @@ begin_define
 define|#
 directive|define
 name|B_CACHE
-value|0x008000
+value|0x00008000
 end_define
 
 begin_comment
@@ -865,7 +875,7 @@ begin_define
 define|#
 directive|define
 name|B_INVAL
-value|0x010000
+value|0x00010000
 end_define
 
 begin_comment
@@ -876,7 +886,7 @@ begin_define
 define|#
 directive|define
 name|B_LOCKED
-value|0x020000
+value|0x00020000
 end_define
 
 begin_comment
@@ -887,7 +897,7 @@ begin_define
 define|#
 directive|define
 name|B_HEAD
-value|0x040000
+value|0x00040000
 end_define
 
 begin_comment
@@ -898,7 +908,7 @@ begin_define
 define|#
 directive|define
 name|B_GATHERED
-value|0x080000
+value|0x00080000
 end_define
 
 begin_comment
@@ -909,7 +919,7 @@ begin_define
 define|#
 directive|define
 name|B_BAD
-value|0x100000
+value|0x00100000
 end_define
 
 begin_comment
@@ -920,7 +930,7 @@ begin_define
 define|#
 directive|define
 name|B_CALL
-value|0x200000
+value|0x00200000
 end_define
 
 begin_comment
@@ -931,7 +941,7 @@ begin_define
 define|#
 directive|define
 name|B_RAW
-value|0x400000
+value|0x00400000
 end_define
 
 begin_comment
@@ -942,11 +952,44 @@ begin_define
 define|#
 directive|define
 name|B_NOCACHE
-value|0x800000
+value|0x00800000
 end_define
 
 begin_comment
 comment|/* do not cache block after use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_WRITEINPROG
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* write in progress on buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_APPENDWRITE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* append-write in progress on buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_EINTR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* I/O was interrupted */
 end_comment
 
 begin_define
