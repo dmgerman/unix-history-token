@@ -169,7 +169,7 @@ typedef|typedef
 name|void
 function_decl|(
 modifier|*
-name|__dlfunc_t
+name|dlfunc_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -253,7 +253,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__dlfunc_t
+name|dlfunc_t
 name|dlfunc
 parameter_list|(
 name|void

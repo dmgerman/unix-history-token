@@ -14,7 +14,7 @@ comment|/*  * Implement the dlfunc() interface, which behaves exactly the same a
 end_comment
 
 begin_function
-name|__dlfunc_t
+name|dlfunc_t
 name|dlfunc
 parameter_list|(
 name|void
@@ -33,7 +33,7 @@ name|void
 modifier|*
 name|d
 decl_stmt|;
-name|__dlfunc_t
+name|dlfunc_t
 name|f
 decl_stmt|;
 block|}
