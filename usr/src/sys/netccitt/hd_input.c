@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_input.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)hd_input.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1467,6 +1467,14 @@ expr_stmt|;
 name|fbuf
 operator|->
 name|m_len
+operator|-=
+name|HDHEADERLN
+expr_stmt|;
+name|fbuf
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 operator|-=
 name|HDHEADERLN
 expr_stmt|;
