@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.51 (Berkeley) %G%"
+literal|"@(#)main.c	6.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* saved user environment */
+end_comment
+
+begin_decl_stmt
+name|char
+name|RealUserName
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the actual user id on this host */
 end_comment
 
 begin_comment
@@ -433,12 +446,6 @@ name|stat
 name|stb
 decl_stmt|;
 name|char
-name|realuser
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|char
 name|jbuf
 index|[
 name|MAXHOSTNAMELEN
@@ -512,7 +519,7 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
-name|getrealhostname
+name|getauthinfo
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -925,7 +932,7 @@ name|void
 operator|)
 name|strcpy
 argument_list|(
-name|realuser
+name|RealUserName
 argument_list|,
 name|pw
 operator|->
@@ -938,7 +945,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|realuser
+name|RealUserName
 argument_list|,
 literal|"Unknown UID %d"
 argument_list|,
@@ -1743,33 +1750,24 @@ end_comment
 begin_expr_stmt
 name|p
 operator|=
-name|getrealhostname
+name|getauthinfo
 argument_list|(
 name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-name|RealHostName
-operator|=
-name|newstr
+begin_expr_stmt
+name|define
 argument_list|(
+literal|'_'
+argument_list|,
 name|p
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
-else|else
-name|RealHostName
-operator|=
-literal|"localhost"
-expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* 	** Crack argv. 	*/
@@ -2048,7 +2046,7 @@ name|CurEnv
 argument_list|,
 literal|"Processed by %s with -C %s"
 argument_list|,
-name|realuser
+name|RealUserName
 argument_list|,
 name|optarg
 argument_list|)
@@ -2122,7 +2120,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|realuser
+name|RealUserName
 argument_list|,
 name|from
 argument_list|)
@@ -2135,7 +2133,7 @@ name|CurEnv
 argument_list|,
 literal|"%s set sender to %s using -%c"
 argument_list|,
-name|realuser
+name|RealUserName
 argument_list|,
 name|from
 argument_list|,
@@ -2822,7 +2820,7 @@ name|CurEnv
 argument_list|,
 literal|"%s owned process doing -bs"
 argument_list|,
-name|realuser
+name|RealUserName
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3944,6 +3942,26 @@ operator|)
 name|newenvelope
 argument_list|(
 name|CurEnv
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+comment|/* 		**  Get authentication data 		*/
+name|p
+operator|=
+name|getauthinfo
+argument_list|(
+name|fileno
+argument_list|(
+name|InChannel
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'_'
+argument_list|,
+name|p
 argument_list|,
 name|CurEnv
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.28 (Berkeley) %G%"
+literal|"@(#)headers.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1678,6 +1678,12 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|bitset
@@ -1693,6 +1699,23 @@ name|name
 operator|=
 literal|"[RESPONSE]"
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|name
+operator|=
+name|macvalue
+argument_list|(
+literal|'_'
+argument_list|,
+name|e
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+empty_stmt|;
 elseif|else
 if|if
 condition|(

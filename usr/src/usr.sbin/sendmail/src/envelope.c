@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.28 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1714,6 +1714,36 @@ condition|)
 block|{
 name|char
 modifier|*
+name|p
+decl_stmt|;
+name|char
+name|ebuf
+index|[
+name|MAXNAME
+operator|*
+literal|2
+operator|+
+literal|2
+index|]
+decl_stmt|;
+name|p
+operator|=
+name|macvalue
+argument_list|(
+literal|'_'
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|char
+modifier|*
 name|host
 init|=
 name|RealHostName
@@ -1728,17 +1758,34 @@ name|host
 operator|=
 name|MyHostName
 expr_stmt|;
-name|syslog
+operator|(
+name|void
+operator|)
+name|sprintf
 argument_list|(
-name|LOG_NOTICE
+name|ebuf
 argument_list|,
-literal|"from=%s unparseable, received from %s@%s"
-argument_list|,
-name|from
+literal|"%s@%s"
 argument_list|,
 name|realname
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|ebuf
+expr_stmt|;
+block|}
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"from=%s unparseable, received from %s"
+argument_list|,
+name|from
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
