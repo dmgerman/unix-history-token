@@ -276,6 +276,7 @@ block|{
 name|u_int
 name|bn_bit
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|bn_name
