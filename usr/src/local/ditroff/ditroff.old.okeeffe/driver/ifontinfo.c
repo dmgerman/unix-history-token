@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"ifontinfo.c	1.1	(Berkeley)	83/08/17"
+literal|"ifontinfo.c	1.2	(Berkeley)	83/10/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|unsigned
 name|char
 modifier|*
 name|idstrings
@@ -67,7 +66,6 @@ comment|/* place for identifying strings */
 end_comment
 
 begin_decl_stmt
-name|unsigned
 name|char
 modifier|*
 name|endstring
@@ -150,11 +148,9 @@ comment|/* function makes strings for ascii */
 end_comment
 
 begin_decl_stmt
-name|int
+name|FILE
+modifier|*
 name|FID
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +162,7 @@ begin_decl_stmt
 name|char
 name|defascii
 index|[
-literal|256
+name|DIRSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -439,9 +435,9 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|error
 argument_list|(
-literal|"Bad flag: %s\n"
+literal|"bad flag: %s"
 argument_list|,
 name|argv
 index|[
@@ -463,12 +459,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s filename"
+literal|"usage: %s filename"
 argument_list|,
 name|argv
 index|[
@@ -476,12 +469,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -490,7 +477,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|256
+name|DIRSIZ
 condition|;
 name|i
 operator|++
@@ -534,38 +521,37 @@ condition|(
 operator|(
 name|FID
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|argv
 index|[
 literal|1
 index|]
 argument_list|,
-literal|0
+literal|"r"
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 if|if
 condition|(
 operator|(
 name|FID
 operator|=
-name|open
+name|fopen
 argument_list|(
 name|IName
 argument_list|,
-literal|0
+literal|"r"
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
-block|{
-name|printf
+name|error
 argument_list|(
-literal|"Can't find %s\n"
+literal|"can't find %s"
 argument_list|,
 name|argv
 index|[
@@ -573,28 +559,28 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
+for|for
+control|(
 name|i
 operator|=
-name|read
-argument_list|(
-name|FID
-argument_list|,
-operator|&
+literal|0
+init|;
+name|i
+operator|<
+name|FMARK
+condition|;
 name|filemark
 index|[
-literal|0
+name|i
+operator|++
 index|]
-argument_list|,
-name|FMARK
+operator|=
+name|getc
+argument_list|(
+name|FID
 argument_list|)
-expr_stmt|;
+control|)
+empty_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -605,14 +591,10 @@ literal|"Rast"
 argument_list|,
 literal|4
 argument_list|)
-operator|||
-name|i
-operator|!=
-name|FMARK
 condition|)
 name|error
 argument_list|(
-literal|"Bad File Mark in Font file."
+literal|"bad File Mark in Font file."
 argument_list|)
 expr_stmt|;
 name|p
@@ -637,7 +619,7 @@ name|p_version
 condition|)
 name|error
 argument_list|(
-literal|"Wrong version of Font file."
+literal|"wrong version of Font file."
 argument_list|)
 expr_stmt|;
 name|p
@@ -734,7 +716,7 @@ name|RES
 condition|)
 name|error
 argument_list|(
-literal|"Wrong resolution in Font file."
+literal|"wrong resolution in Font file."
 argument_list|)
 expr_stmt|;
 name|i
@@ -748,7 +730,6 @@ expr_stmt|;
 name|idstrings
 operator|=
 operator|(
-name|unsigned
 name|char
 operator|*
 operator|)
@@ -760,25 +741,32 @@ expr_stmt|;
 name|endstring
 operator|=
 name|idstrings
-operator|+
-name|i
 expr_stmt|;
+while|while
+condition|(
+name|i
+operator|--
+condition|)
 if|if
 condition|(
-name|read
+operator|(
+operator|*
+operator|(
+name|endstring
+operator|++
+operator|)
+operator|=
+name|getc
 argument_list|(
 name|FID
-argument_list|,
-name|idstrings
-argument_list|,
-name|i
 argument_list|)
-operator|!=
-name|i
+operator|)
+operator|==
+name|EOF
 condition|)
 name|error
 argument_list|(
-literal|"Bad preamble in Font file."
+literal|"bad preamble in Font file."
 argument_list|)
 expr_stmt|;
 for|for
@@ -983,10 +971,15 @@ argument_list|)
 expr_stmt|;
 name|putchar
 argument_list|(
-literal|'\n'
+literal|':'
 argument_list|)
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1171,7 +1164,10 @@ name|g_width
 expr_stmt|;
 name|lseek
 argument_list|(
+name|fileno
+argument_list|(
 name|FID
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -1183,7 +1179,10 @@ argument_list|)
 expr_stmt|;
 name|read
 argument_list|(
+name|fileno
+argument_list|(
 name|FID
+argument_list|)
 argument_list|,
 name|charbits
 argument_list|,
@@ -1310,10 +1309,22 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*VARARGS1*/
+end_comment
+
 begin_macro
 name|error
 argument_list|(
 argument|string
+argument_list|,
+argument|a1
+argument_list|,
+argument|a2
+argument_list|,
+argument|a3
+argument_list|,
+argument|a4
 argument_list|)
 end_macro
 
@@ -1326,11 +1337,33 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"\nifontinfo: %s\n"
+name|stderr
+argument_list|,
+literal|"ifontinfo: "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
 name|string
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|,
+name|a4
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2523,33 +2556,28 @@ end_macro
 
 begin_block
 block|{
-name|unsigned
-name|char
+name|int
 name|i
 decl_stmt|;
 if|if
 condition|(
-name|read
+operator|(
+name|i
+operator|=
+name|getc
 argument_list|(
 name|FID
-argument_list|,
-operator|&
-name|i
-argument_list|,
-literal|1
 argument_list|)
-operator|!=
-literal|1
+operator|)
+operator|==
+name|EOF
 condition|)
 name|error
 argument_list|(
-literal|"File read error"
+literal|"file read error"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|int
-operator|)
 name|i
 return|;
 block|}
