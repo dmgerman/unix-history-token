@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.3 (Berkeley) %G%"
+literal|"@(#)popen.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -52,7 +58,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uid_t
+name|int
 modifier|*
 name|pids
 decl_stmt|;
@@ -144,6 +150,10 @@ decl_stmt|,
 modifier|*
 name|strtok
 argument_list|()
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -191,12 +201,11 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 operator|(
 name|pids
 operator|=
 operator|(
-name|uid_t
+name|int
 operator|*
 operator|)
 name|malloc
@@ -209,11 +218,13 @@ name|fds
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uid_t
+name|int
 argument_list|)
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -222,13 +233,17 @@ operator|)
 return|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|pids
 argument_list|,
 name|fds
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uid_t
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -661,7 +676,7 @@ block|}
 end_block
 
 begin_macro
-name|pclose
+name|ftpd_pclose
 argument_list|(
 argument|iop
 argument_list|)
@@ -680,21 +695,23 @@ specifier|register
 name|int
 name|fdes
 decl_stmt|;
-name|long
+name|int
 name|omask
+decl_stmt|;
+name|union
+name|wait
+name|stat_loc
 decl_stmt|;
 name|int
 name|pid
-decl_stmt|,
-name|stat_loc
 decl_stmt|;
-name|u_int
-name|waitpid
-parameter_list|()
-function_decl|;
 comment|/* 	 * pclose returns -1 if stream is not associated with a 	 * `popened' command, or, if already `pclosed'. 	 */
 if|if
 condition|(
+name|pids
+operator|==
+literal|0
+operator|||
 name|pids
 index|[
 name|fdes
@@ -781,7 +798,17 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
+name|pid
+operator|==
+operator|-
+literal|1
+condition|?
+operator|-
+literal|1
+else|:
 name|stat_loc
+operator|.
+name|w_status
 operator|)
 return|;
 block|}

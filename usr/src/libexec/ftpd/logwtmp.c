@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logwtmp.c	5.2 (Berkeley) %G%"
+literal|"@(#)logwtmp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,8 +69,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|fd
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Modified version of logwtmp that holds wtmp file open  * after first call, for use with ftp (which may chroot  * after login, but before logout).  */
+end_comment
 
 begin_macro
 name|logwtmp
@@ -117,8 +124,9 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
-operator|!
 name|fd
+operator|<
+literal|0
 operator|&&
 operator|(
 name|fd
@@ -140,7 +148,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
 name|fstat
 argument_list|(
 name|fd
@@ -148,6 +155,8 @@ argument_list|,
 operator|&
 name|buf
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 operator|(
