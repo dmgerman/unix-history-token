@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|esis_config
 argument_list|()
 decl_stmt|,
@@ -3030,12 +3030,10 @@ begin_comment
 comment|/*  * FUNCTION:		esis_config  *  * PURPOSE:			Report configuration  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			Called every esis_config_time seconds  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|esis_config
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -3170,7 +3168,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		esis_shoutput  *  * PURPOSE:			Transmit an esh or ish pdu  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
