@@ -103,6 +103,14 @@ name|int
 name|flag
 decl_stmt|;
 block|{
+name|c
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
+name|c
+expr_stmt|;
 if|if
 condition|(
 name|isgraph
