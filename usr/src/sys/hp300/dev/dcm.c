@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.1 90/07/09$  *  *	@(#)dcm.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.26 91/01/21$  *  *	@(#)dcm.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1090,6 +1090,9 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* can't debug over console port */
+ifndef|#
+directive|ifndef
+name|KGDB_CHEAT
 comment|/* 		 * The following could potentially be replaced 		 * by the corresponding code in dcmcnprobe. 		 */
 else|else
 block|{
@@ -1137,6 +1140,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* end could be replaced */
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
@@ -5809,11 +5814,12 @@ operator|++
 control|)
 if|if
 condition|(
+name|HW_ISDEV
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|==
-name|COMMDCM
+argument_list|,
+name|D_COMMDCM
+argument_list|)
 operator|&&
 operator|!
 name|badaddr
@@ -5824,17 +5830,19 @@ operator|*
 operator|)
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 argument_list|)
 condition|)
 break|break;
 if|if
 condition|(
+operator|!
+name|HW_ISDEV
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|!=
-name|COMMDCM
+argument_list|,
+name|D_COMMDCM
+argument_list|)
 condition|)
 block|{
 name|cp
@@ -5864,7 +5872,7 @@ operator|*
 operator|)
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 expr_stmt|;
 comment|/* initialize required fields */
 name|cp
@@ -5975,7 +5983,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|notdef
+name|KGDB_CHEAT
 comment|/* 	 * This doesn't currently work, at least not with ite consoles; 	 * the console hasn't been initialized yet. 	 */
 if|if
 condition|(
