@@ -5132,7 +5132,7 @@ literal|16
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"<0x%x>"
+literal|"<0x%lx>"
 argument_list|,
 name|signed_immediate
 operator|+
