@@ -894,6 +894,10 @@ operator|.
 name|first_object
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|debug_mpsafevm
+condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
