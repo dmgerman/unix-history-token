@@ -504,17 +504,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|AcpiDmDecodeNode
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|UINT32
 name|AcpiDmBlockType
 parameter_list|(
