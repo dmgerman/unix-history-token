@@ -359,7 +359,7 @@ name|panic
 parameter_list|(
 name|param
 parameter_list|)
-value|{ printf(param); exit(-1); }
+value|{ printf(param); exit(1); }
 end_define
 
 begin_endif
