@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)value.h	3.2 83/12/06  */
+comment|/*  *	@(#)value.h	3.3 84/01/12  */
 end_comment
 
 begin_struct
@@ -59,6 +59,16 @@ define|#
 directive|define
 name|V_ERR
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|val_free
+parameter_list|(
+name|v
+parameter_list|)
+value|((v).v_type == V_STR ? str_free((v).v_str) : 0)
 end_define
 
 end_unit
