@@ -271,6 +271,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|realsectorsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bytes/sector in hardware*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|rpm
 decl_stmt|;
 end_decl_stmt
@@ -1077,9 +1088,13 @@ name|wtfs
 argument_list|(
 name|fssize
 operator|-
-literal|1
+operator|(
+name|realsectorsize
+operator|/
+name|DEV_BSIZE
+operator|)
 argument_list|,
-name|sectorsize
+name|realsectorsize
 argument_list|,
 operator|(
 name|char

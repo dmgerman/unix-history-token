@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.94 1996/09/06 23:09:18 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.95 1996/09/14 04:31:09 bde Exp $  */
 end_comment
 
 begin_include
@@ -1389,26 +1389,52 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Load the physical device parameters 	 */
+if|#
+directive|if
+literal|0
+block|sd_get_parms(unit, 0);
+comment|/* sets SDEV_MEDIA_LOADED */
+block|if (sd->params.secsiz != SECSIZE) {
+comment|/* XXX One day... */
+block|printf("sd%ld: Can't deal with %d bytes logical blocks\n", 		    unit, sd->params.secsiz); 		Debugger("sd"); 		errcode = ENXIO; 		goto bad; 	}
+else|#
+directive|else
+if|if
+condition|(
+name|errcode
+operator|=
 name|sd_get_parms
 argument_list|(
 name|unit
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* sets SDEV_MEDIA_LOADED */
-if|if
+goto|goto
+name|bad
+goto|;
+switch|switch
 condition|(
 name|sd
 operator|->
 name|params
 operator|.
 name|secsiz
-operator|!=
-name|SECSIZE
 condition|)
 block|{
-comment|/* XXX One day... */
+case|case
+name|SECSIZE
+case|:
+comment|/* 512 */
+case|case
+literal|1024
+case|:
+case|case
+literal|2048
+case|:
+break|break;
+default|default:
 name|printf
 argument_list|(
 literal|"sd%ld: Can't deal with %d bytes logical blocks\n"
@@ -1435,6 +1461,8 @@ goto|goto
 name|bad
 goto|;
 block|}
+endif|#
+directive|endif
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -1788,6 +1816,8 @@ name|sd
 decl_stmt|;
 name|u_int32_t
 name|unit
+decl_stmt|,
+name|secsize
 decl_stmt|;
 name|sdstrats
 operator|++
@@ -1841,6 +1871,16 @@ operator|&
 name|sd_switch
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Odd number of bytes or negative offset 	 */
+block|if (bp->b_blkno< 0 || bp->b_bcount % DEV_BSIZE != 0) { 		bp->b_error = EINVAL; 		goto bad; 	}
+comment|/* 	 * Do bounds checking, adjust transfer, set b_cylin and b_pbklno. 	 */
+block|if (dscheck(bp, sd->dk_slices)<= 0) 		goto done;
+comment|/* XXX check b_resid */
+else|#
+directive|else
 comment|/* 	 * Odd number of bytes or negative offset 	 */
 if|if
 condition|(
@@ -1849,12 +1889,49 @@ operator|->
 name|b_blkno
 operator|<
 literal|0
-operator|||
+condition|)
+block|{
 name|bp
 operator|->
-name|b_bcount
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sd_strategy: Negative block number: 0x%x\n"
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+name|secsize
+operator|=
+name|sd
+operator|->
+name|params
+operator|.
+name|secsiz
+expr_stmt|;
+comment|/* make sure the blkno is scalable */
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_blkno
 operator|%
+operator|(
+name|secsize
+operator|/
 name|DEV_BSIZE
+operator|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -1865,13 +1942,99 @@ name|b_error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"sd_strategy: Block number is not multiple of sector size (2): 0x%x\n"
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* make sure that the transfer size is a multiple of the sector size */
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_bcount
+operator|%
+name|secsize
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sd_strategy: Invalid b_bcount %d at block number: 0x%x\n"
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
 comment|/* 	 * Do bounds checking, adjust transfer, set b_cylin and b_pbklno. 	 */
-if|if
-condition|(
+block|{
+name|int
+name|status
+decl_stmt|;
+name|int
+name|sec_blk_ratio
+init|=
+name|secsize
+operator|/
+name|DEV_BSIZE
+decl_stmt|;
+comment|/* save original block number and size */
+name|int
+name|b_blkno
+init|=
+name|bp
+operator|->
+name|b_blkno
+decl_stmt|;
+name|int
+name|b_bcount
+init|=
+name|bp
+operator|->
+name|b_bcount
+decl_stmt|;
+comment|/* replace with scaled values */
+name|bp
+operator|->
+name|b_blkno
+operator|/=
+name|sec_blk_ratio
+expr_stmt|;
+name|bp
+operator|->
+name|b_bcount
+operator|/=
+name|sec_blk_ratio
+expr_stmt|;
+comment|/* enforce limits and map to physical block number */
+name|status
+operator|=
 name|dscheck
 argument_list|(
 name|bp
@@ -1880,6 +2043,31 @@ name|sd
 operator|->
 name|dk_slices
 argument_list|)
+expr_stmt|;
+comment|/* prevent bad side effects in block system */
+name|bp
+operator|->
+name|b_blkno
+operator|=
+name|b_blkno
+expr_stmt|;
+name|bp
+operator|->
+name|b_bcount
+operator|=
+name|b_bcount
+expr_stmt|;
+comment|/* scale resid */
+name|bp
+operator|->
+name|b_resid
+operator|*=
+name|sec_blk_ratio
+expr_stmt|;
+comment|/* see if the mapping failed */
+if|if
+condition|(
+name|status
 operator|<=
 literal|0
 condition|)
@@ -1887,6 +2075,9 @@ goto|goto
 name|done
 goto|;
 comment|/* XXX check b_resid */
+block|}
+endif|#
+directive|endif
 name|opri
 operator|=
 name|SPLSD
@@ -2062,6 +2253,8 @@ name|u_int32_t
 name|blkno
 decl_stmt|,
 name|nblk
+decl_stmt|,
+name|secsize
 decl_stmt|;
 name|SC_DEBUG
 argument_list|(
@@ -2143,6 +2336,14 @@ name|bad
 goto|;
 block|}
 comment|/* 		 * We have a buf, now we know we are going to go through 		 * With this thing.. 		 */
+name|secsize
+operator|=
+name|sd
+operator|->
+name|params
+operator|.
+name|secsiz
+expr_stmt|;
 name|blkno
 operator|=
 name|bp
@@ -2156,7 +2357,7 @@ operator|->
 name|b_bcount
 operator|&
 operator|(
-name|SECSIZE
+name|secsize
 operator|-
 literal|1
 operator|)
@@ -2171,8 +2372,8 @@ operator|=
 name|bp
 operator|->
 name|b_bcount
-operator|>>
-literal|9
+operator|/
+name|secsize
 expr_stmt|;
 comment|/* 		 *  Fill out the scsi command 		 */
 name|cmd
@@ -4351,7 +4552,11 @@ name|datalen
 operator|=
 name|blkcnt
 operator|*
-name|SECSIZE
+name|sd
+operator|->
+name|params
+operator|.
+name|secsiz
 expr_stmt|;
 comment|/* 		 * Pass all this info to the scsi driver. 		 */
 name|retval
@@ -4437,9 +4642,13 @@ name|int
 operator|)
 name|addr
 operator|+=
-name|SECSIZE
-operator|*
 name|blkcnt
+operator|*
+name|sd
+operator|->
+name|params
+operator|.
+name|secsiz
 expr_stmt|;
 comment|/* operator aborting dump? */
 if|if
