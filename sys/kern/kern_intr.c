@@ -129,16 +129,6 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
-end_include
-
-begin_comment
-comment|/* prototype for legacy_setsoftnet */
-end_comment
-
 begin_struct
 struct|struct
 name|int_entropy
