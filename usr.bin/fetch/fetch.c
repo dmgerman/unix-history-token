@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -490,7 +496,7 @@ comment|/* default timeout for HTTP transfers */
 end_comment
 
 begin_decl_stmt
-name|u_char
+name|char
 modifier|*
 name|buf
 decl_stmt|;
@@ -604,11 +610,12 @@ decl_stmt|;
 name|long
 name|elapsed
 decl_stmt|,
+name|eta
+decl_stmt|;
+name|off_t
 name|received
 decl_stmt|,
 name|expected
-decl_stmt|,
-name|eta
 decl_stmt|;
 name|elapsed
 operator|=
@@ -784,8 +791,11 @@ argument_list|,
 sizeof|sizeof
 name|str
 argument_list|,
-literal|"%4d %cB"
+literal|"%4ju %cB"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|bytes
 argument_list|,
 operator|*
@@ -1722,10 +1732,10 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
-name|u_int
+name|unsigned
 name|timeout
 decl_stmt|;
-name|u_char
+name|char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -2098,11 +2108,10 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%lld\n"
+literal|"%jd\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|us
 operator|.
@@ -2281,19 +2290,17 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: size mismatch: expected %lld, actual %lld"
+literal|"%s: size mismatch: expected %jd, actual %jd"
 argument_list|,
 name|URL
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|S_size
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|us
 operator|.
@@ -2398,11 +2405,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"local size / mtime: %lld / %ld\n"
+literal|"local size / mtime: %jd / %ld\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|sb
 operator|.
@@ -2429,11 +2435,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"remote size / mtime: %lld / %ld\n"
+literal|"remote size / mtime: %jd / %ld\n"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|us
 operator|.
@@ -2547,22 +2552,20 @@ block|{
 comment|/* local file too long! */
 name|warnx
 argument_list|(
-literal|"%s: local file (%lld bytes) is longer "
-literal|"than remote file (%lld bytes)"
+literal|"%s: local file (%jd bytes) is longer "
+literal|"than remote file (%jd bytes)"
 argument_list|,
 name|path
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|sb
 operator|.
 name|st_size
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|us
 operator|.
@@ -3380,19 +3383,17 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s appears to be truncated: %lld/%lld bytes"
+literal|"%s appears to be truncated: %jd/%jd bytes"
 argument_list|,
 name|path
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|count
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|us
 operator|.
