@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.11 1995/02/03 10:19:38 ache Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.12 1995/03/16 18:12:05 bde Exp $  */
 end_comment
 
 begin_include
@@ -164,14 +164,23 @@ block|{
 name|unsigned
 name|int
 name|divisor
-init|=
-name|TIMER_CLK
-operator|/
-name|thz
 decl_stmt|;
 name|int
 name|sps
 decl_stmt|;
+if|if
+condition|(
+name|thz
+operator|<=
+literal|0
+condition|)
+return|return;
+name|divisor
+operator|=
+name|TIMER_CLK
+operator|/
+name|thz
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -953,6 +962,17 @@ operator|*=
 name|DENOM_MULT
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|value
+operator|==
+literal|0
+operator|||
+name|sdenom
+operator|==
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|pitch
