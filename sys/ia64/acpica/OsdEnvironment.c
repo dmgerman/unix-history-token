@@ -46,6 +46,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|ia64_acpi_root
 decl_stmt|;

@@ -46,6 +46,7 @@ file|"acpi.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|amd64_acpi_root
 decl_stmt|;

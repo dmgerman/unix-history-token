@@ -45,13 +45,8 @@ directive|include
 file|"acpi.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pc/bios.h>
-end_include
-
 begin_decl_stmt
+specifier|static
 name|u_long
 name|i386_acpi_root
 decl_stmt|;

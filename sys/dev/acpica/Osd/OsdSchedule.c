@@ -270,15 +270,13 @@ directive|ifdef
 name|ACPI_USE_THREADS
 end_ifdef
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|acpi_task_queue
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|acpi_task_queue
 expr_stmt|;
 end_expr_stmt

@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
