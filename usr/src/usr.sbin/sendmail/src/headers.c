@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.29 (Berkeley) %G%"
+literal|"@(#)headers.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4449,7 +4449,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|obp
 argument_list|,
@@ -4485,7 +4485,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|obp
 argument_list|,
