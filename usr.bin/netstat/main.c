@@ -1600,17 +1600,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
 comment|/* 	 * Keep file descriptors open to avoid overhead 	 * of open/close on each call to get* routines. 	 */
-name|sethostent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|setnetent
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+block|sethostent(1); 	setnetent(1);
+else|#
+directive|else
+comment|/* 	 * This does not make sense any more with DNS being default over 	 * the files.  Doing a setXXXXent(1) causes a tcp connection to be 	 * used for the queries, which is slower. 	 */
+endif|#
+directive|endif
 if|if
 condition|(
 name|iflag

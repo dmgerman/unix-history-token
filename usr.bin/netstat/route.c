@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.8 1995/12/05 07:29:15 julian Exp $"
+literal|"$Id: route.c,v 1.9 1996/01/14 23:33:13 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3305,7 +3305,7 @@ name|np
 operator|=
 name|getnetbyaddr
 argument_list|(
-name|net
+name|i
 argument_list|,
 name|AF_INET
 argument_list|)
@@ -3315,7 +3315,7 @@ name|np
 operator|=
 name|getnetbyaddr
 argument_list|(
-name|i
+name|net
 argument_list|,
 name|AF_INET
 argument_list|)
