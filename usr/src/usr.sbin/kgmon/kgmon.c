@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	4.5 83/01/15"
+literal|"@(#)kgmon.c	4.6 83/01/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ name|kflag
 decl_stmt|,
 name|rflag
 decl_stmt|,
-name|sflag
+name|pflag
 decl_stmt|;
 end_decl_stmt
 
@@ -277,7 +277,7 @@ name|mode
 decl_stmt|,
 name|disp
 decl_stmt|,
-name|ronly
+name|openmode
 init|=
 literal|0
 decl_stmt|;
@@ -317,12 +317,20 @@ case|:
 name|bflag
 operator|++
 expr_stmt|;
+name|openmode
+operator|=
+literal|2
+expr_stmt|;
 break|break;
 case|case
 literal|'h'
 case|:
 name|hflag
 operator|++
+expr_stmt|;
+name|openmode
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -331,18 +339,26 @@ case|:
 name|rflag
 operator|++
 expr_stmt|;
+name|openmode
+operator|=
+literal|2
+expr_stmt|;
 break|break;
 case|case
-literal|'s'
+literal|'p'
 case|:
-name|sflag
+name|pflag
 operator|++
+expr_stmt|;
+name|openmode
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Usage: kgmon [ -b -h -r -s system memory ]\n"
+literal|"Usage: kgmon [ -b -h -r -p system memory ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -433,7 +449,7 @@ name|open
 argument_list|(
 name|kmemf
 argument_list|,
-literal|2
+name|openmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -443,13 +459,17 @@ operator|<
 literal|0
 condition|)
 block|{
+name|openmode
+operator|=
+literal|0
+expr_stmt|;
 name|kmem
 operator|=
 name|open
 argument_list|(
 name|kmemf
 argument_list|,
-literal|0
+name|openmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -477,9 +497,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-name|ronly
-operator|++
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -653,13 +670,14 @@ name|mode
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|sflag
+name|pflag
 condition|)
 block|{
 if|if
 condition|(
-name|ronly
+name|openmode
+operator|==
+literal|0
 operator|&&
 name|mode
 operator|==
