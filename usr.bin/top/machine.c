@@ -401,7 +401,7 @@ name|char
 name|smp_header
 index|[]
 init|=
-literal|"  PID %-*.*s PRI NICE  SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s PRI NICE   SIZE    RES STATE  C   TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,7 +410,7 @@ define|#
 directive|define
 name|smp_Proc_format
 define|\
-value|"%5d %-*.*s %3d %3d%7s %6s %-6.6s %1x%7s %5.2f%% %5.2f%% %.*s"
+value|"%5d %-*.*s %3d %4d%7s %6s %-6.6s %1x%7s %5.2f%% %5.2f%% %.*s"
 end_define
 
 begin_decl_stmt
@@ -419,7 +419,7 @@ name|char
 name|up_header
 index|[]
 init|=
-literal|"  PID %-*.*s PRI NICE  SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
+literal|"  PID %-*.*s PRI NICE   SIZE    RES STATE    TIME   WCPU    CPU COMMAND"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +428,7 @@ define|#
 directive|define
 name|up_Proc_format
 define|\
-value|"%5d %-*.*s %3d %3d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.*s"
+value|"%5d %-*.*s %3d %4d%7s %6s %-6.6s%.0d%7s %5.2f%% %5.2f%% %.*s"
 end_define
 
 begin_comment
