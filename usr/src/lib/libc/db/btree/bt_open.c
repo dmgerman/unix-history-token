@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.22 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,11 +619,6 @@ goto|goto
 name|einval
 goto|;
 block|}
-define|#
-directive|define
-name|USEFLAGS
-define|\
-value|(O_CREAT|O_EXCL|O_EXLOCK|O_RDONLY|O_RDWR|O_SHLOCK|O_TRUNC)
 if|if
 condition|(
 operator|(
@@ -637,7 +632,7 @@ name|fname
 argument_list|,
 name|flags
 operator|&
-name|USEFLAGS
+name|__USE_OPEN_FLAGS
 argument_list|,
 name|mode
 argument_list|)
