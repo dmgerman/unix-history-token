@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ls.c,v 1.13 1997/02/22 14:03:59 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Fischbein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ls.c	8.5 (Berkeley) 4/2/94  */
 end_comment
 
 begin_ifndef
@@ -11,8 +11,8 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-name|char
 specifier|const
+name|char
 name|copyright
 index|[]
 init|=
@@ -20,29 +20,14 @@ literal|"@(#) Copyright (c) 1989, 1993, 1994\n\ 	The Regents of the University o
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_decl_stmt
 specifier|static
-name|char
 specifier|const
-name|sccsid
+name|char
+name|rcsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.5 (Berkeley) 4/2/94"
+literal|"$Id: ls.c,v 1.14 1997/03/28 15:24:23 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,12 +444,6 @@ begin_comment
 comment|/* add type character for non-regular files */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD4_4_LITE
-end_ifndef
-
 begin_decl_stmt
 name|int
 name|f_whiteout
@@ -474,11 +453,6 @@ end_decl_stmt
 begin_comment
 comment|/* show whiteout entries */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -651,30 +625,6 @@ name|fts_options
 operator|=
 name|FTS_PHYSICAL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD4_4_LITE
-while|while
-condition|(
-operator|(
-name|ch
-operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|"1ACFLRTacdfgikloqrstu"
-argument_list|)
-operator|)
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-else|#
-directive|else
 while|while
 condition|(
 operator|(
@@ -694,8 +644,6 @@ operator|-
 literal|1
 condition|)
 block|{
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|ch
@@ -904,9 +852,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|BSD4_4_LITE
 case|case
 literal|'W'
 case|:
@@ -915,8 +860,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 case|case
 literal|'?'
@@ -972,9 +915,6 @@ name|fts_options
 operator||=
 name|FTS_COMFOLLOW
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|BSD4_4_LITE
 comment|/* 	 * If -W, show whiteout entries 	 */
 ifdef|#
 directive|ifdef
@@ -987,8 +927,6 @@ name|fts_options
 operator||=
 name|FTS_WHITEOUT
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* If -l or -s, figure out block size. */
@@ -1155,12 +1093,24 @@ name|rval
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|int
 name|output
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* If anything output. */
+end_comment
+
+begin_comment
 comment|/*  * Traverse() walks the logical directory structure specified by the argv list  * in the order specified by the mastercmp() comparison function.  During the  * traversal it passes linked lists of structures to display() which represent  * a superset (may be exact set) of the files to be displayed.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|traverse
@@ -1432,7 +1382,13 @@ literal|"fts_read"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Display() takes a linked list of FTSENT structures and passes the list  * along with any other necessary information to the print function.  P  * points to the parent directory of the display list.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|display
@@ -1448,6 +1404,9 @@ decl_stmt|,
 decl|*
 name|list
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|struct
 name|stat
@@ -2239,7 +2198,13 @@ name|fts_pointer
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Ordering for mastercmp:  * If ordering the argv (fts_level = FTS_ROOTLEVEL) return non-directories  * as larger than directories.  Within either group, use the sort function.  * All other levels use the sort function.  Error entries remain unsorted.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|mastercmp
@@ -2258,6 +2223,9 @@ decl|*
 modifier|*
 name|b
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|int
 name|a_info
@@ -2406,7 +2374,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
