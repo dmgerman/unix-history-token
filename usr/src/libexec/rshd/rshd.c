@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Source: /mit/kerberos/ucb/mit/rshd/RCS/rshd.c,v $  *	$Header: /mit/kerberos/ucb/mit/rshd/RCS/rshd.c,v 5.2 89/07/31 19:30:04 kfall Exp $  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1983, 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -18,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1988 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988, 1089 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.23 (Berkeley) 5/18/89"
+literal|"@(#)rshd.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +50,10 @@ end_endif
 
 begin_comment
 comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/* From:  *	$Source: /mit/kerberos/ucb/mit/rshd/RCS/rshd.c,v $  *	$Header: /mit/kerberos/ucb/mit/rshd/RCS/rshd.c,v 5.2 89/07/31 19:30:04 kfall Exp $  */
 end_comment
 
 begin_comment
@@ -159,6 +159,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|check_all
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|index
@@ -184,6 +192,12 @@ name|error
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|sent_null
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -211,17 +225,10 @@ name|opterr
 decl_stmt|,
 name|optind
 decl_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
 specifier|extern
 name|int
 name|_check_rhosts_file
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|linger
 name|linger
@@ -273,17 +280,17 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
+case|case
+literal|'a'
+case|:
+name|check_all
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
@@ -292,8 +299,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'n'
 case|:
@@ -342,21 +347,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"getpeername"
+literal|"getpeername: %m"
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -1320,12 +1315,19 @@ block|{
 comment|/* 		 * If name returned by gethostbyaddr is in our domain, 		 * attempt to verify that we haven't been fooled by someone 		 * in a remote net; look up the name and check that this 		 * address corresponds to the name. 		 */
 if|if
 condition|(
+name|check_all
+operator|||
+operator|(
+operator|!
+name|use_kerberos
+operator|&&
 name|local_domain
 argument_list|(
 name|hp
 operator|->
 name|h_name
 argument_list|)
+operator|)
 condition|)
 block|{
 name|strncpy
@@ -1381,7 +1383,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Couldn't look up address for your host"
+literal|"Couldn't look up address for your host\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1462,7 +1464,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Host address mismatch"
+literal|"Host address mismatch\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1672,6 +1674,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|sent_null
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|port
@@ -1766,7 +1772,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Try again.\n"
+literal|"Can't fork; try again.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1775,30 +1781,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pv
-index|[
-literal|0
-index|]
-operator|>
-name|s
-condition|)
-name|nfd
-operator|=
-name|pv
-index|[
-literal|0
-index|]
-expr_stmt|;
-else|else
-name|nfd
-operator|=
-name|s
-expr_stmt|;
-name|nfd
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|pid
@@ -1824,17 +1806,6 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|pv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
 name|pv1
 index|[
 literal|1
@@ -1850,14 +1821,6 @@ name|pv2
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-literal|2
 argument_list|)
 expr_stmt|;
 name|des_write
@@ -1893,6 +1856,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1912,7 +1876,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -1937,6 +1900,27 @@ argument_list|,
 operator|&
 name|readfrom
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pv
+index|[
+literal|0
+index|]
+operator|>
+name|s
+condition|)
+name|nfd
+operator|=
+name|pv
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+name|nfd
+operator|=
+name|s
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2020,6 +2004,9 @@ name|one
 argument_list|)
 expr_stmt|;
 comment|/* should set s nbio! */
+name|nfd
+operator|++
+expr_stmt|;
 do|do
 block|{
 name|ready
@@ -2617,6 +2604,31 @@ name|pw_shell
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
+if|if
+condition|(
+name|setlogin
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setlogin() failed: %m"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -2641,38 +2653,6 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
-if|if
-condition|(
-name|setlogname
-argument_list|(
-name|pwd
-operator|->
-name|pw_name
-argument_list|,
-name|strlen
-argument_list|(
-name|pwd
-operator|->
-name|pw_name
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"setlogname() failed: %m"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -2768,10 +2748,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pwd
 operator|->
 name|pw_uid
+operator|==
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -2783,7 +2764,7 @@ name|use_kerberos
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 operator||
 name|LOG_AUTH
 argument_list|,
@@ -2811,7 +2792,7 @@ endif|#
 directive|endif
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 operator||
 name|LOG_AUTH
 argument_list|,
@@ -2856,6 +2837,10 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Report error to client.  * Note: can't be used until second socket has connected  * to client, or older clients will hang waiting  * for that connection first.  */
+end_comment
+
+begin_comment
 comment|/*VARARGS1*/
 end_comment
 
@@ -2896,11 +2881,21 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
+decl_stmt|,
+modifier|*
+name|bp
+init|=
 name|buf
-index|[
+decl_stmt|;
+if|if
+condition|(
+name|sent_null
+operator|==
 literal|0
-index|]
+condition|)
+operator|*
+name|bp
+operator|++
 operator|=
 literal|1
 expr_stmt|;
@@ -2909,9 +2904,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|buf
-operator|+
-literal|1
+name|bp
 argument_list|,
 name|fmt
 argument_list|,
@@ -3036,7 +3029,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check whether host h is in our local domain,  * as determined by the part of the name following  * the first '.' in its name and in ours.  * If either name is unqualified (contains no '.'),  * assume that the host is local, as it will be  * interpreted as such.  */
+comment|/*  * Check whether host h is in our local domain,  * defined as sharing the last two components of the domain part,  * or the entire domain part if the local domain has only one component.  * If either name is unqualified (contains no '.'),  * assume that the host is local, as it will be  * interpreted as such.  */
 end_comment
 
 begin_macro
@@ -3067,14 +3060,18 @@ name|p1
 decl_stmt|,
 modifier|*
 name|p2
-init|=
-name|index
-argument_list|(
-name|h
-argument_list|,
-literal|'.'
-argument_list|)
+decl_stmt|,
+modifier|*
+name|topdomain
+argument_list|()
 decl_stmt|;
+name|localhost
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3090,11 +3087,16 @@ argument_list|)
 expr_stmt|;
 name|p1
 operator|=
-name|index
+name|topdomain
 argument_list|(
 name|localhost
-argument_list|,
-literal|'.'
+argument_list|)
+expr_stmt|;
+name|p2
+operator|=
+name|topdomain
+argument_list|(
+name|h
 argument_list|)
 expr_stmt|;
 if|if
@@ -3128,6 +3130,87 @@ return|;
 block|}
 end_block
 
+begin_function
+name|char
+modifier|*
+name|topdomain
+parameter_list|(
+name|h
+parameter_list|)
+name|char
+modifier|*
+name|h
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|char
+modifier|*
+name|maybe
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|dots
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|h
+operator|+
+name|strlen
+argument_list|(
+name|h
+argument_list|)
+init|;
+name|p
+operator|>=
+name|h
+condition|;
+name|p
+operator|--
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'.'
+condition|)
+block|{
+if|if
+condition|(
+operator|++
+name|dots
+operator|==
+literal|2
+condition|)
+return|return
+operator|(
+name|p
+operator|)
+return|;
+name|maybe
+operator|=
+name|p
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+name|maybe
+operator|)
+return|;
+block|}
+end_function
+
 begin_macro
 name|usage
 argument_list|()
@@ -3138,16 +3221,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: rshd [-ln]"
+literal|"usage: rshd [-aln]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -3156,36 +3234,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: rshd [-n]"
+literal|"usage: rshd [-alknvx]"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-else|#
-directive|else
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"usage: rshd [-lknvx]"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"usage: rshd [-knvx]"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
