@@ -42,6 +42,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_SLPARMS
+value|"/etc/sliphome/slip.slparms"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_LOGIN
 value|"/etc/sliphome/slip.login"
 end_define
