@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.35	81/04/14	*/
+comment|/*	tm.c	4.36	81/04/15	*/
 end_comment
 
 begin_include
@@ -2376,6 +2376,14 @@ index|]
 operator|->
 name|ui_addr
 expr_stmt|;
+name|sc
+operator|=
+operator|&
+name|te_softc
+index|[
+name|teunit
+index|]
+expr_stmt|;
 comment|/* 	 * If last command was a rewind, and tape is still 	 * rewinding, wait for the rewind complete interrupt. 	 */
 if|if
 condition|(
@@ -2404,17 +2412,20 @@ name|tmer
 operator|&
 name|TMER_RWS
 condition|)
+block|{
+name|sc
+operator|->
+name|sc_timo
+operator|=
+literal|5
+operator|*
+literal|60
+expr_stmt|;
+comment|/* 5 minutes */
 return|return;
 block|}
+block|}
 comment|/* 	 * An operation completed... record status 	 */
-name|sc
-operator|=
-operator|&
-name|te_softc
-index|[
-name|teunit
-index|]
-expr_stmt|;
 name|sc
 operator|->
 name|sc_timo
