@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.11 1997/09/19 06:28:57 charnier Exp $"
+literal|"$Id: kbdcontrol.c,v 1.12 1998/01/07 08:43:27 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2779,7 +2779,7 @@ name|L_SCR
 condition|)
 name|printf
 argument_list|(
-literal|" S(%02d),"
+literal|" S(%2d),"
 argument_list|,
 name|value
 operator|-
@@ -2905,7 +2905,7 @@ name|j
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"static keymap_t key_map_%s = { 0x%02x,\n"
+literal|"static keymap_t keymap_%s = { 0x%02x, {\n"
 argument_list|,
 name|name
 argument_list|,
@@ -2919,9 +2919,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"/*                                                            alt\n"
-literal|" * scan                          cntrl          alt    alt   cntrl\n"
-literal|" * code     base   shift  cntrl  shift   alt   shift  cntrl  shift  spcl  flgs\n"
+literal|"/*                                                         alt\n"
+literal|" * scan                       cntrl          alt    alt   cntrl\n"
+literal|" * code  base   shift  cntrl  shift   alt   shift  cntrl  shift    spcl flgs\n"
 literal|" * ---------------------------------------------------------------------------\n"
 literal|" */\n"
 argument_list|)
@@ -2944,7 +2944,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"/* sc=%02x */"
+literal|"/*%02x*/{{"
 argument_list|,
 name|i
 argument_list|)
@@ -3016,7 +3016,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|" 0x%02X, 0x%02X,\n"
+literal|"}, 0x%02X,0x%02X },\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -3046,7 +3046,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"};\n\n"
+literal|"} };\n\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3075,13 +3075,34 @@ name|c
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"static accentmap_t accent_map_%s = { %d,\n  {\n"
+literal|"static accentmap_t accentmap_%s = { %d"
 argument_list|,
 name|name
 argument_list|,
 name|accentmap
 operator|->
 name|n_accs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|accentmap
+operator|->
+name|n_accs
+operator|<=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" };\n\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|", {\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3304,7 +3325,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"  }\n};\n"
+literal|"} };\n\n"
 argument_list|)
 expr_stmt|;
 block|}
