@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	8.2 (Berkeley) 12/13/93  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_page.h,v 1.48 1998/10/28 13:37:02 dg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	8.2 (Berkeley) 12/13/93  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_page.h,v 1.49 1999/01/08 17:31:28 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -62,24 +62,23 @@ argument_list|)
 name|pageq
 expr_stmt|;
 comment|/* queue info for FIFO queue or free list (P) */
-name|TAILQ_ENTRY
-argument_list|(
-argument|vm_page
-argument_list|)
-name|hashq
-expr_stmt|;
-comment|/* hash table links (O) */
+name|struct
+name|vm_page
+modifier|*
+name|hnext
+decl_stmt|;
+comment|/* hash table link (O,P)	*/
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
 name|listq
 expr_stmt|;
-comment|/* pages in same object (O) */
+comment|/* pages in same object (O) 	*/
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* which object am I in (O,P) */
+comment|/* which object am I in (O,P)*/
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
@@ -148,6 +147,32 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * note SWAPBLK_NONE is a flag, basically the high bit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAPBLK_MASK
+value|((daddr_t)((u_daddr_t)-1>> 1))
+end_define
+
+begin_comment
+comment|/* mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAPBLK_NONE
+value|((daddr_t)((u_daddr_t)SWAPBLK_MASK + 1))
+end_define
+
+begin_comment
+comment|/* flag */
+end_comment
 
 begin_comment
 comment|/*  * Page coloring parameters  */
@@ -590,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|PG_BUSY
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -601,7 +626,7 @@ begin_define
 define|#
 directive|define
 name|PG_WANTED
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -612,7 +637,7 @@ begin_define
 define|#
 directive|define
 name|PG_FICTITIOUS
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -623,7 +648,7 @@ begin_define
 define|#
 directive|define
 name|PG_WRITEABLE
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -634,7 +659,7 @@ begin_define
 define|#
 directive|define
 name|PG_MAPPED
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -645,7 +670,7 @@ begin_define
 define|#
 directive|define
 name|PG_ZERO
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -656,7 +681,7 @@ begin_define
 define|#
 directive|define
 name|PG_REFERENCED
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
@@ -667,11 +692,22 @@ begin_define
 define|#
 directive|define
 name|PG_CLEANCHK
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
 comment|/* page will be checked for cleaning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_SWAPINPROG
+value|0x0200
+end_define
+
+begin_comment
+comment|/* swap I/O in progress on page	     */
 end_comment
 
 begin_comment
@@ -999,23 +1035,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	vm_page_flash:  *  *	wakeup anyone waiting for the page.  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
 name|void
-name|vm_page_wakeup
+name|vm_page_flash
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_BUSY
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -1038,6 +1071,35 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_page_wakeup:  *  *	clear the PG_BUSY flag and wakeup anyone waiting for the  *	page.  *  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_page_wakeup
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_BUSY
+argument_list|)
+expr_stmt|;
+name|vm_page_flash
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1088,34 +1150,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_WANTED
-operator|)
-operator|&&
 name|m
 operator|->
 name|busy
 operator|==
 literal|0
 condition|)
-block|{
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_WANTED
-argument_list|)
-expr_stmt|;
-name|wakeup
+name|vm_page_flash
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1268,18 +1313,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|vm_page_deactivate
-name|__P
-argument_list|(
-operator|(
-name|vm_page_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
+name|__inline
 name|void
 name|vm_page_free
 name|__P
@@ -1292,8 +1327,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__inline
 name|void
 name|vm_page_free_zero
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_destroy
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_deactivate
 name|__P
 argument_list|(
 operator|(
@@ -1334,7 +1395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|vm_object_t
 name|vm_page_remove
 name|__P
 argument_list|(
@@ -1559,20 +1620,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|int vm_page_sleep(vm_page_t m, char *msg, char *busy); int vm_page_asleep(vm_page_t m, char *msg, char *busy);
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
-name|int
-name|vm_page_sleep
+name|void
+name|vm_page_free_toq
 parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|char
-modifier|*
-name|msg
-parameter_list|,
-name|char
-modifier|*
-name|busy
+name|int
+name|queue
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1795,6 +1863,166 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_page_free:  *  *	Free a page  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_page_free
+parameter_list|(
+name|m
+parameter_list|)
+name|vm_page_t
+name|m
+decl_stmt|;
+block|{
+name|vm_page_free_toq
+argument_list|(
+name|m
+argument_list|,
+name|PQ_FREE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_page_free_zero:  *  *	Free a page to the zerod-pages queue  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_page_free_zero
+parameter_list|(
+name|m
+parameter_list|)
+name|vm_page_t
+name|m
+decl_stmt|;
+block|{
+name|vm_page_free_toq
+argument_list|(
+name|m
+argument_list|,
+name|PQ_ZERO
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_page_sleep_busy:  *  *	Wait until page is no longer PG_BUSY or (if also_m_busy is TRUE)  *	m->busy is zero.  Returns TRUE if it had to sleep ( including if   *	it almost had to sleep and made temporary spl*() mods), FALSE   *	otherwise.  *  *	This routine assumes that interrupts can only remove the busy  *	status from a page, not set the busy status or change it from  *	PG_BUSY to m->busy or vise versa (which would create a timing  *	window).  *  *	Note that being an inline, this code will be well optimized.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|vm_page_sleep_busy
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|int
+name|also_m_busy
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_BUSY
+operator|)
+operator|||
+operator|(
+name|also_m_busy
+operator|&&
+name|m
+operator|->
+name|busy
+operator|)
+condition|)
+block|{
+name|int
+name|s
+init|=
+name|splvm
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_BUSY
+operator|)
+operator|||
+operator|(
+name|also_m_busy
+operator|&&
+name|m
+operator|->
+name|busy
+operator|)
+condition|)
+block|{
+comment|/* 			 * Page is busy. Wait and retry. 			 */
+name|vm_page_flag_set
+argument_list|(
+name|m
+argument_list|,
+name|PG_WANTED
+operator||
+name|PG_REFERENCED
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+name|m
+argument_list|,
+name|PVM
+argument_list|,
+name|msg
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+comment|/* not reached */
+block|}
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 end_function
 

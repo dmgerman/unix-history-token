@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	8.4 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_fault.c,v 1.92 1999/01/08 17:31:24 eivind Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	8.4 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_fault.c,v 1.93 1999/01/10 01:58:28 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -207,6 +207,7 @@ end_struct
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|release_page
 parameter_list|(
@@ -241,6 +242,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|unlock_map
 parameter_list|(
@@ -743,12 +745,12 @@ name|fs
 operator|.
 name|first_pindex
 expr_stmt|;
-comment|/* 	 * See whether this page is resident 	 */
 while|while
 condition|(
 name|TRUE
 condition|)
 block|{
+comment|/* 		 * If the object is dead, we stop here 		 */
 if|if
 condition|(
 name|fs
@@ -772,6 +774,7 @@ name|KERN_PROTECTION_FAILURE
 operator|)
 return|;
 block|}
+comment|/* 		 * See if page is resident 		 */
 name|fs
 operator|.
 name|m
@@ -801,7 +804,7 @@ name|queue
 decl_stmt|,
 name|s
 decl_stmt|;
-comment|/* 			 * If the page is being brought in, wait for it and 			 * then retry. 			 */
+comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either PG_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaniously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
 if|if
 condition|(
 operator|(
@@ -814,25 +817,11 @@ operator|&
 name|PG_BUSY
 operator|)
 operator|||
-operator|(
 name|fs
 operator|.
 name|m
 operator|->
 name|busy
-operator|&&
-operator|(
-name|fs
-operator|.
-name|m
-operator|->
-name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
-operator|!=
-name|VM_PAGE_BITS_ALL
-operator|)
 condition|)
 block|{
 name|unlock_things
@@ -841,78 +830,24 @@ operator|&
 name|fs
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 operator|(
-name|fs
-operator|.
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
+name|void
 operator|)
-operator|||
-operator|(
-name|fs
-operator|.
-name|m
-operator|->
-name|busy
-operator|&&
-operator|(
-name|fs
-operator|.
-name|m
-operator|->
-name|valid
-operator|&
-name|VM_PAGE_BITS_ALL
-operator|)
-operator|!=
-name|VM_PAGE_BITS_ALL
-operator|)
-condition|)
-block|{
-name|vm_page_flag_set
+name|vm_page_sleep_busy
 argument_list|(
 name|fs
 operator|.
 name|m
 argument_list|,
-name|PG_WANTED
-operator||
-name|PG_REFERENCED
+name|TRUE
+argument_list|,
+literal|"vmpfw"
 argument_list|)
 expr_stmt|;
 name|cnt
 operator|.
 name|v_intrans
 operator|++
-expr_stmt|;
-name|tsleep
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|,
-name|PSWP
-argument_list|,
-literal|"vmpfw"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
@@ -950,57 +885,14 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Mark page busy for other processes, and the pagedaemon. 			 */
-if|if
-condition|(
-operator|(
-operator|(
-name|queue
-operator|-
-name|fs
-operator|.
-name|m
-operator|->
-name|pc
-operator|)
-operator|==
-name|PQ_CACHE
-operator|)
-operator|&&
-operator|(
-name|cnt
-operator|.
-name|v_free_count
-operator|+
-name|cnt
-operator|.
-name|v_cache_count
-operator|)
-operator|<
-name|cnt
-operator|.
-name|v_free_min
-condition|)
-block|{
-name|vm_page_activate
-argument_list|(
-name|fs
-operator|.
-name|m
-argument_list|)
-expr_stmt|;
-name|unlock_and_deallocate
-argument_list|(
-operator|&
-name|fs
-argument_list|)
-expr_stmt|;
-name|VM_WAIT
-expr_stmt|;
-goto|goto
-name|RetryFault
-goto|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* 			 * Code removed.  In a low-memory situation (say, a 			 * memory-bound program is running), the last thing you 			 * do is starve reactivations for other processes. 			 * XXX we need to find a better way. 			 */
+block|if (((queue - fs.m->pc) == PQ_CACHE)&& 			    (cnt.v_free_count + cnt.v_cache_count)< cnt.v_free_min) { 				vm_page_activate(fs.m); 				unlock_and_deallocate(&fs); 				VM_WAIT; 				goto RetryFault; 			}
+endif|#
+directive|endif
+comment|/* 			 * Mark page busy for other processes, and the  			 * pagedaemon.  If it still isn't completely valid 			 * (readable), jump to readrest, else break-out ( we 			 * found the page ). 			 */
 name|vm_page_busy
 argument_list|(
 name|fs
@@ -1047,6 +939,7 @@ goto|;
 block|}
 break|break;
 block|}
+comment|/* 		 * Page is not resident, If this is the search termination, 		 * allocate a new page. 		 */
 if|if
 condition|(
 operator|(
@@ -1167,6 +1060,7 @@ block|}
 block|}
 name|readrest
 label|:
+comment|/* 		 * Have page, but it may not be entirely valid ( or valid at 		 * all ).   If this object is not the default, try to fault-in 		 * the page as well as activate additional pages when 		 * appropriate, and page-in additional pages when appropriate. 		 */
 if|if
 condition|(
 name|fs
@@ -1468,7 +1362,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 */
+comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are PG_BUSY'd. 			 */
 name|faultcount
 operator|=
 name|vm_fault_additional_pages
@@ -1487,7 +1381,7 @@ operator|&
 name|reqpage
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map. 			 */
+comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map.  We hold a ref on 			 * fs.object and the pages are PG_BUSY'd. 			 */
 name|unlock_map
 argument_list|(
 operator|&
@@ -1559,6 +1453,7 @@ name|hardfault
 operator|++
 expr_stmt|;
 break|break;
+comment|/* break to PAGE HAS BEEN FOUND */
 block|}
 comment|/* 			 * Remove the bogus page (which does not exist at this 			 * object/offset); before doing so, we must get back 			 * our object lock to preserve our invariant. 			 * 			 * Also wake up any other process that may want to bring 			 * in this page. 			 * 			 * If this is the top-level object, we must leave the 			 * busy page to prevent another process from rushing 			 * past us, and inserting the page in that object at 			 * the same time that we are. 			 */
 if|if
@@ -1667,7 +1562,7 @@ expr_stmt|;
 comment|/* 				 * XXX - we cannot just fall out at this 				 * point, m has been freed and is invalid! 				 */
 block|}
 block|}
-comment|/* 		 * We get here if the object has default pager (or unwiring) or the 		 * pager doesn't have the page. 		 */
+comment|/* 		 * We get here if the object has default pager (or unwiring)  		 * or the pager doesn't have the page. 		 */
 if|if
 condition|(
 name|fs
@@ -1799,6 +1694,7 @@ name|v_zfod
 operator|++
 expr_stmt|;
 break|break;
+comment|/* break to PAGE HAS BEEN FOUND */
 block|}
 else|else
 block|{
@@ -1821,6 +1717,21 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|fs
+operator|.
+name|object
+operator|!=
+name|next_object
+argument_list|,
+operator|(
+literal|"object loop %p"
+operator|,
+name|next_object
+operator|)
+argument_list|)
+expr_stmt|;
 name|fs
 operator|.
 name|object
@@ -1885,7 +1796,7 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* 			 * This allows pages to be virtually copied from a backing_object 			 * into the first_object, where the backing object has no other 			 * refs to it, and cannot gain any more refs.  Instead of a 			 * bcopy, we just move the page from the backing object to the 			 * first object.  Note that we must mark the page dirty in the 			 * first object so that it will go out to swap when needed. 			 */
+comment|/* 			 * This allows pages to be virtually copied from a  			 * backing_object into the first_object, where the  			 * backing object has no other refs to it, and cannot 			 * gain any more refs.  Instead of a bcopy, we just  			 * move the page from the backing object to the  			 * first object.  Note that we must mark the page  			 * dirty in the first object so that it will go out  			 * to swap when needed. 			 */
 if|if
 condition|(
 name|map_generation
@@ -2042,7 +1953,7 @@ name|first_m
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 				 * grab the page and put it into the process'es object 				 */
+comment|/* 				 * grab the page and put it into the  				 * process'es object.  The page is  				 * automatically made dirty. 				 */
 name|vm_page_rename
 argument_list|(
 name|fs
@@ -2065,14 +1976,6 @@ operator|=
 name|fs
 operator|.
 name|m
-expr_stmt|;
-name|fs
-operator|.
-name|first_m
-operator|->
-name|dirty
-operator|=
-name|VM_PAGE_BITS_ALL
 expr_stmt|;
 name|vm_page_busy
 argument_list|(
@@ -2123,6 +2026,7 @@ name|fs
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * fs.object != fs.first_object due to above  			 * conditional 			 */
 name|vm_object_pip_wakeup
 argument_list|(
 name|fs
@@ -2345,7 +2249,7 @@ operator||
 name|OBJ_MIGHTBEDIRTY
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the fault is a write, we know that this page is being 		 * written NOW. This will save on the pmap_is_modified() calls 		 * later. 		 */
+comment|/* 		 * If the fault is a write, we know that this page is being 		 * written NOW. This will save on the pmap_is_modified() calls 		 * later. 		 * 		 * Also tell the backing pager, if any, that it should remove 		 * any swap backing since the page is now dirty. 		 */
 if|if
 condition|(
 name|fault_flags
@@ -2360,6 +2264,13 @@ operator|->
 name|dirty
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|vm_pager_page_unswapped
+argument_list|(
+name|fs
+operator|.
+name|m
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3294,13 +3205,6 @@ name|vm_pager_has_page
 argument_list|(
 name|object
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
-name|object
-operator|->
-name|paging_offset
-argument_list|)
-operator|+
 name|pindex
 argument_list|,
 operator|&

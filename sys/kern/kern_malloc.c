@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  * $Id: kern_malloc.c,v 1.50 1999/01/08 17:31:09 eivind Exp $  */
+comment|/*  * Copyright (c) 1987, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_malloc.c	8.3 (Berkeley) 1/4/94  * $Id: kern_malloc.c,v 1.51 1999/01/10 01:58:24 eivind Exp $  */
 end_comment
 
 begin_include
@@ -317,7 +317,7 @@ comment|/* INVARIANTS */
 end_comment
 
 begin_comment
-comment|/*  * Allocate a block of memory  */
+comment|/*  *	malloc:  *  *	Allocate a block of memory.  *  *	If M_NOWAIT is set, this routine will not block and return NULL if  *	the allocation fails.  *  *	If M_ASLEEP is set (M_NOWAIT must also be set), this routine  *	will have the side effect of calling asleep() if it returns NULL,  *	allowing the parent to await() at some future time.  */
 end_comment
 
 begin_function
@@ -406,6 +406,12 @@ name|ksp
 init|=
 name|type
 decl_stmt|;
+comment|/* 	 * Must be at splmem() prior to initializing segment to handle 	 * potential initialization race. 	 */
+name|s
+operator|=
+name|splmem
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -413,11 +419,13 @@ name|type
 operator|->
 name|ks_next
 condition|)
+block|{
 name|malloc_init
 argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
+block|}
 name|indx
 operator|=
 name|BUCKETINDX
@@ -433,11 +441,6 @@ index|[
 name|indx
 index|]
 expr_stmt|;
-name|s
-operator|=
-name|splmem
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|ksp
@@ -449,6 +452,45 @@ operator|->
 name|ks_limit
 condition|)
 block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|M_ASLEEP
+condition|)
+block|{
+if|if
+condition|(
+name|ksp
+operator|->
+name|ks_limblocks
+operator|<
+literal|65535
+condition|)
+name|ksp
+operator|->
+name|ks_limblocks
+operator|++
+expr_stmt|;
+name|asleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ksp
+argument_list|,
+name|PSWP
+operator|+
+literal|2
+argument_list|,
+name|type
+operator|->
+name|ks_shortdesc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
@@ -1135,7 +1177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a block of memory allocated by malloc.  */
+comment|/*  *	free:  *  *	Free a block of memory allocated by malloc.  *  *	This routine may not block.  */
 end_comment
 
 begin_function

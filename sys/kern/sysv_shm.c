@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.38 1998/08/24 08:39:38 dfr Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.39 1998/10/13 08:24:40 dg Exp $ */
 end_comment
 
 begin_comment
@@ -123,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_page.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_kern.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_kern.c,v 1.49 1998/08/24 08:39:37 dfr Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_kern.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_kern.c,v 1.50 1998/09/04 08:06:57 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -425,22 +425,23 @@ argument_list|(
 name|mem
 argument_list|)
 expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|mem
-argument_list|,
-operator|(
-name|PG_BUSY
-operator||
-name|PG_ZERO
-operator|)
-argument_list|)
-expr_stmt|;
 name|mem
 operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|vm_page_flag_clear
+argument_list|(
+name|mem
+argument_list|,
+name|PG_ZERO
+argument_list|)
+expr_stmt|;
+name|vm_page_wakeup
+argument_list|(
+name|mem
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * And finally, mark the data as non-pageable. 	 */
@@ -472,7 +473,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_free:  *  *	Release a region of kernel virtual memory allocated  *	with kmem_alloc, and return the physical pages  *	associated with that region.  */
+comment|/*  *	kmem_free:  *  *	Release a region of kernel virtual memory allocated  *	with kmem_alloc, and return the physical pages  *	associated with that region.  *  *	This routine may not block on kernel maps.  */
 end_comment
 
 begin_function
@@ -706,7 +707,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Allocate wired-down memory in the kernel's address map for the higher  * level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * kmem_alloc() because we may need to allocate memory at interrupt  * level where we cannot block (canwait == FALSE).  *  * This routine has its own private kernel submap (kmem_map) and object  * (kmem_object).  This, combined with the fact that only malloc uses  * this routine, ensures that we will never block in map or object waits.  *  * Note that this still only works in a uni-processor environment and  * when called at splhigh().  *  * We don't worry about expanding the map (adding entries) since entries  * for wired maps are statically allocated.  */
+comment|/*  *	kmem_malloc:  *  * 	Allocate wired-down memory in the kernel's address map for the higher  * 	level kernel memory allocator (kern/kern_malloc.c).  We cannot use  * 	kmem_alloc() because we may need to allocate memory at interrupt  * 	level where we cannot block (canwait == FALSE).  *  * 	This routine has its own private kernel submap (kmem_map) and object  * 	(kmem_object).  This, combined with the fact that only malloc uses  * 	this routine, ensures that we will never block in map or object waits.  *  * 	Note that this still only works in a uni-processor environment and  * 	when called at splhigh().  *  * 	We don't worry about expanding the map (adding entries) since entries  * 	for wired maps are statically allocated.  *  *	NOTE:  This routine is not supposed to block if M_NOWAIT is set, but  *	I have not verified that it actually does not block.  */
 end_comment
 
 begin_function
@@ -717,7 +718,7 @@ name|map
 parameter_list|,
 name|size
 parameter_list|,
-name|waitflag
+name|flags
 parameter_list|)
 specifier|register
 name|vm_map_t
@@ -727,8 +728,8 @@ specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
-name|boolean_t
-name|waitflag
+name|int
+name|flags
 decl_stmt|;
 block|{
 specifier|register
@@ -828,9 +829,13 @@ return|;
 block|}
 if|if
 condition|(
-name|waitflag
+operator|(
+name|flags
+operator|&
+name|M_NOWAIT
+operator|)
 operator|==
-name|M_WAITOK
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -896,6 +901,7 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
+comment|/* 		 * Note: if M_NOWAIT specified alone, allocate from  		 * interrupt-safe queues only (just the free list).  If  		 * M_ASLEEP or M_USE_RESERVE is also specified, we can also 		 * allocate from the cache.  Neither of the latter two 		 * flags may be specified from an interrupt since interrupts 		 * are not allowed to mess with the cache queue. 		 */
 name|retry
 label|:
 name|m
@@ -912,7 +918,17 @@ name|i
 argument_list|)
 argument_list|,
 operator|(
-name|waitflag
+operator|(
+name|flags
+operator|&
+operator|(
+name|M_NOWAIT
+operator||
+name|M_ASLEEP
+operator||
+name|M_USE_RESERVE
+operator|)
+operator|)
 operator|==
 name|M_NOWAIT
 operator|)
@@ -932,9 +948,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|waitflag
+operator|(
+name|flags
+operator|&
+name|M_NOWAIT
+operator|)
 operator|==
-name|M_WAITOK
+literal|0
 condition|)
 block|{
 name|VM_WAIT
@@ -990,6 +1010,16 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_ASLEEP
+condition|)
+block|{
+name|VM_AWAIT
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1099,6 +1129,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Because this is kernel_pmap, this call will not block. 		 */
 name|pmap_enter
 argument_list|(
 name|kernel_pmap
@@ -1143,7 +1174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_alloc_wait  *  *	Allocates pageable memory from a sub-map of the kernel.  If the submap  *	has no room, the caller sleeps waiting for more memory in the submap.  *  */
+comment|/*  *	kmem_alloc_wait:  *  *	Allocates pageable memory from a sub-map of the kernel.  If the submap  *	has no room, the caller sleeps waiting for more memory in the submap.  *  *	This routine may block.  */
 end_comment
 
 begin_function
@@ -1285,7 +1316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_free_wakeup  *  *	Returns memory to a submap of the kernel, and wakes up any processes  *	waiting for memory in that map.  */
+comment|/*  *	kmem_free_wakeup:  *  *	Returns memory to a submap of the kernel, and wakes up any processes  *	waiting for memory in that map.  */
 end_comment
 
 begin_function
@@ -1347,7 +1378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create the kernel map; insert a mapping covering kernel text, data, bss,  * and all space allocated thus far (`boostrap' data).  The new map will thus  * map the range between VM_MIN_KERNEL_ADDRESS and `start' as allocated, and  * the range between `start' and `end' as free.  */
+comment|/*  * 	kmem_init:  *  *	Create the kernel map; insert a mapping covering kernel text,   *	data, bss, and all space allocated thus far (`boostrap' data).  The   *	new map will thus map the range between VM_MIN_KERNEL_ADDRESS and   *	`start' as allocated, and the range between `start' and `end' as free.  */
 end_comment
 
 begin_function

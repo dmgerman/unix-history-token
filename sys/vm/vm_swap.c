@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_swap.c	8.5 (Berkeley) 2/17/94  * $Id: vm_swap.c,v 1.56 1998/07/04 22:30:26 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_swap.c	8.5 (Berkeley) 2/17/94  * $Id: vm_swap.c,v 1.57 1998/10/25 19:24:04 bde Exp $  */
 end_comment
 
 begin_include
@@ -99,7 +99,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rlist.h>
+file|<sys/blist.h>
 end_include
 
 begin_include
@@ -289,11 +289,8 @@ name|swapdev_vp
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX swapinfo(8) needs this one I belive */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
 name|nswap
 decl_stmt|;
@@ -438,9 +435,10 @@ name|bp
 operator|->
 name|b_bcount
 argument_list|,
-name|DEV_BSIZE
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Convert interleaved swap into per-device swap.  Note that 	 * the block size is left in PAGE_SIZE'd chunks (for the newswap) 	 * here. 	 */
 if|if
 condition|(
 name|nswdev
@@ -514,10 +512,12 @@ name|off
 expr_stmt|;
 block|}
 else|else
+block|{
 name|index
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|sp
 operator|=
 operator|&
@@ -594,6 +594,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Convert from PAGE_SIZE'd to DEV_BSIZE'd chunks for the actual I/O 	 */
+name|bp
+operator|->
+name|b_blkno
+operator|=
+name|ctodb
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
 name|vhold
 argument_list|(
 name|sp
@@ -677,31 +689,19 @@ name|v_numoutput
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|b_vp
-operator|!=
-name|NULL
-condition|)
-name|pbrelvp
+name|pbreassignbuf
 argument_list|(
 name|bp
+argument_list|,
+name|sp
+operator|->
+name|sw_vp
 argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_vp
-operator|=
-name|sp
-operator|->
-name|sw_vp
 expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
@@ -941,7 +941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Swfree(index) frees the index'th portion of the swap map.  * Each of the nswdev devices provides 1/nswdev'th of the swap  * space, which is laid out with blocks of dmmax pages circularly  * among the devices.  */
+comment|/*  * Swfree(index) frees the index'th portion of the swap map.  * Each of the nswdev devices provides 1/nswdev'th of the swap  * space, which is laid out with blocks of dmmax pages circularly  * among the devices.  *  * The new swap code uses page-sized blocks.  The old swap code used  * DEV_BSIZE'd chunks.  *  * XXX locking when multiple swapon's run in parallel  */
 end_comment
 
 begin_function
@@ -1173,6 +1173,26 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/* 	 * nblks is in DEV_BSIZE'd chunks, convert to PAGE_SIZE'd chunks. 	 * First chop nblks off to page-align it, then convert. 	 *  	 * sw->sw_nblks is in page-sized chunks now too. 	 */
+name|nblks
+operator|&=
+operator|~
+operator|(
+name|ctodb
+argument_list|(
+literal|1
+argument_list|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+name|nblks
+operator|=
+name|dbtoc
+argument_list|(
+name|nblks
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|sw_vp
@@ -1197,6 +1217,7 @@ name|sw_nblks
 operator|=
 name|nblks
 expr_stmt|;
+comment|/* 	 * nblks, nswap, and dmmax are PAGE_SIZE'd parameters now, not 	 * DEV_BSIZE'd.  	 */
 if|if
 condition|(
 name|nblks
@@ -1214,6 +1235,30 @@ literal|1
 operator|)
 operator|*
 name|nswdev
+expr_stmt|;
+if|if
+condition|(
+name|swapblist
+operator|==
+name|NULL
+condition|)
+name|swapblist
+operator|=
+name|blist_create
+argument_list|(
+name|nswap
+argument_list|)
+expr_stmt|;
+else|else
+name|blist_resize
+argument_list|(
+operator|&
+name|swapblist
+argument_list|,
+name|nswap
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1251,18 +1296,13 @@ name|dvbase
 operator|*
 name|nswdev
 expr_stmt|;
-name|rlist_free
+name|blist_free
 argument_list|(
-operator|&
-name|swaplist
+name|swapblist
 argument_list|,
 name|vsbase
 argument_list|,
-name|vsbase
-operator|+
 name|blk
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|vm_swap_size

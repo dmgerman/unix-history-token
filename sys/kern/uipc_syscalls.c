@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * sendfile(2) and related extensions:  * Copyright (c) 1998, David Greenman. All rights reserved.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_syscalls.c	8.4 (Berkeley) 2/21/94  * $Id: uipc_syscalls.c,v 1.48 1998/12/03 12:35:47 dg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * sendfile(2) and related extensions:  * Copyright (c) 1998, David Greenman. All rights reserved.   *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_syscalls.c	8.4 (Berkeley) 2/21/94  * $Id: uipc_syscalls.c,v 1.49 1998/12/07 21:58:29 archie Exp $  */
 end_comment
 
 begin_include
@@ -7875,11 +7875,10 @@ goto|goto
 name|retry_lookup
 goto|;
 block|}
-name|vm_page_flag_clear
+comment|/* 				 * don't just clear PG_BUSY manually - 				 * vm_page_alloc() should be considered opaque, 				 * use the VM routine provided to clear 				 * PG_BUSY. 				 */
+name|vm_page_wakeup
 argument_list|(
 name|pg
-argument_list|,
-name|PG_BUSY
 argument_list|)
 expr_stmt|;
 block|}
@@ -8093,74 +8092,19 @@ else|else
 block|{
 if|if
 condition|(
-operator|(
-name|pg
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
-operator|||
-name|pg
-operator|->
-name|busy
-condition|)
-block|{
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|pg
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
-operator|||
-name|pg
-operator|->
-name|busy
-condition|)
-block|{
-comment|/* 					 * Page is busy. Wait and retry. 					 */
-name|vm_page_flag_set
+name|vm_page_sleep_busy
 argument_list|(
 name|pg
 argument_list|,
-name|PG_WANTED
-argument_list|)
-expr_stmt|;
-name|tsleep
-argument_list|(
-name|pg
-argument_list|,
-name|PVM
+name|TRUE
 argument_list|,
 literal|"sfpbsy"
-argument_list|,
-literal|0
 argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+condition|)
 goto|goto
 name|retry_lookup
 goto|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 			 * Protect from having the page ripped out from beneath us. 			 */
+comment|/* 			 * Protect from having the page ripped out from  			 * beneath us. 			 */
 name|vm_page_wire
 argument_list|(
 name|pg

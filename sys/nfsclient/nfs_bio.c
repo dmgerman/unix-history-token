@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.9 (Berkeley) 3/30/95  * $Id: nfs_bio.c,v 1.64 1998/12/07 21:58:43 archie Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_bio.c	8.9 (Berkeley) 3/30/95  * $Id: nfs_bio.c,v 1.65 1998/12/14 17:51:30 dt Exp $  */
 end_comment
 
 begin_include
@@ -195,6 +195,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|nfs_pbuf_freecnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|nfsstats
 name|nfsstats
@@ -370,7 +377,10 @@ comment|/* 	 * We use only the kva address for the buffer, but this is extremely
 name|bp
 operator|=
 name|getpbuf
-argument_list|()
+argument_list|(
+operator|&
+name|nfs_pbuf_freecnt
+argument_list|)
 expr_stmt|;
 name|npages
 operator|=
@@ -485,6 +495,9 @@ expr_stmt|;
 name|relpbuf
 argument_list|(
 name|bp
+argument_list|,
+operator|&
+name|nfs_pbuf_freecnt
 argument_list|)
 expr_stmt|;
 if|if
@@ -499,9 +512,49 @@ operator|==
 name|count
 operator|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"nfs_getpages: error %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|npages
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|!=
+name|ap
+operator|->
+name|a_reqpage
+condition|)
+name|vnode_pager_freepage
+argument_list|(
+name|pages
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|VM_PAGER_ERROR
 return|;
+block|}
 name|size
 operator|=
 name|count
@@ -855,7 +908,10 @@ comment|/* 	 * We use only the kva address for the buffer, but this is extremely
 name|bp
 operator|=
 name|getpbuf
-argument_list|()
+argument_list|(
+operator|&
+name|nfs_pbuf_freecnt
+argument_list|)
 expr_stmt|;
 name|kva
 operator|=
@@ -990,6 +1046,9 @@ expr_stmt|;
 name|relpbuf
 argument_list|(
 name|bp
+argument_list|,
+operator|&
+name|nfs_pbuf_freecnt
 argument_list|)
 expr_stmt|;
 if|if
@@ -6437,7 +6496,7 @@ operator|&=
 operator|~
 name|B_WRITEINPROG
 expr_stmt|;
-comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set B_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 */
+comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set B_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we do not ( and cannot ) reassign 		 * it.  XXX numdirtybuffers should be integrated into  		 * reassignbuf() call. 		 */
 if|if
 condition|(
 name|error
@@ -6472,6 +6531,19 @@ operator||
 name|B_NOCACHE
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_PAGING
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 operator|++
 name|numdirtybuffers
 expr_stmt|;
@@ -6498,6 +6570,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.28 1998/08/19 10:50:32 sos Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.29 1998/10/25 17:44:51 phk Exp $  */
 end_comment
 
 begin_include
@@ -643,6 +643,8 @@ label|:
 name|relpbuf
 argument_list|(
 name|bpa
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -867,7 +869,9 @@ operator|)
 condition|)
 return|return
 name|getpbuf
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 return|;
 name|maxio
 operator|=
@@ -887,7 +891,9 @@ name|maxio
 expr_stmt|;
 return|return
 name|getpbuf
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.192 1999/01/12 11:59:34 eivind Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.193 1999/01/19 08:00:51 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -2460,6 +2460,8 @@ block|{
 name|relpbuf
 argument_list|(
 name|bp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6423,7 +6425,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * check for size inconsistancies (note that they shouldn't 		 * happen but do when filesystems don't handle the size changes 		 * correctly.) We are conservative on metadata and don't just 		 * extend the buffer but write (if needed) and re-constitute it. 		 */
+comment|/* 		 * check for size inconsistancies for non-VMIO case. 		 */
 if|if
 condition|(
 name|bp
@@ -6442,25 +6444,17 @@ name|b_flags
 operator|&
 name|B_VMIO
 operator|)
-operator|&&
+operator|==
+literal|0
+operator|||
 operator|(
 name|size
-operator|<=
+operator|>
 name|bp
 operator|->
 name|b_kvasize
 operator|)
 condition|)
-block|{
-name|allocbuf
-argument_list|(
-name|bp
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 if|if
 condition|(
@@ -6540,6 +6534,22 @@ name|loop
 goto|;
 block|}
 block|}
+comment|/* 		 * If the size is inconsistant in the VMIO case, we can resize 		 * the buffer.  This might lead to B_CACHE getting cleared. 		 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bcount
+operator|!=
+name|size
+condition|)
+name|allocbuf
+argument_list|(
+name|bp
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|bp
@@ -6553,14 +6563,24 @@ literal|"getblk: no buffer offset"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check that the constituted buffer really deserves for the 		 * B_CACHE bit to be set.  B_VMIO type buffers might not 		 * contain fully valid pages.  Normal (old-style) buffers 		 * should be fully valid. 		 */
+comment|/* 		 * Check that the constituted buffer really deserves for the 		 * B_CACHE bit to be set.  B_VMIO type buffers might not 		 * contain fully valid pages.  Normal (old-style) buffers 		 * should be fully valid.  This might also lead to B_CACHE 		 * getting clear. 		 */
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_VMIO
+operator||
+name|B_CACHE
+operator|)
+operator|==
+operator|(
+name|B_VMIO
+operator||
+name|B_CACHE
+operator|)
 condition|)
 block|{
 name|int
@@ -6658,6 +6678,33 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+comment|/* 		 * If B_DELWRI is set and B_CACHE got cleared ( or was 		 * already clear ), we have to commit the write and 		 * retry.  The NFS code absolutely depends on this, 		 * and so might the FFS code.  In anycase, it formalizes 		 * the B_CACHE rules.  See sys/buf.h. 		 */
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+operator|(
+name|B_CACHE
+operator||
+name|B_DELWRI
+operator|)
+operator|)
+operator|==
+name|B_DELWRI
+condition|)
+block|{
+name|VOP_BWRITE
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
 block|}
 if|if
 condition|(
@@ -7082,7 +7129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This code constitutes the buffer memory from either anonymous system  * memory (in the case of non-VMIO operations) or from an associated  * VM object (in the case of VMIO operations).  *  * Note that this code is tricky, and has many complications to resolve  * deadlock or inconsistant data situations.  Tread lightly!!!  *  * Modify the length of a buffer's underlying buffer storage without  * destroying information (unless, of course the buffer is shrinking).  */
+comment|/*  * This code constitutes the buffer memory from either anonymous system  * memory (in the case of non-VMIO operations) or from an associated  * VM object (in the case of VMIO operations).  This code is able to  * resize a buffer up or down.  *  * Note that this code is tricky, and has many complications to resolve  * deadlock or inconsistant data situations.  Tread lightly!!!   * There are B_CACHE and B_DELWRI interactions that must be dealt with by   * the caller.  Calling this code willy nilly can result in the loss of data.  */
 end_comment
 
 begin_function
@@ -7098,9 +7145,6 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|int
 name|newbsize
 decl_stmt|,
@@ -7687,18 +7731,18 @@ literal|"allocbuf: bogus page found"
 operator|)
 argument_list|)
 expr_stmt|;
-name|vm_page_sleep
+while|while
+condition|(
+name|vm_page_sleep_busy
 argument_list|(
 name|m
 argument_list|,
-literal|"biodep"
+name|TRUE
 argument_list|,
-operator|&
-name|m
-operator|->
-name|busy
+literal|"biodep"
 argument_list|)
-expr_stmt|;
+condition|)
+empty_stmt|;
 name|bp
 operator|->
 name|b_pages
@@ -8069,11 +8113,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_flag_clear
+name|vm_page_wakeup
 argument_list|(
 name|m
-argument_list|,
-name|PG_BUSY
 argument_list|)
 expr_stmt|;
 name|bp
@@ -8087,51 +8129,17 @@ block|}
 elseif|else
 if|if
 condition|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-condition|)
-block|{
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-condition|)
-block|{
-name|vm_page_flag_set
+name|vm_page_sleep_busy
 argument_list|(
 name|m
 argument_list|,
-name|PG_WANTED
-argument_list|)
-expr_stmt|;
-name|tsleep
-argument_list|(
-name|m
-argument_list|,
-name|PVM
+name|FALSE
 argument_list|,
 literal|"pgtblk"
-argument_list|,
-literal|0
 argument_list|)
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* 						 *  If we had to sleep, retry. 						 * 						 *  Also note that we only test 						 *  PG_BUSY here, not m->busy. 						 *   						 *  We cannot sleep on m->busy 						 *  here because a vm_fault -> 						 *  getpages -> cluster-read -> 						 *  ...-> allocbuf sequence  						 *  will convert PG_BUSY to 						 *  m->busy so we have to let  						 *  m->busy through if we do  						 *  not want to deadlock. 						 */
 goto|goto
 name|doretry
 goto|;
@@ -9313,37 +9321,14 @@ block|}
 if|if
 condition|(
 name|obj
-operator|&&
-operator|(
-name|obj
-operator|->
-name|paging_in_progress
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|obj
-operator|->
-name|flags
-operator|&
-name|OBJ_PIPWNT
-operator|)
 condition|)
-block|{
-name|vm_object_clear_flag
+name|vm_object_pip_wakeupn
 argument_list|(
 name|obj
 argument_list|,
-name|OBJ_PIPWNT
+literal|0
 argument_list|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* 	 * For asynchronous completions, release the buffer now. The brelse 	 * checks for B_WANTED and will do the wakeup there if necessary - so 	 * no need to do a wakeup here in the async case. 	 */
 if|if
@@ -9589,42 +9574,19 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|obj
-operator|->
-name|paging_in_progress
-operator|==
-literal|0
-operator|&&
-operator|(
-name|obj
-operator|->
-name|flags
-operator|&
-name|OBJ_PIPWNT
-operator|)
-condition|)
-block|{
-name|vm_object_clear_flag
+name|vm_object_pip_wakeupn
 argument_list|(
 name|obj
 argument_list|,
-name|OBJ_PIPWNT
+literal|0
 argument_list|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Set NFS' b_validoff and b_validend fields from the valid bits  * of a page.  If the consumer is not NFS, and the page is not  * valid for the entire range, clear the B_CACHE flag to force  * the consumer to re-read the page.  */
+comment|/*  * Set NFS' b_validoff and b_validend fields from the valid bits  * of a page.  If the consumer is not NFS, and the page is not  * valid for the entire range, clear the B_CACHE flag to force  * the consumer to re-read the page.  *  * B_CACHE interaction is especially tricky.  */
 end_comment
 
 begin_function
@@ -9752,7 +9714,7 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Make sure this range is contiguous with the range 		 * built up from previous pages.  If not, then we will 		 * just use the range from the previous pages. 		 */
+comment|/* 		 * We can only set b_validoff/end if this range is contiguous 		 * with the range built up already.  If we cannot set 		 * b_validoff/end, we must clear B_CACHE to force an update 		 * to clean the bp up. 		 */
 if|if
 condition|(
 name|svalid
@@ -9787,6 +9749,16 @@ name|b_validend
 argument_list|,
 name|evalid
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_CACHE
 expr_stmt|;
 block|}
 block|}
@@ -9827,7 +9799,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the valid bits in a page, taking care of the b_validoff,  * b_validend fields which NFS uses to optimise small reads.  Off is  * the offset within the file and pageno is the page index within the buf.  */
+comment|/*  * Set the valid bits in a page, taking care of the b_validoff,  * b_validend fields which NFS uses to optimise small reads.  Off is  * the offset within the file and pageno is the page index within the buf.  *  * XXX we have to set the valid& clean bits for all page fragments   * touched by b_validoff/validend, even if the page fragment goes somewhat  * beyond b_validoff/validend due to alignment.  */
 end_comment
 
 begin_function
@@ -10147,13 +10119,13 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|vm_page_sleep
+name|vm_page_sleep_busy
 argument_list|(
 name|m
 argument_list|,
-literal|"vbpage"
+name|FALSE
 argument_list|,
-name|NULL
+literal|"vbpage"
 argument_list|)
 condition|)
 goto|goto

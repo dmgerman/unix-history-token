@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.h	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.h,v 1.50 1998/08/06 08:33:19 dfr Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.h	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.h,v 1.51 1998/08/24 08:39:37 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -57,7 +57,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  */
+comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  */
 end_comment
 
 begin_struct
@@ -118,10 +118,17 @@ name|int
 name|pg_color
 decl_stmt|;
 comment|/* color of first page in obj */
-name|int
-name|id
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int id;
 comment|/* ID for no purpose, other than info */
+endif|#
+directive|endif
+name|int
+name|hash_rand
+decl_stmt|;
+comment|/* vm hash table randomizer	*/
 name|u_short
 name|flags
 decl_stmt|;
@@ -146,10 +153,6 @@ name|int
 name|wire_count
 decl_stmt|;
 comment|/* number of wired pages */
-name|vm_ooffset_t
-name|paging_offset
-decl_stmt|;
-comment|/* Offset into paging space */
 name|struct
 name|vm_object
 modifier|*
@@ -164,10 +167,6 @@ name|vm_offset_t
 name|last_read
 decl_stmt|;
 comment|/* last read in object -- detect seq behavior */
-name|vm_page_t
-name|page_hint
-decl_stmt|;
-comment|/* hint for last looked-up or allocated page */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_object
@@ -181,15 +180,16 @@ name|handle
 decl_stmt|;
 union|union
 block|{
+comment|/* 		 * VNode pager 		 * 		 *	vnp_size - current size of file 		 */
 struct|struct
 block|{
 name|off_t
 name|vnp_size
 decl_stmt|;
-comment|/* Current size of file */
 block|}
 name|vnp
 struct|;
+comment|/* 		 * Device pager 		 * 		 *	devp_pglist - list of allocated pages 		 */
 struct|struct
 block|{
 name|TAILQ_HEAD
@@ -199,25 +199,14 @@ argument|vm_page
 argument_list|)
 name|devp_pglist
 expr_stmt|;
-comment|/* list of pages allocated */
 block|}
 name|devp
 struct|;
+comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
 block|{
 name|int
-name|swp_nblocks
-decl_stmt|;
-name|int
-name|swp_allocsize
-decl_stmt|;
-name|struct
-name|swblock
-modifier|*
-name|swp_blocks
-decl_stmt|;
-name|short
-name|swp_poip
+name|swp_bcount
 decl_stmt|;
 block|}
 name|swp
@@ -629,6 +618,66 @@ begin_function
 specifier|static
 name|__inline
 name|void
+name|vm_object_pip_wakeupn
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|int
+name|i
+parameter_list|)
+block|{
+if|if
+condition|(
+name|i
+condition|)
+name|atomic_subtract_short
+argument_list|(
+operator|&
+name|object
+operator|->
+name|paging_in_progress
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|object
+operator|->
+name|flags
+operator|&
+name|OBJ_PIPWNT
+operator|)
+operator|&&
+name|object
+operator|->
+name|paging_in_progress
+operator|==
+literal|0
+condition|)
+block|{
+name|vm_object_clear_flag
+argument_list|(
+name|object
+argument_list|,
+name|OBJ_PIPWNT
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
 name|vm_object_pip_sleep
 parameter_list|(
 name|vm_object_t
@@ -639,9 +688,6 @@ modifier|*
 name|waitid
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|object
@@ -649,11 +695,12 @@ operator|->
 name|paging_in_progress
 condition|)
 block|{
+name|int
 name|s
-operator|=
+init|=
 name|splvm
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|object

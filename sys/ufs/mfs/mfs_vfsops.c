@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.11 (Berkeley) 6/19/95  * $Id: mfs_vfsops.c,v 1.52 1998/12/07 21:58:49 archie Exp $  */
+comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.11 (Berkeley) 6/19/95  * $Id: mfs_vfsops.c,v 1.53 1999/01/01 04:14:11 dillon Exp $  */
 end_comment
 
 begin_include
@@ -148,6 +148,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MFS_ROOT
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|caddr_t
@@ -169,6 +175,11 @@ end_decl_stmt
 begin_comment
 comment|/* size of mini-root in bytes */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -530,10 +541,15 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MFS_ROOT
 name|u_char
 modifier|*
 name|base
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|mfsnode
 modifier|*
@@ -1224,8 +1240,13 @@ goto|goto
 name|error_2
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|MFS_ROOT
 name|dostatfs
 label|:
+endif|#
+directive|endif
 comment|/* 	 * Initialize FS stat information in mount struct; uses both 	 * mp->mnt_stat.f_mntonname and mp->mnt_stat.f_mntfromname 	 * 	 * This code is common to root and non-root mounts 	 */
 operator|(
 name|void
@@ -1346,21 +1367,11 @@ modifier|*
 name|bp
 decl_stmt|;
 specifier|register
-name|caddr_t
-name|base
-decl_stmt|;
-specifier|register
 name|int
 name|gotsig
 init|=
 literal|0
 decl_stmt|;
-name|base
-operator|=
-name|mfsp
-operator|->
-name|mfs_baseoff
-expr_stmt|;
 comment|/* 	 * Must set P_SYSTEM to prevent system from trying to kill 	 * this process.  What happens is that the process is unkillable, 	 * and the swapper loops trying to continuously kill it.  Nor 	 * can we swap out this process - not unless you want a deadlock, 	 * anyway. 	 */
 name|curproc
 operator|->
@@ -1375,6 +1386,14 @@ operator|->
 name|mfs_active
 condition|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|bp
@@ -1398,11 +1417,16 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|mfs_doio
 argument_list|(
 name|bp
 argument_list|,
-name|base
+name|mfsp
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1413,7 +1437,17 @@ operator|)
 name|bp
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If a non-ignored signal is received, try to unmount. 		 * If that fails, clear the signal (it has been "processed"), 		 * otherwise we will loop here, as tsleep will always return 		 * EINTR/ERESTART. 		 */
 comment|/* 		 * Note that dounmount() may fail if work was queued after 		 * we slept. We have to jump hoops here to make sure that we 		 * process any buffers after the sleep, before we dounmount() 		 */
 if|if
