@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.11 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,7 +184,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|memfs
+name|mfs
 decl_stmt|;
 end_decl_stmt
 
@@ -696,7 +696,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 block|{
 name|ppid
@@ -732,7 +732,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"memfs"
+literal|"mfs"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3384,7 +3384,7 @@ condition|(
 name|warn
 operator|&&
 operator|!
-name|memfs
+name|mfs
 condition|)
 block|{
 name|printf
@@ -3622,7 +3622,7 @@ comment|/* 	 * Dump out summary information about file system. 	 */
 if|if
 condition|(
 operator|!
-name|memfs
+name|mfs
 condition|)
 block|{
 name|printf
@@ -3704,7 +3704,7 @@ comment|/* 	 * Now build the cylinders group blocks and 	 * then print out indic
 if|if
 condition|(
 operator|!
-name|memfs
+name|mfs
 condition|)
 name|printf
 argument_list|(
@@ -3734,7 +3734,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 continue|continue;
 if|if
@@ -3773,7 +3773,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|memfs
+name|mfs
 condition|)
 name|printf
 argument_list|(
@@ -3785,7 +3785,7 @@ condition|(
 name|Nflag
 operator|&&
 operator|!
-name|memfs
+name|mfs
 condition|)
 name|exit
 argument_list|(
@@ -3963,7 +3963,7 @@ expr_stmt|;
 comment|/* 	 * Notify parent process of success. 	 */
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 name|kill
 argument_list|(
@@ -5292,7 +5292,7 @@ name|ROOTINO
 expr_stmt|;
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 name|node
 operator|.
@@ -6522,7 +6522,7 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 block|{
 name|bcopy
@@ -6654,7 +6654,7 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 block|{
 name|bcopy

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.19 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,7 +247,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|memfs
+name|mfs
 decl_stmt|;
 end_decl_stmt
 
@@ -576,6 +576,16 @@ comment|/* superblock size */
 end_comment
 
 begin_decl_stmt
+name|int
+name|mntflags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flags to be passed to mount */
+end_comment
+
+begin_decl_stmt
 name|u_long
 name|memleft
 decl_stmt|;
@@ -760,14 +770,14 @@ name|strcmp
 argument_list|(
 name|progname
 argument_list|,
-literal|"memfs"
+literal|"mfs"
 argument_list|)
 condition|)
 block|{
 name|Nflag
 operator|++
 expr_stmt|;
-name|memfs
+name|mfs
 operator|++
 expr_stmt|;
 block|}
@@ -819,6 +829,61 @@ operator|*
 name|cp
 condition|)
 block|{
+case|case
+literal|'F'
+case|:
+if|if
+condition|(
+operator|!
+name|mfs
+condition|)
+name|fatal
+argument_list|(
+literal|"-F: unknown flag"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-F: mount flags"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|mntflags
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mntflags
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad mount flags"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 case|case
 literal|'N'
 case|:
@@ -1738,13 +1803,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: memfs [ fsoptions ] special-device %s\n"
+literal|"usage: mfs [ fsoptions ] special-device %s\n"
 argument_list|,
 literal|"mount-point"
 argument_list|)
@@ -2278,7 +2343,7 @@ operator|->
 name|p_size
 operator|&&
 operator|!
-name|memfs
+name|mfs
 condition|)
 name|fatal
 argument_list|(
@@ -2824,14 +2889,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memfs
+name|mfs
 condition|)
 block|{
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"memfs:%d"
+literal|"mfs:%d"
 argument_list|,
 name|getpid
 argument_list|()
@@ -2868,7 +2933,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|0
+name|mntflags
 argument_list|,
 operator|&
 name|args
@@ -2879,7 +2944,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"memfs: mount"
+literal|"mfs: mount"
 argument_list|)
 expr_stmt|;
 name|exit
