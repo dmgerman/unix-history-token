@@ -4,11 +4,11 @@ comment|/* Copyright (c) 1984 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* @(#)inline.h	1.1	(Berkeley)	%G%	*/
+comment|/* @(#)inline.h	1.2	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * COMMENTCHAR is the character delimiting comments in the assembler.  * LABELCHAR is the character that separates labels from instructions.  */
+comment|/*  * COMMENTCHAR is the character delimiting comments in the assembler.  * LABELCHAR is the character that separates labels from instructions.  * ARGSEPCHAR is the character that separates arguments in instructions.  */
 end_comment
 
 begin_define
@@ -23,6 +23,13 @@ define|#
 directive|define
 name|LABELCHAR
 value|':'
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGSEPCHAR
+value|','
 end_define
 
 begin_comment
@@ -95,7 +102,7 @@ value|((qindex) - 1< 0 ? QUEUESIZE - 1 : (qindex) - 1)
 end_define
 
 begin_comment
-comment|/*  * The hash table should be twice as big as the number of patterns.  * It must be a power of two.  */
+comment|/*  * Hash table headers should be twice as big as the number of patterns.  * They must be a power of two.  */
 end_comment
 
 begin_define
@@ -104,6 +111,10 @@ directive|define
 name|HSHSIZ
 value|128
 end_define
+
+begin_comment
+comment|/*  * These tables specify the substitutions that are to be done.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -133,7 +144,7 @@ begin_decl_stmt
 name|struct
 name|pats
 modifier|*
-name|hashhdr
+name|patshdr
 index|[
 name|HSHSIZ
 index|]
@@ -155,15 +166,53 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_comment
+comment|/*  * This table defines the set of instructions that demark the  * end of a basic block.  */
+end_comment
+
+begin_struct
+struct|struct
+name|inststoptbl
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
 name|struct
-name|pats
+name|inststoptbl
 modifier|*
+name|next
+decl_stmt|;
+name|int
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|inststoptbl
 modifier|*
-name|hash
-parameter_list|()
-function_decl|;
-end_function_decl
+name|inststoptblhdr
+index|[
+name|HSHSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|inststoptbl
+name|inststoptable
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Miscellaneous functions.  */
+end_comment
 
 begin_decl_stmt
 name|char
