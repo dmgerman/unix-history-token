@@ -225,6 +225,9 @@ name|int
 name|x
 decl_stmt|;
 name|int
+name|height
+decl_stmt|;
+name|int
 name|width
 decl_stmt|;
 name|int
@@ -342,6 +345,16 @@ name|void
 name|cancel_form
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_status
+parameter_list|(
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -70,6 +70,11 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|print_status
+argument_list|(
+literal|"This is the status line"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|!
