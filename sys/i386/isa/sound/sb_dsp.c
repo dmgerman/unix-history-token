@@ -4881,15 +4881,9 @@ break|break;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|major
-operator|==
-literal|2
-condition|)
 name|dsp_model
 operator|=
-literal|2
+name|major
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -4920,25 +4914,6 @@ expr_stmt|;
 name|init_mixer
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|SBC_DMA
-operator|<
-literal|4
-comment|/* This is a kludge for SB16 cards */
-if|if
-condition|(
-name|major
-operator|==
-literal|3
-condition|)
-name|dsp_model
-operator|=
-literal|2
-expr_stmt|;
-comment|/* Do not enable if SB16 */
-endif|#
-directive|endif
 name|mixer_devs
 index|[
 name|num_mixers
@@ -4951,12 +4926,8 @@ expr_stmt|;
 if|if
 condition|(
 name|major
-operator|==
+operator|>=
 literal|2
-operator|||
-name|major
-operator|==
-literal|3
 condition|)
 name|duplex_midi
 operator|=
