@@ -483,6 +483,9 @@ operator|=
 name|VM_OUTOFTEXT
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TESTMAIN
 case|case
 name|VM_OUTOFTEXT
 case|:
@@ -516,6 +519,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|VM_USEREXIT
 case|:
