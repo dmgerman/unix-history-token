@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -40,7 +40,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 parameter_list|,
 name|long
@@ -58,7 +58,7 @@ name|char
 modifier|*
 name|mesg
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 parameter_list|)
 function_decl|;
