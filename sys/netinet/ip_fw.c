@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.103 1998/12/31 07:43:29 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.104 1999/02/16 10:49:52 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -2606,12 +2606,9 @@ block|}
 name|offset
 operator|=
 operator|(
-name|ntohs
-argument_list|(
 name|ip
 operator|->
 name|ip_off
-argument_list|)
 operator|&
 name|IP_OFFMASK
 operator|)
@@ -2875,6 +2872,14 @@ operator|->
 name|fw_prot
 operator|!=
 name|IPPROTO_UDP
+operator|||
+name|f
+operator|->
+name|fw_smsk
+operator|.
+name|s_addr
+operator|!=
+literal|0xffffffff
 condition|)
 continue|continue;
 switch|switch
@@ -2911,11 +2916,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"match!\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|got_match
 goto|;
@@ -3184,14 +3184,14 @@ operator|->
 name|fw_prot
 condition|)
 continue|continue;
+comment|/*  * here, pip==NULL for bridged pkts -- they include the ethernet  * header so i have to adjust lengths accordingly  */
 define|#
 directive|define
 name|PULLUP_TO
 parameter_list|(
-name|len
+name|l
 parameter_list|)
-define|\
-value|do {								\ 	    if ((*m)->m_len< (len) ) {					\ 		if ( (*m = m_pullup(*m, (len))) == 0)			\ 		    goto bogusfrag;					\ 		ip = mtod(*m, struct ip *);				\ 		if (pip) {						\ 		    *pip = ip ;						\ 		    offset = (ip->ip_off& IP_OFFMASK);			\ 		} else							\ 		    offset = (ntohs(ip->ip_off)& IP_OFFMASK);		\ 	    }								\ 	} while (0)
+value|do {                                            \ 			    int len = (pip ? l : l + 14 ) ;             \ 			    if ((*m)->m_len< (len) ) {                 \ 				if ( (*m = m_pullup(*m, (len))) == 0)   \ 				    goto bogusfrag;                     \ 				ip = mtod(*m, struct ip *);             \ 				if (pip)                                \ 				    *pip = ip ;                         \ 				else                                    \ 				    ip = (struct ip *)((int)ip + 14);   \ 				offset = (ip->ip_off& IP_OFFMASK);     \ 			    }                                           \ 			} while (0)
 comment|/* Protocol specific checks */
 switch|switch
 condition|(
@@ -3556,18 +3556,9 @@ name|f
 operator|->
 name|fw_bcnt
 operator|+=
-name|pip
-condition|?
 name|ip
 operator|->
 name|ip_len
-else|:
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
 expr_stmt|;
 block|}
 name|f
