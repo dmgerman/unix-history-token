@@ -2086,6 +2086,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mac_check_system_swapoff
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mac_check_system_sysctl
 parameter_list|(
 name|struct
