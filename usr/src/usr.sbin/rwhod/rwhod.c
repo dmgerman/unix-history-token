@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.20 (Berkeley) 83/10/11"
+literal|"@(#)rwhod.c	4.21 (Berkeley) 83/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,17 @@ include|#
 directive|include
 file|"rwhod.h"
 end_include
+
+begin_comment
+comment|/*  * Alarm interval. Don't forget to change the down time check in ruptime  * if this is changed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_INTERVAL
+value|(5 * 60)
+end_define
 
 begin_decl_stmt
 name|struct
@@ -1705,7 +1716,7 @@ name|void
 operator|)
 name|alarm
 argument_list|(
-literal|60
+name|AL_INTERVAL
 argument_list|)
 expr_stmt|;
 block|}
