@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.16 (Berkeley) %G%"
+literal|"@(#)date.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1570,7 +1570,7 @@ name|msg
 operator|.
 name|tsp_type
 operator|=
-name|TSP_DATE
+name|TSP_SETDATE
 expr_stmt|;
 name|msg
 operator|.
@@ -1606,15 +1606,6 @@ sizeof|sizeof
 argument_list|(
 name|hostname
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|timevalsub
-argument_list|(
-operator|&
-name|tv
-argument_list|,
-operator|&
-name|now
 argument_list|)
 expr_stmt|;
 name|msg
