@@ -93,6 +93,17 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAX_APSIZE
+value|0x3f
+end_define
+
+begin_comment
+comment|/* 256 MB */
+end_comment
+
 begin_struct
 struct|struct
 name|agp_intel_softc
@@ -109,6 +120,9 @@ name|struct
 name|agp_gatt
 modifier|*
 name|gatt
+decl_stmt|;
+name|u_int
+name|aperture_mask
 decl_stmt|;
 block|}
 struct|;
@@ -256,6 +270,14 @@ operator|(
 literal|"Intel 82860 host to AGP bridge"
 operator|)
 return|;
+case|case
+literal|0x25708086
+case|:
+return|return
+operator|(
+literal|"Intel 82865 host to AGP bridge"
+operator|)
+return|;
 block|}
 empty_stmt|;
 if|if
@@ -358,6 +380,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|u_int32_t
+name|value
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -375,6 +400,55 @@ condition|)
 return|return
 name|error
 return|;
+comment|/* Determine maximum supported aperture size. */
+name|value
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_APSIZE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_APSIZE
+argument_list|,
+name|MAX_APSIZE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aperture_mask
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_APSIZE
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+name|MAX_APSIZE
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_APSIZE
+argument_list|,
+name|value
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|initial_aperture
@@ -488,13 +562,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|value
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|AGP_INTEL_AGPCTRL
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
 name|AGP_INTEL_AGPCTRL
 argument_list|,
-literal|0x0080
+name|value
+operator||
+literal|0x80
 argument_list|,
 literal|4
 argument_list|)
@@ -584,6 +671,10 @@ case|case
 literal|0x1a308086
 case|:
 comment|/* i845 */
+case|case
+literal|0x25708086
+case|:
+comment|/* i865 */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -688,13 +779,17 @@ case|case
 literal|0x25318086
 case|:
 comment|/* i860 */
+case|case
+literal|0x25708086
+case|:
+comment|/* i865 */
 name|pci_write_config
 argument_list|(
 name|dev
 argument_list|,
 name|AGP_INTEL_I8XX_ERRSTS
 argument_list|,
-literal|0x001c
+literal|0x00ff
 argument_list|,
 literal|2
 argument_list|)
@@ -905,6 +1000,10 @@ case|case
 literal|0x1a308086
 case|:
 comment|/* i845 */
+case|case
+literal|0x25708086
+case|:
+comment|/* i865 */
 name|printf
 argument_list|(
 literal|"%s: set MCHCFG to %x\n"
@@ -1057,6 +1156,16 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|agp_intel_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|u_int32_t
 name|apsize
 decl_stmt|;
@@ -1071,7 +1180,9 @@ argument_list|,
 literal|1
 argument_list|)
 operator|&
-literal|0x1f
+name|sc
+operator|->
+name|aperture_mask
 expr_stmt|;
 comment|/* 	 * The size is determined by the number of low bits of 	 * register APBASE which are forced to zero. The low 22 bits 	 * are always forced to zero and each zero bit in the apsize 	 * field just read forces the corresponding bit in the 27:22 	 * to be zero. We calculate the aperture size accordingly. 	 */
 return|return
@@ -1080,7 +1191,9 @@ operator|(
 operator|(
 name|apsize
 operator|^
-literal|0x1f
+name|sc
+operator|->
+name|aperture_mask
 operator|)
 operator|<<
 literal|22
@@ -1114,6 +1227,16 @@ name|u_int32_t
 name|aperture
 parameter_list|)
 block|{
+name|struct
+name|agp_intel_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|u_int32_t
 name|apsize
 decl_stmt|;
@@ -1130,7 +1253,9 @@ operator|>>
 literal|22
 operator|)
 operator|^
-literal|0x1f
+name|sc
+operator|->
+name|aperture_mask
 expr_stmt|;
 comment|/* 	 * Double check for sanity. 	 */
 if|if
@@ -1140,7 +1265,9 @@ operator|(
 operator|(
 name|apsize
 operator|^
-literal|0x1f
+name|sc
+operator|->
+name|aperture_mask
 operator|)
 operator|<<
 literal|22
