@@ -20,120 +20,7 @@ comment|/*  * various 'tests in progress'  */
 end_comment
 
 begin_comment
-comment|/*  * address of POST hardware port  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POST_ADDR
-value|0x80
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|POST_ADDR
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_INC
-define|\
-value|pushl	%eax ;				\ 	movl	_current_postcode, %eax ;	\ 	incl	%eax ;				\ 	andl	$0xff, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
-end_define
-
-begin_comment
-comment|/*  * Overwrite the current_postcode low nibble .  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_HILO
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|pushl	%eax ;				\ 	movl	$X, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
-end_define
-
-begin_comment
-comment|/*  * Overwrite the current_postcode low nibble .  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_LO
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|pushl	%eax ;				\ 	movl	_current_postcode, %eax ;	\ 	andl	$0xf0, %eax ;			\ 	orl	$X, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
-end_define
-
-begin_comment
-comment|/*  * Overwrite the current_postcode high nibble .  * Note: this does NOT shift the digit to the high position!  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_HI
-parameter_list|(
-name|X
-parameter_list|)
-define|\
-value|pushl	%eax ;				\ 	movl	_current_postcode, %eax ;	\ 	andl	$0x0f, %eax ;			\ 	orl	$X, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_INC
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_HILO
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_LO
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASMPOSTCODE_HI
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* POST_ADDR */
+comment|/*  * address of POST hardware port  * #define POST_ADDR		0x80  */
 end_comment
 
 begin_comment
@@ -212,6 +99,116 @@ end_comment
 
 begin_comment
 comment|/*  * simple test code for IPI interaction, save for future...  * #define TEST_TEST1 #define IPI_TARGET_TEST1	1  */
+end_comment
+
+begin_comment
+comment|/*  * POST hardware macros.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POST_ADDR
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE_INC
+define|\
+value|pushl	%eax ;				\ 	movl	_current_postcode, %eax ;	\ 	incl	%eax ;				\ 	andl	$0xff, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
+end_define
+
+begin_comment
+comment|/*  * Overwrite the current_postcode value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|pushl	%eax ;				\ 	movl	$X, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
+end_define
+
+begin_comment
+comment|/*  * Overwrite the current_postcode low nibble.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE_LO
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|pushl	%eax ;				\ 	movl	_current_postcode, %eax ;	\ 	andl	$0xf0, %eax ;			\ 	orl	$X, %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
+end_define
+
+begin_comment
+comment|/*  * Overwrite the current_postcode high nibble.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE_HI
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|pushl	%eax ;				\ 	movl	_current_postcode, %eax ;	\ 	andl	$0x0f, %eax ;			\ 	orl	$(X<<4), %eax ;			\ 	movl	%eax, _current_postcode ;	\ 	outb	%al, $POST_ADDR ;		\ 	popl	%eax
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE_INC
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE_LO
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASMPOSTCODE_HI
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* POST_ADDR */
 end_comment
 
 begin_comment
