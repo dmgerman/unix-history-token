@@ -51,6 +51,17 @@ directive|include
 file|"efiboot.h"
 end_include
 
+begin_comment
+comment|/* Perform I/O in blocks of size EFI_BLOCK_SIZE. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFI_BLOCK_SIZE
+value|(1024 * 1024)
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -421,11 +432,11 @@ if|if
 condition|(
 name|sz
 operator|>
-literal|8192
+name|EFI_BLOCK_SIZE
 condition|)
 name|sz
 operator|=
-literal|8192
+name|EFI_BLOCK_SIZE
 expr_stmt|;
 name|status
 operator|=
@@ -546,11 +557,11 @@ if|if
 condition|(
 name|sz
 operator|>
-literal|8192
+name|EFI_BLOCK_SIZE
 condition|)
 name|sz
 operator|=
-literal|8192
+name|EFI_BLOCK_SIZE
 expr_stmt|;
 name|status
 operator|=
