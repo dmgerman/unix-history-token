@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.49 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.48		%G%"
+literal|"@(#)sendmail.h	6.49		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1977,6 +1977,14 @@ name|short
 name|mci_state
 decl_stmt|;
 comment|/* SMTP state */
+name|short
+name|mci_options
+decl_stmt|;
+comment|/* ESMTP options */
+name|long
+name|mci_maxsize
+decl_stmt|;
+comment|/* max size this server will accept */
 name|FILE
 modifier|*
 name|mci_in
@@ -2134,6 +2142,32 @@ end_define
 
 begin_comment
 comment|/* I/O error on connection */
+end_comment
+
+begin_comment
+comment|/* options bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIO_EXPN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* EXPN command supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIO_SIZE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* SIZE option supported */
 end_comment
 
 begin_escape
@@ -3861,7 +3895,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* user database source spec [udbexpand.c] */
+comment|/* user database source spec */
 end_comment
 
 begin_decl_stmt
@@ -3872,7 +3906,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of hops until we give an error */
+comment|/* max # of hops until bounce */
 end_comment
 
 begin_decl_stmt
@@ -3883,7 +3917,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* config file level -- what does .cf expect? */
+comment|/* config file level */
 end_comment
 
 begin_decl_stmt
@@ -3962,7 +3996,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* minimum number of blocks free on queue fs */
+comment|/* min # of blocks free on queue fs */
 end_comment
 
 begin_decl_stmt
@@ -4011,6 +4045,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* fall back MX host */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|MaxMessageSize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* advertised max size we will accept */
 end_comment
 
 begin_comment
