@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mailwrapper.c,v 1.3 1999/05/29 18:18:15 christos Exp $	*/
-end_comment
-
-begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
@@ -15,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_MAILERCONF
-value|"/etc/mailer.conf"
+value|"/etc/mail/mailer.conf"
 end_define
 
 end_unit
