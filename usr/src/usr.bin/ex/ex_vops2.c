@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops2.c	6.5 %G%"
+literal|"@(#)ex_vops2.c	6.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +462,9 @@ name|oldhold
 init|=
 name|hold
 decl_stmt|;
+name|int
+name|oldmask
+decl_stmt|;
 comment|/* 	 * Before a move in hardopen when the line is dirty 	 * or we are in the middle of the printed representation, 	 * we retype the line to the left of the cursor so the 	 * insert looks clean. 	 */
 if|if
 condition|(
@@ -687,6 +690,16 @@ comment|/* 	 * For wrapmargin to hack away second space after a '.' 	 * when the
 name|gobblebl
 operator|=
 literal|0
+expr_stmt|;
+name|oldmask
+operator|=
+name|sigblock
+argument_list|(
+name|sigmask
+argument_list|(
+name|SIGWINCH
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Text gathering loop. 	 * New text goes into genbuf starting at gcursor. 	 * cursor preserves place in linebuf where text will eventually go. 	 */
 if|if
@@ -1323,6 +1336,14 @@ name|cursor
 expr_stmt|;
 name|vmove
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|oldmask
+argument_list|)
 expr_stmt|;
 block|}
 end_block
