@@ -3668,18 +3668,21 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * This is a consistency check, and should likely be a panic 		 * or warning. 		 */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|m
 operator|->
 name|queue
-operator|!=
+operator|==
 name|PQ_ACTIVE
-condition|)
-block|{
-break|break;
-block|}
+argument_list|,
+operator|(
+literal|"vm_pageout_scan: page %p isn't active"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|next
 operator|=
 name|TAILQ_NEXT
