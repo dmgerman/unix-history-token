@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.14 1997/02/22 16:09:25 peter Exp $"
+literal|"$Id: main.c,v 1.15 1997/03/31 05:10:47 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvf:p:P:c:d:i:k:r:t:X:D:m:"
+literal|"YNOhvf:p:P:c:d:i:k:r:t:X:D:m:s:"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Desc
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|SrcDir
 init|=
 name|NULL
 decl_stmt|;
@@ -121,15 +130,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|PlayPen
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 modifier|*
 name|ExcludeFrom
 init|=
@@ -152,6 +152,15 @@ modifier|*
 name|Pkgdeps
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|PlayPen
+index|[
+name|FILENAME_MAX
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -270,6 +279,14 @@ case|case
 literal|'p'
 case|:
 name|Prefix
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|SrcDir
 operator|=
 name|optarg
 expr_stmt|;

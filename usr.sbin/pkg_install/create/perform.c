@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: perform.c,v 1.34 1997/02/22 16:09:28 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,6 +329,37 @@ condition|)
 name|printf
 argument_list|(
 literal|".\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If a SrcDir override is set, add it now */
+if|if
+condition|(
+name|SrcDir
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+operator|&&
+operator|!
+name|PlistOnly
+condition|)
+name|printf
+argument_list|(
+literal|"Using SrcDir value of %s\n"
+argument_list|,
+name|SrcDir
+argument_list|)
+expr_stmt|;
+name|add_plist
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_SRC
+argument_list|,
+name|SrcDir
 argument_list|)
 expr_stmt|;
 block|}
