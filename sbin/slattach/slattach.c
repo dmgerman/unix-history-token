@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: slattach.c,v 1.34 1999/05/29 08:16:34 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,9 +937,14 @@ name|dvname
 operator|++
 expr_stmt|;
 comment|/* trailing tty pathname component */
-name|sprintf
+name|snprintf
 argument_list|(
 name|pidfilename
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pidfilename
+argument_list|)
 argument_list|,
 literal|"%sslattach.%s.pid"
 argument_list|,
