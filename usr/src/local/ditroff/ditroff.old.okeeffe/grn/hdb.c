@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hdb.c	1.3	(Berkeley) 83/07/25  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
+comment|/*	hdb.c	1.4	(Berkeley) 83/07/25  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -467,15 +467,18 @@ name|void
 operator|)
 name|fscanf
 argument_list|(
-argument|file
+name|file
 argument_list|,
 literal|"%f%f"
 argument_list|,
-argument|&x
+operator|&
+name|x
 argument_list|,
-argument|&y
+operator|&
+name|y
 argument_list|)
-while|while
+expr_stmt|;
+do|while
 condition|(
 operator|(
 name|x
@@ -489,8 +492,8 @@ operator|>=
 literal|0.0
 operator|)
 condition|)
-empty_stmt|;
-do|}
+do|;
+block|}
 else|else
 block|{
 while|while
