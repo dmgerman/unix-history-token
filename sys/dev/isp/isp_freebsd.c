@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: isp_freebsd.c,v 1.10 1998/12/28 19:22:26 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -285,25 +285,6 @@ operator|&
 name|csa
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set base transfer capabilities for Fibre Channel. 	 * Technically not correct because we don't know 	 * what media we're running on top of- but we'll 	 * look good if we always say 100MB/s. 	 */
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_type
-operator|&
-name|ISP_HA_FC
-condition|)
-block|{
-name|isp
-operator|->
-name|isp_sim
-operator|->
-name|base_transfer_speed
-operator|=
-literal|100000
-expr_stmt|;
-block|}
 name|isp
 operator|->
 name|isp_state
@@ -2205,6 +2186,13 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 			 * Set base transfer capabilities for Fibre Channel. 			 * Technically not correct because we don't know 			 * what media we're running on top of- but we'll 			 * look good if we always say 100MB/s. 			 */
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|100000
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2283,6 +2271,12 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+name|cpi
+operator|->
+name|base_transfer_speed
+operator|=
+literal|3300
+expr_stmt|;
 block|}
 name|cpi
 operator|->
