@@ -6600,7 +6600,9 @@ argument_list|(
 operator|&
 name|isn_callout
 argument_list|,
-literal|1
+name|hz
+operator|/
+literal|100
 argument_list|,
 name|tcp_isn_tick
 argument_list|,
