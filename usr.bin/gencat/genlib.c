@@ -1,34 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*********************************************************** Copyright 1990, by Alfalfa Software Incorporated, Cambridge, Massachusetts.                          All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that Alfalfa's name not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  ALPHALPHA DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL ALPHALPHA BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  If you make any modifications, bugfixes or other changes to this software we'd appreciate it if you could send a copy to us so we can keep things up-to-date.  Many thanks. 				Kee Hinckley 				Alfalfa Software, Inc. 				267 Allston St., #3 				Cambridge, MA 02139  USA 				nazgul@alfalfa.com  ******************************************************************/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -445,6 +443,14 @@ operator|*=
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|curline
+condition|)
+name|nomem
+argument_list|()
+expr_stmt|;
 name|cend
 operator|=
 name|curline
@@ -783,6 +789,14 @@ argument_list|(
 name|clen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msg
+condition|)
+name|nomem
+argument_list|()
+expr_stmt|;
 name|msglen
 operator|=
 name|clen
@@ -933,6 +947,14 @@ name|msg
 argument_list|,
 name|msglen
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msg
+condition|)
+name|nomem
+argument_list|()
 expr_stmt|;
 name|tptr
 operator|=
