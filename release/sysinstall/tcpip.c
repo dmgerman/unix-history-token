@@ -387,7 +387,7 @@ directive|define
 name|LAYOUT_NAMESERVER
 value|3
 block|{
-literal|11
+literal|10
 block|,
 literal|10
 block|,
@@ -413,7 +413,7 @@ directive|define
 name|LAYOUT_IPADDR
 value|5
 block|{
-literal|11
+literal|10
 block|,
 literal|35
 block|,
@@ -439,7 +439,7 @@ directive|define
 name|LAYOUT_NETMASK
 value|6
 block|{
-literal|15
+literal|14
 block|,
 literal|10
 block|,
