@@ -1385,6 +1385,15 @@ name|ret
 operator|->
 name|soft
 operator|=
+name|strcmp
+argument_list|(
+name|mpoint
+argument_list|,
+literal|"/"
+argument_list|)
+condition|?
+literal|1
+else|:
 literal|0
 expr_stmt|;
 if|if
