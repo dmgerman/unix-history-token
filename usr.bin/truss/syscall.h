@@ -4,7 +4,7 @@ comment|/*  * See i386-fbsd.c for copyright and license terms.  *  * System call
 end_comment
 
 begin_comment
-comment|/*  * $Id: syscall.h,v 1.2 1997/12/06 06:51:13 sef Exp $  */
+comment|/*  * $Id: syscall.h,v 1.3 1997/12/20 18:40:41 sef Exp $  */
 end_comment
 
 begin_enum
@@ -30,6 +30,8 @@ block|,
 name|Ioctl
 block|,
 name|Quad
+block|,
+name|Signal
 block|}
 enum|;
 end_enum
