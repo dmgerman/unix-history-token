@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_glue.c	7.18 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_glue.c	7.19 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_include
@@ -282,7 +282,7 @@ name|KGDB
 end_ifdef
 
 begin_comment
-comment|/*  * Change protections on kernel pages from addr to addr+len  * (presumably so debugger can plant a breakpoint).  * All addresses are assumed to reside in the Sysmap,  */
+comment|/*  * Change protections on kernel pages from addr to addr+len  * (presumably so debugger can plant a breakpoint).  *  * We force the protection change at the pmap level.  If we were  * to use vm_map_protect a change to allow writing would be lazily-  * applied meaning we would still take a protection fault, something  * we really don't want to do.  It would also fragment the kernel  * map unnecessarily.  We cannot use pmap_protect since it also won't  * enforce a write-enable request.  Using pmap_enter is the only way  * we can ensure the change takes place properly.  */
 end_comment
 
 begin_function
@@ -307,24 +307,28 @@ decl_stmt|;
 block|{
 name|vm_prot_t
 name|prot
-init|=
+decl_stmt|;
+name|vm_offset_t
+name|pa
+decl_stmt|,
+name|sva
+decl_stmt|,
+name|eva
+decl_stmt|;
+name|prot
+operator|=
 name|rw
 operator|==
 name|B_READ
 condition|?
 name|VM_PROT_READ
 else|:
+name|VM_PROT_READ
+operator||
 name|VM_PROT_WRITE
-decl_stmt|;
-name|vm_map_protect
-argument_list|(
-name|kernel_map
-argument_list|,
-name|trunc_page
-argument_list|(
-name|addr
-argument_list|)
-argument_list|,
+expr_stmt|;
+name|eva
+operator|=
 name|round_page
 argument_list|(
 name|addr
@@ -333,12 +337,65 @@ name|len
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|sva
+operator|=
+name|trunc_page
+argument_list|(
+name|addr
+argument_list|)
+init|;
+name|sva
+operator|<
+name|eva
+condition|;
+name|sva
+operator|+=
+name|PAGE_SIZE
+control|)
+block|{
+comment|/* 		 * Extract physical address for the page. 		 * We use a cheezy hack to differentiate physical 		 * page 0 from an invalid mapping, not that it 		 * really matters... 		 */
+name|pa
+operator|=
+name|pmap_extract
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|sva
+operator||
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pa
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"chgkprot: invalid page"
+argument_list|)
+expr_stmt|;
+name|pmap_enter
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|sva
+argument_list|,
+name|pva
+operator|&
+operator|~
+literal|1
 argument_list|,
 name|prot
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
