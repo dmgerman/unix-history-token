@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.29 1999/04/30 16:44:17 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.30 1999/04/30 16:59:48 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2341,6 +2341,15 @@ return|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Fix for PR #10971: don't let the child ypserv share 	 * DB handles with the parent process. 	 */
+ifdef|#
+directive|ifdef
+name|DB_CACHE
+name|yp_flush_all
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|yp_select_map
