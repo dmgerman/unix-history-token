@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.9 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1210,7 +1210,7 @@ name|cyclenlp
 operator|->
 name|name
 operator|=
-literal|""
+literal|0
 expr_stmt|;
 comment|/* the name */
 name|cyclenlp
