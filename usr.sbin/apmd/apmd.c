@@ -601,6 +601,9 @@ name|evcmd
 operator|.
 name|op
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|newone
 operator|->
 name|line
@@ -610,6 +613,16 @@ argument_list|(
 name|oldone
 operator|->
 name|line
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 return|return
