@@ -2356,6 +2356,23 @@ name|dp
 argument_list|)
 condition|)
 block|{
+comment|/* Skip trailing NUL. */
+if|if
+condition|(
+name|dp
+operator|+
+literal|1
+operator|!=
+name|data
+operator|+
+name|len
+operator|||
+operator|*
+name|dp
+operator|!=
+literal|0
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|op
@@ -2370,6 +2387,7 @@ name|op
 operator|+=
 literal|4
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
