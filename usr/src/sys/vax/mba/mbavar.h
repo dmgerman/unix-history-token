@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.9	81/02/25	*/
+comment|/*	mbavar.h	4.10	81/02/26	*/
 end_comment
 
 begin_comment
@@ -1038,6 +1038,14 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
+end_if
+
 begin_extern
 extern|extern	Xmba0int(
 end_extern
@@ -1077,6 +1085,11 @@ name|int
 name|nummba
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

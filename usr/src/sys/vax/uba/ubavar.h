@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.13	81/02/26	*/
+comment|/*	ubavar.h	4.14	81/02/26	*/
 end_comment
 
 begin_comment
@@ -31,12 +31,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
 
 begin_comment
 comment|/*  * UBA registers  */
@@ -120,6 +114,12 @@ comment|/* no maps for device address space */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
 
 begin_comment
 comment|/* UBA control register, UBACR */
