@@ -18,13 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
+file|<sys/bus_private.h>
 end_include
 
 begin_include
@@ -36,31 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kobj.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/bus_private.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/module.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -78,12 +66,26 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_comment
-comment|/* for device_printf() */
-end_comment
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
 
 begin_expr_stmt
 specifier|static
