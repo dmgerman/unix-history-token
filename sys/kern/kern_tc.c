@@ -1497,7 +1497,7 @@ name|u
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Timecounter \"%s\"  frequency %ju Hz"
+literal|"Timecounter \"%s\" frequency %ju Hz"
 argument_list|,
 name|tc
 operator|->
