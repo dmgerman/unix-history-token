@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.197 1999/06/02 21:28:02 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.198 1999/06/05 21:35:48 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -752,7 +752,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/06/02 21:28:02 $"
+literal|"$Date: 1999/06/05 21:35:48 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6132,7 +6132,6 @@ name|LogCOMMAND
 argument_list|)
 condition|)
 block|{
-specifier|static
 name|char
 name|buf
 index|[
@@ -6144,11 +6143,6 @@ name|f
 decl_stmt|,
 name|n
 decl_stmt|;
-operator|*
-name|buf
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 name|label
@@ -6183,7 +6177,6 @@ argument_list|,
 literal|": "
 argument_list|)
 expr_stmt|;
-block|}
 name|n
 operator|=
 name|strlen
@@ -6191,6 +6184,30 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|buf
+operator|=
+literal|'\0'
+expr_stmt|;
+name|n
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* In case we run out of room in buf */
 for|for
 control|(
 name|f
