@@ -214,24 +214,12 @@ name|b_caller1
 value|b_io.bio_caller1
 define|#
 directive|define
-name|b_caller2
-value|b_io.bio_caller2
-define|#
-directive|define
 name|b_data
 value|b_io.bio_data
 define|#
 directive|define
 name|b_dev
 value|b_io.bio_dev
-define|#
-directive|define
-name|b_driver1
-value|b_io.bio_driver1
-define|#
-directive|define
-name|b_driver2
-value|b_io.bio_driver2
 define|#
 directive|define
 name|b_error
@@ -577,7 +565,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* Availabel flag. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
