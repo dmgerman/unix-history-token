@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.10 (Berkeley) %G%"
+literal|"@(#)input.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,10 @@ name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|,
+modifier|*
+name|if_ifwithdstaddr
+argument_list|()
 decl_stmt|;
 name|int
 name|newsize
@@ -698,7 +702,6 @@ block|}
 comment|/* 			 * Update if from gateway and different, 			 * shorter, or getting stale and equivalent. 			 */
 if|if
 condition|(
-operator|(
 name|equal
 argument_list|(
 name|from
@@ -708,7 +711,10 @@ name|rt
 operator|->
 name|rt_router
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|n
 operator|->
 name|rip_metric
@@ -716,8 +722,28 @@ operator|!=
 name|rt
 operator|->
 name|rt_metric
-operator|)
-operator|||
+condition|)
+name|rtchange
+argument_list|(
+name|rt
+argument_list|,
+name|from
+argument_list|,
+name|n
+operator|->
+name|rip_metric
+argument_list|)
+expr_stmt|;
+name|rt
+operator|->
+name|rt_timer
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 call|(
 name|unsigned
 call|)
