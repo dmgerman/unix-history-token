@@ -280,7 +280,7 @@ name|EXT
 parameter_list|(
 name|x
 parameter_list|)
-value|_ ## x
+value|x
 end_define
 
 begin_define
@@ -290,7 +290,7 @@ name|LEXT
 parameter_list|(
 name|x
 parameter_list|)
-value|_ ## x ## :
+value|x ## :
 end_define
 
 begin_define
