@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)linkaddr.c	5.2 (Berkeley) %G%"
+literal|"@(#)linkaddr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,7 +609,7 @@ name|in
 operator|+
 name|sdl
 operator|->
-name|sdl_nlen
+name|sdl_alen
 decl_stmt|;
 name|int
 name|firsttime
@@ -642,6 +642,12 @@ name|sdl
 operator|->
 name|sdl_nlen
 expr_stmt|;
+if|if
+condition|(
+name|sdl
+operator|->
+name|sdl_alen
+condition|)
 operator|*
 name|out
 operator|++
