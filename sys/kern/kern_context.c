@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|UC_COPY_SIZE
-value|(sizeof(sigset_t) + sizeof(mcontext_t))
+value|offsetof(ucontext_t, uc_link)
 end_define
 
 begin_ifndef
@@ -305,6 +305,12 @@ block|}
 return|return
 operator|(
 name|ret
+operator|==
+literal|0
+condition|?
+name|EJUSTRETURN
+else|:
+name|ret
 operator|)
 return|;
 block|}
@@ -462,6 +468,12 @@ block|}
 block|}
 return|return
 operator|(
+name|ret
+operator|==
+literal|0
+condition|?
+name|EJUSTRETURN
+else|:
 name|ret
 operator|)
 return|;
