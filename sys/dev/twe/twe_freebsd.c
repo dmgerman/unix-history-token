@@ -3793,6 +3793,21 @@ name|tr_flags
 operator||=
 name|TWE_CMD_MAPPED
 expr_stmt|;
+if|if
+condition|(
+name|tr
+operator|->
+name|tr_flags
+operator|&
+name|TWE_CMD_IN_PROGRESS
+condition|)
+name|sc
+operator|->
+name|twe_state
+operator|&=
+operator|~
+name|TWE_STATE_FRZN
+expr_stmt|;
 comment|/* save base of first segment in command (applicable if there only one segment) */
 name|tr
 operator|->
@@ -4322,9 +4337,41 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* XXX check result here */
+if|if
+condition|(
+name|tr
+operator|->
+name|tr_data
+operator|==
+name|NULL
+condition|)
+block|{
+name|twe_printf
+argument_list|(
+name|sc
+argument_list|,
+literal|"%s: malloc failed\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|tr
+operator|->
+name|tr_data
+operator|=
+name|tr
+operator|->
+name|tr_realdata
+expr_stmt|;
+comment|/* restore original data pointer */
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 block|}
-comment|/* 	 * Map the data buffer into bus space and build the s/g list. 	*/
+block|}
+comment|/* 	 * Map the data buffer into bus space and build the s/g list. 	 */
 if|if
 condition|(
 name|tr
@@ -4349,6 +4396,8 @@ operator|->
 name|tr_length
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -4412,6 +4461,12 @@ operator|==
 name|EINPROGRESS
 condition|)
 block|{
+name|tr
+operator|->
+name|tr_flags
+operator||=
+name|TWE_CMD_IN_PROGRESS
+expr_stmt|;
 name|sc
 operator|->
 name|twe_state
@@ -4424,14 +4479,31 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|twe_start
 argument_list|(
 name|tr
 argument_list|)
+operator|)
+operator|==
+name|EBUSY
+condition|)
+block|{
+name|twe_requeue_ready
+argument_list|(
+name|tr
+argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -4697,6 +4769,15 @@ ifdef|#
 directive|ifdef
 name|TWE_DEBUG
 end_ifdef
+
+begin_function_decl
+name|void
+name|twe_report
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/********************************************************************************  * Print current controller status, call from DDB.  */

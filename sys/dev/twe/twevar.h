@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|TWE_DRIVER_VERSION_STRING
-value|"1.50.00.000"
+value|"1.50.01.000"
 end_define
 
 begin_ifdef
@@ -181,6 +181,11 @@ directive|define
 name|TWE_CMD_COMPLETE
 value|2
 comment|/* completed by controller (maybe with error) */
+define|#
+directive|define
+name|TWE_CMD_ERROR
+value|3
+comment|/* encountered error, even before submission to controller */
 name|int
 name|tr_flags
 decl_stmt|;
@@ -211,6 +216,11 @@ define|#
 directive|define
 name|TWE_CMD_MAPPED
 value|(1<<5)
+define|#
+directive|define
+name|TWE_CMD_IN_PROGRESS
+value|(1<<6)
+comment|/* bus_dmamap_load returned EINPROGRESS */
 name|void
 function_decl|(
 modifier|*
