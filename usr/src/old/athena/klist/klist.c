@@ -28,7 +28,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<mit-copyright.h>
+file|<kerberos/mit-copyright.h>
 end_include
 
 begin_include
@@ -52,13 +52,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberos/krb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<prot.h>
+file|<kerberos/prot.h>
 end_include
 
 begin_function_decl
@@ -995,7 +995,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%-15s %-15s %-10s %s\n"
+literal|"%-15s %-15s %-10s      %s\n"
 argument_list|,
 literal|"Service"
 argument_list|,
@@ -1008,7 +1008,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"------------------------------------------------------\n"
+literal|"-----------------------------------------------------------\n"
 argument_list|)
 expr_stmt|;
 comment|/* argh. getst doesn't return error codes, it silently fails */
