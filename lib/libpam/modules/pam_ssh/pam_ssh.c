@@ -632,13 +632,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|env_swap
-argument_list|(
-name|self
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|p
