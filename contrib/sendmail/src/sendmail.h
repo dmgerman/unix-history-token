@@ -44,7 +44,7 @@ name|char
 name|SmailId
 index|[]
 init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.28 2000/07/18 02:24:44 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.517.4.37 2000/09/25 07:53:29 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3065,6 +3065,17 @@ begin_comment
 comment|/* header from user */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CHHDR_QUEUE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* header from qf file */
+end_comment
+
 begin_comment
 comment|/* functions */
 end_comment
@@ -3342,6 +3353,7 @@ modifier|*
 name|e_errorqueue
 decl_stmt|;
 comment|/* the queue for error responses */
+comment|/* 	**  Overflow detection is based on< 0, so don't change this 	**  to unsigned.  We don't use unsigned and == ULONG_MAX because 	**  some libc's don't have strtoul(), see mail_esmtp_args(). 	*/
 name|long
 name|e_msgsize
 decl_stmt|;
@@ -3822,6 +3834,17 @@ end_define
 
 begin_comment
 comment|/* discard the message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_TOOBIG
+value|0x2000000L
+end_define
+
+begin_comment
+comment|/* message is too big */
 end_comment
 
 begin_comment
@@ -4990,17 +5013,6 @@ end_define
 
 begin_comment
 comment|/* don't rewrite result, return as-is */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MF_SHARED
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* map connection is shared */
 end_comment
 
 begin_define
@@ -8043,7 +8055,7 @@ comment|/* d_flags, see daemon.c */
 end_comment
 
 begin_comment
-comment|/* generic rule: lower case: required, upper case: No */
+comment|/* general rule: lower case: required, upper case: No */
 end_comment
 
 begin_define
@@ -8099,6 +8111,32 @@ end_define
 
 begin_comment
 comment|/* fq sender address required (cf) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_TLS_CLT1
+end_if
+
+begin_define
+define|#
+directive|define
+name|D_CLTNOTLS
+value|'S'
+end_define
+
+begin_comment
+comment|/* don't use STARTTLS in client */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_TLS_CLT1 */
 end_comment
 
 begin_define
@@ -9367,6 +9405,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* syslog user errors (e.g., SMTP RCPT cmd) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|MapOpenErr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* error opening a non-optional map */
 end_comment
 
 begin_decl_stmt
@@ -11595,7 +11644,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|tls_rand_init
 name|__P
 argument_list|(

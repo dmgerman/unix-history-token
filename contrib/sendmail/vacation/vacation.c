@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: vacation.c,v 8.68.4.4 2000/07/18 05:10:29 gshapiro Exp $"
+literal|"@(#)$Id: vacation.c,v 8.68.4.7 2000/09/05 21:48:45 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,6 +521,33 @@ begin_comment
 comment|/* _FFR_DEBUG */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|eatmsg
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* exit after reading input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXITIT
+parameter_list|(
+name|excode
+parameter_list|)
+value|{ \ 				eatmsg(); \ 				exit(excode); \ 			}
+end_define
+
 begin_function
 name|int
 name|main
@@ -570,6 +597,9 @@ name|ch
 decl_stmt|;
 name|int
 name|result
+decl_stmt|;
+name|long
+name|sff
 decl_stmt|;
 name|time_t
 name|interval
@@ -700,6 +730,29 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_LISTDB
+define|#
+directive|define
+name|EXITM
+parameter_list|(
+name|excode
+parameter_list|)
+value|{ \ 				if (!iflag&& !lflag) \ 					eatmsg(); \ 				exit(excode); \ 			}
+else|#
+directive|else
+comment|/* _FFR_LISTDB */
+define|#
+directive|define
+name|EXITM
+parameter_list|(
+name|excode
+parameter_list|)
+value|{ \ 				if (!iflag) \ 					eatmsg(); \ 				exit(excode); \ 			}
+endif|#
+directive|endif
+comment|/* _FFR_LISTDB */
 comment|/* Vars needed to link with smutil */
 name|clrbitmap
 argument_list|(
@@ -1149,7 +1202,7 @@ argument_list|,
 literal|"vacation: can't allocate memory for alias.\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|)
@@ -1216,7 +1269,7 @@ name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_NOUSER
 argument_list|)
@@ -1260,7 +1313,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_NOUSER
 argument_list|)
@@ -1295,7 +1348,7 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_NOINPUT
 argument_list|)
@@ -1336,6 +1389,39 @@ argument_list|,
 name|SMDB_MAX_USER_NAME_LEN
 argument_list|)
 expr_stmt|;
+name|sff
+operator|=
+name|SFF_CREAT
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_BLACKBOX
+if|if
+condition|(
+name|getegid
+argument_list|()
+operator|!=
+name|getgid
+argument_list|()
+condition|)
+name|RunAsGid
+operator|=
+name|user_info
+operator|.
+name|smdbu_group_id
+operator|=
+name|getegid
+argument_list|()
+expr_stmt|;
+name|sff
+operator||=
+name|SFF_NOPATHCHECK
+operator||
+name|SFF_OPENASROOT
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_BLACKBOX */
 name|result
 operator|=
 name|smdb_open_database
@@ -1361,7 +1447,7 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
-name|SFF_CREAT
+name|sff
 argument_list|,
 name|SMDB_TYPE_DEFAULT
 argument_list|,
@@ -1392,7 +1478,7 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_DATAERR
 argument_list|)
@@ -1493,7 +1579,7 @@ argument_list|(
 name|Db
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_OK
 argument_list|)
@@ -1530,7 +1616,7 @@ argument_list|,
 literal|"vacation: can't allocate memory for username.\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITM
 argument_list|(
 name|EX_OSERR
 argument_list|)
@@ -1623,7 +1709,31 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** READHEADERS -- read mail headers ** **	Parameters: **		none. ** **	Returns: **		nothing. ** */
+comment|/* ** EATMSG -- read stdin till EOF ** **	Parameters: **		none. ** **	Returns: **		nothing. ** */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|eatmsg
+parameter_list|()
+block|{
+comment|/* 	**  read the rest of the e-mail and ignore it to avoid problems 	**  with EPIPE in sendmail 	*/
+while|while
+condition|(
+name|getc
+argument_list|(
+name|stdin
+argument_list|)
+operator|!=
+name|EOF
+condition|)
+continue|continue;
+block|}
+end_function
+
+begin_comment
+comment|/* ** READHEADERS -- read mail headers ** **	Parameters: **		none. ** **	Returns: **		nothing. ** **	Side Effects: **		may exit(). ** */
 end_comment
 
 begin_function
@@ -1777,7 +1887,7 @@ argument_list|,
 literal|"vacation: badly formatted \"From \" line.\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITIT
 argument_list|(
 name|EX_DATAERR
 argument_list|)
@@ -1839,7 +1949,7 @@ argument_list|,
 literal|"vacation: badly formatted \"From \" line.\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITIT
 argument_list|(
 name|EX_DATAERR
 argument_list|)
@@ -1904,7 +2014,7 @@ operator|+
 literal|5
 argument_list|)
 condition|)
-name|exit
+name|EXITIT
 argument_list|(
 name|EX_OK
 argument_list|)
@@ -2046,7 +2156,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|exit
+name|EXITIT
 argument_list|(
 name|EX_OK
 argument_list|)
@@ -2176,7 +2286,7 @@ condition|(
 operator|!
 name|tome
 condition|)
-name|exit
+name|EXITIT
 argument_list|(
 name|EX_OK
 argument_list|)
@@ -2196,7 +2306,7 @@ argument_list|,
 literal|"vacation: no initial \"From \" line.\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXITIT
 argument_list|(
 name|EX_DATAERR
 argument_list|)
@@ -3358,6 +3468,8 @@ argument_list|(
 name|_PATH_SENDMAIL
 argument_list|,
 literal|"sendmail"
+argument_list|,
+literal|"-oi"
 argument_list|,
 literal|"-f"
 argument_list|,

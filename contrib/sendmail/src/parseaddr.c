@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: parseaddr.c,v 8.234.4.1 2000/05/25 18:56:16 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.234.4.5 2000/09/25 07:53:29 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -11628,6 +11628,10 @@ goto|goto
 name|finis
 goto|;
 block|}
+name|MapOpenErr
+operator|=
+name|FALSE
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -11640,6 +11644,17 @@ argument_list|,
 literal|0
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MapOpenErr
+condition|)
+name|usrerrenh
+argument_list|(
+literal|"4.3.0"
+argument_list|,
+literal|"451 Temporary failure"
 argument_list|)
 expr_stmt|;
 if|if

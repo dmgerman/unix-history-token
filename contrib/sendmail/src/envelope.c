@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: envelope.c,v 8.180.14.3 2000/06/29 05:30:23 gshapiro Exp $"
+literal|"@(#)$Id: envelope.c,v 8.180.14.4 2000/08/22 18:22:39 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3431,6 +3431,24 @@ comment|/* 			**  Process passwd file entry. 			*/
 comment|/* extract home directory */
 if|if
 condition|(
+operator|*
+name|pw
+operator|->
+name|pw_dir
+operator|==
+literal|'\0'
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|pw
@@ -3653,7 +3671,30 @@ operator|.
 name|q_home
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|==
+literal|'\0'
+condition|)
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_home
+operator|=
+name|NULL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|e
@@ -3674,6 +3715,7 @@ operator|.
 name|q_home
 operator|++
 expr_stmt|;
+block|}
 block|}
 name|e
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: main.c,v 8.34.4.5 2000/07/14 06:16:57 msk Exp $"
+literal|"@(#)$Id: main.c,v 8.34.4.9 2000/09/09 02:23:03 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,29 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SMFI_STOP -- stop milter ** **	Parameters: **		none. ** **	Returns: **		success. */
+end_comment
+
+begin_function
+name|int
+name|smfi_stop
+parameter_list|()
+block|{
+name|mi_stop_milters
+argument_list|(
+name|MILTER_STOP
+argument_list|)
+expr_stmt|;
+return|return
+name|MI_SUCCESS
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -260,6 +283,15 @@ name|int
 name|timeout
 init|=
 name|MI_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|backlog
+init|=
+name|MI_SOMAXCONN
 decl_stmt|;
 end_decl_stmt
 
@@ -384,6 +416,35 @@ end_function
 
 begin_function
 name|int
+name|smfi_setbacklog
+parameter_list|(
+name|obacklog
+parameter_list|)
+name|int
+name|obacklog
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|obacklog
+operator|<=
+literal|0
+condition|)
+return|return
+name|MI_FAILURE
+return|;
+name|backlog
+operator|=
+name|obacklog
+expr_stmt|;
+return|return
+name|MI_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|smfi_main
 parameter_list|()
 block|{
@@ -463,6 +524,8 @@ argument_list|,
 name|smfi
 argument_list|,
 name|timeout
+argument_list|,
+name|backlog
 argument_list|)
 operator|!=
 name|MI_SUCCESS

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: readcf.c,v 8.382.4.14 2000/07/12 00:00:27 geir Exp $"
+literal|"@(#)$Id: readcf.c,v 8.382.4.27 2000/09/28 01:31:16 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4569,7 +4569,7 @@ condition|)
 block|{
 if|#
 directive|if
-name|_FFR_REMOVE_TCP_PATH
+name|_FFR_REMOVE_TCP_MAILER_PATH
 name|syserr
 argument_list|(
 literal|"M%s: P=[TCP] is deprecated, use P=[IPC] instead\n"
@@ -4581,7 +4581,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* _FFR_REMOVE_TCP_PATH */
+comment|/* _FFR_REMOVE_TCP_MAILER_PATH */
 name|printf
 argument_list|(
 literal|"M%s: Warning: P=[TCP] is deprecated, use P=[IPC] instead\n"
@@ -4593,7 +4593,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_REMOVE_TCP_PATH */
+comment|/* _FFR_REMOVE_TCP_MAILER_PATH */
 block|}
 if|if
 condition|(
@@ -4607,11 +4607,11 @@ literal|"[IPC]"
 argument_list|)
 operator|==
 literal|0
-operator|||
 if|#
 directive|if
 operator|!
 name|_FFR_REMOVE_TCP_MAILER_PATH
+operator|||
 name|strcmp
 argument_list|(
 name|m
@@ -4690,10 +4690,10 @@ literal|"TCP"
 argument_list|)
 operator|!=
 literal|0
-operator|&&
 if|#
 directive|if
 name|NETUNIX
+operator|&&
 name|strcmp
 argument_list|(
 name|m
@@ -4707,7 +4707,6 @@ literal|"FILE"
 argument_list|)
 operator|!=
 literal|0
-operator|&&
 endif|#
 directive|endif
 comment|/* NETUNIX */
@@ -4715,6 +4714,7 @@ if|#
 directive|if
 operator|!
 name|_FFR_DEPRECATE_IPC_MAILER_ARG
+operator|&&
 name|strcmp
 argument_list|(
 name|m
@@ -9309,11 +9309,14 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|QueueDir
 operator|=
 literal|"mqueue"
 expr_stmt|;
+block|}
 else|else
+block|{
 name|QueueDir
 operator|=
 name|newstr
@@ -9321,6 +9324,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|RealUid

@@ -21,7 +21,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: alias.c,v 8.142.4.1 2000/05/25 18:56:12 gshapiro Exp $"
+literal|"@(#)$Id: alias.c,v 8.142.4.3 2000/09/21 21:52:16 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3253,7 +3253,7 @@ name|announcestats
 condition|)
 name|message
 argument_list|(
-literal|"%s: %d aliases, longest %d bytes, %d bytes total"
+literal|"%s: %ld aliases, longest %ld bytes, %ld bytes total"
 argument_list|,
 name|map
 operator|->
@@ -3280,7 +3280,7 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"%s: %d aliases, longest %d bytes, %d bytes total"
+literal|"%s: %ld aliases, longest %ld bytes, %ld bytes total"
 argument_list|,
 name|map
 operator|->

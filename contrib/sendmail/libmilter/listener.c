@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: listener.c,v 8.38.2.1.2.7 2000/05/25 21:44:26 gshapiro Exp $"
+literal|"@(#)$Id: listener.c,v 8.38.2.1.2.11 2000/09/01 00:49:04 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|socket_t
 name|mi_milteropen
 parameter_list|(
 name|conn
@@ -103,10 +103,8 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|int
+name|socket_t
 name|sock
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|sockopt
@@ -159,7 +157,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 operator|(
@@ -291,7 +289,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 endif|#
 directive|endif
@@ -435,7 +433,7 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 operator|*
@@ -533,7 +531,7 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 endif|#
 directive|endif
@@ -614,7 +612,7 @@ name|colon
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 if|#
@@ -622,7 +620,7 @@ directive|if
 literal|0
 block|errno = safefile(colon, RunAsUid, RunAsGid, RunAsUserName, sff, 				 S_IRUSR|S_IWUSR, NULL);
 comment|/* if not safe, don't create */
-block|if (errno != 0) 		{ 			smi_log(SMI_LOG_ERR, 				"%s: UNIX socket name %s unsafe", 				name, colon); 			return MI_INVALID_SOCKET; 		}
+block|if (errno != 0) 		{ 			smi_log(SMI_LOG_ERR, 				"%s: UNIX socket name %s unsafe", 				name, colon); 			return INVALID_SOCKET; 		}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -793,7 +791,7 @@ name|colon
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 else|#
 directive|else
@@ -832,7 +830,7 @@ name|colon
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 name|port
@@ -1068,7 +1066,7 @@ name|at
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 block|}
@@ -1086,7 +1084,7 @@ name|at
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 block|}
@@ -1124,7 +1122,7 @@ name|at
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 name|addr
@@ -1229,7 +1227,7 @@ name|h_addrtype
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 block|}
@@ -1326,7 +1324,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 if|if
@@ -1379,7 +1377,7 @@ name|sock
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 if|if
@@ -1425,7 +1423,7 @@ name|sock
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 if|if
@@ -1463,7 +1461,7 @@ name|sock
 argument_list|)
 expr_stmt|;
 return|return
-name|MI_INVALID_SOCKET
+name|INVALID_SOCKET
 return|;
 block|}
 return|return
@@ -1504,11 +1502,56 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|socket_t
+name|listenfd
+init|=
+name|INVALID_SOCKET
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MI_MILTER_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		smfi -- filter structure to use **		timeout -- timeout for reads/writes ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
+comment|/* **  MI_CLOSENER -- close listen socket ** **	Parameters: **		none. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|mi_closener
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ValidSocket
+argument_list|(
+name|listenfd
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|listenfd
+argument_list|)
+expr_stmt|;
+name|listenfd
+operator|=
+name|INVALID_SOCKET
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		smfi -- filter structure to use **		timeout -- timeout for reads/writes ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
 end_comment
 
 begin_function
@@ -1522,6 +1565,8 @@ parameter_list|,
 name|smfi
 parameter_list|,
 name|timeout
+parameter_list|,
+name|backlog
 parameter_list|)
 name|char
 modifier|*
@@ -1536,18 +1581,14 @@ decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
-block|{
 name|int
+name|backlog
+decl_stmt|;
+block|{
+name|socket_t
 name|connfd
 init|=
-operator|-
-literal|1
-decl_stmt|;
-name|int
-name|listenfd
-init|=
-operator|-
-literal|1
+name|INVALID_SOCKET
 decl_stmt|;
 name|int
 name|sockopt
@@ -1615,16 +1656,13 @@ argument_list|,
 name|conn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|listenfd
 operator|=
 name|mi_milteropen
 argument_list|(
 name|conn
 argument_list|,
-name|SOMAXCONN
+name|backlog
 argument_list|,
 operator|&
 name|socksize
@@ -1633,9 +1671,14 @@ name|smfi
 operator|->
 name|xxfi_name
 argument_list|)
-operator|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ValidSocket
+argument_list|(
+name|listenfd
+argument_list|)
 condition|)
 block|{
 name|smi_log
@@ -1828,9 +1871,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|ValidSocket
+argument_list|(
 name|connfd
-operator|<
-literal|0
+argument_list|)
 condition|)
 block|{
 name|smi_log

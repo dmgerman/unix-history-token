@@ -54,7 +54,7 @@ name|char
 name|MilterlId
 index|[]
 init|=
-literal|"@(#)$Id: libmilter.h,v 8.3.6.4 2000/06/09 07:12:13 gshapiro Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.3.6.9 2000/09/01 00:49:04 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|INVALID_SOCKET
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_SOCK_READ
+parameter_list|(
+name|s
+parameter_list|,
+name|b
+parameter_list|,
+name|l
+parameter_list|)
+value|(read(s, b, l))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_SOCK_WRITE
+parameter_list|(
+name|s
+parameter_list|,
+name|b
+parameter_list|,
+name|l
+parameter_list|)
+value|(write(s, b, l))
+end_define
+
+begin_define
+define|#
+directive|define
 name|thread_create
 parameter_list|(
 name|ptid
@@ -234,6 +269,46 @@ end_define
 
 begin_comment
 comment|/* checking whether to terminate */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SOMAXCONN
+operator|>
+literal|20
+end_if
+
+begin_define
+define|#
+directive|define
+name|MI_SOMAXCONN
+value|SOMAXCONN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SOMAXCONN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MI_SOMAXCONN
+value|20
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOMAXCONN */
 end_comment
 
 begin_comment
@@ -407,13 +482,6 @@ name|SMI_LOG_DEBUG
 value|LOG_DEBUG
 end_define
 
-begin_define
-define|#
-directive|define
-name|MI_INVALID_SOCKET
-value|(-1)
-end_define
-
 begin_comment
 comment|/* stop? */
 end_comment
@@ -484,6 +552,8 @@ operator|,
 name|smfiDesc_ptr
 operator|,
 name|time_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -570,6 +640,19 @@ name|char
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mi_closener
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. ** ** $Id: smdb.h,v 8.29.2.1 2000/04/08 20:40:42 ca Exp $ */
+comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. ** ** $Id: smdb.h,v 8.29.2.1.2.1 2000/08/24 17:08:00 gshapiro Exp $ */
 end_comment
 
 begin_ifndef
@@ -377,6 +377,23 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+argument_list|(
+argument|*db_lockfd_func
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SMDB_DATABASE
+operator|*
+name|db
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
 begin_struct
 struct|struct
 name|database_struct
@@ -404,6 +421,9 @@ name|smdb_set_owner
 decl_stmt|;
 name|db_cursor_func
 name|smdb_cursor
+decl_stmt|;
+name|db_lockfd_func
+name|smdb_lockfd
 decl_stmt|;
 name|void
 modifier|*
@@ -1064,6 +1084,36 @@ name|__P
 argument_list|(
 operator|(
 name|SMDB_DBTYPE
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|smdb_lock_map
+name|__P
+argument_list|(
+operator|(
+name|SMDB_DATABASE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|smdb_unlock_map
+name|__P
+argument_list|(
+operator|(
+name|SMDB_DATABASE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

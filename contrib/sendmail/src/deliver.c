@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.31 2000/07/18 02:24:43 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.44 2000/09/21 21:52:17 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2174,20 +2174,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* be sure everything is instantiated in the queue */
-name|queueup
-argument_list|(
-name|e
-argument_list|,
-name|mode
-operator|==
-name|SM_QUEUE
-operator|||
-name|mode
-operator|==
-name|SM_DEFER
-argument_list|)
-expr_stmt|;
+comment|/* 		**  Be sure everything is instantiated in the queue. 		**  Split envelopes first in case the machine crashes. 		**  If the original were done first, we may lose 		**  recipients. 		*/
 for|for
 control|(
 name|ee
@@ -2207,6 +2194,19 @@ control|)
 name|queueup
 argument_list|(
 name|ee
+argument_list|,
+name|mode
+operator|==
+name|SM_QUEUE
+operator|||
+name|mode
+operator|==
+name|SM_DEFER
+argument_list|)
+expr_stmt|;
+name|queueup
+argument_list|(
+name|e
 argument_list|,
 name|mode
 operator|==
@@ -2710,6 +2710,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 		**  Since we have accepted responsbility for the message, 		**  change the SIGTERM handler.  intsig() (the old handler) 		**  would remove the envelope if this was a command line 		**  message submission. 		*/
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 comment|/* double fork to avoid zombies */
 name|pid
 operator|=
@@ -3313,6 +3324,10 @@ name|QUEUE
 comment|/* 			**  Checkpoint the send list every few addresses 			*/
 if|if
 condition|(
+name|CheckpointInterval
+operator|>
+literal|0
+operator|&&
 name|e
 operator|->
 name|e_nsent
@@ -4746,7 +4761,7 @@ name|to
 operator|->
 name|q_paddr
 expr_stmt|;
-comment|/* 		**  Check to see that these people are allowed to 		**  talk to each other. 		*/
+comment|/* 		**  Check to see that these people are allowed to 		**  talk to each other. 		**  Check also for overflow of e_msgsize. 		*/
 if|if
 condition|(
 name|m
@@ -4755,6 +4770,7 @@ name|m_maxsize
 operator|!=
 literal|0
 operator|&&
+operator|(
 name|e
 operator|->
 name|e_msgsize
@@ -4762,6 +4778,13 @@ operator|>
 name|m
 operator|->
 name|m_maxsize
+operator|||
+name|e
+operator|->
+name|e_msgsize
+operator|<
+literal|0
+operator|)
 condition|)
 block|{
 name|e
@@ -9563,6 +9586,16 @@ name|saveSuprErrs
 init|=
 name|SuprErrs
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_TLS_CLT1
+name|char
+modifier|*
+name|p
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_TLS_CLT1 */
 specifier|extern
 name|SOCKADDR
 name|CurHostAddr
@@ -9582,6 +9615,64 @@ operator|->
 name|mci_flags
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_TLS_CLT1
+if|if
+condition|(
+name|usetls
+operator|&&
+operator|(
+name|p
+operator|=
+name|macvalue
+argument_list|(
+name|macid
+argument_list|(
+literal|"{client_flags}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+comment|/* look for just this one flag */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+name|D_CLTNOTLS
+condition|)
+block|{
+name|usetls
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_TLS_CLT1 */
 name|hasdot
 operator|=
 name|CurHostName
@@ -11215,8 +11306,36 @@ condition|)
 block|{
 if|#
 directive|if
-operator|!
 name|_FFR_DYNAMIC_TOBUF
+operator|(
+name|void
+operator|)
+name|strlcat
+argument_list|(
+name|tobuf
+argument_list|,
+literal|","
+argument_list|,
+name|tobufsize
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcat
+argument_list|(
+name|tobuf
+argument_list|,
+name|to
+operator|->
+name|q_paddr
+argument_list|,
+name|tobufsize
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* _FFR_DYNAMIC_TOBUF */
 if|if
 condition|(
 name|strlen
@@ -11244,9 +11363,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* !_FFR_DYNAMIC_TOBUF */
 block|{
 operator|(
 name|void
@@ -11277,6 +11393,9 @@ name|tobuf
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* _FFR_DYNAMIC_TOBUF */
 name|anyok
 operator|=
 name|TRUE
@@ -11401,6 +11520,10 @@ name|QUEUE
 comment|/* 		**  Checkpoint the send list every few addresses 		*/
 if|if
 condition|(
+name|CheckpointInterval
+operator|>
+literal|0
+operator|&&
 name|e
 operator|->
 name|e_nsent
@@ -12457,7 +12580,7 @@ else|else
 block|{
 name|syserr
 argument_list|(
-literal|"endmailer %s: wait timeout (%d)"
+literal|"endmailer %s: wait timeout (%ld)"
 argument_list|,
 name|mci
 operator|->
@@ -12465,6 +12588,9 @@ name|mci_mailer
 operator|->
 name|m_name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|mci
 operator|->
 name|mci_mailer
@@ -14384,10 +14510,15 @@ name|e_id
 argument_list|,
 literal|"to=%.*s [more]%s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|++
 name|q
 operator|-
 name|p
+argument_list|)
 argument_list|,
 name|p
 argument_list|,
@@ -14550,10 +14681,15 @@ name|e_id
 argument_list|,
 literal|"to=%.*s [more]"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|++
 name|q
 operator|-
 name|p
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -20889,6 +21025,13 @@ name|smtpresult
 decl_stmt|;
 name|int
 name|result
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rfd
+decl_stmt|,
+name|wfd
 decl_stmt|;
 name|SSL
 modifier|*
@@ -20896,6 +21039,19 @@ name|clt_ssl
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|clt_ctx
+operator|==
+name|NULL
+operator|&&
+operator|!
+name|initclttls
+argument_list|()
+condition|)
+return|return
+name|EX_TEMPFAIL
+return|;
 name|smtpmessage
 argument_list|(
 literal|"STARTTLS"
@@ -20981,19 +21137,6 @@ argument_list|,
 literal|"TLS: start client"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|clt_ctx
-operator|==
-name|NULL
-operator|&&
-operator|!
-name|initclttls
-argument_list|()
-condition|)
-return|return
-name|EX_SOFTWARE
-return|;
 comment|/* start connection */
 if|if
 condition|(
@@ -21041,9 +21184,35 @@ return|return
 name|EX_SOFTWARE
 return|;
 block|}
+name|rfd
+operator|=
+name|fileno
+argument_list|(
+name|mci
+operator|->
+name|mci_in
+argument_list|)
+expr_stmt|;
+name|wfd
+operator|=
+name|fileno
+argument_list|(
+name|mci
+operator|->
+name|mci_out
+argument_list|)
+expr_stmt|;
 comment|/* SSL_clear(clt_ssl); ? */
 if|if
 condition|(
+name|rfd
+operator|<
+literal|0
+operator|||
+name|wfd
+operator|<
+literal|0
+operator|||
 operator|(
 name|result
 operator|=
@@ -21051,16 +21220,11 @@ name|SSL_set_rfd
 argument_list|(
 name|clt_ssl
 argument_list|,
-name|fileno
-argument_list|(
-name|mci
-operator|->
-name|mci_in
-argument_list|)
+name|rfd
 argument_list|)
 operator|)
-operator|!=
-literal|1
+operator|<=
+literal|0
 operator|||
 operator|(
 name|result
@@ -21069,16 +21233,11 @@ name|SSL_set_wfd
 argument_list|(
 name|clt_ssl
 argument_list|,
-name|fileno
-argument_list|(
-name|mci
-operator|->
-name|mci_out
-argument_list|)
+name|wfd
 argument_list|)
 operator|)
-operator|!=
-literal|1
+operator|<=
+literal|0
 condition|)
 block|{
 if|if

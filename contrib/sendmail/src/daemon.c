@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: daemon.c,v 8.401.4.14 2000/07/14 04:15:00 gshapiro Exp $ (with daemon mode)"
+literal|"@(#)$Id: daemon.c,v 8.401.4.18 2000/09/21 21:52:16 ca Exp $ (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: daemon.c,v 8.401.4.14 2000/07/14 04:15:00 gshapiro Exp $ (without daemon mode)"
+literal|"@(#)$Id: daemon.c,v 8.401.4.18 2000/09/21 21:52:16 ca Exp $ (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,27 @@ if|#
 directive|if
 name|DAEMON
 end_if
+
+begin_if
+if|#
+directive|if
+name|STARTTLS
+end_if
+
+begin_include
+include|#
+directive|include
+file|<openssl/rand.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* STARTTLS */
+end_comment
 
 begin_include
 include|#
@@ -882,6 +903,18 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|STARTTLS
+name|long
+name|seed
+decl_stmt|;
+name|time_t
+name|timenow
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* STARTTLS */
 comment|/* see if we are rejecting connections */
 operator|(
 name|void
@@ -1112,7 +1145,7 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"rejecting new messages: min free: %d"
+literal|"rejecting new messages: min free: %ld"
 argument_list|,
 name|MinBlocksFree
 argument_list|)
@@ -1123,7 +1156,7 @@ name|TRUE
 argument_list|,
 name|e
 argument_list|,
-literal|"rejecting new messages: min free: %d"
+literal|"rejecting new messages: min free: %ld"
 argument_list|,
 name|MinBlocksFree
 argument_list|)
@@ -2072,12 +2105,70 @@ name|t
 argument_list|)
 expr_stmt|;
 comment|/* 		**  advance state of PRNG 		**  this is necessary because otherwise all child processes 		**  will produce the same PRN sequence and hence the selection 		**  of a queue directory (and other things, e.g., MX selection) 		**  are not "really" random. 		*/
+if|#
+directive|if
+name|STARTTLS
+name|seed
+operator|=
+name|get_random
+argument_list|()
+expr_stmt|;
+name|RAND_seed
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|last_disk_space_check
+argument_list|,
+sizeof|sizeof
+name|last_disk_space_check
+argument_list|)
+expr_stmt|;
+name|timenow
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
+name|RAND_seed
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|timenow
+argument_list|,
+sizeof|sizeof
+name|timenow
+argument_list|)
+expr_stmt|;
+name|RAND_seed
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|seed
+argument_list|,
+sizeof|sizeof
+name|seed
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* STARTTLS */
 operator|(
 name|void
 operator|)
 name|get_random
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* STARTTLS */
 comment|/* 		**  Create a pipe to keep the child from writing to the 		**  socket until after the parent has closed it.  Otherwise 		**  the parent may hang if the child has closed it first. 		*/
 if|if
 condition|(
@@ -5259,7 +5350,7 @@ operator|->
 name|d_mflags
 condition|)
 operator|*
-name|f
+name|flags
 operator|++
 operator|=
 literal|' '
@@ -9937,6 +10028,7 @@ modifier|*
 name|may_be_forged
 decl_stmt|;
 block|{
+specifier|volatile
 name|u_short
 name|port
 init|=

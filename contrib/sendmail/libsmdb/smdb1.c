@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: smdb1.c,v 8.43 2000/03/17 07:32:43 gshapiro Exp $"
+literal|"@(#)$Id: smdb1.c,v 8.43.4.1 2000/08/24 17:08:00 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,6 +531,37 @@ name|errno
 return|;
 return|return
 name|SMDBE_OK
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|smdb1_lockfd
+parameter_list|(
+name|database
+parameter_list|)
+name|SMDB_DATABASE
+modifier|*
+name|database
+decl_stmt|;
+block|{
+name|SMDB_DB1_DATABASE
+modifier|*
+name|db1
+init|=
+operator|(
+name|SMDB_DB1_DATABASE
+operator|*
+operator|)
+name|database
+operator|->
+name|smdb_impl
+decl_stmt|;
+return|return
+name|db1
+operator|->
+name|smdb1_lock_fd
 return|;
 block|}
 end_function
@@ -1767,6 +1798,12 @@ operator|->
 name|smdb_fd
 operator|=
 name|smdb1_fd
+expr_stmt|;
+name|smdb_db
+operator|->
+name|smdb_lockfd
+operator|=
+name|smdb1_lockfd
 expr_stmt|;
 name|smdb_db
 operator|->
