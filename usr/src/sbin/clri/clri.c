@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c	5.4 (Berkeley) %G%"
+literal|"@(#)clri.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/inode.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
