@@ -2754,6 +2754,13 @@ block|}
 block|,
 comment|/* OZO8039 - Zoom 56k flex */
 block|{
+literal|0x3024a341
+block|,
+name|NULL
+block|}
+block|,
+comment|/* PMC2430 - Pace 56 Voice Internal Modem */
+block|{
 literal|0x1000eb49
 block|,
 name|NULL
