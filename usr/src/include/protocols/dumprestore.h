@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dumprestore.h	2.5	83/08/11	*/
+comment|/*	dumprestore.h	2.6	85/03/24	*/
 end_comment
 
 begin_comment
-comment|/*  * TP_BSIZE is the size of file blocks on the dump tapes.  * Note that TP_BSIZE must be a multiple of DEV_BSIZE.  *  * NTREC is the number of TP_BSIZE blocks that are written  * in each tape record.  *  * TP_NINDIR is the number of indirect pointers in a TS_INODE  * or TS_ADDR record. Note that it must be a power of two.  */
+comment|/*  * TP_BSIZE is the size of file blocks on the dump tapes.  * Note that TP_BSIZE must be a multiple of DEV_BSIZE.  *  * NTREC is the number of TP_BSIZE blocks that are written  * in each tape record. HIGHDENSITYTREC is the number of  * TP_BSIZE blocks that are written in each tape record on  * 6250 BPI or higher density tapes.  *  * TP_NINDIR is the number of indirect pointers in a TS_INODE  * or TS_ADDR record. Note that it must be a power of two.  */
 end_comment
 
 begin_define
@@ -19,6 +19,13 @@ define|#
 directive|define
 name|NTREC
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIGHDENSITYTREC
+value|32
 end_define
 
 begin_define
