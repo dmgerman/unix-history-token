@@ -3067,7 +3067,7 @@ condition|(
 name|sp
 operator|->
 name|state
-operator||=
+operator|!=
 name|PPPOE_PRIMED
 condition|)
 block|{
