@@ -1907,7 +1907,7 @@ end_comment
 
 begin_function
 specifier|static
-name|wchar_t
+name|wint_t
 name|fetch_wc
 parameter_list|(
 name|char
@@ -1938,8 +1938,7 @@ argument_list|)
 expr_stmt|;
 else|else
 return|return
-operator|-
-literal|1
+name|WEOF
 return|;
 block|}
 name|cur_mb_len
@@ -2035,7 +2034,7 @@ name|void
 name|parse_bracket_exp_mb
 parameter_list|()
 block|{
-name|wchar_t
+name|wint_t
 name|wc
 decl_stmt|,
 name|wc1
@@ -2227,8 +2226,7 @@ do|do
 block|{
 name|wc1
 operator|=
-operator|-
-literal|1
+name|WEOF
 expr_stmt|;
 comment|/* mark wc1 is not initialized".  */
 comment|/* Note that if we're looking at some other [:...:] construct, 	 we just treat it as a bunch of ordinary characters.  We can do 	 this because we assume regex has checked for syntax errors before 	 dfa is ever called. */
@@ -2689,8 +2687,7 @@ block|}
 block|}
 name|wc
 operator|=
-operator|-
-literal|1
+name|WEOF
 expr_stmt|;
 block|}
 else|else
@@ -2740,8 +2737,7 @@ if|if
 condition|(
 name|wc1
 operator|==
-operator|-
-literal|1
+name|WEOF
 condition|)
 name|wc1
 operator|=
@@ -2888,6 +2884,9 @@ operator|->
 name|nranges
 index|]
 operator|=
+operator|(
+name|wchar_t
+operator|)
 name|wc
 expr_stmt|;
 name|REALLOC_IF_NECESSARY
@@ -2917,6 +2916,9 @@ name|nranges
 operator|++
 index|]
 operator|=
+operator|(
+name|wchar_t
+operator|)
 name|wc2
 expr_stmt|;
 block|}
@@ -2925,8 +2927,7 @@ if|if
 condition|(
 name|wc
 operator|!=
-operator|-
-literal|1
+name|WEOF
 condition|)
 comment|/* build normal characters.  */
 block|{
@@ -2957,6 +2958,9 @@ name|nchars
 operator|++
 index|]
 operator|=
+operator|(
+name|wchar_t
+operator|)
 name|wc
 expr_stmt|;
 block|}
