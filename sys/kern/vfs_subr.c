@@ -5050,13 +5050,7 @@ operator|==
 literal|0
 condition|)
 block|{
-while|while
-condition|(
-name|object
-operator|->
-name|paging_in_progress
-condition|)
-name|vm_object_pip_sleep
+name|vm_object_pip_wait
 argument_list|(
 name|object
 argument_list|,
