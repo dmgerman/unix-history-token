@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_icmp.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1270,11 +1270,11 @@ name|icp
 operator|->
 name|icmp_mask
 operator|=
-name|ntohl
+name|htonl
 argument_list|(
 name|ia
 operator|->
-name|ia_netmask
+name|ia_subnetmask
 argument_list|)
 expr_stmt|;
 if|if
