@@ -3860,9 +3860,10 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
+operator|==
 literal|0
 condition|)
+break|break;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -3873,8 +3874,10 @@ argument_list|,
 name|v_freelist
 argument_list|)
 expr_stmt|;
-else|else
-break|break;
+name|vp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 if|if
