@@ -112,7 +112,15 @@ literal|"#define yyerrok (yyerrflag=0)"
 block|,
 literal|"#define YYRECOVERING() (yyerrflag!=0)"
 block|,
+literal|"#if defined(__cplusplus) || __STDC__"
+block|,
+literal|"static int yygrowstack(void);"
+block|,
+literal|"#else"
+block|,
 literal|"static int yygrowstack();"
+block|,
+literal|"#endif"
 block|,
 literal|0
 block|}
