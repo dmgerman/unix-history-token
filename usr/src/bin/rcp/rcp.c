@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.35 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.35.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4767,25 +4767,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
-ifdef|#
-directive|ifdef
-name|CRYPT
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n\t%s\n"
-argument_list|,
-literal|"usage: rcp [-Kpx] [-k realm] f1 f2"
-argument_list|,
-literal|"or: rcp [-Kprx] [-k realm] f1 ... fn directory"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 operator|(
 name|void
 operator|)
@@ -4800,8 +4781,6 @@ argument_list|,
 literal|"or: rcp [-Kpr] [-k realm] f1 ... fn directory"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 else|#
 directive|else
 operator|(
