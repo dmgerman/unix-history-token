@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/uart/uart_dev_sab82532.h>
+file|<dev/ic/sab82532.h>
 end_include
 
 begin_include

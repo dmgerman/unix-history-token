@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/uart/uart_dev_z8530.h>
+file|<dev/ic/z8530.h>
 end_include
 
 begin_include
