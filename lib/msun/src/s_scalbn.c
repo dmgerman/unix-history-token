@@ -325,7 +325,7 @@ operator|)
 end_if
 
 begin_expr_stmt
-name|__strong_reference
+name|__weak_reference
 argument_list|(
 name|scalbn
 argument_list|,
@@ -335,7 +335,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|__strong_reference
+name|__weak_reference
 argument_list|(
 name|scalbn
 argument_list|,
