@@ -292,16 +292,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s control block: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|istcp
 operator|=
 name|strcmp
@@ -351,65 +342,18 @@ name|off
 expr_stmt|;
 if|if
 condition|(
-name|first
+name|inpcb
+operator|.
+name|inp_next
+operator|==
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|)
+name|off
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Active connections"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|aflag
-condition|)
-name|printf
-argument_list|(
-literal|" (including servers)"
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Aflag
-condition|)
-name|printf
-argument_list|(
-literal|"%-8.8s "
-argument_list|,
-literal|"PCB"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|Aflag
-condition|?
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
-else|:
-literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
-argument_list|,
-literal|"Proto"
-argument_list|,
-literal|"Recv-Q"
-argument_list|,
-literal|"Send-Q"
-argument_list|,
-literal|"Local Address"
-argument_list|,
-literal|"Foreign Address"
-argument_list|,
-literal|"(state)"
-argument_list|)
-expr_stmt|;
-name|first
-operator|=
-literal|0
-expr_stmt|;
-block|}
+return|return;
 while|while
 condition|(
 name|inpcb
@@ -560,7 +504,72 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|first
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Active Internet connections"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|aflag
+condition|)
+name|printf
+argument_list|(
+literal|" (including servers)"
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|Aflag
+condition|)
+name|printf
+argument_list|(
+literal|"%-8.8s "
+argument_list|,
+literal|"PCB"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|Aflag
+condition|?
+literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
+else|:
+literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
+argument_list|,
+literal|"Proto"
+argument_list|,
+literal|"Recv-Q"
+argument_list|,
+literal|"Send-Q"
+argument_list|,
+literal|"Local Address"
+argument_list|,
+literal|"Foreign Address"
+argument_list|,
+literal|"(state)"
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Aflag
+condition|)
+if|if
+condition|(
+name|istcp
 condition|)
 name|printf
 argument_list|(
@@ -569,6 +578,14 @@ argument_list|,
 name|inpcb
 operator|.
 name|inp_ppcb
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%8x "
+argument_list|,
+name|next
 argument_list|)
 expr_stmt|;
 name|printf
@@ -711,16 +728,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
@@ -749,9 +757,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d bad header checksum%s\n"
+literal|"%s:\n\t%d incomplete header%s\n"
 argument_list|,
 name|name
+argument_list|,
+name|tcpstat
+operator|.
+name|tcps_hdrops
+argument_list|,
+name|plural
+argument_list|(
+name|tcpstat
+operator|.
+name|tcps_hdrops
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d bad checksum%s\n"
 argument_list|,
 name|tcpstat
 operator|.
@@ -778,22 +802,6 @@ argument_list|(
 name|tcpstat
 operator|.
 name|tcps_badoff
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t%d incomplete header%s\n"
-argument_list|,
-name|tcpstat
-operator|.
-name|tcps_hdrops
-argument_list|,
-name|plural
-argument_list|(
-name|tcpstat
-operator|.
-name|tcps_hdrops
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -875,16 +883,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
@@ -913,25 +912,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d bad header checksum%s\n"
+literal|"%s:\n\t%d incomplete header%s\n"
 argument_list|,
 name|name
-argument_list|,
-name|udpstat
-operator|.
-name|udps_badsum
-argument_list|,
-name|plural
-argument_list|(
-name|udpstat
-operator|.
-name|udps_badsum
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t%d incomplete header%s\n"
 argument_list|,
 name|udpstat
 operator|.
@@ -958,6 +941,22 @@ argument_list|(
 name|udpstat
 operator|.
 name|udps_badlen
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d bad checksum%s\n"
+argument_list|,
+name|udpstat
+operator|.
+name|udps_badsum
+argument_list|,
+name|plural
+argument_list|(
+name|udpstat
+operator|.
+name|udps_badsum
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1002,16 +1001,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
@@ -1040,9 +1030,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d bad header checksum%s\n"
+literal|"%s:\n\t%d total packets received\n"
 argument_list|,
 name|name
+argument_list|,
+name|ipstat
+operator|.
+name|ips_total
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d bad header checksum%s\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1092,6 +1091,102 @@ operator|.
 name|ips_badlen
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d fragment%s received\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_fragments
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_fragments
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d fragment%s dropped (dup or out of space)\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_fragdropped
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_fragdropped
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d fragment%s dropped after timeout\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_fragtimeout
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_fragtimeout
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d packet%s forwarded\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_forward
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_forward
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d packet%s not forwardable\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_cantforward
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_cantforward
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d redirect%s sent\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_redirectsent
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_redirectsent
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1136,7 +1231,11 @@ block|,
 literal|"information request"
 block|,
 literal|"information request reply"
-block|}
+block|,
+literal|"address mask request"
+block|,
+literal|"address mask reply"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1184,16 +1283,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
@@ -1235,22 +1325,6 @@ argument_list|(
 name|icmpstat
 operator|.
 name|icps_error
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t%d error%s not generated 'cuz old message too short\n"
-argument_list|,
-name|icmpstat
-operator|.
-name|icps_oldshort
-argument_list|,
-name|plural
-argument_list|(
-name|icmpstat
-operator|.
-name|icps_oldshort
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1398,22 +1472,6 @@ name|icps_badlen
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t%d message response%s generated\n"
-argument_list|,
-name|icmpstat
-operator|.
-name|icps_reflect
-argument_list|,
-name|plural
-argument_list|(
-name|icmpstat
-operator|.
-name|icps_reflect
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|first
@@ -1478,6 +1536,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\t%d message response%s generated\n"
+argument_list|,
+name|icmpstat
+operator|.
+name|icps_reflect
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_reflect
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
