@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.9 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
