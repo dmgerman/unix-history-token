@@ -1389,43 +1389,43 @@ name|u_char
 name|ctrlr
 decl_stmt|;
 comment|/* physical controller number */
-name|u_char
+name|u_int
 name|debug
 range|:
 literal|1
 decl_stmt|;
 comment|/* trace enable flag */
-name|u_char
+name|u_int
 name|cmd16
 range|:
 literal|1
 decl_stmt|;
 comment|/* 16-byte command flag */
-name|u_char
+name|u_int
 name|intrcmd
 range|:
 literal|1
 decl_stmt|;
 comment|/* interrupt before cmd flag */
-name|u_char
+name|u_int
 name|slow
 range|:
 literal|1
 decl_stmt|;
 comment|/* slow reaction device */
-name|u_char
+name|u_int
 name|accel
 range|:
 literal|1
 decl_stmt|;
 comment|/* accelerated reaction device */
-name|u_char
+name|u_int
 name|use_dsc
 range|:
 literal|1
 decl_stmt|;
 comment|/* use DSC completition handeling */
-name|u_char
+name|u_int
 name|wait_for_dsc
 range|:
 literal|1

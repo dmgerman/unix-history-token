@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.36 1998/04/15 17:45:48 bde Exp $ */
+comment|/* $Id: scd.c,v 1.37 1998/06/07 17:10:56 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -438,13 +438,13 @@ decl_stmt|;
 struct|struct
 block|{
 name|unsigned
-name|char
+name|int
 name|adr
 range|:
 literal|4
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|ctl
 range|:
 literal|4

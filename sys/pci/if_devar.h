@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.26 1998/02/11 01:28:29 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.5 1998/03/08 16:54:00 peter Exp $ */
+comment|/*	$Id: if_devar.h,v 1.6 1998/06/07 17:12:37 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -962,7 +962,7 @@ decl_stmt|;
 name|u_int8_t
 name|gpr_actdata
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|gpr_default
 range|:
 literal|1

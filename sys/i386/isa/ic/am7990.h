@@ -139,7 +139,7 @@ name|short
 name|r_addr_lo
 decl_stmt|;
 name|unsigned
-name|short
+name|int
 name|LN_BITFIELD3
 decl|(
 name|r_addr_hi

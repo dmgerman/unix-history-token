@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: wst.c,v 1.4 1998/04/20 18:51:33 sos Exp $  */
+comment|/*-  * Copyright (c) 1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: wst.c,v 1.5 1998/06/08 06:18:52 bde Exp $  */
 end_comment
 
 begin_include
@@ -443,13 +443,13 @@ begin_struct
 struct|struct
 name|wst_cappage
 block|{
-name|u_char
+name|u_int
 name|page_code
 range|:
 literal|6
 decl_stmt|;
 comment|/* Page code == 0x2a */
-name|u_char
+name|u_int
 name|reserved1_67
 range|:
 literal|2
@@ -464,125 +464,125 @@ decl_stmt|;
 name|u_char
 name|reserved3
 decl_stmt|;
-name|u_char
+name|u_int
 name|readonly
 range|:
 literal|1
 decl_stmt|;
 comment|/* Read Only Mode */
-name|u_char
+name|u_int
 name|reserved4_1234
 range|:
 literal|4
 decl_stmt|;
-name|u_char
+name|u_int
 name|reverse
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports reverse direction */
-name|u_char
+name|u_int
 name|reserved4_67
 range|:
 literal|2
 decl_stmt|;
-name|u_char
+name|u_int
 name|reserved5_012
 range|:
 literal|3
 decl_stmt|;
-name|u_char
+name|u_int
 name|eformat
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports ERASE formatting */
-name|u_char
+name|u_int
 name|reserved5_4
 range|:
 literal|1
 decl_stmt|;
-name|u_char
+name|u_int
 name|qfa
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports QFA formats */
-name|u_char
+name|u_int
 name|reserved5_67
 range|:
 literal|2
 decl_stmt|;
-name|u_char
+name|u_int
 name|lock
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports locking media */
-name|u_char
+name|u_int
 name|locked
 range|:
 literal|1
 decl_stmt|;
 comment|/* The media is locked */
-name|u_char
+name|u_int
 name|prevent
 range|:
 literal|1
 decl_stmt|;
 comment|/* Defaults  to prevent state */
-name|u_char
+name|u_int
 name|eject
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports eject */
-name|u_char
+name|u_int
 name|disconnect
 range|:
 literal|1
 decl_stmt|;
 comment|/* Can break request> ctl */
-name|u_char
+name|u_int
 name|reserved6_5
 range|:
 literal|1
 decl_stmt|;
-name|u_char
+name|u_int
 name|ecc
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports error correction */
-name|u_char
+name|u_int
 name|compress
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports data compression */
-name|u_char
+name|u_int
 name|reserved7_0
 range|:
 literal|1
 decl_stmt|;
-name|u_char
+name|u_int
 name|blk512
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports 512b block size */
-name|u_char
+name|u_int
 name|blk1024
 range|:
 literal|1
 decl_stmt|;
 comment|/* Supports 1024b block size */
-name|u_char
+name|u_int
 name|reserved7_3456
 range|:
 literal|4
 decl_stmt|;
-name|u_char
+name|u_int
 name|slowb
 range|:
 literal|1
@@ -626,13 +626,13 @@ begin_struct
 struct|struct
 name|wst_reqsense
 block|{
-name|u_char
+name|u_int
 name|error_code
 range|:
 literal|7
 decl_stmt|;
 comment|/* Current or deferred errors */
-name|u_char
+name|u_int
 name|valid
 range|:
 literal|1
@@ -642,31 +642,31 @@ name|u_char
 name|reserved1
 decl_stmt|;
 comment|/* Segment Number - Reserved */
-name|u_char
+name|u_int
 name|sense_key
 range|:
 literal|4
 decl_stmt|;
 comment|/* Sense Key */
-name|u_char
+name|u_int
 name|reserved2_4
 range|:
 literal|1
 decl_stmt|;
 comment|/* Reserved */
-name|u_char
+name|u_int
 name|ili
 range|:
 literal|1
 decl_stmt|;
 comment|/* Incorrect Length Indicator */
-name|u_char
+name|u_int
 name|eom
 range|:
 literal|1
 decl_stmt|;
 comment|/* End Of Medium */
-name|u_char
+name|u_int
 name|filemark
 range|:
 literal|1
@@ -702,13 +702,13 @@ name|u_char
 name|replaceable_unit_code
 decl_stmt|;
 comment|/* Field Replaceable Unit Code */
-name|u_char
+name|u_int
 name|sk_specific1
 range|:
 literal|7
 decl_stmt|;
 comment|/* Sense Key Specific */
-name|u_char
+name|u_int
 name|sksv
 range|:
 literal|1

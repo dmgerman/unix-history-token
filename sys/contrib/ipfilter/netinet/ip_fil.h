@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 1.3 1998/06/07 17:12:15 dfr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 1.4 1998/06/08 06:04:11 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -447,13 +447,13 @@ typedef|typedef
 struct|struct
 name|fr_ip
 block|{
-name|u_char
+name|u_int
 name|fi_v
 range|:
 literal|4
 decl_stmt|;
 comment|/* IP version */
-name|u_char
+name|u_int
 name|fi_fl
 range|:
 literal|4

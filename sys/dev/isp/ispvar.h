@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.1 1998/04/22 17:54:58 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.2 1998/05/01 18:10:50 bde Exp $ */
 end_comment
 
 begin_comment
@@ -318,7 +318,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int16_t
+name|u_int
 name|isp_adapter_enabled
 range|:
 literal|1
@@ -388,7 +388,7 @@ decl_stmt|;
 name|u_int8_t
 name|sync_period
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|sync_offset
 range|:
 literal|4

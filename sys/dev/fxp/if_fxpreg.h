@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxpreg.h,v 1.11 1997/09/29 11:27:42 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxpreg.h,v 1.12 1998/03/03 14:19:09 dg Exp $  */
 end_comment
 
 begin_define
@@ -469,7 +469,7 @@ name|u_int32_t
 name|link_addr
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|byte_count
 range|:
 literal|6
@@ -478,7 +478,7 @@ range|:
 literal|2
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|rx_fifo_limit
 range|:
 literal|4
@@ -495,12 +495,12 @@ name|u_int8_t
 name|adaptive_ifs
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|8
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|rx_dma_bytecount
 range|:
 literal|7
@@ -509,7 +509,7 @@ range|:
 literal|1
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|tx_dma_bytecount
 range|:
 literal|7
@@ -519,7 +519,7 @@ range|:
 literal|1
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|late_scb
 range|:
 literal|1
@@ -543,7 +543,7 @@ range|:
 literal|1
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|disc_short_rx
 range|:
 literal|1
@@ -556,7 +556,7 @@ range|:
 literal|5
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|mediatype
 range|:
 literal|1
@@ -565,12 +565,12 @@ range|:
 literal|7
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|8
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|3
 operator|,
@@ -587,7 +587,7 @@ operator|:
 literal|2
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|linear_priority
 range|:
 literal|3
@@ -596,7 +596,7 @@ range|:
 literal|5
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|linear_pri_mode
 range|:
 literal|1
@@ -609,17 +609,17 @@ range|:
 literal|4
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|8
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|8
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|promiscuous
 range|:
 literal|1
@@ -636,17 +636,17 @@ range|:
 literal|1
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|8
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|8
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 name|stripping
 range|:
 literal|1
@@ -663,7 +663,7 @@ range|:
 literal|5
 decl_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|6
 operator|,
@@ -676,7 +676,7 @@ operator|:
 literal|1
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|6
 operator|,
@@ -688,7 +688,7 @@ operator|:
 literal|1
 expr_stmt|;
 specifier|volatile
-name|u_int8_t
+name|u_int
 operator|:
 literal|3
 operator|,
