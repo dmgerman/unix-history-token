@@ -1024,6 +1024,19 @@ name|struct
 name|smb_slock
 name|vc_stlock
 decl_stmt|;
+name|u_int32_t
+name|vc_seqno
+decl_stmt|;
+comment|/* my next sequence number */
+name|u_int8_t
+modifier|*
+name|vc_mackey
+decl_stmt|;
+comment|/* MAC key */
+name|int
+name|vc_mackeylen
+decl_stmt|;
+comment|/* length of MAC key */
 block|}
 struct|;
 end_struct

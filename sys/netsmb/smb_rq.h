@@ -188,6 +188,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SMBT2_SECONDARY
+value|0x0020
+end_define
+
+begin_comment
+comment|/* secondary request */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMBRQ_SLOCK
 parameter_list|(
 name|rqp
@@ -266,6 +277,12 @@ decl_stmt|;
 name|u_short
 name|sr_mid
 decl_stmt|;
+name|u_int32_t
+name|sr_seqno
+decl_stmt|;
+name|u_int32_t
+name|sr_rseqno
+decl_stmt|;
 name|struct
 name|mbchain
 name|sr_rq
@@ -322,6 +339,10 @@ decl_stmt|;
 name|int
 name|sr_lerror
 decl_stmt|;
+name|u_int8_t
+modifier|*
+name|sr_rqsig
+decl_stmt|;
 name|u_int16_t
 modifier|*
 name|sr_rqtid
@@ -362,7 +383,11 @@ name|smb_slock
 name|sr_slock
 decl_stmt|;
 comment|/* short term locks */
-comment|/*	struct smb_t2rq*sr_t2;*/
+name|struct
+name|smb_t2rq
+modifier|*
+name|sr_t2
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|smb_rq

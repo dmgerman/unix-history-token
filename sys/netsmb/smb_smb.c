@@ -111,6 +111,12 @@ directive|include
 file|<netsmb/smb_tran.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_netsmb.h"
+end_include
+
 begin_struct
 struct|struct
 name|smb_dialect
@@ -211,9 +217,10 @@ modifier|*
 name|vcp
 parameter_list|)
 block|{
-comment|/* 	 * Specs say up to 64k data bytes, but Windows traffic 	 * uses 60k... no doubt for some good reason. 	 */
+comment|/* 	 * Specs say up to 64k data bytes, but Windows traffic 	 * uses 60k... no doubt for some good reason. 	 * 	 * Don't exceed the server's buffer size if signatures 	 * are enabled otherwise Windows 2003 chokes. Allow space 	 * for the SMB header& a little bit extra. 	 */
 if|if
 condition|(
+operator|(
 name|vcp
 operator|->
 name|vc_sopt
@@ -221,6 +228,17 @@ operator|.
 name|sv_caps
 operator|&
 name|SMB_CAP_LARGE_READX
+operator|)
+operator|&&
+operator|(
+name|vcp
+operator|->
+name|vc_hflags2
+operator|&
+name|SMB_FLAGS2_SECURITY_SIGNATURE
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -237,6 +255,10 @@ operator|->
 name|vc_sopt
 operator|.
 name|sv_maxtx
+operator|-
+name|SMB_HDRLEN
+operator|-
+literal|64
 operator|)
 return|;
 block|}
@@ -253,9 +275,10 @@ modifier|*
 name|vcp
 parameter_list|)
 block|{
-comment|/* 	 * Specs say up to 64k data bytes, but Windows traffic 	 * uses 60k... probably for some good reason. 	 */
+comment|/* 	 * See comment above. 	 */
 if|if
 condition|(
+operator|(
 name|vcp
 operator|->
 name|vc_sopt
@@ -263,6 +286,17 @@ operator|.
 name|sv_caps
 operator|&
 name|SMB_CAP_LARGE_WRITEX
+operator|)
+operator|&&
+operator|(
+name|vcp
+operator|->
+name|vc_hflags2
+operator|&
+name|SMB_FLAGS2_SECURITY_SIGNATURE
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -279,6 +313,10 @@ operator|->
 name|vc_sopt
 operator|.
 name|sv_maxtx
+operator|-
+name|SMB_HDRLEN
+operator|-
+literal|64
 operator|)
 return|;
 block|}
@@ -881,6 +919,25 @@ operator||=
 name|SMBV_ENCRYPT
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETSMBCRYPTO
+if|if
+condition|(
+name|sp
+operator|->
+name|sv_sm
+operator|&
+name|SMB_SM_SIGS_REQUIRE
+condition|)
+name|vcp
+operator|->
+name|vc_hflags2
+operator||=
+name|SMB_FLAGS2_SECURITY_SIGNATURE
+expr_stmt|;
+endif|#
+directive|endif
 name|vcp
 operator|->
 name|vc_hflags2
@@ -2064,6 +2121,19 @@ argument_list|(
 name|ntencpass
 argument_list|,
 name|M_SMBTEMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vcp
+operator|->
+name|vc_hflags2
+operator|&
+name|SMB_FLAGS2_SECURITY_SIGNATURE
+condition|)
+name|smb_calcmackey
+argument_list|(
+name|vcp
 argument_list|)
 expr_stmt|;
 name|error
