@@ -1603,6 +1603,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_short
 name|interactive_ports
 index|[
