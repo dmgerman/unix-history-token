@@ -2405,6 +2405,8 @@ name|m
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|,
 name|sotype
 decl_stmt|,
@@ -2694,31 +2696,22 @@ operator|&
 name|nfs_reply_mtx
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
+operator|(
 name|rep
 operator|->
 name|r_mrep
-operator|!=
+operator|==
 name|NULL
-condition|)
-block|{
-comment|/* 		 * This is a very rare race, but it does occur. The reply  		 * could come in and the wakeup could happen before the  		 * process tsleeps(). Blocking here without checking for  		 * this results in a missed wakeup(), blocking this request  		 * forever. The 2 reasons why this could happen are a context 		 * switch in the stack after the request is sent out, or heavy 		 * interrupt activity pinning down the process within the window. 		 * (after the request is sent). 		 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|nfs_reply_mtx
-argument_list|)
-expr_stmt|;
-name|nfs_mrep_before_tsleep
-operator|++
-expr_stmt|;
-return|return
+operator|)
+operator|&&
 operator|(
+name|error
+operator|==
 literal|0
 operator|)
-return|;
-block|}
+condition|)
 name|error
 operator|=
 name|msleep
@@ -6219,7 +6212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Any signal that can interrupt an NFS operation in an intr mount  * should be added to this set.  */
+comment|/*  * Any signal that can interrupt an NFS operation in an intr mount  * should be added to this set. SIGSTOP and SIGKILL cannot be masked.  */
 end_comment
 
 begin_decl_stmt
@@ -6235,6 +6228,8 @@ block|,
 name|SIGHUP
 block|,
 name|SIGKILL
+block|,
+name|SIGSTOP
 block|,
 name|SIGQUIT
 block|}
