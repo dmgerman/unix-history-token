@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *                                                                            *  * Copyright (c) David L. Mills 1993, 1994                                    *  *                                                                            *  * Permission to use, copy, modify, and distribute this software and its      *  * documentation for any purpose and without fee is hereby granted, provided  *  * that the above copyright notice appears in all copies and that both the    *  * copyright notice and this permission notice appear in supporting           *  * documentation, and that the name University of Delaware not be used in     *  * advertising or publicity pertaining to distribution of the software        *  * without specific, written prior permission.  The University of Delaware    *  * makes no representations about the suitability this software for any       *  * purpose.  It is provided "as is" without express or implied warranty.      *  *                                                                            *  ******************************************************************************/
+comment|/***********************************************************************  *								       *  * Copyright (c) David L. Mills 1993-1998			       *  *								       *  * Permission to use, copy, modify, and distribute this software and   *  * its documentation for any purpose and without fee is hereby	       *  * granted, provided that the above copyright notice appears in all    *  * copies and that both the copyright notice and this permission       *  * notice appear in supporting documentation, and that the name        *  * University of Delaware not be used in advertising or publicity      *  * pertaining to distribution of the software without specific,	       *  * written prior permission. The University of Delaware makes no       *  * representations about the suitability this software for any	       *  * purpose. It is provided "as is" without express or implied	       *  * warranty.							       *  *								       *  **********************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Modification history timex.h  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  */
+comment|/*  * Modification history timex.h  *  * 17 Nov 98	David L. Mills  *	Revised for nanosecond kernel and user interface.  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  */
 end_comment
 
 begin_comment
-comment|/*  * This header file defines the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. These are implemented using  * private syscalls and data structures and require specific kernel  * support.  *  * NAME  *	ntp_gettime - NTP user application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *  *	int syscall(SYS_ntp_gettime, tptr)  *  *	int SYS_ntp_gettime		defined in syscall.h header file  *	struct ntptimeval *tptr		pointer to ntptimeval structure  *  * NAME  *	ntp_adjtime - NTP daemon application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *  *	int syscall(SYS_ntp_adjtime, mode, tptr)  *  *	int SYS_ntp_adjtime		defined in syscall.h header file  *	struct timex *tptr		pointer to timex structure  *  */
+comment|/*  * This header file defines the Network Time Protocol (NTP) interfaces  * for user and daemon application programs. These are implemented using  * defined syscalls and data structures and require specific kernel  * support.  *  * The original precision time kernels developed from 1993 have an  * ultimate resolution of one microsecond; however, the most recent  * kernels have an ultimate resolution of one nanosecond. In these  * kernels, a ntp_adjtime() syscalls can be used to determine which  * resolution is in use and to select either one at any time. The  * resolution selected affects the scaling of certain fields in the  * ntp_gettime() and ntp_adjtime() syscalls, as described below.  *  * NAME  *	ntp_gettime - NTP user application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *	#include<sys/syscall.h>  *  *	int syscall(SYS_ntp_gettime, tptr);  *	int SYS_ntp_gettime;  *	struct ntptimeval *tptr;  *  * DESCRIPTION  *	The time returned by ntp_gettime() is in a timeval structure,  *	but may be in either microsecond (seconds and microseconds) or  *	nanosecond (seconds and nanoseconds) format. The particular  *	format in use is determined by the STA_NANO bit of the status  *	word returned by the ntp_adjtime() syscall.  *  * NAME  *	ntp_adjtime - NTP daemon application interface  *  * SYNOPSIS  *	#include<sys/timex.h>  *	#include<sys/syscall.h>  *  *	int syscall(SYS_ntp_adjtime, tptr);  *	struct timex *tptr;  *  * DESCRIPTION  *	Certain fields of the timex structure are interpreted in either  *	microseconds or nanoseconds according to the state of the  *	STA_NANO bit in the status word. See the description below for  *	further information.  */
 end_comment
 
 begin_ifndef
@@ -50,263 +50,88 @@ comment|/* MSDOS */
 end_comment
 
 begin_comment
-comment|/*  * The following defines establish the engineering parameters of the  * phase-lock loop (PLL) model used in the kernel implementation. These  * parameters have been carefully chosen by analysis for good stability  * and wide dynamic range.  *  * The hz variable is defined in the kernel build environment. It  * establishes the timer interrupt frequency, 100 Hz for the SunOS  * kernel, 256 Hz for the Ultrix kernel and 1024 Hz for the OSF/1  * kernel. SHIFT_HZ expresses the same value as the nearest power of two  * in order to avoid hardware multiply operations.  *  * SHIFT_KG and SHIFT_KF establish the damping of the PLL and are chosen  * for a slightly underdamped convergence characteristic. SHIFT_KH  * establishes the damping of the FLL and is chosen by wisdom and black  * art.  *  * MAXTC establishes the maximum time constant of the PLL. With the  * SHIFT_KG and SHIFT_KF values given and a time constant range from  * zero to MAXTC, the PLL will converge in 15 minutes to 16 hours,  * respectively.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_HZ
-value|7
-end_define
-
-begin_comment
-comment|/* log2(hz) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_KG
-value|6
-end_define
-
-begin_comment
-comment|/* phase factor (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_KF
-value|16
-end_define
-
-begin_comment
-comment|/* PLL frequency factor (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_KH
-value|2
-end_define
-
-begin_comment
-comment|/* FLL frequency factor (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXTC
-value|6
-end_define
-
-begin_comment
-comment|/* maximum time constant (shift) */
-end_comment
-
-begin_comment
-comment|/*  * The following defines establish the scaling of the various variables  * used by the PLL. They are chosen to allow the greatest precision  * possible without overflow of a 32-bit word.  *  * SHIFT_SCALE defines the scaling (shift) of the time_phase variable,  * which serves as a an extension to the low-order bits of the system  * clock variable time.tv_usec.  *  * SHIFT_UPDATE defines the scaling (shift) of the time_offset variable,  * which represents the current time offset with respect to standard  * time.  *  * SHIFT_USEC defines the scaling (shift) of the time_freq and  * time_tolerance variables, which represent the current frequency  * offset and maximum frequency tolerance.  *  * FINEUSEC is 1 us in SHIFT_UPDATE units of the time_phase variable.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_SCALE
-value|22
-end_define
-
-begin_comment
-comment|/* phase scale (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_UPDATE
-value|(SHIFT_KG + MAXTC)
-end_define
-
-begin_comment
-comment|/* time offset scale (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHIFT_USEC
-value|16
-end_define
-
-begin_comment
-comment|/* frequency offset scale (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FINEUSEC
-value|(1L<< SHIFT_SCALE)
-end_define
-
-begin_comment
-comment|/* 1 us in phase units */
-end_comment
-
-begin_comment
-comment|/*  * The following defines establish the performance envelope of the PLL.  * They insure it operates within predefined limits, in order to satisfy  * correctness assertions. An excursion which exceeds these bounds is  * clamped to the bound and operation proceeds accordingly. In practice,  * this can occur only if something has failed or is operating out of  * tolerance, but otherwise the PLL continues to operate in a stable  * mode.  *  * MAXPHASE must be set greater than or equal to CLOCK.MAX (128 ms), as  * defined in the NTP specification. CLOCK.MAX establishes the maximum  * time offset allowed before the system time is reset, rather than  * incrementally adjusted. Here, the maximum offset is clamped to  * MAXPHASE only in order to prevent overflow errors due to defective  * protocol implementations.  *  * MAXFREQ is the maximum frequency tolerance of the CPU clock  * oscillator plus the maximum slew rate allowed by the protocol. It  * should be set to at least the frequency tolerance of the oscillator  * plus 100 ppm for vernier frequency adjustments. If the kernel  * PPS discipline code is configured (PPS_SYNC), the oscillator time and  * frequency are disciplined to an external source, presumably with  * negligible time and frequency error relative to UTC, and MAXFREQ can  * be reduced.  *  * MAXTIME is the maximum jitter tolerance of the PPS signal if the  * kernel PPS discipline code is configured (PPS_SYNC).  *  * MINSEC and MAXSEC define the lower and upper bounds on the interval  * between protocol updates.  */
+comment|/*  * The following defines establish the performance envelope of the  * kernel discipline loop. Phase or frequency errors greater than  * NAXPHASE or MAXFREQ are clamped to these maxima. For update intervals  * less than MINSEC, the loop always operates in PLL mode; while, for  * update intervals greater than MAXSEC, the loop always operates in FLL  * mode. Between these two limits the operating mode is selected by the  * STA_FLL bit in the status word.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXPHASE
-value|512000L
+value|500000000L
 end_define
 
 begin_comment
-comment|/* max phase error (us) */
+comment|/* max phase error (ns) */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPS_SYNC
-end_ifdef
 
 begin_define
 define|#
 directive|define
 name|MAXFREQ
-value|(512L<< SHIFT_USEC)
+value|500000L
 end_define
 
 begin_comment
-comment|/* max freq error (100 ppm) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXTIME
-value|(200L<< PPS_AVG)
-end_define
-
-begin_comment
-comment|/* max PPS error (jitter) (200 us) */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXFREQ
-value|(512L<< SHIFT_USEC)
-end_define
-
-begin_comment
-comment|/* max freq error (200 ppm) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PPS_SYNC */
+comment|/* max freq error (ns/s) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MINSEC
-value|16L
+value|256
 end_define
 
 begin_comment
-comment|/* min interval between updates (s) */
+comment|/* min FLL update interval (s) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXSEC
-value|1200L
+value|1600
 end_define
 
 begin_comment
-comment|/* max interval between updates (s) */
-end_comment
-
-begin_comment
-comment|/*  * The following defines are used only if a pulse-per-second (PPS)  * signal is available and connected via a modem control lead, such as  * produced by the optional ppsclock feature incorporated in the Sun  * asynch driver. They establish the design parameters of the frequency-  * lock loop used to discipline the CPU clock oscillator to the PPS  * signal.  *  * PPS_AVG is the averaging factor for the frequency loop, as well as  * the time and frequency dispersion.  *  * PPS_SHIFT and PPS_SHIFTMAX specify the minimum and maximum  * calibration intervals, respectively, in seconds as a power of two.  *  * PPS_VALID is the maximum interval before the PPS signal is considered  * invalid and protocol updates used directly instead.  *  * MAXGLITCH is the maximum interval before a time offset of more than  * MAXTIME is believed.  */
+comment|/* max PLL update interval (s) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PPS_AVG
-value|2
+name|NANOSECOND
+value|1000000000L
 end_define
 
 begin_comment
-comment|/* pps averaging constant (shift) */
+comment|/* nanoseconds in one second */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PPS_SHIFT
-value|2
+name|SCALE_PPM
+value|(65536 / 1000)
 end_define
 
 begin_comment
-comment|/* min interval duration (s) (shift) */
+comment|/* crude ns/s to scaled PPM */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PPS_SHIFTMAX
-value|8
+name|MAXTC
+value|10
 end_define
 
 begin_comment
-comment|/* max interval duration (s) (shift) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPS_VALID
-value|120
-end_define
-
-begin_comment
-comment|/* pps signal watchdog max (s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXGLITCH
-value|30
-end_define
-
-begin_comment
-comment|/* pps signal glitch max (s) */
+comment|/* max time constant in PLL mode */
 end_comment
 
 begin_comment
-comment|/*  * The following defines and structures define the user interface for  * the ntp_gettime() and ntp_adjtime() system calls.  *  * Control mode codes (timex.modes)  */
+comment|/*  * The following defines and structures define the user interface for  * the ntp_gettime() and ntp_adjtime() syscalls.  *  * Control mode codes (timex.modes and nanotimex.modes)  */
 end_comment
 
 begin_define
@@ -372,29 +197,73 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* set pll time constant */
+comment|/* set PLL time constant */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOD_CANSCALE
-value|0x0040
+name|MOD_PLL
+value|0x0400
 end_define
 
 begin_comment
-comment|/* kernel can scale offset field */
+comment|/* select default PLL mode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOD_DOSCALE
-value|0x0080
+name|MOD_FLL
+value|0x0800
 end_define
 
 begin_comment
-comment|/* userland wants to scale offset field */
+comment|/* select default FLL mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD_MICRO
+value|0x1000
+end_define
+
+begin_comment
+comment|/* select microsecond resolution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD_NANO
+value|0x2000
+end_define
+
+begin_comment
+comment|/* select nanosecond resolution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD_CLKB
+value|0x4000
+end_define
+
+begin_comment
+comment|/* select clock B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD_CLKA
+value|0x8000
+end_define
+
+begin_comment
+comment|/* select clock A */
 end_comment
 
 begin_comment
@@ -442,7 +311,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* select frequency-lock mode (rw) */
+comment|/* enable FLL mode (rw) */
 end_comment
 
 begin_define
@@ -547,13 +416,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STA_RONLY
-value|(STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER | \     STA_PPSERROR | STA_CLOCKERR)
+name|STA_NANO
+value|0x2000
 end_define
 
 begin_comment
-comment|/* read-only bits */
+comment|/* resolution (0 = us, 1 = ns) (ro) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_MODE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* mode (0 = PLL, 1 = FLL) (ro) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_CLK
+value|0x8000
+end_define
+
+begin_comment
+comment|/* clock source (0 = A, 1 = B) (ro) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STA_RONLY
+value|(STA_PPSSIGNAL | STA_PPSJITTER | STA_PPSWANDER | \     STA_PPSERROR | STA_CLOCKERR | STA_NANO | STA_MODE | STA_CLK)
+end_define
 
 begin_comment
 comment|/*  * Clock states (time_state)  */
@@ -622,11 +520,11 @@ value|5
 end_define
 
 begin_comment
-comment|/* clock not synchronized */
+comment|/* error (see status word) */
 end_comment
 
 begin_comment
-comment|/*  * NTP user interface (ntp_gettime()) - used to read kernel clock values  *  * Note: maximum error = NTP synch distance = dispersion + delay / 2;  * estimated error = NTP dispersion.  */
+comment|/*  * NTP user interface (ntp_gettime()) - used to read kernel clock values  *  * Note: The time member is in microseconds if STA_NANO is zero and  * nanoseconds if not.  */
 end_comment
 
 begin_struct
@@ -634,10 +532,10 @@ struct|struct
 name|ntptimeval
 block|{
 name|struct
-name|timeval
+name|timespec
 name|time
 decl_stmt|;
-comment|/* current time (ro) */
+comment|/* current time (ns) (ro) */
 name|long
 name|maxerror
 decl_stmt|;
@@ -649,13 +547,13 @@ comment|/* estimated error (us) (ro) */
 name|int
 name|time_state
 decl_stmt|;
-comment|/* what ntp_gettime returns */
+comment|/* time status */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * NTP daemon interface - (ntp_adjtime()) used to discipline CPU clock  * oscillator  */
+comment|/*  * NTP daemon interface (ntp_adjtime()) - used to discipline CPU clock  * oscillator and determine status.  *  * Note: The offset, precision and jitter members are in microseconds if  * STA_NANO is zero and nanoseconds if not.  */
 end_comment
 
 begin_struct
@@ -670,11 +568,11 @@ comment|/* clock mode bits (wo) */
 name|long
 name|offset
 decl_stmt|;
-comment|/* time offset (us) (rw) */
+comment|/* time offset (ns/us) (rw) */
 name|long
 name|freq
 decl_stmt|;
-comment|/* frequency offset (scaled ppm) (rw) */
+comment|/* frequency offset (scaled PPM) (rw) */
 name|long
 name|maxerror
 decl_stmt|;
@@ -690,24 +588,24 @@ comment|/* clock status bits (rw) */
 name|long
 name|constant
 decl_stmt|;
-comment|/* pll time constant (rw) */
+comment|/* poll interval (log2 s) (rw) */
 name|long
 name|precision
 decl_stmt|;
-comment|/* clock precision (us) (ro) */
+comment|/* clock precision (ns/us) (ro) */
 name|long
 name|tolerance
 decl_stmt|;
-comment|/* clock frequency tolerance (scaled 				 * ppm) (ro) */
-comment|/* 	 * The following read-only structure members are implemented 	 * only if the PPS signal discipline is configured in the 	 * kernel. 	 */
+comment|/* clock frequency tolerance (scaled 				 * PPM) (ro) */
+comment|/* 	 * The following read-only structure members are implemented 	 * only if the PPS signal discipline is configured in the 	 * kernel. They are included in all configurations to insure 	 * portability. 	 */
 name|long
 name|ppsfreq
 decl_stmt|;
-comment|/* pps frequency (scaled ppm) (ro) */
+comment|/* PPS frequency (scaled PPM) (ro) */
 name|long
 name|jitter
 decl_stmt|;
-comment|/* pps jitter (us) (ro) */
+comment|/* PPS jitter (ns/us) (ro) */
 name|int
 name|shift
 decl_stmt|;
@@ -715,7 +613,7 @@ comment|/* interval duration (s) (shift) (ro) */
 name|long
 name|stabil
 decl_stmt|;
-comment|/* pps stability (scaled ppm) (ro) */
+comment|/* PPS stability (scaled PPM) (ro) */
 name|long
 name|jitcnt
 decl_stmt|;
@@ -742,39 +640,6 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_comment
-comment|/*  * sysctl identifiers underneath kern.ntp_pll  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_PLL_GETTIME
-value|1
-end_define
-
-begin_comment
-comment|/* used by ntp_gettime() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_PLL_MAXID
-value|2
-end_define
-
-begin_comment
-comment|/* number of valid ids */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTP_PLL_NAMES
-value|{ \ 			  { 0, 0 }, \ 			  { "gettime", CTLTYPE_STRUCT }, \ 		      }
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -793,20 +658,6 @@ operator|*
 name|tc
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|time_phase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|time_adj
 decl_stmt|;
 end_decl_stmt
 
