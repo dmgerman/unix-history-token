@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  $Id: dist.h,v 1.35 1999/05/14 07:15:04 jkh Exp $  */
+comment|/*  $Id: dist.h,v 1.36 1999/07/02 02:00:23 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -75,6 +75,16 @@ name|DIST_INFO
 value|0x00080
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_comment
+comment|/* only applicable on x86 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -109,6 +119,11 @@ directive|define
 name|DIST_COMPAT3X
 value|0x01000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
