@@ -102,6 +102,13 @@ name|zero_read
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|null_read
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -131,25 +138,13 @@ name|null_cdevsw
 init|=
 block|{
 comment|/* open */
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|nullop
+name|nullopen
 block|,
 comment|/* close */
-operator|(
-name|d_close_t
-operator|*
-operator|)
-name|nullop
+name|nullclose
 block|,
 comment|/* read */
-operator|(
-name|d_read_t
-operator|*
-operator|)
-name|nullop
+name|null_read
 block|,
 comment|/* write */
 name|null_write
@@ -195,18 +190,10 @@ name|zero_cdevsw
 init|=
 block|{
 comment|/* open */
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|nullop
+name|nullopen
 block|,
 comment|/* close */
-operator|(
-name|d_close_t
-operator|*
-operator|)
-name|nullop
+name|nullclose
 block|,
 comment|/* read */
 name|zero_read
@@ -254,6 +241,31 @@ modifier|*
 name|zbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|null_read
+parameter_list|(
+name|dev_t
+name|dev
+name|__unused
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|flags
+name|__unused
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
