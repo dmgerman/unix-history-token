@@ -2035,15 +2035,6 @@ name|bootinfo
 operator|.
 name|bi_boothowto
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KADB
-name|boothowto
-operator||=
-name|RB_KDB
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Catch case of boot_verbose set in environment. 	 */
 if|if
 condition|(
