@@ -108,6 +108,9 @@ begin_typedef
 typedef|typedef
 name|gregset_t
 name|prgregset_t
+index|[
+literal|1
+index|]
 typedef|;
 end_typedef
 
