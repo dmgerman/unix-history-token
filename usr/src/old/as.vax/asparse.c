@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.8 %G%"
+literal|"@(#)asparse.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1042,7 +1042,12 @@ argument|stpt->s_value = locxp->e_xvalue; 		stpt->s_index = dotp - usedot; 		if 
 comment|/*really have a name*/
 argument|stpt->s_dest = locxp->e_xname; 		stpt->s_index = p->s_index; 		stpt->s_type = p->s_type | STABFLAG;
 comment|/* 		 *	We will assign a more accruate 		 *	guess of locxp's location when 		 *	we sort the symbol table 		 *	The final value of value is 		 *	given by stabfix() 		 */
-argument|stpt->s_tag = STABFLOATING; 	}
+comment|/*  * For exprs of the form (name + value) one needs to remember locxp->e_xvalue  * for use in stabfix. The right place to keep this is in stpt->s_value  * however this gets corrupted at an unknown point.  * As a bandaid hack the value is preserved in s_desc and s_other (a  * short and a char). This destroys these two values and will  * be fixed. May 19 ,1983 Alastair Fyfe  */
+argument|if(locxp->e_xvalue) { 			stpt->s_other = (locxp->e_xvalue>>
+literal|16
+argument|); 			stpt->s_desc =  (locxp->e_xvalue&
+literal|0x0000ffff
+argument|); 			stpt->s_tag = STABFLOATING; 		} 	}
 comment|/* 	 *	tokptr now points at one token beyond 	 *	the current token stored in val and yylval, 	 *	which are the next tokens after the end of 	 *	this .stab directive.  This next token must 	 *	be either a SEMI or NL, so is of width just 	 *	one.  Therefore, to point to the next token 	 *	after the end of this stab, just back up one.. 	 */
 argument|buildskip(stabstart, (bytetoktype *)tokptr - sizeof(bytetoktype)); 	break;
 comment|/*end of the .stab*/
