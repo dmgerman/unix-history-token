@@ -8,6 +8,28 @@ comment|/* config.in.  Generated automatically from configure.in by autoheader. 
 end_comment
 
 begin_comment
+comment|/* Name of package.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"ld"
+end_define
+
+begin_comment
+comment|/* Version of package.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"2.9.1"
+end_define
+
+begin_comment
 comment|/* Whether strstr must be declared even if<string.h> is included.  */
 end_comment
 
@@ -38,6 +60,17 @@ end_comment
 begin_comment
 comment|/* #undef NEED_DECLARATION_GETENV */
 end_comment
+
+begin_comment
+comment|/* Define if lex declares yytext as a char * by default, not a char[].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYTEXT_POINTER
+value|1
+end_define
 
 begin_comment
 comment|/* Do we need to use the b modifier when opening binary files?  */

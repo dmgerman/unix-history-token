@@ -8,6 +8,39 @@ comment|/* config.in.  Generated automatically from configure.in by autoheader. 
 end_comment
 
 begin_comment
+comment|/* Name of package.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"binutils"
+end_define
+
+begin_comment
+comment|/* Version of package.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"2.9.1"
+end_define
+
+begin_comment
+comment|/* Configured target name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET
+value|"i386-unknown-freebsdelf"
+end_define
+
+begin_comment
 comment|/* Whether strstr must be declared even if<string.h> is included.  */
 end_comment
 
@@ -86,22 +119,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have<vfork.h>.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_VFORK_H */
-end_comment
-
-begin_comment
-comment|/* Define to `int' if<sys/types.h> doesn't define.  */
-end_comment
-
-begin_comment
-comment|/* #undef pid_t */
-end_comment
-
-begin_comment
 comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
 end_comment
 
@@ -110,23 +127,15 @@ comment|/* #undef STACK_DIRECTION */
 end_comment
 
 begin_comment
-comment|/* Define if you have the ANSI C header files.  */
+comment|/* Define if lex declares yytext as a char * by default, not a char[].  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STDC_HEADERS
+name|YYTEXT_POINTER
 value|1
 end_define
-
-begin_comment
-comment|/* Define vfork as fork if vfork does not work.  */
-end_comment
-
-begin_comment
-comment|/* #undef vfork */
-end_comment
 
 begin_comment
 comment|/* Is the type time_t defined in<time.h>?  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ comment|/* These two lines get substitutions done by commands in Makefile.in.  *
 define|#
 directive|define
 name|BFD_VERSION
-value|"2.8.1"
+value|"2.9.1"
 define|#
 directive|define
 name|BFD_ARCH_SIZE
@@ -668,6 +668,15 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->vma)
+define|#
+directive|define
+name|bfd_section_lma
+parameter_list|(
+name|bfd
+parameter_list|,
+name|ptr
+parameter_list|)
+value|((ptr)->lma)
 define|#
 directive|define
 name|bfd_section_alignment
@@ -2243,6 +2252,22 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|boolean
+name|bfd_elf_get_bfd_needed_list
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_needed_list
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
 name|bfd_elf32_size_dynamic_sections
 name|PARAMS
 argument_list|(
@@ -3294,7 +3319,7 @@ define|#
 directive|define
 name|SEC_COFF_SHARED_LIBRARY
 value|0x800
-comment|/* The section contains common symbols (symbols may be defined            multiple times, the value of a symbol is the amount of            space it requires, and the largest symbol value is the one            used).  Most targets have exactly one of these (which we 	    translate to bfd_com_section_ptr), but ECOFF has two. */
+comment|/* The section contains common symbols (symbols may be defined            multiple times, the value of a symbol is the amount of            space it requires, and the largest symbol value is the one            used).  Most targets have exactly one of these (which we            translate to bfd_com_section_ptr), but ECOFF has two. */
 define|#
 directive|define
 name|SEC_IS_COMMON
@@ -3309,47 +3334,47 @@ define|#
 directive|define
 name|SEC_IN_MEMORY
 value|0x20000
-comment|/* The contents of this section are to be excluded by the 	    linker for executable and shared objects unless those 	    objects are to be further relocated.  */
+comment|/* The contents of this section are to be excluded by the            linker for executable and shared objects unless those            objects are to be further relocated.  */
 define|#
 directive|define
 name|SEC_EXCLUDE
 value|0x40000
-comment|/* The contents of this section are to be sorted by the 	   based on the address specified in the associated symbol 	   table.  */
+comment|/* The contents of this section are to be sorted by the           based on the address specified in the associated symbol           table.  */
 define|#
 directive|define
 name|SEC_SORT_ENTRIES
 value|0x80000
-comment|/* When linking, duplicate sections of the same name should be 	   discarded, rather than being combined into a single section as 	   is usually done.  This is similar to how common symbols are 	   handled.  See SEC_LINK_DUPLICATES below.  */
+comment|/* When linking, duplicate sections of the same name should be           discarded, rather than being combined into a single section as           is usually done.  This is similar to how common symbols are           handled.  See SEC_LINK_DUPLICATES below.  */
 define|#
 directive|define
 name|SEC_LINK_ONCE
 value|0x100000
-comment|/* If SEC_LINK_ONCE is set, this bitfield describes how the linker 	   should handle duplicate sections.  */
+comment|/* If SEC_LINK_ONCE is set, this bitfield describes how the linker           should handle duplicate sections.  */
 define|#
 directive|define
 name|SEC_LINK_DUPLICATES
 value|0x600000
-comment|/* This value for SEC_LINK_DUPLICATES means that duplicate 	   sections with the same name should simply be discarded. */
+comment|/* This value for SEC_LINK_DUPLICATES means that duplicate           sections with the same name should simply be discarded. */
 define|#
 directive|define
 name|SEC_LINK_DUPLICATES_DISCARD
 value|0x0
-comment|/* This value for SEC_LINK_DUPLICATES means that the linker 	   should warn if there are any duplicate sections, although 	   it should still only link one copy.  */
+comment|/* This value for SEC_LINK_DUPLICATES means that the linker           should warn if there are any duplicate sections, although           it should still only link one copy.  */
 define|#
 directive|define
 name|SEC_LINK_DUPLICATES_ONE_ONLY
 value|0x200000
-comment|/* This value for SEC_LINK_DUPLICATES means that the linker 	   should warn if any duplicate sections are a different size.  */
+comment|/* This value for SEC_LINK_DUPLICATES means that the linker           should warn if any duplicate sections are a different size.  */
 define|#
 directive|define
 name|SEC_LINK_DUPLICATES_SAME_SIZE
 value|0x400000
-comment|/* This value for SEC_LINK_DUPLICATES means that the linker 	   should warn if any duplicate sections contain different 	   contents.  */
+comment|/* This value for SEC_LINK_DUPLICATES means that the linker           should warn if any duplicate sections contain different           contents.  */
 define|#
 directive|define
 name|SEC_LINK_DUPLICATES_SAME_CONTENTS
 value|0x600000
-comment|/* This section was created by the linker as part of dynamic 	   relocation or other arcane processing.  It is skipped when 	   going through the first-pass output, trusting that someone 	   else up the line will take care of it later.  */
+comment|/* This section was created by the linker as part of dynamic           relocation or other arcane processing.  It is skipped when           going through the first-pass output, trusting that someone           else up the line will take care of it later.  */
 define|#
 directive|define
 name|SEC_LINKER_CREATED
@@ -3378,11 +3403,11 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* End of internal packed boolean fields.  */
-comment|/*  The virtual memory address of the section - where it will be            at run time.  The symbols are relocated against this.  The 	    user_set_vma flag is maintained by bfd; if it's not set, the 	    backend can assign addresses (for example, in<<a.out>>, where 	    the default address for<<.data>> is dependent on the specific 	    target and various flags).  */
+comment|/*  The virtual memory address of the section - where it will be            at run time.  The symbols are relocated against this.  The            user_set_vma flag is maintained by bfd; if it's not set, the            backend can assign addresses (for example, in<<a.out>>, where            the default address for<<.data>> is dependent on the specific            target and various flags).  */
 name|bfd_vma
 name|vma
 decl_stmt|;
-comment|/*  The load address of the section - where it would be in a            rom image; really only used for writing section header 	    information. */
+comment|/*  The load address of the section - where it would be in a            rom image; really only used for writing section header            information. */
 name|bfd_vma
 name|lma
 decl_stmt|;
@@ -3390,7 +3415,7 @@ comment|/* The size of the section in bytes, as it will be output.            co
 name|bfd_size_type
 name|_cooked_size
 decl_stmt|;
-comment|/* The original size on disk of the section, in bytes.  Normally this 	    value is the same as the size, but if some relaxing has 	    been done, then this value will be bigger.  */
+comment|/* The original size on disk of the section, in bytes.  Normally this            value is the same as the size, but if some relaxing has            been done, then this value will be bigger.  */
 name|bfd_size_type
 name|_raw_size
 decl_stmt|;
@@ -3506,7 +3531,7 @@ decl_stmt|;
 block|}
 name|asection
 typedef|;
-comment|/* These sections are global, and are managed by BFD.  The application        and target back end are not permitted to change the values in 	these sections.  New code should use the section_ptr macros rather        than referring directly to the const sections.  The const sections        may eventually vanish.  */
+comment|/* These sections are global, and are managed by BFD.  The application        and target back end are not permitted to change the values in        these sections.  New code should use the section_ptr macros rather        than referring directly to the const sections.  The const sections        may eventually vanish.  */
 define|#
 directive|define
 name|BFD_ABS_SECTION_NAME
@@ -3850,7 +3875,7 @@ parameter_list|,
 name|osection
 parameter_list|)
 define|\
-value|BFD_SEND (obfd, _bfd_copy_private_section_data, \ 		(ibfd, isection, obfd, osection))
+value|BFD_SEND (obfd, _bfd_copy_private_section_data, \                (ibfd, isection, obfd, osection))
 enum|enum
 name|bfd_architecture
 block|{
@@ -3863,6 +3888,34 @@ comment|/* Arch known, not one of these */
 name|bfd_arch_m68k
 block|,
 comment|/* Motorola 68xxx */
+define|#
+directive|define
+name|bfd_mach_m68000
+value|1
+define|#
+directive|define
+name|bfd_mach_m68008
+value|2
+define|#
+directive|define
+name|bfd_mach_m68010
+value|3
+define|#
+directive|define
+name|bfd_mach_m68020
+value|4
+define|#
+directive|define
+name|bfd_mach_m68030
+value|5
+define|#
+directive|define
+name|bfd_mach_m68040
+value|6
+define|#
+directive|define
+name|bfd_mach_m68060
+value|7
 name|bfd_arch_vax
 block|,
 comment|/* DEC Vax */
@@ -3951,6 +4004,62 @@ value|((mach)>= bfd_mach_sparc_v8plus&& (mach)<= bfd_mach_sparc_v9a)
 name|bfd_arch_mips
 block|,
 comment|/* MIPS Rxxxx */
+define|#
+directive|define
+name|bfd_mach_mips3000
+value|3000
+define|#
+directive|define
+name|bfd_mach_mips3900
+value|3900
+define|#
+directive|define
+name|bfd_mach_mips4000
+value|4000
+define|#
+directive|define
+name|bfd_mach_mips4010
+value|4010
+define|#
+directive|define
+name|bfd_mach_mips4100
+value|4100
+define|#
+directive|define
+name|bfd_mach_mips4300
+value|4300
+define|#
+directive|define
+name|bfd_mach_mips4400
+value|4400
+define|#
+directive|define
+name|bfd_mach_mips4600
+value|4600
+define|#
+directive|define
+name|bfd_mach_mips4650
+value|4650
+define|#
+directive|define
+name|bfd_mach_mips5000
+value|5000
+define|#
+directive|define
+name|bfd_mach_mips6000
+value|6000
+define|#
+directive|define
+name|bfd_mach_mips8000
+value|8000
+define|#
+directive|define
+name|bfd_mach_mips10000
+value|10000
+define|#
+directive|define
+name|bfd_mach_mips16
+value|16
 name|bfd_arch_i386
 block|,
 comment|/* Intel 386 */
@@ -4030,21 +4139,83 @@ comment|/* Hitachi H8/500 */
 name|bfd_arch_sh
 block|,
 comment|/* Hitachi SH */
+define|#
+directive|define
+name|bfd_mach_sh
+value|0
+define|#
+directive|define
+name|bfd_mach_sh3
+value|0x30
+define|#
+directive|define
+name|bfd_mach_sh3e
+value|0x3e
+define|#
+directive|define
+name|bfd_mach_sh4
+value|0x40
 name|bfd_arch_alpha
 block|,
 comment|/* Dec Alpha */
 name|bfd_arch_arm
 block|,
 comment|/* Advanced Risc Machines ARM */
+define|#
+directive|define
+name|bfd_mach_arm_2
+value|1
+define|#
+directive|define
+name|bfd_mach_arm_2a
+value|2
+define|#
+directive|define
+name|bfd_mach_arm_3
+value|3
+define|#
+directive|define
+name|bfd_mach_arm_3M
+value|4
+define|#
+directive|define
+name|bfd_mach_arm_4
+value|5
+define|#
+directive|define
+name|bfd_mach_arm_4T
+value|6
 name|bfd_arch_ns32k
 block|,
 comment|/* National Semiconductors ns32000 */
 name|bfd_arch_w65
 block|,
 comment|/* WDC 65816 */
+name|bfd_arch_tic30
+block|,
+comment|/* Texas Instruments TMS320C30 */
+name|bfd_arch_v850
+block|,
+comment|/* NEC V850 */
+define|#
+directive|define
+name|bfd_mach_v850
+value|0
+name|bfd_arch_arc
+block|,
+comment|/* Argonaut RISC Core */
+define|#
+directive|define
+name|bfd_mach_arc_base
+value|0
 name|bfd_arch_m32r
 block|,
 comment|/* Mitsubishi M32R/D */
+define|#
+directive|define
+name|bfd_mach_m32r
+value|0
+comment|/* backwards compatibility */
 name|bfd_arch_mn10200
 block|,
 comment|/* Matsushita MN10200 */
@@ -4169,6 +4340,18 @@ specifier|const
 name|char
 operator|*
 name|string
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|bfd_arch_list
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4365,13 +4548,13 @@ block|{
 comment|/* Do not complain on overflow. */
 name|complain_overflow_dont
 block|,
-comment|/* Complain if the bitfield overflows, whether it is considered 	   as signed or unsigned. */
+comment|/* Complain if the bitfield overflows, whether it is considered           as signed or unsigned. */
 name|complain_overflow_bitfield
 block|,
-comment|/* Complain if the value overflows when considered as signed 	   number. */
+comment|/* Complain if the value overflows when considered as signed           number. */
 name|complain_overflow_signed
 block|,
-comment|/* Complain if the value overflows when considered as an 	   unsigned number. */
+comment|/* Complain if the value overflows when considered as an           unsigned number. */
 name|complain_overflow_unsigned
 block|}
 enum|;
@@ -4388,11 +4571,11 @@ name|unsigned
 name|int
 name|rightshift
 decl_stmt|;
-comment|/*  The size of the item to be relocated.  This is *not* a 	    power-of-two measure.  To get the number of bytes operated 	    on by a type of relocation, use bfd_get_reloc_size.  */
+comment|/*  The size of the item to be relocated.  This is *not* a            power-of-two measure.  To get the number of bytes operated            on by a type of relocation, use bfd_get_reloc_size.  */
 name|int
 name|size
 decl_stmt|;
-comment|/*  The number of bits in the item to be relocated.  This is used 	    when doing overflow checking.  */
+comment|/*  The number of bits in the item to be relocated.  This is used            when doing overflow checking.  */
 name|unsigned
 name|int
 name|bitsize
@@ -4401,12 +4584,12 @@ comment|/*  Notes that the relocation is relative to the location in the        
 name|boolean
 name|pc_relative
 decl_stmt|;
-comment|/*  The bit position of the reloc value in the destination. 	    The relocated value is left shifted by this amount. */
+comment|/*  The bit position of the reloc value in the destination.            The relocated value is left shifted by this amount. */
 name|unsigned
 name|int
 name|bitpos
 decl_stmt|;
-comment|/* What type of overflow error should be checked for when 	   relocating. */
+comment|/* What type of overflow error should be checked for when           relocating. */
 name|enum
 name|complain_overflow
 name|complain_on_overflow
@@ -4530,6 +4713,7 @@ name|symbol
 parameter_list|)
 define|\
 value|{                                            \   if (symbol != (asymbol *)NULL) {             \     if (bfd_is_com_section (symbol->section)) { \       relocation = 0;                          \     }                                          \     else {                                     \       relocation = symbol->value;              \     }                                          \   }                                            \ }
+name|unsigned
 name|int
 name|bfd_get_reloc_size
 name|PARAMS
@@ -4555,6 +4739,28 @@ decl_stmt|;
 block|}
 name|arelent_chain
 typedef|;
+name|bfd_reloc_status_type
+name|bfd_check_overflow
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|complain_overflow
+name|how
+operator|,
+name|unsigned
+name|int
+name|bitsize
+operator|,
+name|unsigned
+name|int
+name|rightshift
+operator|,
+name|bfd_vma
+name|relocation
+operator|)
+argument_list|)
+decl_stmt|;
 name|bfd_reloc_status_type
 name|bfd_perform_relocation
 name|PARAMS
@@ -4769,7 +4975,7 @@ name|BFD_RELOC_SPARC_BASE13
 block|,
 name|BFD_RELOC_SPARC_BASE22
 block|,
-comment|/* Some relocations we're using for SPARC V9 -- subject to change. */
+comment|/* SPARC64 relocations */
 define|#
 directive|define
 name|BFD_RELOC_SPARC_64
@@ -4796,13 +5002,29 @@ name|BFD_RELOC_SPARC_WDISP16
 block|,
 name|BFD_RELOC_SPARC_WDISP19
 block|,
-name|BFD_RELOC_SPARC_GLOB_JMP
-block|,
 name|BFD_RELOC_SPARC_7
 block|,
 name|BFD_RELOC_SPARC_6
 block|,
 name|BFD_RELOC_SPARC_5
+block|,
+define|#
+directive|define
+name|BFD_RELOC_SPARC_DISP64
+value|BFD_RELOC_64_PCREL
+name|BFD_RELOC_SPARC_PLT64
+block|,
+name|BFD_RELOC_SPARC_HIX22
+block|,
+name|BFD_RELOC_SPARC_LOX10
+block|,
+name|BFD_RELOC_SPARC_H44
+block|,
+name|BFD_RELOC_SPARC_M44
+block|,
+name|BFD_RELOC_SPARC_L44
+block|,
+name|BFD_RELOC_SPARC_REGISTER
 block|,
 comment|/* Alpha ECOFF and ELF relocations.  Some of these treat the symbol or "addend" in some special way. For GPDISP_HI16 ("gpdisp") relocations, the symbol is ignored when writing; when reading, it will be the absolute section symbol.  The addend is the displacement in bytes of the "lda" instruction from the "ldah" instruction (which is at the address of this reloc). */
 name|BFD_RELOC_ALPHA_GPDISP_HI16
@@ -5057,6 +5279,19 @@ name|BFD_RELOC_SH_DATA
 block|,
 name|BFD_RELOC_SH_LABEL
 block|,
+comment|/* Thumb 23-, 12- and 9-bit pc-relative branches.  The lowest bit must be zero and is not stored in the instruction. */
+name|BFD_RELOC_THUMB_PCREL_BRANCH9
+block|,
+name|BFD_RELOC_THUMB_PCREL_BRANCH12
+block|,
+name|BFD_RELOC_THUMB_PCREL_BRANCH23
+block|,
+comment|/* Argonaut RISC Core (ARC) relocs. ARC 22 bit pc-relative branch.  The lowest two bits must be zero and are not stored in the instruction.  The high 20 bits are installed in bits 26 through 7 of the instruction. */
+name|BFD_RELOC_ARC_B22_PCREL
+block|,
+comment|/* ARC 26 bit absolute branch.  The lowest two bits must be zero and are not stored in the instruction.  The high 24 bits are installed in bits 23 through 0. */
+name|BFD_RELOC_ARC_B26
+block|,
 comment|/* Mitsubishi D10V relocs. This is a 10-bit reloc with the right 2 bits assumed to be 0. */
 name|BFD_RELOC_D10V_10_PCREL_R
 block|,
@@ -5093,11 +5328,44 @@ block|,
 comment|/* This is a 16-bit reloc containing the small data area offset for use in add3, load, and store instructions. */
 name|BFD_RELOC_M32R_SDA16
 block|,
+comment|/* This is a 9-bit reloc */
+name|BFD_RELOC_V850_9_PCREL
+block|,
+comment|/* This is a 22-bit reloc */
+name|BFD_RELOC_V850_22_PCREL
+block|,
+comment|/* This is a 16 bit offset from the short data area pointer. */
+name|BFD_RELOC_V850_SDA_16_16_OFFSET
+block|,
+comment|/* This is a 16 bit offset (of which only 15 bits are used) from the short data area pointer. */
+name|BFD_RELOC_V850_SDA_15_16_OFFSET
+block|,
+comment|/* This is a 16 bit offset from the zero data area pointer. */
+name|BFD_RELOC_V850_ZDA_16_16_OFFSET
+block|,
+comment|/* This is a 16 bit offset (of which only 15 bits are used) from the zero data area pointer. */
+name|BFD_RELOC_V850_ZDA_15_16_OFFSET
+block|,
+comment|/* This is an 8 bit offset (of which only 6 bits are used) from the tiny data area pointer. */
+name|BFD_RELOC_V850_TDA_6_8_OFFSET
+block|,
+comment|/* This is an 8bit offset (of which only 7 bits are used) from the tiny data area pointer. */
+name|BFD_RELOC_V850_TDA_7_8_OFFSET
+block|,
+comment|/* This is a 7 bit offset from the tiny data area pointer. */
+name|BFD_RELOC_V850_TDA_7_7_OFFSET
+block|,
+comment|/* This is a 16 bit offset from the tiny data area pointer. */
+name|BFD_RELOC_V850_TDA_16_16_OFFSET
+block|,
 comment|/* This is a 32bit pcrel reloc for the mn10300, offset by two bytes in the instruction. */
 name|BFD_RELOC_MN10300_32_PCREL
 block|,
 comment|/* This is a 16bit pcrel reloc for the mn10300, offset by two bytes in the instruction. */
 name|BFD_RELOC_MN10300_16_PCREL
+block|,
+comment|/* This is a 8bit DP reloc for the tms320c30, where the most significant 8 bits of a 24 bit word are placed into the least significant 8 bits of the opcode. */
+name|BFD_RELOC_TIC30_LDP
 block|,
 name|BFD_RELOC_UNUSED
 block|}
@@ -5138,14 +5406,14 @@ typedef|typedef
 struct|struct
 name|symbol_cache_entry
 block|{
-comment|/* A pointer to the BFD which owns the symbol. This information 	   is necessary so that a back end can work out what additional    	   information (invisible to the application writer) is carried 	   with the symbol.  	   This field is *almost* redundant, since you can use section->owner 	   instead, except that some symbols point to the global sections 	   bfd_{abs,com,und}_section.  This could be fixed by making 	   these globals be per-bfd (or per-target-flavor).  FIXME. */
+comment|/* A pointer to the BFD which owns the symbol. This information           is necessary so that a back end can work out what additional           information (invisible to the application writer) is carried           with the symbol.            This field is *almost* redundant, since you can use section->owner           instead, except that some symbols point to the global sections           bfd_{abs,com,und}_section.  This could be fixed by making           these globals be per-bfd (or per-target-flavor).  FIXME. */
 name|struct
 name|_bfd
 modifier|*
 name|the_bfd
 decl_stmt|;
 comment|/* Use bfd_asymbol_bfd(sym) to access this field. */
-comment|/* The text of the symbol. The name is left alone, and not copied; the 	   application may not alter it. */
+comment|/* The text of the symbol. The name is left alone, and not copied; the           application may not alter it. */
 name|CONST
 name|char
 modifier|*
@@ -5160,29 +5428,29 @@ define|#
 directive|define
 name|BSF_NO_FLAGS
 value|0x00
-comment|/* The symbol has local scope;<<static>> in<<C>>. The value  	   is the offset into the section of the data. */
+comment|/* The symbol has local scope;<<static>> in<<C>>. The value           is the offset into the section of the data. */
 define|#
 directive|define
 name|BSF_LOCAL
 value|0x01
-comment|/* The symbol has global scope; initialized data in<<C>>. The 	   value is the offset into the section of the data. */
+comment|/* The symbol has global scope; initialized data in<<C>>. The           value is the offset into the section of the data. */
 define|#
 directive|define
 name|BSF_GLOBAL
 value|0x02
-comment|/* The symbol has global scope and is exported. The value is 	   the offset into the section of the data. */
+comment|/* The symbol has global scope and is exported. The value is           the offset into the section of the data. */
 define|#
 directive|define
 name|BSF_EXPORT
 value|BSF_GLOBAL
 comment|/* no real difference */
 comment|/* A normal C symbol would be one of:<<BSF_LOCAL>>,<<BSF_FORT_COMM>>,<<BSF_UNDEFINED>> or<<BSF_GLOBAL>> */
-comment|/* The symbol is a debugging record. The value has an arbitary 	   meaning. */
+comment|/* The symbol is a debugging record. The value has an arbitary           meaning. */
 define|#
 directive|define
 name|BSF_DEBUGGING
 value|0x08
-comment|/* The symbol denotes a function entry point.  Used in ELF, 	   perhaps others someday.  */
+comment|/* The symbol denotes a function entry point.  Used in ELF,           perhaps others someday.  */
 define|#
 directive|define
 name|BSF_FUNCTION
@@ -5196,17 +5464,17 @@ define|#
 directive|define
 name|BSF_KEEP_G
 value|0x40
-comment|/* A weak global symbol, overridable without warnings by 	   a regular global symbol of the same name.  */
+comment|/* A weak global symbol, overridable without warnings by           a regular global symbol of the same name.  */
 define|#
 directive|define
 name|BSF_WEAK
 value|0x80
-comment|/* This symbol was created to point to a section, e.g. ELF's 	   STT_SECTION symbols.  */
+comment|/* This symbol was created to point to a section, e.g. ELF's           STT_SECTION symbols.  */
 define|#
 directive|define
 name|BSF_SECTION_SYM
 value|0x100
-comment|/* The symbol used to be a common symbol, but now it is 	   allocated. */
+comment|/* The symbol used to be a common symbol, but now it is           allocated. */
 define|#
 directive|define
 name|BSF_OLD_COMMON
@@ -5216,7 +5484,7 @@ define|#
 directive|define
 name|BFD_FORT_COMM_DEFAULT_VALUE
 value|0
-comment|/* In some files the type of a symbol sometimes alters its 	   location in an output file - ie in coff a<<ISFCN>> symbol 	   which is also<<C_EXT>> symbol appears where it was 	   declared and not at the end of a section.  This bit is set   	   by the target BFD part to convey this information. */
+comment|/* In some files the type of a symbol sometimes alters its           location in an output file - ie in coff a<<ISFCN>> symbol           which is also<<C_EXT>> symbol appears where it was           declared and not at the end of a section.  This bit is set           by the target BFD part to convey this information. */
 define|#
 directive|define
 name|BSF_NOT_AT_END
@@ -5226,17 +5494,17 @@ define|#
 directive|define
 name|BSF_CONSTRUCTOR
 value|0x800
-comment|/* Signal that the symbol is a warning symbol.  The name is a 	   warning.  The name of the next symbol is the one to warn about; 	   if a reference is made to a symbol with the same name as the next 	   symbol, a warning is issued by the linker. */
+comment|/* Signal that the symbol is a warning symbol.  The name is a           warning.  The name of the next symbol is the one to warn about;           if a reference is made to a symbol with the same name as the next           symbol, a warning is issued by the linker. */
 define|#
 directive|define
 name|BSF_WARNING
 value|0x1000
-comment|/* Signal that the symbol is indirect.  This symbol is an indirect 	   pointer to the symbol with the same name as the next symbol. */
+comment|/* Signal that the symbol is indirect.  This symbol is an indirect           pointer to the symbol with the same name as the next symbol. */
 define|#
 directive|define
 name|BSF_INDIRECT
 value|0x2000
-comment|/* BSF_FILE marks symbols that contain a file name.  This is used 	   for ELF STT_FILE symbols.  */
+comment|/* BSF_FILE marks symbols that contain a file name.  This is used           for ELF STT_FILE symbols.  */
 define|#
 directive|define
 name|BSF_FILE
@@ -5254,7 +5522,7 @@ value|0x10000
 name|flagword
 name|flags
 decl_stmt|;
-comment|/* A pointer to the section to which this symbol is 	   relative.  This will always be non NULL, there are special           sections for undefined and absolute symbols.  */
+comment|/* A pointer to the section to which this symbol is           relative.  This will always be non NULL, there are special           sections for undefined and absolute symbols.  */
 name|struct
 name|sec
 modifier|*
@@ -5450,7 +5718,7 @@ parameter_list|,
 name|osymbol
 parameter_list|)
 define|\
-value|BFD_SEND (obfd, _bfd_copy_private_symbol_data, \ 		(ibfd, isymbol, obfd, osymbol))
+value|BFD_SEND (obfd, _bfd_copy_private_symbol_data, \                (ibfd, isymbol, obfd, osymbol))
 struct|struct
 name|_bfd
 block|{
@@ -5894,6 +6162,15 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+name|bfd_error_handler_type
+name|bfd_get_error_handler
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 name|long
 name|bfd_get_reloc_upper_bound
 name|PARAMS
@@ -6078,7 +6355,7 @@ parameter_list|,
 name|obfd
 parameter_list|)
 define|\
-value|BFD_SEND (obfd, _bfd_copy_private_bfd_data, \ 		(ibfd, obfd))
+value|BFD_SEND (obfd, _bfd_copy_private_bfd_data, \                (ibfd, obfd))
 name|boolean
 name|bfd_merge_private_bfd_data
 name|PARAMS
@@ -6103,7 +6380,7 @@ parameter_list|,
 name|obfd
 parameter_list|)
 define|\
-value|BFD_SEND (obfd, _bfd_merge_private_bfd_data, \ 		(ibfd, obfd))
+value|BFD_SEND (obfd, _bfd_merge_private_bfd_data, \                (ibfd, obfd))
 name|boolean
 name|bfd_set_private_flags
 name|PARAMS
@@ -6127,7 +6404,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|BFD_SEND (abfd, _bfd_set_private_flags, \ 		(abfd, flags))
+value|BFD_SEND (abfd, _bfd_set_private_flags, \                (abfd, flags))
 define|#
 directive|define
 name|bfd_sizeof_headers
