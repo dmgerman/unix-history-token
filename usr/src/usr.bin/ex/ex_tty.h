@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tty.h	7.2	%G%  */
+comment|/* sccs id:	@(#)ex_tty.h	7.3	%G%  */
 end_comment
 
 begin_comment
@@ -47,6 +47,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* P* Add new blank line */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
+name|AL_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* P* Add n new blank lines */
 end_comment
 
 begin_decl_stmt
@@ -118,7 +130,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* P  Cursor motion */
+comment|/* PG Cursor motion */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
+name|CS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PG Change scrolling region (vt100) */
 end_comment
 
 begin_decl_stmt
@@ -161,6 +185,18 @@ begin_decl_stmt
 name|var
 name|char
 modifier|*
+name|DL_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* P* Delete n lines */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
 name|DM
 decl_stmt|;
 end_decl_stmt
@@ -179,6 +215,18 @@ end_decl_stmt
 
 begin_comment
 comment|/*    Down line sequence */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
+name|DOWN_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Down n lines */
 end_comment
 
 begin_decl_stmt
@@ -380,6 +428,18 @@ begin_decl_stmt
 name|var
 name|char
 modifier|*
+name|LEFT_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Left n chars */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
 name|LL
 decl_stmt|;
 end_decl_stmt
@@ -404,6 +464,18 @@ begin_decl_stmt
 name|var
 name|char
 modifier|*
+name|RIGHT_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Right n spaces */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
 name|xNL
 decl_stmt|;
 end_decl_stmt
@@ -421,6 +493,30 @@ end_decl_stmt
 
 begin_comment
 comment|/*    Pad character */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
+name|RC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Restore cursor from last SC */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
+name|SC
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Save cursor */
 end_comment
 
 begin_decl_stmt
@@ -517,6 +613,18 @@ end_decl_stmt
 
 begin_comment
 comment|/*    Upline */
+end_comment
+
+begin_decl_stmt
+name|var
+name|char
+modifier|*
+name|UP_PARM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*    Up n lines */
 end_comment
 
 begin_decl_stmt
@@ -751,17 +859,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Tabs are destructive */
-end_comment
-
-begin_decl_stmt
-name|var
-name|bool
-name|XV
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* VT100 - run AL and DL through tgoto */
 end_comment
 
 begin_decl_stmt
@@ -1061,7 +1158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* likewise */
+comment|/* likewise for scroll reverse */
 end_comment
 
 begin_decl_stmt
@@ -1070,6 +1167,43 @@ name|short
 name|costAL
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* likewise for insert line */
+end_comment
+
+begin_decl_stmt
+name|var
+name|short
+name|costDP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* likewise for DOWN_PARM */
+end_comment
+
+begin_decl_stmt
+name|var
+name|short
+name|costLP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* likewise for LEFT_PARM */
+end_comment
+
+begin_decl_stmt
+name|var
+name|short
+name|costRP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* likewise for RIGHT_PARM */
+end_comment
 
 begin_ifdef
 ifdef|#

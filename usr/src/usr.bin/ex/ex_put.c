@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.3	%G%"
+literal|"@(#)ex_put.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1900,12 +1900,50 @@ expr_stmt|;
 block|}
 name|dontcr
 label|:
+comment|/* Move down, if necessary, until we are at the desired line */
 while|while
 condition|(
 name|outline
 operator|<
 name|destline
 condition|)
+block|{
+name|j
+operator|=
+name|destline
+operator|-
+name|outline
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+name|costDP
+condition|)
+block|{
+comment|/* Win big on Tek 4025 */
+name|tputs
+argument_list|(
+name|tgoto
+argument_list|(
+name|DOWN_PARM
+argument_list|,
+literal|0
+argument_list|,
+name|j
+argument_list|)
+argument_list|,
+name|j
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+name|outline
+operator|+=
+name|j
+expr_stmt|;
+block|}
+else|else
 block|{
 name|outline
 operator|++
@@ -1931,6 +1969,7 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|plodcnt
@@ -1964,6 +2003,8 @@ argument_list|(
 name|BT
 argument_list|)
 expr_stmt|;
+comment|/* should probably be cost(BT) and moved out */
+comment|/* Move left, if necessary, to desired column */
 while|while
 condition|(
 name|outcol
@@ -1980,7 +2021,82 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 		if (BT&& !insmode&& outcol - destcol> 4+k) { 			tputs(BT, 0, plodput); 			outcol--; 			outcol&= ~7; 			continue; 		} */
+if|if
+condition|(
+name|BT
+operator|&&
+operator|!
+name|insmode
+operator|&&
+name|outcol
+operator|-
+name|destcol
+operator|>
+literal|4
+operator|+
+name|k
+condition|)
+block|{
+name|tputs
+argument_list|(
+name|BT
+argument_list|,
+literal|0
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+name|outcol
+operator|--
+expr_stmt|;
+name|outcol
+operator|-=
+name|outcol
+operator|%
+name|value
+argument_list|(
+name|HARDTABS
+argument_list|)
+expr_stmt|;
+comment|/* outcol&= ~7; */
+continue|continue;
+block|}
+name|j
+operator|=
+name|outcol
+operator|-
+name|destcol
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+name|costLP
+condition|)
+block|{
+name|tputs
+argument_list|(
+name|tgoto
+argument_list|(
+name|LEFT_PARM
+argument_list|,
+literal|0
+argument_list|,
+name|j
+argument_list|)
+argument_list|,
+name|j
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+name|outcol
+operator|-=
+name|j
+expr_stmt|;
+block|}
+else|else
+block|{
 name|outcol
 operator|--
 expr_stmt|;
@@ -2004,12 +2120,51 @@ literal|'\b'
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* Move up, if necessary, to desired row */
 while|while
 condition|(
 name|outline
 operator|>
 name|destline
 condition|)
+block|{
+name|j
+operator|=
+name|outline
+operator|-
+name|destline
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+literal|1
+condition|)
+block|{
+comment|/* Win big on Tek 4025 */
+name|tputs
+argument_list|(
+name|tgoto
+argument_list|(
+name|UP_PARM
+argument_list|,
+literal|0
+argument_list|,
+name|j
+argument_list|)
+argument_list|,
+name|j
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+name|outline
+operator|-=
+name|j
+expr_stmt|;
+block|}
+else|else
 block|{
 name|outline
 operator|--
@@ -2023,6 +2178,7 @@ argument_list|,
 name|plodput
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|plodcnt
@@ -2033,6 +2189,7 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * Now move to the right, if necessary.  We first tab to 	 * as close as we can get. 	 */
 if|if
 condition|(
 name|GT
@@ -2047,6 +2204,7 @@ operator|>
 literal|1
 condition|)
 block|{
+comment|/* tab to right as far as possible without passing col */
 for|for
 control|(
 init|;
@@ -2096,6 +2254,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+comment|/* consider another tab and then some backspaces */
 if|if
 condition|(
 name|destcol
@@ -2138,6 +2297,7 @@ name|outcol
 operator|=
 name|i
 expr_stmt|;
+comment|/* 			 * Back up.  Don't worry about LEFT_PARM because 			 * it's never more than 4 spaces anyway. 			 */
 while|while
 condition|(
 name|outcol
@@ -2170,6 +2330,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* 	 * We've tabbed as much as possible.  If we still need to go 	 * further (not exact or can't tab) space over.  This is a 	 * very common case when moving to the right with space. 	 */
 while|while
 condition|(
 name|outcol
@@ -2177,7 +2338,44 @@ operator|<
 name|destcol
 condition|)
 block|{
-comment|/* 		 * move one char to the right.  We don't use ND space 		 * because it's better to just print the char we are 		 * moving over.  There are various exceptions, however. 		 * If !inopen, vtube contains garbage.  If the char is 		 * a null or a tab we want to print a space.  Other random 		 * chars we use space for instead, too. 		 */
+name|j
+operator|=
+name|destcol
+operator|-
+name|outcol
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+name|costRP
+condition|)
+block|{
+comment|/* 			 * This probably happens rarely, if at all. 			 * It seems mainly useful for ANSI terminals 			 * with no hardware tabs, and I don't know 			 * of any such terminal at the moment. 			 */
+name|tputs
+argument_list|(
+name|tgoto
+argument_list|(
+name|RIGHT_PARM
+argument_list|,
+literal|0
+argument_list|,
+name|j
+argument_list|)
+argument_list|,
+name|j
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+name|outcol
+operator|+=
+name|j
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * move one char to the right.  We don't use ND space 			 * because it's better to just print the char we are 			 * moving over.  There are various exceptions, however. 			 * If !inopen, vtube contains garbage.  If the char is 			 * a null or a tab we want to print a space.  Other 			 * random chars we use space for instead, too. 			 */
 if|if
 condition|(
 operator|!
@@ -2243,6 +2441,7 @@ expr_stmt|;
 name|outcol
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|plodcnt
