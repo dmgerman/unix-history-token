@@ -1877,12 +1877,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: xargs [-0pt] [-E eofstr] [-I replstr] [-J replstr] [-L number]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"             [-n number [-x] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
