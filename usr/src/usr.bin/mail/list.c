@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)list.c	1.2 %G%"
+literal|"@(#)list.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1971,6 +1971,9 @@ name|cp
 decl_stmt|,
 modifier|*
 name|cp2
+decl_stmt|,
+modifier|*
+name|backup
 decl_stmt|;
 name|str
 operator|++
@@ -2031,6 +2034,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|backup
+operator|=
+name|cp2
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -2065,10 +2072,17 @@ name|cp2
 operator|++
 argument_list|)
 condition|)
+block|{
+name|cp2
+operator|=
+operator|++
+name|backup
+expr_stmt|;
 name|cp
 operator|=
 name|str
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
