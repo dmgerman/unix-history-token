@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)service.c	4.7 %G%"
+literal|"@(#)service.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|"errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/file.h"
 end_include
 
 begin_include
@@ -251,10 +257,14 @@ name|restricted
 argument_list|)
 decl_stmt|;
 name|ELIF
+argument_list|(
 name|iof
-modifier|&
+operator|&
 name|IOAPP
-name|ANDF
+argument_list|)
+operator|==
+literal|0
+name|ORF
 argument_list|(
 name|fd
 operator|=
@@ -262,28 +272,21 @@ name|open
 argument_list|(
 name|ion
 argument_list|,
-literal|1
+name|O_WRONLY
+operator||
+name|O_APPEND
 argument_list|)
 argument_list|)
-decl|>=0
+operator|<
+literal|0
 name|THEN
-name|lseek
-argument_list|(
 name|fd
-argument_list|,
-literal|0L
-argument_list|,
-literal|2
-argument_list|)
-decl_stmt|;
-name|ELSE
-name|fd
-init|=
+operator|=
 name|create
 argument_list|(
 name|ion
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|FI
 name|IF
 name|fd
