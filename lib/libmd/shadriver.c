@@ -73,6 +73,12 @@ directive|include
 file|"sha.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sha256.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -86,6 +92,21 @@ define|#
 directive|define
 name|SHA_Data
 value|SHA1_Data
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SHA
+operator|==
+literal|256
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHA_Data
+value|SHA256_Data
 end_define
 
 begin_endif
@@ -114,7 +135,7 @@ name|buf
 index|[
 literal|2
 operator|*
-literal|20
+literal|32
 operator|+
 literal|1
 index|]
