@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.c,v 1.15 1999/03/24 23:47:29 nate Exp $  */
+comment|/*-  * Copyright 1996-1998 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: rtld.c,v 1.16 1999/04/04 06:01:09 peter Exp $  */
 end_comment
 
 begin_comment
@@ -683,6 +683,17 @@ begin_comment
 comment|/* The dynamic linker shared object */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|Elf_Sym
+name|sym_zero
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For resolving undefined weak refs. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1293,6 +1304,24 @@ name|obj_main
 operator|->
 name|refcount
 operator|++
+expr_stmt|;
+comment|/* Initialize a fake symbol for resolving undefined weak references. */
+name|sym_zero
+operator|.
+name|st_info
+operator|=
+name|ELF_ST_INFO
+argument_list|(
+name|STB_GLOBAL
+argument_list|,
+name|STT_NOTYPE
+argument_list|)
+expr_stmt|;
+name|sym_zero
+operator|.
+name|st_shndx
+operator|=
+name|SHN_ABS
 expr_stmt|;
 name|dbg
 argument_list|(
@@ -3455,6 +3484,28 @@ name|weakobj
 expr_stmt|;
 return|return
 name|weakdef
+return|;
+block|}
+if|if
+condition|(
+name|ELF_ST_BIND
+argument_list|(
+name|ref
+operator|->
+name|st_info
+argument_list|)
+operator|==
+name|STB_WEAK
+condition|)
+block|{
+operator|*
+name|defobj_out
+operator|=
+name|obj_main
+expr_stmt|;
+return|return
+operator|&
+name|sym_zero
 return|;
 block|}
 name|_rtld_error
