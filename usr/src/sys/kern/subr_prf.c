@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.4	%G%	*/
+comment|/*	subr_prf.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -520,7 +520,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Print an unsigned integer in base b.  */
+comment|/*  * Print an integer in base b.  If the base is ten it is condidered a  * signed integer otherwise it is treated as unsigned.  */
 end_comment
 
 begin_macro
@@ -535,6 +535,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|long
 name|n
 decl_stmt|;
@@ -543,17 +544,27 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|unsigned
 name|long
 name|a
 decl_stmt|;
+specifier|register
+name|long
+name|a1
+init|=
+name|n
+decl_stmt|;
 if|if
 condition|(
-name|n
+name|b
+operator|==
+literal|10
+operator|&&
+name|a1
 operator|<
 literal|0
 condition|)
 block|{
-comment|/* shouldn't happen */
 name|putchar
 argument_list|(
 literal|'-'
@@ -564,7 +575,7 @@ expr_stmt|;
 name|n
 operator|=
 operator|-
-name|n
+name|a1
 expr_stmt|;
 block|}
 if|if
