@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.5 1995/05/05 23:47:46 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.6 1995/05/06 09:34:22 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -775,7 +775,11 @@ name|buf
 expr_stmt|;
 block|}
 block|}
-else|else
+if|if
+condition|(
+operator|!
+name|fname
+condition|)
 block|{
 name|snprintf
 argument_list|(
@@ -944,11 +948,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|setterm
-argument_list|(
-name|color
-argument_list|)
-expr_stmt|;
+comment|/*    setterm(color); */
 block|}
 else|else
 block|{
@@ -970,11 +970,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|setterm
-argument_list|(
-name|mono
-argument_list|)
-expr_stmt|;
+comment|/*    setterm(mono); */
 block|}
 block|}
 block|}
