@@ -153,21 +153,28 @@ directive|include
 file|<sys/rman.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_comment
-comment|/* for rdtsc proto for clock.h below */
-end_comment
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
 
 begin_include
 include|#
 directive|include
 file|<machine/clock.h>
 end_include
+
+begin_comment
+comment|/* for DELAY() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
