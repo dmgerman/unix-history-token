@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.11.1.1 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2724,6 +2724,14 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fsync
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
 name|ignore
 argument_list|(
 name|iostats
@@ -3625,14 +3633,6 @@ end_macro
 
 begin_block
 block|{
-operator|(
-name|void
-operator|)
-name|fsync
-argument_list|(
-name|io
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|io
