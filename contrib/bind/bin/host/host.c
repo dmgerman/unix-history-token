@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.42 2000/12/23 08:14:32 vixie Exp $"
+literal|"$Id: host.c,v 8.43.2.1 2001/04/26 02:56:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,24 @@ end_include
 begin_comment
 comment|/* Global. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_SEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PATH_SEP
+value|'/'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -730,6 +748,9 @@ name|filter
 parameter_list|,
 name|int
 name|isls
+parameter_list|,
+name|int
+name|isinaddr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -939,7 +960,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|'/'
+name|PATH_SEP
 argument_list|)
 operator|)
 operator|==
@@ -3038,6 +3059,12 @@ argument_list|,
 name|ns_t_any
 argument_list|,
 literal|0
+argument_list|,
+operator|(
+name|type
+operator|==
+name|ns_t_ptr
+operator|)
 argument_list|)
 operator|)
 return|;
@@ -3064,6 +3091,9 @@ name|filter
 parameter_list|,
 name|int
 name|isls
+parameter_list|,
+name|int
+name|isinaddr
 parameter_list|)
 block|{
 name|int
@@ -3440,8 +3470,15 @@ if|if
 condition|(
 name|cname
 operator|&&
+operator|(
 operator|!
 name|verbose
+operator|)
+operator|&&
+operator|(
+operator|!
+name|isinaddr
+operator|)
 condition|)
 return|return
 operator|(
@@ -9290,6 +9327,8 @@ argument_list|,
 name|queryType
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

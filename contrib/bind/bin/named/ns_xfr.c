@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_xfr.c,v 8.63 2000/12/23 08:14:43 vixie Exp $"
+literal|"$Id: ns_xfr.c,v 8.64 2001/02/15 00:18:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -510,9 +510,18 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|ns_error
+argument_list|(
+name|ns_log_xfer_out
+argument_list|,
+literal|"ns_xfr: out of memory"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
+block|}
 name|memset
 argument_list|(
 operator|&
@@ -610,9 +619,18 @@ name|xfr
 operator|.
 name|msg
 condition|)
+block|{
+name|ns_error
+argument_list|(
+name|ns_log_xfer_out
+argument_list|,
+literal|"ns_xfr: out of memory"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
+block|}
 name|qsp
 operator|->
 name|xfr
@@ -1040,6 +1058,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|ns_error
+argument_list|(
+name|ns_log_xfer_out
+argument_list|,
+literal|"ns_xfr: out of memory"
+argument_list|)
+expr_stmt|;
 name|abort
 label|:
 operator|(

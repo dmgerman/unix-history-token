@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 8.17 2000/11/08 06:47:37 marka Exp $"
+literal|"$Id: res_init.c,v 8.19 2001/03/08 03:57:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +503,17 @@ name|nscount
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RESOLVSORT
+name|statp
+operator|->
+name|nsort
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allow user to override the local domain definition */
 if|if
 condition|(
@@ -2478,16 +2489,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|statp
-operator|->
-name|_u
-operator|.
-name|_ext
-operator|.
-name|nscount
-operator|=
-literal|0
-expr_stmt|;
 block|}
 end_function
 

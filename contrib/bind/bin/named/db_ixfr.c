@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_ixfr.c,v 8.23 2000/12/23 08:14:35 vixie Exp $"
+literal|"$Id: db_ixfr.c,v 8.23.2.2 2001/05/03 03:53:18 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1835,6 +1835,9 @@ name|serial
 decl_stmt|,
 name|ttl
 decl_stmt|;
+name|u_int32_t
+name|current_serial
+decl_stmt|;
 name|int
 name|nonempty_lineno
 init|=
@@ -2373,6 +2376,49 @@ operator|&
 name|serial
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|current_serial
+operator|==
+literal|0
+condition|)
+name|current_serial
+operator|=
+name|serial
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|current_serial
+operator|!=
+name|serial
+condition|)
+block|{
+name|ns_debug
+argument_list|(
+name|ns_log_update
+argument_list|,
+literal|1
+argument_list|,
+literal|"%s:line %d serial # askew %d %d"
+argument_list|,
+name|filename
+argument_list|,
+name|lineno
+argument_list|,
+name|serial
+argument_list|,
+name|current_serial
+argument_list|)
+expr_stmt|;
+name|current_serial
+operator|=
+name|serial
+expr_stmt|;
+name|err
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|n
@@ -3225,13 +3271,13 @@ condition|(
 name|opcode
 operator|==
 name|ADD
-operator|&&
-name|i
-operator|==
-literal|0
 condition|)
 operator|*
 name|new_serial
+operator|=
+name|n
+expr_stmt|;
+name|current_serial
 operator|=
 name|n
 expr_stmt|;

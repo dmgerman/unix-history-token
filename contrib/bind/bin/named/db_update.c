@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_update.c,v 8.45 2000/12/23 08:14:36 vixie Exp $"
+literal|"$Id: db_update.c,v 8.46 2001/02/08 02:05:51 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * findMyZone(struct namebuf *np, int class)  *	surf the zone cuts and find this zone the hard way  * return value:  *	zone number or DB_Z_CACHE if it's outside a zone  * interesting cases:  *	    DEC.COM SOA (primary)  *	CRL.DEC.COM NS  (in primary)  *		if you start at CRL.. here, you find the DEC.COM zone  *		if you start at NS.CRL.. here, you're in the cache  *	    DEC.COM SOA (primary)  *	CRL.DEC.COM NS  (in primary)  *	CRL.DEC.COM SOA (secondary)  *	CRL.DEC.COM NS  (in secondary)  *		if you start at CRL.. here, you find the CRL.DEC.COM zone  *		if you start at NS.CRL.. here, you're in the CRL.. zone  */
+comment|/* int  * findMyZone(struct namebuf *np, int class)  *	surf the zone cuts and find this zone the hard way  * return value:  *	zone number or DB_Z_CACHE if it's outside a zone  * interesting cases:  *	    DEC.COM SOA (primary)  *	CRL.DEC.COM NS  (in primary)  *		if you start at CRL.. here, you find the DEC.COM zone  *		if you start at NS.CRL.. here, you're in the cache  *	    DEC.COM SOA (primary)  *	CRL.DEC.COM NS  (in primary)  *	CRL.DEC.COM SOA (slave)  *	CRL.DEC.COM NS  (in slave)  *		if you start at CRL.. here, you find the CRL.DEC.COM zone  *		if you start at NS.CRL.. here, you're in the CRL.. zone  */
 end_comment
 
 begin_function
@@ -1690,7 +1690,7 @@ name|DB_C_ZONE
 condition|)
 block|{
 comment|/* Both records are from a zone file. 					 * If their credibility levels differ, 					 * we're dealing with a zone cut.  The 					 * record with lower clev is from the 					 * upper zone's file and is therefore  					 * glue. 					 */
-comment|/* XXX - Tricky situation here is you 					 * have 2 zones a.b.c and sub.a.b.c 					 * being served by the same server. 					 * named will send NS records for 					 * sub.a.b.c during zone transfer of 					 * a.b.c zone.  If we're secondary for 					 * both zones, and we reload zone 					 * a.b.c, we'll get the NS records 					 * (and possibly A records to go with 					 * them?) for sub.a.b.c as part of the 					 * a.b.c zone transfer.  But we've 					 * already got a more credible record 					 * from the sub.a.b.c zone.  So we want 					 * to ignore the new record, but we 					 * shouldn't syslog because there's 					 * nothing the user can do to prevent 					 * the situation.  Perhaps we should 					 * only complain when we are primary? 	 				 */
+comment|/* XXX - Tricky situation here is you 					 * have 2 zones a.b.c and sub.a.b.c 					 * being served by the same server. 					 * named will send NS records for 					 * sub.a.b.c during zone transfer of 					 * a.b.c zone.  If we're slave for 					 * both zones, and we reload zone 					 * a.b.c, we'll get the NS records 					 * (and possibly A records to go with 					 * them?) for sub.a.b.c as part of the 					 * a.b.c zone transfer.  But we've 					 * already got a more credible record 					 * from the sub.a.b.c zone.  So we want 					 * to ignore the new record, but we 					 * shouldn't syslog because there's 					 * nothing the user can do to prevent 					 * the situation.  Perhaps we should 					 * only complain when we are primary? 	 				 */
 if|if
 condition|(
 name|newdp

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_load.c,v 8.110 2001/01/25 05:50:53 marka Exp $"
+literal|"$Id: db_load.c,v 8.113.2.1 2001/05/03 03:26:48 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4779,6 +4779,36 @@ break|break;
 case|case
 name|ns_t_nsap
 case|:
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'0'
+operator|||
+operator|(
+name|buf
+index|[
+literal|1
+index|]
+operator|!=
+literal|'x'
+operator|&&
+name|buf
+index|[
+literal|1
+index|]
+operator|!=
+literal|'X'
+operator|)
+condition|)
+name|ERRTO
+argument_list|(
+literal|"NSAP RR: no leading 0x"
+argument_list|)
+expr_stmt|;
 name|n
 operator|=
 name|inet_nsap_addr
@@ -5522,7 +5552,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|ns_warning
+name|ns_error
 argument_list|(
 name|ns_log_load
 argument_list|,
@@ -10180,16 +10210,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|origTTL
-operator|>=
-literal|0
-operator|||
 name|wordtouint32_error
 operator|||
 operator|(
 name|origTTL
 operator|>
-literal|0x7fffffff
+literal|0x7fffffffU
 operator|)
 condition|)
 name|ERRTO
@@ -11231,10 +11257,7 @@ operator|*
 operator|)
 name|cp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|data
-argument_list|)
+name|data_size
 operator|-
 name|i
 argument_list|)

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.17 2000/12/23 08:14:46 vixie Exp $"
+literal|"$Id: getinfo.c,v 8.18 2001/02/27 06:03:40 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,6 +425,10 @@ name|SendRequest
 argument_list|(
 name|nsAddrPtr
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|msg
 argument_list|,
 name|msglen

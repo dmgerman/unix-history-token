@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_timers.c,v 1.26 2000/07/17 07:36:54 vixie Exp $"
+literal|"$Id: ev_timers.c,v 1.30 2001/02/12 23:13:48 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,13 @@ end_include
 begin_comment
 comment|/* Constants. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MILLION
+value|1000000
+end_define
 
 begin_define
 define|#
@@ -498,21 +505,6 @@ literal|0
 argument_list|)
 operator|)
 return|;
-name|INSIST
-argument_list|(
-name|now
-operator|.
-name|tv_usec
-operator|>=
-literal|0
-operator|&&
-name|now
-operator|.
-name|tv_usec
-operator|<
-literal|1000000
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|evTimeSpec

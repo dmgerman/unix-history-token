@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/prandom.c,v 1.9 2000/07/17 07:36:53 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/prandom.c,v 1.10 2001/02/12 23:13:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -797,21 +797,6 @@ argument_list|(
 name|mtime
 argument_list|,
 name|zone
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|mtime
-operator|->
-name|tv_usec
-operator|>=
-literal|0
-operator|&&
-name|mtime
-operator|->
-name|tv_usec
-operator|<
-literal|1000000
 argument_list|)
 expr_stmt|;
 name|cnt

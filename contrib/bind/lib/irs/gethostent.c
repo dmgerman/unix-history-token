@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostent.c,v 1.27 2000/04/20 07:10:33 vixie Exp $"
+literal|"$Id: gethostent.c,v 1.28 2001/03/01 05:47:44 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -621,6 +621,14 @@ operator|&&
 name|net_data
 operator|->
 name|ho_last
+operator|&&
+name|net_data
+operator|->
+name|ho_last
+operator|->
+name|h_addrtype
+operator|==
+name|af
 condition|)
 block|{
 if|if

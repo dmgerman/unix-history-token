@@ -6,7 +6,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/support.c,v 1.8 1999/10/13 16:39:24 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/support.c,v 1.9 2001/04/05 22:00:06 bwelling Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,7 +690,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * calculates a checksum used in kmt for a id.  * takes an array of bytes and a length.  * returns a 16  bit checksum.  */
+comment|/*  * calculates a checksum used in dst for an id.  * takes an array of bytes and a length.  * returns a 16  bit checksum.  */
 end_comment
 
 begin_function
@@ -813,7 +813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * dst_s_dns_key_id() Function to calculated DNSSEC footprint from KEY reocrd  *   rdata (all of  record)  * Input:  *	dns_key_rdata: the raw data in wire format   *      rdata_len: the size of the input data   * Output:  *      the key footprint/id calcuated from the key data   */
+comment|/*   * dst_s_dns_key_id() Function to calculate DNSSEC footprint from KEY record  *   rdata  * Input:  *	dns_key_rdata: the raw data in wire format   *      rdata_len: the size of the input data   * Output:  *      the key footprint/id calculated from the key data   */
 end_comment
 
 begin_function
@@ -830,39 +830,14 @@ name|int
 name|rdata_len
 parameter_list|)
 block|{
-name|int
-name|key_data
-init|=
-literal|4
-decl_stmt|;
 if|if
 condition|(
 operator|!
 name|dns_key_rdata
-operator|||
-operator|(
-name|rdata_len
-operator|<
-name|key_data
-operator|)
 condition|)
 return|return
 literal|0
 return|;
-comment|/* check the extended parameters bit in the DNS Key RR flags */
-if|if
-condition|(
-name|dst_s_get_int16
-argument_list|(
-name|dns_key_rdata
-argument_list|)
-operator|&
-name|DST_EXTEND_FLAG
-condition|)
-name|key_data
-operator|+=
-literal|2
-expr_stmt|;
 comment|/* compute id */
 if|if
 condition|(
@@ -895,17 +870,9 @@ comment|/* compute a checksum on the key part of the key rr */
 return|return
 name|dst_s_id_calc
 argument_list|(
-operator|&
 name|dns_key_rdata
-index|[
-name|key_data
-index|]
 argument_list|,
-operator|(
 name|rdata_len
-operator|-
-name|key_data
-operator|)
 argument_list|)
 return|;
 block|}

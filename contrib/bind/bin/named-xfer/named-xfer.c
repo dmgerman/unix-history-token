@@ -91,7 +91,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: named-xfer.c,v 8.104 2000/12/23 08:14:44 vixie Exp $"
+literal|"$Id: named-xfer.c,v 8.105.2.1 2001/04/26 02:56:09 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +283,24 @@ include|#
 directive|include
 file|"port_after.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_SEP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PATH_SEP
+value|'/'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1185,7 +1203,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|'/'
+name|PATH_SEP
 argument_list|)
 expr_stmt|;
 if|if
@@ -4145,7 +4163,7 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|"secondary\n"
+literal|"slave\n"
 argument_list|)
 expr_stmt|;
 break|break;
