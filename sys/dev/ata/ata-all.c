@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.8 1999/04/18 20:48:15 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.9 1999/04/21 07:26:25 peter Exp $  */
 end_comment
 
 begin_include
@@ -313,10 +313,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Ought to be handled by the devclass.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int32_t
@@ -374,8 +370,8 @@ name|ctlr
 decl_stmt|,
 name|res
 decl_stmt|;
-name|int
-name|unit
+name|int32_t
+name|lun
 decl_stmt|;
 comment|/* Allocate the port range */
 name|rid
@@ -470,7 +466,10 @@ name|ENXIO
 return|;
 block|}
 block|}
-comment|/*       * XXX not sure what to do with the unit. The new bus code will      * automatically assign unit numbers for both pci and isa. For      * now, store it in the softc.      */
+name|lun
+operator|=
+literal|0
+expr_stmt|;
 name|res
 operator|=
 name|ata_probe
@@ -492,20 +491,8 @@ argument_list|,
 name|dev
 argument_list|,
 operator|&
-name|unit
+name|lun
 argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-operator|=
-name|unit
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
@@ -550,6 +537,11 @@ name|dev
 parameter_list|)
 block|{
 name|struct
+name|ata_softc
+modifier|*
+name|scp
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|port
@@ -565,11 +557,6 @@ name|ih
 decl_stmt|;
 name|int
 name|rid
-decl_stmt|;
-name|struct
-name|ata_softc
-modifier|*
-name|softc
 decl_stmt|;
 comment|/* Allocate the port range and interrupt */
 name|rid
@@ -655,7 +642,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|softc
+name|scp
 operator|=
 name|device_get_softc
 argument_list|(
@@ -671,7 +658,7 @@ name|irq
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|,
 operator|&
 name|ih
@@ -717,7 +704,7 @@ name|driver_t
 name|ata_isa_driver
 init|=
 block|{
-literal|"ata"
+literal|"ata-isa"
 block|,
 name|ata_isa_methods
 block|,
@@ -931,7 +918,7 @@ decl_stmt|;
 name|struct
 name|ata_softc
 modifier|*
-name|softc
+name|scp
 decl_stmt|;
 name|u_int32_t
 name|type
@@ -1011,7 +998,7 @@ directive|ifdef
 name|ATA_DEBUG
 name|printf
 argument_list|(
-literal|"ata%d: type=%08x class=%02x subclass=%02x cmd=%08x\n"
+literal|"ata-pci%d: type=%08x class=%02x subclass=%02x cmd=%08x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1430,7 +1417,7 @@ name|lun
 argument_list|)
 condition|)
 block|{
-name|softc
+name|scp
 operator|=
 name|atadevices
 index|[
@@ -1457,7 +1444,7 @@ name|irq1
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|,
 operator|&
 name|bio_imask
@@ -1476,7 +1463,7 @@ literal|0
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1530,7 +1517,7 @@ name|irq
 argument_list|,
 name|promise_intr
 argument_list|,
-name|softc
+name|scp
 argument_list|,
 operator|&
 name|ih
@@ -1545,7 +1532,7 @@ name|irq
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|,
 operator|&
 name|ih
@@ -1590,7 +1577,7 @@ name|lun
 argument_list|)
 condition|)
 block|{
-name|softc
+name|scp
 operator|=
 name|atadevices
 index|[
@@ -1617,7 +1604,7 @@ name|irq2
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|,
 operator|&
 name|bio_imask
@@ -1636,7 +1623,7 @@ literal|1
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1691,7 +1678,7 @@ name|irq
 argument_list|,
 name|ataintr
 argument_list|,
-name|softc
+name|scp
 argument_list|,
 operator|&
 name|ih
@@ -1758,7 +1745,7 @@ name|driver_t
 name|ata_pci_driver
 init|=
 block|{
-literal|"ata"
+literal|"ata-pci"
 block|,
 name|ata_pci_methods
 block|,
