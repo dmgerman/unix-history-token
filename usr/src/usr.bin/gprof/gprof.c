@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.9 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2036,13 +2036,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[asgnsamples] ccnt %d time %f totime %f\n"
+literal|"[asgnsamples] pcl 0x%x pch 0x%x ccnt %d\n"
+argument_list|,
+name|pcl
+argument_list|,
+name|pch
 argument_list|,
 name|ccnt
-argument_list|,
-name|time
-argument_list|,
-name|totime
 argument_list|)
 expr_stmt|;
 block|}
@@ -2146,7 +2146,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[asgnsamples] %s gets %f ticks\n"
+literal|"[asgnsamples] (0x%x-0x%x) %s gets %f ticks\n"
+argument_list|,
+name|svalue0
+argument_list|,
+name|svalue1
 argument_list|,
 name|nl
 index|[
