@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.6	81/07/11	*/
+comment|/*	dn11.c	4.7	81/07/23	*/
 end_comment
 
 begin_if
@@ -425,20 +425,6 @@ block|{
 name|alarm
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|longjmp
