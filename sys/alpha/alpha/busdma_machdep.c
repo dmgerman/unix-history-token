@@ -1622,6 +1622,13 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+name|free
+argument_list|(
+name|map
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
 name|dmat
 operator|->
