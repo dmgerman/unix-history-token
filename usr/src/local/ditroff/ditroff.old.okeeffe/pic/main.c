@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.8	84/01/02	*/
+comment|/* main.c	(Berkeley)	1.9	86/03/11	*/
 end_comment
 
 begin_include
@@ -70,6 +70,14 @@ end_decl_stmt
 begin_comment
 comment|/* default typesetter is varian */
 end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -462,6 +470,45 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"PRINTER"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|dev
+operator|=
+name|cp
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"TYPESETTER"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|dev
+operator|=
+name|cp
+expr_stmt|;
 name|cmdname
 operator|=
 name|argv
