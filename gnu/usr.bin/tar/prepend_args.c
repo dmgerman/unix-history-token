@@ -36,6 +36,12 @@ directive|include
 file|"prepend_args.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"port.h"
+end_include
+
 begin_comment
 comment|/* Find the white-space-separated options specified by OPTIONS, and    using BUF to store copies of these options, set ARGV[0], ARGV[1],    etc. to the option copies.  Return the number N of options found.    Do not set ARGV[N] to NULL.  If ARGV is NULL, do not store ARGV[0]    etc.  Backslash can be used to escape whitespace (and backslashes).  */
 end_comment

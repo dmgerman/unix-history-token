@@ -4,6 +4,10 @@ comment|/* Portability declarations.  Requires sys/types.h.    Copyright (C) 198
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* AIX requires this to be the first thing in the file. */
 end_comment
 
@@ -680,6 +684,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|PTR
+name|ck_malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|PTR
+name|ck_realloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|xmalloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
