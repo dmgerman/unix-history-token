@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lo_main.c	8.1 (Berkeley) %G%"
+literal|"@(#)lo_main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"externs.h"
+file|"extern.h"
 end_include
 
 begin_include
