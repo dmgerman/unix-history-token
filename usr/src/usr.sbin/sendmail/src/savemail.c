@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.42 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1397,6 +1397,21 @@ end_decl_stmt
 begin_if
 if|if
 condition|(
+name|returnq
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+end_if
+
+begin_if
+if|if
+condition|(
 name|msg
 operator|==
 name|NULL
@@ -2722,13 +2737,26 @@ expr_stmt|;
 else|else
 name|putline
 argument_list|(
-literal|""
+literal|"   ----- Message body suppressed -----"
 argument_list|,
 name|fp
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|putline
+argument_list|(
+literal|"  ----- No message was collected -----\n"
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|e
@@ -2764,19 +2792,6 @@ expr_stmt|;
 name|putline
 argument_list|(
 name|buf
-argument_list|,
-name|fp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|putline
-argument_list|(
-literal|"  ----- No message was collected -----\n"
 argument_list|,
 name|fp
 argument_list|,
