@@ -6023,11 +6023,24 @@ name|mp
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* 		 * Previously we returned ENOENT for a nonexistent path and 		 * EINVAL for a non-mountpoint.  We cannot tell these apart 		 * now, so in the !MNT_BYFSID case return the more likely 		 * EINVAL for compatibility. 		 */
 return|return
 operator|(
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MNT_BYFSID
+operator|)
+condition|?
 name|ENOENT
+else|:
+name|EINVAL
 operator|)
 return|;
+block|}
 comment|/* 	 * Only root, or the user that did the original mount is 	 * permitted to unmount this filesystem. 	 */
 if|if
 condition|(
