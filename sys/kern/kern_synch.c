@@ -1644,7 +1644,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We put ourselves on the sleep queue and start our timeout 	 * before calling CURSIG, as we could stop there, and a wakeup 	 * or a SIGCONT (or both) could occur while we were stopped. 	 * A SIGCONT would cause us to be marked as SSLEEP 	 * without resuming us, thus we must be ready for sleep 	 * when CURSIG is called.  If the wakeup happens while we're 	 * stopped, td->td_wchan will be 0 upon return from CURSIG. 	 */
+comment|/* 	 * We put ourselves on the sleep queue and start our timeout 	 * before calling cursig, as we could stop there, and a wakeup 	 * or a SIGCONT (or both) could occur while we were stopped. 	 * A SIGCONT would cause us to be marked as SSLEEP 	 * without resuming us, thus we must be ready for sleep 	 * when cursig is called.  If the wakeup happens while we're 	 * stopped, td->td_wchan will be 0 upon return from cursig. 	 */
 if|if
 condition|(
 name|catch
@@ -1686,7 +1686,7 @@ argument_list|)
 expr_stmt|;
 name|sig
 operator|=
-name|CURSIG
+name|cursig
 argument_list|(
 name|p
 argument_list|)
@@ -1910,7 +1910,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXX: shouldn't we always be calling CURSIG() */
+comment|/* XXX: shouldn't we always be calling cursig() */
 if|if
 condition|(
 name|sig
@@ -1920,7 +1920,7 @@ operator|||
 operator|(
 name|sig
 operator|=
-name|CURSIG
+name|cursig
 argument_list|(
 name|p
 argument_list|)

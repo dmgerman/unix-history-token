@@ -755,7 +755,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|CURSIG
+name|cursig
 parameter_list|(
 name|struct
 name|proc

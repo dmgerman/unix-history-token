@@ -1176,7 +1176,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-comment|/*		printf("Signal: %x", CURSIG(p));*/
+comment|/*		printf("Signal: %x", cursig(p));*/
 name|error
 operator|=
 literal|0

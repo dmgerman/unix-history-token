@@ -718,7 +718,7 @@ end_comment
 
 begin_function
 name|int
-name|CURSIG
+name|cursig
 parameter_list|(
 name|struct
 name|proc
@@ -6897,7 +6897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If the current process has received a signal (should be caught or cause  * termination, should interrupt current syscall), return the signal number.  * Stop signals with default action are processed immediately, then cleared;  * they aren't returned.  This is checked after each entry to the system for  * a syscall or trap (though this can usually be done without calling issignal  * by checking the pending signal masks in the CURSIG macro.) The normal call  * sequence is  *  *	while (sig = CURSIG(curproc))  *		postsig(sig);  */
+comment|/*  * If the current process has received a signal (should be caught or cause  * termination, should interrupt current syscall), return the signal number.  * Stop signals with default action are processed immediately, then cleared;  * they aren't returned.  This is checked after each entry to the system for  * a syscall or trap (though this can usually be done without calling issignal  * by checking the pending signal masks in cursig.) The normal call  * sequence is  *  *	while (sig = cursig(curproc))  *		postsig(sig);  */
 end_comment
 
 begin_function

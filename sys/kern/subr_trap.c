@@ -762,7 +762,7 @@ condition|(
 operator|(
 name|sig
 operator|=
-name|CURSIG
+name|cursig
 argument_list|(
 name|p
 argument_list|)

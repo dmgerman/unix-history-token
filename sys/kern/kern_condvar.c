@@ -347,7 +347,7 @@ decl_stmt|;
 name|int
 name|sig
 decl_stmt|;
-comment|/* 	 * We put ourselves on the sleep queue and start our timeout before 	 * calling CURSIG, as we could stop there, and a wakeup or a SIGCONT (or 	 * both) could occur while we were stopped.  A SIGCONT would cause us to 	 * be marked as SSLEEP without resuming us, thus we must be ready for 	 * sleep when CURSIG is called.  If the wakeup happens while we're 	 * stopped, td->td_wchan will be 0 upon return from CURSIG. 	 */
+comment|/* 	 * We put ourselves on the sleep queue and start our timeout before 	 * calling cursig, as we could stop there, and a wakeup or a SIGCONT (or 	 * both) could occur while we were stopped.  A SIGCONT would cause us to 	 * be marked as SSLEEP without resuming us, thus we must be ready for 	 * sleep when cursig is called.  If the wakeup happens while we're 	 * stopped, td->td_wchan will be 0 upon return from cursig. 	 */
 name|td
 operator|->
 name|td_flags
@@ -373,7 +373,7 @@ argument_list|)
 expr_stmt|;
 name|sig
 operator|=
-name|CURSIG
+name|cursig
 argument_list|(
 name|p
 argument_list|)
@@ -944,7 +944,7 @@ literal|0
 condition|)
 name|sig
 operator|=
-name|CURSIG
+name|cursig
 argument_list|(
 name|p
 argument_list|)
@@ -1607,7 +1607,7 @@ literal|0
 condition|)
 name|sig
 operator|=
-name|CURSIG
+name|cursig
 argument_list|(
 name|p
 argument_list|)
