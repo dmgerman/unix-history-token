@@ -7007,7 +7007,7 @@ argument_list|)
 expr_stmt|;
 name|warning
 argument_list|(
-literal|"timeout expired for %s on %s: %m; going to single used mode"
+literal|"timeout expired for %s on %s: %m; going to single user mode"
 argument_list|,
 name|_PATH_BSHELL
 argument_list|,
