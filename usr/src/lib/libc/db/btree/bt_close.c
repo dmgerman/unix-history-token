@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	5.4 (Berkeley) %G%"
+literal|"@(#)bt_close.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,9 +577,10 @@ name|m
 operator|.
 name|m_free
 operator|=
-literal|0
+name|t
+operator|->
+name|bt_free
 expr_stmt|;
-comment|/* XXX */
 name|m
 operator|.
 name|m_nrecs

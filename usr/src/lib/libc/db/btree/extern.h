@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -149,6 +149,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|__bt_free
+name|__P
+argument_list|(
+operator|(
+name|BTREE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|__bt_get
 name|__P
 argument_list|(
@@ -165,6 +181,23 @@ name|DBT
 operator|*
 operator|,
 name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|PAGE
+modifier|*
+name|__bt_new
+name|__P
+argument_list|(
+operator|(
+name|BTREE
+operator|*
+operator|,
+name|pgno_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

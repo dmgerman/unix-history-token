@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.6 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1562,11 +1562,9 @@ condition|(
 operator|(
 name|r
 operator|=
-name|mpool_new
+name|__bt_new
 argument_list|(
 name|t
-operator|->
-name|bt_mp
 argument_list|,
 operator|&
 name|npg
@@ -1978,11 +1976,9 @@ condition|(
 operator|(
 name|l
 operator|=
-name|mpool_new
+name|__bt_new
 argument_list|(
 name|t
-operator|->
-name|bt_mp
 argument_list|,
 operator|&
 name|lnpg
@@ -1994,11 +1990,9 @@ operator|||
 operator|(
 name|r
 operator|=
-name|mpool_new
+name|__bt_new
 argument_list|(
 name|t
-operator|->
-name|bt_mp
 argument_list|,
 operator|&
 name|rnpg

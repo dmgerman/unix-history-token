@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -731,7 +731,7 @@ comment|/* R: record file descriptor */
 name|pgno_t
 name|bt_free
 decl_stmt|;
-comment|/* XXX next free page */
+comment|/* next free page */
 name|index_t
 name|bt_psize
 decl_stmt|;
