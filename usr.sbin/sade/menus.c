@@ -5446,29 +5446,6 @@ name|DIST_CRYPTO_CRYPTO
 block|, }
 block|,
 block|{
-literal|" krb5"
-block|,
-literal|"Kerberos5 authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_KERBEROS5
-block|}
-block|,
-block|{
 literal|" dict"
 block|,
 literal|"Spelling checker dictionary files"

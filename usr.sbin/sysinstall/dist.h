@@ -225,58 +225,12 @@ name|DIST_CRYPTO_SSECURE
 value|0x0004
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|<=
-literal|3
-end_if
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_KERBEROS
-value|0x0008
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_KERBEROS4
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_KERBEROS5
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_SKERBEROS4
-value|0x0020
-end_define
-
 begin_define
 define|#
 directive|define
 name|DIST_CRYPTO_SKERBEROS5
 value|0x0040
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -985,14 +939,6 @@ directive|define
 name|_DIST_DEVELOPER
 define|\
 value|( _DIST_USER | DIST_PROFLIBS | DIST_INFO | DIST_SRC )
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_CRYPTO_BIN
-define|\
-value|( DIST_CRYPTO_CRYPTO | DIST_CRYPTO_KERBEROS4 | DIST_CRYPTO_KERBEROS5 )
 end_define
 
 begin_endif
