@@ -145,7 +145,8 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|unsigned
+name|long
 name|__clock_t
 typedef|;
 end_typedef
