@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)comsat.c	4.4 82/11/17"
+literal|"@(#)comsat.c	4.5 82/12/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,8 +115,6 @@ name|sin
 init|=
 block|{
 name|AF_INET
-block|,
-name|IPPORT_BIFFUDP
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -342,27 +340,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|vax
-operator|||
-name|pdp11
-name|sp
-operator|->
-name|s_port
-operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|sp
-operator|->
-name|s_port
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sin
 operator|.
 name|sin_port
