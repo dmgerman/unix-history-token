@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * NIS interface routines for chpass  *   * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  *	$Id: pw_yp.c,v 1.2 1995/09/02 03:56:19 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * NIS interface routines for chpass  *   * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  *	$Id: pw_yp.c,v 1.1.2.1 1995/10/06 00:58:50 davidg Exp $  */
 end_comment
 
 begin_ifdef
@@ -239,20 +239,36 @@ name|s
 init|=
 name|p
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|buf
+decl_stmt|;
 name|yp_password
 operator|.
 name|pw_fields
 operator|=
 literal|0
 expr_stmt|;
-name|t
+name|buf
 operator|=
 operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|realloc
 argument_list|(
+name|buf
+argument_list|,
+name|m
+operator|+
+literal|10
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
 name|m
 operator|+
 literal|10
@@ -292,6 +308,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+name|t
+operator|=
+name|buf
+expr_stmt|;
 define|#
 directive|define
 name|EXPAND
@@ -443,7 +463,7 @@ operator|)
 expr_stmt|;
 name|yp_password
 operator|.
-name|pw_expire
+name|pw_fields
 operator||=
 name|_PWF_EXPIRE
 expr_stmt|;
@@ -512,18 +532,38 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
-name|t
+specifier|static
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|buf
 operator|=
 operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|realloc
 argument_list|(
+name|buf
+argument_list|,
 name|m
 operator|+
 literal|10
 argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+name|m
+operator|+
+literal|10
+argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|buf
 expr_stmt|;
 name|EXPAND
 argument_list|(
@@ -1425,12 +1465,28 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
+name|yppasswd
+operator|.
+name|oldpass
+operator|=
+literal|""
+expr_stmt|;
 comment|/* Get NIS master server name */
 name|master
 operator|=
 name|get_yp_master
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_passwd
+index|[
+literal|0
+index|]
+condition|)
+block|{
 comment|/* Get the user's password for authentication purposes. */
 name|printf
 argument_list|(
@@ -1447,16 +1503,7 @@ argument_list|)
 expr_stmt|;
 name|encpass
 operator|=
-operator|(
-name|getpwnam
-argument_list|(
-name|yppasswd
-operator|.
-name|newpw
-operator|.
-name|pw_name
-argument_list|)
-operator|)
+name|pw
 operator|->
 name|pw_passwd
 expr_stmt|;
@@ -1509,6 +1556,7 @@ operator|=
 name|password
 expr_stmt|;
 comment|/* XXX */
+block|}
 comment|/* Create a handle to yppasswdd. */
 name|clnt
 operator|=
@@ -1614,7 +1662,13 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"NIS information changed on host %s"
+literal|"NIS information %schanged on host %s"
+argument_list|,
+name|status
+condition|?
+literal|"not "
+else|:
+literal|""
 argument_list|,
 name|master
 argument_list|)

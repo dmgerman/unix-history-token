@@ -499,6 +499,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Only admin can change "restricted" shells. */
+ifdef|#
+directive|ifdef
+name|0
 elseif|else
 if|if
 condition|(
@@ -510,6 +513,34 @@ name|pw_shell
 argument_list|)
 condition|)
 comment|/* 		 * Make shell a restricted field.  Ugly with a 		 * necklace, but there's not much else to do. 		 */
+else|#
+directive|else
+elseif|else
+if|if
+condition|(
+operator|(
+operator|!
+name|list
+index|[
+name|E_SHELL
+index|]
+operator|.
+name|restricted
+operator|&&
+name|ok_shell
+argument_list|(
+name|pw
+operator|->
+name|pw_shell
+argument_list|)
+operator|)
+operator|||
+operator|!
+name|uid
+condition|)
+comment|/* 		 * If change not restrict (table.c) and standard shell 		 *      OR if root, then allow editing of shell. 		 */
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
