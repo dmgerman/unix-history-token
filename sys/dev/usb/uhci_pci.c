@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.3 1999/03/27 23:08:43 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.4 1999/04/06 23:09:58 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -534,19 +534,31 @@ name|uhci_softc_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_iobase
-operator|=
-name|pci_conf_read
+if|if
+condition|(
+operator|!
+name|pci_map_port
 argument_list|(
 name|config_id
 argument_list|,
 name|PCI_UHCI_BASE_REG
-argument_list|)
+argument_list|,
 operator|&
-literal|0xffe0
+name|sc
+operator|->
+name|sc_iobase
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uhci%d: could not map port\n"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
