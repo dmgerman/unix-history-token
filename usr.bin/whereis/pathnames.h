@@ -69,6 +69,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MANWHEREISALLCMD
+value|"man -a -w %s 2>/dev/null"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MANWHEREISMATCH
 value|"^.* [(]source: (.*)[)]$"
 end_define
