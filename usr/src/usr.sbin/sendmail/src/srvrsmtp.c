@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.75 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.76 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.75 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.76 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1594,6 +1594,14 @@ operator|&&
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|&&
+operator|!
+name|wordinclass
+argument_list|(
+name|RealUserName
+argument_list|,
+literal|'t'
+argument_list|)
 operator|&&
 operator|!
 name|bitnset
