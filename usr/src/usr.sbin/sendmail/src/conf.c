@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.141 (Berkeley) %G%"
+literal|"@(#)conf.c	8.142 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2274,13 +2274,45 @@ condition|)
 block|{
 name|maptype
 index|[
-literal|0
+name|svcno
+operator|++
 index|]
 operator|=
 literal|"files"
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTO_NIS_ALIASES
+ifdef|#
+directive|ifdef
+name|NISPLUS
+name|maptype
+index|[
+name|svcno
+operator|++
+index|]
+operator|=
+literal|"nisplus"
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NIS
+name|maptype
+index|[
+name|svcno
+operator|++
+index|]
+operator|=
+literal|"nis"
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 return|return
-literal|1
+name|svcno
 return|;
 block|}
 if|if
