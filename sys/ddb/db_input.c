@@ -1001,6 +1001,7 @@ expr_stmt|;
 case|case
 literal|'\n'
 case|:
+comment|/* FALLTHROUGH */
 case|case
 literal|'\r'
 case|:
