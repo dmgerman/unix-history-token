@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2446,24 +2446,23 @@ argument_list|)
 operator|->
 name|rn_key
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|tt
 operator|->
 name|rn_mask
 operator|!=
 name|netmask
-condition|;
+condition|)
+if|if
+condition|(
+operator|(
 name|tt
 operator|=
 name|tt
 operator|->
 name|rn_dupedkey
-control|)
-if|if
-condition|(
-name|tt
+operator|)
 operator|==
 literal|0
 condition|)
