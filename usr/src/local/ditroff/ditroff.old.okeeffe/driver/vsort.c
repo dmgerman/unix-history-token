@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.9	84/03/14  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
+comment|/* vsort.c	1.10	84/04/11  *  *	Sorts and shuffles ditroff output for versatec wide printer.  It  *	puts pages side-by-side on the output, and fits as many as it can  *	on one horizontal span.  The versatec driver sees only pages of  *	full width, not the individual pages.  Output is sorted vertically  *	and bands are created NLINES pixels high.  Any object that has  *	ANY part of it in a band is put on that band.  */
 end_comment
 
 begin_include
@@ -2837,26 +2837,6 @@ expr_stmt|;
 comment|/* not done if there's still */
 block|}
 comment|/* something to put lower */
-ifdef|#
-directive|ifdef
-name|DEBUGABLE
-if|if
-condition|(
-name|dbg
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"topv=%d, botv=%d\n"
-argument_list|,
-name|topv
-argument_list|,
-name|botv
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|notdone
@@ -3308,10 +3288,11 @@ name|first
 condition|)
 block|{
 comment|/* or this is the first page */
-name|sprintf
+name|oflush
+argument_list|()
+expr_stmt|;
+name|printf
 argument_list|(
-name|op
-argument_list|,
 literal|"p%d\n"
 argument_list|,
 name|spanno
@@ -3319,16 +3300,6 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|/* make it a REAL page-break */
-name|op
-operator|+=
-name|strlen
-argument_list|(
-name|op
-argument_list|)
-expr_stmt|;
-name|oflush
-argument_list|()
-expr_stmt|;
 name|first
 operator|=
 name|pageno
