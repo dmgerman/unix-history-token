@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.18 %G%"
+literal|"@(#)put.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1961,6 +1961,9 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
+ifdef|#
+directive|ifdef
+name|vax
 name|putprintf
 argument_list|(
 literal|"	.data"
@@ -1975,6 +1978,29 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+name|putprintf
+argument_list|(
+literal|"	.data"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	.even"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
 name|ap
 operator|->
 name|value
