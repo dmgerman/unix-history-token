@@ -228,6 +228,18 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 	 * To avoid signal-lost problem, if signals had already been 	 * delivered to us, handle it. we have already set EXITING flag 	 * so no new signals should be delivered to us. 	 * XXX this is not enough if signal was delivered just before 	 * thread called sigprocmask and masked it! in this case, we 	 * might have to re-post the signal by kill() if the signal 	 * is targeting process (not for a specified thread). 	 * Kernel has same signal-lost problem, a signal may be delivered 	 * to a thread which is on the way to call sigprocmask or thr_exit()! 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|check_pending
+condition|)
+name|_thr_sig_check_pending
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Save the return value: */
 name|curthread
 operator|->
