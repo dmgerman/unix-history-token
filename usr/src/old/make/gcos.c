@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gcos.c	4.3 (Berkeley) 85/08/30"
+literal|"@(#)gcos.c	4.4 (Berkeley) 87/12/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -659,8 +659,7 @@ operator|=
 name|ar
 expr_stmt|;
 name|sp1
-operator|=
-operator|>>
+operator|>>=
 literal|18
 expr_stmt|;
 name|sp2
@@ -668,8 +667,7 @@ operator|=
 name|filbuf
 expr_stmt|;
 name|sp2
-operator|=
-operator|>>
+operator|>>=
 literal|18
 expr_stmt|;
 name|sp2
@@ -1396,8 +1394,7 @@ literal|'Z'
 condition|)
 operator|*
 name|p1
-operator|=
-operator|+
+operator|+=
 operator|(
 literal|'a'
 operator|-
@@ -1609,8 +1606,7 @@ case|case
 literal|'-'
 case|:
 name|k
-operator|=
-operator||
+operator||=
 name|lc
 operator|<=
 name|scc
