@@ -469,6 +469,7 @@ value|"\20\6BUFF\5UFLO\4RES\3LCOL\2LCAR\1RTRY"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|nic_ident
@@ -487,6 +488,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|ic_ident

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.81 1995/10/28 15:39:01 phk Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.82 1995/10/28 22:46:26 pst Exp $  */
 end_comment
 
 begin_include
@@ -357,6 +357,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_attach
 parameter_list|(
@@ -368,6 +369,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ed_init
 parameter_list|(
@@ -386,6 +388,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_ioctl
 parameter_list|(
@@ -401,6 +404,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_probe
 parameter_list|(
@@ -412,6 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ed_start
 parameter_list|(
@@ -423,6 +428,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ed_reset
 parameter_list|(
@@ -432,6 +438,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ed_watchdog
 parameter_list|(
@@ -441,6 +448,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_probe_generic8390
 parameter_list|(
@@ -452,6 +460,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_probe_WD80x3
 parameter_list|(
@@ -463,6 +472,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_probe_3Com
 parameter_list|(
@@ -474,6 +484,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_probe_Novell
 parameter_list|(
@@ -485,6 +496,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ed_probe_pccard
 parameter_list|(
@@ -499,6 +511,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ds_getmcaf
 parameter_list|()
@@ -564,6 +577,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ed_pio_readmem
 argument_list|()
@@ -574,6 +588,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|u_short
 name|ed_pio_write_mbufs
 parameter_list|()
@@ -581,6 +596,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ed_setrcr
 parameter_list|(
@@ -591,6 +607,18 @@ parameter_list|,
 name|struct
 name|ed_softc
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|u_long
+name|ds_crc
+parameter_list|(
+name|u_char
+modifier|*
+name|ep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -648,6 +676,7 @@ comment|/* Interrupt handler */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|edunload
 parameter_list|(
@@ -663,6 +692,7 @@ comment|/* Disable driver */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|edsuspend
 parameter_list|(
@@ -728,6 +758,7 @@ comment|/*  * Called when a power down is wanted. Shuts down the  * device and c
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|edsuspend
 parameter_list|(
@@ -756,6 +787,7 @@ comment|/*  *	Initialize the device - called from Slot manager.  *	if first is s
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|edinit
 parameter_list|(
@@ -768,9 +800,6 @@ name|int
 name|first
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|ed_softc
 modifier|*
@@ -871,6 +900,7 @@ comment|/*  *	edunload - unload the driver and clear the table.  *	XXX TODO:  *	
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|edunload
 parameter_list|(
@@ -10731,6 +10761,7 @@ comment|/*  * Compute crc for ethernet address  */
 end_comment
 
 begin_function
+specifier|static
 name|u_long
 name|ds_crc
 parameter_list|(

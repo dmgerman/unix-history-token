@@ -320,6 +320,7 @@ comment|/* Function prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|bicc_probe
 parameter_list|(
@@ -331,6 +332,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|depca_probe
 parameter_list|(
@@ -342,6 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|lance_probe
 parameter_list|(
@@ -351,6 +354,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ne2100_probe
 parameter_list|(
@@ -362,6 +366,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pcnet_probe
 parameter_list|(
@@ -371,6 +376,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|lnc_init
 parameter_list|(
@@ -380,6 +386,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|lnc_start
 parameter_list|(
@@ -391,6 +398,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|lnc_ioctl
 parameter_list|(
@@ -406,6 +414,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|lnc_watchdog
 parameter_list|(
@@ -415,6 +424,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|lnc_probe
 parameter_list|(
@@ -426,6 +436,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|lnc_attach
 parameter_list|(
@@ -436,7 +447,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_function_decl
+specifier|static
 name|void
 name|lnc_dump_state
 parameter_list|(
@@ -444,6 +462,15 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -816,7 +843,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
+specifier|static
 name|void
 name|lnc_setladrf
 parameter_list|(
@@ -833,7 +867,17 @@ parameter_list|)
 block|{  }
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|lnc_stop
 parameter_list|(
@@ -854,6 +898,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lnc_reset
 parameter_list|(
@@ -870,6 +915,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lnc_free_mbufs
 parameter_list|(
@@ -994,6 +1040,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|alloc_mbuf_cluster
@@ -1180,6 +1227,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|struct
 name|mbuf
@@ -1341,6 +1389,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|struct
 name|mbuf
@@ -1670,6 +1719,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|lnc_rint
@@ -2407,6 +2457,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|void
 name|lnc_tint
@@ -3247,6 +3298,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lnc_probe
 parameter_list|(
@@ -3342,6 +3394,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ne2100_probe
 parameter_list|(
@@ -3487,6 +3540,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bicc_probe
 parameter_list|(
@@ -3642,6 +3696,7 @@ comment|/*  * I don't have data sheets for the dec cards but it looks like the m
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dec_macaddr_extract
 parameter_list|(
@@ -3815,6 +3870,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|depca_probe
 parameter_list|(
@@ -3958,6 +4014,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lance_probe
 parameter_list|(
@@ -4044,6 +4101,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcnet_probe
 parameter_list|(
@@ -4154,6 +4212,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lnc_attach
 parameter_list|(
@@ -4642,6 +4701,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lnc_init
 parameter_list|(
@@ -5930,6 +5990,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|mbuf_to_buffer
@@ -5999,6 +6060,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|struct
 name|mbuf
@@ -6090,6 +6152,7 @@ comment|/*  * IFF_OACTIVE and IFF_RUNNING are checked in ether_output so it's re
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lnc_start
 parameter_list|(
@@ -6809,6 +6872,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lnc_ioctl
 parameter_list|(
@@ -7242,6 +7306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lnc_watchdog
 parameter_list|(
@@ -7285,6 +7350,7 @@ name|DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|lnc_dump_state
 parameter_list|(
@@ -7804,6 +7870,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mbuf_dump_chain
 parameter_list|(

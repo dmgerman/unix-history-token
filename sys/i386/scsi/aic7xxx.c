@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.40 1995/10/28 17:27:21 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.41 1995/10/29 05:57:48 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -134,6 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahc_init
 name|__P
@@ -147,6 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ahc_loadseq
 name|__P
@@ -160,6 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int32
 name|ahc_scsi_cmd
 parameter_list|()
@@ -167,12 +170,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|timeout_t
 name|ahc_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ahc_done
 name|__P
@@ -191,6 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scb
 modifier|*
@@ -209,6 +215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ahc_free_scb
 parameter_list|()
@@ -216,6 +223,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ahc_scb_timeout
 name|__P
@@ -239,6 +247,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|ahc_abort_wscb
 name|__P
@@ -269,6 +278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahc_match_scb
 name|__P
@@ -290,6 +300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahc_reset_device
 name|__P
@@ -320,6 +331,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ahc_reset_current_bus
 name|__P
@@ -333,6 +345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahc_reset_channel
 name|__P
@@ -360,6 +373,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ahcminphys
 parameter_list|()
@@ -367,6 +381,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ahc_unbusy_target
 name|__P
@@ -395,6 +410,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahc_poll
 name|__P
@@ -411,6 +427,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|u_int32
 name|ahc_adapter_info
 parameter_list|()
@@ -471,6 +488,7 @@ name|AHC_DEBUG
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ahc_debug
 init|=
@@ -519,6 +537,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|ahc_switch
@@ -550,6 +569,7 @@ comment|/* the below structure is so we have a default dev struct for our link s
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|ahc_dev
@@ -2587,6 +2607,7 @@ name|AHC_DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|ahc_print_scb
 parameter_list|(
@@ -2726,6 +2747,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_print_active_scb
 parameter_list|(
@@ -3658,6 +3680,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_send_scb
 parameter_list|(
@@ -6585,6 +6608,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|enable_seeprom
 parameter_list|(
@@ -6694,6 +6718,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|release_seeprom
 parameter_list|(
@@ -6741,6 +6766,7 @@ comment|/*  * We have a scb which has been processed by the  * adaptor, now we l
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahc_done
 parameter_list|(
@@ -6991,6 +7017,7 @@ comment|/*  * Start the board, ready for normal operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahc_init
 parameter_list|(
@@ -9068,6 +9095,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahcminphys
 parameter_list|(
@@ -9120,6 +9148,7 @@ comment|/*  * start a scsi operation given the command and  * the data address, 
 end_comment
 
 begin_function
+specifier|static
 name|int32
 name|ahc_scsi_cmd
 parameter_list|(
@@ -10120,6 +10149,7 @@ comment|/*  * Return some information to the caller about  * the adapter and it'
 end_comment
 
 begin_function
+specifier|static
 name|u_int32
 name|ahc_adapter_info
 parameter_list|(
@@ -10143,6 +10173,7 @@ comment|/*  * A scb (and hence an scb entry on the board is put onto the  * free
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ahc_free_scb
 parameter_list|(
@@ -10246,6 +10277,7 @@ comment|/*  * Get a free scb  * If there are none, see if we can allocate a  * n
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|scb
 modifier|*
@@ -10595,8 +10627,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|gottit
-label|:
 name|splx
 argument_list|(
 name|opri
@@ -10611,6 +10641,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_loadseq
 parameter_list|(
@@ -10713,6 +10744,7 @@ comment|/*  * Function to poll for command completion when in poll mode  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahc_poll
 parameter_list|(
@@ -10804,6 +10836,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_scb_timeout
 parameter_list|(
@@ -10838,9 +10871,6 @@ name|int
 name|found
 init|=
 literal|0
-decl_stmt|;
-name|u_char
-name|scb_control
 decl_stmt|;
 name|char
 name|channel
@@ -11397,6 +11427,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_timeout
 parameter_list|(
@@ -11593,6 +11624,7 @@ comment|/*  * The device at the given target/channel has been reset.  Abort   * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ahc_reset_device
 parameter_list|(
@@ -12075,6 +12107,7 @@ comment|/*  * Manipulate the waiting for selection list and return the  * scb th
 end_comment
 
 begin_function
+specifier|static
 name|u_char
 name|ahc_abort_wscb
 parameter_list|(
@@ -12328,6 +12361,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_unbusy_target
 parameter_list|(
@@ -12404,6 +12438,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ahc_reset_current_bus
 parameter_list|(
@@ -12440,6 +12475,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ahc_reset_channel
 parameter_list|(
@@ -12793,6 +12829,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ahc_match_scb
 parameter_list|(
