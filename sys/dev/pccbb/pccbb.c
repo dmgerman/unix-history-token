@@ -525,6 +525,18 @@ operator||
 name|PCCBB_PCIC_MEM_32
 block|}
 block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI4451
+block|,
+literal|"TI4451 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+name|PCCBB_PCIC_IO_RELOC
+operator||
+name|PCCBB_PCIC_MEM_32
+block|}
+block|,
 comment|/* Ricoh chips */
 block|{
 name|PCI_DEVICE_ID_RICOH_RL5C465
@@ -642,7 +654,17 @@ comment|/* 02Micro */
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6832
 block|,
-literal|"O2Mirco OZ6832 PCI-CardBus Bridge"
+literal|"O2Mirco OZ6832/6833 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
+block|,
+name|PCCBB_PCIC_MEM_32
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6860
+block|,
+literal|"O2Mirco OZ6836/6860 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,
@@ -652,7 +674,7 @@ block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6872
 block|,
-literal|"O2Mirco OZ6872 PCI-CardBus Bridge"
+literal|"O2Mirco OZ6812/6872 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|,

@@ -968,11 +968,48 @@ name|PCI_DEVICE_ID_PCIC_OZ6832
 value|0x68321217ul
 end_define
 
+begin_comment
+comment|/* Also 6833 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_OZ6860
+value|0x68361216ul
+end_define
+
+begin_comment
+comment|/* Also 6836? */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_OZ6872
 value|0x68721217ul
+end_define
+
+begin_comment
+comment|/* Also 6812 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_OZ6912
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_OZ6922
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_OZ6933
 end_define
 
 begin_define
@@ -1085,6 +1122,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_PCIC_TI1451
 value|0xac52104cul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_PCIC_TI4451
+value|0xac42104cul
 end_define
 
 begin_define
