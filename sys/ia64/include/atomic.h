@@ -41,7 +41,7 @@ parameter_list|,
 name|ret
 parameter_list|)
 define|\
-value|__asm __volatile (					\ 		"mov ar.ccv=%2;;\n\t"				\ 		"cmpxchg" #sz "." #sem " %0=%4,%3,ar.ccv\n\t"	\ 		: "=r" (ret), "=m" (*p)				\ 		: "r" (cmpval), "r" (newval), "m" (*p)		\ 		: "memory")
+value|__asm __volatile (						\ 		"mov ar.ccv=%2;;\n\t"					\ 		"cmpxchg" #sz "." #sem " %0=%4,%3,ar.ccv\n\t"		\ 		: "=r" (ret), "=m" (*p)					\ 		: "r" (cmpval), "r" (newval), "m" (*p)			\ 		: "memory")
 end_define
 
 begin_comment
@@ -51,22 +51,22 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|ia64_cmpxchg_acq_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cmpval
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|newval
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|ret
 decl_stmt|;
 name|IA64_CMPXCHG
@@ -95,22 +95,22 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|ia64_cmpxchg_rel_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cmpval
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|newval
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|ret
 decl_stmt|;
 name|IA64_CMPXCHG
@@ -139,22 +139,22 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_cmpxchg_acq_64
 parameter_list|(
 specifier|volatile
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|cmpval
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|newval
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|ret
 decl_stmt|;
 name|IA64_CMPXCHG
@@ -183,22 +183,22 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|ia64_cmpxchg_rel_64
 parameter_list|(
 specifier|volatile
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|cmpval
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|newval
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|ret
 decl_stmt|;
 name|IA64_CMPXCHG
@@ -236,7 +236,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static __inline u_int##width##_t				\ ia64_ld_acq_##width(volatile u_int##width##_t* p)		\ {								\ 	u_int##width##_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "=r" (v)				\ 			  : "m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 								\ static __inline u_int##width##_t				\ atomic_load_acq_##width(volatile u_int##width##_t* p)		\ {								\ 	u_int##width##_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "=r" (v)				\ 			  : "m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 								\ static __inline u_int##width##_t				\ atomic_load_acq_##type(volatile u_int##width##_t* p)		\ {								\ 	u_int##width##_t v;					\ 								\ 	__asm __volatile ("ld" size ".acq %0=%1"		\ 			  : "=r" (v)				\ 			  : "m" (*p)				\ 			  : "memory");				\ 	return (v);						\ }								\ 							       	\ static __inline void						\ ia64_st_rel_##width(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }								\ 							       	\ static __inline void						\ atomic_store_rel_##width(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }								\ 							       	\ static __inline void						\ atomic_store_rel_##type(volatile u_int##width##_t* p, u_int##width##_t v)\ {								\ 	__asm __volatile ("st" size ".rel %0=%1"		\ 			  : "=m" (*p)				\ 			  : "r" (v)				\ 			  : "memory");				\ }
+value|static __inline uint##width##_t					\ 	ia64_ld_acq_##width(volatile uint##width##_t* p)		\ 	{								\ 		uint##width##_t v;					\ 		__asm __volatile ("ld" size ".acq %0=%1" : "=r" (v)	\ 		    : "m" (*p) : "memory");				\ 		return (v);						\ 	}								\ 									\ 	static __inline uint##width##_t					\ 	atomic_load_acq_##width(volatile uint##width##_t* p)		\ 	{								\ 		uint##width##_t v;					\ 		__asm __volatile ("ld" size ".acq %0=%1" : "=r" (v)	\ 		    : "m" (*p) : "memory");				\ 		return (v);						\ 	}								\ 									\ 	static __inline uint##width##_t					\ 	atomic_load_acq_##type(volatile uint##width##_t* p)		\ 	{								\ 		uint##width##_t v;					\ 		__asm __volatile ("ld" size ".acq %0=%1" : "=r" (v)	\ 		    : "m" (*p) : "memory");				\ 		return (v);						\ 	}								\ 								       	\ 	static __inline void						\ 	ia64_st_rel_##width(volatile uint##width##_t* p, uint##width##_t v) \ 	{								\ 		__asm __volatile ("st" size ".rel %0=%1" : "=m" (*p)	\ 		    : "r" (v) : "memory");				\ 	}								\ 									\ 	static __inline void						\ 	atomic_store_rel_##width(volatile uint##width##_t* p,		\ 	    uint##width##_t v)						\ 	{								\ 		__asm __volatile ("st" size ".rel %0=%1" : "=m" (*p)	\ 		    : "r" (v) : "memory");				\ 	}								\ 									\ 	static __inline void						\ 	atomic_store_rel_##type(volatile uint##width##_t* p,		\ 	    uint##width##_t v)						\ 	{								\ 		__asm __volatile ("st" size ".rel %0=%1" : "=m" (*p)	\ 		    : "r" (v) : "memory");				\ 	}
 end_define
 
 begin_macro
@@ -304,8 +304,8 @@ name|width
 parameter_list|,
 name|op
 parameter_list|)
-define|\ 									\
-value|static __inline void							\ atomic_##name##_acq_##width(volatile type *p, type v)			\ {									\ 	type old, ret;							\ 	do {								\ 		old = *p;						\ 		IA64_CMPXCHG(sz, acq, p, old, old op v, ret);		\ 	} while (ret != old);						\ }									\ 									\ static __inline void							\ atomic_##name##_rel_##width(volatile type *p, type v)			\ {									\ 	type old, ret;							\ 	do {								\ 		old = *p;						\ 		IA64_CMPXCHG(sz, rel, p, old, old op v, ret);		\ 	} while (ret != old);						\ }
+define|\
+value|static __inline void						\ 	atomic_##name##_acq_##width(volatile type *p, type v)		\ 	{								\ 		type old, ret;						\ 		do {							\ 			old = *p;					\ 			IA64_CMPXCHG(sz, acq, p, old, old op v, ret);	\ 		} while (ret != old);					\ 	}								\ 									\ 	static __inline void						\ 	atomic_##name##_rel_##width(volatile type *p, type v)		\ 	{								\ 		type old, ret;						\ 		do {							\ 			old = *p;					\ 			IA64_CMPXCHG(sz, rel, p, old, old op v, ret);	\ 		} while (ret != old);					\ 	}
 end_define
 
 begin_macro
@@ -313,7 +313,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|1
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|,
 argument|set
 argument_list|,
@@ -328,7 +328,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|2
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|,
 argument|set
 argument_list|,
@@ -343,7 +343,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|4
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|,
 argument|set
 argument_list|,
@@ -358,7 +358,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|8
 argument_list|,
-argument|u_int64_t
+argument|uint64_t
 argument_list|,
 argument|set
 argument_list|,
@@ -373,7 +373,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|1
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|,
 argument|clear
 argument_list|,
@@ -388,7 +388,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|2
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|,
 argument|clear
 argument_list|,
@@ -403,7 +403,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|4
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|,
 argument|clear
 argument_list|,
@@ -418,7 +418,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|8
 argument_list|,
-argument|u_int64_t
+argument|uint64_t
 argument_list|,
 argument|clear
 argument_list|,
@@ -433,7 +433,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|1
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|,
 argument|add
 argument_list|,
@@ -448,7 +448,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|2
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|,
 argument|add
 argument_list|,
@@ -463,7 +463,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|4
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|,
 argument|add
 argument_list|,
@@ -478,7 +478,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|8
 argument_list|,
-argument|u_int64_t
+argument|uint64_t
 argument_list|,
 argument|add
 argument_list|,
@@ -493,7 +493,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|1
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|,
 argument|subtract
 argument_list|,
@@ -508,7 +508,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|2
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|,
 argument|subtract
 argument_list|,
@@ -523,7 +523,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|4
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|,
 argument|subtract
 argument_list|,
@@ -538,7 +538,7 @@ name|IA64_ATOMIC
 argument_list|(
 literal|8
 argument_list|,
-argument|u_int64_t
+argument|uint64_t
 argument_list|,
 argument|subtract
 argument_list|,
@@ -552,12 +552,6 @@ begin_undef
 undef|#
 directive|undef
 name|IA64_ATOMIC
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|IA64_CMPXCHG
 end_undef
 
 begin_define
@@ -1008,6 +1002,12 @@ name|atomic_subtract_rel_long
 value|atomic_subtract_rel_64
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|IA64_CMPXCHG
+end_undef
+
 begin_comment
 comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
 end_comment
@@ -1019,18 +1019,19 @@ name|int
 name|atomic_cmpset_acq_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cmpval
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|newval
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ia64_cmpxchg_acq_32
 argument_list|(
 name|p
@@ -1041,6 +1042,7 @@ name|newval
 argument_list|)
 operator|==
 name|cmpval
+operator|)
 return|;
 block|}
 end_function
@@ -1052,18 +1054,19 @@ name|int
 name|atomic_cmpset_rel_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cmpval
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|newval
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ia64_cmpxchg_rel_32
 argument_list|(
 name|p
@@ -1074,6 +1077,7 @@ name|newval
 argument_list|)
 operator|==
 name|cmpval
+operator|)
 return|;
 block|}
 end_function
@@ -1089,18 +1093,19 @@ name|int
 name|atomic_cmpset_acq_64
 parameter_list|(
 specifier|volatile
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|cmpval
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|newval
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ia64_cmpxchg_acq_64
 argument_list|(
 name|p
@@ -1111,6 +1116,7 @@ name|newval
 argument_list|)
 operator|==
 name|cmpval
+operator|)
 return|;
 block|}
 end_function
@@ -1122,18 +1128,19 @@ name|int
 name|atomic_cmpset_rel_64
 parameter_list|(
 specifier|volatile
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|cmpval
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|newval
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ia64_cmpxchg_rel_64
 argument_list|(
 name|p
@@ -1144,6 +1151,7 @@ name|newval
 argument_list|)
 operator|==
 name|cmpval
+operator|)
 return|;
 block|}
 end_function
@@ -1224,7 +1232,11 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-return|return
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|atomic_cmpset_acq_long
 argument_list|(
 operator|(
@@ -1244,6 +1256,11 @@ name|u_long
 operator|)
 name|src
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -1268,7 +1285,11 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-return|return
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|atomic_cmpset_rel_long
 argument_list|(
 operator|(
@@ -1288,6 +1309,11 @@ name|u_long
 operator|)
 name|src
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -1314,6 +1340,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
 name|void
 operator|*
 operator|)
@@ -1326,6 +1353,7 @@ operator|*
 operator|)
 name|p
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1372,7 +1400,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|static __inline void					\ atomic_##NAME##_ptr(volatile void *p, uintptr_t v)	\ {							\ 	atomic_##NAME##_long((volatile u_long *)p, v);	\ }							\ 							\ static __inline void					\ atomic_##NAME##_acq_ptr(volatile void *p, uintptr_t v)	\ {							\ 	atomic_##NAME##_acq_long((volatile u_long *)p, v);\ }							\ 							\ static __inline void					\ atomic_##NAME##_rel_ptr(volatile void *p, uintptr_t v)	\ {							\ 	atomic_##NAME##_rel_long((volatile u_long *)p, v);\ }
+value|static __inline void						\ 	atomic_##NAME##_ptr(volatile void *p, uintptr_t v)		\ 	{								\ 		atomic_##NAME##_long((volatile u_long *)p, v);		\ 	}								\ 									\ 	static __inline void						\ 	atomic_##NAME##_acq_ptr(volatile void *p, uintptr_t v)		\ 	{								\ 		atomic_##NAME##_acq_long((volatile u_long *)p, v);	\ 	}								\ 									\ 	static __inline void						\ 	atomic_##NAME##_rel_ptr(volatile void *p, uintptr_t v)		\ 	{								\ 		atomic_##NAME##_rel_long((volatile u_long *)p, v);	\ 	}
 end_define
 
 begin_macro
@@ -1412,16 +1440,16 @@ end_undef
 begin_function
 specifier|static
 name|__inline
-name|u_int32_t
+name|uint32_t
 name|atomic_readandclear_32
 parameter_list|(
 specifier|volatile
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|val
 decl_stmt|;
 do|do
@@ -1446,7 +1474,9 @@ argument_list|)
 condition|)
 do|;
 return|return
+operator|(
 name|val
+operator|)
 return|;
 block|}
 end_function
@@ -1454,16 +1484,16 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int64_t
+name|uint64_t
 name|atomic_readandclear_64
 parameter_list|(
 specifier|volatile
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|val
 decl_stmt|;
 do|do
@@ -1488,7 +1518,9 @@ argument_list|)
 condition|)
 do|;
 return|return
+operator|(
 name|val
+operator|)
 return|;
 block|}
 end_function
