@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)r_tan.c	5.3	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)r_tan.c	5.4	%G%  */
 end_comment
 
 begin_ifndef
@@ -71,6 +71,55 @@ begin_comment
 comment|/* 4/pi */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_decl_stmt
+name|fortran
+name|float
+name|sin
+argument_list|()
+decl_stmt|,
+name|cos
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|sin
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|({ \ 	float __result; \ 	asm("ldd %1; cvdf; sinf; stf %0" : "=rm" (__result) : "rm" (x)); \ 	__result; \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|cos
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|({ \ 	float __result; \ 	asm("ldd %1; cvdf; cosf; stf %0" : "=rm" (__result) : "rm" (x)); \ 	__result; \ })
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|float
 name|r_tan
@@ -84,14 +133,6 @@ decl_stmt|;
 block|{
 name|double
 name|arg
-decl_stmt|;
-name|fortran
-name|float
-name|sin
-argument_list|()
-decl_stmt|,
-name|cos
-argument_list|()
 decl_stmt|;
 name|double
 name|modf
