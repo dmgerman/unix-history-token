@@ -876,21 +876,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|void
-name|fill_user
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|struct
-name|user
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
