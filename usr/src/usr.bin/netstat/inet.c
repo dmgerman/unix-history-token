@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.2 82/10/05"
+literal|"@(#)inet.c	4.3 82/10/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -974,6 +974,8 @@ name|in_netof
 argument_list|(
 name|in
 argument_list|)
+argument_list|,
+name|AF_INET
 argument_list|)
 decl_stmt|;
 if|if
@@ -1006,6 +1008,8 @@ argument_list|(
 expr|struct
 name|in_addr
 argument_list|)
+argument_list|,
+name|AF_INET
 argument_list|)
 expr_stmt|;
 if|if

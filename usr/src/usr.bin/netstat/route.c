@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.2 82/10/05"
+literal|"@(#)route.c	4.3 82/10/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,6 +667,8 @@ init|=
 name|getnetbyaddr
 argument_list|(
 name|net
+argument_list|,
+name|AF_INET
 argument_list|)
 decl_stmt|;
 if|if
@@ -699,6 +701,8 @@ argument_list|(
 expr|struct
 name|in_addr
 argument_list|)
+argument_list|,
+name|AF_INET
 argument_list|)
 expr_stmt|;
 if|if
