@@ -326,6 +326,16 @@ literal|"3Com Airconnect IEEE 802.11b"
 block|}
 block|,
 block|{
+literal|0x111a
+block|,
+literal|0x1023
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"Siemens SpeedStream IEEE 802.11b"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
