@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	bugfiler.c	4.2	83/05/23	*/
+comment|/*	bugfiler.c	4.3	83/08/05	*/
 end_comment
 
 begin_comment
@@ -2477,7 +2477,7 @@ name|fprintf
 argument_list|(
 name|fout
 argument_list|,
-literal|"Reply-To: 4bsd-bugs%ucbarpa@BERKELEY\n"
+literal|"Reply-To: 4bsd-bugs%%ucbarpa@BERKELEY\n"
 argument_list|)
 expr_stmt|;
 if|if
