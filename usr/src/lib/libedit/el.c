@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)el.c	8.1 (Berkeley) %G%"
+literal|"@(#)el.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1156,7 +1156,7 @@ condition|(
 operator|(
 name|ptr
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|fp
 argument_list|,
