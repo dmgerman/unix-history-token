@@ -368,12 +368,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|ieee80211_unref_node
-argument_list|(
-operator|&
-name|ni
-argument_list|)
-expr_stmt|;
 name|ic
 operator|->
 name|ic_stats
