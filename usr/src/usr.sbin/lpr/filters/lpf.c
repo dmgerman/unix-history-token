@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*		lpf.c	4.10	83/05/02  * 	filter which reads the output of nroff and converts lines  *	with ^H's to overwritten lines.  Thus this works like 'ul'  *	but is much better: it can handle more than 2 overwrites  *	and it is written with some style.  *	modified by kls to use register references instead of arrays  *	to try to gain a little speed.  */
+comment|/*		lpf.c	4.11	83/05/19  * 	filter which reads the output of nroff and converts lines  *	with ^H's to overwritten lines.  Thus this works like 'ul'  *	but is much better: it can handle more than 2 overwrites  *	and it is written with some style.  *	modified by kls to use register references instead of arrays  *	to try to gain a little speed.  */
 end_comment
 
 begin_include
@@ -83,6 +83,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* page length */
+end_comment
+
+begin_decl_stmt
+name|int
+name|indent
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indentation length */
 end_comment
 
 begin_decl_stmt
@@ -287,6 +297,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'i'
+case|:
+name|indent
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|cp
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 comment|/* Print control chars */
@@ -341,7 +366,7 @@ condition|)
 block|{
 name|col
 operator|=
-literal|0
+name|indent
 expr_stmt|;
 name|maxrep
 operator|=
@@ -412,14 +437,14 @@ literal|'\b'
 case|:
 if|if
 condition|(
-name|col
 operator|--
+name|col
 operator|<
-literal|0
+name|indent
 condition|)
 name|col
 operator|=
-literal|0
+name|indent
 expr_stmt|;
 break|break;
 case|case
@@ -427,7 +452,7 @@ literal|'\r'
 case|:
 name|col
 operator|=
-literal|0
+name|indent
 expr_stmt|;
 break|break;
 case|case
@@ -436,10 +461,16 @@ case|:
 name|col
 operator|=
 operator|(
+operator|(
 name|col
+operator|-
+name|indent
+operator|)
 operator||
 literal|07
 operator|)
+operator|+
+name|indent
 operator|+
 literal|1
 expr_stmt|;
@@ -503,7 +534,12 @@ name|ch
 operator|<
 literal|' '
 condition|)
+block|{
+name|col
+operator|++
+expr_stmt|;
 break|break;
+block|}
 name|cp
 operator|=
 operator|&
