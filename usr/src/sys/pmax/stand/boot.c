@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pmax/stand/dec_prom.h>
 end_include
 
 begin_decl_stmt
@@ -181,6 +187,13 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|callv
+operator|==
+operator|&
+name|callvec
+condition|)
 operator|(
 operator|(
 name|void
@@ -195,6 +208,31 @@ operator|(
 name|argc
 operator|,
 name|argv
+operator|,
+literal|0
+operator|,
+literal|0
+operator|)
+expr_stmt|;
+else|else
+operator|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|entry
+operator|)
+operator|(
+name|argc
+operator|,
+name|argv
+operator|,
+name|DEC_PROM_MAGIC
+operator|,
+name|callv
 operator|)
 expr_stmt|;
 block|}
