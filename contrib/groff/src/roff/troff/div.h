@@ -63,6 +63,9 @@ name|high_water_mark
 decl_stmt|;
 name|public
 label|:
+name|int
+name|no_space_mode
+decl_stmt|;
 name|vunits
 name|marked_place
 decl_stmt|;
@@ -428,9 +431,6 @@ name|public
 operator|:
 name|int
 name|before_first_page
-block|;
-name|int
-name|no_space_mode
 block|;
 name|top_level_diversion
 argument_list|()
