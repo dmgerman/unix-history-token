@@ -210,15 +210,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcb
-modifier|*
-name|curpcb
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|savectx
