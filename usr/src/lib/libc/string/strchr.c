@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strchr.c	5.4 (Berkeley) %G%"
+literal|"@(#)strchr.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,31 +37,10 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)index.c	5.3 (Berkeley) 6/2/88"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_function
@@ -73,7 +52,6 @@ name|p
 parameter_list|,
 name|ch
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
@@ -81,43 +59,16 @@ decl_stmt|,
 name|ch
 decl_stmt|;
 block|{
-for|for
-control|(
-init|;
-condition|;
-operator|++
+return|return
+operator|(
+name|index
+argument_list|(
 name|p
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|==
+argument_list|,
 name|ch
-condition|)
-return|return
-operator|(
-name|p
+argument_list|)
 operator|)
 return|;
-if|if
-condition|(
-operator|!
-operator|*
-name|p
-condition|)
-return|return
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-operator|)
-return|;
-block|}
-comment|/* NOTREACHED */
 block|}
 end_function
 
