@@ -607,7 +607,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -769,7 +769,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc

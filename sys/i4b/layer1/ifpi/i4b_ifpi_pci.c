@@ -3857,21 +3857,10 @@ operator|=
 name|ACT_RX
 expr_stmt|;
 comment|/* move rx'd data to rx queue */
-if|if
-condition|(
-operator|!
 operator|(
-name|IF_QFULL
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|rx_queue
-argument_list|)
+name|void
 operator|)
-condition|)
-block|{
-name|IF_ENQUEUE
+name|IF_HANDOFF
 argument_list|(
 operator|&
 name|chan
@@ -3881,19 +3870,10 @@ argument_list|,
 name|chan
 operator|->
 name|in_mbuf
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|i4b_Bfreembuf
-argument_list|(
-name|chan
-operator|->
-name|in_mbuf
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* signal upper layer that data are available */
 call|(
 modifier|*
@@ -5072,6 +5052,28 @@ name|HSCX_IDLE
 expr_stmt|;
 comment|/* B channel state */
 comment|/* receiver part */
+name|chan
+operator|->
+name|rx_queue
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|rx_queue
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"i4b_avma1pp_rx"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i4b_Bcleanifq
 argument_list|(
 operator|&
@@ -5081,14 +5083,6 @@ name|rx_queue
 argument_list|)
 expr_stmt|;
 comment|/* clean rx queue */
-name|chan
-operator|->
-name|rx_queue
-operator|.
-name|ifq_maxlen
-operator|=
-name|IFQ_MAXLEN
-expr_stmt|;
 name|chan
 operator|->
 name|rxcount
@@ -5126,6 +5120,28 @@ literal|0
 expr_stmt|;
 comment|/* reset mbuf data len */
 comment|/* transmitter part */
+name|chan
+operator|->
+name|tx_queue
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|tx_queue
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"i4b_avma1pp_tx"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i4b_Bcleanifq
 argument_list|(
 operator|&
@@ -5135,14 +5151,6 @@ name|tx_queue
 argument_list|)
 expr_stmt|;
 comment|/* clean tx queue */
-name|chan
-operator|->
-name|tx_queue
-operator|.
-name|ifq_maxlen
-operator|=
-name|IFQ_MAXLEN
-expr_stmt|;
 name|chan
 operator|->
 name|txcount

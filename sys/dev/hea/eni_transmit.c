@@ -723,7 +723,7 @@ name|splimp
 argument_list|()
 decl_stmt|;
 comment|/* 	 * Pull the top element (PDU) off 	 */
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|eup
@@ -815,7 +815,7 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * Haven't finished this PDU yet - replace 			 * it as the head of list. 			 */
-name|IF_PREPEND
+name|_IF_PREPEND
 argument_list|(
 operator|&
 name|eup
@@ -851,7 +851,7 @@ name|start
 condition|)
 block|{
 comment|/* 			 * Haven't finished this PDU yet - replace 			 * it as the head of list. 			 */
-name|IF_PREPEND
+name|_IF_PREPEND
 argument_list|(
 operator|&
 name|eup
@@ -1015,7 +1015,7 @@ operator|=
 name|stop
 expr_stmt|;
 comment|/* 		 * Look for next completed transmit PDU 		 */
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|eup
@@ -2420,7 +2420,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|eup

@@ -896,6 +896,12 @@ name|prev
 operator|=
 name|NULL
 expr_stmt|;
+name|IF_LOCK
+argument_list|(
+operator|&
+name|atm_intrq
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|m
@@ -996,6 +1002,12 @@ name|m
 expr_stmt|;
 block|}
 block|}
+name|IF_UNLOCK
+argument_list|(
+operator|&
+name|atm_intrq
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

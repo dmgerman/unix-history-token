@@ -17089,7 +17089,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -17385,7 +17385,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -18078,7 +18078,7 @@ name|TULIP_DSTS_RxLASTDESC
 operator|)
 condition|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -18229,7 +18229,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	     * Dequeue the first buffer for the start of the packet.  Hopefully 	     * this will be the only one we need to dequeue.  However, if the 	     * packet consumed multiple descriptors, then we need to dequeue 	     * those buffers and chain to the starting mbuf.  All buffers but 	     * the last buffer have the same length so we can set that now. 	     * (we add to last_offset instead of multiplying since we normally 	     * won't go into the loop and thereby saving a ourselves from 	     * doing a multiplication by 0 in the normal case). 	     */
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -18330,7 +18330,7 @@ name|last_offset
 operator|+=
 name|TULIP_RX_BUFLEN
 expr_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -19475,7 +19475,7 @@ name|m_next
 operator|=
 name|NULL
 expr_stmt|;
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -19791,7 +19791,7 @@ name|ri_nextin
 operator|->
 name|d_status
 decl_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -22811,7 +22811,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/*      * The descriptors have been filled in.  Now get ready      * to transmit.      */
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc

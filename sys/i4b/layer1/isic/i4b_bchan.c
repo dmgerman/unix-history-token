@@ -246,6 +246,28 @@ name|HSCX_IDLE
 expr_stmt|;
 comment|/* B channel state */
 comment|/* receiver part */
+name|chan
+operator|->
+name|rx_queue
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|rx_queue
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"i4b_isic_rx"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i4b_Bcleanifq
 argument_list|(
 operator|&
@@ -255,14 +277,6 @@ name|rx_queue
 argument_list|)
 expr_stmt|;
 comment|/* clean rx queue */
-name|chan
-operator|->
-name|rx_queue
-operator|.
-name|ifq_maxlen
-operator|=
-name|IFQ_MAXLEN
-expr_stmt|;
 name|chan
 operator|->
 name|rxcount
@@ -300,6 +314,28 @@ literal|0
 expr_stmt|;
 comment|/* reset mbuf data len */
 comment|/* transmitter part */
+name|chan
+operator|->
+name|tx_queue
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|tx_queue
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"i4b_isic_tx"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|i4b_Bcleanifq
 argument_list|(
 operator|&
@@ -309,14 +345,6 @@ name|tx_queue
 argument_list|)
 expr_stmt|;
 comment|/* clean tx queue */
-name|chan
-operator|->
-name|tx_queue
-operator|.
-name|ifq_maxlen
-operator|=
-name|IFQ_MAXLEN
-expr_stmt|;
 name|chan
 operator|->
 name|txcount

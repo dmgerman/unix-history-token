@@ -1697,10 +1697,34 @@ name|u_int16_t
 name|tactive
 decl_stmt|;
 comment|/* # active */
+name|struct
+name|mtx
+name|wx_mtx
+decl_stmt|;
 block|}
 name|wx_softc_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|WX_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->wx_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->wx_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/*  * We offset the the receive frame header by two bytes so that the actual  * payload is 32 bit aligned. On platforms that require strict structure  * alignment, this means that the ethernet frame header may have to be shifted  * to align it at interrupt time, but because it's such a small amount  * (fourteen bytes) and processors have gotten pretty fast, that's okay.  * It may even turn out on some platforms that this doesn't have to happen.  */

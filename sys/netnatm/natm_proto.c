@@ -444,6 +444,18 @@ name|ifq_maxlen
 operator|=
 name|natmqmaxlen
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|natmintrq
+operator|.
+name|ifq_mtx
+argument_list|,
+literal|"natm_inq"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

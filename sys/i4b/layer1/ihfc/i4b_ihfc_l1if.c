@@ -363,7 +363,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 operator|&
 name|S_IFQUEUE
@@ -958,7 +958,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 operator|&
 name|S_IFQUEUE

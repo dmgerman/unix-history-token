@@ -6968,7 +6968,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -7002,7 +7002,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -7119,7 +7119,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -7153,7 +7153,7 @@ condition|(
 literal|1
 condition|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -8723,7 +8723,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -10478,7 +10478,7 @@ return|return;
 comment|/*>>> exit here if out of dtqs<<< */
 block|}
 comment|/*    * it is a go, commit!  dequeue mbuf start working on the xfer.    */
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -10735,7 +10735,7 @@ name|launch
 operator|.
 name|need
 expr_stmt|;
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -10759,7 +10759,7 @@ comment|/*    * END of txdma loop!    */
 comment|/*    * error handles    */
 name|dequeue_drop
 label|:
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -13162,7 +13162,7 @@ argument_list|(
 name|dtq
 argument_list|)
 expr_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -13436,7 +13436,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -14921,7 +14921,7 @@ operator|->
 name|rxqus
 argument_list|)
 expr_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -15171,7 +15171,7 @@ index|]
 operator|=
 name|drqneed
 expr_stmt|;
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -16189,7 +16189,7 @@ operator|+=
 name|cnt
 expr_stmt|;
 block|}
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc

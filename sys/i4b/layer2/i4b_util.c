@@ -490,7 +490,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 operator|&
 name|l2sc

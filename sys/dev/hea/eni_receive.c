@@ -1526,7 +1526,7 @@ expr_stmt|;
 comment|/* 		         * Place buffer on receive queue waiting for RX_DMA 		         */
 if|if
 condition|(
-name|IF_QFULL
+name|_IF_QFULL
 argument_list|(
 operator|&
 name|eup
@@ -1574,7 +1574,7 @@ return|return;
 block|}
 else|else
 block|{
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|eup
@@ -1758,7 +1758,7 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* Pop first buffer */
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|eup
@@ -1850,7 +1850,7 @@ name|start
 operator|)
 condition|)
 block|{
-name|IF_PREPEND
+name|_IF_PREPEND
 argument_list|(
 operator|&
 name|eup
@@ -1878,7 +1878,7 @@ operator|>=
 name|start
 condition|)
 block|{
-name|IF_PREPEND
+name|_IF_PREPEND
 argument_list|(
 operator|&
 name|eup
@@ -2151,24 +2151,19 @@ expr_stmt|;
 comment|/* 			 * Schedule callback 			 */
 if|if
 condition|(
-operator|!
-name|IF_QFULL
-argument_list|(
-operator|&
-name|atm_intrq
-argument_list|)
-condition|)
-block|{
-name|que
-operator|++
-expr_stmt|;
-name|IF_ENQUEUE
+name|IF_HANDOFF
 argument_list|(
 operator|&
 name|atm_intrq
 argument_list|,
 name|m
+argument_list|,
+name|NULL
 argument_list|)
+condition|)
+block|{
+name|que
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -2201,11 +2196,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|KB_FREEALL
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -2220,7 +2210,7 @@ block|}
 name|next_buffer
 label|:
 comment|/* 		 * Look for next buffer 		 */
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|eup
