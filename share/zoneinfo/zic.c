@@ -1,4 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * This file provided by Arthur David Olson of the National Cancer  * Institute.  Because it was created by the United States government,  * it is in the public domain with the United States, and freely distributable  * outside.  (Comment added by G. Wollman, FreeBSD Project.)  */
+end_comment
+
+begin_comment
+comment|/* $Id$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -226,25 +234,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|emkdir
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|name
-operator|,
-name|int
-name|mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -2620,9 +2609,6 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|unix
 operator|(
 name|void
 operator|)
@@ -2636,9 +2622,6 @@ operator||
 literal|022
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined unix */
 name|progname
 operator|=
 name|argv
@@ -3182,6 +3165,10 @@ literal|'/'
 condition|)
 name|fromname
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|fromfile
 expr_stmt|;
 else|else
@@ -3223,6 +3210,10 @@ literal|'/'
 condition|)
 name|toname
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|tofile
 expr_stmt|;
 else|else
@@ -10707,53 +10698,6 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|unix
-comment|/* 		** MS-DOS drive specifier? 		*/
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-operator|==
-literal|2
-operator|&&
-name|isascii
-argument_list|(
-name|name
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|isalpha
-argument_list|(
-name|name
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|name
-index|[
-literal|1
-index|]
-operator|==
-literal|':'
-condition|)
-block|{
-operator|*
-name|cp
-operator|=
-literal|'/'
-expr_stmt|;
-continue|continue;
-block|}
-endif|#
-directive|endif
-comment|/* !defined unix */
 if|if
 condition|(
 operator|!
@@ -10766,7 +10710,7 @@ block|{
 comment|/* 			** It doesn't seem to exist, so we try to create it. 			*/
 if|if
 condition|(
-name|emkdir
+name|mkdir
 argument_list|(
 name|name
 argument_list|,
