@@ -196,7 +196,6 @@ comment|/*  * Local variables  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|uma_zone_t
 name|sscf_uni_zone
 decl_stmt|;

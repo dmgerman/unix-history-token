@@ -162,7 +162,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|uma_zone_t
-name|unisig_vc_zone
+name|sscf_uni_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -502,7 +502,7 @@ return|return;
 block|}
 name|uma_zfree
 argument_list|(
-name|unisig_vc_zone
+name|sscf_uni_zone
 argument_list|,
 name|uvp
 argument_list|)
