@@ -1325,6 +1325,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SNDCTL_DSP_SETDUPLEX
+value|0x5016
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SNDCTL_DSP_GETODELAY
 value|0x5017
 end_define
