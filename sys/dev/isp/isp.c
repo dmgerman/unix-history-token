@@ -8823,9 +8823,8 @@ name|XS_CDBP
 argument_list|(
 name|xs
 argument_list|)
-index|[
-literal|0
-index|]
+operator|->
+name|opcode
 operator|==
 literal|0x3
 condition|)
