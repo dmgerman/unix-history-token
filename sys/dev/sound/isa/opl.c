@@ -2230,16 +2230,17 @@ begin_comment
 comment|/* These functions are local. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|opl_startplay
-parameter_list|(
+argument_list|(
 name|sc_p
 name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__unused
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
