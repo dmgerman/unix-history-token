@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)lgamma.c	4.1	%G%	*/
+comment|/*	@(#)lgamma.c	4.2	%G% */
 end_comment
 
 begin_comment
-comment|/* 	C program for floating point log gamma function  	gamma(x) computes the log of the absolute 	value of the gamma function. 	The sign of the gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log and sin. */
+comment|/* 	C program for floating point log gamma function  	gamma(x) computes the log of the absolute 	value of the gamma function. 	The sign of the gamma function is returned in the 	external quantity signgam.  	The coefficients for expansion around zero 	are #5243 from Hart& Cheney; for expansion 	around infinity they are #5404.  	Calls log, drem and sin. */
 end_comment
 
 begin_include
@@ -18,6 +18,38 @@ include|#
 directive|include
 file|<math.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|long
+name|NaN_
+index|[]
+init|=
+block|{
+literal|0x8000
+block|,
+literal|0x0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NaN
+value|(*(double *) NaN_)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -41,6 +73,10 @@ init|=
 literal|0.9189385332046727417803297
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* log(2*pi)/2 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -334,6 +370,9 @@ decl_stmt|,
 name|sin
 argument_list|()
 decl_stmt|,
+name|drem
+argument_list|()
+decl_stmt|,
 name|pos
 argument_list|()
 decl_stmt|;
@@ -342,13 +381,14 @@ operator|=
 operator|-
 name|arg
 expr_stmt|;
+comment|/*       * to see if arg were a true integer, the old code used the       * mathematically correct observation:       * sin(n*pi) = 0<=> n is an integer.       * but in finite precision arithmetic, sin(n*PI) will NEVER       * be zero simply because n*PI is a rational number.  hence       *	it failed to work with our newer, more accurate sin()       * which uses true pi to do the argument reduction...       *	temp = sin(pi*arg);       */
 name|temp
 operator|=
-name|sin
+name|drem
 argument_list|(
-name|pi
-operator|*
 name|arg
+argument_list|,
+literal|1.e0
 argument_list|)
 expr_stmt|;
 if|if
@@ -362,12 +402,33 @@ name|errno
 operator|=
 name|EDOM
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VAX
+return|return
+operator|(
+name|NaN
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|HUGE
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
+name|temp
+operator|=
+name|drem
+argument_list|(
+name|arg
+argument_list|,
+literal|2.e0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|temp
@@ -397,7 +458,12 @@ argument_list|(
 name|arg
 argument_list|)
 operator|*
+name|sin
+argument_list|(
+name|pi
+operator|*
 name|temp
+argument_list|)
 operator|/
 name|pi
 argument_list|)
