@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: miscbltin.c,v 1.4 1995/10/21 00:47:30 joerg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Kenneth Almquist.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: miscbltin.c,v 1.5 1996/09/01 10:20:46 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -989,6 +995,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|units
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
@@ -1016,7 +1027,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_CPU
 block|{
-literal|"time(seconds)"
+literal|"cpu time"
+block|,
+literal|"seconds"
 block|,
 name|RLIMIT_CPU
 block|,
@@ -1031,7 +1044,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_FSIZE
 block|{
-literal|"file(512-blocks)"
+literal|"file size"
+block|,
+literal|"512-blocks"
 block|,
 name|RLIMIT_FSIZE
 block|,
@@ -1046,7 +1061,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_DATA
 block|{
-literal|"data(kbytes)"
+literal|"data seg size"
+block|,
+literal|"kbytes"
 block|,
 name|RLIMIT_DATA
 block|,
@@ -1061,7 +1078,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_STACK
 block|{
-literal|"stack(kbytes)"
+literal|"stack size"
+block|,
+literal|"kbytes"
 block|,
 name|RLIMIT_STACK
 block|,
@@ -1076,7 +1095,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_CORE
 block|{
-literal|"coredump(512-blocks)"
+literal|"core file size"
+block|,
+literal|"512-blocks"
 block|,
 name|RLIMIT_CORE
 block|,
@@ -1091,7 +1112,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_RSS
 block|{
-literal|"memory(kbytes)"
+literal|"max memory size"
+block|,
+literal|"kbytes"
 block|,
 name|RLIMIT_RSS
 block|,
@@ -1106,7 +1129,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_MEMLOCK
 block|{
-literal|"lockedmem(kbytes)"
+literal|"locked memory"
+block|,
+literal|"kbytes"
 block|,
 name|RLIMIT_MEMLOCK
 block|,
@@ -1121,7 +1146,13 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_NPROC
 block|{
-literal|"process(processes)"
+literal|"max user processes"
+block|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 block|,
 name|RLIMIT_NPROC
 block|,
@@ -1136,7 +1167,13 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_NOFILE
 block|{
-literal|"nofiles(descriptors)"
+literal|"open files"
+block|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 block|,
 name|RLIMIT_NOFILE
 block|,
@@ -1151,7 +1188,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_VMEM
 block|{
-literal|"vmemory(kbytes)"
+literal|"virtual mem size"
+block|,
+literal|"kbytes"
 block|,
 name|RLIMIT_VMEM
 block|,
@@ -1166,7 +1205,9 @@ ifdef|#
 directive|ifdef
 name|RLIMIT_SWAP
 block|{
-literal|"swap(kbytes)"
+literal|"swap limit"
+block|,
+literal|"kbytes"
 block|,
 name|RLIMIT_SWAP
 block|,
@@ -1178,6 +1219,12 @@ block|,
 endif|#
 directive|endif
 block|{
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+block|,
 operator|(
 name|char
 operator|*
@@ -1267,7 +1314,7 @@ name|optc
 operator|=
 name|nextopt
 argument_list|(
-literal|"HSatfdsmcnpl"
+literal|"HSatfdsmcnul"
 argument_list|)
 operator|)
 operator|!=
@@ -1337,7 +1384,7 @@ name|name
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: internal error (%c)\n"
+literal|"internal error (%c)"
 argument_list|,
 name|what
 argument_list|)
@@ -1374,7 +1421,7 @@ index|]
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: too many arguments\n"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1452,7 +1499,7 @@ name|c
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: bad number\n"
+literal|"bad number"
 argument_list|)
 expr_stmt|;
 name|val
@@ -1482,6 +1529,14 @@ name|l
 operator|++
 control|)
 block|{
+name|char
+name|optbuf
+index|[
+literal|40
+index|]
+decl_stmt|;
+if|if
+condition|(
 name|getrlimit
 argument_list|(
 name|l
@@ -1490,6 +1545,18 @@ name|cmd
 argument_list|,
 operator|&
 name|limit
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"can't get limit: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1517,13 +1584,62 @@ name|limit
 operator|.
 name|rlim_max
 expr_stmt|;
-name|out1fmt
+if|if
+condition|(
+name|l
+operator|->
+name|units
+condition|)
+name|snprintf
 argument_list|(
-literal|"%-20s "
+name|optbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|optbuf
+argument_list|)
+argument_list|,
+literal|"%s (%s, -%c) "
 argument_list|,
 name|l
 operator|->
 name|name
+argument_list|,
+name|l
+operator|->
+name|units
+argument_list|,
+name|l
+operator|->
+name|option
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|optbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|optbuf
+argument_list|)
+argument_list|,
+literal|"%s (-%c) "
+argument_list|,
+name|l
+operator|->
+name|name
+argument_list|,
+name|l
+operator|->
+name|option
+argument_list|)
+expr_stmt|;
+name|out1fmt
+argument_list|(
+literal|"%32s "
+argument_list|,
+name|optbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1561,6 +1677,8 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
 name|getrlimit
 argument_list|(
 name|l
@@ -1569,6 +1687,18 @@ name|cmd
 argument_list|,
 operator|&
 name|limit
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"can't get limit: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1616,7 +1746,12 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"ulimit: bad limit\n"
+literal|"bad limit: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
