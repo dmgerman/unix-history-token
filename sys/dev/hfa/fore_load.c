@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.6 1999/04/24 20:17:05 peter Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.7 1999/05/09 17:07:30 peter Exp $  *  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: fore_load.c,v 1.6 1999/04/24 20:17:05 peter Exp $"
+literal|"@(#) $Id: fore_load.c,v 1.7 1999/05/09 17:07:30 peter Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2996,7 +2996,69 @@ operator|=
 name|DEV_UNKNOWN
 expr_stmt|;
 block|}
+comment|/* 	 * Enable Memory Mapping / Bus Mastering  	 */
+name|val
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|)
+expr_stmt|;
+name|val
+operator||=
+operator|(
+name|PCIM_CMD_MEMEN
+operator||
+name|PCIM_CMD_BUSMASTEREN
+operator|)
+expr_stmt|;
+name|pci_conf_write
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Map RAM 	 */
+name|val
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|val
+operator|&
+name|PCIM_CMD_MEMEN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s%d: memory mapping not enabled\n"
+argument_list|,
+name|FORE_DEV_NAME
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
+block|}
 if|if
 condition|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: eni.c,v 1.6 1999/04/24 20:17:05 peter Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: eni.c,v 1.7 1999/05/09 17:07:27 peter Exp $  *  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: eni.c,v 1.6 1999/04/24 20:17:05 peter Exp $"
+literal|"@(#) $Id: eni.c,v 1.7 1999/05/09 17:07:27 peter Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -906,7 +906,69 @@ operator|=
 operator|&
 name|eni_nif_pool
 expr_stmt|;
+comment|/* 	 * Enable Memory Mapping / Bus Mastering  	 */
+name|val
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|)
+expr_stmt|;
+name|val
+operator||=
+operator|(
+name|PCIM_CMD_MEMEN
+operator||
+name|PCIM_CMD_BUSMASTEREN
+operator|)
+expr_stmt|;
+name|pci_conf_write
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Map in adapter RAM 	 */
+name|val
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_COMMAND_STATUS_REG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|val
+operator|&
+name|PCIM_CMD_MEMEN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s%d: memory mapping not enabled\n"
+argument_list|,
+name|ENI_DEV_NAME
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -927,8 +989,20 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Nothing's happened yet that we need to undo. 		 */
-return|return;
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s%d: unable to map memory\n"
+argument_list|,
+name|ENI_DEV_NAME
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
 block|}
 comment|/* 	 * Map okay - retain address assigned 	 */
 name|eup
@@ -1075,8 +1149,20 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Adapter memory test failed. Clean up and 		 * return. 		 */
-comment|/* 		 * FreeBSD doesn't support unmapping PCI memory (yet?). 		 */
-return|return;
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s%d: memory test failed\n"
+argument_list|,
+name|ENI_DEV_NAME
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|failed
+goto|;
 block|}
 comment|/* 	 * Read the contents of the SEEPROM 	 */
 name|eni_read_seeprom
@@ -1194,16 +1280,20 @@ name|net_imask
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Finish by unmapping memory, etc. 		 */
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"eni_pci_attach: Unable to map interrupt\n"
+literal|"%s%d: unable to map interrupt\n"
+argument_list|,
+name|ENI_DEV_NAME
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Can't unmap PCI memory (yet). 		 */
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 comment|/* 	 * Setup some of the adapter configuration 	 */
 comment|/* 	 * Get MIDWAY ID 	 */
@@ -1406,24 +1496,20 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Registration failed - back everything out 		 */
-comment|/* 		 * Can't unmap PCI memory (yet). 		 */
-comment|/* 		 * Unmap PCI interrupt 		 */
-operator|(
-name|void
-operator|)
-name|pci_unmap_int
-argument_list|(
-name|config_id
-argument_list|)
-expr_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"eni_pci_attach: atm_physif_register failed\n"
+literal|"%s%d: atm_physif_register failed\n"
+argument_list|,
+name|ENI_DEV_NAME
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|failed
+goto|;
 block|}
 name|eni_units
 index|[
@@ -1465,11 +1551,26 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"eni_pci_attach: Failed eni_init()\n"
+literal|"%s%d: adapter init failed\n"
+argument_list|,
+name|ENI_DEV_NAME
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Can't unmap PCI memory (yet). 		 */
-comment|/* 		 * Unmap PCI interrupt 		 */
+goto|goto
+name|failed
+goto|;
+block|}
+return|return;
+name|failed
+label|:
+comment|/* 	 * Attach failed - clean up 	 */
+name|eni_pci_reset
+argument_list|(
+name|eup
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1478,8 +1579,11 @@ argument_list|(
 name|config_id
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Fall through to return 		 */
-block|}
+name|atm_dev_free
+argument_list|(
+name|eup
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -1501,7 +1605,14 @@ name|eup
 decl_stmt|;
 block|{
 comment|/* 	 * We should really close down any open VCI's and 	 * release all memory (TX and RX) buffers. For now, 	 * we assume we're shutting the card down for good. 	 */
-comment|/* 	 * Issue RESET command to Midway chip 	 */
+if|if
+condition|(
+name|eup
+operator|->
+name|eu_midway
+condition|)
+block|{
+comment|/* 		 * Issue RESET command to Midway chip 		 */
 name|eup
 operator|->
 name|eu_midway
@@ -1511,12 +1622,13 @@ index|]
 operator|=
 name|MIDWAY_RESET
 expr_stmt|;
-comment|/* 	 * Delay to allow everything to terminate 	 */
+comment|/* 		 * Delay to allow everything to terminate 		 */
 name|DELAY
 argument_list|(
 name|MIDWAY_DELAY
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
