@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tahoe.c	5.3 (Berkeley) %G%"
+literal|"@(#)tahoe.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,7 +186,7 @@ name|nargspassed
 parameter_list|(
 name|frame
 parameter_list|)
-value|((frame->removed-4)/4)
+value|(((argn(-1, frame)&0xffff)-4)/4)
 end_define
 
 begin_comment
