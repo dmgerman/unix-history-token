@@ -2182,6 +2182,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|sysctl_ctx_list
+modifier|*
+name|devclass_get_sysctl_ctx
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|sysctl_oid
+modifier|*
+name|devclass_get_sysctl_tree
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Access functions for device resources.  */
 end_comment
