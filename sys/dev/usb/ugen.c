@@ -1314,8 +1314,6 @@ index|[
 name|IN
 index|]
 operator|.
-name|sc
-operator|->
 name|dev
 operator|=
 name|dev
@@ -1346,8 +1344,6 @@ index|[
 name|OUT
 index|]
 operator|.
-name|sc
-operator|->
 name|dev
 operator|=
 name|dev
@@ -1449,8 +1445,6 @@ index|[
 name|IN
 index|]
 operator|.
-name|sc
-operator|->
 name|dev
 expr_stmt|;
 else|else
@@ -1466,8 +1460,6 @@ index|[
 name|OUT
 index|]
 operator|.
-name|sc
-operator|->
 name|dev
 expr_stmt|;
 name|destroy_dev
