@@ -3666,11 +3666,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|NG_NODE_UNREF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|arg
@@ -3681,6 +3676,11 @@ name|rackTimerPtr
 condition|)
 block|{
 comment|/* timer stopped race condition */
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3848,6 +3848,11 @@ operator|->
 name|xmitWin
 expr_stmt|;
 comment|/* reset win expand time */
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
