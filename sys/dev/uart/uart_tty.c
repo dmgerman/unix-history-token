@@ -589,14 +589,14 @@ name|sc
 operator|->
 name|sc_hwsig
 operator|&
-name|UART_SIG_RTS
+name|SER_RTS
 operator|)
 condition|)
 name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DRTS
+name|SER_DRTS
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -617,16 +617,16 @@ name|sc
 operator|->
 name|sc_hwsig
 operator|&
-name|UART_SIG_RTS
+name|SER_RTS
 operator|)
 condition|)
 name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DRTS
+name|SER_DRTS
 operator||
-name|UART_SIG_RTS
+name|SER_RTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -847,9 +847,9 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DDTR
+name|SER_DDTR
 operator||
-name|UART_SIG_DRTS
+name|SER_DRTS
 argument_list|)
 expr_stmt|;
 return|return
@@ -967,9 +967,9 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DDTR
+name|SER_DDTR
 operator||
-name|UART_SIG_DTR
+name|SER_DTR
 argument_list|)
 expr_stmt|;
 comment|/* Set input flow control state. */
@@ -1003,7 +1003,7 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DRTS
+name|SER_DRTS
 argument_list|)
 expr_stmt|;
 else|else
@@ -1011,9 +1011,9 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DRTS
+name|SER_DRTS
 operator||
-name|UART_SIG_RTS
+name|SER_RTS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,7 +1364,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_DDCD
+name|SER_DDCD
 condition|)
 name|ttyld_modem
 argument_list|(
@@ -1372,7 +1372,7 @@ name|tp
 argument_list|,
 name|sig
 operator|&
-name|UART_SIG_DCD
+name|SER_DCD
 argument_list|)
 expr_stmt|;
 if|if
@@ -1380,7 +1380,7 @@ condition|(
 operator|(
 name|sig
 operator|&
-name|UART_SIG_DCTS
+name|SER_DCTS
 operator|)
 operator|&&
 operator|(
@@ -1401,7 +1401,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_CTS
+name|SER_CTS
 condition|)
 block|{
 name|tp
@@ -2055,7 +2055,7 @@ name|sc
 operator|->
 name|sc_hwsig
 operator|&
-name|UART_SIG_DCD
+name|SER_DCD
 operator|)
 operator|||
 name|sc
@@ -2342,9 +2342,9 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DDTR
+name|SER_DDTR
 operator||
-name|UART_SIG_DRTS
+name|SER_DRTS
 argument_list|)
 expr_stmt|;
 comment|/* Disable pulse capturing. */
@@ -2550,9 +2550,9 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DDTR
+name|SER_DDTR
 operator||
-name|UART_SIG_DTR
+name|SER_DTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2563,7 +2563,7 @@ name|UART_SETSIG
 argument_list|(
 name|sc
 argument_list|,
-name|UART_SIG_DDTR
+name|SER_DDTR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2581,9 +2581,9 @@ name|data
 expr_stmt|;
 name|sig
 operator|=
-name|UART_SIG_DDTR
+name|SER_DDTR
 operator||
-name|UART_SIG_DRTS
+name|SER_DRTS
 expr_stmt|;
 if|if
 condition|(
@@ -2593,7 +2593,7 @@ name|TIOCM_DTR
 condition|)
 name|sig
 operator||=
-name|UART_SIG_DTR
+name|SER_DTR
 expr_stmt|;
 if|if
 condition|(
@@ -2603,7 +2603,7 @@ name|TIOCM_RTS
 condition|)
 name|sig
 operator||=
-name|UART_SIG_RTS
+name|SER_RTS
 expr_stmt|;
 name|UART_SETSIG
 argument_list|(
@@ -2637,9 +2637,9 @@ name|TIOCM_DTR
 condition|)
 name|sig
 operator||=
-name|UART_SIG_DDTR
+name|SER_DDTR
 operator||
-name|UART_SIG_DTR
+name|SER_DTR
 expr_stmt|;
 if|if
 condition|(
@@ -2649,9 +2649,9 @@ name|TIOCM_RTS
 condition|)
 name|sig
 operator||=
-name|UART_SIG_DRTS
+name|SER_DRTS
 operator||
-name|UART_SIG_RTS
+name|SER_RTS
 expr_stmt|;
 name|UART_SETSIG
 argument_list|(
@@ -2685,7 +2685,7 @@ name|TIOCM_DTR
 condition|)
 name|sig
 operator||=
-name|UART_SIG_DDTR
+name|SER_DDTR
 expr_stmt|;
 if|if
 condition|(
@@ -2695,7 +2695,7 @@ name|TIOCM_RTS
 condition|)
 name|sig
 operator||=
-name|UART_SIG_DRTS
+name|SER_DRTS
 expr_stmt|;
 name|UART_SETSIG
 argument_list|(
@@ -2722,7 +2722,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_DTR
+name|SER_DTR
 condition|)
 name|bits
 operator||=
@@ -2732,7 +2732,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_RTS
+name|SER_RTS
 condition|)
 name|bits
 operator||=
@@ -2742,7 +2742,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_DSR
+name|SER_DSR
 condition|)
 name|bits
 operator||=
@@ -2752,7 +2752,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_CTS
+name|SER_CTS
 condition|)
 name|bits
 operator||=
@@ -2762,7 +2762,7 @@ if|if
 condition|(
 name|sig
 operator|&
-name|UART_SIG_DCD
+name|SER_DCD
 condition|)
 name|bits
 operator||=
@@ -2773,9 +2773,9 @@ condition|(
 name|sig
 operator|&
 operator|(
-name|UART_SIG_DRI
+name|SER_DRI
 operator||
-name|UART_SIG_RI
+name|SER_RI
 operator|)
 condition|)
 name|bits

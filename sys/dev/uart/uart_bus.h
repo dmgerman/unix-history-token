@@ -35,6 +35,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/serial.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/timepps.h>
 end_include
 
@@ -71,7 +77,7 @@ value|UART_DRAIN_TRANSMITTER
 end_define
 
 begin_comment
-comment|/*  * Interrupt sources (in priority order). See also uart_core.c  * Note that the low order 16 bits are used to pass modem signals  * from the hardware interrupt handler to the software interrupt  * handler. See UART_SIG_* and UART_SIGMASK_* below.  */
+comment|/*  * Interrupt sources (in priority order). See also uart_core.c  * Note that the low order 16 bits are used to pass modem signals  * from the hardware interrupt handler to the software interrupt  * handler.  */
 end_comment
 
 begin_define
@@ -155,120 +161,32 @@ name|UART_STAT_PARERR
 value|0x0800
 end_define
 
-begin_comment
-comment|/* Modem and line signals. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DTR
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_RTS
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DSR
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_CTS
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DCD
-value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_RI
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DDTR
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DRTS
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DDSR
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DCTS
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DDCD
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|UART_SIG_DRI
-value|0x2000
-end_define
-
 begin_define
 define|#
 directive|define
 name|UART_SIGMASK_DTE
-value|0x0003
+value|(SER_DTR | SER_RTS)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UART_SIGMASK_DCE
-value|0x003c
+value|(SER_DSR | SER_CTS | SER_DCD | SER_RI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UART_SIGMASK_STATE
-value|0x003f
+value|(UART_SIGMASK_DTE | UART_SIGMASK_DCE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UART_SIGMASK_DELTA
-value|0x3f00
+value|(UART_SIGMASK_STATE<< 8)
 end_define
 
 begin_ifdef
@@ -281,14 +199,14 @@ begin_define
 define|#
 directive|define
 name|UART_SIG_DPPS
-value|UART_SIG_DCTS
+value|SER_DCTS
 end_define
 
 begin_define
 define|#
 directive|define
 name|UART_SIG_PPS
-value|UART_SIG_CTS
+value|SER_CTS
 end_define
 
 begin_else
@@ -300,14 +218,14 @@ begin_define
 define|#
 directive|define
 name|UART_SIG_DPPS
-value|UART_SIG_DDCD
+value|SER_DDCD
 end_define
 
 begin_define
 define|#
 directive|define
 name|UART_SIG_PPS
-value|UART_SIG_DCD
+value|SER_DCD
 end_define
 
 begin_endif
