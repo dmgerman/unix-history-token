@@ -248,7 +248,13 @@ name|NULL
 condition|)
 return|return
 operator|(
+name|errno
+operator|==
+literal|0
+condition|?
 name|ENOMEM
+else|:
+name|errno
 operator|)
 return|;
 name|new__mb_cur_max

@@ -205,17 +205,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|errno
 operator|=
 literal|0
