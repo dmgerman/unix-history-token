@@ -217,6 +217,26 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|pausefst
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pause before first page */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pauseall
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pause before each page */
+end_comment
+
+begin_decl_stmt
+name|int
 name|formfeed
 decl_stmt|;
 end_decl_stmt
@@ -553,6 +573,104 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check if we should pause and write an alert character and wait for a  * carriage return on /dev/tty.  */
+end_comment
+
+begin_function
+name|void
+name|ttypause
+parameter_list|(
+name|pagecnt
+parameter_list|)
+name|int
+name|pagecnt
+decl_stmt|;
+block|{
+name|int
+name|pch
+decl_stmt|;
+name|FILE
+modifier|*
+name|ttyfp
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|pauseall
+operator|||
+operator|(
+name|pausefst
+operator|&&
+name|pagecnt
+operator|==
+literal|1
+operator|)
+operator|)
+operator|&&
+name|isatty
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ttyfp
+operator|=
+name|fopen
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|'\a'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|pch
+operator|=
+name|getc
+argument_list|(
+name|ttyfp
+argument_list|)
+operator|)
+operator|!=
+literal|'\n'
+operator|&&
+name|pch
+operator|!=
+name|EOF
+condition|)
+empty_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|ttyfp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * onecol:	print files with only one column of output.  *		Line length is unlimited.  */
 end_comment
 
@@ -883,6 +1001,11 @@ expr_stmt|;
 name|cps
 operator|=
 literal|0
+expr_stmt|;
+name|ttypause
+argument_list|(
+name|pagecnt
+argument_list|)
 expr_stmt|;
 comment|/* 			 * loop by line 			 */
 while|while
@@ -1676,6 +1799,11 @@ init|;
 condition|;
 control|)
 block|{
+name|ttypause
+argument_list|(
+name|pagecnt
+argument_list|)
+expr_stmt|;
 comment|/* 			 * loop by column 			 */
 name|cvc
 operator|=
@@ -2627,6 +2755,11 @@ init|;
 condition|;
 control|)
 block|{
+name|ttypause
+argument_list|(
+name|pagecnt
+argument_list|)
+expr_stmt|;
 comment|/* 			 * loop by line 			 */
 for|for
 control|(
@@ -3368,6 +3501,11 @@ operator|>
 literal|0
 condition|)
 block|{
+name|ttypause
+argument_list|(
+name|pagecnt
+argument_list|)
+expr_stmt|;
 comment|/* 		 * loop by line 		 */
 for|for
 control|(
@@ -5802,7 +5940,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"usage: pr [+page] [-col] [-adFmrt] [-e[ch][gap]] [-h header]\n"
+literal|"usage: pr [+page] [-col] [-adFfmprt] [-e[ch][gap]] [-h header]\n"
 argument_list|,
 name|err
 argument_list|)
@@ -5947,7 +6085,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"#adFmrte?h:i?L:l:n?o:s?w:"
+literal|"#adFfmrte?h:i?L:l:n?o:ps?w:"
 argument_list|)
 operator|)
 operator|!=
@@ -6188,6 +6326,13 @@ operator|=
 name|INGAP
 expr_stmt|;
 break|break;
+case|case
+literal|'f'
+case|:
+operator|++
+name|pausefst
+expr_stmt|;
+comment|/*FALLTHROUGH*/
 case|case
 literal|'F'
 case|:
@@ -6572,6 +6717,13 @@ literal|1
 operator|)
 return|;
 block|}
+break|break;
+case|case
+literal|'p'
+case|:
+operator|++
+name|pauseall
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
