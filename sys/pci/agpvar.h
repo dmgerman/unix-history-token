@@ -49,6 +49,9 @@ decl_stmt|;
 name|vm_size_t
 name|ai_aperture_size
 decl_stmt|;
+name|vm_offset_t
+name|ai_aperture_va
+decl_stmt|;
 name|vm_size_t
 name|ai_memory_allowed
 decl_stmt|;

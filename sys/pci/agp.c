@@ -160,6 +160,16 @@ file|<sys/rman.h>
 end_include
 
 begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|agp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
 name|M_AGP
@@ -3235,6 +3245,20 @@ argument_list|)
 operator|)
 operator|+
 literal|1
+expr_stmt|;
+name|info
+operator|->
+name|ai_aperture_va
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|rman_get_virtual
+argument_list|(
+name|sc
+operator|->
+name|as_aperture
+argument_list|)
 expr_stmt|;
 name|info
 operator|->
