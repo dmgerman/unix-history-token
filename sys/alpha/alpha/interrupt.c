@@ -101,12 +101,6 @@ directive|ifdef
 name|EVCNT_COUNTERS
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
 begin_decl_stmt
 name|struct
 name|evcnt
