@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.41 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5382,6 +5382,10 @@ name|rcode
 operator|==
 name|EX_TEMPFAIL
 operator|&&
+name|curhost
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|curhost
 operator|!=
@@ -5709,6 +5713,10 @@ condition|(
 name|rcode
 operator|!=
 name|EX_OK
+operator|&&
+name|curhost
+operator|!=
+name|NULL
 operator|&&
 operator|*
 name|curhost
@@ -7221,6 +7229,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
