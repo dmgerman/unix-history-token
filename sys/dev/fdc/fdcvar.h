@@ -61,6 +61,16 @@ define|#
 directive|define
 name|FDC_NODMA
 value|0x40
+define|#
+directive|define
+name|FDC_KTHREAD_EXIT
+value|0x1000
+comment|/* request worker thread to stop */
+define|#
+directive|define
+name|FDC_KTHREAD_ALIVE
+value|0x2000
+comment|/* worker thread is alive */
 name|struct
 name|fd_data
 modifier|*
