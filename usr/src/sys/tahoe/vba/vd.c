@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4884,15 +4884,6 @@ operator|+
 name|dcb
 operator|->
 name|err_sec
-operator|)
-operator|>>
-name|dksoftc
-index|[
-name|unit
-index|]
-operator|.
-name|dk_bshift
-operator|)
 operator|-
 name|lp
 operator|->
@@ -4907,6 +4898,15 @@ argument_list|)
 index|]
 operator|.
 name|p_offset
+operator|)
+operator|>>
+name|dksoftc
+index|[
+name|unit
+index|]
+operator|.
+name|dk_bshift
+operator|)
 operator|-
 name|bp
 operator|->
@@ -5042,15 +5042,6 @@ operator|+
 name|dcb
 operator|->
 name|err_sec
-operator|)
-operator|>>
-name|dksoftc
-index|[
-name|unit
-index|]
-operator|.
-name|dk_bshift
-operator|)
 operator|-
 name|lp
 operator|->
@@ -5065,6 +5056,15 @@ argument_list|)
 index|]
 operator|.
 name|p_offset
+operator|)
+operator|>>
+name|dksoftc
+index|[
+name|unit
+index|]
+operator|.
+name|dk_bshift
+operator|)
 operator|-
 name|bp
 operator|->
