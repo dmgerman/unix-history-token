@@ -5,6 +5,20 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_comment
+comment|/* XXX There should be a way for a type driver to have its own  *     private senses and add them when it is added.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_SCSI_SENSE
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -88,13 +102,6 @@ name|tab
 index|[]
 init|=
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|NO_SCSI_SENSE
-argument_list|)
 if|#
 directive|if
 operator|(
@@ -2425,17 +2432,6 @@ literal|0x00
 block|,
 literal|"Unsuccessful soft reset"
 block|}
-block|,
-endif|#
-directive|endif
-comment|/* NO_SCSI_SENSE */
-block|{
-literal|0xff
-block|,
-literal|0xff
-block|,
-literal|0
-block|}
 block|, }
 struct|;
 end_struct
@@ -2508,10 +2504,42 @@ operator|.
 name|desc
 return|;
 return|return
-literal|"no available sense description"
+literal|""
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NO_SCSI_SENSE */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|scsi_sense_desc
+parameter_list|(
+name|int
+name|asc
+parameter_list|,
+name|int
+name|ascq
+parameter_list|)
+block|{
+return|return
+literal|""
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
