@@ -3543,6 +3543,19 @@ name|dt
 expr_stmt|;
 if|#
 directive|if
+name|PCVT_FREEBSD
+operator|>
+literal|210
+name|add_keyboard_randomness
+argument_list|(
+name|dt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_FREEBSD> 210 */
+if|#
+directive|if
 operator|!
 name|PCVT_USL_VT_COMPAT
 if|if
@@ -4715,6 +4728,19 @@ goto|;
 comment|/* got a normal scan key */
 name|regular
 label|:
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>
+literal|210
+name|add_keyboard_randomness
+argument_list|(
+name|dt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_FREEBSD> 210 */
 if|#
 directive|if
 name|PCVT_SCANSET
