@@ -3062,6 +3062,10 @@ expr_stmt|;
 comment|/* 		 * We repeat the same procedure from rt_setgate() here because 		 * it doesn't fire when we call it there because the node 		 * hasn't been added to the tree yet. 		 */
 if|if
 condition|(
+name|req
+operator|==
+name|RTM_ADD
+operator|&&
 operator|!
 operator|(
 name|rt
@@ -3231,7 +3235,13 @@ name|rt
 operator|->
 name|rt_flags
 operator|&
+operator|(
 name|RTF_PINNED
+operator||
+name|RTF_CLONING
+operator||
+name|RTF_PRCLONING
+operator|)
 operator|)
 condition|)
 block|{
@@ -3407,7 +3417,13 @@ name|rt
 operator|->
 name|rt_flags
 operator|&
+operator|(
 name|RTF_PINNED
+operator||
+name|RTF_CLONING
+operator||
+name|RTF_PRCLONING
+operator|)
 operator|)
 condition|)
 block|{
@@ -3420,7 +3436,7 @@ name|rtfcdebug
 condition|)
 name|printf
 argument_list|(
-literal|"no parent or pinned\n"
+literal|"no parent, pinned or cloning\n"
 argument_list|)
 expr_stmt|;
 endif|#
