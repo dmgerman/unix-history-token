@@ -27971,7 +27971,7 @@ name|ahd
 operator|->
 name|stat_timer
 argument_list|,
-name|AHD_STAT_UPDATE_US
+name|AHD_STAT_UPDATE_MS
 argument_list|,
 name|ahd_stat_timer
 argument_list|,
@@ -35318,8 +35318,8 @@ end_function
 begin_define
 define|#
 directive|define
-name|AHD_RESET_POLL_US
-value|1000
+name|AHD_RESET_POLL_MS
+value|1
 end_define
 
 begin_function
@@ -35445,7 +35445,7 @@ name|ahd
 operator|->
 name|reset_timer
 argument_list|,
-name|AHD_RESET_POLL_US
+name|AHD_RESET_POLL_MS
 argument_list|,
 name|ahd_reset_poll
 argument_list|,
@@ -35774,7 +35774,7 @@ name|ahd
 operator|->
 name|stat_timer
 argument_list|,
-name|AHD_STAT_UPDATE_US
+name|AHD_STAT_UPDATE_MS
 argument_list|,
 name|ahd_stat_timer
 argument_list|,
@@ -36722,7 +36722,7 @@ name|scb
 argument_list|,
 literal|5
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -39053,6 +39053,26 @@ decl_stmt|;
 name|u_int
 name|printed_mask
 decl_stmt|;
+name|u_int
+name|dummy_column
+decl_stmt|;
+if|if
+condition|(
+name|cur_column
+operator|==
+name|NULL
+condition|)
+block|{
+name|dummy_column
+operator|=
+literal|0
+expr_stmt|;
+name|cur_column
+operator|=
+operator|&
+name|dummy_column
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cur_column
@@ -39245,12 +39265,6 @@ argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cur_column
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|cur_column
 operator|+=
@@ -41771,10 +41785,6 @@ argument_list|,
 name|SCB_GET_TAG
 argument_list|(
 name|scb
-operator|->
-name|hscb
-operator|->
-name|tag
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -41932,7 +41942,7 @@ name|scb
 argument_list|,
 literal|2
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;
@@ -41986,10 +41996,6 @@ argument_list|,
 name|SCB_GET_TAG
 argument_list|(
 name|scb
-operator|->
-name|hscb
-operator|->
-name|tag
 argument_list|)
 argument_list|,
 name|ROLE_INITIATOR
@@ -42183,7 +42189,7 @@ name|scb
 argument_list|,
 literal|2
 operator|*
-literal|1000000
+literal|1000
 argument_list|)
 expr_stmt|;
 break|break;

@@ -482,6 +482,24 @@ value|25
 end_define
 
 begin_comment
+comment|/* Phase change constants used in target mode. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_BUSSETTLE_DELAY
+value|400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_DATARELEASE_DELAY
+value|400
+end_define
+
+begin_comment
 comment|/******************* Chip Characteristics/Operating Settings  *****************/
 end_comment
 
