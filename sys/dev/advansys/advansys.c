@@ -4491,11 +4491,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"No external RAM\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
