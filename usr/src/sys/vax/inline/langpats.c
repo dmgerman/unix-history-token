@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	1.4 (Berkeley) %G%"
+literal|"@(#)langpats.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -311,7 +311,7 @@ block|,
 block|{
 literal|"_setjmp\n"
 block|,
-literal|"	movl	(sp)+,r0 \n\ 	jsb	_Setjmp\n"
+literal|"	movl	(sp)+,r1 \n\ 	clrl	r0 \n\ 	movl	fp,(r1)+ \n\ 	moval	1(pc),(r1)\n"
 block|}
 block|,
 block|{
