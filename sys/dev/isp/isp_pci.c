@@ -4383,6 +4383,8 @@ argument_list|,
 name|ISP_LOGERR
 argument_list|,
 literal|"cannot allocate %d bytes of CCB memory"
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|free
