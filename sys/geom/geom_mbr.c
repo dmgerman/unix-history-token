@@ -312,7 +312,7 @@ modifier|*
 name|gsp
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|pp
 operator|=
@@ -320,7 +320,7 @@ name|bp
 operator|->
 name|bio_to
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|pp
 operator|->
@@ -365,7 +365,7 @@ name|mp
 operator|->
 name|type
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 condition|)
@@ -386,7 +386,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|offset
@@ -416,6 +416,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|indent
@@ -1472,7 +1473,7 @@ modifier|*
 name|gsp
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|pp
 operator|=
@@ -1480,7 +1481,7 @@ name|bp
 operator|->
 name|bio_to
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|pp
 operator|->
@@ -1525,7 +1526,7 @@ name|mp
 operator|->
 name|type
 index|[
-name|index
+name|idx
 index|]
 argument_list|)
 condition|)
@@ -1553,6 +1554,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|indent

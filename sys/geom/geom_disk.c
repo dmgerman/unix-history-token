@@ -991,6 +991,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|indent

@@ -272,8 +272,9 @@ parameter_list|)
 block|{
 name|int
 name|error
-decl_stmt|,
-name|i
+decl_stmt|;
+name|u_int
+name|u
 decl_stmt|;
 name|struct
 name|g_geom
@@ -350,17 +351,17 @@ index|]
 expr_stmt|;
 for|for
 control|(
-name|i
+name|u
 operator|=
 literal|0
 init|;
-name|i
+name|u
 operator|<
 name|gsp
 operator|->
 name|nslice
 condition|;
-name|i
+name|u
 operator|++
 control|)
 block|{
@@ -371,7 +372,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|i
+name|u
 index|]
 expr_stmt|;
 if|if
@@ -385,7 +386,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|i
+name|u
 operator|==
 name|pp
 operator|->
@@ -593,7 +594,7 @@ modifier|*
 name|gsl
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -662,7 +663,7 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|bp
 operator|->
@@ -677,7 +678,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 name|bp2
@@ -799,7 +800,7 @@ modifier|*
 name|gmp
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|,
 name|error
 decl_stmt|;
@@ -837,7 +838,7 @@ operator|->
 name|consumer
 argument_list|)
 expr_stmt|;
-name|index
+name|idx
 operator|=
 name|pp
 operator|->
@@ -850,7 +851,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 switch|switch
@@ -1188,7 +1189,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|offset
@@ -1203,7 +1204,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|length
@@ -1216,7 +1217,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|length
@@ -1284,6 +1285,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|indent
@@ -1520,7 +1522,7 @@ modifier|*
 name|gp
 parameter_list|,
 name|u_int
-name|index
+name|idx
 parameter_list|,
 name|int
 name|how
@@ -1534,6 +1536,7 @@ parameter_list|,
 name|u_int
 name|sectorsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1579,7 +1582,7 @@ name|gp
 operator|->
 name|name
 argument_list|,
-name|index
+name|idx
 argument_list|,
 name|how
 argument_list|)
@@ -1599,7 +1602,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|>=
 name|gsp
 operator|->
@@ -1617,7 +1620,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
 name|pp
@@ -1913,7 +1916,7 @@ name|pp
 operator|->
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 name|pp
 operator|->
@@ -1972,7 +1975,7 @@ modifier|*
 name|gp
 parameter_list|,
 name|u_int
-name|index
+name|idx
 parameter_list|,
 name|off_t
 name|offset
@@ -2018,7 +2021,7 @@ name|hot
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|idx
 operator|>=
 name|gsp
 operator|->
@@ -2030,7 +2033,7 @@ operator|=
 name|g_malloc
 argument_list|(
 operator|(
-name|index
+name|idx
 operator|+
 literal|1
 operator|)
@@ -2096,7 +2099,7 @@ name|gsp
 operator|->
 name|nhot
 operator|=
-name|index
+name|idx
 operator|+
 literal|1
 expr_stmt|;
@@ -2113,7 +2116,7 @@ name|gp
 operator|->
 name|name
 argument_list|,
-name|index
+name|idx
 argument_list|,
 operator|(
 name|intmax_t
@@ -2139,7 +2142,7 @@ argument_list|)
 expr_stmt|;
 name|gsl
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|offset
@@ -2148,7 +2151,7 @@ name|offset
 expr_stmt|;
 name|gsl
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|length
@@ -2175,7 +2178,7 @@ modifier|*
 name|gp
 parameter_list|,
 name|int
-name|index
+name|idx
 parameter_list|,
 name|off_t
 name|offset
@@ -2186,6 +2189,7 @@ parameter_list|,
 name|u_int
 name|sectorsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -2277,13 +2281,13 @@ name|pp
 operator|->
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|length
@@ -2294,7 +2298,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|offset
@@ -2305,7 +2309,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|provider
@@ -2316,7 +2320,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|sectorsize
@@ -2331,7 +2335,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|length
@@ -2344,7 +2348,7 @@ name|gsp
 operator|->
 name|slices
 index|[
-name|index
+name|idx
 index|]
 operator|.
 name|sectorsize

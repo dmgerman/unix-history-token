@@ -155,6 +155,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 modifier|*
 name|aes_magic
@@ -165,6 +166,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 modifier|*
 name|aes_magic_random
@@ -175,6 +177,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 modifier|*
 name|aes_magic_test

@@ -109,7 +109,7 @@ modifier|*
 name|gp
 parameter_list|,
 name|int
-name|index
+name|idx
 parameter_list|,
 name|off_t
 name|offset
@@ -120,6 +120,7 @@ parameter_list|,
 name|u_int
 name|sectorsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -139,7 +140,7 @@ modifier|*
 name|gp
 parameter_list|,
 name|u_int
-name|index
+name|idx
 parameter_list|,
 name|int
 name|how
@@ -153,6 +154,7 @@ parameter_list|,
 name|u_int
 name|sectorsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -232,7 +234,7 @@ modifier|*
 name|gp
 parameter_list|,
 name|u_int
-name|index
+name|idx
 parameter_list|,
 name|off_t
 name|offset

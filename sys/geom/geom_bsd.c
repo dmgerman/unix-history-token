@@ -1823,6 +1823,8 @@ name|cp
 decl_stmt|;
 name|u_int
 name|secsize
+decl_stmt|,
+name|u
 decl_stmt|;
 name|off_t
 name|mediasize
@@ -2068,17 +2070,17 @@ block|}
 comment|/* Look good, go for it... */
 for|for
 control|(
-name|i
+name|u
 operator|=
 literal|0
 init|;
-name|i
+name|u
 operator|<
 name|gsp
 operator|->
 name|nslice
 condition|;
-name|i
+name|u
 operator|++
 control|)
 block|{
@@ -2089,14 +2091,14 @@ name|dl
 operator|->
 name|d_partitions
 index|[
-name|i
+name|u
 index|]
 expr_stmt|;
 name|g_slice_config
 argument_list|(
 name|gp
 argument_list|,
-name|i
+name|u
 argument_list|,
 name|G_SLICE_CONFIG_SET
 argument_list|,
@@ -2134,7 +2136,7 @@ name|name
 argument_list|,
 literal|'a'
 operator|+
-name|i
+name|u
 argument_list|)
 expr_stmt|;
 block|}
@@ -2863,6 +2865,10 @@ index|]
 expr_stmt|;
 name|p
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|bp
 operator|->
 name|bio_data
@@ -3274,6 +3280,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|indent
