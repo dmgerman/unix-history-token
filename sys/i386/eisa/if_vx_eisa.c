@@ -110,12 +110,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/eisa/eisaconf.h>
 end_include
 
@@ -176,6 +170,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|vx_match
@@ -218,6 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|eisa_driver
 name|vx_eisa_driver
@@ -250,6 +246,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|vx_match
@@ -444,17 +441,6 @@ name|unit
 decl_stmt|;
 name|int
 name|irq
-init|=
-name|ffs
-argument_list|(
-name|e_dev
-operator|->
-name|ioconf
-operator|.
-name|irq
-argument_list|)
-operator|-
-literal|1
 decl_stmt|;
 name|resvaddr_t
 modifier|*
@@ -467,6 +453,40 @@ decl_stmt|;
 name|u_char
 name|level_intr
 decl_stmt|;
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|irq
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|->
+name|irq_no
+expr_stmt|;
 name|ioport
 operator|=
 name|e_dev
@@ -573,7 +593,13 @@ name|irq
 argument_list|,
 operator|(
 name|void
+argument_list|(
 operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
 operator|)
 name|vxintr
 argument_list|,
@@ -635,7 +661,13 @@ name|irq
 argument_list|,
 operator|(
 name|void
+argument_list|(
 operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
 operator|)
 name|vxintr
 argument_list|)
