@@ -1693,6 +1693,22 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|Debugger
+argument_list|(
+literal|"Boot flags requested debugger"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
