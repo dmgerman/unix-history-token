@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: dset.c,v 1.12 1998/06/08 06:44:05 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,7 +1120,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"kernel: id=%u io=%X irq=%d drq=%d maddr=%X msize=%d flags=%X enabled=%X \n"
+literal|"kernel: id=%u io=%X irq=%d drq=%d maddr=%p msize=%d flags=%X enabled=%X \n"
 argument_list|,
 name|buf1
 operator|.
@@ -1169,7 +1169,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"file: id=%u io=%X irq=%d drq=%d maddr=%X msize=%d flags=%X enabled=%X \n"
+literal|"file: id=%u io=%X irq=%d drq=%d maddr=%p msize=%d flags=%X enabled=%X \n"
 argument_list|,
 name|buf
 operator|.
@@ -2308,7 +2308,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" flags 0x%08x"
+literal|" flags 0x%08lx"
 argument_list|,
 name|new_ov
 index|[
@@ -2384,7 +2384,7 @@ name|j
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" mem 0x%x"
+literal|" mem 0x%lx"
 argument_list|,
 name|new_ov
 index|[
@@ -2414,7 +2414,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" 0x%x"
+literal|" 0x%lx"
 argument_list|,
 name|new_ov
 index|[
