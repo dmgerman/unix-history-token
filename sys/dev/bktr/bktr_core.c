@@ -2459,7 +2459,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: buffer size %d, addr 0x%x\n"
+literal|"%s: buffer size %d, addr %p\n"
 argument_list|,
 name|bktr_name
 argument_list|(
@@ -2468,6 +2468,13 @@ argument_list|)
 argument_list|,
 name|BROOKTREE_ALLOC
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|vtophys
 argument_list|(
 name|buf
