@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -117,6 +117,26 @@ directive|include
 file|"vm/vm.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HPFPLIB
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"Copyright (c) 1982,1986,1989,1991 The Regents of the University of California.\nCopyright (c) 1992 Hewlett-Packard Company\nCopyright (c) 1992 Motorola Inc.\nAll rights reserved.\n\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 name|copyright
@@ -125,6 +145,11 @@ init|=
 literal|"Copyright (c) 1982,1986,1989,1991 The Regents of the University of California.\nAll rights reserved.\n\n"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Components of process 0;  * never freed.  */
