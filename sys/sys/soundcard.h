@@ -246,6 +246,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -457,6 +463,42 @@ end_define
 begin_comment
 comment|/* Dolby Digital AC3 */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|AFMT_S16_NE
+value|AFMT_S16_LE
+end_define
+
+begin_comment
+comment|/* native endian signed 16 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AFMT_S16_NE
+value|AFMT_S16_BE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * 32-bit formats below used for 24-bit audio data where the data is stored  * in the 24 most significant bits and the least significant bits are not used  * (should be set to 0).  */
