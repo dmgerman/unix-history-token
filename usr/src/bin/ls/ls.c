@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.3 (Berkeley) %G%"
+literal|"@(#)ls.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1281,12 +1281,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|fts_close
+if|if
+condition|(
+name|errno
+condition|)
+name|err
 argument_list|(
-name|ftsp
+literal|1
+argument_list|,
+literal|"fts_read"
 argument_list|)
 expr_stmt|;
 block|}
