@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.28 1999/07/03 20:17:05 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.29 1999/07/06 19:23:30 des Exp $ */
 end_comment
 
 begin_comment
@@ -1963,10 +1963,10 @@ name|epic_shutdown
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
 name|void
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2774,13 +2774,15 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Set shut down routine to stop DMA processes on reboot */
-name|at_shutdown
+name|EVENTHANDLER_REGISTER
 argument_list|(
+name|shutdown_post_sync
+argument_list|,
 name|epic_shutdown
 argument_list|,
 name|sc
 argument_list|,
-name|SHUTDOWN_POST_SYNC
+name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
 comment|/*  Attach to if manager */
@@ -2833,12 +2835,12 @@ specifier|static
 name|void
 name|epic_shutdown
 parameter_list|(
-name|int
-name|howto
-parameter_list|,
 name|void
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|howto
 parameter_list|)
 block|{
 name|epic_stop

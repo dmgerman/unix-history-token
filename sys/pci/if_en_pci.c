@@ -130,10 +130,10 @@ name|en_pci_shutdown
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
 name|void
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -999,13 +999,15 @@ else|:
 literal|0
 expr_stmt|;
 comment|/*    * Add shutdown hook so that DMA is disabled prior to reboot. Not    * doing so could allow DMA to corrupt kernel memory during the    * reboot before the driver initializes.    */
-name|at_shutdown
+name|EVENTHANDLER_REGISTER
 argument_list|(
+name|shutdown_post_sync
+argument_list|,
 name|en_pci_shutdown
 argument_list|,
 name|scp
 argument_list|,
-name|SHUTDOWN_POST_SYNC
+name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1138,12 +1140,12 @@ specifier|static
 name|void
 name|en_pci_shutdown
 parameter_list|(
-name|int
-name|howto
-parameter_list|,
 name|void
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|howto
 parameter_list|)
 block|{
 name|struct

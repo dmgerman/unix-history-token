@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.23 1999/05/06 20:16:22 ken Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.24 1999/08/16 01:49:35 gibbs Exp $"
 end_empty
 
 begin_define
@@ -658,12 +658,12 @@ specifier|static
 name|void
 name|dptshutdown
 parameter_list|(
-name|int
-name|howto
-parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|howto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6807,13 +6807,15 @@ name|i
 operator|>
 literal|0
 condition|)
-name|at_shutdown
+name|EVENTHANDLER_REGISTER
 argument_list|(
+name|shutdown_final
+argument_list|,
 name|dptshutdown
 argument_list|,
 name|dpt
 argument_list|,
-name|SHUTDOWN_FINAL
+name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
 return|return
@@ -7737,7 +7739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Shutdown the controller and ensure that the cache is completely flushed.  * Called via at_shutdown(9) after all disk access has completed.  */
+comment|/*  * Shutdown the controller and ensure that the cache is completely flushed.  * Called from the shutdown_final event after all disk access has completed.  */
 end_comment
 
 begin_function
@@ -7745,12 +7747,12 @@ specifier|static
 name|void
 name|dptshutdown
 parameter_list|(
-name|int
-name|howto
-parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|howto
 parameter_list|)
 block|{
 name|dpt_softc_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.8 1999/05/10 22:53:45 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: fore_load.c,v 1.9 1999/05/30 16:51:25 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: fore_load.c,v 1.8 1999/05/10 22:53:45 mks Exp $"
+literal|"@(#) $Id: fore_load.c,v 1.9 1999/05/30 16:51:25 phk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -203,10 +203,10 @@ name|fore_pci_shutdown
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
 name|void
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3450,13 +3450,15 @@ name|BSD
 operator|>=
 literal|199506
 comment|/* 	 * Add hook to our shutdown function 	 */
-name|at_shutdown
+name|EVENTHANDLER_REGISTER
 argument_list|(
+name|shutdown_post_sync
+argument_list|,
 name|fore_pci_shutdown
 argument_list|,
 name|fup
 argument_list|,
-name|SHUTDOWN_POST_SYNC
+name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3587,16 +3589,16 @@ specifier|static
 name|void
 name|fore_pci_shutdown
 parameter_list|(
-name|howto
-parameter_list|,
 name|fup
-parameter_list|)
-name|int
+parameter_list|,
 name|howto
-decl_stmt|;
+parameter_list|)
 name|void
 modifier|*
 name|fup
+decl_stmt|;
+name|int
+name|howto
 decl_stmt|;
 block|{
 name|fore_reset

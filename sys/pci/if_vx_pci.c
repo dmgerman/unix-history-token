@@ -70,10 +70,10 @@ specifier|static
 name|void
 name|vx_pci_shutdown
 parameter_list|(
-name|int
-parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -110,12 +110,12 @@ specifier|static
 name|void
 name|vx_pci_shutdown
 parameter_list|(
-name|int
-name|howto
-parameter_list|,
 name|void
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|howto
 parameter_list|)
 block|{
 name|vxstop
@@ -365,13 +365,15 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * Add shutdown hook so that DMA is disabled prior to reboot. Not      * doing do could allow DMA to corrupt kernel memory during the      * reboot before the driver initializes.      */
-name|at_shutdown
+name|EVENTHANDLER_REGISTER
 argument_list|(
+name|shutdown_post_sync
+argument_list|,
 name|vx_pci_shutdown
 argument_list|,
 name|sc
 argument_list|,
-name|SHUTDOWN_POST_SYNC
+name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
 name|pci_map_int

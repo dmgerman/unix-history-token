@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: eni.c,v 1.7 1999/05/09 17:07:27 peter Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: eni.c,v 1.8 1999/05/10 22:53:41 mks Exp $  *  */
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"@(#) $Id: eni.c,v 1.7 1999/05/09 17:07:27 peter Exp $"
+literal|"@(#) $Id: eni.c,v 1.8 1999/05/10 22:53:41 mks Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -171,10 +171,10 @@ name|eni_pci_shutdown
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
 name|void
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1524,16 +1524,15 @@ name|BSD
 operator|>=
 literal|199506
 comment|/* 	 * Add hook to out shutdown function 	 */
-name|at_shutdown
+name|EVENTHANDLER_REGISTER
 argument_list|(
-operator|(
-name|bootlist_fn
-operator|)
+name|shutdown_post_sync
+argument_list|,
 name|eni_pci_shutdown
 argument_list|,
 name|eup
 argument_list|,
-name|SHUTDOWN_POST_SYNC
+name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1738,16 +1737,16 @@ specifier|static
 name|void
 name|eni_pci_shutdown
 parameter_list|(
-name|howto
-parameter_list|,
 name|eup
-parameter_list|)
-name|int
+parameter_list|,
 name|howto
-decl_stmt|;
+parameter_list|)
 name|void
 modifier|*
 name|eup
+decl_stmt|;
+name|int
+name|howto
 decl_stmt|;
 block|{
 comment|/* Do device reset */
