@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.1.1.1 1996/09/30 19:09:55 fenner Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.2 1996/09/30 19:39:25 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,6 +2291,9 @@ name|unreachable
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|loss
+decl_stmt|;
 name|Printf
 argument_list|(
 literal|"%2d "
@@ -2301,6 +2304,10 @@ expr_stmt|;
 for|for
 control|(
 name|probe
+operator|=
+literal|0
+operator|,
+name|loss
 operator|=
 literal|0
 init|;
@@ -2665,11 +2672,16 @@ name|cc
 operator|==
 literal|0
 condition|)
+block|{
+name|loss
+operator|++
+expr_stmt|;
 name|Printf
 argument_list|(
 literal|" *"
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2679,6 +2691,27 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+name|Printf
+argument_list|(
+literal|" (%d%% loss)"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+operator|(
+name|float
+operator|)
+name|loss
+operator|/
+name|nprobes
+operator|)
+operator|*
+literal|100
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
