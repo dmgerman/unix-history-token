@@ -939,7 +939,6 @@ if|if
 condition|(
 name|port
 condition|)
-return|return
 name|bus_space_write_1
 argument_list|(
 name|rman_get_bustag
@@ -956,7 +955,7 @@ name|off
 argument_list|,
 name|data
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -1028,7 +1027,6 @@ name|reg
 operator|-=
 literal|4
 expr_stmt|;
-return|return
 name|port_wr
 argument_list|(
 name|mss
@@ -1039,7 +1037,7 @@ name|reg
 argument_list|,
 name|data
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

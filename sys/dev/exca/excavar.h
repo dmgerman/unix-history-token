@@ -315,8 +315,6 @@ name|uint8_t
 name|val
 parameter_list|)
 block|{
-return|return
-operator|(
 name|bus_space_write_1
 argument_list|(
 name|sc
@@ -335,8 +333,7 @@ name|reg
 argument_list|,
 name|val
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 

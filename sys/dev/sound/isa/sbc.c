@@ -750,7 +750,6 @@ name|u_int8_t
 name|val
 parameter_list|)
 block|{
-return|return
 name|bus_space_write_1
 argument_list|(
 name|rman_get_bustag
@@ -767,7 +766,7 @@ name|reg
 argument_list|,
 name|val
 argument_list|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
