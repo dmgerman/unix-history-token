@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.3.2.1 1996/11/16 21:07:02 phk Exp $"
+literal|"$Id: init.c,v 1.3.2.2 1996/12/31 05:50:28 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +348,21 @@ block|}
 block|,
 comment|/* ppp login program */
 block|{
+literal|"if"
+block|}
+block|,
+comment|/* sysv-like 'issue' filename */
+block|{
+literal|"ic"
+block|}
+block|,
+comment|/* modem init-chat */
+block|{
+literal|"ac"
+block|}
+block|,
+comment|/* modem answer-chat */
+block|{
 literal|0
 block|}
 block|}
@@ -491,6 +506,21 @@ literal|"de"
 block|}
 block|,
 comment|/* delay before sending 1st prompt */
+block|{
+literal|"rt"
+block|}
+block|,
+comment|/* reset timeout */
+block|{
+literal|"ct"
+block|}
+block|,
+comment|/* chat script timeout */
+block|{
+literal|"dc"
+block|}
+block|,
+comment|/* debug chat script value */
 block|{
 literal|0
 block|}
@@ -666,6 +696,13 @@ literal|0
 block|}
 block|,
 comment|/* do MDMBUF flow control */
+block|{
+literal|"hw"
+block|,
+literal|0
+block|}
+block|,
+comment|/* do CTSRTS flow control */
 block|{
 literal|0
 block|}

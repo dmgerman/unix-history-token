@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 1.1.1.2 1996/04/13 15:33:14 joerg Exp $"
+literal|"$Id: subr.c,v 1.6 1996/05/05 19:01:11 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,8 +209,17 @@ argument_list|(
 operator|&
 name|buf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|dba
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 argument_list|)
 operator|!=
@@ -234,6 +243,10 @@ name|cgetstr
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sp
 operator|->
 name|field
@@ -264,6 +277,10 @@ name|cgetnum
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|np
 operator|->
 name|field
@@ -317,6 +334,10 @@ name|cgetcap
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|fp
 operator|->
 name|field
@@ -1410,6 +1431,25 @@ argument_list|(
 name|cflag
 argument_list|,
 name|MDMBUF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HW
+condition|)
+name|SET
+argument_list|(
+name|cflag
+argument_list|,
+name|CRTSCTS
+argument_list|)
+expr_stmt|;
+else|else
+name|CLR
+argument_list|(
+name|cflag
+argument_list|,
+name|CRTSCTS
 argument_list|)
 expr_stmt|;
 if|if
