@@ -1432,6 +1432,9 @@ case|:
 case|case
 name|PS_STATE_MAX
 case|:
+case|case
+name|PS_SUSPENDED
+case|:
 break|break;
 comment|/* 		 * States which need to return to critical sections 		 * before they can switch contexts: 		 */
 case|case
@@ -1497,9 +1500,6 @@ name|PS_SLEEP_WAIT
 case|:
 case|case
 name|PS_SPINBLOCK
-case|:
-case|case
-name|PS_SUSPENDED
 case|:
 case|case
 name|PS_WAIT_WAIT
@@ -1921,7 +1921,6 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Increment the pending signal count. */
 name|sigaddset
 argument_list|(
@@ -1933,6 +1932,21 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Increment the pending signal count. */
+name|sigaddset
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigpend
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function

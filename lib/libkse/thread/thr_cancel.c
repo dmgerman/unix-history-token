@@ -156,6 +156,24 @@ name|PTHREAD_CANCELLING
 expr_stmt|;
 break|break;
 case|case
+name|PS_SUSPENDED
+case|:
+comment|/* 				 * This thread isn't in any scheduling 				 * queues; just change it's state: 				 */
+name|pthread
+operator|->
+name|cancelflags
+operator||=
+name|PTHREAD_CANCELLING
+expr_stmt|;
+name|PTHREAD_SET_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PS_SPINBLOCK
 case|:
 case|case
@@ -203,9 +221,6 @@ name|PS_SIGSUSPEND
 case|:
 case|case
 name|PS_SIGWAIT
-case|:
-case|case
-name|PS_SUSPENDED
 case|:
 comment|/* Interrupt and resume: */
 name|pthread

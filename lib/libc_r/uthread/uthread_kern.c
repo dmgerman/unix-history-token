@@ -450,7 +450,10 @@ case|case
 name|PS_STATE_MAX
 case|:
 comment|/* to silence -Wall */
-comment|/* 				 * Dead threads are not placed in any queue: 				 */
+case|case
+name|PS_SUSPENDED
+case|:
+comment|/* 				 * Dead and suspended threads are not placed 				 * in any queue: 				 */
 break|break;
 case|case
 name|PS_RUNNING
@@ -556,9 +559,6 @@ name|PS_SIGTHREAD
 case|:
 case|case
 name|PS_SIGWAIT
-case|:
-case|case
-name|PS_SUSPENDED
 case|:
 case|case
 name|PS_WAIT_WAIT

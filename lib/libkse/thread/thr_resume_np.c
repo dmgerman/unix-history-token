@@ -57,13 +57,20 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* The thread exists. Is it suspended? */
+comment|/* Cancel any pending suspensions: */
+name|thread
+operator|->
+name|suspended
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Is it currently suspended? */
 if|if
 condition|(
 name|thread
 operator|->
 name|state
-operator|!=
+operator|==
 name|PS_SUSPENDED
 condition|)
 block|{
@@ -72,11 +79,16 @@ name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
 comment|/* Allow the thread to run. */
-name|PTHREAD_NEW_STATE
+name|PTHREAD_SET_STATE
 argument_list|(
 name|thread
 argument_list|,
 name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+name|PTHREAD_PRIOQ_INSERT_TAIL
+argument_list|(
+name|thread
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Undefer and handle pending signals, yielding if 			 * necessary: 			 */

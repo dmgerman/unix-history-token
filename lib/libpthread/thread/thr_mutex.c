@@ -2085,6 +2085,7 @@ name|interrupted
 operator|!=
 literal|0
 condition|)
+block|{
 name|mutex_queue_remove
 argument_list|(
 operator|*
@@ -2093,6 +2094,11 @@ argument_list|,
 name|_thread_run
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|EINTR
+expr_stmt|;
+block|}
 comment|/* Unlock the mutex structure: */
 name|_SPINUNLOCK
 argument_list|(

@@ -251,7 +251,7 @@ name|PTHREAD_WAITQ_INSERT
 parameter_list|(
 name|thrd
 parameter_list|)
-value|do {					\ 	if ((thrd)->wakeup_time.tv_sec == -1)				\ 		TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);			\ 	else {								\ 		pthread_t tid = TAILQ_FIRST(&_waitingq);		\ 		while ((tid != NULL)&& (tid->wakeup_time.tv_sec != -1)&& \ 		    ((tid->wakeup_time.tv_sec< (thrd)->wakeup_time.tv_sec) ||	\ 		    ((tid->wakeup_time.tv_sec == (thrd)->wakeup_time.tv_sec)&&	\ 		    (tid->wakeup_time.tv_nsec<= (thrd)->wakeup_time.tv_nsec)))) \ 			tid = TAILQ_NEXT(tid, pqe);			\ 		if (tid == NULL)					\ 			TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);		\ 		else							\ 			TAILQ_INSERT_BEFORE(tid,thrd,pqe);		\ 	}								\ 	(thrd)->flags | PTHREAD_FLAGS_IN_WAITQ;				\ } while (0)
+value|do {					\ 	if ((thrd)->wakeup_time.tv_sec == -1)				\ 		TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);			\ 	else {								\ 		pthread_t tid = TAILQ_FIRST(&_waitingq);		\ 		while ((tid != NULL)&& (tid->wakeup_time.tv_sec != -1)&& \ 		    ((tid->wakeup_time.tv_sec< (thrd)->wakeup_time.tv_sec) ||	\ 		    ((tid->wakeup_time.tv_sec == (thrd)->wakeup_time.tv_sec)&&	\ 		    (tid->wakeup_time.tv_nsec<= (thrd)->wakeup_time.tv_nsec)))) \ 			tid = TAILQ_NEXT(tid, pqe);			\ 		if (tid == NULL)					\ 			TAILQ_INSERT_TAIL(&_waitingq,thrd,pqe);		\ 		else							\ 			TAILQ_INSERT_BEFORE(tid,thrd,pqe);		\ 	}								\ 	(thrd)->flags |= PTHREAD_FLAGS_IN_WAITQ;			\ } while (0)
 end_define
 
 begin_define
@@ -1388,6 +1388,9 @@ name|PTHREAD_CANCEL_NEEDED
 value|0x0010
 name|int
 name|cancelflags
+decl_stmt|;
+name|int
+name|suspended
 decl_stmt|;
 name|thread_continuation_t
 name|continuation
