@@ -9194,20 +9194,9 @@ expr_stmt|;
 operator|++
 name|com_events
 expr_stmt|;
-comment|/* XXX - needs to go away when alpha gets ithreads */
-ifdef|#
-directive|ifdef
-name|__alpha__
 name|schedsofttty
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|setsofttty
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 literal|0
