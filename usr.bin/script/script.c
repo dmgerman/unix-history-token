@@ -134,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -773,7 +767,7 @@ name|it_interval
 operator|.
 name|tv_sec
 operator|=
-name|SECSPERMIN
+literal|60
 operator|/
 literal|2
 expr_stmt|;
