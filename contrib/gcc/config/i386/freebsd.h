@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -48,6 +48,79 @@ name|NO_DOLLAR_IN_LABEL
 end_undef
 
 begin_comment
+comment|/* Use more efficient ``thunks'' to implement C++ vtables. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_VTABLE_THUNKS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_VTABLE_THUNKS
+value|1
+end_define
+
+begin_comment
+comment|/* Override the default comment-starter of "/".  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_COMMENT_START
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_COMMENT_START
+value|"#"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_APP_ON
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_APP_ON
+value|"#APP\n"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_APP_OFF
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_APP_OFF
+value|"#NO_APP\n"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
+end_define
+
+begin_comment
 comment|/* This is how to output an element of a case-vector that is relative.    This is only used for PIC code.  See comments by the `casesi' insn in    i386.md for an explanation of the expression this outputs. */
 end_comment
 
@@ -86,6 +159,23 @@ value|(flag_pic)
 end_define
 
 begin_comment
+comment|/* Use stabs instead of DWARF debug format.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|DBX_DEBUG
+end_define
+
+begin_comment
 comment|/* Copy this from the svr4 specifications... */
 end_comment
 
@@ -111,7 +201,7 @@ value|((n) == 0 ? 0 \  : (n) == 1 ? 2 \  : (n) == 2 ? 1 \  : (n) == 3 ? 3 \  : (
 end_define
 
 begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
+comment|/* Tell final.c that we don't need a label passed to mcount.  */
 end_comment
 
 begin_undef
@@ -130,7 +220,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%edx\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%edx\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+value|{									\   if (flag_pic)								\       fprintf (FILE, "\tcall *.mcount@GOT(%%ebx)\n");			\   else									\       fprintf (FILE, "\tcall .mcount\n");				\ }
 end_define
 
 begin_undef
@@ -175,6 +265,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|WCHAR_UNSIGNED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_UNSIGNED
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
 
@@ -211,47 +314,79 @@ name|CPP_SPEC
 value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
 end_define
 
+begin_comment
+comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (comming from svr4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SWITCH_TAKES_ARG
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SWITCH_TAKES_ARG
+parameter_list|(
+name|CHAR
+parameter_list|)
+define|\
+value|(DEFAULT_SWITCH_TAKES_ARG (CHAR) \    || (CHAR) == 'h' \    || (CHAR) == 'z' \    || (CHAR) == 'R')
+end_define
+
+begin_comment
+comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add    the magical crtbegin.o file (see crtstuff.c) which provides part  	of the support for getting C++ file-scope static object constructed  	before entering `main'. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \ 		       %{!p:%{profile:gcrt1.o%s} \ 			 %{!profile:crt1.o%s}}}} \    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+end_define
+
+begin_comment
+comment|/* Provide a ENDFILE_SPEC appropriate for FreeBSD.  Here we tack on    the magical crtend.o file (see crtstuff.c) which provides part of  	the support for getting C++ file-scope static object constructed  	before entering `main', followed by a normal "finalizer" file,  	`crtn.o'.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+define|\
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+end_define
+
+begin_comment
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling or need threads support.    (simular to the default, except no -lg, and no -p.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|LIB_SPEC
 end_undef
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* We no longer link with libc_p.a or libg.a by default. If you  * want to profile or debug the C library, please add  * -lc_p or -ggdb to LDFLAGS at the link time, respectively.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|LIB_SPEC
-define|\
-value|"%{!shared: %{mieee-fp:-lieee} %{p:-lgmon} %{pg:-lgmon} \      %{!ggdb:-lc} %{ggdb:-lg}}"
+value|"%{!shared: \    %{!pg:%{!pthread:%{!kthread:-lc} \      %{kthread:-lpthread -lc}} \      %{pthread:-lc_r}} \    %{pg:%{!pthread:%{!kthread:-lc_p} \      %{kthread:-lpthread_p -lc_p}} \      %{pthread:-lc_r_p}}}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-define|\
-value|"%{!shared: \      %{mieee-fp:-lieee} %{p:-lgmon -lc_p} %{pg:-lgmon -lc_p} \        %{!p:%{!pg:%{!g*:-lc} %{g*:-lg}}}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
@@ -267,12 +402,8 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \ 	%{static:-static}}}"
+value|"-m elf_i386 \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \         %{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
 end_define
-
-begin_comment
-comment|/* Get perform_* macros to build libgcc.a.  */
-end_comment
 
 begin_comment
 comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
@@ -296,7 +427,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|if ((LOG)!=0) \     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
+value|if ((LOG) != 0) {\     if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP)); \   }
 end_define
 
 begin_endif

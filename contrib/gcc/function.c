@@ -3651,11 +3651,7 @@ name|BLKmode
 operator|&&
 name|align
 operator|<
-operator|(
 name|BIGGEST_ALIGNMENT
-operator|/
-name|BITS_PER_UNIT
-operator|)
 condition|)
 name|abort
 argument_list|()
@@ -3668,6 +3664,7 @@ name|assign_stack_local
 argument_list|(
 name|mode
 argument_list|,
+operator|(
 name|mode
 operator|==
 name|BLKmode
@@ -3677,9 +3674,12 @@ argument_list|(
 name|size
 argument_list|,
 name|align
+operator|/
+name|BITS_PER_UNIT
 argument_list|)
 else|:
 name|size
+operator|)
 argument_list|,
 name|align
 argument_list|)

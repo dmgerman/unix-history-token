@@ -3032,6 +3032,19 @@ name|false
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'_'
+operator|&&
+name|prepends_underscore
+condition|)
+operator|++
+name|p
+expr_stmt|;
 name|sym
 operator|=
 name|symbol_hash_lookup
@@ -3041,6 +3054,7 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if

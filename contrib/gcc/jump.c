@@ -1297,6 +1297,9 @@ argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
+name|rtx
+name|set
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1364,29 +1367,27 @@ name|dispatch
 argument_list|)
 operator|!=
 literal|0
-comment|/* Don't mess with a casesi insn.  */
+comment|/* Don't mess with a casesi insn.  		     XXX according to the comment before computed_jump_p(), 		     all casesi insns should be a parallel of the jump 		     and a USE of a LABEL_REF.  */
 operator|&&
 operator|!
 operator|(
-name|GET_CODE
-argument_list|(
-name|PATTERN
+operator|(
+name|set
+operator|=
+name|single_set
 argument_list|(
 name|dispatch
 argument_list|)
-argument_list|)
-operator|==
-name|SET
+operator|)
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|GET_CODE
 argument_list|(
 name|SET_SRC
 argument_list|(
-name|PATTERN
-argument_list|(
-name|dispatch
-argument_list|)
+name|set
 argument_list|)
 argument_list|)
 operator|==
@@ -9907,6 +9908,10 @@ name|rtx
 name|copy
 init|=
 literal|0
+decl_stmt|,
+name|first_copy
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|num_insns
@@ -10360,6 +10365,7 @@ argument_list|(
 name|insn
 argument_list|)
 control|)
+block|{
 switch|switch
 condition|(
 name|GET_CODE
@@ -10695,6 +10701,17 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Record the first insn we copied.  We need it so that we can 	 scan the copied insns for new pseudo registers.  */
+if|if
+condition|(
+operator|!
+name|first_copy
+condition|)
+name|first_copy
+operator|=
+name|copy
+expr_stmt|;
+block|}
 comment|/* Now clean up by emitting a jump to the end label and deleting the jump      at the start of the loop.  */
 if|if
 condition|(
@@ -10723,6 +10740,16 @@ argument_list|)
 argument_list|,
 name|loop_start
 argument_list|)
+expr_stmt|;
+comment|/* Record the first insn we copied.  We need it so that we can 	 scan the copied insns for new pseudo registers.   This may not 	 be strictly necessary since we should have copied at least one 	 insn above.  But I am going to be safe.  */
+if|if
+condition|(
+operator|!
+name|first_copy
+condition|)
+name|first_copy
+operator|=
+name|copy
 expr_stmt|;
 name|mark_jump_label
 argument_list|(
@@ -10795,6 +10822,16 @@ name|loop_start
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Now scan from the first insn we copied to the last insn we copied      (copy) for new pseudo registers.  Do this after the code to jump to      the end label since that might create a new pseudo too.  */
+name|reg_scan_update
+argument_list|(
+name|first_copy
+argument_list|,
+name|copy
+argument_list|,
+name|max_reg
+argument_list|)
+expr_stmt|;
 comment|/* Mark the exit code as the virtual top of the converted loop.  */
 name|emit_note_before
 argument_list|(

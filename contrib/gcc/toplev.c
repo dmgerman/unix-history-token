@@ -17893,10 +17893,6 @@ name|flag_regmove
 operator|=
 literal|1
 expr_stmt|;
-name|flag_strict_aliasing
-operator|=
-literal|1
-expr_stmt|;
 block|}
 if|if
 condition|(

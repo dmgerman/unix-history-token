@@ -1946,9 +1946,9 @@ operator|>=
 literal|0
 operator|||
 operator|(
-operator|~
 name|unit
 operator|&
+operator|~
 operator|(
 operator|(
 literal|1

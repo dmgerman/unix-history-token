@@ -10044,6 +10044,22 @@ return|;
 case|case
 literal|'r'
 case|:
+comment|/* If either of the pointer (or reference) expressions we are dereferencing 	 contain a side effect, these cannot be equal. */
+if|if
+condition|(
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|arg0
+argument_list|)
+operator|||
+name|TREE_SIDE_EFFECTS
+argument_list|(
+name|arg1
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 switch|switch
 condition|(
 name|TREE_CODE
