@@ -5723,6 +5723,10 @@ literal|"channel %d pausing for %ld seconds\n"
 argument_list|,
 name|channel
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sc
 operator|->
 name|mlx_pause
@@ -5730,6 +5734,7 @@ operator|.
 name|mp_howlong
 operator|-
 name|time_second
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
