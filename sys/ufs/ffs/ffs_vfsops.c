@@ -4004,6 +4004,21 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|vinvalbuf
+argument_list|(
+name|devvp
+argument_list|,
+name|V_SAVE
+argument_list|,
+name|NOCRED
+argument_list|,
+name|td
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* XXX: see comment above VOP_OPEN. */
 ifdef|#
 directive|ifdef
