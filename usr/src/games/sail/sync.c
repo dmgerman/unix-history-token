@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sync.c	5.1 (Berkeley) %G%"
+literal|"@(#)sync.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -482,7 +482,7 @@ operator|-
 literal|1
 return|;
 name|sync_seek
-operator|==
+operator|=
 literal|0
 expr_stmt|;
 return|return
@@ -698,13 +698,13 @@ block|{
 name|int
 argument_list|(
 operator|*
-name|sig1
+name|sighup
 argument_list|)
 argument_list|()
 decl_stmt|,
 argument_list|(
 operator|*
-name|sig2
+name|sigint
 argument_list|)
 argument_list|()
 decl_stmt|;
@@ -738,7 +738,7 @@ init|=
 literal|0
 decl_stmt|;
 extern|extern errno;
-name|sig1
+name|sighup
 operator|=
 name|signal
 argument_list|(
@@ -747,7 +747,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sig2
+name|sigint
 operator|=
 name|signal
 argument_list|(
@@ -1100,8 +1100,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fputs
+name|fwrite
 argument_list|(
+name|sync_buf
+argument_list|,
+sizeof|sizeof
+expr|*
+name|sync_buf
+argument_list|,
+name|sync_bp
+operator|-
 name|sync_buf
 argument_list|,
 name|sync_fp
@@ -1162,7 +1170,7 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|sig1
+name|sighup
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1172,7 +1180,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|sig2
+name|sigint
 argument_list|)
 expr_stmt|;
 return|return
