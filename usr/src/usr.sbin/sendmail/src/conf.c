@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.36 (Berkeley) %G%"
+literal|"@(#)conf.c	8.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1462,7 +1462,7 @@ comment|/* **  SETSIGNAL -- set a signal handler ** **	This is essentially old B
 end_comment
 
 begin_function
-name|setsig_t
+name|sigfunc_t
 name|setsignal
 parameter_list|(
 name|sig
@@ -1472,7 +1472,7 @@ parameter_list|)
 name|int
 name|sig
 decl_stmt|;
-name|setsig_t
+name|sigfunc_t
 name|handler
 decl_stmt|;
 block|{

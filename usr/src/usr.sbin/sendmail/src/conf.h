@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.34 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1665,6 +1665,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIGFUNC_DEFINED
+end_define
+
+begin_comment
+comment|/* sigfunc_t already defined */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FORK
 value|fork
 end_define
@@ -2575,6 +2585,32 @@ name|st
 parameter_list|)
 value|(((st)& 0377) == 0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIGFUNC_DEFINED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*sigfunc_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
 
 begin_endif
 endif|#

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.14 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.15 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.14 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.15 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -488,6 +488,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_RCVBUF
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TcpRcvBufferSize
 argument_list|,
@@ -1358,6 +1362,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_SNDBUF
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|TcpSndBufferSize
 argument_list|,
