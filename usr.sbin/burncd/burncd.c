@@ -3181,8 +3181,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: burncd [-delmpqtv] [-f device] [-s speed] [command]"
+literal|"Usage: %s [-delmpqtv] [-f device] [-s speed] [command]"
 literal|" [command file ...]\n"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
