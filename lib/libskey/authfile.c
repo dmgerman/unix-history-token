@@ -118,6 +118,12 @@ directive|include
 file|"skey.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -524,25 +530,25 @@ name|permit_it
 init|=
 literal|0
 decl_stmt|;
+comment|/*      * If auth file not found, be backwards compatible with standard login      * and allow hard coded passwords in from anywhere.  Some may consider      * this a security hole,  but backwards compatibility is more desirable      * than others.  If you don't like it, change the return value to be zero.      */
+if|if
+condition|(
+operator|(
 name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/skey.access"
+name|_PATH_SKEYACCESS
 argument_list|,
 literal|"r"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fp
+operator|)
 operator|==
 name|NULL
 condition|)
 return|return
 literal|1
 return|;
-comment|/* XXX */
 while|while
 condition|(
 name|fgets
