@@ -5396,12 +5396,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|bpf_cdevsw
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
