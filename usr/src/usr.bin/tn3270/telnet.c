@@ -4116,6 +4116,12 @@ operator|=
 operator|&
 name|noltc2
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
 comment|/* 	     * If user hasn't specified one way or the other, 	     * then default to trapping signals. 	     */
 if|if
 condition|(
@@ -4163,6 +4169,19 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* defined(unix) */
+name|notc2
+operator|.
+name|t_intrc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(unix) */
 name|noltc2
 operator|.
 name|t_suspc
@@ -4563,12 +4582,54 @@ condition|(
 name|option
 condition|)
 block|{
+case|case
+name|TELOPT_ECHO
+case|:
 if|#
 directive|if
 name|defined
 argument_list|(
 name|TN3270
 argument_list|)
+comment|/* 	     * The following is a pain in the rear-end. 	     * Various IBM servers (some versions of Wiscnet, 	     * possibly Fibronics/Spartacus, and who knows who 	     * else) will NOT allow us to send "DO SGA" too early 	     * in the setup proceedings.  On the other hand, 	     * 4.2 servers (telnetd) won't set SGA correctly. 	     * So, we are stuck.  Empirically (but, based on 	     * a VERY small sample), the IBM servers don't send 	     * out anything about ECHO, so we postpone our sending 	     * "DO SGA" until we see "WILL ECHO" (which 4.2 servers 	     * DO send). 	     */
+block|{
+specifier|static
+name|int
+name|askedSGA
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|askedSGA
+operator|==
+literal|0
+condition|)
+block|{
+name|askedSGA
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hisopts
+index|[
+name|TELOPT_SGA
+index|]
+condition|)
+block|{
+name|willoption
+argument_list|(
+name|TELOPT_SGA
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+comment|/* Fall through */
 case|case
 name|TELOPT_EOR
 case|:
@@ -4578,9 +4639,6 @@ case|:
 endif|#
 directive|endif
 comment|/* defined(TN3270) */
-case|case
-name|TELOPT_ECHO
-case|:
 case|case
 name|TELOPT_SGA
 case|:
