@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.175 1998/09/05 14:13:06 phk Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.176 1998/09/15 10:05:18 gibbs Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * this file contains a new buffer I/O scheme implementing a coherent  * VM object and buffer cache scheme.  Pains have been taken to make  * sure that the performance degradation associated with schemes such  * as this is not realized.  *  * Author:  John S. Dyson  * Significant help during the development and debugging phases  * had been provided by David Greenman, also of the FreeBSD core team.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_bounce.h"
-end_include
 
 begin_define
 define|#
@@ -8669,26 +8663,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|BOUNCE_BUFFERS
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_BOUNCE
-condition|)
-block|{
-name|vm_bounce_free
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* call optional completion function if requested */
 if|if
 condition|(
