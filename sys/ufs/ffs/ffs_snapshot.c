@@ -6383,20 +6383,33 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d lbn %d for inum %d size %ld to blkno %lld\n"
+literal|"Copyonremove: snapino %lu lbn %ld for inum %lu size %ld to blkno %lld\n"
 argument_list|,
-literal|"Copyonremove: snapino "
-argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ip
 operator|->
 name|i_number
 argument_list|,
+operator|(
+name|long
+operator|)
 name|lbn
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|inum
 argument_list|,
 name|size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cbp
 operator|->
 name|b_blkno
@@ -7515,10 +7528,18 @@ name|printf
 argument_list|(
 literal|" lblkno %lld to blkno %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_lblkno
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cbp
 operator|->
 name|b_blkno

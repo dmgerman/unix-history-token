@@ -12492,10 +12492,18 @@ name|printf
 argument_list|(
 literal|"vm_hold_free_pages: blkno: %lld, lblkno: %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_lblkno
@@ -12621,9 +12629,8 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, "
-literal|"b_resid = %ld\nb_dev = (%d,%d), b_data = %p, "
-literal|"b_blkno = %lld, b_pblkno = %lld\n"
+literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, b_resid = %ld\n"
+literal|"b_dev = (%d,%d), b_data = %p, b_blkno = %lld, b_pblkno = %lld\n"
 argument_list|,
 name|bp
 operator|->
@@ -12659,10 +12666,18 @@ name|bp
 operator|->
 name|b_data
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_pblkno
