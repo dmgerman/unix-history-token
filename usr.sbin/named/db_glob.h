@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_glob.h,v 1.2 1994/04/12 08:57:50 vixie Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_glob.h,v 8.2 1995/06/20 23:58:50 vixie Exp $  */
 end_comment
 
 begin_comment

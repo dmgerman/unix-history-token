@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_lookup.c,v 4.9.1.5 1994/06/01 21:09:39 vixie Exp $"
+literal|"$Id: db_lookup.c,v 8.2 1995/06/29 09:26:17 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,7 @@ name|fname
 parameter_list|,
 name|insert
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -128,6 +129,7 @@ modifier|*
 modifier|*
 name|htpp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -144,6 +146,7 @@ modifier|*
 name|np
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -341,16 +344,8 @@ operator|&
 name|HASHMASK
 expr_stmt|;
 block|}
-name|c
-operator|=
-operator|*
+name|cp
 operator|--
-name|cp
-expr_stmt|;
-operator|*
-name|cp
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* 	 * Lookup this label in current hash table. 	 */
 for|for
@@ -387,13 +382,17 @@ name|n_hashval
 operator|==
 name|hval
 operator|&&
-name|strcasecmp
+name|strncasecmp
 argument_list|(
 name|name
 argument_list|,
 name|np
 operator|->
 name|n_dname
+argument_list|,
+name|cp
+operator|-
+name|name
 argument_list|)
 operator|==
 literal|0
@@ -403,11 +402,6 @@ operator|*
 name|fname
 operator|=
 name|name
-expr_stmt|;
-operator|*
-name|cp
-operator|=
-name|c
 expr_stmt|;
 return|return
 operator|(
@@ -495,11 +489,6 @@ name|fname
 operator|=
 name|name
 expr_stmt|;
-operator|*
-name|cp
-operator|=
-name|c
-expr_stmt|;
 return|return
 operator|(
 name|np
@@ -507,11 +496,6 @@ operator|)
 return|;
 block|}
 block|}
-operator|*
-name|cp
-operator|=
-name|c
-expr_stmt|;
 return|return
 operator|(
 name|parent
@@ -522,6 +506,10 @@ name|np
 operator|=
 name|savename
 argument_list|(
+name|name
+argument_list|,
+name|cp
+operator|-
 name|name
 argument_list|)
 expr_stmt|;
@@ -634,11 +622,6 @@ name|fname
 operator|=
 name|name
 expr_stmt|;
-operator|*
-name|cp
-operator|=
-name|c
-expr_stmt|;
 return|return
 operator|(
 name|np
@@ -681,8 +664,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"match(0x%x, %d, %d) %d, %d\n"
+literal|"match(0x%lx, %d, %d) %d, %d\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|dp
 operator|,
 name|class

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 1.11 1994/07/22 08:42:39 vixie Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.3 1995/06/19 20:55:40 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -427,12 +427,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DB_PRIMING
+value|0x20
+end_define
+
+begin_comment
+comment|/* is this update the result of priming? */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DB_Z_CACHE
 value|(0)
 end_define
 
 begin_comment
-comment|/* cache-zone-only db_dump()  */
+comment|/* cache-zone-only db_dump() */
 end_comment
 
 begin_define
@@ -526,6 +537,43 @@ directive|define
 name|AUTH
 value|-10
 end_define
+
+begin_comment
+comment|/*  * getnum() options  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETNUM_NONE
+value|0x00
+end_define
+
+begin_comment
+comment|/* placeholder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETNUM_SERIAL
+value|0x01
+end_define
+
+begin_comment
+comment|/* treat as serial number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETNUM_SCALED
+value|0x02
+end_define
+
+begin_comment
+comment|/* permit "k", "m" suffixes, scale result */
+end_comment
 
 end_unit
 

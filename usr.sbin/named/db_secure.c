@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_secure.c,v 1.6 1994/07/23 23:23:56 vixie Exp $"
+literal|"$Id: db_secure.c,v 8.4 1995/06/29 09:26:17 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,10 +162,12 @@ name|databuf
 modifier|*
 name|dp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|dname
 decl_stmt|,
@@ -346,7 +348,9 @@ name|match
 argument_list|(
 name|dp
 argument_list|,
-name|C_ANY
+name|zp
+operator|->
+name|z_class
 argument_list|,
 name|T_TXT
 argument_list|)
@@ -465,7 +469,7 @@ argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"build_secure_netlist (%s): Out of Memory"
 argument_list|,
@@ -508,26 +512,9 @@ name|my_addr
 argument_list|)
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"build_secure_netlist (%s): Bad address: %s\n"
-operator|,
-name|zp
-operator|->
-name|z_origin
-operator|,
-name|buf
-operator|)
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"build_secure_netlist (%s): Bad address: %s"
 argument_list|,
@@ -615,7 +602,7 @@ argument_list|)
 expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"build_secure_netlist (%s): Bad mask: %s"
 argument_list|,
@@ -663,37 +650,11 @@ name|mask
 operator|)
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"build_secure_netlist (%s): addr (%s) is not in mask (x%x)\n"
-operator|,
-name|zp
-operator|->
-name|z_origin
-operator|,
-name|inet_ntoa
-argument_list|(
-name|ntp
-operator|->
-name|my_addr
-argument_list|)
-operator|,
-name|ntp
-operator|->
-name|mask
-operator|)
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_WARNING
+name|LOG_INFO
 argument_list|,
-literal|"build_secure_netlist (%s): addr (%s) is not in mask (x%x)"
+literal|"build_secure_netlist (%s): addr (%s) is not in mask (%#lx)"
 argument_list|,
 name|zp
 operator|->
@@ -706,6 +667,9 @@ operator|->
 name|my_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|mask
@@ -749,31 +713,9 @@ name|netlistp
 argument_list|)
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"build_secure_netlist (%s): duplicate address %s\n"
-operator|,
-name|zp
-operator|->
-name|z_origin
-operator|,
-name|inet_ntoa
-argument_list|(
-name|ntp
-operator|->
-name|my_addr
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
-name|LOG_WARNING
+name|LOG_INFO
 argument_list|,
 literal|"build_secure_netlist (%s): duplicate address %s\n"
 argument_list|,
@@ -874,8 +816,11 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|"ntp x%x addr x%x mask x%x"
+literal|"ntp x%lx addr x%lx mask x%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 argument_list|,
 name|ntp
@@ -891,11 +836,16 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|" my_addr x%x"
+literal|" my_addr %#lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|my_addr
+operator|.
+name|s_addr
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -916,8 +866,11 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|" next x%x\n"
+literal|" next x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|next

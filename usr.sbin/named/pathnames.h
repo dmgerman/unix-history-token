@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)pathnames.h	5.4 (Berkeley) 6/1/90  *	$Id: pathnames.h,v 4.9.1.5 1994/04/09 03:43:17 vixie Exp $  */
+comment|/*  *	@(#)pathnames.h	5.4 (Berkeley) 6/1/90  *	$Id: pathnames.h,v 8.1 1994/12/15 06:24:14 vixie Exp $  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 1.7 1994/06/11 22:04:46 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.3 1995/06/19 20:55:40 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ name|DECL
 name|struct
 name|qinfo
 modifier|*
-name|qhead
+name|nsqhead
 name|INIT
 parameter_list|(
 name|QINFO_NULL
@@ -124,21 +124,6 @@ name|NULL
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* next forwarded query id */
-end_comment
-
-begin_decl_stmt
-name|DECL
-name|int
-name|nsid
-name|INIT
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* datagram socket */
@@ -222,6 +207,62 @@ literal|60
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLEANCACHE
+end_ifdef
+
+begin_comment
+comment|/* What's the minimum interval between cache cleanings? */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|cache_interval
+name|INIT
+argument_list|(
+literal|60
+operator|*
+literal|60
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSTATS
+end_ifdef
+
+begin_comment
+comment|/* What's the minimum interval between stats output? */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|stats_interval
+name|INIT
+argument_list|(
+literal|60
+operator|*
+literal|60
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* need to reload secondary zone(s) */
@@ -311,6 +352,36 @@ end_endif
 
 begin_comment
 comment|/* ALLOW_UPDATES */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSTATS
+end_ifdef
+
+begin_comment
+comment|/* need to exit  	 * set by shutdown signal handler 	 *  (onintr) 	 */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|needToExit
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XSTATS */
 end_comment
 
 begin_ifdef
@@ -856,6 +927,7 @@ end_ifdef
 
 begin_function_decl
 name|DECL
+specifier|const
 name|char
 modifier|*
 name|statsfile
@@ -873,6 +945,7 @@ end_else
 
 begin_function_decl
 name|DECL
+specifier|const
 name|char
 modifier|*
 name|statsfile
@@ -890,6 +963,7 @@ end_endif
 
 begin_decl_stmt
 name|DECL
+specifier|const
 name|char
 name|sendtoStr
 index|[]
@@ -926,6 +1000,47 @@ name|MAX_XFERS_RUNNING
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* max number of transfers to any given name server */
+end_comment
+
+begin_function_decl
+name|DECL
+name|int
+name|max_xfers_per_ns
+name|INIT
+parameter_list|(
+name|MAX_XFERS_PER_NS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVQ
+end_ifndef
+
+begin_comment
+comment|/* should IQUERY be answered bogusly rather than with NOTIMPL? */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|fake_iquery
+name|INIT
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 4.9.1.19 1994/07/23 23:23:56 vixie Exp $"
+literal|"$Id: ns_main.c,v 8.8 1995/06/29 09:26:17 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,24 +134,6 @@ begin_comment
 comment|/* !SYSV */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|TIME_H_INCLUDED
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -193,6 +175,58 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|TIME_H_INCLUDED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -311,6 +345,13 @@ init|=
 literal|8
 operator|*
 literal|1024
+decl_stmt|,
+comment|/* TCP send window size */
+name|sbufsize
+init|=
+literal|16
+operator|*
+literal|1024
 decl_stmt|;
 end_decl_stmt
 
@@ -326,12 +367,11 @@ begin_decl_stmt
 specifier|static
 name|u_int16_t
 name|local_ns_port
+decl_stmt|,
+comment|/* our service port */
+name|nsid_state
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* our service port */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -651,6 +691,15 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|POSIX_SIGNALS
+name|struct
+name|sigaction
+name|sact
+decl_stmt|;
+else|#
+directive|else
 ifndef|#
 directive|ifndef
 name|SYSV
@@ -658,6 +707,8 @@ name|struct
 name|sigvec
 name|vec
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|fd_set
@@ -722,6 +773,31 @@ operator|=
 name|htons
 argument_list|(
 name|NAMESERVER_PORT
+argument_list|)
+expr_stmt|;
+comment|/* BSD has a better random number generator but it's not clear 	 * that we need it here. 	 */
+name|gettime
+argument_list|(
+operator|&
+name|tt
+argument_list|)
+expr_stmt|;
+name|srand
+argument_list|(
+operator|(
+operator|(
+name|unsigned
+operator|)
+name|getpid
+argument_list|()
+operator|)
+operator|+
+operator|(
+name|unsigned
+operator|)
+name|tt
+operator|.
+name|tv_usec
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Save start and extent of argv for ns_setproctitle(). 	*/
@@ -1171,8 +1247,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\n"
+literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -1272,6 +1351,9 @@ name|sin_port
 operator|=
 name|local_ns_port
 expr_stmt|;
+name|nsid_init
+argument_list|()
+expr_stmt|;
 comment|/* 	** Open stream port. 	*/
 for|for
 control|(
@@ -1343,7 +1425,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"setsockopt(vs, reuseaddr): %m"
 argument_list|)
@@ -1401,7 +1483,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"There may be a name server already running"
 argument_list|)
@@ -1740,6 +1822,113 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|POSIX_SIGNALS
+argument_list|)
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sact
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sact
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sact
+operator|.
+name|sa_handler
+operator|=
+name|maint_alarm
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sact
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|sact
+operator|.
+name|sa_mask
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|sact
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|sact
+operator|.
+name|sa_handler
+operator|=
+name|endxfer
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sact
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|sact
+operator|.
+name|sa_mask
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGCHLD
+argument_list|,
+operator|&
+name|sact
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYSV
 argument_list|)
 operator|(
@@ -1749,6 +1938,13 @@ name|signal
 argument_list|(
 name|SIGCLD
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|endxfer
 argument_list|)
 expr_stmt|;
@@ -1848,6 +2044,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SYSV */
+endif|#
+directive|endif
+comment|/* POSIX_SIGNALS */
 operator|(
 name|void
 operator|)
@@ -1878,6 +2077,22 @@ ifdef|#
 directive|ifdef
 name|ALLOW_UPDATES
 comment|/* Catch SIGTERM so we can dump the database upon shutdown if it            has changed since it was last dumped/booted */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|onintr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|XSTATS
+comment|/* Catch SIGTERM so we can write stats before exiting. */
 operator|(
 name|void
 operator|)
@@ -2123,9 +2338,17 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYSV
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hpux
+argument_list|)
 name|setpgrp
 argument_list|()
 expr_stmt|;
@@ -2280,8 +2503,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\n"
+literal|"%ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -2327,7 +2553,7 @@ expr_stmt|;
 comment|/* Bulletproofing */
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"Return from getdtablesize()> FD_SETSIZE"
 argument_list|)
@@ -2485,6 +2711,26 @@ block|}
 endif|#
 directive|endif
 comment|/* ALLOW_UPDATES */
+ifdef|#
+directive|ifdef
+name|XSTATS
+if|if
+condition|(
+name|needToExit
+condition|)
+block|{
+name|ns_logstats
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* XSTATS */
 if|if
 condition|(
 name|needreload
@@ -2658,10 +2904,7 @@ condition|(
 name|n
 operator|<
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|errno
 operator|!=
 name|EINTR
@@ -2679,7 +2922,6 @@ argument_list|(
 literal|60
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -2725,7 +2967,7 @@ literal|0
 init|;
 name|udpcnt
 operator|<
-literal|25
+literal|42
 condition|;
 name|udpcnt
 operator|++
@@ -2750,6 +2992,10 @@ name|dqp
 operator|->
 name|dq_dfd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -2775,6 +3021,29 @@ operator|<
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SPURIOUS_ECONNREFUSED
+argument_list|)
+if|if
+condition|(
+operator|(
+name|n
+operator|<
+literal|0
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ECONNREFUSED
+operator|)
+condition|)
+break|break;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2792,7 +3061,7 @@ condition|)
 break|break;
 name|syslog
 argument_list|(
-name|LOG_WARNING
+name|LOG_INFO
 argument_list|,
 literal|"recvfrom: %m"
 argument_list|)
@@ -2841,9 +3110,8 @@ name|dq_dfd
 operator|,
 name|n
 operator|,
-name|ctime
+name|ctimel
 argument_list|(
-operator|&
 name|tt
 operator|.
 name|tv_sec
@@ -2860,9 +3128,11 @@ name|debug
 operator|>=
 literal|10
 condition|)
-name|fp_query
+name|fp_nquery
 argument_list|(
 name|buf
+argument_list|,
+name|n
 argument_list|,
 name|ddt
 argument_list|)
@@ -3056,7 +3326,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_WARNING
+name|LOG_INFO
 argument_list|,
 literal|"accept: %m"
 argument_list|)
@@ -3083,7 +3353,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"fcntl(rfd, F_GETFL): %m"
 argument_list|)
@@ -3116,7 +3386,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"fcntl(rfd, NONBLOCK): %m"
 argument_list|)
@@ -3167,7 +3437,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"getsockopt(rfd, IP_OPTIONS): %m"
 argument_list|)
@@ -3219,7 +3489,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 literal|"rcvd IP_OPTIONS from [%s].%d (ignored)"
 argument_list|,
@@ -3259,7 +3529,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"setsockopt(!IP_OPTIONS): %m"
 argument_list|)
@@ -3277,6 +3547,51 @@ block|}
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|rfd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_SNDBUF
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sbufsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sbufsize
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"setsockopt(rfd, SO_SNDBUF, %d): %m"
+argument_list|,
+name|sbufsize
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|my_close
+argument_list|(
+name|rfd
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|setsockopt
@@ -3305,7 +3620,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"setsockopt(rfd, KEEPALIVE): %m"
 argument_list|)
@@ -3444,7 +3759,6 @@ if|if
 condition|(
 name|streamq
 condition|)
-block|{
 name|dprintf
 argument_list|(
 literal|3
@@ -3452,13 +3766,15 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"streamq = 0x%x\n"
+literal|"streamq = 0x%lx\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|streamq
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|sp
@@ -3501,8 +3817,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"sp x%x rfd %d size %d time %d next x%x\n"
+literal|"sp x%lx rfd %d size %d time %d next x%lx\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|,
 name|sp
@@ -3517,6 +3836,9 @@ name|sp
 operator|->
 name|s_time
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|s_next
@@ -3530,16 +3852,22 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"\tbufsize %d buf x%x bufp x%x\n"
+literal|"\tbufsize %d buf x%lx bufp x%lx\n"
 operator|,
 name|sp
 operator|->
 name|s_bufsize
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|s_buf
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sp
 operator|->
 name|s_bufp
@@ -3925,7 +4253,11 @@ name|hp
 operator|->
 name|ra
 operator|=
-literal|1
+operator|(
+name|NoRecurse
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 name|hp
 operator|->
@@ -4139,7 +4471,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+literal|32768
 index|]
 decl_stmt|,
 modifier|*
@@ -4164,9 +4496,7 @@ operator|.
 name|ifc_len
 operator|=
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
 expr_stmt|;
 name|ifc
 operator|.
@@ -4257,7 +4587,7 @@ name|ifc
 operator|.
 name|ifc_len
 expr_stmt|;
-comment|/*skip over if's with big ifr_addr's */
+comment|/* skip over if's with big ifr_addr's */
 for|for
 control|(
 name|cp
@@ -4368,7 +4698,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"get interface addr: %m"
 argument_list|)
@@ -4681,7 +5011,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"get netmask: %m"
 argument_list|)
@@ -4756,7 +5086,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"get interface flags: %m"
 argument_list|)
@@ -4882,7 +5212,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"get dst addr: %m"
 argument_list|)
@@ -4990,6 +5320,7 @@ argument_list|(
 name|my_generation
 argument_list|)
 expr_stmt|;
+comment|/* With apologies to The Who. */
 comment|/* 	 * Create separate qdatagram structure for socket 	 * wildcard address. 	 */
 if|if
 condition|(
@@ -5330,10 +5661,16 @@ name|ddt
 argument_list|,
 literal|"addr x%lx mask x%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|addr
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntp
 operator|->
 name|mask
@@ -5485,7 +5822,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"setsockopt(dqp->dq_dfd, reuseaddr): %m"
 argument_list|)
@@ -5515,6 +5852,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_RCVBUF
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|n
 argument_list|,
@@ -5593,7 +5934,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"fcntl(dfd, F_GETFL): %m"
 argument_list|)
@@ -5621,7 +5962,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"fcntl(dqp->dq_dfd, non-blocking): %m"
 argument_list|)
@@ -5662,9 +6003,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"bind(dfd=%d, [%s].%d): %m - exiting"
+literal|"bind(dfd=%d, [%s].%d): %m"
 argument_list|,
 name|dqp
 operator|->
@@ -5692,6 +6033,13 @@ name|defined
 argument_list|(
 name|sun
 argument_list|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"exiting"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -5731,6 +6079,13 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|onhup
 argument_list|)
 expr_stmt|;
@@ -5776,6 +6131,13 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|maint_alarm
 argument_list|)
 expr_stmt|;
@@ -5825,6 +6187,38 @@ begin_comment
 comment|/* ALLOW_UPDATES */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSTATS
+end_ifdef
+
+begin_comment
+comment|/*  * Signal handler to write log information  */
+end_comment
+
+begin_function
+specifier|static
+name|SIG_FN
+name|onintr
+parameter_list|()
+block|{
+name|needToExit
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XSTATS */
+end_comment
+
 begin_comment
 comment|/*  * Signal handler to schedule a data base dump.  Do this instead of dumping the  * data base immediately, to avoid seeing it in a possibly inconsistent state  * (due to updates), and to avoid long disk I/O delays at signal-handler  * level  */
 end_comment
@@ -5853,6 +6247,13 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|setdumpflg
 argument_list|)
 expr_stmt|;
@@ -5934,7 +6335,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_WARNING
+name|LOG_NOTICE
 argument_list|,
 literal|"can't open debug file %s: %m"
 argument_list|,
@@ -5952,7 +6353,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SYSV
+name|HAVE_SETVBUF
 argument_list|)
 name|setvbuf
 argument_list|(
@@ -5997,7 +6398,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_WARNING
+name|LOG_INFO
 argument_list|,
 literal|"fcntl(ddt, F_GETFL): %m"
 argument_list|)
@@ -6064,6 +6465,13 @@ name|signal
 argument_list|(
 name|SIGUSR1
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|setIncrDbgFlg
 argument_list|)
 expr_stmt|;
@@ -6145,6 +6553,13 @@ name|signal
 argument_list|(
 name|SIGUSR2
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|setNoDbgFlg
 argument_list|)
 expr_stmt|;
@@ -6205,6 +6620,13 @@ name|signal
 argument_list|(
 name|SIGWINCH
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|setQrylogFlg
 argument_list|)
 expr_stmt|;
@@ -6273,6 +6695,13 @@ name|signal
 argument_list|(
 name|SIGIOT
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|setstatsflg
 argument_list|)
 expr_stmt|;
@@ -6314,6 +6743,13 @@ name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|setchkptflg
 argument_list|)
 expr_stmt|;
@@ -6365,6 +6801,13 @@ name|signal
 argument_list|(
 name|SIGSYS
 argument_list|,
+operator|(
+name|SIG_FN
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|sigprof
 argument_list|)
 expr_stmt|;
@@ -6482,8 +6925,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"sqadd(x%x)\n"
+literal|"sqadd(x%lx)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|sqp
 operator|)
 argument_list|)
@@ -6536,8 +6982,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"sqrm(%#x, %d ) rfcnt=%d\n"
+literal|"sqrm(%#lx, %d) rfcnt=%d\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|,
 name|qp
@@ -6798,7 +7247,7 @@ condition|)
 continue|continue;
 name|syslog
 argument_list|(
-name|LOG_CRIT
+name|LOG_NOTICE
 argument_list|,
 literal|"interface [%s] missing; deleting"
 argument_list|,
@@ -7185,6 +7634,50 @@ name|htonl
 argument_list|(
 name|IN_CLASSC_NET
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * These are here in case we ever want to get more clever, like perhaps  * using a bitmap to keep track of outstanding queries and a random  * allocation scheme to make it a little harder to predict them.  Note  * that the resolver will need the same protection so the cleverness  * should be put there rather than here; this is just an interface layer.  */
+end_comment
+
+begin_function
+name|void
+name|nsid_init
+parameter_list|()
+block|{
+name|nsid_state
+operator|=
+name|res_randomid
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|u_int16_t
+name|nsid_next
+parameter_list|()
+block|{
+if|if
+condition|(
+name|nsid_state
+operator|==
+literal|65535
+condition|)
+name|nsid_state
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|nsid_state
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|nsid_state
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 1.12 1994/07/23 23:23:56 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.2 1995/06/19 20:55:40 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -184,12 +184,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_XFERS_PERNS
+name|MAX_XFERS_PER_NS
 value|2
 end_define
 
 begin_comment
 comment|/* max # of xfers per peer nameserver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFER_BUFSIZE
+value|(16*1024)
+end_define
+
+begin_comment
+comment|/* arbitrary but bigger than most MTU's */
 end_comment
 
 begin_define
@@ -335,9 +346,55 @@ decl_stmt|;
 comment|/* list of secure networks for zone */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+comment|/* XXX - this will have to move to the name when we do !SOA notify */
+name|struct
+name|notify
+modifier|*
+name|z_notifylist
+decl_stmt|;
+comment|/* list of servers we should notify */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+end_ifdef
+
+begin_struct
+struct|struct
+name|notify
+block|{
+name|struct
+name|in_addr
+name|addr
+decl_stmt|;
+comment|/* of server */
+name|time_t
+name|last
+decl_stmt|;
+comment|/* when they asked */
+name|struct
+name|notify
+modifier|*
+name|next
+decl_stmt|;
+comment|/* XXX - this will need a type field when we do !SOA notify */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* zone types (z_type) */
@@ -782,7 +839,15 @@ decl_stmt|;
 comment|/* domain for servers we are querying */
 endif|#
 directive|endif
-comment|/* LAME_DELEGATION */
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+name|int
+name|q_notifyzone
+decl_stmt|;
+comment|/* zone which needs a sysnotify() 					 * when the reply to this comes in. 					 */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1110,7 +1175,21 @@ block|,
 comment|/* sent them a FORMERR */
 name|nssSendtoErr
 block|,
-comment|/* error in sendto(2) */
+comment|/* error in sendto */
+ifdef|#
+directive|ifdef
+name|XSTATS
+name|nssNotNsQ
+block|,
+comment|/* query received from remote port != ns_port */
+name|nssSentNaAns
+block|,
+comment|/* sent them a non autoritative answer */
+name|nssSentNXD
+block|,
+comment|/* sent them a negative response */
+endif|#
+directive|endif
 name|nssLast
 block|}
 enum|;
@@ -1341,7 +1420,7 @@ name|lev
 parameter_list|,
 name|args
 parameter_list|)
-value|((debug>= lev)&& fprintf args)
+value|(ddt&& (debug>= lev)&& fprintf args)
 end_define
 
 begin_else
