@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)leave.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)leave.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,20 +82,52 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
+
+begin_decl_stmt
+name|void
+name|doalarm
+name|__P
+argument_list|(
+operator|(
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * leave [[+]hhmm]  *  * Reminds you when you have to leave.  * Leave prompts for input and goes away if you hit return.  * It nags you like a mother hen.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -182,6 +228,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cp
+operator|==
+name|NULL
+operator|||
 operator|*
 name|cp
 operator|==
@@ -339,6 +389,7 @@ name|tm_hour
 operator|>
 name|hours
 operator|||
+operator|(
 name|t
 operator|->
 name|tm_hour
@@ -350,6 +401,7 @@ operator|<=
 name|t
 operator|->
 name|tm_min
+operator|)
 condition|)
 name|usage
 argument_list|()
@@ -394,20 +446,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|doalarm
-argument_list|(
-argument|secs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|secs
+parameter_list|)
 name|u_int
 name|secs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -429,10 +476,12 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+operator|(
 name|pid
 operator|=
 name|fork
 argument_list|()
+operator|)
 condition|)
 block|{
 operator|(
@@ -662,14 +711,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -684,7 +732,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
