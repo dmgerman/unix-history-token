@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -37,7 +37,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * File status flags: these are used by open(2), fcntl(2).  * They are also used in the kernel file structure,  * which is a superset of the open/fcntl flags.  * Open/fcntl flags begin with O_; kernel-internal-only  * flags begin with F.  */
+comment|/*  * File status flags: these are used by open(2), fcntl(2).  * They are also used (indirectly) in the kernel file structure f_flags,  * which is a superset of the open/fcntl flags.  Open flags and f_flags  * are inter-convertible using OFLAGS(fflags) and FFLAGS(oflags).  * Open/fcntl flags begin with O_; kernel-internal flags begin with F.  */
 end_comment
 
 begin_comment
@@ -360,12 +360,20 @@ name|FAPPEND
 value|O_APPEND
 end_define
 
+begin_comment
+comment|/* kernel/compat */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|FASYNC
 value|O_ASYNC
 end_define
+
+begin_comment
+comment|/* kernel/compat */
+end_comment
 
 begin_define
 define|#
@@ -374,6 +382,10 @@ name|FFSYNC
 value|O_FSYNC
 end_define
 
+begin_comment
+comment|/* kernel */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -381,12 +393,31 @@ name|FNONBLOCK
 value|O_NONBLOCK
 end_define
 
+begin_comment
+comment|/* kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNDELAY
+value|O_NONBLOCK
+end_define
+
+begin_comment
+comment|/* compat */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|O_NDELAY
 value|O_NONBLOCK
 end_define
+
+begin_comment
+comment|/* compat */
+end_comment
 
 begin_endif
 endif|#
