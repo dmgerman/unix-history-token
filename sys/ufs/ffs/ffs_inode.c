@@ -1450,6 +1450,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|oip
 operator|->
 name|i_flag
