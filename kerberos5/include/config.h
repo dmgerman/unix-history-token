@@ -3436,17 +3436,6 @@ comment|/* #undef KASERVER_DB */
 end_comment
 
 begin_comment
-comment|/* Define if you have the krb4 package. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KRB4
-value|1
-end_define
-
-begin_comment
 comment|/* Enable Kerberos 5 support in applications. */
 end_comment
 
