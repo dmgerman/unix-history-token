@@ -194,7 +194,7 @@ value|500
 end_define
 
 begin_comment
-comment|/* max beacon interval (ms) */
+comment|/* max beacon interval (TU's) */
 end_comment
 
 begin_define
@@ -205,7 +205,7 @@ value|25
 end_define
 
 begin_comment
-comment|/* min beacon interval */
+comment|/* min beacon interval (TU's) */
 end_comment
 
 begin_define
@@ -216,7 +216,7 @@ value|100
 end_define
 
 begin_comment
-comment|/* default beacon interval */
+comment|/* default beacon interval (TU's) */
 end_comment
 
 begin_define
@@ -240,6 +240,26 @@ end_define
 begin_comment
 comment|/* maximum saved packets */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MS_TO_TU
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) * 1000) / 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_TU_TO_MS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) * 1024) / 1000)
+end_define
 
 begin_struct_decl
 struct_decl|struct
