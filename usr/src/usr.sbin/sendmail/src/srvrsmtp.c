@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.3 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.4 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.3 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.4 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -610,7 +610,11 @@ operator|->
 name|e_flags
 operator|&=
 operator|~
+operator|(
 name|EF_VRFYONLY
+operator||
+name|EF_GLOBALERRS
+operator|)
 expr_stmt|;
 comment|/* setup for the read */
 name|e
@@ -686,7 +690,13 @@ if|if
 condition|(
 name|LogLevel
 operator|>
+operator|(
+name|gotmail
+condition|?
 literal|1
+else|:
+literal|19
+operator|)
 condition|)
 name|syslog
 argument_list|(
@@ -1057,6 +1067,13 @@ name|message
 argument_list|(
 literal|"503 Sender already specified"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|InChild
+condition|)
+name|finis
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -1892,6 +1909,10 @@ name|SmtpPhase
 operator|=
 literal|"collect"
 expr_stmt|;
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
 name|collect
 argument_list|(
 name|TRUE
@@ -1900,13 +1921,6 @@ name|doublequeue
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|e
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
 expr_stmt|;
 if|if
 condition|(
@@ -1986,6 +2000,10 @@ operator|->
 name|e_to
 operator|=
 name|NULL
+expr_stmt|;
+name|SuprErrs
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* save statistics */
 name|markstats
