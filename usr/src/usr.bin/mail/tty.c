@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.8 (Berkeley) %G%"
+literal|"@(#)tty.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,12 +220,14 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|gtty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|stdin
 argument_list|)
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|ttybuf
