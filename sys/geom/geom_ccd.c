@@ -943,7 +943,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * putccdbuf() -	Allocate and zero a ccd buffer.  *  *	This routine is called at splbio().  */
+comment|/*  * putccdbuf() -	Free a ccd buffer.  *  *	This routine is called at splbio().  */
 end_comment
 
 begin_function
