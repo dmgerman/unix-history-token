@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ohci.c,v 1.144 2003/11/23 19:18:06 augustss Exp $  *	$NetBSD: ohci.c,v 1.145 2003/11/23 19:20:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.146 2003/12/29 08:17:10 toshii Exp $  */
 end_comment
 
 begin_include
@@ -4160,7 +4160,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_ctrl_head
+name|sc_bulk_head
 argument_list|)
 expr_stmt|;
 name|bad2
@@ -4171,7 +4171,7 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|sc_bulk_head
+name|sc_ctrl_head
 argument_list|)
 expr_stmt|;
 name|bad1
@@ -4736,6 +4736,32 @@ name|desca
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The AMD756 requires a delay before re-reading the register, 	 * otherwise it will occasionally report 0 ports. 	 */
+name|sc
+operator|->
+name|sc_noport
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|10
+operator|&&
+name|sc
+operator|->
+name|sc_noport
+operator|==
+literal|0
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|usb_delay_ms
 argument_list|(
 operator|&
@@ -4760,6 +4786,7 @@ name|OHCI_RH_DESCRIPTOR_A
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
@@ -12957,7 +12984,11 @@ argument_list|)
 case|:
 if|if
 condition|(
+operator|(
 name|value
+operator|&
+literal|0xff
+operator|)
 operator|!=
 literal|0
 condition|)
