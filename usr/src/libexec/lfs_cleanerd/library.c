@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.6 (Berkeley) %G%"
+literal|"@(#)library.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2530,6 +2530,16 @@ argument_list|)
 operator|)
 operator|<=
 literal|0
+operator|||
+name|nblocks
+operator|>
+name|fsp
+operator|->
+name|fi_lfs
+operator|.
+name|lfs_ssize
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
