@@ -875,7 +875,7 @@ name|uz_ipers
 condition|)
 name|panic
 argument_list|(
-literal|"zone: %s(%p) slab %p freelist %i out of range 0-%d\n"
+literal|"zone: %s(%p) slab %p freelist %d out of range 0-%d\n"
 argument_list|,
 name|zone
 operator|->
