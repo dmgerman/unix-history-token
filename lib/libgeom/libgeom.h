@@ -532,9 +532,7 @@ name|gctl_req
 modifier|*
 name|gctl_get_handle
 parameter_list|(
-name|enum
-name|gctl_request
-name|req
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
