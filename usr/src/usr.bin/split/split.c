@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)split.c	4.6 (Berkeley) %G%"
+literal|"@(#)split.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,17 +96,6 @@ end_define
 
 begin_comment
 comment|/* general error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ERREXIT
-value|0
-end_define
-
-begin_comment
-comment|/* error exit */
 end_comment
 
 begin_define
@@ -225,7 +214,6 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
-comment|/* general counter */
 name|long
 name|atol
 parameter_list|()
@@ -447,7 +435,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -505,6 +493,11 @@ expr_stmt|;
 name|split2
 argument_list|()
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -512,30 +505,28 @@ begin_comment
 comment|/*  * split1 --  *	split by bytes  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|split1
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|long
 name|bcnt
-block|;
-comment|/* byte counter */
+decl_stmt|;
 specifier|register
 name|int
 name|dist
-block|,
-comment|/* buffer offset */
+decl_stmt|,
 name|len
-block|;
-comment|/* read length */
+decl_stmt|;
 specifier|register
 name|char
-operator|*
+modifier|*
 name|C
-block|;
-comment|/* tmp pointer into buffer */
+decl_stmt|;
 for|for
 control|(
 name|bcnt
@@ -576,7 +567,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 default|default:
@@ -594,9 +585,6 @@ operator|=
 name|YES
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|bcnt
@@ -612,6 +600,8 @@ name|bytecnt
 operator|-
 name|bcnt
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofd
@@ -620,6 +610,11 @@ name|bfr
 argument_list|,
 name|dist
 argument_list|)
+operator|!=
+name|dist
+condition|)
+name|wrerror
+argument_list|()
 expr_stmt|;
 name|len
 operator|-=
@@ -649,6 +644,8 @@ block|{
 name|newfile
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofd
@@ -660,6 +657,11 @@ name|int
 operator|)
 name|bytecnt
 argument_list|)
+operator|!=
+name|bytecnt
+condition|)
+name|wrerror
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -670,6 +672,8 @@ block|{
 name|newfile
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofd
@@ -678,6 +682,11 @@ name|C
 argument_list|,
 name|len
 argument_list|)
+operator|!=
+name|len
+condition|)
+name|wrerror
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -696,6 +705,8 @@ name|bcnt
 operator|+=
 name|len
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofd
@@ -704,39 +715,46 @@ name|bfr
 argument_list|,
 name|len
 argument_list|)
+operator|!=
+name|len
+condition|)
+name|wrerror
+argument_list|()
 expr_stmt|;
 block|}
-end_if
+block|}
+block|}
+end_block
 
 begin_comment
-unit|} }
 comment|/*  * split2 --  *	split by lines  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|split2
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|char
-operator|*
+modifier|*
 name|Ce
-block|,
-comment|/* start/end pointers */
-operator|*
+decl_stmt|,
+modifier|*
 name|Cs
-block|;
+decl_stmt|;
 specifier|register
 name|long
 name|lcnt
-block|;
-comment|/* line counter */
+decl_stmt|;
 specifier|register
 name|int
 name|len
-block|;
-comment|/* read length */
+decl_stmt|,
+name|bcnt
+decl_stmt|;
 for|for
 control|(
 name|lcnt
@@ -775,7 +793,11 @@ argument_list|(
 literal|"read"
 argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 default|default:
 if|if
 condition|(
@@ -791,9 +813,6 @@ operator|=
 name|YES
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|Cs
@@ -821,23 +840,29 @@ operator|==
 name|numlines
 condition|)
 block|{
+name|bcnt
+operator|=
+name|Ce
+operator|-
+name|Cs
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofd
 argument_list|,
 name|Cs
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|Ce
-operator|-
-name|Cs
+name|bcnt
 argument_list|)
-operator|+
-literal|1
-argument_list|)
+operator|!=
+name|bcnt
+condition|)
+name|wrerror
+argument_list|()
 expr_stmt|;
 name|lcnt
 operator|=
@@ -862,59 +887,64 @@ operator|=
 name|NO
 expr_stmt|;
 block|}
-end_for
-
-begin_if
 if|if
 condition|(
 name|Cs
 operator|<
 name|Ce
 condition|)
+block|{
+name|bcnt
+operator|=
+name|Ce
+operator|-
+name|Cs
+expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|ofd
 argument_list|,
 name|Cs
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|Ce
-operator|-
-name|Cs
+name|bcnt
 argument_list|)
-argument_list|)
+operator|!=
+name|bcnt
+condition|)
+name|wrerror
+argument_list|()
 expr_stmt|;
-end_if
+block|}
+block|}
+block|}
+end_block
 
 begin_comment
-unit|} }
 comment|/*  * newfile --  *	open a new file  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|newfile
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|static
 name|long
 name|fnum
-block|;
-comment|/* file name counter */
+decl_stmt|;
 specifier|static
 name|short
 name|defname
-block|;
-comment|/* using default name, "x" */
+decl_stmt|;
 specifier|static
 name|char
-operator|*
+modifier|*
 name|fpnt
-block|;
-comment|/* output file name pointer */
+decl_stmt|;
 if|if
 condition|(
 name|ofd
@@ -944,9 +974,6 @@ operator|=
 name|NO
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 name|fname
@@ -967,9 +994,6 @@ operator|=
 name|YES
 expr_stmt|;
 block|}
-end_else
-
-begin_expr_stmt
 name|ofd
 operator|=
 name|fileno
@@ -977,27 +1001,18 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
+block|}
 comment|/* 	 * hack to increase max files; original code just wandered through 	 * magic characters.  Maximum files is 3 * 26 * 26 == 2028 	 */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|MAXFILES
 value|676
-end_define
-
-begin_expr_stmt
-unit|if
-operator|(
+if|if
+condition|(
 name|fnum
 operator|==
 name|MAXFILES
-operator|)
+condition|)
 block|{
 if|if
 condition|(
@@ -1021,7 +1036,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1031,17 +1046,12 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fnum
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|} 	fpnt
+block|}
+name|fpnt
 index|[
 literal|0
 index|]
@@ -1052,9 +1062,6 @@ literal|26
 operator|+
 literal|'a'
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fpnt
 index|[
 literal|1
@@ -1066,15 +1073,9 @@ literal|26
 operator|+
 literal|'a'
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|++
 name|fnum
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1103,15 +1104,14 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-end_if
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * usage --  *	print usage message and die  */
 end_comment
 
 begin_macro
-unit|static
 name|usage
 argument_list|()
 end_macro
@@ -1127,7 +1127,31 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ERREXIT
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * wrerror --  *	write error  */
+end_comment
+
+begin_macro
+name|wrerror
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|perror
+argument_list|(
+literal|"split: write"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
