@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.55 (Berkeley) %G%"
+literal|"@(#)ls.c	5.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,7 +813,7 @@ name|f_recursive
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If options require that the files be stat'ed. */
+comment|/* If not -F, -l -s or -t options, don't require stat information. */
 if|if
 condition|(
 operator|!
@@ -831,6 +831,22 @@ condition|)
 name|fts_options
 operator||=
 name|FTS_NOSTAT
+expr_stmt|;
+comment|/* 	 * If not -F, -d or -l options, follow any symbolic links listed on 	 * the command line. 	 */
+if|if
+condition|(
+operator|!
+name|f_longform
+operator|&&
+operator|!
+name|f_listdir
+operator|&&
+operator|!
+name|f_type
+condition|)
+name|fts_options
+operator||=
+name|FTS_COMFOLLOW
 expr_stmt|;
 comment|/* Select a sort function. */
 if|if
@@ -1232,7 +1248,7 @@ name|entries
 decl_stmt|,
 name|maxlen
 decl_stmt|;
-comment|/* 	 * If list is NULL there are two possibilities: that the parent 	 * directory p has no children, or that fts_children() returned an 	 * error.  We ignore the error case since, it will be replicated 	 * on the next call to fts_read() on the post-order visit to the 	 * directory p, and will be signalled in traverse(). 	 */
+comment|/* 	 * If list is NULL there are two possibilities: that the parent 	 * directory p has no children, or that fts_children() returned an 	 * error.  We ignore the error case since it will be replicated 	 * on the next call to fts_read() on the post-order visit to the 	 * directory p, and will be signalled in traverse(). 	 */
 if|if
 condition|(
 name|list
