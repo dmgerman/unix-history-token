@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)anyread.c	5.1 (Berkeley) %G%"
+literal|"@(#)anyread.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/*******  *	anyread		check if anybody can read  *	return 0 ok: FAIL not ok  */
+comment|/*  *	anyread		check if anybody can read  *	return SUCCESS ok: FAIL not ok  */
 end_comment
 
 begin_macro
@@ -74,14 +74,12 @@ argument_list|,
 operator|&
 name|s
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 comment|/* for security check a non existant file is readable */
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 if|if
 condition|(
@@ -95,14 +93,10 @@ name|ANYREAD
 operator|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assert.c	5.2 (Berkeley) %G%"
+literal|"@(#)assert.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cfgets.c	5.1 (Berkeley) %G%"
+literal|"@(#)cfgets.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ name|EOF
 condition|)
 name|c
 operator|=
-name|fgetc
+name|getc
 argument_list|(
 name|fil
 argument_list|)
@@ -213,13 +213,11 @@ break|break;
 block|}
 block|}
 return|return
-operator|(
 name|i
 condition|?
 name|buf
 else|:
 name|NULL
-operator|)
 return|;
 block|}
 end_function

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chkpth.c	5.1 (Berkeley) %G%"
+literal|"@(#)chkpth.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,10 +19,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Doug Kingston, 30 July 82 to fix handling of the "userpath" structures.  * (brl-bmd)   * rti!trt: the code here is bizarre.  There must be a zillion holes.  * chkpth should not be called for implied Spool requests .  * But explicit requests (foo!/usr/spoo/uucp/*) should use chkpth.  */
-end_comment
 
 begin_include
 include|#
@@ -164,9 +160,7 @@ operator|!=
 literal|'/'
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -184,7 +178,7 @@ name|NULL
 argument_list|,
 literal|"INIT USERFILE, No entrys!"
 argument_list|,
-literal|""
+name|CNULL
 argument_list|,
 literal|0
 argument_list|)
@@ -283,18 +277,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
-comment|/* found user name */
-name|p
-operator|=
-name|u
-operator|->
-name|us_path
-expr_stmt|;
 comment|/*  check for /../ in path name  */
 for|for
 control|(
@@ -321,9 +306,7 @@ name|s
 argument_list|)
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 comment|/* Check for access permission */
@@ -354,21 +337,17 @@ name|path
 argument_list|)
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 comment|/* path name not valid */
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	rdpth()  *  *	rdpth  -  this routine will read the USERFILE and  *	construct the userpath structure pointed to by (u);  *  *	return codes:  0  |  FAIL  *  * 5/3/81 - changed to enforce the uucp-wide convention that system  *	    names be 7 chars or less in length  */
+comment|/***  *	rdpth()  *  *	rdpth  -  this routine will read the USERFILE and  *	construct the userpath structure pointed to by (u);  *  */
 end_comment
 
 begin_macro
@@ -454,9 +433,6 @@ name|nargs
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|u
 operator|=
 operator|(
@@ -472,7 +448,10 @@ expr|struct
 name|userpath
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|u
 operator|==
 name|NULL
 condition|)
@@ -551,6 +530,8 @@ argument_list|(
 name|pc
 argument_list|,
 name|pbuf
+argument_list|,
+literal|50
 argument_list|)
 expr_stmt|;
 name|u
@@ -642,8 +623,6 @@ name|Logdef
 operator|=
 name|u
 expr_stmt|;
-comment|/* rti!trt: commented following else so 		 * chkpth("","",file) works okay. 		 * I don't understand this, though. 		 */
-comment|/*else*/
 if|if
 condition|(
 operator|*
@@ -697,14 +676,7 @@ name|us_callback
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|cp
-operator|=
-name|u
-operator|->
-name|us_path
 operator|=
 operator|(
 name|char
@@ -730,7 +702,10 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
 operator|==
 name|NULL
 condition|)
@@ -752,6 +727,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|u
+operator|->
+name|us_path
+operator|=
+name|cp
+expr_stmt|;
 while|while
 condition|(
 name|i
@@ -833,7 +814,7 @@ name|NULL
 argument_list|,
 literal|"INIT USERFILE, No Users!"
 argument_list|,
-literal|""
+name|CNULL
 argument_list|,
 literal|0
 argument_list|)
@@ -870,11 +851,9 @@ name|SAME
 condition|)
 comment|/* found user name */
 return|return
-operator|(
 name|u
 operator|->
 name|us_callback
-operator|)
 return|;
 name|u
 operator|=
@@ -885,15 +864,13 @@ expr_stmt|;
 block|}
 comment|/* userid not found */
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	chkperm(file, mopt)	check write permission of file  *	char *mopt;		none NULL - create directories  *  *	if mopt != NULL and permissions are ok,  *	a side effect of this routine is to make  *	directories up to the last part of the  *	filename (if they do not exist).  *  *	return 0 | FAIL  */
+comment|/***  *	chkperm(file, mopt)	check write permission of file  *	char *mopt;		none NULL - create directories  *  *	if mopt != NULL and permissions are ok,  *	a side effect of this routine is to make  *	directories up to the last part of the  *	filename (if they do not exist).  *  *	return SUCCESS | FAIL  */
 end_comment
 
 begin_macro
@@ -952,8 +929,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Forbid scribbling on a not-generally-writable file */
-comment|/* rti!trt */
 if|if
 condition|(
 operator|(
@@ -967,14 +942,10 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 name|strcpy
@@ -1017,9 +988,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 if|if
 condition|(
@@ -1042,62 +1011,51 @@ operator|==
 literal|0
 condition|)
 return|return
-operator|(
 name|FAIL
-operator|)
 return|;
 else|else
 return|return
-operator|(
-literal|0
-operator|)
+name|SUCCESS
 return|;
 block|}
 comment|/*  make directories  */
 return|return
-operator|(
 name|mkdirs
 argument_list|(
 name|file
 argument_list|)
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Check for sufficient privilege to request debugging.  * Suggested by seismo!stewart, John Stewart.  */
+comment|/*  * Check for sufficient privilege to request debugging.  */
 end_comment
 
 begin_macro
 name|chkdebug
-argument_list|(
-argument|uid
-argument_list|)
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|int
-name|uid
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
 if|if
 condition|(
-name|uid
-operator|>
-name|PRIV_UIDS
+name|access
+argument_list|(
+name|SYSFILE
+argument_list|,
+literal|04
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Sorry, uid must be<= %d for debugging\n"
-argument_list|,
-name|PRIV_UIDS
+literal|"Sorry, you must be able to read L.sys for debugging\n"
 argument_list|)
 expr_stmt|;
 name|cleanup
