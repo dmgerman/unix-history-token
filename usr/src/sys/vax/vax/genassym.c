@@ -1,4 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	@(#)genassym.c	6.5 (Berkeley) %G% */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
 begin_define
 define|#
 directive|define
@@ -115,6 +125,16 @@ include|#
 directive|include
 file|"msgbuf.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|uba_hd
+name|uba_hd
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
