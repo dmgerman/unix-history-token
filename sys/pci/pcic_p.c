@@ -1074,15 +1074,6 @@ case|:
 case|case
 name|PCI_DEVICE_ID_RICOH_RL5C466
 case|:
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C475
-case|:
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C476
-case|:
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C478
-case|:
 name|ricoh_init
 argument_list|(
 name|dev
