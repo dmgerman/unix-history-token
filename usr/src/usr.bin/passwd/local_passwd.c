@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local_passwd.c	5.2 (Berkeley) %G%"
+literal|"@(#)local_passwd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,7 +330,7 @@ name|EACCES
 expr_stmt|;
 name|pw_error
 argument_list|(
-name|tempname
+name|NULL
 argument_list|,
 literal|1
 argument_list|,
@@ -378,10 +378,6 @@ argument_list|)
 expr_stmt|;
 name|pw_error
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|0
