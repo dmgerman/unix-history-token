@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alloc.c	5.7 (Berkeley) %G%"
+literal|"@(#)alloc.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,59 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"csh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -100,75 +152,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|U_char
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* we don't really have signed chars */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|U_int
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|U_short
-typedef|;
-end_typedef
-
-begin_function_decl
-specifier|static
-name|int
-name|findbucket
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|morecore
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * The overhead on a block is at least 4 bytes.  When free, this space  * contains a pointer to the next free block, and the bottom two bits must  * be zero.  When in use, the first byte is set to MAGIC, and the second  * byte is the size index.  The remaining bytes are for alignment.  * If range checking is enabled and the size of the block fits  * in two bytes, then the top two bytes hold the size of the requested block  * plus the range checking words, and the header word MINUS ONE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUNOS4
-end_ifdef
-
-begin_comment
-comment|/*  * SunOS localtime() overwrites the 9th byte on an 8 byte malloc()....  * So we align to 16 bytes...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROUNDUP
-value|15
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -176,11 +162,6 @@ directive|define
 name|ROUNDUP
 value|7
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -204,22 +185,22 @@ decl_stmt|;
 comment|/* when free */
 struct|struct
 block|{
-name|U_char
+name|u_char
 name|ovu_magic
 decl_stmt|;
 comment|/* magic number */
-name|U_char
+name|u_char
 name|ovu_index
 decl_stmt|;
 comment|/* bucket # */
 ifdef|#
 directive|ifdef
 name|RCHECK
-name|U_short
+name|u_short
 name|ovu_size
 decl_stmt|;
 comment|/* actual block size */
-name|U_int
+name|u_int
 name|ovu_rmagic
 decl_stmt|;
 comment|/* range magic number */
@@ -280,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|RSLOP
-value|sizeof (U_int)
+value|sizeof (u_int)
 end_define
 
 begin_else
@@ -323,25 +304,35 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
+begin_decl_stmt
+specifier|static
+name|int
+name|findbucket
+name|__P
+argument_list|(
+operator|(
+expr|union
+name|overhead
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|sbrk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+name|void
+name|morecore
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * nmalloc[i] is the difference between the number of mallocs and frees  * for a given block size.  */
@@ -349,7 +340,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|U_int
+name|u_int
 name|nmalloc
 index|[
 name|NBUCKETS
@@ -602,7 +593,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|U_int
+name|u_int
 operator|*
 operator|)
 operator|(
@@ -686,19 +677,17 @@ begin_comment
 comment|/*  * Allocate more memory to the indicated bucket.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|morecore
-argument_list|(
+parameter_list|(
 name|bucket
-argument_list|)
-decl|register
+parameter_list|)
+specifier|register
+name|int
 name|bucket
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|union
@@ -889,7 +878,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|U_int
+name|u_int
 operator|)
 name|op
 operator|)
@@ -907,7 +896,7 @@ operator|)
 operator|(
 operator|(
 operator|(
-name|U_int
+name|u_int
 operator|)
 name|op
 operator|+
@@ -992,7 +981,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -1134,7 +1123,7 @@ name|CHECK
 argument_list|(
 operator|*
 operator|(
-name|U_int
+name|u_int
 operator|*
 operator|)
 operator|(
@@ -1365,7 +1354,7 @@ ifndef|#
 directive|ifndef
 name|lint
 specifier|register
-name|U_int
+name|u_int
 name|onb
 decl_stmt|;
 name|union

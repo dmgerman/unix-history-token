@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.15 (Berkeley) %G%"
+literal|"@(#)lex.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,34 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -5935,21 +5963,10 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TERMIOS
 name|struct
 name|termios
 name|tty
 decl_stmt|;
-else|#
-directive|else
-name|struct
-name|sgttyb
-name|tty
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|wanteof
@@ -5961,9 +5978,6 @@ literal|1
 operator|)
 return|;
 comment|/* was isatty but raw with ignoreeof yields problems */
-ifdef|#
-directive|ifdef
-name|TERMIOS
 if|if
 condition|(
 name|tcgetattr
@@ -5984,37 +5998,6 @@ operator|&
 name|ICANON
 operator|)
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|SHIN
-argument_list|,
-name|TIOCGETP
-argument_list|,
-operator|(
-name|ioctl_t
-operator|)
-operator|&
-name|tty
-argument_list|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|tty
-operator|.
-name|sg_flags
-operator|&
-name|RAW
-operator|)
-operator|==
-literal|0
-condition|)
-endif|#
-directive|endif
 block|{
 comment|/* was 'short' for FILEC */
 name|int

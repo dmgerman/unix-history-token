@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.9 (Berkeley) %G%"
+literal|"@(#)err.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,18 +46,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"csh.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"extern.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -85,6 +73,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"csh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
 begin_decl_stmt
 name|char
