@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.10 81/10/23 */
+comment|/* tcp_usrreq.c 1.11 81/10/24 */
 end_comment
 
 begin_include
@@ -619,7 +619,7 @@ case|:
 comment|/* 40,41 */
 name|nstate
 operator|=
-name|sss_snd
+name|sss_send
 argument_list|(
 name|tp
 argument_list|,
@@ -1359,7 +1359,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|sss_snd
+name|sss_send
 argument_list|(
 name|tp
 argument_list|,
@@ -1408,6 +1408,11 @@ expr_stmt|;
 name|seq_t
 name|last
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|SSS_SEND
+argument_list|)
+expr_stmt|;
 name|last
 operator|=
 name|tp
