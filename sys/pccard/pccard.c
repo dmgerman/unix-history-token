@@ -985,11 +985,40 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|desc
+operator|->
+name|unit
+operator|!=
+operator|-
+literal|1
+condition|)
 name|device_printf
 argument_list|(
-name|pccardd
+name|pccarddev
 argument_list|,
-literal|"device_add_child shouldn't have failed, but did\n"
+literal|"Unit %d failed for %s, try a different unit\n"
+argument_list|,
+name|desc
+operator|->
+name|unit
+argument_list|,
+name|devi
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|pccarddev
+argument_list|,
+literal|"No units available for %s.  Impossible?\n"
+argument_list|,
+name|devi
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 return|return
