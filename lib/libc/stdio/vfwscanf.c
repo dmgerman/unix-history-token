@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfscanf.c,v 1.35 2004/01/31 23:16:09 das Exp ");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfscanf.c,v 1.37 2004/05/02 10:55:05 das  Exp");
 endif|#
 directive|endif
 end_endif
@@ -132,17 +132,11 @@ directive|include
 file|"local.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|FLOATING_POINT
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
 
 begin_include
 include|#
@@ -1075,9 +1069,9 @@ operator|=
 literal|16
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 literal|'A'
 case|:
@@ -3159,9 +3153,9 @@ name|nconversions
 operator|++
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
 case|case
 name|CT_FLOAT
 case|:
@@ -3348,7 +3342,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* FLOATING_POINT */
+comment|/* !NO_FLOATING_POINT */
 block|}
 block|}
 name|input_failure
@@ -3374,11 +3368,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FLOATING_POINT
+end_ifndef
 
 begin_function
 specifier|static
