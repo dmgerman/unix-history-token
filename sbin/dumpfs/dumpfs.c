@@ -852,7 +852,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"insufficient space to maintain rotational tables\n"
+literal|"(no rotational position table)\n"
 argument_list|)
 expr_stmt|;
 for|for
