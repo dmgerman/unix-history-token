@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,10 +53,16 @@ begin_comment
 comment|/* clear_screen, cup& friends, cur_term */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<tic.h>
+end_include
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newterm.c,v 1.41 1999/07/24 20:07:48 tom Exp $"
+literal|"$Id: lib_newterm.c,v 1.46 2000/07/01 22:26:22 tom Exp $"
 argument_list|)
 end_macro
 
@@ -302,10 +308,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|VALID_NUMERIC
+argument_list|(
 name|init_tabs
-operator|!=
-operator|-
-literal|1
+argument_list|)
 condition|)
 name|TABSIZE
 operator|=
@@ -354,7 +360,7 @@ operator|=
 name|carriage_return
 expr_stmt|;
 block|}
-comment|/* If we must simulate soft labels, grab off the line to be used. 	   We assume that we must simulate, if it is none of the standard 	   formats (4-4  or 3-2-3) for which there may be some hardware 	   support. */
+comment|/* If we must simulate soft labels, grab off the line to be used.        We assume that we must simulate, if it is none of the standard        formats (4-4  or 3-2-3) for which there may be some hardware        support. */
 if|if
 condition|(
 name|num_labels
@@ -391,7 +397,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* this actually allocates the screen structure, and saves the 	 * original terminal settings. 	 */
+comment|/* this actually allocates the screen structure, and saves the      * original terminal settings.      */
 name|current
 operator|=
 name|SP
@@ -519,7 +525,7 @@ name|_endwin
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Check whether we can optimize scrolling under dumb terminals in case 	 * we do not have any of these capabilities, scrolling optimization 	 * will be useless. 	 */
+comment|/* Check whether we can optimize scrolling under dumb terminals in case      * we do not have any of these capabilities, scrolling optimization      * will be useless.      */
 name|SP
 operator|->
 name|_scrolling
@@ -560,7 +566,7 @@ name|_keytry
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Check for mismatched graphic-rendition capabilities.  Most SVr4 	 * terminfo trees contain entries that have rmul or rmso equated to 	 * sgr0 (Solaris curses copes with those entries).  We do this only for 	 * curses, since many termcap applications assume that smso/rmso and 	 * smul/rmul are paired, and will not function properly if we remove 	 * rmso or rmul.  Curses applications shouldn't be looking at this 	 * detail. 	 */
+comment|/*      * Check for mismatched graphic-rendition capabilities.  Most SVr4      * terminfo trees contain entries that have rmul or rmso equated to      * sgr0 (Solaris curses copes with those entries).  We do this only for      * curses, since many termcap applications assume that smso/rmso and      * smul/rmul are paired, and will not function properly if we remove      * rmso or rmul.  Curses applications shouldn't be looking at this      * detail.      */
 define|#
 directive|define
 name|SGR0_TEST
@@ -586,6 +592,72 @@ argument_list|(
 name|exit_underline_mode
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_WIDEC_SUPPORT
+comment|/*      * XFree86 xterm can be configured to support UTF-8 based on environment      * variable settings.      */
+block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|s
+operator|=
+name|getenv
+argument_list|(
+literal|"LC_ALL"
+argument_list|)
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|s
+operator|=
+name|getenv
+argument_list|(
+literal|"LC_CTYPE"
+argument_list|)
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
+name|s
+operator|=
+name|getenv
+argument_list|(
+literal|"LANG"
+argument_list|)
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|&&
+name|strstr
+argument_list|(
+name|s
+argument_list|,
+literal|"UTF-8"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|SP
+operator|->
+name|_outch
+operator|=
+name|_nc_utf8_outch
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 comment|/* compute movement costs so we can do better move optimization */
 name|_nc_mvcur_init
 argument_list|()

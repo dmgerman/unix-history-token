@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,11 +8,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: capdefaults.c,v 1.8 1998/07/04 22:31:04 tom Exp $ */
+comment|/* $Id: capdefaults.c,v 1.12 2000/01/02 02:34:56 tom Exp $ */
 end_comment
 
 begin_comment
-comment|/* 	 * Compute obsolete capabilities.  The reason this is an include file 	 * is that the two places where it's needed want the macros to 	 * generate offsets to different structures.  See the file Caps for 	 * explanations of these conversions. 	 * 	 * Note: This code is the functional inverse of the first part 	 * of postprocess_entry(). 	 */
+comment|/*      * Compute obsolete capabilities.  The reason this is an include file is      * that the two places where it's needed want the macros to generate      * offsets to different structures.  See the file Caps for explanations of      * these conversions.      *      * Note:  This code is the functional inverse of the first part of      * postprocess_termcap().      */
 end_comment
 
 begin_block
@@ -93,26 +93,29 @@ name|init_3string
 expr_stmt|;
 name|init_3string
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|ABSENT_STRING
 expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|VALID_STRING
+argument_list|(
+name|termcap_reset
+argument_list|)
+operator|&&
+name|VALID_STRING
+argument_list|(
+name|reset_2string
+argument_list|)
+operator|&&
+operator|!
 name|VALID_STRING
 argument_list|(
 name|reset_1string
 argument_list|)
 operator|&&
 operator|!
-name|VALID_STRING
-argument_list|(
-name|reset_2string
-argument_list|)
-operator|&&
 name|VALID_STRING
 argument_list|(
 name|reset_3string
@@ -125,23 +128,18 @@ name|reset_2string
 expr_stmt|;
 name|reset_2string
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|ABSENT_STRING
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|USE_XMC_SUPPORT
 if|if
 condition|(
 name|magic_cookie_glitch_ul
-operator|<
-literal|0
+operator|==
+name|ABSENT_NUMERIC
 operator|&&
 name|magic_cookie_glitch
+operator|!=
+name|ABSENT_NUMERIC
 operator|&&
 name|VALID_STRING
 argument_list|(
@@ -152,15 +150,6 @@ name|magic_cookie_glitch_ul
 operator|=
 name|magic_cookie_glitch
 expr_stmt|;
-else|#
-directive|else
-name|magic_cookie_glitch_ul
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* totally obsolete capabilities */
 name|linefeed_is_newline
 operator|=

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: fun.c,v 1.2 1999/06/16 00:46:12 tom Exp $"
+literal|"$Id: fun.c,v 1.3 2000/03/04 20:29:21 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1247,7 +1247,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* clear the line for a new fumction key line */
+comment|/* clear the line for a new function key line */
 if|if
 condition|(
 name|over_strike
@@ -3027,7 +3027,7 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"Error string recieved was: %s"
+literal|"Error string received was: %s"
 argument_list|,
 name|expand
 argument_list|(
@@ -3616,12 +3616,12 @@ argument_list|)
 expr_stmt|;
 name|ptextln
 argument_list|(
-literal|" columns print a test patterm to help count screen width."
+literal|" columns print a test pattern to help count screen width."
 argument_list|)
 expr_stmt|;
 name|ptextln
 argument_list|(
-literal|" lines   print a test patterm to help count screen length."
+literal|" lines   print a test pattern to help count screen length."
 argument_list|)
 expr_stmt|;
 name|ptextln

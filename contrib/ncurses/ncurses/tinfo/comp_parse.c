@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: comp_parse.c,v 1.34 1999/02/27 22:13:02 tom Exp $"
+literal|"$Id: comp_parse.c,v 1.40 2000/04/15 16:57:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -80,9 +80,13 @@ begin_decl_stmt
 name|ENTRY
 modifier|*
 name|_nc_head
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|_nc_tail
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +114,7 @@ if|if
 condition|(
 name|newp
 operator|==
-name|NULL
+literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
@@ -131,11 +135,7 @@ name|newp
 operator|->
 name|next
 operator|=
-operator|(
-name|ENTRY
-operator|*
-operator|)
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -160,7 +160,7 @@ name|_nc_free_entries
 parameter_list|(
 name|ENTRY
 modifier|*
-name|head
+name|headp
 parameter_list|)
 comment|/* free the allocated storage consumed by list entries */
 block|{
@@ -175,7 +175,7 @@ for|for
 control|(
 name|ep
 operator|=
-name|head
+name|headp
 init|;
 name|ep
 condition|;
@@ -280,7 +280,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 operator|(
@@ -336,7 +336,7 @@ argument_list|,
 literal|'|'
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 operator|(
@@ -528,6 +528,19 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* shut the lexer up, too */
+name|_nc_reset_input
+argument_list|(
+name|fp
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|memset
 argument_list|(
 operator|&
@@ -541,15 +554,8 @@ name|thisentry
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|_nc_reset_input
-argument_list|(
-name|fp
-argument_list|,
-name|buf
-argument_list|)
-init|;
+if|if
+condition|(
 name|_nc_parse_entry
 argument_list|(
 operator|&
@@ -559,11 +565,10 @@ name|literal
 argument_list|,
 name|silent
 argument_list|)
-operator|!=
+operator|==
 name|ERR
-condition|;
-control|)
-block|{
+condition|)
+break|break;
 if|if
 condition|(
 operator|!
@@ -696,7 +701,8 @@ begin_function
 name|int
 name|_nc_resolve_uses
 parameter_list|(
-name|void
+name|bool
+name|fullresolve
 parameter_list|)
 comment|/* try to resolve all use capabilities */
 block|{
@@ -710,7 +716,7 @@ decl_stmt|,
 modifier|*
 name|lastread
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 name|bool
 name|keepgoing
@@ -872,7 +878,7 @@ literal|"NO MULTIPLE NAME OCCURRENCES"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * First resolution stage: replace names in use arrays with entry      * pointers.  By doing this, we avoid having to do the same name      * match once for each time a use entry is itself unresolved.      */
+comment|/*      * First resolution stage: compute link pointers corresponding to names.      */
 name|total_unresolved
 operator|=
 literal|0
@@ -927,11 +933,6 @@ name|char
 modifier|*
 name|lookfor
 init|=
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 name|qp
 operator|->
 name|uses
@@ -939,8 +940,7 @@ index|[
 name|i
 index|]
 operator|.
-name|parent
-operator|)
+name|name
 decl_stmt|;
 name|long
 name|lookline
@@ -1008,7 +1008,7 @@ index|[
 name|i
 index|]
 operator|.
-name|parent
+name|link
 operator|=
 name|rp
 expr_stmt|;
@@ -1087,7 +1087,7 @@ if|if
 condition|(
 name|rp
 operator|==
-name|NULL
+literal|0
 condition|)
 name|_nc_err_abort
 argument_list|(
@@ -1123,7 +1123,7 @@ index|[
 name|i
 index|]
 operator|.
-name|parent
+name|link
 operator|=
 name|rp
 expr_stmt|;
@@ -1164,13 +1164,9 @@ index|[
 name|i
 index|]
 operator|.
-name|parent
+name|link
 operator|=
-operator|(
-name|ENTRY
-operator|*
-operator|)
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -1201,7 +1197,12 @@ literal|"NAME RESOLUTION COMPLETED OK"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * OK, at this point all (char *) references have been successfully      * replaced by (ENTRY *) pointers.  Time to do the actual merges.      */
+comment|/*      * OK, at this point all (char *) references in `name' mwmbers      * have been successfully converred to (ENTRY *) pointers in      * `link' members.  Time to do the actual merges.      */
+if|if
+condition|(
+name|fullresolve
+condition|)
+block|{
 do|do
 block|{
 name|TERMTYPE
@@ -1243,7 +1244,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If any of the use entries we're looking for is 		 * incomplete, punt.  We'll catch this entry on a 		 * subsequent pass. 		 */
+comment|/* 		     * If any of the use entries we're looking for is 		     * incomplete, punt.  We'll catch this entry on a 		     * subsequent pass. 		     */
 for|for
 control|(
 name|i
@@ -1261,11 +1262,6 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-operator|(
-name|ENTRY
-operator|*
-operator|)
 name|qp
 operator|->
 name|uses
@@ -1273,8 +1269,7 @@ index|[
 name|i
 index|]
 operator|.
-name|parent
-operator|)
+name|link
 operator|->
 name|nuses
 condition|)
@@ -1303,7 +1298,7 @@ goto|goto
 name|incomplete
 goto|;
 block|}
-comment|/* 		 * First, make sure there's no garbage in the merge block. 		 * as a side effect, copy into the merged entry the name 		 * field and string table pointer. 		 */
+comment|/* 		       * First, make sure there's no garbage in the 		       * merge block.  as a side effect, copy into 		       * the merged entry the name field and string 		       * table pointer. 		     */
 name|_nc_copy_termtype
 argument_list|(
 operator|&
@@ -1317,7 +1312,7 @@ name|tterm
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Now merge in each use entry in the proper 		 * (reverse) order. 		 */
+comment|/* 		     * Now merge in each use entry in the proper 		     * (reverse) order. 		     */
 for|for
 control|(
 init|;
@@ -1336,11 +1331,6 @@ operator|&
 name|merged
 argument_list|,
 operator|&
-operator|(
-operator|(
-name|ENTRY
-operator|*
-operator|)
 name|qp
 operator|->
 name|uses
@@ -1352,13 +1342,12 @@ operator|-
 literal|1
 index|]
 operator|.
-name|parent
-operator|)
+name|link
 operator|->
 name|tterm
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Now merge in the original entry. 		 */
+comment|/* 		     * Now merge in the original entry. 		     */
 name|_nc_merge_entry
 argument_list|(
 operator|&
@@ -1370,7 +1359,7 @@ operator|->
 name|tterm
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Replace the original entry with the merged one. 		 */
+comment|/* 		     * Replace the original entry with the merged one. 		     */
 name|FreeIfNeeded
 argument_list|(
 name|qp
@@ -1404,7 +1393,7 @@ name|tterm
 operator|=
 name|merged
 expr_stmt|;
-comment|/* 		 * We know every entry is resolvable because name resolution 		 * didn't bomb.  So go back for another pass. 		 */
+comment|/* 		     * We know every entry is resolvable because name resolution 		     * didn't bomb.  So go back for another pass. 		     */
 comment|/* FALLTHRU */
 name|incomplete
 label|:
@@ -1429,7 +1418,7 @@ literal|"MERGES COMPLETED OK"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * The exit condition of the loop above is such that all entries      * must now be resolved.  Now handle cancellations.  In a resolved      * entry there should be no cancellation markers.      */
+comment|/* 	 * The exit condition of the loop above is such that all entries 	 * must now be resolved.  Now handle cancellations.  In a resolved 	 * entry there should be no cancellation markers. 	 */
 name|for_entry_list
 argument_list|(
 argument|qp
@@ -1463,7 +1452,7 @@ index|[
 name|j
 index|]
 operator|=
-name|FALSE
+name|ABSENT_BOOLEAN
 expr_stmt|;
 name|for_each_number
 argument_list|(
@@ -1526,6 +1515,7 @@ operator|=
 name|ABSENT_STRING
 expr_stmt|;
 block|}
+block|}
 comment|/*      * We'd like to free entries read in off disk at this point, but can't.      * The merge_entry() code doesn't copy the strings in the use entries,      * it just aliases them.  If this ever changes, do a      * free_entries(lastread) here.      */
 name|DEBUG
 argument_list|(
@@ -1536,6 +1526,10 @@ literal|"RESOLUTION FINISHED"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fullresolve
+condition|)
 if|if
 condition|(
 name|_nc_check_termtype
@@ -1726,130 +1720,151 @@ block|}
 comment|/* listed in structure-member order of first argument */
 name|PAIRED
 argument_list|(
-argument|enter_alt_charset_mode
+name|enter_alt_charset_mode
 argument_list|,
-argument|exit_alt_charset_mode
+name|exit_alt_charset_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_alt_charset_mode
+name|enter_alt_charset_mode
 argument_list|,
-argument|acs_chars
+name|acs_chars
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|exit_alt_charset_mode
+name|exit_alt_charset_mode
 argument_list|,
-argument|acs_chars
+name|acs_chars
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_blink_mode
+name|enter_blink_mode
 argument_list|,
-argument|exit_attribute_mode
+name|exit_attribute_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_bold_mode
+name|enter_bold_mode
 argument_list|,
-argument|exit_attribute_mode
+name|exit_attribute_mode
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|exit_ca_mode
+name|exit_ca_mode
 argument_list|,
-argument|enter_ca_mode
+name|enter_ca_mode
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|enter_delete_mode
+name|enter_delete_mode
 argument_list|,
-argument|exit_delete_mode
+name|exit_delete_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_dim_mode
+name|enter_dim_mode
 argument_list|,
-argument|exit_attribute_mode
+name|exit_attribute_mode
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|enter_insert_mode
+name|enter_insert_mode
 argument_list|,
-argument|exit_insert_mode
+name|exit_insert_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_secure_mode
+name|enter_secure_mode
 argument_list|,
-argument|exit_attribute_mode
+name|exit_attribute_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_protected_mode
+name|enter_protected_mode
 argument_list|,
-argument|exit_attribute_mode
+name|exit_attribute_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|enter_reverse_mode
+name|enter_reverse_mode
 argument_list|,
-argument|exit_attribute_mode
+name|exit_attribute_mode
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|from_status_line
+name|from_status_line
 argument_list|,
-argument|to_status_line
+name|to_status_line
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|meta_off
+name|meta_off
 argument_list|,
-argument|meta_on
+name|meta_on
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|prtr_on
+name|prtr_on
 argument_list|,
-argument|prtr_off
+name|prtr_off
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|save_cursor
+name|save_cursor
 argument_list|,
-argument|restore_cursor
+name|restore_cursor
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|enter_xon_mode
+name|enter_xon_mode
 argument_list|,
-argument|exit_xon_mode
+name|exit_xon_mode
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|enter_am_mode
+name|enter_am_mode
 argument_list|,
-argument|exit_am_mode
+name|exit_am_mode
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|label_off
+name|label_off
 argument_list|,
-argument|label_on
+name|label_on
 argument_list|)
+expr_stmt|;
 name|PAIRED
 argument_list|(
-argument|display_clock
+name|display_clock
 argument_list|,
-argument|remove_clock
+name|remove_clock
 argument_list|)
+expr_stmt|;
 name|ANDMISSING
 argument_list|(
-argument|set_color_pair
+name|set_color_pair
 argument_list|,
-argument|initialize_pair
+name|initialize_pair
 argument_list|)
+expr_stmt|;
 block|}
 end_function
 

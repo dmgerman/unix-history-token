@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** This file is part of TACK. **  ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. **  ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. **  ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
+comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. ** ** This file is part of TACK. ** ** TACK is free software; you can redistribute it and/or modify ** it under the terms of the GNU General Public License as published by ** the Free Software Foundation; either version 2, or (at your option) ** any later version. ** ** TACK is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the ** GNU General Public License for more details. ** ** You should have received a copy of the GNU General Public License ** along with TACK; see the file COPYING.  If not, write to ** the Free Software Foundation, Inc., 59 Temple Place - Suite 330, ** Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: init.c,v 1.1 1999/04/18 01:05:23 tom Exp $"
+literal|"$Id: init.c,v 1.2 2000/05/13 19:58:48 Daniel.Weaver Exp $"
 argument_list|)
 end_macro
 
@@ -923,7 +923,7 @@ argument_list|()
 expr_stmt|;
 name|can_test
 argument_list|(
-literal|"lines cols cr nxon rf if iprog rmp"
+literal|"lines cols cr nxon rf if iprog rmp smcup rmcup"
 argument_list|,
 name|FLAG_CAN_TEST
 argument_list|)

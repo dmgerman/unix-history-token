@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: menu.c,v 1.1 1998/01/10 00:29:30 tom Exp $"
+literal|"$Id: menu.c,v 1.2 2000/03/04 21:13:53 tom Exp $"
 argument_list|)
 end_macro
 
@@ -287,7 +287,7 @@ operator|->
 name|test_procedure
 condition|)
 block|{
-comment|/* The procedure takes precidence so I can pass 			   the menu entry as an argument. 			*/
+comment|/* The procedure takes precedence so I can pass 			   the menu entry as an argument. 			*/
 name|can_test
 argument_list|(
 name|test
@@ -1348,7 +1348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	menu_can_scan(menu-structure) ** **	Recursivly scan the menu tree and find which cap names can be tested. */
+comment|/* **	menu_can_scan(menu-structure) ** **	Recursively scan the menu tree and find which cap names can be tested. */
 end_comment
 
 begin_function
@@ -1438,7 +1438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	menu_search(menu-structure, cap) ** **	Recursivly search the menu tree and execute any tests that use cap. */
+comment|/* **	menu_search(menu-structure, cap) ** **	Recursively search the menu tree and execute any tests that use cap. */
 end_comment
 
 begin_function

@@ -30,7 +30,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: hashmap.c,v 1.33 1999/03/18 02:09:45 Alexander.V.Lukyanov Exp $"
+literal|"$Id: hashmap.c,v 1.34 1999/11/28 00:10:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1080,11 +1080,13 @@ if|if
 condition|(
 name|oldhash
 condition|)
+block|{
 name|FreeAndNull
 argument_list|(
 name|oldhash
 argument_list|)
 expr_stmt|;
+block|}
 name|lines_alloc
 operator|=
 literal|0

@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_update.c,v 1.3 1999/09/29 15:22:32 juergen Exp $"
+literal|"$Id: p_update.c,v 1.5 1999/11/25 13:49:26 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -62,6 +62,8 @@ argument_list|,
 name|pan
 operator|->
 name|above
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|pan
@@ -80,15 +82,6 @@ condition|(
 name|pan
 condition|)
 block|{
-if|if
-condition|(
-name|is_wintouched
-argument_list|(
-name|pan
-operator|->
-name|win
-argument_list|)
-condition|)
 name|Wnoutrefresh
 argument_list|(
 name|pan

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.2 1999/06/16 00:41:57 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
+comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.4 2000/03/19 01:34:00 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
 end_comment
 
 begin_include
@@ -540,6 +540,37 @@ name|content
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|CARD
+modifier|*
+name|new_card
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|CARD
+modifier|*
+name|card
+init|=
+name|add_title
+argument_list|(
+literal|""
+argument_list|)
+decl_stmt|;
+name|add_content
+argument_list|(
+name|card
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+return|return
+name|card
+return|;
 block|}
 end_function
 
@@ -1580,9 +1611,6 @@ argument_list|,
 name|visible_cards
 argument_list|)
 expr_stmt|;
-name|update_panels
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -1764,6 +1792,16 @@ name|n
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|count_cards
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|new_card
+argument_list|()
+expr_stmt|;
 name|cardfile
 argument_list|(
 name|argv
@@ -1779,6 +1817,16 @@ name|read_data
 argument_list|(
 name|default_name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count_cards
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|new_card
+argument_list|()
 expr_stmt|;
 name|cardfile
 argument_list|(

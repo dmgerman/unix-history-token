@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $Id: nc_alloc.h,v 1.7 1999/04/03 23:15:13 tom Exp $ */
+comment|/* $Id: nc_alloc.h,v 1.8 2000/04/08 23:42:57 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -227,6 +227,94 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* doalloc.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|_nc_doalloc
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_STRDUP
+end_if
+
+begin_define
+define|#
+directive|define
+name|strdup
+value|_nc_strdup
+end_define
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|_nc_strdup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|typeMalloc
+parameter_list|(
+name|type
+parameter_list|,
+name|elts
+parameter_list|)
+value|(type *)malloc((elts)*sizeof(type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|typeCalloc
+parameter_list|(
+name|type
+parameter_list|,
+name|elts
+parameter_list|)
+value|(type *)calloc((elts),sizeof(type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|typeRealloc
+parameter_list|(
+name|type
+parameter_list|,
+name|elts
+parameter_list|,
+name|ptr
+parameter_list|)
+value|(type *)_nc_doalloc(ptr, (elts)*sizeof(type))
+end_define
 
 begin_endif
 endif|#

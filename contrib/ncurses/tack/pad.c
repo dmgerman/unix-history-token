@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: pad.c,v 1.1 1998/01/10 00:30:27 tom Exp $"
+literal|"$Id: pad.c,v 1.2 2000/03/04 21:04:58 tom Exp $"
 argument_list|)
 end_macro
 
@@ -2763,6 +2763,7 @@ block|}
 name|clear_select
 operator|++
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|2
 case|:
@@ -2780,6 +2781,7 @@ block|}
 name|clear_select
 operator|++
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|3
 case|:
@@ -5004,7 +5006,7 @@ operator|!
 name|delete_character
 condition|)
 block|{
-comment|/* this test is quitely ignored */
+comment|/* this test is quietly ignored */
 return|return;
 block|}
 if|if
@@ -5072,7 +5074,7 @@ argument_list|)
 expr_stmt|;
 name|ptext
 argument_list|(
-literal|"The preceeding two lines should be the same.  "
+literal|"The preceding two lines should be the same.  "
 argument_list|)
 expr_stmt|;
 name|pad_done_message

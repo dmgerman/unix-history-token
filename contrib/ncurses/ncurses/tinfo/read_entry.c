@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,23 +17,6 @@ directive|include
 file|<curses.priv.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_FCNTL_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -49,60 +32,29 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_entry.c,v 1.61 1999/07/24 20:07:20 tom Exp $"
+literal|"$Id: read_entry.c,v 1.67 2000/03/11 12:35:45 tom Exp $"
 argument_list|)
 end_macro
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|O_BINARY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|O_BINARY
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
 directive|if
-literal|0
+operator|!
+name|HAVE_TELL
 end_if
 
 begin_define
 define|#
 directive|define
-name|TRACE_IN
+name|tell
 parameter_list|(
-name|p
+name|fd
 parameter_list|)
-value|DEBUG(2, p)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TRACE_IN
-parameter_list|(
-name|p
-parameter_list|)
+value|0
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/* lseek() is POSIX, but not tell() - odd... */
 end_comment
 
 begin_endif
@@ -376,8 +328,10 @@ operator|*
 name|i
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"get Numbers[%d]=%d"
 operator|,
@@ -524,8 +478,10 @@ operator|+
 name|table
 operator|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"Strings[%d] = %s"
 operator|,
@@ -660,8 +616,10 @@ index|[
 name|MAX_ENTRY_SIZE
 index|]
 decl_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"READ termtype header @%d"
 operator|,
@@ -670,6 +628,19 @@ argument_list|(
 name|fd
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|ptr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ptr
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* grab the header */
@@ -749,18 +720,26 @@ operator|+
 literal|10
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
-literal|"header is %d/%d/%d/%d(%d)"
+literal|"TERMTYPE name_size=%d, bool=%d/%d, num=%d/%d str=%d/%d(%d)"
 operator|,
 name|name_size
 operator|,
 name|bool_count
 operator|,
+name|BOOLCOUNT
+operator|,
 name|num_count
 operator|,
+name|NUMCOUNT
+operator|,
 name|str_count
+operator|,
+name|STRCOUNT
 operator|,
 name|str_size
 operator|)
@@ -1165,8 +1144,10 @@ argument_list|(
 name|str_size
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"READ extended_header @%d"
 operator|,
@@ -1390,8 +1371,10 @@ operator|->
 name|Strings
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"extended header is %d/%d/%d(%d:%d)"
 operator|,
@@ -1407,8 +1390,10 @@ name|ext_str_limit
 operator|)
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"READ %d extended-booleans @%d"
 operator|,
@@ -1465,8 +1450,10 @@ argument_list|(
 name|ext_bool_count
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"READ %d extended-numbers @%d"
 operator|,
@@ -1509,8 +1496,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"Before converting extended-numbers"
 operator|)
@@ -1530,8 +1519,10 @@ name|ext_num_count
 argument_list|)
 expr_stmt|;
 block|}
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"READ extended-offsets @%d"
 operator|,
@@ -1567,8 +1558,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"READ %d bytes of extended-strings @%d"
 operator|,
@@ -1628,8 +1621,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"first extended-string is %s"
 operator|,
@@ -1656,8 +1651,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"Before computing extended-string capabilities str_count=%d, ext_str_count=%d"
 operator|,
@@ -1702,8 +1699,10 @@ name|i
 operator|--
 control|)
 block|{
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"MOVE from [%d:%d] %s"
 operator|,
@@ -1777,8 +1776,10 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"... to    [%d] %s"
 operator|,
@@ -1830,8 +1831,10 @@ operator|(
 literal|0
 operator|)
 return|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"ext_NAMES starting @%d in extended_strings, first = %s"
 operator|,
@@ -1905,8 +1908,10 @@ name|ext_Strings
 operator|)
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"extend: num_Booleans:%d"
 operator|,
@@ -1935,8 +1940,13 @@ name|str_count
 operator|)
 argument_list|)
 expr_stmt|;
-name|TRACE_IN
+if|#
+directive|if
+name|NCURSES_XNAMES
+name|TR
 argument_list|(
+name|TRACE_DATABASE
+argument_list|,
 operator|(
 literal|"normal: num_Booleans:%d"
 operator|,
@@ -1946,6 +1956,8 @@ name|num_Booleans
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -2425,7 +2437,7 @@ argument_list|,
 name|tn
 argument_list|)
 expr_stmt|;
-comment|/* This is System V behavior, in conjunction with our requirements for 	 * writing terminfo entries. 	 */
+comment|/* This is System V behavior, in conjunction with our requirements for      * writing terminfo entries.      */
 if|if
 condition|(
 name|have_tic_directory
@@ -2542,7 +2554,7 @@ argument_list|,
 name|tp
 argument_list|)
 return|;
-comment|/* Try the system directory.  Note that the TERMINFO_DIRS value, if 	 * defined by the configure script, begins with a ":", which will be 	 * interpreted as TERMINFO. 	 */
+comment|/* Try the system directory.  Note that the TERMINFO_DIRS value, if      * defined by the configure script, begins with a ":", which will be      * interpreted as TERMINFO.      */
 ifdef|#
 directive|ifdef
 name|TERMINFO_DIRS

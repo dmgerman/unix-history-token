@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Author:  Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: filter.c,v 1.2 1998/05/10 00:39:27 tom Exp $  */
+comment|/*  * Author:  Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: filter.c,v 1.3 1999/11/13 23:39:19 tom Exp $  */
 end_comment
 
 begin_include
@@ -183,7 +183,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
 name|use_default_colors

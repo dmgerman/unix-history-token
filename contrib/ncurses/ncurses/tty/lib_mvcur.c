@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -90,7 +90,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvcur.c,v 1.60 1999/10/03 01:08:27 Alexander.V.Lukyanov Exp $"
+literal|"$Id: lib_mvcur.c,v 1.67 2000/06/24 21:13:51 tom Exp $"
 argument_list|)
 end_macro
 
@@ -103,17 +103,6 @@ name|s
 parameter_list|)
 value|(s != 0) ? strlen(s) : 0
 end_define
-
-begin_define
-define|#
-directive|define
-name|CURRENT_ATTR
-value|SP->_current_attr
-end_define
-
-begin_comment
-comment|/* current phys attribute */
-end_comment
 
 begin_define
 define|#
@@ -135,6 +124,17 @@ end_define
 
 begin_comment
 comment|/* phys cursor column */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CURRENT_ATTR
+value|SP->_current_attr
+end_define
+
+begin_comment
+comment|/* current phys attribute */
 end_comment
 
 begin_define
@@ -385,11 +385,16 @@ operator||
 name|TRACE_MOVE
 argument_list|,
 operator|(
-literal|"CostOf %s %d"
+literal|"CostOf %s %d %s"
 operator|,
 name|capname
 operator|,
 name|result
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|cap
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -447,11 +452,16 @@ operator||
 name|TRACE_MOVE
 argument_list|,
 operator|(
-literal|"NormalizedCost %s %d"
+literal|"NormalizedCost %s %d %s"
 operator|,
 name|capname
 operator|,
 name|result
+operator|,
+name|_nc_visbuf
+argument_list|(
+name|cap
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -670,6 +680,20 @@ operator|/
 literal|10.0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|NCURSES_NO_PADDING
+if|if
+condition|(
+operator|!
+operator|(
+name|SP
+operator|->
+name|_no_padding
+operator|)
+condition|)
+endif|#
+directive|endif
 name|cum_cost
 operator|+=
 name|number
@@ -1085,7 +1109,7 @@ name|cursor_address
 else|:
 name|cursor_mem_address
 expr_stmt|;
-comment|/*      * Parametrized local-motion strings.  This static cost computation      * depends on the following assumptions:      *      * (1) They never have * padding.  In the entire master terminfo database      *     as of March 1995, only the obsolete Zenith Z-100 pc violates this.      *	   (Proportional padding is found mainly in insert, delete and scroll      *     capabilities).      *      * (2) The average case of cup has two two-digit parameters.  Strictly,      *     the average case for a 24 * 80 screen has ((10*10*(1 + 1)) +      *     (14*10*(1 + 2)) + (10*70*(2 + 1)) + (14*70*4)) / (24*80) = 3.458      *     digits of parameters.  On a 25x80 screen the average is 3.6197.      *     On larger screens the value gets much closer to 4.      *      * (3) The average case of cub/cuf/hpa/ech/rep has 2 digits of parameters      *     (strictly, (((10 * 1) + (70 * 2)) / 80) = 1.8750).      *      * (4) The average case of cud/cuu/vpa has 2 digits of parameters      *     (strictly, (((10 * 1) + (14 * 2)) / 24) = 1.5833).      *      * All these averages depend on the assumption that all parameter values      * are equally probable.      */
+comment|/*      * Parametrized local-motion strings.  This static cost computation      * depends on the following assumptions:      *      * (1) They never have * padding.  In the entire master terminfo database      *     as of March 1995, only the obsolete Zenith Z-100 pc violates this.      *     (Proportional padding is found mainly in insert, delete and scroll      *     capabilities).      *      * (2) The average case of cup has two two-digit parameters.  Strictly,      *     the average case for a 24 * 80 screen has ((10*10*(1 + 1)) +      *     (14*10*(1 + 2)) + (10*70*(2 + 1)) + (14*70*4)) / (24*80) = 3.458      *     digits of parameters.  On a 25x80 screen the average is 3.6197.      *     On larger screens the value gets much closer to 4.      *      * (3) The average case of cub/cuf/hpa/ech/rep has 2 digits of parameters      *     (strictly, (((10 * 1) + (70 * 2)) / 80) = 1.8750).      *      * (4) The average case of cud/cuu/vpa has 2 digits of parameters      *     (strictly, (((10 * 1) + (14 * 2)) / 24) = 1.5833).      *      * All these averages depend on the assumption that all parameter values      * are equally probable.      */
 name|SP
 operator|->
 name|_cup_cost
@@ -1359,6 +1383,44 @@ literal|23
 argument_list|)
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|SP
+operator|->
+name|_cuf_ch_cost
+operator|=
+name|NormalizedCost
+argument_list|(
+name|tparm
+argument_list|(
+name|parm_right_cursor
+argument_list|,
+literal|23
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|SP
+operator|->
+name|_inline_cost
+operator|=
+name|min
+argument_list|(
+name|SP
+operator|->
+name|_cup_ch_cost
+argument_list|,
+name|min
+argument_list|(
+name|SP
+operator|->
+name|_hpa_ch_cost
+argument_list|,
+name|SP
+operator|->
+name|_cuf_ch_cost
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* pre-compute some capability lengths */
@@ -1840,8 +1902,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* (to_y< from_y) */
 block|{
+comment|/* (to_y< from_y) */
 name|n
 operator|=
 operator|(
@@ -2362,8 +2424,8 @@ block|}
 block|}
 block|}
 else|else
-comment|/* (to_x< from_x) */
 block|{
+comment|/* (to_x< from_x) */
 name|n
 operator|=
 name|from_x
@@ -3076,17 +3138,14 @@ name|newcost
 expr_stmt|;
 block|}
 comment|/*      * These cases are ordered by estimated relative frequency.      */
-if|if
+switch|switch
 condition|(
 name|tactic
 condition|)
 block|{
-if|if
-condition|(
-name|tactic
-operator|==
+case|case
 literal|1
-condition|)
+case|:
 operator|(
 name|void
 operator|)
@@ -3105,14 +3164,10 @@ argument_list|,
 name|ovw
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|tactic
-operator|==
+break|break;
+case|case
 literal|2
-condition|)
-block|{
+case|:
 operator|(
 name|void
 operator|)
@@ -3145,15 +3200,10 @@ argument_list|,
 name|ovw
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|tactic
-operator|==
+break|break;
+case|case
 literal|3
-condition|)
-block|{
+case|:
 operator|(
 name|void
 operator|)
@@ -3186,15 +3236,10 @@ argument_list|,
 name|ovw
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|tactic
-operator|==
+break|break;
+case|case
 literal|4
-condition|)
-block|{
+case|:
 operator|(
 name|void
 operator|)
@@ -3229,10 +3274,10 @@ argument_list|,
 name|ovw
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-comment|/* if (tactic == 5) */
-block|{
+break|break;
+case|case
+literal|5
+case|:
 name|use
 index|[
 literal|0
@@ -3293,7 +3338,7 @@ argument_list|,
 name|ovw
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
 block|}
 endif|#
 directive|endif
@@ -3712,6 +3757,10 @@ name|xmits
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* these override lib_tputs.c */
+end_comment
+
 begin_decl_stmt
 name|int
 name|tputs
@@ -3809,6 +3858,57 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+return|return
+name|OK
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|char
+name|PC
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used by termcap library */
+end_comment
+
+begin_decl_stmt
+name|speed_t
+name|ospeed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used by termcap library */
+end_comment
+
+begin_decl_stmt
+name|int
+name|_nc_nulls_sent
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used by 'tack' program */
+end_comment
+
+begin_function
+name|int
+name|delay_output
+parameter_list|(
+name|int
+name|ms
+name|GCC_UNUSED
+parameter_list|)
+block|{
 return|return
 name|OK
 return|;
@@ -4453,8 +4553,7 @@ operator|->
 name|nte_index
 index|]
 operator|=
-operator|-
-literal|1
+name|ABSENT_NUMERIC
 expr_stmt|;
 operator|(
 name|void
@@ -4487,11 +4586,7 @@ operator|->
 name|nte_index
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|ABSENT_STRING
 expr_stmt|;
 operator|(
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -113,18 +113,6 @@ directive|if
 name|USE_FUNC_POLL
 end_if
 
-begin_include
-include|#
-directive|include
-file|<stropts.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<poll.h>
-end_include
-
 begin_elif
 elif|#
 directive|elif
@@ -162,7 +150,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tty_update.c,v 1.117 1999/10/22 23:28:46 tom Exp $"
+literal|"$Id: tty_update.c,v 1.139 2000/06/24 23:45:17 tom Exp $"
 argument_list|)
 end_macro
 
@@ -175,6 +163,14 @@ define|#
 directive|define
 name|CHECK_INTERVAL
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILL_BCE
+parameter_list|()
+value|(SP->_coloron&& !SP->_default_color&& !back_color_erase)
 end_define
 
 begin_comment
@@ -566,7 +562,7 @@ argument_list|,
 literal|"GoTo"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Force restore even if msgr is on when we're in an alternate 	 * character set -- these have a strong tendency to screw up the 	 * CR& LF used for local character motions! 	 */
+comment|/*      * Force restore even if msgr is on when we're in an alternate      * character set -- these have a strong tendency to screw up the      * CR& LF used for local character motions!      */
 if|if
 condition|(
 operator|(
@@ -658,6 +654,9 @@ name|chtype
 name|ch
 parameter_list|)
 block|{
+name|int
+name|data
+decl_stmt|;
 if|if
 condition|(
 name|tilde_glitch
@@ -709,22 +708,27 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SP
-operator|->
-name|_cleanup
-condition|)
-block|{
-name|_nc_outch
-argument_list|(
-operator|(
-name|int
-operator|)
+name|data
+operator|=
 name|TextOf
 argument_list|(
 name|ch
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SP
+operator|->
+name|_outch
+operator|!=
+literal|0
+condition|)
+block|{
+name|SP
+operator|->
+name|_outch
+argument_list|(
+name|data
 argument_list|)
 expr_stmt|;
 block|}
@@ -732,13 +736,7 @@ else|else
 block|{
 name|putc
 argument_list|(
-operator|(
-name|int
-operator|)
-name|TextOf
-argument_list|(
-name|ch
-argument_list|)
+name|data
 argument_list|,
 name|SP
 operator|->
@@ -794,7 +792,7 @@ name|have_pending
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* 	 * Only carry out this check when the flag is zero, otherwise we'll 	 * have the refreshing slow down drastically (or stop) if there's an 	 * unread character available. 	 */
+comment|/*      * Only carry out this check when the flag is zero, otherwise we'll      * have the refreshing slow down drastically (or stop) if there's an      * unread character available.      */
 if|if
 condition|(
 name|SP
@@ -870,7 +868,7 @@ name|defined
 argument_list|(
 name|__BEOS__
 argument_list|)
-comment|/* 		 * BeOS's select() is declared in socket.h, so the configure script does 		 * not see it.  That's just as well, since that function works only for 		 * sockets.  This (using snooze and ioctl) was distilled from Be's patch 		 * for ncurses which uses a separate thread to simulate select(). 		 * 		 * FIXME: the return values from the ioctl aren't very clear if we get 		 * interrupted. 		 */
+comment|/* 	 * BeOS's select() is declared in socket.h, so the configure script does 	 * not see it.  That's just as well, since that function works only for 	 * sockets.  This (using snooze and ioctl) was distilled from Be's patch 	 * for ncurses which uses a separate thread to simulate select(). 	 * 	 * FIXME: the return values from the ioctl aren't very clear if we get 	 * interrupted. 	 */
 name|int
 name|n
 init|=
@@ -1337,6 +1335,91 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check whether the given character can be output by clearing commands.  This  * includes test for being a space and not including any 'bad' attributes, such  * as A_REVERSE.  All attribute flags which don't affect appearance of a space  * or can be output by clearing (A_COLOR in case of bce-terminal) are excluded.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|can_clear_with
+parameter_list|(
+name|chtype
+name|ch
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|back_color_erase
+operator|&&
+name|SP
+operator|->
+name|_coloron
+condition|)
+block|{
+if|if
+condition|(
+name|ch
+operator|&
+name|A_COLOR
+condition|)
+return|return
+name|FALSE
+return|;
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+if|if
+condition|(
+operator|!
+name|SP
+operator|->
+name|_default_color
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+name|SP
+operator|->
+name|_default_fg
+operator|!=
+name|C_MASK
+operator|||
+name|SP
+operator|->
+name|_default_bg
+operator|!=
+name|C_MASK
+condition|)
+return|return
+name|FALSE
+return|;
+endif|#
+directive|endif
+block|}
+return|return
+operator|(
+operator|(
+name|ch
+operator|&
+operator|~
+operator|(
+name|NONBLANK_ATTR
+operator||
+name|A_COLOR
+operator|)
+operator|)
+operator|==
+name|BLANK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Issue a given span of characters from an array.  * Must be functionally equivalent to:  *	for (i = 0; i< num; i++)  *	    PutChar(ntext[i]);  * but can leave the cursor positioned at the middle of the interval.  *  * Returns: 0 - cursor is at the end of interval  *	    1 - cursor is somewhere in the middle  *  * This code is optimized using ech and rep.  */
 end_comment
 
@@ -1452,7 +1535,7 @@ condition|)
 name|runcount
 operator|++
 expr_stmt|;
-comment|/* 	     * The cost expression in the middle isn't exactly right. 	     * _cup_cost is an upper bound on the cost for moving to the 	     * end of the erased area, but not the cost itself (which we 	     * can't compute without emitting the move).  This may result 	     * in erase_chars not getting used in some situations for 	     * which it would be marginally advantageous. 	     */
+comment|/* 	     * The cost expression in the middle isn't exactly right. 	     * _cup_ch_cost is an upper bound on the cost for moving to the 	     * end of the erased area, but not the cost itself (which we 	     * can't compute without emitting the move).  This may result 	     * in erase_chars not getting used in some situations for 	     * which it would be marginally advantageous. 	     */
 if|if
 condition|(
 name|erase_chars
@@ -1465,7 +1548,7 @@ name|_ech_cost
 operator|+
 name|SP
 operator|->
-name|_cup_cost
+name|_cup_ch_cost
 operator|&&
 name|can_clear_with
 argument_list|(
@@ -1685,20 +1768,6 @@ name|j
 decl_stmt|,
 name|run
 decl_stmt|;
-name|int
-name|cost
-init|=
-name|min
-argument_list|(
-name|SP
-operator|->
-name|_cup_ch_cost
-argument_list|,
-name|SP
-operator|->
-name|_hpa_ch_cost
-argument_list|)
-decl_stmt|;
 name|TR
 argument_list|(
 name|TRACE_CHARPUT
@@ -1732,7 +1801,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|cost
+name|SP
+operator|->
+name|_inline_cost
 condition|)
 block|{
 for|for
@@ -1776,7 +1847,9 @@ if|if
 condition|(
 name|run
 operator|>
-name|cost
+name|SP
+operator|->
+name|_inline_cost
 condition|)
 block|{
 name|int
@@ -1862,6 +1935,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* leave unbracketed here so 'indent' works */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1872,7 +1949,7 @@ parameter_list|,
 name|row
 parameter_list|)
 define|\
-value|{ \ 		win->_line[row].firstchar = _NOCHANGE; \ 		win->_line[row].lastchar = _NOCHANGE; \ 		if_USE_SCROLL_HINTS(win->_line[row].oldindex = row); \ 	}
+value|win->_line[row].firstchar = _NOCHANGE; \ 		win->_line[row].lastchar = _NOCHANGE; \ 		if_USE_SCROLL_HINTS(win->_line[row].oldindex = row)
 end_define
 
 begin_function
@@ -1980,7 +2057,7 @@ operator|->
 name|_sig_winch
 condition|)
 block|{
-comment|/* 		 * This is a transparent extension:  XSI does not address it, 		 * and applications need not know that ncurses can do it. 		 * 		 * Check if the terminal size has changed while curses was off 		 * (this can happen in an xterm, for example), and resize the 		 * ncurses data structures accordingly. 		 */
+comment|/* 	 * This is a transparent extension:  XSI does not address it, 	 * and applications need not know that ncurses can do it. 	 * 	 * Check if the terminal size has changed while curses was off 	 * (this can happen in an xterm, for example), and resize the 	 * ncurses data structures accordingly. 	 */
 name|_nc_update_screensize
 argument_list|()
 expr_stmt|;
@@ -2044,7 +2121,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_TRACE_TIMES */
-comment|/* 	 * This is the support for magic-cookie terminals.  The 	 * theory: we scan the virtual screen looking for attribute 	 * turnons.  Where we find one, check to make sure it's 	 * realizable by seeing if the required number of 	 * un-attributed blanks are present before and after the 	 * attributed range; try to shift the range boundaries over 	 * blanks (not changing the screen display) so this becomes 	 * true.  If it is, shift the beginning attribute change 	 * appropriately (the end one, if we've gotten this far, is 	 * guaranteed room for its cookie). If not, nuke the added 	 * attributes out of the span. 	 */
+comment|/*      * This is the support for magic-cookie terminals.  The      * theory: we scan the virtual screen looking for attribute      * turnons.  Where we find one, check to make sure it's      * realizable by seeing if the required number of      * un-attributed blanks are present before and after the      * attributed range; try to shift the range boundaries over      * blanks (not changing the screen display) so this becomes      * true.  If it is, shift the beginning attribute change      * appropriately (the end one, if we've gotten this far, is      * guaranteed room for its cookie). If not, nuke the added      * attributes out of the span.      */
 if|#
 directive|if
 name|USE_XMC_SUPPORT
@@ -2078,6 +2155,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 for|for
 control|(
 name|j
@@ -2173,14 +2251,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		     * If the attribute change location is a blank with a 		     * "safe" attribute, undo the attribute turnon.  This may 		     * ensure there's enough room to set the attribute before 		     * the first non-blank in the run. 		     */
+comment|/* 		 * If the attribute change location is a blank with a 		 * "safe" attribute, undo the attribute turnon.  This may 		 * ensure there's enough room to set the attribute before 		 * the first non-blank in the run. 		 */
 define|#
 directive|define
 name|SAFE
 parameter_list|(
 name|a
 parameter_list|)
-value|!((a)& (chtype)~NONBLANK_ATTR)
+value|(!((a)& (chtype)~NONBLANK_ATTR))
 if|if
 condition|(
 name|TextOf
@@ -2237,6 +2315,7 @@ condition|;
 name|k
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|j
@@ -2289,6 +2368,7 @@ name|failed
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2416,7 +2496,7 @@ index|]
 operator|.
 name|text
 decl_stmt|;
-comment|/* 			     * If there are safely-attributed blanks at the 			     * end of the range, shorten the range.  This will 			     * help ensure that there is enough room at end 			     * of span. 			     */
+comment|/* 			 * If there are safely-attributed blanks at the 			 * end of the range, shorten the range.  This will 			 * help ensure that there is enough room at end 			 * of span. 			 */
 while|while
 condition|(
 name|n
@@ -2626,7 +2706,7 @@ name|j
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * back up the start of range so there's room 			 * for cookies before the first nonblank character 			 */
+comment|/* 		     * back up the start of range so there's room 		     * for cookies before the first nonblank character 		     */
 for|for
 control|(
 name|k
@@ -2674,6 +2754,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2816,7 +2897,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 			 * Here is our line-breakout optimization. 			 */
+comment|/* 	     * Here is our line-breakout optimization. 	     */
 if|if
 condition|(
 name|changedlines
@@ -2837,7 +2918,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 			 * newscr->line[i].firstchar is normally set 			 * by wnoutrefresh.  curscr->line[i].firstchar 			 * is normally set by _nc_scroll_window in the 			 * vertical-movement optimization code, 			 */
+comment|/* 	     * newscr->line[i].firstchar is normally set 	     * by wnoutrefresh.  curscr->line[i].firstchar 	     * is normally set by _nc_scroll_window in the 	     * vertical-movement optimization code, 	     */
 if|if
 condition|(
 name|newscr
@@ -2881,12 +2962,14 @@ name|newscr
 operator|->
 name|_maxy
 condition|)
+block|{
 name|MARK_NOCHANGE
 argument_list|(
 argument|newscr
 argument_list|,
 argument|i
 argument_list|)
+block|}
 if|if
 condition|(
 name|i
@@ -2895,12 +2978,14 @@ name|curscr
 operator|->
 name|_maxy
 condition|)
+block|{
 name|MARK_NOCHANGE
 argument_list|(
 argument|curscr
 argument_list|,
 argument|i
 argument_list|)
+block|}
 block|}
 block|}
 comment|/* put everything back in sync */
@@ -2919,12 +3004,14 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|MARK_NOCHANGE
 argument_list|(
 argument|newscr
 argument_list|,
 argument|i
 argument_list|)
+block|}
 for|for
 control|(
 name|i
@@ -2940,12 +3027,14 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|MARK_NOCHANGE
 argument_list|(
 argument|curscr
 argument_list|,
 argument|i
 argument_list|)
+block|}
 if|if
 condition|(
 operator|!
@@ -2984,7 +3073,7 @@ expr_stmt|;
 block|}
 name|cleanup
 label|:
-comment|/* 	 * Keep the physical screen in normal mode in case we get other 	 * processes writing to the screen. 	 */
+comment|/*      * Keep the physical screen in normal mode in case we get other      * processes writing to the screen.      */
 name|UpdateAttrs
 argument_list|(
 name|A_NORMAL
@@ -3001,7 +3090,6 @@ name|newscr
 operator|->
 name|_attrs
 expr_stmt|;
-comment|/*	curscr->_bkgd  = newscr->_bkgd; */
 if|#
 directive|if
 name|USE_TRACE_TIMES
@@ -3210,16 +3298,33 @@ name|ClrToEOL
 parameter_list|(
 name|chtype
 name|blank
+parameter_list|,
+name|bool
+name|needclear
 parameter_list|)
 block|{
 name|int
 name|j
 decl_stmt|;
-name|bool
-name|needclear
-init|=
-name|FALSE
-decl_stmt|;
+if|if
+condition|(
+name|curscr
+operator|!=
+literal|0
+operator|&&
+name|SP
+operator|->
+name|_cursrow
+operator|>=
+literal|0
+operator|&&
+name|SP
+operator|->
+name|_curscol
+operator|>=
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|j
@@ -3276,6 +3381,14 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+block|{
+name|needclear
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|needclear
@@ -3331,11 +3444,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|putp
 argument_list|(
 name|clr_eol
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -3358,6 +3473,19 @@ name|row
 decl_stmt|,
 name|col
 decl_stmt|;
+name|row
+operator|=
+name|SP
+operator|->
+name|_cursrow
+expr_stmt|;
+name|col
+operator|=
+name|SP
+operator|->
+name|_curscol
+expr_stmt|;
+block|{
 name|UpdateAttrs
 argument_list|(
 name|blank
@@ -3367,12 +3495,6 @@ name|TPUTS_TRACE
 argument_list|(
 literal|"clr_eos"
 argument_list|)
-expr_stmt|;
-name|row
-operator|=
-name|SP
-operator|->
-name|_cursrow
 expr_stmt|;
 name|tputs
 argument_list|(
@@ -3385,21 +3507,13 @@ argument_list|,
 name|_nc_outch
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|col
-operator|=
-name|SP
-operator|->
-name|_curscol
-init|;
+block|}
+while|while
+condition|(
 name|col
 operator|<
 name|screen_columns
-condition|;
-name|col
-operator|++
-control|)
+condition|)
 name|curscr
 operator|->
 name|_line
@@ -3410,6 +3524,7 @@ operator|.
 name|text
 index|[
 name|col
+operator|++
 index|]
 operator|=
 name|blank
@@ -3482,7 +3597,8 @@ name|lenLine
 decl_stmt|;
 name|int
 name|row
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|col
 decl_stmt|;
 name|int
@@ -3580,14 +3696,36 @@ expr_stmt|;
 if|if
 condition|(
 name|tstLine
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
+return|return
+name|total
+return|;
 name|lenLine
 operator|=
 name|last
 expr_stmt|;
+name|tstLine
+index|[
+literal|0
+index|]
+operator|=
+operator|~
+name|blank
+expr_stmt|;
+comment|/* force the fill below */
+block|}
+if|if
+condition|(
+name|tstLine
+index|[
+literal|0
+index|]
+operator|!=
+name|blank
+condition|)
+block|{
 for|for
 control|(
 name|col
@@ -3596,7 +3734,7 @@ literal|0
 init|;
 name|col
 operator|<
-name|last
+name|lenLine
 condition|;
 name|col
 operator|++
@@ -3609,14 +3747,6 @@ operator|=
 name|blank
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|tstLine
-operator|!=
-literal|0
-condition|)
-block|{
 for|for
 control|(
 name|row
@@ -3753,7 +3883,6 @@ index|]
 expr_stmt|;
 block|}
 block|}
-block|}
 if|#
 directive|if
 name|NO_LEAKS
@@ -3763,11 +3892,13 @@ name|tstLine
 operator|!=
 literal|0
 condition|)
+block|{
 name|FreeAndNull
 argument_list|(
 name|tstLine
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -3865,6 +3996,175 @@ index|[
 name|lineno
 index|]
 expr_stmt|;
+define|#
+directive|define
+name|ColorOf
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)& A_COLOR)
+define|#
+directive|define
+name|unColor
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)& ALL_BUT_COLOR)
+comment|/*      * If we have colors, there is the possibility of having two color pairs      * that display as the same colors.  For instance, Lynx does this.  Check      * for this case, and update the old line with the new line's colors when      * they are equivalent.      */
+if|if
+condition|(
+name|SP
+operator|->
+name|_coloron
+condition|)
+block|{
+name|chtype
+name|oldColor
+decl_stmt|;
+name|chtype
+name|newColor
+decl_stmt|;
+name|int
+name|oldPair
+decl_stmt|;
+name|int
+name|newPair
+decl_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|screen_columns
+condition|;
+name|n
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|newLine
+index|[
+name|n
+index|]
+operator|!=
+name|oldLine
+index|[
+name|n
+index|]
+condition|)
+block|{
+name|oldColor
+operator|=
+name|ColorOf
+argument_list|(
+name|oldLine
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+name|newColor
+operator|=
+name|ColorOf
+argument_list|(
+name|newLine
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oldColor
+operator|!=
+name|newColor
+operator|&&
+name|unColor
+argument_list|(
+name|oldLine
+index|[
+name|n
+index|]
+argument_list|)
+operator|==
+name|unColor
+argument_list|(
+name|newLine
+index|[
+name|n
+index|]
+argument_list|)
+condition|)
+block|{
+name|oldPair
+operator|=
+name|PAIR_NUMBER
+argument_list|(
+name|oldColor
+argument_list|)
+expr_stmt|;
+name|newPair
+operator|=
+name|PAIR_NUMBER
+argument_list|(
+name|newColor
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oldPair
+operator|<
+name|COLOR_PAIRS
+operator|&&
+name|newPair
+operator|<
+name|COLOR_PAIRS
+operator|&&
+name|SP
+operator|->
+name|_color_pairs
+index|[
+name|oldPair
+index|]
+operator|==
+name|SP
+operator|->
+name|_color_pairs
+index|[
+name|newPair
+index|]
+condition|)
+block|{
+name|oldLine
+index|[
+name|n
+index|]
+operator|&=
+operator|~
+name|A_COLOR
+expr_stmt|;
+name|oldLine
+index|[
+name|n
+index|]
+operator||=
+name|ColorOf
+argument_list|(
+name|newLine
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+block|}
+block|}
 if|if
 condition|(
 name|ceol_standout_glitch
@@ -3933,6 +4233,8 @@ name|ClrBlank
 argument_list|(
 name|curscr
 argument_list|)
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|PutRange
@@ -4020,7 +4322,7 @@ name|n
 operator|+
 name|magic_cookie_glitch
 decl_stmt|;
-comment|/* check for turn-on: 			 * If we are writing an attributed blank, where the 			 * previous cell is not attributed. 			 */
+comment|/* check for turn-on: 	     * If we are writing an attributed blank, where the 	     * previous cell is not attributed. 	     */
 if|if
 condition|(
 name|TextOf
@@ -4099,7 +4401,7 @@ name|n
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* check for turn-off: 			 * If we are writing an attributed non-blank, where the 			 * next cell is blank, and not attributed. 			 */
+comment|/* check for turn-off: 	     * If we are writing an attributed non-blank, where the 	     * next cell is blank, and not attributed. 	     */
 if|if
 condition|(
 name|TextOf
@@ -4572,6 +4874,8 @@ expr_stmt|;
 name|ClrToEOL
 argument_list|(
 name|blank
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4652,6 +4956,8 @@ expr_stmt|;
 name|ClrToEOL
 argument_list|(
 name|blank
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4912,12 +5218,14 @@ expr_stmt|;
 name|ClrToEOL
 argument_list|(
 name|blank
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * The delete-char sequence will 					 * effectively shift in blanks from the 					 * right margin of the screen.  Ensure 					 * that they are the right color by 					 * setting the video attributes from 					 * the last character on the row. 					 */
+comment|/* 		     * The delete-char sequence will 		     * effectively shift in blanks from the 		     * right margin of the screen.  Ensure 		     * that they are the right color by 		     * setting the video attributes from 		     * the last character on the row. 		     */
 name|UpdateAttrs
 argument_list|(
 name|blank
@@ -4984,6 +5292,17 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|bool
+name|fast_clear
+init|=
+operator|(
+name|clear_screen
+operator|||
+name|clr_eos
+operator|||
+name|clr_eol
+operator|)
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -4991,6 +5310,56 @@ literal|"ClearScreen() called"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+if|if
+condition|(
+name|SP
+operator|->
+name|_coloron
+operator|&&
+operator|!
+name|SP
+operator|->
+name|_default_color
+condition|)
+block|{
+name|_nc_do_color
+argument_list|(
+name|COLOR_PAIR
+argument_list|(
+name|SP
+operator|->
+name|_current_attr
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|FALSE
+argument_list|,
+name|_nc_outch
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|back_color_erase
+condition|)
+block|{
+name|fast_clear
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|fast_clear
+condition|)
+block|{
 if|if
 condition|(
 name|clear_screen
@@ -5137,16 +5506,61 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
-name|T
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|screen_lines
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|GoTo
 argument_list|(
-operator|(
-literal|"cannot clear screen"
-operator|)
+name|i
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+name|UpdateAttrs
+argument_list|(
+name|blank
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|screen_columns
+condition|;
+name|j
+operator|++
+control|)
+name|PutChar
+argument_list|(
+name|blank
+argument_list|)
+expr_stmt|;
+block|}
+name|GoTo
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 for|for
 control|(
@@ -5228,7 +5642,7 @@ name|count
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Prefer parm_ich as it has the smallest cost - no need to shift 	 * the whole line on each character. */
+comment|/* Prefer parm_ich as it has the smallest cost - no need to shift      * the whole line on each character. */
 comment|/* The order must match that of InsCharCost. */
 if|if
 condition|(
@@ -5412,6 +5826,9 @@ name|int
 name|count
 parameter_list|)
 block|{
+name|int
+name|n
+decl_stmt|;
 name|T
 argument_list|(
 operator|(
@@ -5456,11 +5873,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-while|while
-condition|(
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
 name|count
-operator|--
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|TPUTS_TRACE
 argument_list|(
@@ -5539,6 +5964,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 if|if
 condition|(
@@ -5829,6 +6256,60 @@ else|else
 return|return
 name|ERR
 return|;
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+if|if
+condition|(
+name|FILL_BCE
+argument_list|()
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|GoTo
+argument_list|(
+name|bot
+operator|-
+name|i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|screen_columns
+condition|;
+name|j
+operator|++
+control|)
+name|PutChar
+argument_list|(
+name|blank
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 return|return
 name|OK
 return|;
@@ -5869,6 +6350,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 if|if
 condition|(
@@ -6159,6 +6642,60 @@ else|else
 return|return
 name|ERR
 return|;
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+if|if
+condition|(
+name|FILL_BCE
+argument_list|()
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|GoTo
+argument_list|(
+name|top
+operator|+
+name|i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|screen_columns
+condition|;
+name|j
+operator|++
+control|)
+name|PutChar
+argument_list|(
+name|blank
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 return|return
 name|OK
 return|;
@@ -6279,8 +6816,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* if (delete_line) */
 block|{
+comment|/* if (delete_line) */
 for|for
 control|(
 name|i
@@ -6376,8 +6913,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* if (insert_line) */
 block|{
+comment|/* if (insert_line) */
 for|for
 control|(
 name|i
@@ -6493,8 +7030,8 @@ name|n
 operator|>
 literal|0
 condition|)
-comment|/* scroll up (forward) */
 block|{
+comment|/* scroll up (forward) */
 comment|/* 	 * Explicitly clear if stuff pushed off top of region might 	 * be saved by the terminal. 	 */
 if|if
 condition|(
@@ -6533,6 +7070,8 @@ expr_stmt|;
 name|ClrToEOL
 argument_list|(
 name|BLANK
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -6751,8 +7290,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* (n< 0) - scroll down (backward) */
 block|{
+comment|/* (n< 0) - scroll down (backward) */
 comment|/* 	 * Do explicit clear to end of region if it's possible that the 	 * terminal might hold on to stuff we push off the end. 	 */
 if|if
 condition|(
@@ -6826,6 +7365,8 @@ expr_stmt|;
 name|ClrToEOL
 argument_list|(
 name|BLANK
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7082,7 +7623,9 @@ end_function
 begin_function
 name|void
 name|_nc_screen_resume
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* make sure terminal is in a sane known state */
 name|SP
@@ -7182,7 +7725,9 @@ end_function
 begin_function
 name|void
 name|_nc_screen_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|_nc_screen_resume
 argument_list|()
@@ -7197,13 +7742,95 @@ end_comment
 begin_function
 name|void
 name|_nc_screen_wrap
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|UpdateAttrs
 argument_list|(
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NCURSES_EXT_FUNCS
+if|if
+condition|(
+name|SP
+operator|->
+name|_coloron
+operator|&&
+operator|!
+name|SP
+operator|->
+name|_default_color
+condition|)
+block|{
+name|SP
+operator|->
+name|_default_color
+operator|=
+name|TRUE
+expr_stmt|;
+name|_nc_do_color
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|FALSE
+argument_list|,
+name|_nc_outch
+argument_list|)
+expr_stmt|;
+name|SP
+operator|->
+name|_default_color
+operator|=
+name|FALSE
+expr_stmt|;
+name|mvcur
+argument_list|(
+name|SP
+operator|->
+name|_cursrow
+argument_list|,
+name|SP
+operator|->
+name|_curscol
+argument_list|,
+name|screen_lines
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|SP
+operator|->
+name|_cursrow
+operator|=
+name|screen_lines
+operator|-
+literal|1
+expr_stmt|;
+name|SP
+operator|->
+name|_curscol
+operator|=
+literal|0
+expr_stmt|;
+name|ClrToEOL
+argument_list|(
+name|BLANK
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 

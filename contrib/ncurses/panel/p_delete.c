@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_delete.c,v 1.2 1998/02/11 12:14:01 tom Exp $"
+literal|"$Id: p_delete.c,v 1.4 1999/11/25 13:49:26 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -33,6 +33,11 @@ modifier|*
 name|pan
 parameter_list|)
 block|{
+name|int
+name|err
+init|=
+name|OK
+decl_stmt|;
 if|if
 condition|(
 name|pan
@@ -52,19 +57,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|_nc_panel_is_linked
+name|HIDE_PANEL
 argument_list|(
 name|pan
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|hide_panel
-argument_list|(
-name|pan
+argument_list|,
+name|err
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|free
@@ -76,15 +75,15 @@ operator|)
 name|pan
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|OK
-operator|)
-return|;
 block|}
+else|else
+name|err
+operator|=
+name|ERR
+expr_stmt|;
 return|return
 operator|(
-name|ERR
+name|err
 operator|)
 return|;
 block|}

@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: p_hidden.c,v 1.3 1999/09/18 11:04:19 juergen Exp $"
+literal|"$Id: p_hidden.c,v 1.4 1999/11/22 18:02:41 juergen Exp $"
 argument_list|)
 end_macro
 
@@ -46,7 +46,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|_nc_panel_is_linked
+name|IS_LINKED
 argument_list|(
 name|pan
 argument_list|)

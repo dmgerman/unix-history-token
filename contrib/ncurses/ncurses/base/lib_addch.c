@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_addch.c,v 1.42 1999/07/24 20:01:05 tom Exp $"
+literal|"$Id: lib_addch.c,v 1.44 2000/05/20 21:13:11 tom Exp $"
 argument_list|)
 end_macro
 
@@ -291,37 +291,14 @@ operator|->
 name|_cury
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're trying to add a character at the lower-right corner more 	 * than once, fail.  (Moving the cursor will clear the flag). 	 */
-if|if
-condition|(
-name|win
-operator|->
-name|_flags
-operator|&
-name|_WRAPPED
-condition|)
-block|{
-if|if
-condition|(
-name|x
-operator|>=
-name|win
-operator|->
-name|_maxx
-condition|)
-return|return
-operator|(
-name|ERR
-operator|)
-return|;
-name|win
-operator|->
-name|_flags
-operator|&=
-operator|~
-name|_WRAPPED
-expr_stmt|;
-block|}
+comment|/*      * If we're trying to add a character at the lower-right corner more      * than once, fail.  (Moving the cursor will clear the flag).      */
+if|#
+directive|if
+literal|0
+comment|/* Solaris 2.6 allows updating the corner more than once */
+block|if (win->_flags& _WRAPPED) { 	if (x>= win->_maxx) 	    return (ERR); 	win->_flags&= ~_WRAPPED;     }
+endif|#
+directive|endif
 name|ch
 operator|=
 name|render_char
@@ -403,7 +380,7 @@ operator|->
 name|_maxx
 condition|)
 block|{
-comment|/* 		 * The _WRAPPED flag is useful only for telling an application 		 * that we've just wrapped the cursor.  We don't do anything 		 * with this flag except set it when wrapping, and clear it 		 * whenever we move the cursor.  If we try to wrap at the 		 * lower-right corner of a window, we cannot move the cursor 		 * (since that wouldn't be legal).  So we return an error 		 * (which is what SVr4 does).  Unlike SVr4, we can successfully 		 * add a character to the lower-right corner. 		 */
+comment|/* 	 * The _WRAPPED flag is useful only for telling an application that 	 * we've just wrapped the cursor.  We don't do anything with this flag 	 * except set it when wrapping, and clear it whenever we move the 	 * cursor.  If we try to wrap at the lower-right corner of a window, we 	 * cannot move the cursor (since that wouldn't be legal).  So we return 	 * an error (which is what SVr4 does).  Unlike SVr4, we can 	 * successfully add a character to the lower-right corner (Solaris 2.6 	 * does this also, however). 	 */
 name|win
 operator|->
 name|_flags
@@ -590,7 +567,7 @@ name|TABSIZE
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 		 * Space-fill the tab on the bottom line so that we'll get the 		 * "correct" cursor position. 		 */
+comment|/* 	 * Space-fill the tab on the bottom line so that we'll get the 	 * "correct" cursor position. 	 */
 if|if
 condition|(
 operator|(

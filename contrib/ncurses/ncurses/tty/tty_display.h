@@ -414,21 +414,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Check whether the given character can be output by clearing commands.  This  * includes test for being a space and not including any 'bad' attributes, such  * as A_REVERSE.  All attribute flags which don't affect appearance of a space  * or can be output by clearing (A_COLOR in case of bce-terminal) are excluded.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|can_clear_with
-parameter_list|(
-name|ch
-parameter_list|)
-define|\
-value|((ch& ~(NONBLANK_ATTR|(back_color_erase ? A_COLOR:0))) == BLANK)
-end_define
-
 begin_define
 define|#
 directive|define
