@@ -192,7 +192,9 @@ specifier|static
 name|char
 name|current
 index|[
-literal|40
+literal|7
+operator|+
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
