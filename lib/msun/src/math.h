@@ -293,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|math_errhandling
-value|0
+value|MATH_ERREXCEPT
 end_define
 
 begin_comment
