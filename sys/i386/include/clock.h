@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.24 1997/02/22 09:33:59 peter Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.25 1997/04/26 11:45:33 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -122,7 +122,6 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|I586_CPU
@@ -132,8 +131,11 @@ name|defined
 argument_list|(
 name|I686_CPU
 argument_list|)
-operator|)
-operator|&&
+end_if
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -158,14 +160,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|i586_ctr_freq
+name|i586_ctr_multiplier
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|i586_ctr_multiplier
+name|i586_ctr_freq
 decl_stmt|;
 end_decl_stmt
 
