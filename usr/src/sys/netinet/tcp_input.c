@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.28 81/11/23 */
+comment|/* tcp_input.c 1.29 81/11/24 */
 end_comment
 
 begin_include
@@ -739,24 +739,12 @@ operator|&
 name|TH_RST
 condition|)
 block|{
-name|tcp_error
+name|tcp_drop
 argument_list|(
 name|tp
 argument_list|,
 name|ENETRESET
 argument_list|)
-expr_stmt|;
-name|tcp_detach
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* 70 */
-name|tp
-operator|->
-name|t_state
-operator|=
-name|CLOSED
 expr_stmt|;
 goto|goto
 name|bad
@@ -855,24 +843,12 @@ goto|goto
 name|bad
 goto|;
 default|default:
-name|tcp_error
+name|tcp_drop
 argument_list|(
 name|tp
 argument_list|,
 name|ENETRESET
 argument_list|)
-expr_stmt|;
-name|tcp_detach
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-comment|/* 66 */
-name|tp
-operator|->
-name|t_state
-operator|=
-name|CLOSED
 expr_stmt|;
 goto|goto
 name|bad
@@ -1172,13 +1148,6 @@ operator|=
 name|T_2ML
 expr_stmt|;
 comment|/* 3 */
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
-expr_stmt|;
 name|nstate
 operator|=
 name|CLOSE_WAIT
@@ -1253,7 +1222,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|tp
 operator|->
 name|t_finack
@@ -1261,14 +1229,6 @@ operator|=
 name|T_2ML
 expr_stmt|;
 comment|/* 9 */
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
-expr_stmt|;
-block|}
 name|nstate
 operator|=
 name|CLOSE_WAIT
@@ -1446,13 +1406,6 @@ name|t_finack
 operator|=
 name|T_2ML
 expr_stmt|;
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
-expr_stmt|;
 name|nstate
 operator|=
 name|j
@@ -1482,13 +1435,6 @@ operator|=
 name|T_2ML
 expr_stmt|;
 comment|/* 29 */
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
-expr_stmt|;
 name|nstate
 operator|=
 name|TIME_WAIT
@@ -1543,13 +1489,6 @@ name|t_finack
 operator|=
 name|T_2ML
 expr_stmt|;
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
-expr_stmt|;
 block|}
 else|else
 operator|(
@@ -1602,13 +1541,6 @@ name|t_finack
 operator|=
 name|T_2ML
 expr_stmt|;
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
-expr_stmt|;
 if|if
 condition|(
 name|j
@@ -1631,9 +1563,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|tc_flags
-operator|&
-name|TC_WAITED_2_ML
+name|t_finack
+operator|==
+literal|0
 condition|)
 if|if
 condition|(
@@ -1781,13 +1713,6 @@ operator|->
 name|t_finack
 operator|=
 name|T_2ML
-expr_stmt|;
-name|tp
-operator|->
-name|tc_flags
-operator|&=
-operator|~
-name|TC_WAITED_2_ML
 expr_stmt|;
 comment|/* 30 */
 block|}

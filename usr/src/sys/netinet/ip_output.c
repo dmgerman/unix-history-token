@@ -6,7 +6,7 @@ name|IMPLOOP
 end_define
 
 begin_comment
-comment|/*	ip_output.c	1.18	81/11/23	*/
+comment|/*	ip_output.c	1.19	81/11/24	*/
 end_comment
 
 begin_include
@@ -371,6 +371,16 @@ operator||=
 name|IP_MF
 expr_stmt|;
 block|}
+name|mhip
+operator|->
+name|ip_len
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+expr_stmt|;
 name|mh
 operator|->
 name|m_next

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.5	81/11/18	*/
+comment|/*	tcp_var.h	4.6	81/11/24	*/
 end_comment
 
 begin_comment
@@ -342,15 +342,11 @@ begin_comment
 comment|/* retransmit timer cancelled */
 end_comment
 
-begin_comment
-comment|/* ... */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|TC_FIN_RCVD
-value|0x0008
+value|0x0004
 end_define
 
 begin_comment
@@ -361,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|TC_FORCE_ONE
-value|0x0010
+value|0x0008
 end_define
 
 begin_comment
@@ -372,7 +368,7 @@ begin_define
 define|#
 directive|define
 name|TC_NEW_WINDOW
-value|0x0020
+value|0x0010
 end_define
 
 begin_comment
@@ -383,7 +379,7 @@ begin_define
 define|#
 directive|define
 name|TC_REXMT
-value|0x0040
+value|0x0020
 end_define
 
 begin_comment
@@ -394,7 +390,7 @@ begin_define
 define|#
 directive|define
 name|TC_SND_FIN
-value|0x0080
+value|0x0040
 end_define
 
 begin_comment
@@ -405,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|TC_SND_RST
-value|0x0100
+value|0x0080
 end_define
 
 begin_comment
@@ -416,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|TC_SND_URG
-value|0x0200
+value|0x0100
 end_define
 
 begin_comment
@@ -427,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|TC_SYN_ACKED
-value|0x0400
+value|0x0200
 end_define
 
 begin_comment
@@ -438,7 +434,7 @@ begin_define
 define|#
 directive|define
 name|TC_SYN_RCVD
-value|0x0800
+value|0x0400
 end_define
 
 begin_comment
@@ -449,7 +445,7 @@ begin_define
 define|#
 directive|define
 name|TC_USR_CLOSED
-value|0x1000
+value|0x0800
 end_define
 
 begin_comment
@@ -459,30 +455,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TC_WAITED_2_ML
-value|0x2000
-end_define
-
-begin_comment
-comment|/* wait time for FIN ACK is up */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_NET_KEEP
-value|0x4000
-end_define
-
-begin_comment
-comment|/* don't free this net input */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TC_USR_ABORT
-value|0x8000
+value|0x1000
 end_define
 
 begin_comment
