@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.22 1996/08/13 07:21:45 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.23 1996/08/13 19:48:41 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -40,16 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_comment
-comment|/* define FWRITE ... */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -69,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.30 1995/12/07 12:47:20 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.31 1996/06/14 11:01:41 asami Exp $ */
 end_comment
 
 begin_comment
@@ -52,16 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_comment
-comment|/* define FWRITE ... */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -81,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
 end_include
 
 begin_include
