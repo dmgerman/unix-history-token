@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operator.c	5.4 (Berkeley) %G%"
+literal|"@(#)operator.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,18 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fts.h>
 end_include
 
 begin_include
@@ -212,11 +224,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"("
-argument_list|,
-literal|"missing closing ')'"
+literal|"(: missing closing ')'"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a N_EXPR.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
@@ -235,13 +245,11 @@ name|subplan
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"()"
-argument_list|,
-literal|"empty inner expression"
+literal|"(): empty inner expression"
 argument_list|)
 expr_stmt|;
 name|node
@@ -375,13 +383,11 @@ name|type
 operator|==
 name|N_CLOSEPAREN
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|")"
-argument_list|,
-literal|"no beginning '('"
+literal|"): no beginning '('"
 argument_list|)
 expr_stmt|;
 comment|/* add the expression to our result plan */
@@ -564,13 +570,11 @@ name|node
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"!"
-argument_list|,
-literal|"no following expression"
+literal|"!: no following expression"
 argument_list|)
 expr_stmt|;
 if|if
@@ -581,13 +585,11 @@ name|type
 operator|==
 name|N_OR
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"!"
-argument_list|,
-literal|"nothing between ! and -o"
+literal|"!: nothing between ! and -o"
 argument_list|)
 expr_stmt|;
 if|if
@@ -779,13 +781,11 @@ name|result
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"-o"
-argument_list|,
-literal|"no expression before -o"
+literal|"-o: no expression before -o"
 argument_list|)
 expr_stmt|;
 name|next
@@ -820,13 +820,11 @@ index|]
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"-o"
-argument_list|,
-literal|"no expression after -o"
+literal|"-o: no expression after -o"
 argument_list|)
 expr_stmt|;
 return|return

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.11 (Berkeley) %G%"
+literal|"@(#)option.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -70,58 +76,6 @@ directive|include
 file|"find.h"
 end_include
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|_option
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* option name */
-name|enum
-name|ntype
-name|token
-decl_stmt|;
-comment|/* token type */
-name|PLAN
-modifier|*
-function_decl|(
-modifier|*
-name|create
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* create function */
-define|#
-directive|define
-name|O_NONE
-value|0x01
-comment|/* no call required */
-define|#
-directive|define
-name|O_ZERO
-value|0x02
-comment|/* pass: nothing */
-define|#
-directive|define
-name|O_ARGV
-value|0x04
-comment|/* pass: argv, increment argv */
-define|#
-directive|define
-name|O_ARGVP
-value|0x08
-comment|/* pass: *argv, N_OK || N_EXEC */
-name|int
-name|flags
-decl_stmt|;
-block|}
-name|OPTION
-typedef|;
-end_typedef
-
 begin_comment
 comment|/* NB: the following table must be sorted lexically. */
 end_comment
@@ -133,6 +87,7 @@ name|options
 index|[]
 init|=
 block|{
+block|{
 literal|"!"
 block|,
 name|N_NOT
@@ -140,7 +95,9 @@ block|,
 name|c_not
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"("
 block|,
 name|N_OPENPAREN
@@ -148,7 +105,9 @@ block|,
 name|c_openparen
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|")"
 block|,
 name|N_CLOSEPAREN
@@ -156,7 +115,9 @@ block|,
 name|c_closeparen
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-a"
 block|,
 name|N_AND
@@ -164,7 +125,9 @@ block|,
 name|NULL
 block|,
 name|O_NONE
+block|}
 block|,
+block|{
 literal|"-and"
 block|,
 name|N_AND
@@ -172,7 +135,9 @@ block|,
 name|NULL
 block|,
 name|O_NONE
+block|}
 block|,
+block|{
 literal|"-atime"
 block|,
 name|N_ATIME
@@ -180,7 +145,9 @@ block|,
 name|c_atime
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-ctime"
 block|,
 name|N_CTIME
@@ -188,7 +155,9 @@ block|,
 name|c_ctime
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-depth"
 block|,
 name|N_DEPTH
@@ -196,7 +165,9 @@ block|,
 name|c_depth
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-exec"
 block|,
 name|N_EXEC
@@ -204,7 +175,9 @@ block|,
 name|c_exec
 block|,
 name|O_ARGVP
+block|}
 block|,
+block|{
 literal|"-follow"
 block|,
 name|N_FOLLOW
@@ -212,7 +185,9 @@ block|,
 name|c_follow
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-fstype"
 block|,
 name|N_FSTYPE
@@ -220,7 +195,9 @@ block|,
 name|c_fstype
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-group"
 block|,
 name|N_GROUP
@@ -228,7 +205,9 @@ block|,
 name|c_group
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-inum"
 block|,
 name|N_INUM
@@ -236,7 +215,9 @@ block|,
 name|c_inum
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-links"
 block|,
 name|N_LINKS
@@ -244,7 +225,9 @@ block|,
 name|c_links
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-ls"
 block|,
 name|N_LS
@@ -252,7 +235,9 @@ block|,
 name|c_ls
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-mtime"
 block|,
 name|N_MTIME
@@ -260,7 +245,9 @@ block|,
 name|c_mtime
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-name"
 block|,
 name|N_NAME
@@ -268,7 +255,9 @@ block|,
 name|c_name
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-newer"
 block|,
 name|N_NEWER
@@ -276,7 +265,9 @@ block|,
 name|c_newer
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-nogroup"
 block|,
 name|N_NOGROUP
@@ -284,7 +275,9 @@ block|,
 name|c_nogroup
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-nouser"
 block|,
 name|N_NOUSER
@@ -292,7 +285,9 @@ block|,
 name|c_nouser
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-o"
 block|,
 name|N_OR
@@ -300,7 +295,9 @@ block|,
 name|c_or
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-ok"
 block|,
 name|N_OK
@@ -308,7 +305,9 @@ block|,
 name|c_exec
 block|,
 name|O_ARGVP
+block|}
 block|,
+block|{
 literal|"-or"
 block|,
 name|N_OR
@@ -316,7 +315,9 @@ block|,
 name|c_or
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-path"
 block|,
 name|N_PATH
@@ -324,7 +325,9 @@ block|,
 name|c_path
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-perm"
 block|,
 name|N_PERM
@@ -332,7 +335,9 @@ block|,
 name|c_perm
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-print"
 block|,
 name|N_PRINT
@@ -340,7 +345,9 @@ block|,
 name|c_print
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-prune"
 block|,
 name|N_PRUNE
@@ -348,7 +355,9 @@ block|,
 name|c_prune
 block|,
 name|O_ZERO
+block|}
 block|,
+block|{
 literal|"-size"
 block|,
 name|N_SIZE
@@ -356,7 +365,9 @@ block|,
 name|c_size
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-type"
 block|,
 name|N_TYPE
@@ -364,7 +375,9 @@ block|,
 name|c_type
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-user"
 block|,
 name|N_USER
@@ -372,7 +385,9 @@ block|,
 name|c_user
 block|,
 name|O_ARGV
+block|}
 block|,
+block|{
 literal|"-xdev"
 block|,
 name|N_XDEV
@@ -380,6 +395,7 @@ block|,
 name|c_xdev
 block|,
 name|O_ZERO
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -416,11 +432,6 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-name|OPTION
-modifier|*
-name|option
-parameter_list|()
-function_decl|;
 name|argv
 operator|=
 operator|*
@@ -440,26 +451,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"find: unknown option %s.\n"
+literal|"%s: unknown option"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|++
 name|argv
 expr_stmt|;
@@ -479,27 +480,17 @@ operator|!
 operator|*
 name|argv
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"find: %s requires additional arguments.\n"
+literal|"%s: requires additional arguments"
 argument_list|,
 operator|*
 operator|--
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|p
@@ -567,6 +558,10 @@ name|N_OK
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 operator|*
 name|argvp
@@ -652,25 +647,23 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|typecompare
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

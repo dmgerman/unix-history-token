@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.24 (Berkeley) %G%"
+literal|"@(#)function.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fnmatch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fts.h>
 end_include
 
 begin_include
@@ -74,30 +92,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fts.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fnmatch.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
 end_include
 
 begin_include
@@ -121,6 +115,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"find.h"
 end_include
 
@@ -133,7 +139,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	switch(plan->flags) { \ 	case F_EQUAL: \ 		return(a == b); \ 	case F_LESSTHAN: \ 		return(a< b); \ 	case F_GREATER: \ 		return(a> b); \ 	} \ 	return(0); \ }
+value|{							\ 	switch (plan->flags) {						\ 	case F_EQUAL:							\ 		return (a == b);					\ 	case F_LESSTHAN:						\ 		return (a< b);						\ 	case F_GREATER:							\ 		return (a> b);						\ 	default:							\ 		abort();						\ 	}								\ }
 end_define
 
 begin_decl_stmt
@@ -149,9 +155,18 @@ name|ntype
 operator|,
 name|int
 argument_list|(
-operator|*
+argument|*
 argument_list|)
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|PLAN
+operator|*
+operator|,
+name|FTSENT
+operator|*
+operator|)
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
@@ -170,7 +185,7 @@ name|plan
 parameter_list|,
 name|option
 parameter_list|,
-name|str
+name|vp
 parameter_list|,
 name|endch
 parameter_list|)
@@ -183,7 +198,7 @@ modifier|*
 name|option
 decl_stmt|,
 decl|*
-name|str
+name|vp
 decl_stmt|,
 modifier|*
 name|endch
@@ -198,9 +213,16 @@ decl_stmt|;
 name|char
 modifier|*
 name|endchar
+decl_stmt|,
+modifier|*
+name|str
 decl_stmt|;
 comment|/* pointer to character ending conversion */
 comment|/* determine comparison from leading + or - */
+name|str
+operator|=
+name|vp
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -265,13 +287,15 @@ name|endchar
 operator|==
 name|str
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s: %s: illegal numeric value"
 argument_list|,
 name|option
 argument_list|,
-literal|"illegal numeric value"
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -295,13 +319,15 @@ operator|*
 name|endch
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s: %s: illegal trailing character"
 argument_list|,
 name|option
 argument_list|,
-literal|"illegal trailing character"
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -328,30 +354,22 @@ begin_comment
 comment|/*  * -atime n functions --  *  *	True if the difference between the file access time and the  *	current time is n 24 hour periods.  *  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_atime
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|time_t
@@ -381,7 +399,7 @@ name|t_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -440,30 +458,22 @@ begin_comment
 comment|/*  * -ctime n functions --  *  *	True if the difference between the last change of file  *	status information and the current time is n 24 hour periods.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_ctime
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|time_t
@@ -493,7 +503,7 @@ name|t_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -552,34 +562,22 @@ begin_comment
 comment|/*  * -depth functions --  *  *	Always true, causes descent of the directory hierarchy to be done  *	so that all entries in a directory are acted on before the directory  *	itself.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+begin_function
+name|int
 name|f_always_true
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -587,7 +585,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -616,28 +614,23 @@ begin_comment
 comment|/*  * [-exec | -ok] utility [arg ... ] ; functions --  *  *	True if the executed utility returns a zero value as exit status.  *	The end of the primary expression is delimited by a semicolon.  If  *	"{}" occurs anywhere, it gets replaced by the current pathname.  *	The current directory for the execution of utility is the same as  *	the current directory when the find utility was started.  *  *	The primary -ok is different in that it requests affirmation of the  *	user before executing the utility.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|f_exec
-argument_list|(
+parameter_list|(
 name|plan
-argument_list|,
+parameter_list|,
 name|entry
-argument_list|)
+parameter_list|)
 specifier|register
 name|PLAN
-operator|*
+modifier|*
 name|plan
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -742,12 +735,9 @@ literal|1
 case|:
 name|err
 argument_list|(
-literal|"fork: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"fork"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -762,19 +752,9 @@ name|dotfd
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: chdir: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"chdir"
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -797,14 +777,9 @@ operator|->
 name|e_argv
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|plan
 operator|->
@@ -812,11 +787,6 @@ name|e_argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -857,7 +827,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * c_exec --  *	build three parallel arrays, one with pointers to the strings passed  *	on the command line, one with (possibly duplicated) pointers to the  *	argv array, and one with integer values that are lengths of the  *	strings, but also flags meaning that the string has to be massaged.  */
@@ -947,17 +917,17 @@ operator|!
 operator|*
 name|ap
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s: no terminating \";\""
 argument_list|,
 name|isok
 condition|?
 literal|"-ok"
 else|:
 literal|"-exec"
-argument_list|,
-literal|"no terminating \";\""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1229,30 +1199,22 @@ begin_comment
 comment|/*  * -fstype functions --  *  *	True if the file is of a certain type.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_fstype
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|dev_t
@@ -1324,7 +1286,7 @@ if|if
 condition|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|entry
 operator|->
@@ -1397,16 +1359,13 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|entry
 operator|->
 name|fts_accpath
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1466,6 +1425,10 @@ operator|.
 name|f_type
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 switch|switch
@@ -1499,9 +1462,13 @@ operator|->
 name|mt_data
 operator|)
 return|;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -1739,9 +1706,11 @@ return|;
 block|}
 break|break;
 block|}
-name|err
+name|errx
 argument_list|(
-literal|"unknown file type %s"
+literal|1
+argument_list|,
+literal|"%s: unknown file type"
 argument_list|,
 name|arg
 argument_list|)
@@ -1754,30 +1723,22 @@ begin_comment
 comment|/*  * -group gname functions --  *  *	True if the file belongs to the group gname.  If gname is numeric and  *	an equivalent of the getgrnam() function does not return a valid group  *	name, gname is taken as a group ID.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_group
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1793,7 +1754,7 @@ name|g_data
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -1858,13 +1819,13 @@ index|]
 operator|!=
 literal|'0'
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"-group"
+literal|"-group: %s: no such group"
 argument_list|,
-literal|"no such group"
+name|gname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1902,30 +1863,22 @@ begin_comment
 comment|/*  * -inum n functions --  *  *	True if the file has inode # n.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_inum
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|COMPARE
 argument_list|(
@@ -1941,7 +1894,7 @@ name|i_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2000,30 +1953,22 @@ begin_comment
 comment|/*  * -links n functions --  *  *	True if the file has n links.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_links
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|COMPARE
 argument_list|(
@@ -2039,7 +1984,7 @@ name|l_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2101,34 +2046,22 @@ begin_comment
 comment|/*  * -ls functions --  *  *	Always true - prints the current entry to stdout in "ls" format.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+begin_function
+name|int
 name|f_ls
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printlong
 argument_list|(
@@ -2151,7 +2084,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2185,30 +2118,22 @@ begin_comment
 comment|/*  * -mtime n functions --  *  *	True if the difference between the file modification time and the  *	current time is n 24 hour periods.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_mtime
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|time_t
@@ -2238,7 +2163,7 @@ name|t_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2297,30 +2222,22 @@ begin_comment
 comment|/*  * -name functions --  *  *	True if the basename of the filename being examined  *	matches pattern using Pattern Matching Notation S3.14  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_name
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2340,7 +2257,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2385,30 +2302,22 @@ begin_comment
 comment|/*  * -newer file functions --  *  *	True if the current file has been modified more recently  *	then the modification time of the file named by the pathname  *	file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_newer
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2424,7 +2333,7 @@ name|t_data
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2463,14 +2372,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|new
@@ -2502,34 +2408,22 @@ begin_comment
 comment|/*  * -nogroup functions --  *  *	True if file belongs to a user ID for which the equivalent  *	of the getgrnam() 9.2.1 [POSIX.1] function returns NULL.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+begin_function
+name|int
 name|f_nogroup
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2555,7 +2449,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2585,34 +2479,22 @@ begin_comment
 comment|/*  * -nouser functions --  *  *	True if file belongs to a user ID for which the equivalent  *	of the getpwuid() 9.2.2 [POSIX.1] function returns NULL.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+begin_function
+name|int
 name|f_nouser
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2638,7 +2520,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2668,30 +2550,22 @@ begin_comment
 comment|/*  * -path functions --  *  *	True if the path of the filename being examined  *	matches pattern using Pattern Matching Notation S3.14  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_path
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2711,7 +2585,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2756,30 +2630,22 @@ begin_comment
 comment|/*  * -perm functions --  *  *	The mode argument is used to represent file mode bits.  If it starts  *	with a leading digit, it's treated as an octal mode, otherwise as a  *	symbolic mode.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_perm
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|mode_t
 name|mode
@@ -2839,7 +2705,7 @@ operator|)
 return|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -2908,11 +2774,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"-perm"
+literal|"-perm: %s: illegal mode string"
 argument_list|,
-literal|"illegal mode string"
+name|perm
 argument_list|)
 expr_stmt|;
 name|new
@@ -2938,34 +2804,22 @@ begin_comment
 comment|/*  * -print functions --  *  *	Always true, causes the current pathame to be written to  *	standard output.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+begin_function
+name|int
 name|f_print
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -2985,7 +2839,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3014,34 +2868,22 @@ begin_comment
 comment|/*  * -prune functions --  *  *	Prune a portion of the hierarchy.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_macro
+begin_function
+name|int
 name|f_prune
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|FTS
@@ -3061,16 +2903,13 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|entry
 operator|->
 name|fts_path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3079,7 +2918,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3120,30 +2959,22 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|f_size
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|off_t
 name|size
@@ -3182,7 +3013,7 @@ name|o_data
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3259,30 +3090,22 @@ begin_comment
 comment|/*  * -type c functions --  *  *	True if the type of the file is c, where c is b, c, d, p, or f for  *	block special file, character special file, directory, FIFO, or  *	regular file, respectively.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_type
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -3302,7 +3125,7 @@ name|m_data
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3393,13 +3216,13 @@ name|S_IFSOCK
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"-type"
+literal|"-type: %s: unknown type"
 argument_list|,
-literal|"unknown type"
+name|typestring
 argument_list|)
 expr_stmt|;
 block|}
@@ -3430,30 +3253,22 @@ begin_comment
 comment|/*  * -user uname functions --  *  *	True if the file belongs to the user uname.  If uname is numeric and  *	an equivalent of the getpwnam() S9.2.2 [POSIX.1] function does not  *	return a valid user name, uname is taken as a user ID.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_user
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -3469,7 +3284,7 @@ name|u_data
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3534,13 +3349,13 @@ index|]
 operator|!=
 literal|'0'
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s: %s"
+literal|1
 argument_list|,
-literal|"-user"
+literal|"-user: %s: no such user"
 argument_list|,
-literal|"no such user"
+name|username
 argument_list|)
 expr_stmt|;
 block|}
@@ -3605,30 +3420,22 @@ begin_comment
 comment|/*  * ( expression ) functions --  *  *	True if expression is true.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_expr
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|PLAN
@@ -3680,7 +3487,7 @@ name|state
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * N_OPENPAREN and N_CLOSEPAREN nodes are temporary place markers.  They are  * eliminated during phase 2 of find_formplan() --- the '(' node is converted  * to a N_EXPR node containing the expression and the ')' node is discarded.  */
@@ -3744,30 +3551,22 @@ begin_comment
 comment|/*  * ! expression functions --  *  *	Negation of a primary; the unary NOT operator.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_not
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|PLAN
@@ -3820,7 +3619,7 @@ name|state
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3845,30 +3644,22 @@ begin_comment
 comment|/*  * expression -o expression functions --  *  *	Alternation of primaries; the OR operator.  The second expression is  * not evaluated if the first expression is true.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|f_or
-argument_list|(
-argument|plan
-argument_list|,
-argument|entry
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
 name|PLAN
 modifier|*
 name|plan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|PLAN
@@ -3964,7 +3755,7 @@ name|state
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|PLAN
@@ -3985,31 +3776,39 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|PLAN
 modifier|*
 name|palloc
-argument_list|(
+parameter_list|(
 name|t
-argument_list|,
+parameter_list|,
 name|f
-argument_list|)
-decl|enum
+parameter_list|)
+name|enum
 name|ntype
 name|t
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|f
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|int
+parameter_list|(
+function_decl|*f
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|PLAN
+operator|*
+operator|,
+name|FTSENT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4062,12 +3861,9 @@ return|;
 block|}
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */

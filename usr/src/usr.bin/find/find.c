@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	5.6 (Berkeley) %G%"
+literal|"@(#)find.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -107,6 +113,8 @@ comment|/* 	 * for each argument in the command line, determine what kind of nod
 for|for
 control|(
 name|plan
+operator|=
+name|tail
 operator|=
 name|NULL
 init|;
@@ -295,12 +303,9 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"ftsopen: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ftsopen"
 argument_list|)
 expr_stmt|;
 while|while
@@ -356,23 +361,13 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|entry
 operator|->
 name|fts_path
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -403,14 +398,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: illegal path: %s\n"
+literal|"%s: illegal path"
 argument_list|,
 name|entry
 operator|->

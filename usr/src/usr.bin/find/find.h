@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)find.h	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)find.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -93,13 +93,22 @@ name|next
 decl_stmt|;
 comment|/* next node */
 name|int
-function_decl|(
-modifier|*
-name|eval
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*eval
+argument_list|)
 comment|/* node evaluation function */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|_plandata
+operator|*
+operator|,
+name|FTSENT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|F_EQUAL
@@ -325,6 +334,58 @@ directive|define
 name|e_len
 value|p_un.ex._e_len
 end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_option
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* option name */
+name|enum
+name|ntype
+name|token
+decl_stmt|;
+comment|/* token type */
+name|PLAN
+modifier|*
+function_decl|(
+modifier|*
+name|create
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* create function: DON'T PROTOTYPE! */
+define|#
+directive|define
+name|O_NONE
+value|0x01
+comment|/* no call required */
+define|#
+directive|define
+name|O_ZERO
+value|0x02
+comment|/* pass: nothing */
+define|#
+directive|define
+name|O_ARGV
+value|0x04
+comment|/* pass: argv, increment argv */
+define|#
+directive|define
+name|O_ARGVP
+value|0x08
+comment|/* pass: *argv, N_OK || N_EXEC */
+name|int
+name|flags
+decl_stmt|;
+block|}
+name|OPTION
+typedef|;
+end_typedef
 
 begin_include
 include|#
