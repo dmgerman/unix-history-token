@@ -3492,6 +3492,15 @@ name|spec_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vop_t
+modifier|*
+modifier|*
+name|dead_vnodeop_p
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

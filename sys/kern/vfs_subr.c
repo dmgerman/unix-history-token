@@ -2290,15 +2290,6 @@ begin_comment
 comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|dead_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Return the next vnode from the free list.  */
 end_comment
@@ -12526,6 +12517,11 @@ modifier|*
 name|errp
 decl_stmt|;
 block|{
+name|struct
+name|cdevsw
+modifier|*
+name|cdevsw
+decl_stmt|;
 if|if
 condition|(
 name|vp
@@ -12584,15 +12580,20 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|!
+name|cdevsw
+operator|=
 name|devsw
 argument_list|(
 name|vp
 operator|->
 name|v_rdev
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cdevsw
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -12616,12 +12617,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|devsw
-argument_list|(
-name|vp
-operator|->
-name|v_rdev
-argument_list|)
+name|cdevsw
 operator|->
 name|d_flags
 operator|&
