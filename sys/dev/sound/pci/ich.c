@@ -70,6 +70,13 @@ name|ICH_DEFAULT_BUFSZ
 value|16384
 end_define
 
+begin_define
+define|#
+directive|define
+name|ICH_MAX_BUFSZ
+value|65536
+end_define
+
 begin_comment
 comment|/* buffer descriptor */
 end_comment
@@ -161,9 +168,14 @@ name|int
 name|hasvra
 decl_stmt|,
 name|hasvrm
+decl_stmt|,
+name|hasmic
 decl_stmt|;
+name|unsigned
 name|int
 name|chnum
+decl_stmt|,
+name|bufsz
 decl_stmt|;
 name|struct
 name|resource
@@ -1052,6 +1064,7 @@ name|sc_chinfo
 modifier|*
 name|ch
 decl_stmt|;
+name|unsigned
 name|int
 name|num
 decl_stmt|;
@@ -1128,7 +1141,9 @@ name|ch
 operator|->
 name|blksz
 operator|=
-name|ICH_DEFAULT_BUFSZ
+name|sc
+operator|->
+name|bufsz
 operator|/
 name|ch
 operator|->
@@ -1260,7 +1275,9 @@ name|sc
 operator|->
 name|dmat
 argument_list|,
-name|ICH_DEFAULT_BUFSZ
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 condition|)
 return|return
@@ -2100,7 +2117,16 @@ name|sc
 argument_list|,
 literal|1
 argument_list|)
-operator|||
+condition|)
+return|return
+name|ENXIO
+return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|hasmic
+operator|&&
 name|ich_resetchan
 argument_list|(
 name|sc
@@ -2532,6 +2558,21 @@ operator|->
 name|nabmbar
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|ICH_DEFAULT_BUFSZ
+argument_list|,
+name|ICH_MAX_BUFSZ
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -2550,7 +2591,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|ICH_DEFAULT_BUFSZ
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 literal|1
 argument_list|,
@@ -2672,6 +2715,23 @@ name|hasvrm
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|ac97_getcaps
+argument_list|(
+name|sc
+operator|->
+name|codec
+argument_list|)
+operator|&
+name|AC97_CAP_MICCHANNEL
+condition|)
+name|sc
+operator|->
+name|hasmic
+operator|=
+literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|irqid
@@ -2772,6 +2832,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* play */
 name|pcm_addchan
 argument_list|(
 name|dev
@@ -2784,6 +2845,13 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* record */
+if|if
+condition|(
+name|sc
+operator|->
+name|hasmic
+condition|)
 name|pcm_addchan
 argument_list|(
 name|dev
@@ -2796,6 +2864,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* record mic */
 name|snprintf
 argument_list|(
 name|status
