@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getgrent.c	4.1 (Berkeley) %G% */
+comment|/* @(#)getgrent.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -14,27 +14,6 @@ include|#
 directive|include
 file|<grp.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|CL
-value|':'
-end_define
-
-begin_define
-define|#
-directive|define
-name|CM
-value|','
-end_define
-
-begin_define
-define|#
-directive|define
-name|NL
-value|'\n'
-end_define
 
 begin_define
 define|#
@@ -281,7 +260,7 @@ name|grskip
 argument_list|(
 name|p
 argument_list|,
-name|CL
+literal|':'
 argument_list|)
 expr_stmt|;
 name|group
@@ -296,7 +275,7 @@ name|grskip
 argument_list|(
 name|p
 argument_list|,
-name|CL
+literal|':'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -312,14 +291,14 @@ name|grskip
 argument_list|(
 name|p
 argument_list|,
-name|CL
+literal|':'
 argument_list|)
 expr_stmt|;
 name|grskip
 argument_list|(
 name|p
 argument_list|,
-name|NL
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|q
@@ -332,6 +311,18 @@ operator|*
 name|p
 condition|)
 block|{
+if|if
+condition|(
+name|q
+operator|<
+operator|&
+name|gr_mem
+index|[
+name|MAXGRP
+operator|-
+literal|1
+index|]
+condition|)
 operator|*
 name|q
 operator|++
@@ -344,7 +335,7 @@ name|grskip
 argument_list|(
 name|p
 argument_list|,
-name|CM
+literal|','
 argument_list|)
 expr_stmt|;
 block|}
