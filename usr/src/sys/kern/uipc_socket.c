@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.c	4.43	82/07/21	*/
+comment|/*	uipc_socket.c	4.46	82/08/01	*/
 end_comment
 
 begin_include
