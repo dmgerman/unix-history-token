@@ -2859,6 +2859,17 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+operator|-
+literal|1
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)

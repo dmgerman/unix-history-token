@@ -1079,6 +1079,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errlen
+operator|>
+literal|0
+condition|)
 name|buflen
 operator|+=
 name|errlen
@@ -1129,6 +1135,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errlen
+operator|>
+literal|0
+condition|)
 name|buflen
 operator|+=
 name|errlen
