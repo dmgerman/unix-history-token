@@ -818,10 +818,13 @@ name|K_flag
 operator|&&
 name|freebsd
 condition|)
+block|{
+comment|/* XXX Note:  The leading -K is not needed, it gets added later! */
 name|K_flag
 operator|=
-literal|"-KeAuthor,eDate,eHeader,eId,eLocker,eLog,eRCSfile,eRevision,eSource,eState,iFreeBSD"
+literal|"eAuthor,eDate,eHeader,eId,eLocker,eLog,eRCSfile,eRevision,eSource,eState,iFreeBSD"
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* FREEBSD_DEVELOPER */

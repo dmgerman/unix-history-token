@@ -727,10 +727,13 @@ name|K_flag
 operator|&&
 name|freebsd
 condition|)
+block|{
+comment|/* XXX Note:  The leading -K is not needed, it gets added later! */
 name|K_flag
 operator|=
-literal|"-KeAuthor,Date,Header,Id,Locker,Log,RCSfile,Revision,Source,State -KiFreeBSD"
+literal|"eAuthor,Date,Header,Id,Locker,Log,RCSfile,Revision,Source,State -KiFreeBSD"
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* FREEBSD_DEVELOPER */
