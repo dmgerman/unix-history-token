@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.43 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6868,6 +6868,18 @@ condition|(
 name|stat
 operator|!=
 name|EX_OK
+operator|&&
+operator|(
+name|stat
+operator|!=
+name|EX_TEMPFAIL
+operator|||
+name|e
+operator|->
+name|e_message
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
 if|if
