@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.3	%G%"
+literal|"@(#)stab.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ init|=
 operator|&
 name|SymTab
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|newstr
-parameter_list|()
-function_decl|;
 specifier|extern
 name|bool
 name|sameword

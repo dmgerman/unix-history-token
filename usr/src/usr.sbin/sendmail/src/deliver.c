@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.16	%G%"
+literal|"@(#)deliver.c	3.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,10 +130,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 extern|extern putmessage(
 block|)
 end_block
@@ -141,15 +137,6 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -171,15 +158,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|newstr
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 name|tobuf
@@ -197,15 +175,6 @@ name|MAXNAME
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|expand
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|bool
@@ -403,6 +372,9 @@ operator|++
 operator|=
 literal|"-r"
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$g"
@@ -488,6 +460,9 @@ name|NULL
 condition|)
 break|break;
 comment|/* this entry is safe -- go ahead and process it */
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 operator|*
@@ -854,6 +829,9 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|tobuf
@@ -861,6 +839,9 @@ argument_list|,
 literal|","
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|tobuf
@@ -889,6 +870,9 @@ argument_list|)
 expr_stmt|;
 comment|/* user's home */
 comment|/* expand out this user */
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 name|user
@@ -979,6 +963,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 operator|*
@@ -1065,6 +1052,9 @@ name|M_PRIVATE
 index|]
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$z/.mailer"
@@ -1310,6 +1300,9 @@ condition|)
 break|break;
 name|sleep
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|NFORKTRIES
 operator|-
 name|i
@@ -1331,6 +1324,9 @@ argument_list|(
 literal|"Cannot fork"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|pvect
@@ -1339,6 +1335,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|pvect
@@ -1364,16 +1363,25 @@ condition|)
 block|{
 comment|/* child -- set up input& exec mailer */
 comment|/* make diagnostic output be standard output */
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1381,6 +1389,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|0
@@ -1410,6 +1421,9 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|pvect
@@ -1418,6 +1432,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|pvect
@@ -1438,6 +1455,9 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|setuid
 argument_list|(
 name|getuid
@@ -1483,6 +1503,9 @@ operator|->
 name|m_mailer
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1501,6 +1524,9 @@ comment|/* write out message to mailer */
 end_comment
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|pvect
@@ -1512,6 +1538,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -1563,6 +1592,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mfile
@@ -1693,7 +1725,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		stat. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. ** **	Called By: **		deliver */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		force -- if set, force an error message output, even **			if the mailer seems to like to print its own **			messages. **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. ** **	Called By: **		deliver */
 end_comment
 
 begin_expr_stmt
@@ -1756,12 +1788,6 @@ index|[
 literal|30
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
 name|i
 operator|=
 name|stat
@@ -1921,6 +1947,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -1963,11 +1992,6 @@ argument_list|(
 name|stat
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|stat
-operator|)
-return|;
 block|}
 end_block
 
@@ -2034,12 +2058,6 @@ name|anyheader
 init|=
 name|FALSE
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|expand
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 modifier|*
@@ -2141,6 +2159,9 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 name|h
@@ -2246,6 +2267,9 @@ operator|)
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|fwrite
 argument_list|(
 name|buf
@@ -2298,6 +2322,9 @@ argument_list|(
 literal|"Broken pipe"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -2357,12 +2384,6 @@ name|ADDRESS
 modifier|*
 name|a
 decl_stmt|;
-specifier|extern
-name|ADDRESS
-modifier|*
-name|parse
-parameter_list|()
-function_decl|;
 name|bool
 name|more
 decl_stmt|;
@@ -2500,15 +2521,6 @@ name|bool
 name|forward
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|extern
-name|bool
-name|sameaddr
-parameter_list|()
-function_decl|;
 name|To
 operator|=
 name|a
@@ -2643,6 +2655,9 @@ operator|->
 name|q_home
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$z/.mailer"
@@ -2903,6 +2918,9 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|f

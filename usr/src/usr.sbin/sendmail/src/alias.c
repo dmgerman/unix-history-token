@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.7	%G%"
+literal|"@(#)alias.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,10 +100,14 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
-name|ADDRESS
+specifier|register
+name|char
 modifier|*
-name|q2
+name|p
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|DBM
 name|FILE
 modifier|*
 name|af
@@ -116,15 +120,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|bool
 name|didalias
 decl_stmt|;
@@ -135,20 +130,14 @@ specifier|auto
 name|ADDRESS
 name|al
 decl_stmt|;
-specifier|extern
-name|bool
-name|sameaddr
-parameter_list|()
-function_decl|;
-specifier|extern
-name|ADDRESS
-modifier|*
-name|parse
-parameter_list|()
-function_decl|;
+else|#
+directive|else
 name|int
 name|mno
 decl_stmt|;
+endif|#
+directive|endif
+endif|DBM
 if|if
 condition|(
 name|NoAlias
@@ -543,6 +532,9 @@ condition|(
 name|didalias
 condition|)
 do|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|af
@@ -760,12 +752,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|user
@@ -789,6 +775,9 @@ name|FALSE
 operator|)
 return|;
 comment|/* good address -- look for .forward file in home */
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$z/.forward"
@@ -826,6 +815,9 @@ name|FALSE
 operator|)
 return|;
 comment|/* we do have an address to forward to -- do it */
+operator|(
+name|void
+operator|)
 name|fgets
 argument_list|(
 name|buf
@@ -856,6 +848,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp

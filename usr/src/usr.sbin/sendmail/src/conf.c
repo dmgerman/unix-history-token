@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.14	%G%"
+literal|"@(#)conf.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -590,10 +590,6 @@ index|[]
 init|=
 literal|"/dev/ttyx"
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 comment|/* compute the pathname of the controlling tty */
 if|if
 condition|(
@@ -742,6 +738,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fileno
@@ -873,13 +872,15 @@ modifier|*
 name|pathn
 decl_stmt|;
 specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
 name|ttyname
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|getlogin
 parameter_list|()
 function_decl|;
 comment|/* compute the pathname of the controlling tty */
@@ -1010,6 +1011,22 @@ modifier|*
 name|to
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|ADDRESS
+modifier|*
+name|x
+init|=
+name|to
+decl_stmt|;
+name|to
+operator|=
+name|x
+expr_stmt|;
+endif|#
+directive|endif
+endif|lint
 return|return
 operator|(
 name|TRUE

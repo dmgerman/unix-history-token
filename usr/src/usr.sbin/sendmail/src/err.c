@@ -41,13 +41,39 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.5	%G%"
+literal|"@(#)err.c	3.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		-1 always ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|sys_nerr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_comment
 comment|/*VARARGS1*/
@@ -79,10 +105,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|static
 name|char
 name|errbuf
@@ -91,11 +113,6 @@ name|MAXLINE
 operator|+
 literal|1
 index|]
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 specifier|extern
 name|char
@@ -107,12 +124,6 @@ specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
 specifier|register
 name|char
 modifier|*
@@ -131,6 +142,9 @@ name|fmt
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|eb
@@ -144,6 +158,9 @@ literal|4
 expr_stmt|;
 block|}
 comment|/* put error message into buffer */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|eb
@@ -185,6 +202,9 @@ name|errno
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|eb
@@ -198,6 +218,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|eb
@@ -231,6 +254,9 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -288,12 +314,6 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 end_block
 
@@ -301,7 +321,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		-1 ** **	Side Effects: **		increments Errors. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		none ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -342,11 +362,7 @@ if|if
 condition|(
 name|SuprErrs
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|Errors
 operator|++
 expr_stmt|;
@@ -367,12 +383,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 end_block
 
@@ -381,6 +391,10 @@ end_escape
 
 begin_comment
 comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		num -- the default ARPANET error number (in ascii) **		msg -- the message (printf fmt) -- if it begins **			with a digit, this number overrides num. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+end_comment
+
+begin_comment
+comment|/*VARARGS2*/
 end_comment
 
 begin_expr_stmt
@@ -497,6 +511,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout

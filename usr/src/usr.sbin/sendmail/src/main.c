@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.14	%G%"
+literal|"@(#)main.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,24 +371,9 @@ name|finis
 parameter_list|()
 function_decl|;
 specifier|extern
-name|ADDRESS
-modifier|*
-name|parse
-parameter_list|()
-function_decl|;
-specifier|register
-name|ADDRESS
-modifier|*
-name|q
-decl_stmt|;
-specifier|extern
 name|char
 name|Version
 index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|char
 modifier|*
@@ -417,25 +402,9 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|newstr
+name|arpadate
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcat
-argument_list|()
-decl_stmt|;
 name|char
 modifier|*
 name|cfname
@@ -472,24 +441,6 @@ literal|30
 index|]
 decl_stmt|;
 comment|/* holds ctime(tbuf) */
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-ifndef|#
-directive|ifndef
-name|V6
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-endif|V6
 name|bool
 name|canrename
 decl_stmt|;
@@ -504,6 +455,9 @@ argument_list|)
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -511,6 +465,9 @@ argument_list|,
 name|finis
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -564,6 +521,9 @@ operator|>
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|i
@@ -573,16 +533,25 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|dup
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|i
@@ -810,6 +779,9 @@ case|case
 literal|'q'
 case|:
 comment|/* be silent about it */
+operator|(
+name|void
+operator|)
 name|freopen
 argument_list|(
 literal|"/dev/null"
@@ -996,6 +968,9 @@ argument_list|)
 expr_stmt|;
 comment|/* 	**  Read control file and initialize system macros. 	**	Collect should be called first, so that the time 	**	corresponds to the time that the messages starts 	**	getting sent, rather than when it is first composed. 	*/
 comment|/* process id */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|pbuf
@@ -1014,6 +989,9 @@ name|pbuf
 argument_list|)
 expr_stmt|;
 comment|/* hop count */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cbuf
@@ -1031,12 +1009,18 @@ name|cbuf
 argument_list|)
 expr_stmt|;
 comment|/* time as integer, unix time, arpa time */
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
 name|CurTime
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tbuf
@@ -1054,6 +1038,9 @@ argument_list|,
 name|tbuf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dbuf
@@ -1135,6 +1122,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$z/.mailcf"
@@ -1239,6 +1229,9 @@ operator|==
 literal|'&'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|nb
@@ -1348,6 +1341,9 @@ argument_list|,
 name|realname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$l"
@@ -1519,6 +1515,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|nbuf
@@ -1529,6 +1528,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|nbuf
@@ -1536,6 +1538,9 @@ argument_list|,
 literal|"@"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|nbuf
@@ -1669,6 +1674,9 @@ operator|->
 name|q_next
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|deliver
 argument_list|(
 name|q
@@ -1825,6 +1833,9 @@ argument_list|(
 name|realname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|parse
 argument_list|(
 name|from
@@ -1894,6 +1905,9 @@ name|pvp
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|frombuf
@@ -1944,11 +1958,17 @@ if|if
 condition|(
 name|HasXscrpt
 condition|)
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|Transcript
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|InFileName
@@ -1982,6 +2002,9 @@ modifier|*
 name|mktemp
 parameter_list|()
 function_decl|;
+operator|(
+name|void
+operator|)
 name|mktemp
 argument_list|(
 name|Transcript
@@ -2010,6 +2033,9 @@ argument_list|,
 name|Transcript
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|chmod
 argument_list|(
 name|Transcript

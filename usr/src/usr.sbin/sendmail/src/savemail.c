@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.9	%G%"
+literal|"@(#)savemail.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,34 +97,11 @@ name|i
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|auto
-name|long
-name|tim
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|ttypath
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|ADDRESS
-modifier|*
-name|parse
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -135,28 +112,6 @@ name|int
 name|exclusive
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcat
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|expand
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_if
 if|if
@@ -304,10 +259,9 @@ argument_list|,
 name|Transcript
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\r\nMessage from %s\r\n"
-argument_list|,
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$n"
@@ -323,6 +277,12 @@ operator|-
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\r\nMessage from %s\r\n"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 name|printf
@@ -341,6 +301,8 @@ name|buf
 argument_list|,
 name|xfile
 argument_list|)
+operator|!=
+name|NULL
 operator|&&
 operator|!
 name|ferror
@@ -362,11 +324,17 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|syserr
 argument_list|(
 literal|"savemail: stdout: write err"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|xfile
@@ -386,6 +354,9 @@ condition|(
 name|MailBack
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|freopen
 argument_list|(
 literal|"/dev/null"
@@ -422,10 +393,9 @@ sizeof|sizeof
 name|to_addr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|parse
-argument_list|(
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$n"
@@ -441,6 +411,12 @@ operator|-
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parse
+argument_list|(
+name|buf
 argument_list|,
 operator|&
 name|From
@@ -518,6 +494,9 @@ comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back,
 end_comment
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|setuid
 argument_list|(
 name|getuid
@@ -527,6 +506,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|setgid
 argument_list|(
 name|getgid
@@ -655,6 +637,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$z/dead.letter"
@@ -746,10 +731,9 @@ name|FILE
 modifier|*
 name|xfile
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -808,12 +792,12 @@ while|while
 condition|(
 name|fgets
 argument_list|(
-name|xfile
-argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|,
+name|xfile
 argument_list|)
 operator|!=
 name|NULL
@@ -832,6 +816,9 @@ argument_list|,
 literal|"\n   ----- Unsent message follows -----\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|fp
@@ -847,7 +834,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|close
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
 name|xfile
 argument_list|)

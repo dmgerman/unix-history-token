@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.19	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.20	%G% */
 end_comment
 
 begin_include
@@ -1021,6 +1021,54 @@ name|s
 parameter_list|)
 value|{ if (ExitStat == EX_OK) ExitStat = s; }
 end_define
+
+begin_comment
+comment|/* useful functions */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|newstr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ADDRESS
+modifier|*
+name|parse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|xalloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|expand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|sameaddr
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

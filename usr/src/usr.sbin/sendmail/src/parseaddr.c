@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.15	%G%"
+literal|"@(#)parseaddr.c	3.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,18 +94,6 @@ name|char
 modifier|*
 modifier|*
 name|prescan
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|newstr
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|strcpy
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -496,12 +484,6 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 name|state
@@ -509,6 +491,11 @@ decl_stmt|;
 name|int
 name|nstate
 decl_stmt|;
+specifier|extern
+name|char
+name|lower
+parameter_list|()
+function_decl|;
 name|space
 operator|=
 name|FALSE
@@ -1256,6 +1243,9 @@ name|firstime
 operator|=
 name|FALSE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|expand
 argument_list|(
 literal|"$o"
@@ -1597,6 +1587,11 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|NULL
 argument_list|,
 name|avp
@@ -1747,8 +1742,18 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|NULL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1923,8 +1928,16 @@ name|NULL
 expr_stmt|;
 name|bmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|npvp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|pvp
 argument_list|,
 operator|(
@@ -2384,12 +2397,6 @@ name|mailer
 modifier|*
 name|m
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|xalloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|a
@@ -2579,6 +2586,9 @@ name|tv
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -2796,6 +2806,9 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
