@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.8 %G%"
+literal|"@(#)n1.c	4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2047,6 +2047,13 @@ modifier|*
 name|mktemp
 parameter_list|()
 function_decl|;
+specifier|static
+name|char
+name|tempname
+index|[]
+init|=
+literal|"/tmp/taXXXXX"
+decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
@@ -2063,7 +2070,7 @@ name|p
 operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/taXXXXX"
+name|tempname
 argument_list|)
 expr_stmt|;
 if|if
