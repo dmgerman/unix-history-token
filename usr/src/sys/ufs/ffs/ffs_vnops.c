@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -368,7 +368,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|ufs_reclaim
+name|ffs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -755,7 +755,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|ufs_reclaim
+name|ffs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1148,7 +1148,7 @@ block|{
 operator|&
 name|vop_reclaim_desc
 block|,
-name|ufs_reclaim
+name|ffs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1664,6 +1664,73 @@ name|a_waitfor
 operator|==
 name|MNT_WAIT
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reclaim an inode so that it can be used for other purposes.  */
+end_comment
+
+begin_function
+name|int
+name|ffs_reclaim
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|ufs_reclaim
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|FREE
+argument_list|(
+name|vp
+operator|->
+name|v_data
+argument_list|,
+name|M_FFSNODE
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_data
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1683,20 +1683,26 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|FREE
-argument_list|(
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
 name|ap
 operator|->
 name|a_vp
+decl_stmt|;
+name|FREE
+argument_list|(
+name|vp
 operator|->
 name|v_data
 argument_list|,
 name|M_MFSNODE
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_data
 operator|=
