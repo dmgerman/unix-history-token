@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -34,6 +34,12 @@ end_include
 begin_comment
 comment|/* For struct selinfo. */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_comment
 comment|/*  * One structure allocated per session.  */
@@ -84,17 +90,20 @@ begin_struct
 struct|struct
 name|pgrp
 block|{
-name|struct
-name|pgrp
-modifier|*
-name|pg_hforw
-decl_stmt|;
-comment|/* Forward link in hash bucket. */
-name|struct
-name|proc
-modifier|*
-name|pg_mem
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|pgrp
+argument_list|)
+name|pg_hash
+expr_stmt|;
+comment|/* Hash chain. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|pg_members
+expr_stmt|;
 comment|/* Pointer to pgrp members. */
 name|struct
 name|session
@@ -133,19 +142,13 @@ name|proc
 modifier|*
 name|p_back
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p_next
-decl_stmt|;
-comment|/* Linked list of active procs */
-name|struct
-name|proc
-modifier|*
-modifier|*
-name|p_prev
-decl_stmt|;
-comment|/*    and zombies. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_list
+expr_stmt|;
+comment|/* List of all processes. */
 comment|/* substructures: */
 name|struct
 name|pcred
@@ -209,47 +212,39 @@ name|pid_t
 name|p_pid
 decl_stmt|;
 comment|/* Process identifier. */
-name|struct
-name|proc
-modifier|*
-name|p_hash
-decl_stmt|;
-comment|/* Hashed based on p_pid for kill+exit+... */
-name|struct
-name|proc
-modifier|*
-name|p_pgrpnxt
-decl_stmt|;
-comment|/* Pointer to next process in process group. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_pglist
+expr_stmt|;
+comment|/* List of processes in pgrp. */
 name|struct
 name|proc
 modifier|*
 name|p_pptr
 decl_stmt|;
-comment|/* Pointer to process structure of parent. */
-name|struct
-name|proc
-modifier|*
-name|p_osptr
-decl_stmt|;
-comment|/* Pointer to older sibling processes. */
+comment|/* Pointer to parent process. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_sibling
+expr_stmt|;
+comment|/* List of sibling processes. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_children
+expr_stmt|;
+comment|/* Pointer to list of children. */
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
 name|p_startzero
-value|p_ysptr
-name|struct
-name|proc
-modifier|*
-name|p_ysptr
-decl_stmt|;
-comment|/* Pointer to younger siblings. */
-name|struct
-name|proc
-modifier|*
-name|p_cptr
-decl_stmt|;
-comment|/* Pointer to youngest living child. */
+value|p_oppid
 name|pid_t
 name|p_oppid
 decl_stmt|;
@@ -331,10 +326,17 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* Vnode of executable. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_hash
+expr_stmt|;
+comment|/* Hash chain. */
 name|long
 name|p_spare
 index|[
-literal|5
+literal|3
 index|]
 decl_stmt|;
 comment|/* pad to 256, avoid shifting eproc. */
@@ -772,16 +774,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIDHASH
-parameter_list|(
-name|pid
-parameter_list|)
-value|((pid)& pidhashmask)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SESS_LEADER
 parameter_list|(
 name|p
@@ -809,33 +801,65 @@ parameter_list|)
 value|{							\ 	if (--(s)->s_count == 0)					\ 		FREE(s, M_SESSION);					\ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|PIDHASH
+parameter_list|(
+name|pid
+parameter_list|)
+value|(&pidhashtbl[(pid)& pidhash])
+end_define
+
+begin_extern
+extern|extern LIST_HEAD(pidhashhead
+operator|,
+extern|proc
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|*
+name|pidhashtbl
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
-name|struct
-name|proc
-modifier|*
+name|u_long
 name|pidhash
-index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* In param.c. */
-end_comment
+begin_define
+define|#
+directive|define
+name|PGRPHASH
+parameter_list|(
+name|pgid
+parameter_list|)
+value|(&pgrphashtbl[(pgid)& pgrphash])
+end_define
+
+begin_extern
+extern|extern LIST_HEAD(pgrphashhead
+operator|,
+extern|pgrp
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|*
+name|pgrphashtbl
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|pgrp
-modifier|*
+name|u_long
 name|pgrphash
-index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* In param.c. */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -886,29 +910,36 @@ begin_comment
 comment|/* In param.c. */
 end_comment
 
-begin_decl_stmt
-specifier|volatile
-name|struct
-name|proc
-modifier|*
+begin_extern
+extern|extern LIST_HEAD(
+operator|,
+extern|proc
+end_extern
+
+begin_expr_stmt
+unit|)
 name|allproc
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* List of active procs. */
+comment|/* List of all processes. */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
+begin_extern
+extern|extern LIST_HEAD(
+operator|,
+extern|proc
+end_extern
+
+begin_expr_stmt
+unit|)
 name|zombproc
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* List of zombie procs. */
+comment|/* List of zombie processes. */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.8 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.9 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -2504,6 +2504,8 @@ modifier|*
 name|p
 init|=
 name|allproc
+operator|.
+name|lh_first
 decl_stmt|;
 name|again
 label|:
@@ -2658,7 +2660,9 @@ name|p
 operator|=
 name|p
 operator|->
-name|p_next
+name|p_list
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
@@ -2712,7 +2716,9 @@ name|p
 operator|=
 name|p
 operator|->
-name|p_next
+name|p_list
+operator|.
+name|le_next
 expr_stmt|;
 break|break;
 block|}
@@ -2757,6 +2763,8 @@ expr_stmt|;
 name|p
 operator|=
 name|zombproc
+operator|.
+name|lh_first
 expr_stmt|;
 goto|goto
 name|again

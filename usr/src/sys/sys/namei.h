@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|_SYS_NAMEI_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_comment
 comment|/*  * Encapsulation of namei parameters.  */
@@ -462,31 +468,19 @@ begin_struct
 struct|struct
 name|namecache
 block|{
-name|struct
-name|namecache
-modifier|*
-name|nc_forw
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|namecache
+argument_list|)
+name|nc_hash
+expr_stmt|;
 comment|/* hash chain */
-name|struct
-name|namecache
-modifier|*
-modifier|*
-name|nc_back
-decl_stmt|;
-comment|/* hash chain */
-name|struct
-name|namecache
-modifier|*
-name|nc_nxt
-decl_stmt|;
-comment|/* LRU chain */
-name|struct
-name|namecache
-modifier|*
-modifier|*
-name|nc_prev
-decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|namecache
+argument_list|)
+name|nc_lru
+expr_stmt|;
 comment|/* LRU chain */
 name|struct
 name|vnode

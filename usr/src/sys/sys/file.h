@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)file.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_struct_decl
 struct_decl|struct
@@ -41,18 +47,12 @@ begin_struct
 struct|struct
 name|file
 block|{
-name|struct
-name|file
-modifier|*
-name|f_filef
-decl_stmt|;
-comment|/* list of active files */
-name|struct
-name|file
-modifier|*
-modifier|*
-name|f_fileb
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|file
+argument_list|)
+name|f_list
+expr_stmt|;
 comment|/* list of active files */
 name|short
 name|f_flag
@@ -218,11 +218,20 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|filelist
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
-name|file
-modifier|*
+name|filelist
 name|filehead
 decl_stmt|;
 end_decl_stmt

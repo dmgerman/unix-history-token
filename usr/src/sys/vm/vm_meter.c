@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -177,22 +177,21 @@ literal|0
 operator|,
 name|p
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
 name|allproc
+operator|.
+name|lh_first
 init|;
 name|p
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|p
 operator|=
 name|p
 operator|->
-name|p_next
+name|p_list
+operator|.
+name|le_next
 control|)
 block|{
 switch|switch
@@ -543,22 +542,21 @@ for|for
 control|(
 name|p
 operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
 name|allproc
+operator|.
+name|lh_first
 init|;
 name|p
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|p
 operator|=
 name|p
 operator|->
-name|p_next
+name|p_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
