@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.15 (Berkeley) %G%"
+literal|"@(#)su.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,6 +98,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -280,6 +286,10 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|getlogin
+argument_list|()
+decl_stmt|,
+modifier|*
+name|mytty
 argument_list|()
 decl_stmt|;
 name|np
@@ -713,10 +723,8 @@ literal|"BAD SU %s on %s"
 argument_list|,
 name|username
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|mytty
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1099,10 +1107,8 @@ literal|"%s on %s"
 argument_list|,
 name|username
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|mytty
+argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1204,6 +1210,39 @@ return|;
 block|}
 end_block
 
+begin_function
+name|char
+modifier|*
+name|mytty
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|ttyname
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+operator|(
+name|p
+operator|=
+name|ttyname
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+operator|)
+condition|?
+name|p
+else|:
+literal|"UNKNOWN TTY"
+operator|)
+return|;
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1294,6 +1333,11 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|mytty
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|krb_get_lrealm
@@ -1537,10 +1581,8 @@ literal|"su: BAD Kerberos SU: %s on %s: %s"
 argument_list|,
 name|username
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|mytty
+argument_list|()
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1702,10 +1744,8 @@ literal|"su: %s on %s, tgt not verified"
 argument_list|,
 name|username
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|mytty
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -1740,10 +1780,8 @@ literal|"su: failed su: %s on %s: %s"
 argument_list|,
 name|username
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|mytty
+argument_list|()
 argument_list|,
 name|krb_err_txt
 index|[
@@ -1869,10 +1907,8 @@ literal|"su: failed su: %s on %s: %s"
 argument_list|,
 name|username
 argument_list|,
-name|ttyname
-argument_list|(
-literal|2
-argument_list|)
+name|mytty
+argument_list|()
 argument_list|,
 name|krb_err_txt
 index|[
