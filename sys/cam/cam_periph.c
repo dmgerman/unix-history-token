@@ -6323,6 +6323,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If we have and error and are booting verbosely, whine 	 * *unless* this was a non-retryable selection timeout. 	 */
 if|if
 condition|(
 name|error
@@ -6330,6 +6331,21 @@ operator|!=
 literal|0
 operator|&&
 name|bootverbose
+operator|&&
+operator|!
+operator|(
+name|status
+operator|==
+name|CAM_SEL_TIMEOUT
+operator|&&
+operator|(
+name|camflags
+operator|&
+name|CAM_RETRY_SELTO
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 if|if
