@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.12 1997/08/26 07:32:38 phk Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.13 1997/09/02 20:06:17 bde Exp $ */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * When we search a directory the blocks containing directory entries are  * read and examined.  The directory entries contain information that would  * normally be in the inode of a unix filesystem.  This means that some of  * a directory's contents may also be in memory resident denodes (sort of  * an inode).  This can cause problems if we are searching while some other  * process is modifying a directory.  To prevent one process from accessing  * incompletely modified directory information we depend upon being the  * soul owner of a directory block.  bread/brelse provide this service.  * This being the case, when a process modifies a directory it must first  * acquire the disk block that contains the directory entry to be modified.  * Then update the disk block and the denode, and then write the disk block  * out to disk.  This way disk blocks containing directory entries and in  * memory denode's will be in synch.  */
+comment|/*  * When we search a directory the blocks containing directory entries are  * read and examined.  The directory entries contain information that would  * normally be in the inode of a unix filesystem.  This means that some of  * a directory's contents may also be in memory resident denodes (sort of  * an inode).  This can cause problems if we are searching while some other  * process is modifying a directory.  To prevent one process from accessing  * incompletely modified directory information we depend upon being the  * sole owner of a directory block.  bread/brelse provide this service.  * This being the case, when a process modifies a directory it must first  * acquire the disk block that contains the directory entry to be modified.  * Then update the disk block and the denode, and then write the disk block  * out to disk.  This way disk blocks containing directory entries and in  * memory denode's will be in synch.  */
 end_comment
 
 begin_function
@@ -341,22 +341,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Be sure vdp is a directory.  Since dos filesystems don't have 	 * the concept of execute permission anybody can search a 	 * directory. 	 */
-if|if
-condition|(
-operator|(
-name|dp
-operator|->
-name|de_Attributes
-operator|&
-name|ATTR_DIRECTORY
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-name|ENOTDIR
-return|;
 comment|/* 	 * If they are going after the . or .. entry in the root directory, 	 * they won't find it.  DOS filesystems don't have them in the root 	 * directory.  So, we fake it. deget() is in on this scam too. 	 */
 if|if
 condition|(
