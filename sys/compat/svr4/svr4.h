@@ -36,20 +36,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|memset
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|,
-name|z
-parameter_list|)
-value|bzero(x,z)
-end_define
-
-begin_define
-define|#
-directive|define
 name|COMPAT_SVR4_SOLARIS2
 end_define
 
