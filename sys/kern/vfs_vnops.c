@@ -1422,14 +1422,14 @@ condition|(
 name|fp
 operator|->
 name|f_seqcount
-operator|>=
-literal|127
+operator|>
+name|IO_SEQMAX
 condition|)
 name|fp
 operator|->
 name|f_seqcount
 operator|=
-literal|127
+name|IO_SEQMAX
 expr_stmt|;
 return|return
 operator|(
@@ -1437,7 +1437,7 @@ name|fp
 operator|->
 name|f_seqcount
 operator|<<
-literal|16
+name|IO_SEQSHIFT
 operator|)
 return|;
 block|}

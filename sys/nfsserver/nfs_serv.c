@@ -4287,13 +4287,13 @@ name|nh
 operator|->
 name|nh_seqcount
 operator|>
-literal|127
+name|IO_SEQMAX
 condition|)
 name|nh
 operator|->
 name|nh_seqcount
 operator|=
-literal|127
+name|IO_SEQMAX
 expr_stmt|;
 block|}
 elseif|else
@@ -4348,7 +4348,7 @@ name|nh
 operator|->
 name|nh_seqcount
 operator|<<
-literal|16
+name|IO_SEQSHIFT
 expr_stmt|;
 block|}
 name|nfsm_reply

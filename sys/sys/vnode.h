@@ -1112,6 +1112,28 @@ begin_comment
 comment|/* MAC checks unnecessary */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_SEQMAX
+value|0x7F
+end_define
+
+begin_comment
+comment|/* seq heuristic max value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_SEQSHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* seq heuristic in upper 16 bits */
+end_comment
+
 begin_comment
 comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
 end_comment
