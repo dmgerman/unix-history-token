@@ -251,7 +251,7 @@ name|privused
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Determine privileges now, but don't apply until we've found 	 * a DAC match that has failed to allow access. 	 */
+comment|/* 	 * Determine privileges now, but don't apply until we've found 	 * a DAC entry that matches but has failed to allow access. 	 */
 ifndef|#
 directive|ifndef
 name|CAPABILITIES
@@ -425,7 +425,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CAPABILITIES */
-comment|/* 	 * Check the owner. 	 * Also, record locations of ACL_MASK and ACL_OTHER for reference 	 * later if the owner doesn't match. 	 */
+comment|/* 	 * The owner matches if the effective uid associated with the 	 * credential matches that of the ACL_USER_OBJ entry.  While we're 	 * doing the first scan, also cache the location of the ACL_MASK 	 * and ACL_OTHER entries, preventing some future iterations. 	 */
 name|acl_mask
 operator|=
 name|acl_other
@@ -612,7 +612,7 @@ break|break;
 default|default:
 block|}
 block|}
-comment|/* 	 * Checks against ACL_USER, ACL_GROUP_OBJ, and ACL_GROUP fields 	 * are masked by an ACL_MASK entry, if any.  As such, first identify 	 * the ACL_MASK field, then iterate through identifying potential 	 * user matches, then group matches.  If there is no ACL_MASK, 	 * assume that the mask allows all requests to succeed. 	 * Also keep track of the location of ACL_OTHER for later consumption. 	 */
+comment|/* 	 * An ACL_OTHER entry should always exist in a valid access 	 * ACL.  If it doesn't, then generate a serious failure.  For now, 	 * this means a debugging message and EPERM, but in the future 	 * should probably be a panic. 	 */
 if|if
 condition|(
 name|acl_other
@@ -620,7 +620,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * XXX: This should never happen.  Only properly formatted 		 * ACLs should be passed to vaccess_acl_posix1e. 		 * Should make this a panic post-debugging. 		 */
+comment|/* 		 * XXX This should never happen 		 */
 name|printf
 argument_list|(
 literal|"vaccess_acl_posix1e: ACL_OTHER missing\n"
@@ -632,6 +632,7 @@ name|EPERM
 operator|)
 return|;
 block|}
+comment|/* 	 * Checks against ACL_USER, ACL_GROUP_OBJ, and ACL_GROUP fields 	 * are masked by an ACL_MASK entry, if any.  As such, first identify 	 * the ACL_MASK field, then iterate through identifying potential 	 * user matches, then group matches.  If there is no ACL_MASK, 	 * assume that the mask allows all requests to succeed. 	 */
 if|if
 condition|(
 name|acl_mask
@@ -689,7 +690,7 @@ name|VREAD
 operator||
 name|VWRITE
 expr_stmt|;
-comment|/* 	 * We have to check each type even if we know ACL_MASK will reject, 	 * as we need to know what match there might have been, and 	 * therefore what further types we might be allowed to check. 	 * Do the checks twice -- once without privilege, and a second time 	 * with, if there was a match. 	 */
+comment|/* 	 * Iterate through user ACL entries.  Do checks twice, first 	 * without privilege, and then if a match is found but failed, 	 * a second time with privilege. 	 */
 comment|/* 	 * Check ACL_USER ACL entries. 	 */
 for|for
 control|(
@@ -847,7 +848,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Group match is best-match, not first-match, so find a  	 * "best" match.  Iterate across, testing each potential group 	 * match.  Make sure we keep track of whether we found a match 	 * or not, so that we know if we can move on to ACL_OTHER. 	 */
+comment|/* 	 * Group match is best-match, not first-match, so find a  	 * "best" match.  Iterate across, testing each potential group 	 * match.  Make sure we keep track of whether we found a match 	 * or not, so that we know if we should try again with any 	 * available privilege, or if we should move on to ACL_OTHER. 	 */
 name|group_matched
 operator|=
 literal|0
