@@ -205,20 +205,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KPT_MAX_ADDRESS
-value|VADDR(PTDPTDI, KPTDI+NKPT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KPT_MIN_ADDRESS
-value|VADDR(PTDPTDI, KPTDI)
-end_define
-
-begin_define
-define|#
-directive|define
 name|UPT_MAX_ADDRESS
 value|VADDR(PTDPTDI, PTDPTDI)
 end_define
