@@ -609,6 +609,7 @@ name|oldhfield
 return|;
 if|if
 condition|(
+operator|(
 name|hfield
 operator|=
 name|ishfield
@@ -619,6 +620,9 @@ name|colon
 argument_list|,
 name|field
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|oldhfield
 operator|=
@@ -2288,7 +2292,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
