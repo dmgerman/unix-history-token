@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 David E. O'Brien.  All rights reserved.  * Copy
 end_comment
 
 begin_comment
-comment|/*  * Machine dependent constants for the AMD x86-64.  */
+comment|/*  * Machine dependent constants for the AMD64.  */
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ begin_define
 define|#
 directive|define
 name|_MACHINE
-value|x86_64
+value|amd64
 end_define
 
 begin_endif
@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_ARCH
-value|x86_64
+value|amd64
 end_define
 
 begin_endif
@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|MACHINE
-value|"x86_64"
+value|"amd64"
 end_define
 
 begin_endif
@@ -155,20 +155,13 @@ begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
-value|"x86_64"
+value|"amd64"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|MID_MACHINE
-value|MID_X86_64
-end_define
 
 begin_ifdef
 ifdef|#
@@ -409,7 +402,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|x86_64_btop
+name|amd64_btop
 parameter_list|(
 name|x
 parameter_list|)
@@ -419,7 +412,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|x86_64_ptob
+name|amd64_ptob
 parameter_list|(
 name|x
 parameter_list|)
