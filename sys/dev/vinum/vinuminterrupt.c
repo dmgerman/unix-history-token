@@ -4,7 +4,7 @@ comment|/* vinuminterrupt.c: bottom half of the driver */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinuminterrupt.c,v 1.7 1999/10/12 04:34:50 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -95,6 +95,11 @@ modifier|*
 name|ubp
 decl_stmt|;
 comment|/* user buffer */
+name|struct
+name|drive
+modifier|*
+name|drive
+decl_stmt|;
 name|rqe
 operator|=
 operator|(
@@ -150,6 +155,59 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|drive
+operator|=
+operator|&
+name|DRIVE
+index|[
+name|rqe
+operator|->
+name|driveno
+index|]
+expr_stmt|;
+name|drive
+operator|->
+name|active
+operator|--
+expr_stmt|;
+comment|/* one less outstanding I/O on this drive */
+name|vinum_conf
+operator|.
+name|active
+operator|--
+expr_stmt|;
+comment|/* one less outstanding I/O globally */
+if|if
+condition|(
+operator|(
+name|drive
+operator|->
+name|active
+operator|==
+operator|(
+name|DRIVE_MAXACTIVE
+operator|-
+literal|1
+operator|)
+operator|)
+comment|/* we were at the drive limit */
+operator|||
+operator|(
+name|vinum_conf
+operator|.
+name|active
+operator|==
+name|VINUM_MAXACTIVE
+operator|)
+condition|)
+comment|/* or the global limit */
+name|wakeup
+argument_list|(
+operator|&
+name|launch_requests
+argument_list|)
+expr_stmt|;
+comment|/* let another one at it */
 if|if
 condition|(
 operator|(
@@ -2068,6 +2126,53 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* drive to access */
+comment|/* We can't sleep here, so we just increment the counters. */
+name|drive
+operator|->
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|active
+operator|>=
+name|drive
+operator|->
+name|maxactive
+condition|)
+name|drive
+operator|->
+name|maxactive
+operator|=
+name|drive
+operator|->
+name|active
+expr_stmt|;
+name|vinum_conf
+operator|.
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|vinum_conf
+operator|.
+name|maxactive
+condition|)
+name|vinum_conf
+operator|.
+name|maxactive
+operator|=
+name|vinum_conf
+operator|.
+name|active
+expr_stmt|;
 if|#
 directive|if
 name|VINUMDEBUG
@@ -2327,6 +2432,53 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* drive to access */
+comment|/* We can't sleep here, so we just increment the counters. */
+name|drive
+operator|->
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|active
+operator|>=
+name|drive
+operator|->
+name|maxactive
+condition|)
+name|drive
+operator|->
+name|maxactive
+operator|=
+name|drive
+operator|->
+name|active
+expr_stmt|;
+name|vinum_conf
+operator|.
+name|active
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|active
+operator|>=
+name|vinum_conf
+operator|.
+name|maxactive
+condition|)
+name|vinum_conf
+operator|.
+name|maxactive
+operator|=
+name|vinum_conf
+operator|.
+name|active
+expr_stmt|;
 if|#
 directive|if
 name|VINUMDEBUG
