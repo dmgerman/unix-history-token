@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -1426,19 +1432,14 @@ name|consdirect
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
 if|if
 condition|(
-name|db_active
+name|kdb_active
 condition|)
 name|consdirect
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|consdirect
