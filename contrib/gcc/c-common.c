@@ -8491,7 +8491,7 @@ literal|0
 condition|)
 name|warning
 argument_list|(
-literal|"`%%%c' yields only last 2 digits of year in some locales"
+literal|"`%%%c' yields only last 2 digits of year in some locales on non-BSD systems"
 argument_list|,
 name|format_char
 argument_list|)
