@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reboot.c	4.3 (Berkeley) %G%"
+literal|"@(#)reboot.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,19 @@ name|pause
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|howto
+operator|&
+name|RB_NOSYNC
+operator|)
+operator|==
+literal|0
+condition|)
+name|log_entry
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
