@@ -108,6 +108,7 @@ name|process
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -200,6 +201,7 @@ name|process
 parameter_list|(
 name|file
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file

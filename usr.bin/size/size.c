@@ -123,6 +123,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -262,6 +263,7 @@ parameter_list|)
 name|int
 name|count
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name

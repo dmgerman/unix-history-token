@@ -166,6 +166,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file

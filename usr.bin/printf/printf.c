@@ -325,6 +325,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|getstr
@@ -413,6 +414,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|skip1
@@ -873,6 +875,7 @@ case|case
 literal|'s'
 case|:
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1471,6 +1474,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|getstr
@@ -1499,6 +1503,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|Number

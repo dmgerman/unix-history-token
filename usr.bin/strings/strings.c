@@ -278,6 +278,7 @@ name|u_char
 modifier|*
 name|bfr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
