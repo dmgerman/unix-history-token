@@ -86,7 +86,7 @@ parameter_list|,
 name|cp
 parameter_list|)
 define|\
-value|((name[0] + name[namelen-1] + namelen + (int)(cp))& (coda_nc_hashsize-1))
+value|((name[0] + name[namelen-1] + namelen + (int)(intptr_t)(cp))& (coda_nc_hashsize-1))
 end_define
 
 begin_else
@@ -106,7 +106,7 @@ parameter_list|,
 name|cp
 parameter_list|)
 define|\
-value|((name[0] + (name[namelen-1]<<4) + namelen + (((int)cp)>>8))& (coda_nc_hashsize-1))
+value|((name[0] + (name[namelen-1]<<4) + namelen + (((int)(intptr_t)cp)>>8))& (coda_nc_hashsize-1))
 end_define
 
 begin_endif
