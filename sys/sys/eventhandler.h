@@ -9,6 +9,22 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_comment
+comment|/* XXX should these be prerequisites? */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -46,12 +62,6 @@ begin_struct
 struct|struct
 name|eventhandler_list
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|eventhandler_list
-argument_list|)
-name|el_link
-expr_stmt|;
 name|char
 modifier|*
 name|el_name
@@ -63,6 +73,16 @@ define|#
 directive|define
 name|EHE_INITTED
 value|(1<<0)
+name|struct
+name|mtx
+name|el_mutex
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|eventhandler_list
+argument_list|)
+name|el_link
+expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -82,6 +102,13 @@ modifier|*
 name|eventhandler_tag
 typedef|;
 end_typedef
+
+begin_decl_stmt
+name|struct
+name|mtx
+name|eventhandler_mutex
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*   * Fast handler lists require the eventhandler list be present  * at link time.  They don't allow addition of entries to  * unknown eventhandler lists, ie. each list must have an   * "owner".  *  * Fast handler lists must be defined once by the owner   * of the eventhandler list, and the declaration must be in   * scope at any point the list is manipulated.  */
@@ -124,7 +151,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\     struct eventhandler_entry *_ep = TAILQ_FIRST(&(_el->el_entries));	\ 									\     while (_ep != NULL) {						\ 	((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , ## args); \ 	_ep = TAILQ_NEXT(_ep, ee_link);					\     }									\ } while (0)
+value|do {										\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;		\     struct eventhandler_entry *_ep = TAILQ_FIRST(&(_el->el_entries));		\ 										\     if (_el->el_flags& EHE_INITTED) {						\ 	mtx_enter(&_el->el_mutex, MTX_DEF);					\ 	while (_ep != NULL) {							\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = TAILQ_NEXT(_ep, ee_link);					\ 	}									\ 	mtx_exit(&_el->el_mutex, MTX_DEF);					\     }										\ } while (0)
 end_define
 
 begin_define
@@ -141,7 +168,7 @@ parameter_list|,
 name|priority
 parameter_list|)
 define|\
-value|eventhandler_register(Xeventhandler_list_ ## name, #name, func, arg, priority)
+value|eventhandler_register(&Xeventhandler_list_ ## name, #name, func, arg, priority)
 end_define
 
 begin_define
@@ -154,11 +181,11 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|eventhandler_deregister(Xeventhandler_list ## name, tag)
+value|eventhandler_deregister(&Xeventhandler_list ## name, tag)
 end_define
 
 begin_comment
-comment|/*  * Slow handlerss are entirely dynamic; lists are created  * when entries are added to them, and thus have no concept of "owner",  *  * Slow handlerss need to be declared, but do not need to be defined. The  * declaration must be in scope wherever the handler is to be invoked.  */
+comment|/*  * Slow handlers are entirely dynamic; lists are created  * when entries are added to them, and thus have no concept of "owner",  *  * Slow handlers need to be declared, but do not need to be defined. The  * declaration must be in scope wherever the handler is to be invoked.  */
 end_comment
 
 begin_define
@@ -185,7 +212,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\     struct eventhandler_list *_el;					\     struct eventhandler_entry *_ep;					\ 									\     if ((_el = eventhandler_find_list(#name)) != NULL) {		\ 	for (_ep = TAILQ_FIRST(&(_el->el_entries));			\ 	     _ep != NULL;						\ 	     _ep = TAILQ_NEXT(_ep, ee_link)) {				\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , ## args); \ 	}								\     }									\ } while (0)
+value|do {										\     struct eventhandler_list *_el;						\     struct eventhandler_entry *_ep;						\ 										\     if (((_el = eventhandler_find_list(#name)) != NULL)&& 			\ 	(_el->el_flags& EHE_INITTED)) {					\ 	mtx_enter(&_el->el_mutex, MTX_DEF);					\ 	for (_ep = TAILQ_FIRST(&(_el->el_entries));				\ 	     _ep != NULL;							\ 	     _ep = TAILQ_NEXT(_ep, ee_link)) {					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	}									\ 	mtx_exit(&_el->el_mutex, MTX_DEF);					\     }										\ } while (0)
 end_define
 
 begin_define
@@ -357,6 +384,45 @@ argument_list|(
 name|shutdown_final
 argument_list|,
 name|shutdown_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Idle process event */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*idle_eventhandler_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|IDLE_PRI_LAST
+value|20000
+end_define
+
+begin_expr_stmt
+name|EVENTHANDLER_FAST_DECLARE
+argument_list|(
+name|idle_event
+argument_list|,
+name|idle_eventhandler_t
 argument_list|)
 expr_stmt|;
 end_expr_stmt
