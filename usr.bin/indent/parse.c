@@ -729,7 +729,7 @@ name|diag2
 argument_list|(
 literal|1
 argument_list|,
-literal|"Statement nesting error."
+literal|"Statement nesting error"
 argument_list|)
 expr_stmt|;
 break|break;

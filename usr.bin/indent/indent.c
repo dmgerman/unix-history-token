@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)indent.c	5.17 (Berkeley) 6/7/93";
@@ -47,14 +47,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -185,6 +185,17 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|found_err
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* flag set in diagN() on error */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -198,11 +209,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|found_err
-decl_stmt|;
-comment|/* flag set in diagN() on error */
 name|int
 name|dec_ind
 decl_stmt|;
@@ -261,6 +267,10 @@ literal|0
 decl_stmt|;
 comment|/* true iff last keyword was an else */
 comment|/*-----------------------------------------------*\     |		      INITIALIZATION		      |     \*-----------------------------------------------*/
+name|found_err
+operator|=
+literal|0
+expr_stmt|;
 name|ps
 operator|.
 name|p_stack
@@ -295,6 +305,19 @@ argument_list|(
 name|bufsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|combuf
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|labbuf
 operator|=
 operator|(
@@ -304,6 +327,19 @@ operator|)
 name|malloc
 argument_list|(
 name|bufsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|labbuf
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|codebuf
@@ -317,6 +353,19 @@ argument_list|(
 name|bufsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|codebuf
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|tokenbuf
 operator|=
 operator|(
@@ -326,6 +375,19 @@ operator|)
 name|malloc
 argument_list|(
 name|bufsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tokenbuf
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|l_com
@@ -443,6 +505,19 @@ operator|)
 name|malloc
 argument_list|(
 literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|in_buffer
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|in_buffer_limit
@@ -1517,7 +1592,7 @@ name|diag2
 argument_list|(
 literal|1
 argument_list|,
-literal|"Internal buffer overflow - Move big comment from right after if, while, or whatever."
+literal|"Internal buffer overflow - Move big comment from right after if, while, or whatever"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -1834,7 +1909,7 @@ name|diag2
 argument_list|(
 literal|1
 argument_list|,
-literal|"Stuff missing from end of file."
+literal|"Stuff missing from end of file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5206,7 +5281,7 @@ name|diag2
 argument_list|(
 literal|0
 argument_list|,
-literal|"Syntactically inconsistent #ifdef alternatives."
+literal|"Syntactically inconsistent #ifdef alternatives"
 argument_list|)
 expr_stmt|;
 endif|#

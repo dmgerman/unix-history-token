@@ -51,6 +51,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -103,15 +109,6 @@ directive|define
 name|opchar
 value|3
 end_define
-
-begin_function_decl
-name|void
-name|fill_buffer
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 struct|struct
