@@ -1884,7 +1884,7 @@ name|sact
 operator|.
 name|sa_flags
 operator|=
-literal|0
+name|SA_RESTART
 expr_stmt|;
 operator|(
 name|void
@@ -2335,7 +2335,7 @@ name|sact
 operator|.
 name|sa_flags
 operator|=
-literal|0
+name|SA_RESTART
 expr_stmt|;
 operator|(
 name|void
