@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)srt0.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -47,6 +47,12 @@ name|_cpu
 operator|.
 name|globl
 name|_openfirst
+operator|.
+name|globl
+name|_boothowto
+operator|.
+name|globl
+name|_bootdev
 operator|.
 name|set
 name|HIGH
@@ -153,6 +159,16 @@ name|begin
 range|:
 endif|#
 directive|endif
+name|movl
+name|r11
+decl_stmt|,
+name|_boothowto
+name|movl
+name|r10
+decl_stmt|,
+name|_bootdev
+name|again
+range|:
 name|mtpr
 name|$0
 decl_stmt|,
@@ -169,11 +185,11 @@ name|calls
 name|$0
 decl_stmt|,
 name|_main
-ifndef|#
-directive|ifndef
-name|TP
+ifdef|#
+directive|ifdef
+name|REL
 name|jmp
-name|start
+name|again
 else|#
 directive|else
 name|ret
@@ -205,6 +221,18 @@ name|long
 name|_edata
 endif|#
 directive|endif
+name|_bootdev
+operator|:
+operator|.
+name|long
+literal|0
+name|_boothowto
+operator|:
+operator|.
+name|long
+literal|0
+operator|.
+name|text
 name|__rtt
 operator|:
 operator|.
