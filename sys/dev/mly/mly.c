@@ -6464,8 +6464,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-name|sc
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
