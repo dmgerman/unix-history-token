@@ -237,6 +237,20 @@ name|DS_INSTALL_HLP
 value|HELP_PATH##"pkg_ds_install.hlp"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PREVIEW_HLP
+value|HELP_PATH##"pkg_preview.hlp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREVIEW_FS_HLP
+value|HELP_PATH##"pkg_preview_fs.hlp"
+end_define
+
 begin_comment
 comment|/*  * prototypes  */
 end_comment
@@ -255,22 +269,6 @@ name|void
 name|get_pkginfo
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|FreeMnu
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|mnu
-parameter_list|,
-name|int
-name|n
 parameter_list|)
 function_decl|;
 end_function_decl

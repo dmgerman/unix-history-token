@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************************  *   * Program:	pkg_manage  * Author:	Marc van Kempen  * Desc:	Add, delete packages with the pkg_* binaries  *		Get info about installed packages  *		Review about to be installed packages  *  * 1. View installed packages  * 2. Delete installed packages  * 3. Install packages  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *   ***************************************************************/
+comment|/***************************************************************  *   * Program:	pkg_manage.c  * Author:	Marc van Kempen  * Desc:	Add, delete packages with the pkg_* binaries  *		Get info about installed packages  *		Review about to be installed packages  *  * 1. View installed packages  * 2. Delete installed packages  * 3. Preview package install  * 4. Install packages  *  * Copyright (c) 1995, Marc van Kempen  *  * All rights reserved.  *  * This software may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with  * its use.  *   ***************************************************************/
 end_comment
 
 begin_include
@@ -103,6 +103,9 @@ name|void
 parameter_list|)
 comment|/*  * Desc: free the space allocated to p_inf  */
 block|{
+name|int
+name|i
+decl_stmt|;
 name|free
 argument_list|(
 name|p_inf
@@ -137,45 +140,6 @@ name|Nitems
 operator|=
 literal|0
 expr_stmt|;
-name|FreeMnu
-argument_list|(
-name|p_inf
-operator|.
-name|mnu
-argument_list|,
-literal|2
-operator|*
-name|p_inf
-operator|.
-name|Nitems
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
-comment|/* FreeInfo() */
-end_comment
-
-begin_function
-name|void
-name|FreeMnu
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-modifier|*
-name|mnu
-parameter_list|,
-name|int
-name|n
-parameter_list|)
-comment|/*  * Desc: free mnu array  */
-block|{
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -184,7 +148,11 @@ literal|0
 init|;
 name|i
 operator|<
-name|n
+literal|2
+operator|*
+name|p_inf
+operator|.
+name|Nitems
 condition|;
 name|i
 operator|++
@@ -192,6 +160,8 @@ control|)
 block|{
 name|free
 argument_list|(
+name|p_inf
+operator|.
 name|mnu
 index|[
 name|i
@@ -201,6 +171,8 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
+name|p_inf
+operator|.
 name|mnu
 argument_list|)
 expr_stmt|;
@@ -209,7 +181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FreeMnu() */
+comment|/* FreeInfo() */
 end_comment
 
 begin_function
@@ -1575,19 +1547,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|getenv
-argument_list|(
-literal|"PKG_PATH"
-argument_list|)
-condition|)
-name|putenv
-argument_list|(
-literal|"/usr/ports/packages:/usr/ports/packages/all:."
-argument_list|)
-expr_stmt|;
 name|exec_catch_errors
 argument_list|(
 name|PKG_ADD
