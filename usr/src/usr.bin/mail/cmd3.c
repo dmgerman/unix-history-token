@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	2.9 %G%"
+literal|"@(#)cmd3.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,9 +765,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"No help just now.\n"
+name|HELPFILE
 argument_list|)
 expr_stmt|;
 return|return
@@ -935,18 +935,25 @@ name|char
 modifier|*
 name|cp
 decl_stmt|,
-name|buf
-index|[
-literal|2
-operator|*
-name|LINESIZE
-index|]
+modifier|*
+name|cp2
+decl_stmt|,
+modifier|*
+name|cp3
 decl_stmt|,
 modifier|*
 name|rcv
 decl_stmt|,
 modifier|*
 name|replyto
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|2
+operator|*
+name|LINESIZE
+index|]
 decl_stmt|,
 modifier|*
 modifier|*
@@ -961,11 +968,6 @@ name|struct
 name|header
 name|head
 decl_stmt|;
-name|char
-modifier|*
-name|netmap
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|msgvec
@@ -1098,13 +1100,13 @@ argument_list|(
 name|np
 argument_list|,
 name|myname
+argument_list|,
+name|icequal
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|altnames
-operator|!=
-literal|0
 condition|)
 for|for
 control|(
@@ -1126,6 +1128,8 @@ name|np
 argument_list|,
 operator|*
 name|ap
+argument_list|,
+name|icequal
 argument_list|)
 expr_stmt|;
 name|head
@@ -1317,6 +1321,8 @@ argument_list|(
 name|np
 argument_list|,
 name|myname
+argument_list|,
+name|icequal
 argument_list|)
 expr_stmt|;
 if|if
@@ -1345,6 +1351,8 @@ name|np
 argument_list|,
 operator|*
 name|ap
+argument_list|,
+name|icequal
 argument_list|)
 expr_stmt|;
 name|head
