@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -807,6 +807,37 @@ return|return;
 block|}
 block|}
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|11
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"runqueue, pid=%d"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+endif|LOG
+end_endif
 
 begin_comment
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	**	There is a race condition at the end -- we could get 	**		a reorder signal after finishing the queue. 	**		In this case we will hang for one more queue 	**		interval -- clearly a botch, but rare and 	**		relatively innocuous. 	*/
@@ -1777,6 +1808,32 @@ operator|+
 literal|3
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|11
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"dowork, pid=%d, id=%s"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 comment|/* don't use the headers from sendmail.cf... */
 name|CurEnv
 operator|->
