@@ -771,7 +771,8 @@ argument_list|,
 name|maxsize
 argument_list|,
 comment|/*nsegs*/
-name|BUS_SPACE_UNRESTRICTED
+operator|~
+literal|0
 argument_list|,
 name|maxsegsz
 argument_list|,
