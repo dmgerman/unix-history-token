@@ -294,7 +294,7 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|buf
 argument_list|)
-name|b_vnbufs
+name|b_bobufs
 expr_stmt|;
 comment|/* (V) Buffer's associated vnode. */
 name|struct
@@ -2379,17 +2379,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|vfs_unbusy_pages
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vwakeup
 parameter_list|(
 name|struct
 name|buf

@@ -9754,7 +9754,7 @@ argument|bp
 argument_list|,
 argument|&vp->v_dirtyblkhd
 argument_list|,
-argument|b_vnbufs
+argument|b_bobufs
 argument_list|)
 block|{
 if|if
@@ -22755,7 +22755,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|bp
 argument_list|,
-name|b_vnbufs
+name|b_bobufs
 argument_list|)
 expr_stmt|;
 comment|/*  		 * If it is already scheduled, skip to the next buffer. 		 */
@@ -23745,7 +23745,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|bp
 argument_list|,
-name|b_vnbufs
+name|b_bobufs
 argument_list|)
 argument_list|,
 name|VI_MTX
@@ -26686,14 +26686,18 @@ while|while
 condition|(
 name|vp
 operator|->
-name|v_numoutput
+name|v_bufobj
+operator|.
+name|bo_numoutput
 condition|)
 block|{
 name|vp
 operator|->
-name|v_iflag
+name|v_bufobj
+operator|.
+name|bo_flag
 operator||=
-name|VI_BWAIT
+name|BO_WWAIT
 expr_stmt|;
 name|interlocked_sleep
 argument_list|(
@@ -26708,7 +26712,9 @@ operator|)
 operator|&
 name|vp
 operator|->
-name|v_numoutput
+name|v_bufobj
+operator|.
+name|bo_numoutput
 argument_list|,
 name|VI_MTX
 argument_list|(

@@ -100,9 +100,24 @@ name|long
 name|bo_numoutput
 decl_stmt|;
 comment|/* i Writes in progress */
+name|u_int
+name|bo_flag
+decl_stmt|;
+comment|/* i Flags */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BO_WWAIT
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Wait for output to complete */
+end_comment
 
 begin_define
 define|#
@@ -155,6 +170,48 @@ name|bo
 parameter_list|)
 value|mtx_assert(bo->bo_mtx, MA_NOTOWNED)
 end_define
+
+begin_function_decl
+name|void
+name|bufobj_wdrop
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bufobj_wref
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bufobj_wwait
+parameter_list|(
+name|struct
+name|bufobj
+modifier|*
+name|bo
+parameter_list|,
+name|int
+name|slpflag
+parameter_list|,
+name|int
+name|timeo
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

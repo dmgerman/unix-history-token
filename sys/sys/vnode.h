@@ -719,17 +719,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VI_BWAIT
-value|0x0004
-end_define
-
-begin_comment
-comment|/* waiting for output to complete */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VI_OLOCK
 value|0x0008
 end_define

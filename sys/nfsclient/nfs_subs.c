@@ -4014,7 +4014,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|bp
 argument_list|,
-name|b_vnbufs
+name|b_bobufs
 argument_list|)
 expr_stmt|;
 if|if
