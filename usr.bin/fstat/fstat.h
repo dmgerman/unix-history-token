@@ -31,7 +31,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|(kvm_read(kd, (u_long)(kaddr), (char *)(paddr), (len)) == (len))
+value|((len)< SSIZE_MAX&& \ 	kvm_read(kd, (u_long)(kaddr), (char *)(paddr), (len)) == (ssize_t)(len))
 end_define
 
 begin_define
@@ -54,7 +54,7 @@ decl_stmt|;
 name|long
 name|fsid
 decl_stmt|;
-name|ino_t
+name|long
 name|ino
 decl_stmt|;
 specifier|const
