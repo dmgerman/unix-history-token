@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	simpleHTTPd (C) 1998 netSTOR Technologies, Inc. ("netSTOR") 	FreeBSD port and additional work by Marc Nicholas<marc@netstor.com> 	Based on work by:- 	Thierry Leconte& Yury Shimanovsky 	My Russian webserver writing friends :-)  	This is an HTTP daemon that will serve up HTML, text files, JPEGs, 	GIFs and do simple CGI work.  	You may use this code for non-commercial distribution only. Commercial 	distribution requires the express, written permission of netSTOR. No 	warranty is implied or given -- use at your own risk! */
-end_comment
-
-begin_comment
-comment|/*  * $Id: simple_httpd.c,v 1.1.1.1 1998/08/27 17:38:45 abial Exp $  */
+comment|/*-  * SimpleHTTPd v1.0 - a very small, barebones HTTP server  *   * Copyright (c) 1998-1999 Marc Nicholas<marc@netstor.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: simple_httpd.c,v 1.2.2.1 1999/02/05 12:21:41 abial Exp $  */
 end_comment
 
 begin_include
@@ -96,13 +92,6 @@ include|#
 directive|include
 file|<sys/wait.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|LOGDIR
-value|"/var/log"
-end_define
 
 begin_decl_stmt
 name|int
@@ -631,8 +620,7 @@ name|strcpy
 argument_list|(
 name|logfile
 argument_list|,
-name|LOGDIR
-literal|"/jhttpd.log"
+literal|"/var/log/jhttpd.log"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1765,23 +1753,7 @@ name|sprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%4d/%02d/%02d %02d:%02d:%02d"
-argument_list|,
-name|t
-operator|->
-name|tm_year
-operator|+
-literal|1900
-argument_list|,
-name|t
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|t
-operator|->
-name|tm_mday
+literal|"%02d:%02d:%02d %02d/%02d/%02d"
 argument_list|,
 name|t
 operator|->
@@ -1794,6 +1766,20 @@ argument_list|,
 name|t
 operator|->
 name|tm_sec
+argument_list|,
+name|t
+operator|->
+name|tm_mday
+argument_list|,
+name|t
+operator|->
+name|tm_mon
+operator|+
+literal|1
+argument_list|,
+name|t
+operator|->
+name|tm_year
 argument_list|)
 expr_stmt|;
 return|return
