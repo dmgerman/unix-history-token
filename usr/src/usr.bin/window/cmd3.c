@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	3.6 83/12/06"
+literal|"@(#)cmd3.c	3.7 84/01/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,7 +432,7 @@ name|w
 operator|->
 name|ww_label
 condition|)
-name|free
+name|str_free
 argument_list|(
 name|w
 operator|->
