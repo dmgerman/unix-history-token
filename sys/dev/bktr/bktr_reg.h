@@ -2395,12 +2395,20 @@ name|__FreeBSD_version
 operator|>=
 literal|400000
 operator|)
+name|int
+name|mem_rid
+decl_stmt|;
+comment|/* 4.x resource id */
 name|struct
 name|resource
 modifier|*
 name|res_mem
 decl_stmt|;
 comment|/* 4.x resource descriptor for registers */
+name|int
+name|irq_rid
+decl_stmt|;
+comment|/* 4.x resource id */
 name|struct
 name|resource
 modifier|*
