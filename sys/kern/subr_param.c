@@ -560,6 +560,23 @@ operator|&
 name|maxproc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Limit maxproc so that kmap entries cannot be exhausted by 	 * processes. 	 */
+if|if
+condition|(
+name|maxproc
+operator|>
+operator|(
+name|physpages
+operator|/
+literal|12
+operator|)
+condition|)
+name|maxproc
+operator|=
+name|physpages
+operator|/
+literal|12
+expr_stmt|;
 name|maxfiles
 operator|=
 name|MAXFILES
