@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.7 1997/02/22 15:00:50 peter Exp $ */
+comment|/*	$Id: msgcat.c,v 1.8 1997/03/24 06:15:07 imp Exp $ */
 end_comment
 
 begin_comment
@@ -297,7 +297,6 @@ return|;
 block|}
 else|else
 block|{
-comment|/* XXX Should really be issetguid(), but we don't have that */
 if|if
 condition|(
 operator|(
@@ -314,18 +313,6 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|||
-name|getuid
-argument_list|()
-operator|!=
-name|geteuid
-argument_list|()
-operator|||
-name|getgid
-argument_list|()
-operator|!=
-name|getegid
-argument_list|()
 condition|)
 name|lang
 operator|=
