@@ -81,7 +81,7 @@ operator|)
 operator|||
 operator|(
 name|contentionscope
-operator|!=
+operator|==
 name|PTHREAD_SCOPE_SYSTEM
 operator|)
 condition|)
