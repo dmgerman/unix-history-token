@@ -3423,7 +3423,11 @@ operator|*
 name|saved_argv
 argument_list|)
 operator|*
+operator|(
 name|ac
+operator|+
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3451,6 +3455,13 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+name|saved_argv
+index|[
+name|ac
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 ifndef|#
 directive|ifndef
