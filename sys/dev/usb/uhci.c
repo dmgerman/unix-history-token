@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.82 2000/01/26 10:04:38 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.84 2000/01/28 00:44:27 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1270,6 +1270,16 @@ end_function_decl
 
 begin_function_decl
 name|Static
+name|void
+name|uhci_root_ctrl_done
+parameter_list|(
+name|usbd_xfer_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
 name|usbd_status
 name|uhci_root_intr_transfer
 parameter_list|(
@@ -1704,7 +1714,7 @@ name|uhci_root_ctrl_close
 block|,
 name|uhci_noop
 block|,
-literal|0
+name|uhci_root_ctrl_done
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -4438,6 +4448,16 @@ end_function
 begin_function
 name|void
 name|uhci_root_intr_done
+parameter_list|(
+name|usbd_xfer_handle
+name|xfer
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|uhci_root_ctrl_done
 parameter_list|(
 name|usbd_xfer_handle
 name|xfer
