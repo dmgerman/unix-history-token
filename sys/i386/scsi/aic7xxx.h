@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.23 1996/03/31 03:15:31 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.25 1996/04/20 21:29:27 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -46,17 +46,6 @@ end_define
 begin_comment
 comment|/* 				 * Up to 255 SCBs on some types of aic7xxx 				 * based boards.  The aic7870 have 16 internal 				 * SCBs, but external SRAM bumps this to 255. 				 * The aic7770 family have only 4, and the  				 * aic7850 has only 3. 				 */
 end_comment
-
-begin_comment
-comment|/* #define AHCDEBUG */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bootverbose
-decl_stmt|;
-end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -119,6 +108,11 @@ name|AHC_AIC7850
 init|=
 literal|0x020
 block|,
+name|AHC_AIC7860
+init|=
+literal|0x021
+block|,
+comment|/* ULTRA version of the aic7850 */
 name|AHC_AIC7870
 init|=
 literal|0x040
@@ -183,16 +177,16 @@ name|AHC_RUNNING
 init|=
 literal|0x02
 block|,
-name|AHC_USEDEFAULTS
+name|AHC_PAGESCBS
 init|=
 literal|0x04
 block|,
-comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default chip and 					 * target settings. 					 */
-name|AHC_EXTSCB
+comment|/* Enable SCB paging */
+name|AHC_USEDEFAULTS
 init|=
 literal|0x10
 block|,
-comment|/* External SCBs present */
+comment|/* 					 * For cards without an seeprom 					 * or a BIOS to initialize the chip's 					 * SRAM, we use the default chip and 					 * target settings. 					 */
 name|AHC_CHNLB
 init|=
 literal|0x20
@@ -204,7 +198,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure need to be transfered to the card during  * normal operation.  The remaining fields (next_waiting and host_scb) are  * initialized the first time an SCB is allocated in get_scb().  The fields  * starting at byte 32 are used for kernel level bookkeeping.    */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure need to be transfered to the card during  * normal operation.  The fields starting at byte 32 are used for kernel level  * bookkeeping.    */
 end_comment
 
 begin_struct
@@ -218,12 +212,12 @@ name|control
 decl_stmt|;
 comment|/*1*/
 name|u_char
-name|target_channel_lun
+name|tcl
 decl_stmt|;
 comment|/* 4/1/3 bits */
 comment|/*2*/
 name|u_char
-name|target_status
+name|status
 decl_stmt|;
 comment|/*3*/
 name|u_char
@@ -261,24 +255,33 @@ comment|/*24*/
 name|u_char
 name|cmdlen
 decl_stmt|;
+comment|/*25*/
+name|u_char
+name|tag
+decl_stmt|;
+comment|/* Index into our kernel SCB array. 					 * Also used as the tag for tagged I/O 					 */
 define|#
 directive|define
 name|SCB_PIO_TRANSFER_SIZE
-value|25
+value|26
 comment|/* amount we need to upload/download 					 * via PIO to initialize a transaction. 					 */
-comment|/*25*/
+comment|/*26*/
 name|u_char
-name|next_waiting
+name|next
 decl_stmt|;
-comment|/* Used to thread SCBs awaiting 					 * selection 					 */
+comment|/* Used for threading SCBs in the 					 * "Waiting for Selection" and 					 * "Disconnected SCB" lists down 					 * in the sequencer. 					 */
+comment|/*27*/
+name|u_char
+name|prev
+decl_stmt|;
 comment|/*-----------------end of hardware supported fields----------------*/
-name|SLIST_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|scb
 argument_list|)
-name|next
+name|links
 expr_stmt|;
-comment|/* in free list */
+comment|/* for chaining */
 name|struct
 name|scsi_xfer
 modifier|*
@@ -291,39 +294,55 @@ decl_stmt|;
 define|#
 directive|define
 name|SCB_FREE
-value|0x00
+value|0x000
 define|#
 directive|define
 name|SCB_ACTIVE
-value|0x01
+value|0x001
 define|#
 directive|define
 name|SCB_ABORTED
-value|0x02
+value|0x002
 define|#
 directive|define
 name|SCB_DEVICE_RESET
-value|0x04
+value|0x004
 define|#
 directive|define
 name|SCB_IMMED
-value|0x08
+value|0x008
 define|#
 directive|define
 name|SCB_SENSE
-value|0x10
+value|0x010
 define|#
 directive|define
 name|SCB_TIMEDOUT
-value|0x20
+value|0x020
 define|#
 directive|define
 name|SCB_QUEUED_FOR_DONE
-value|0x40
-name|int
+value|0x040
+define|#
+directive|define
+name|SCB_PAGED_OUT
+value|0x080
+define|#
+directive|define
+name|SCB_WAITINGQ
+value|0x100
+define|#
+directive|define
+name|SCB_ASSIGNEDQ
+value|0x200
+define|#
+directive|define
+name|SCB_SENTORDEREDTAG
+value|0x400
+name|u_char
 name|position
 decl_stmt|;
-comment|/* Position in scbarray */
+comment|/* Position in card's scbarray */
 name|struct
 name|ahc_dma_seg
 name|ahc_dma
@@ -371,30 +390,47 @@ name|AHC_SCB_MAX
 index|]
 decl_stmt|;
 comment|/* Mirror boards scbarray */
-name|SLIST_HEAD
+name|struct
+name|scb
+modifier|*
+name|pagedout_ntscbs
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/*  					  * Paged out, non-tagged scbs 					  * indexed by target. 					  */
+name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|scb
 argument_list|)
-name|free_scb
+name|free_scbs
 expr_stmt|;
-name|int
-name|our_id
-decl_stmt|;
-comment|/* our scsi id */
-name|int
-name|our_id_b
-decl_stmt|;
-comment|/* B channel scsi id */
-name|int
-name|vect
-decl_stmt|;
-name|struct
-name|scb
-modifier|*
-name|immed_ecb
-decl_stmt|;
-comment|/* an outstanding immediate command */
+comment|/* 					 * SCBs assigned to free slots 					 * on the card. (no paging required) 					 */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|page_scbs
+expr_stmt|;
+comment|/* 					 * SCBs that will require paging 					 * before use (no assigned slot) 					 */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|waiting_scbs
+expr_stmt|;
+comment|/* 					 * SCBs waiting to be paged in 					 * and started. 					 */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|scb
+argument_list|)
+name|assigned_scbs
+expr_stmt|;
+comment|/* 					 * SCBs that were waiting but have 					 * now been assigned a slot by 					 * ahc_free_scb. 					 */
 name|struct
 name|scsi_link
 name|sc_link
@@ -433,18 +469,35 @@ name|tagenable
 decl_stmt|;
 comment|/* Targets that can handle tagqueing */
 name|u_short
+name|orderedtag
+decl_stmt|;
+comment|/* Targets to use ordered tag on */
+name|u_short
 name|discenable
 decl_stmt|;
 comment|/* Targets allowed to disconnect */
-name|int
+name|u_char
+name|our_id
+decl_stmt|;
+comment|/* our scsi id */
+name|u_char
+name|our_id_b
+decl_stmt|;
+comment|/* B channel scsi id */
+name|u_char
 name|numscbs
 decl_stmt|;
-name|int
+name|u_char
 name|activescbs
 decl_stmt|;
 name|u_char
+name|maxhscbs
+decl_stmt|;
+comment|/* Number of SCBs on the card */
+name|u_char
 name|maxscbs
 decl_stmt|;
+comment|/* 					 * Max SCBs we allocate total including 					 * any that will force us to page SCBs 					 */
 name|u_char
 name|qcntmask
 decl_stmt|;
@@ -460,6 +513,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* #define AHC_DEBUG */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+end_ifdef
 
 begin_comment
 comment|/* Different debugging levels used when AHC_DEBUG is defined */
@@ -507,10 +570,6 @@ name|AHC_SHOWSCBCNT
 value|0x0020
 end_define
 
-begin_comment
-comment|/* #define AHC_DEBUG */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -521,6 +580,18 @@ end_decl_stmt
 begin_comment
 comment|/* Initialized in i386/scsi/aic7xxx.c */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bootverbose
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
