@@ -3917,17 +3917,6 @@ name|pthread_mutex
 modifier|*
 name|mutex
 decl_stmt|;
-comment|/* 	 * Defer signals to protect the scheduling queues from 	 * access by the signal handler: 	 */
-comment|/* _thread_kern_sig_defer();*/
-comment|/* XXX - Necessary to obey lock order */
-name|UMTX_LOCK
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 name|mutex
 operator|=
 name|pthread
@@ -3935,27 +3924,6 @@ operator|->
 name|data
 operator|.
 name|mutex
-expr_stmt|;
-name|UMTX_UNLOCK
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-name|_SPINLOCK
-argument_list|(
-operator|&
-name|mutex
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
-name|_thread_critical_enter
-argument_list|(
-name|pthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3987,21 +3955,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Undefer and handle pending signals, yielding if 	 * necessary: 	 */
-comment|/* _thread_kern_sig_undefer(); */
-name|_thread_critical_exit
-argument_list|(
-name|pthread
-argument_list|)
-expr_stmt|;
-name|_SPINUNLOCK
-argument_list|(
-operator|&
-name|mutex
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4455,12 +4408,12 @@ block|{
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Put this thread on the mutex's list of waiting threads. 	 * The lock on the thread ensures atomic (as far as other 	 * threads are concerned) setting of the thread state with 	 * it's status on the mutex queue. 	 */
 name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Put this thread on the mutex's list of waiting threads. 	 * The lock on the thread ensures atomic (as far as other 	 * threads are concerned) setting of the thread state with 	 * it's status on the mutex queue. 	 */
 name|mutex_queue_enq
 argument_list|(
 name|mutexp

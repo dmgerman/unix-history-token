@@ -1377,11 +1377,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|COND_LOCK
-argument_list|(
-name|cond
-argument_list|)
-expr_stmt|;
 comment|/* Process according to condition variable type: */
 switch|switch
 condition|(
@@ -1394,11 +1389,6 @@ comment|/* Fast condition variable: */
 case|case
 name|COND_TYPE_FAST
 case|:
-name|_thread_critical_enter
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 name|cond_queue_remove
 argument_list|(
 name|cond
@@ -1406,20 +1396,10 @@ argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;
-name|_thread_critical_exit
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 break|break;
 block|}
-name|COND_UNLOCK
-argument_list|(
-name|cond
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

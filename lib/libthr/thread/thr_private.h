@@ -2215,6 +2215,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|_spintrylock
+parameter_list|(
+name|spinlock_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|_thread_exit
 parameter_list|(
