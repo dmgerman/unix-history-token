@@ -1258,7 +1258,7 @@ name|NULL
 block|,
 literal|0
 block|,
-name|rtprior
+name|priorityr
 block|,
 name|NULL
 block|,
@@ -1266,7 +1266,7 @@ literal|7
 block|,
 name|KOFF
 argument_list|(
-argument|ki_rtprio
+argument|ki_pri
 argument_list|)
 block|}
 block|,
@@ -1693,10 +1693,12 @@ literal|3
 block|,
 name|KOFF
 argument_list|(
-name|ki_usrpri
+name|ki_pri
+operator|.
+name|pri_user
 argument_list|)
 block|,
-name|CHAR
+name|UCHAR
 block|,
 literal|"d"
 block|}

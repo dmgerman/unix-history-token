@@ -374,7 +374,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|rtprior
+name|priorityr
 name|__P
 argument_list|(
 operator|(

@@ -2825,7 +2825,9 @@ argument_list|)
 argument_list|,
 name|pp
 operator|->
-name|ki_priority
+name|ki_pri
+operator|.
+name|pri_level
 operator|-
 name|PZERO
 argument_list|,
@@ -2833,11 +2835,11 @@ comment|/* 	     * normal time      -> nice value -20 - +20  	     * real time 0
 operator|(
 name|pp
 operator|->
-name|ki_rtprio
+name|ki_pri
 operator|.
-name|type
+name|pri_class
 operator|==
-name|RTP_PRIO_NORMAL
+name|PRI_TIMESHARE
 condition|?
 name|pp
 operator|->
@@ -2846,13 +2848,13 @@ operator|-
 name|NZERO
 else|:
 operator|(
-name|RTP_PRIO_IS_REALTIME
+name|PRI_IS_REALTIME
 argument_list|(
 name|pp
 operator|->
-name|ki_rtprio
+name|ki_pri
 operator|.
-name|type
+name|pri_class
 argument_list|)
 condition|?
 operator|(
@@ -2860,13 +2862,15 @@ name|PRIO_MIN
 operator|-
 literal|1
 operator|-
-name|RTP_PRIO_MAX
-operator|+
+operator|(
+name|PRI_MAX_REALTIME
+operator|-
 name|pp
 operator|->
-name|ki_rtprio
+name|ki_pri
 operator|.
-name|prio
+name|pri_level
+operator|)
 operator|)
 else|:
 operator|(
@@ -2876,9 +2880,11 @@ literal|1
 operator|+
 name|pp
 operator|->
-name|ki_rtprio
+name|ki_pri
 operator|.
-name|prio
+name|pri_level
+operator|-
+name|PRI_MIN_IDLE
 operator|)
 operator|)
 operator|)
@@ -3201,7 +3207,7 @@ define|#
 directive|define
 name|ORDERKEY_PRIO
 define|\
-value|if ((result = p2->ki_priority - p1->ki_priority) == 0)
+value|if ((result = p2->ki_pri.pri_level - p1->ki_pri.pri_level) == 0)
 end_define
 
 begin_define
