@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.28 (Berkeley) %G%"
+literal|"@(#)main.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +573,16 @@ name|bool
 name|canrename
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* do machine-dependent initializations */
+end_comment
+
+begin_expr_stmt
+name|init_md
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* in 4.4BSD, the table can be huge; impose a reasonable limit */

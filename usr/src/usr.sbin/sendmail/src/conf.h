@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.37 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -1755,6 +1761,159 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Encore UMAX V ** **	Not extensively tested. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UMAXV
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SETPGRP
+value|1
+end_define
+
+begin_comment
+comment|/* use System V setpgrp(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|fork
+end_define
+
+begin_comment
+comment|/* no vfork(2) primitive available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATH_MAX
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwent
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getpwnam
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getpwuid
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|group
+modifier|*
+name|getgrent
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getgrnam
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getgrgid
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -1851,6 +2010,17 @@ end_define
 
 begin_comment
 comment|/* use System V ustat(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SETPGRP
+value|1
+end_define
+
+begin_comment
+comment|/* use System V setpgrp(2) syscall */
 end_comment
 
 begin_ifndef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.29 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1703,28 +1703,6 @@ operator|->
 name|e_flags
 operator||=
 name|EF_GLOBALERRS
-expr_stmt|;
-comment|/* be sure to use any new error message */
-if|if
-condition|(
-name|e
-operator|->
-name|e_message
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|e
-operator|->
-name|e_message
-argument_list|)
-expr_stmt|;
-name|e
-operator|->
-name|e_message
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* now run through the queue */
 for|for

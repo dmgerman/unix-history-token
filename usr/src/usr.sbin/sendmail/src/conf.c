@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.39 (Berkeley) %G%"
+literal|"@(#)conf.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1666,6 +1666,53 @@ end_macro
 
 begin_block
 block|{ }
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  INIT_MD -- do machine dependent initializations ** **	Systems that have global modes that should be set should do **	them here rather than in main. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AUX_SOURCE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<compat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|init_md
+argument_list|()
+end_macro
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|_AUX_SOURCE
+name|setcompat
+argument_list|(
+name|getcompat
+argument_list|()
+operator||
+name|COMPAT_BSDPROT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_block
 
 begin_escape
@@ -4051,7 +4098,7 @@ directive|endif
 comment|/* TIOCNOTTY */
 ifdef|#
 directive|ifdef
-name|SYSTEM5
+name|SYS5SETPGRP
 return|return
 name|setpgrp
 argument_list|()
@@ -4863,6 +4910,11 @@ name|defined
 argument_list|(
 name|_SCO_unix_
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|UMAXV
+argument_list|)
 end_if
 
 begin_include
@@ -5092,6 +5144,11 @@ operator|||
 name|defined
 argument_list|(
 name|apollo
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|UMAXV
 argument_list|)
 if|if
 condition|(

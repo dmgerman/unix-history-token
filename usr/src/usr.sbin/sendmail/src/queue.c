@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.19 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.20 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.19 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.20 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4322,19 +4322,7 @@ case|case
 literal|'M'
 case|:
 comment|/* message */
-name|e
-operator|->
-name|e_message
-operator|=
-name|newstr
-argument_list|(
-operator|&
-name|bp
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
+comment|/* ignore this; we want a new message next time */
 break|break;
 case|case
 literal|'S'
@@ -5692,11 +5680,14 @@ condition|)
 continue|continue;
 name|syserr
 argument_list|(
-literal|"queuename: Cannot create \"%s\" in \"%s\""
+literal|"queuename: Cannot create \"%s\" in \"%s\" (euid=%d)"
 argument_list|,
 name|qf
 argument_list|,
 name|QueueDir
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5757,11 +5748,14 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"queuename: Cannot create \"%s\" in \"%s\""
+literal|"queuename: Cannot create \"%s\" in \"%s\" (euid=%d)"
 argument_list|,
 name|qf
 argument_list|,
 name|QueueDir
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
