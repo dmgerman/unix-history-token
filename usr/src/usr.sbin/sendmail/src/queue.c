@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.87 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.88 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.87 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.88 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1724,7 +1724,14 @@ name|h_value
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  Clean up. 	*/
+comment|/* 	**  Clean up. 	** 	**	Write a terminator record -- this is to prevent 	**	scurrilous crackers from appending any data. 	*/
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|".\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fflush
@@ -5013,6 +5020,11 @@ name|orcpt
 init|=
 name|NULL
 decl_stmt|;
+name|bool
+name|nomore
+init|=
+name|FALSE
+decl_stmt|;
 name|char
 name|qf
 index|[
@@ -5468,6 +5480,35 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nomore
+condition|)
+block|{
+comment|/* hack attack */
+name|syserr
+argument_list|(
+literal|"SECURITY ALERT: extra data in qf: %s"
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+name|loseqfile
+argument_list|(
+name|e
+argument_list|,
+literal|"bogus queue line"
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 switch|switch
 condition|(
 name|bp
@@ -5755,6 +5796,44 @@ case|case
 literal|'F'
 case|:
 comment|/* flag bits */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|bp
+argument_list|,
+literal|"From "
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* we are being spoofed! */
+name|syserr
+argument_list|(
+literal|"SECURITY ALERT: bogus qf line %s"
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+name|loseqfile
+argument_list|(
+name|e
+argument_list|,
+literal|"bogus queue line"
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 for|for
 control|(
 name|p
@@ -5859,9 +5938,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'\0'
+literal|'.'
 case|:
-comment|/* blank line; ignore */
+comment|/* terminate file */
+name|nomore
+operator|=
+name|TRUE
+expr_stmt|;
 break|break;
 default|default:
 name|syserr
