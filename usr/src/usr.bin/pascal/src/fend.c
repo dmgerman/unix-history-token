@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.12 %G%"
+literal|"@(#)fend.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1375,6 +1375,10 @@ block|}
 endif|#
 directive|endif
 endif|PC
+name|inp
+operator|=
+literal|0
+expr_stmt|;
 name|out
 operator|=
 literal|0
@@ -1406,7 +1410,9 @@ name|p
 operator|->
 name|symbol
 argument_list|,
-literal|"input"
+name|input
+operator|->
+name|symbol
 argument_list|)
 operator|==
 literal|0
@@ -1425,7 +1431,9 @@ name|p
 operator|->
 name|symbol
 argument_list|,
-literal|"output"
+name|output
+operator|->
+name|symbol
 argument_list|)
 operator|==
 literal|0
@@ -1781,28 +1789,6 @@ endif|#
 directive|endif
 endif|PC
 block|}
-if|if
-condition|(
-name|out
-operator|==
-literal|0
-operator|&&
-name|fp
-operator|->
-name|chain
-operator|!=
-name|NIL
-condition|)
-block|{
-name|recovered
-argument_list|()
-expr_stmt|;
-name|error
-argument_list|(
-literal|"The file output must appear in the program statement file list"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Process the prog/proc/func body 	 */
 name|noreach
@@ -2001,6 +1987,11 @@ block|}
 endif|#
 directive|endif
 endif|PC
+comment|/* 	 * Clean up the symbol table displays and check for unresolves 	 */
+name|line
+operator|=
+name|endline
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -2037,11 +2028,42 @@ literal|"Input is used but not defined in the program statement"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Clean up the symbol table displays and check for unresolves 	 */
-name|line
-operator|=
-name|endline
+if|if
+condition|(
+name|fp
+operator|->
+name|class
+operator|==
+name|PROG
+operator|&&
+name|out
+operator|==
+literal|0
+operator|&&
+operator|(
+name|output
+operator|->
+name|nl_flags
+operator|&
+operator|(
+name|NUSED
+operator||
+name|NMOD
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|recovered
+argument_list|()
 expr_stmt|;
+name|error
+argument_list|(
+literal|"Output is used but not defined in the program statement"
+argument_list|)
+expr_stmt|;
+block|}
 name|b
 operator|=
 name|cbn

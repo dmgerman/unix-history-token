@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.11 %G%"
+literal|"@(#)proc.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -679,6 +679,12 @@ argument_list|,
 name|O_UNITOUT
 argument_list|)
 expr_stmt|;
+name|output
+operator|->
+name|nl_flags
+operator||=
+name|NUSED
+expr_stmt|;
 block|}
 else|else
 name|put
@@ -687,6 +693,12 @@ literal|1
 argument_list|,
 name|O_UNITOUT
 argument_list|)
+expr_stmt|;
+name|output
+operator|->
+name|nl_flags
+operator||=
+name|NUSED
 expr_stmt|;
 comment|/* 		 * Loop and process each 		 * of the arguments. 		 */
 for|for
