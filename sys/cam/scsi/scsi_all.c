@@ -10955,6 +10955,11 @@ literal|0
 operator|)
 return|;
 comment|/* Async */
+comment|/* Adjust for exception table being in 100ths. */
+name|period
+operator|*=
+literal|10
+expr_stmt|;
 name|num_syncrates
 operator|=
 sizeof|sizeof
@@ -10997,7 +11002,7 @@ operator|.
 name|period
 condition|)
 block|{
-comment|/* Period in kHz */
+comment|/* Period in 100ths of ns */
 return|return
 operator|(
 name|scsi_syncrates
@@ -11015,7 +11020,7 @@ return|return
 operator|(
 name|period
 operator|/
-literal|40
+literal|400
 operator|)
 return|;
 block|}
