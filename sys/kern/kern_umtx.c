@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -219,6 +225,13 @@ directive|define
 name|UMTX_UNLOCK
 parameter_list|()
 value|mtx_unlock(&umtx_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_CONTESTED
+value|LONG_MIN
 end_define
 
 begin_function_decl
@@ -658,10 +671,9 @@ name|u_owner
 argument_list|,
 name|UMTX_UNOWNED
 argument_list|,
-operator|(
-name|intptr_t
-operator|)
 name|td
+operator|->
+name|td_tid
 argument_list|)
 expr_stmt|;
 comment|/* The address was invalid. */
@@ -712,14 +724,11 @@ name|u_owner
 argument_list|,
 name|UMTX_CONTESTED
 argument_list|,
-operator|(
-operator|(
-name|intptr_t
-operator|)
 name|td
+operator|->
+name|td_tid
 operator||
 name|UMTX_CONTESTED
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* The address was invalid. */
@@ -1007,11 +1016,6 @@ return|;
 if|if
 condition|(
 operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-operator|(
 name|owner
 operator|&
 operator|~
@@ -1019,6 +1023,8 @@ name|UMTX_CONTESTED
 operator|)
 operator|!=
 name|td
+operator|->
+name|td_tid
 condition|)
 return|return
 operator|(

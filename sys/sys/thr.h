@@ -15,18 +15,6 @@ directive|define
 name|_SYS_THR_H_
 end_define
 
-begin_comment
-comment|/*  * Globally unique thread id type.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|thr_id_t
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -56,7 +44,7 @@ name|ucontext_t
 modifier|*
 name|ctx
 parameter_list|,
-name|thr_id_t
+name|long
 modifier|*
 name|id
 parameter_list|,
@@ -70,7 +58,7 @@ begin_function_decl
 name|int
 name|thr_self
 parameter_list|(
-name|thr_id_t
+name|long
 modifier|*
 name|id
 parameter_list|)
@@ -90,7 +78,7 @@ begin_function_decl
 name|int
 name|thr_kill
 parameter_list|(
-name|thr_id_t
+name|long
 name|id
 parameter_list|,
 name|int
@@ -116,7 +104,7 @@ begin_function_decl
 name|int
 name|thr_wake
 parameter_list|(
-name|thr_id_t
+name|long
 name|id
 parameter_list|)
 function_decl|;

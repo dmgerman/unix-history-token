@@ -69,15 +69,6 @@ directive|include
 file|"libc_private.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|u_int64_t
-name|next_uniqueid
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -97,17 +88,6 @@ argument_list|(
 name|tle
 operator|.
 name|tqe_next
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_uniqueid_offset
-init|=
-name|OFF
-argument_list|(
-name|uniqueid
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -521,14 +501,6 @@ operator|=
 name|new_thread
 operator|->
 name|base_priority
-expr_stmt|;
-comment|/* 	 * Initialise the unique id which GDB uses to 	 * track threads. 	 */
-name|new_thread
-operator|->
-name|uniqueid
-operator|=
-name|next_uniqueid
-operator|++
 expr_stmt|;
 name|THREAD_LIST_LOCK
 expr_stmt|;

@@ -1250,11 +1250,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|u_int64_t
-name|uniqueid
-decl_stmt|;
-comment|/* for gdb */
-name|thr_id_t
+name|long
 name|thr_id
 decl_stmt|;
 name|sigset_t

@@ -1513,7 +1513,7 @@ name|_thread_printf
 argument_list|(
 literal|2
 argument_list|,
-literal|"Thread (%s:%u) already on condq\n"
+literal|"Thread (%s:%ld) already on condq\n"
 argument_list|,
 name|pthread
 operator|->
@@ -1521,7 +1521,7 @@ name|name
 argument_list|,
 name|pthread
 operator|->
-name|uniqueid
+name|thr_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -1540,7 +1540,7 @@ name|_thread_printf
 argument_list|(
 literal|2
 argument_list|,
-literal|"Thread (%s:%u) already on mutexq\n"
+literal|"Thread (%s:%ld) already on mutexq\n"
 argument_list|,
 name|pthread
 operator|->
@@ -1548,7 +1548,7 @@ name|name
 argument_list|,
 name|pthread
 operator|->
-name|uniqueid
+name|thr_id
 argument_list|)
 expr_stmt|;
 name|PTHREAD_ASSERT_NOT_IN_SYNCQ

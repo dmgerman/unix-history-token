@@ -362,7 +362,7 @@ name|thr_create_args
 modifier|*
 name|uap
 parameter_list|)
-comment|/* ucontext_t *ctx, thr_id_t *id, int flags */
+comment|/* ucontext_t *ctx, long *id, int flags */
 block|{
 name|struct
 name|kse
@@ -376,6 +376,9 @@ name|td0
 decl_stmt|;
 name|ucontext_t
 name|ctx
+decl_stmt|;
+name|long
+name|id
 decl_stmt|;
 name|int
 name|error
@@ -413,6 +416,12 @@ name|thread_alloc
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Try the copyout as soon as we allocate the td so we don't have to 	 * tear things down in a failure case below. 	 */
+name|id
+operator|=
+name|td0
+operator|->
+name|td_tid
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -421,7 +430,7 @@ operator|=
 name|copyout
 argument_list|(
 operator|&
-name|td0
+name|id
 argument_list|,
 name|uap
 operator|->
@@ -429,7 +438,7 @@ name|id
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|thr_id_t
+name|long
 argument_list|)
 argument_list|)
 operator|)
@@ -705,11 +714,20 @@ name|thr_self_args
 modifier|*
 name|uap
 parameter_list|)
-comment|/* thr_id_t *id */
+comment|/* long *id */
 block|{
+name|long
+name|id
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|id
+operator|=
+name|td
+operator|->
+name|td_tid
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -718,7 +736,7 @@ operator|=
 name|copyout
 argument_list|(
 operator|&
-name|td
+name|id
 argument_list|,
 name|uap
 operator|->
@@ -726,7 +744,7 @@ name|id
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|thr_id_t
+name|long
 argument_list|)
 argument_list|)
 operator|)
@@ -814,7 +832,7 @@ name|thr_kill_args
 modifier|*
 name|uap
 parameter_list|)
-comment|/* thr_id_t id, int sig */
+comment|/* long id, int sig */
 block|{
 name|struct
 name|thread
@@ -854,6 +872,8 @@ block|{
 if|if
 condition|(
 name|ttd
+operator|->
+name|td_tid
 operator|==
 name|uap
 operator|->
@@ -1188,29 +1208,13 @@ name|thr_wake_args
 modifier|*
 name|uap
 parameter_list|)
-comment|/* thr_id_t id */
+comment|/* long id */
 block|{
 name|struct
 name|thread
 modifier|*
-name|tdsleeper
-decl_stmt|,
-modifier|*
 name|ttd
 decl_stmt|;
-name|tdsleeper
-operator|=
-operator|(
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-name|uap
-operator|->
-name|id
-operator|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -1228,8 +1232,12 @@ block|{
 if|if
 condition|(
 name|ttd
+operator|->
+name|td_tid
 operator|==
-name|tdsleeper
+name|uap
+operator|->
+name|id
 condition|)
 break|break;
 block|}
@@ -1259,7 +1267,7 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|tdsleeper
+name|ttd
 operator|->
 name|td_flags
 operator||=
@@ -1277,7 +1285,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|tdsleeper
+name|ttd
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
