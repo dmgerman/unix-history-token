@@ -1312,6 +1312,10 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * If we are adding a route to an interface, 			 * and the interface is a pt to pt link 			 * we should search for the destination 			 * as our clue to the interface.  Otherwise 			 * we can use the local address. 			 */
+name|ifa
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|entry
@@ -1330,7 +1334,12 @@ operator|->
 name|rt_dst
 argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|ifa
+operator|==
+literal|0
+condition|)
 name|ifa
 operator|=
 name|ifa_ifwithaddr
