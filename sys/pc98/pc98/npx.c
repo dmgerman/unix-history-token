@@ -1166,6 +1166,7 @@ index|[
 name|npx_intrno
 index|]
 expr_stmt|;
+comment|/* 	 * XXX This looks highly bogus, but it appears that npc_probe1 	 * needs interrupts enabled.  Does this make any difference 	 * here? 	 */
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -2763,9 +2764,12 @@ name|stop_emulating
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Record new context early in case frstor causes an IRQ13. 	 */
+name|PCPU_SET
+argument_list|(
 name|npxproc
-operator|=
-name|curproc
+argument_list|,
+name|CURPROC
+argument_list|)
 expr_stmt|;
 name|curpcb
 operator|->
@@ -2823,13 +2827,19 @@ comment|/* fnop(); */
 name|start_emulating
 argument_list|()
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
 name|npxproc
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
 comment|/* SMP */
+name|int
+name|intrstate
+decl_stmt|;
 name|u_char
 name|icu1_mask
 decl_stmt|;
@@ -2846,6 +2856,11 @@ name|struct
 name|gate_descriptor
 name|save_idt_npxintr
 decl_stmt|;
+name|intrstate
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -2977,8 +2992,10 @@ index|]
 operator|=
 name|npx_idt_probeintr
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|write_eflags
+argument_list|(
+name|intrstate
+argument_list|)
 expr_stmt|;
 name|stop_emulating
 argument_list|()
@@ -2994,9 +3011,12 @@ expr_stmt|;
 name|start_emulating
 argument_list|()
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
 name|npxproc
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|disable_intr
 argument_list|()
@@ -3149,10 +3169,12 @@ index|]
 operator|=
 name|save_idt_npxintr
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|restore_intr
+argument_list|(
+name|intrstate
+argument_list|)
 expr_stmt|;
-comment|/* back to usual state */
+comment|/* back to previous state */
 endif|#
 directive|endif
 comment|/* SMP */
