@@ -22,7 +22,7 @@ file|<dev/vinum/vinumhdr.h>
 end_include
 
 begin_comment
-comment|/* Lock routines.  Currently, we lock either an individual volume  * or the global configuration.  I don't think tsleep and  * wakeup are SMP safe. FIXME XXX */
+comment|/*  * Lock routines.  Currently, we lock either an individual volume  * or the global configuration.  I don't think tsleep and  * wakeup are SMP safe. FIXME XXX   */
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* There are problems sleeping on a unique identifier, 	 * since the drive structure can move, and the unlock 	 * function can be called after killing the drive. 	 * Solve this by waiting on this function; the number 	 * of conflicts is negligible */
+comment|/* 	 * There are problems sleeping on a unique identifier, 	 * since the drive structure can move, and the unlock 	 * function can be called after killing the drive. 	 * Solve this by waiting on this function; the number 	 * of conflicts is negligible  	 */
 if|if
 condition|(
 operator|(
@@ -171,7 +171,7 @@ name|flags
 operator||=
 name|VF_LOCKING
 expr_stmt|;
-comment|/* It would seem to make more sense to sleep on 	 * the address 'vol'.  Unfortuntaly we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change. */
+comment|/* 	 * It would seem to make more sense to sleep on 	 * the address 'vol'.  Unfortuntaly we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change.  	 */
 if|if
 condition|(
 operator|(
@@ -309,7 +309,7 @@ name|flags
 operator||=
 name|VF_LOCKING
 expr_stmt|;
-comment|/* It would seem to make more sense to sleep on 	 * the address 'plex'.  Unfortunately we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change. */
+comment|/* 	 * It would seem to make more sense to sleep on 	 * the address 'plex'.  Unfortunately we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change.  	 */
 if|if
 condition|(
 operator|(

@@ -16,7 +16,7 @@ file|<dev/vinum/vinumstate.h>
 end_include
 
 begin_comment
-comment|/* Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them are soft limits.  */
+comment|/*  * Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them are soft limits.  */
 end_comment
 
 begin_enum
@@ -116,7 +116,7 @@ name|VINUM_SD_WIDTH
 init|=
 literal|8
 block|,
-comment|/* Shifts for the second half of raw plex and      * subdisk numbers */
+comment|/*    * Shifts for the second half of raw plex and    * subdisk numbers   */
 name|VINUM_RAWPLEX_SHIFT
 init|=
 literal|8
@@ -234,7 +234,7 @@ name|VINUM_SUPERDEV_TYPE
 argument_list|)
 block|,
 comment|/* superdevice number */
-comment|/* the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
+comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES
 init|=
 literal|4
@@ -302,7 +302,7 @@ begin_struct
 struct|struct
 name|devcode
 block|{
-comment|/* CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around */
+comment|/*  * CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around   */
 name|unsigned
 name|volume
 range|:
@@ -339,7 +339,7 @@ range|:
 literal|3
 decl_stmt|;
 comment|/* type of object */
-comment|/* type field        VINUM_VOLUME = 0,        VINUM_PLEX = 1,        VINUM_SUBDISK = 2,        VINUM_DRIVE = 3,        VINUM_SUPERDEV = 4,        VINUM_RAWPLEX = 5,                                             VINUM_RAWSD = 6 */
+comment|/*      * type field      VINUM_VOLUME = 0,      VINUM_PLEX = 1,      VINUM_SUBDISK = 2,      VINUM_DRIVE = 3,      VINUM_SUPERDEV = 4,      VINUM_RAWPLEX = 5,                                             VINUM_RAWSD = 6 */
 name|unsigned
 name|signbit
 range|:
@@ -372,7 +372,7 @@ value|VINUM_DIR"/control"
 end_define
 
 begin_comment
-comment|/* Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word. */
+comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.   */
 end_comment
 
 begin_enum
@@ -598,7 +598,7 @@ value|vinum_conf.flags
 end_define
 
 begin_comment
-comment|/* Slice header   * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      2  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      3  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      3 + size of config  * |                                      |  * |--------------------------------------|  */
+comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      2  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      3  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      3 + size of config  * |                                      |  * |--------------------------------------|  */
 end_comment
 
 begin_comment
@@ -645,7 +645,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose */
+comment|/*  * hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose   */
 end_comment
 
 begin_struct
@@ -748,7 +748,7 @@ comment|/*** Drive definitions ***/
 end_comment
 
 begin_comment
-comment|/* A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theroretically be a complete, unpartitioned disk */
+comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theroretically be a complete, unpartitioned disk   */
 end_comment
 
 begin_struct
@@ -898,7 +898,7 @@ name|int64_t
 name|driveoffset
 decl_stmt|;
 comment|/* offset on drive */
-comment|/* plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset */
+comment|/*      * plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset       */
 name|int64_t
 name|plexoffset
 decl_stmt|;
@@ -1220,7 +1220,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly */
+comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly   */
 end_comment
 
 begin_define
@@ -1310,7 +1310,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* These enums are used by the state transition  * routines.  They're in bit map format:  *  * Bit 0: Other plexes in the volume are down  * Bit 1: Other plexes in the volume are up  * Bit 2: The current plex is up  * Maybe they should be local to  * state.c */
+comment|/*  * These enums are used by the state transition  * routines.  They're in bit map format:  *  * Bit 0: Other plexes in the volume are down  * Bit 1: Other plexes in the volume are up  * Bit 2: The current plex is up  * Maybe they should be local to  * state.c   */
 end_comment
 
 begin_enum
@@ -1402,7 +1402,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* This is really just a parameter to pass to  * set_<foo>_state, but since it needs to be known  * in the external definitions, we need to define  * it here */
+comment|/*  * This is really just a parameter to pass to  * set_<foo>_state, but since it needs to be known  * in the external definitions, we need to define  * it here   */
 end_comment
 
 begin_enum

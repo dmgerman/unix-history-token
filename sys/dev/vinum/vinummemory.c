@@ -874,7 +874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* return the nth request trace buffer entry.  This  * is indexed back from the current entry (which  * has index 0) */
+comment|/*  * return the nth request trace buffer entry.  This  * is indexed back from the current entry (which  * has index 0)   */
 end_comment
 
 begin_function

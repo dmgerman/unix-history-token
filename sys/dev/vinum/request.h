@@ -127,7 +127,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Describe one low-level request, part  * of a high-level request.  This is an  * extended struct buf buffer, and the first  * element *must* be a struct buf.  We pass this structure  * to the I/O routines instead of a struct buf in oder  * to be able to locate the high-level request when it  * completes.  *  * All offsets and lengths are in "blocks", i.e. sectors */
+comment|/*  * Describe one low-level request, part  * of a high-level request.  This is an  * extended struct buf buffer, and the first  * element *must* be a struct buf.  We pass this structure  * to the I/O routines instead of a struct buf in oder  * to be able to locate the high-level request when it  * completes.  *  * All offsets and lengths are in "blocks", i.e. sectors   */
 end_comment
 
 begin_struct
@@ -154,7 +154,7 @@ name|int
 name|useroffset
 decl_stmt|;
 comment|/* offset in user buffer of normal data */
-comment|/* dataoffset and datalen refer to "individual"      * data transfers (normal read, parityless write)      * and also degraded write.      *      * groupoffset and grouplen refer to the other      * "group" operations (normal write, recovery read)      * Both the offsets are relative to the start of the      * local buffer */
+comment|/*      * dataoffset and datalen refer to "individual"      * data transfers (normal read, parityless write)      * and also degraded write.      *      * groupoffset and grouplen refer to the other      * "group" operations (normal write, recovery read)      * Both the offsets are relative to the start of the      * local buffer       */
 name|int
 name|dataoffset
 decl_stmt|;
@@ -193,7 +193,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A group of requests built to satisfy a certain  * component of a user request */
+comment|/*  * A group of requests built to satisfy a certain  * component of a user request   */
 end_comment
 
 begin_struct
@@ -246,7 +246,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Describe one high-level request and the  * work we have to do to satisfy it */
+comment|/*  * Describe one high-level request and the  * work we have to do to satisfy it   */
 end_comment
 
 begin_struct
@@ -315,7 +315,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Extended buffer header for subdisk I/O.  Includes  * a pointer to the user I/O request. */
+comment|/*  * Extended buffer header for subdisk I/O.  Includes  * a pointer to the user I/O request.   */
 end_comment
 
 begin_struct
@@ -346,7 +346,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Values returned by rqe and friends.  * Be careful with these: they are in order of increasing  * seriousness.  Some routines check for> REQUEST_RECOVERED  * to indicate a completely failed request. */
+comment|/*  * Values returned by rqe and friends.  * Be careful with these: they are in order of increasing  * seriousness.  Some routines check for> REQUEST_RECOVERED  * to indicate a completely failed request.   */
 end_comment
 
 begin_enum

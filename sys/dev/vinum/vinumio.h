@@ -255,7 +255,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Start an object.  Pass two integers:  * msg [0] index in vinum_conf.<object>  * msg [1] type of object (see below)  *  * Return ioctl_reply  */
+comment|/*  * Start an object.  Pass two integers:  * msg [0] index in vinum_conf.<object>  * msg [1] type of object (see below)  *  * Return ioctl_reply  */
 end_comment
 
 begin_define
@@ -270,7 +270,7 @@ comment|/* start an object */
 end_comment
 
 begin_comment
-comment|/* The state to set with VINUM_SETSTATE.  Since  * each object has a different set of states, we  * need to translate later */
+comment|/*  * The state to set with VINUM_SETSTATE.  Since  * each object has a different set of states, we  * need to translate later   */
 end_comment
 
 begin_enum
@@ -287,7 +287,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* This structure is used for modifying objects  * (VINUM_SETSTATE, VINUM_REMOVE, VINUM_RESETSTATS, VINUM_ATTACH,  * VINUM_DETACH, VINUM_REPLACE  */
+comment|/*  * This structure is used for modifying objects  * (VINUM_SETSTATE, VINUM_REMOVE, VINUM_RESETSTATS, VINUM_ATTACH,  * VINUM_DETACH, VINUM_REPLACE  */
 end_comment
 
 begin_struct

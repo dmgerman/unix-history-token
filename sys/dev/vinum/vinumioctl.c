@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* XXX replace all the checks on object validity with    * calls to valid<object> */
+comment|/*  * XXX replace all the checks on object validity with  * calls to valid<object>   */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.6 1999/01/21 00:35:35 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.7 1999/01/18 03:36:17 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -490,7 +490,7 @@ name|start_config
 argument_list|()
 return|;
 comment|/* just lock it */
-comment|/* Move the individual parts of the config to user space.  	     * Specify the index of the object in the first word of data, 	     * and return the object there 	     */
+comment|/* 	     * Move the individual parts of the config to user space. 	     * 	     * Specify the index of the object in the first word of data, 	     * and return the object there 	     */
 case|case
 name|VINUM_DRIVECONFIG
 case|:
@@ -880,7 +880,7 @@ operator|)
 condition|)
 block|{
 comment|/* if we're not active */
-comment|/* Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow */
+comment|/* 		 * Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow  		 */
 name|int
 name|oc
 init|=
@@ -1280,7 +1280,6 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 name|EINVAL
 return|;
@@ -1396,7 +1395,7 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it. */
+comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it.  	     */
 case|case
 name|DIOCGPART
 case|:
@@ -1449,7 +1448,7 @@ literal|0
 index|]
 expr_stmt|;
 break|break;
-comment|/* We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. */
+comment|/* 	     * We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. 	     */
 case|case
 name|DIOCWDINFO
 case|:
@@ -1526,7 +1525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following four functions check the supplied  * object index and return a pointer to the object  * if it exists.  Otherwise they longjump out via  * throw_rude_remark */
+comment|/*  * The following four functions check the supplied  * object index and return a pointer to the object  * if it exists.  Otherwise they longjump out via  * throw_rude_remark.  */
 end_comment
 
 begin_function
@@ -3133,7 +3132,7 @@ operator|)
 condition|)
 block|{
 comment|/* and this is the last plex */
-comment|/* XXX As elsewhere, check whether we will lose 		   * mapping by removing this plex */
+comment|/* 		   * XXX As elsewhere, check whether we will lose 		   * mapping by removing this plex  		 */
 name|reply
 operator|->
 name|error

@@ -21,11 +21,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Command keywords that vinum knows.  These include both user-level  * and kernel-level stuff */
+comment|/*  * Command keywords that vinum knows.  These include both user-level  * and kernel-level stuff   */
 end_comment
 
 begin_comment
-comment|/* Our complete vocabulary.  The names of the commands are  * the same as the identifier without the kw_ at the beginning  * (i.e. kw_create defines the "create" keyword).  Preprocessor  * magic in parser.c does the rest. */
+comment|/*  * Our complete vocabulary.  The names of the commands are  * the same as the identifier without the kw_ at the beginning  * (i.e. kw_create defines the "create" keyword).  Preprocessor  * magic in parser.c does the rest.   */
 end_comment
 
 begin_enum

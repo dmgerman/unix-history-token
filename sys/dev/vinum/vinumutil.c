@@ -384,7 +384,7 @@ comment|/* Now convert in the other direction */
 end_comment
 
 begin_comment
-comment|/* These are currently used only internally,  * so we don't do too much error checking */
+comment|/*  * These are currently used only internally,  * so we don't do too much error checking   */
 end_comment
 
 begin_function
@@ -620,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Take a number with an optional scale factor and convert  * it to a number of bytes.  *  * The scale factors are:  *  * b    blocks (of 512 bytes)  * k    kilobytes (1024 bytes)  * m    megabytes (of 1024 * 1024 bytes)  * g    gigabytes (of 1024 * 1024 * 1024 bytes)  */
+comment|/*  * Take a number with an optional scale factor and convert  * it to a number of bytes.  *  * The scale factors are:  *  * b    blocks (of 512 bytes)  * k    kilobytes (1024 bytes)  * m    megabytes (of 1024 * 1024 bytes)  * g    gigabytes (of 1024 * 1024 * 1024 bytes)  */
 end_comment
 
 begin_function
@@ -801,7 +801,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract the volume number from a device number.  * Perform no checking. */
+comment|/*  * Extract the volume number from a device number.  * Perform no checking.   */
 end_comment
 
 begin_function
@@ -836,7 +836,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract a plex number from a device number.  * Don't check the major number, but check the  * type.  Return -1 for invalid types. */
+comment|/*  * Extract a plex number from a device number.  * Don't check the major number, but check the  * type.  Return -1 for invalid types.   */
 end_comment
 
 begin_function
@@ -959,7 +959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract a subdisk number from a device number.  * Don't check the major number, but check the  * type.  Return -1 for invalid types. */
+comment|/*  * Extract a subdisk number from a device number.  * Don't check the major number, but check the  * type.  Return -1 for invalid types.   */
 end_comment
 
 begin_function

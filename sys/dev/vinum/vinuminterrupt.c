@@ -103,7 +103,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Take a completed buffer, transfer the data back if  * it's a read, and complete the high-level request  * if this is the last subrequest.  *  * The bp parameter is in fact a struct rqelement, which  * includes a couple of extras at the end.  */
+comment|/*  * Take a completed buffer, transfer the data back if  * it's a read, and complete the high-level request  * if this is the last subrequest.  *  * The bp parameter is in fact a struct rqelement, which  * includes a couple of extras at the end.  */
 end_comment
 
 begin_function

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* To do:   * Don't store drive configuration on the config DB: read each drive's header  * to decide where it is.  *  * Accept any old crap in the config_<foo> functions, and complain when  * we try to bring it up.  *  * When trying to bring volumes up, check that the complete address range  * is covered.  */
+comment|/*  * To do:  *  * Don't store drive configuration on the config DB: read each drive's header  * to decide where it is.  *  * Accept any old crap in the config_<foo> functions, and complain when  * we try to bring it up.  *  * When trying to bring volumes up, check that the complete address range  * is covered.  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.8 1999/01/21 00:32:54 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.22 1998/12/30 05:07:24 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -73,7 +73,7 @@ comment|/* maximum number of tokens in a line */
 end_comment
 
 begin_comment
-comment|/* We can afford the luxury of global variables here,  * since start_config ensures that these functions  * are single-threaded. */
+comment|/*  * We can afford the luxury of global variables here,  * since start_config ensures that these functions  * are single-threaded.  */
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ comment|/* maximum length of a formatted message */
 end_comment
 
 begin_comment
-comment|/* Format an error message and return to the user in the reply.  * CARE: This routine is designed to be called only from the  * configuration routines, so it assumes it's the owner of  * the configuration lock, and unlocks it on exit */
+comment|/*  * Format an error message and return to the user in the reply.  * CARE: This routine is designed to be called only from the  * configuration routines, so it assumes it's the owner of  * the configuration lock, and unlocks it on exit  */
 end_comment
 
 begin_function
@@ -277,8 +277,8 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* and we're not doing kernel things: return msg */
-comment|/* XXX We can't just format to ioctl_reply, since it 	 * may contain our input parameters */
+comment|/* and not in kernel: return msg */
+comment|/* 	 * XXX We can't just format to ioctl_reply, since it 	 * may contain our input parameters  	 */
 name|text
 operator|=
 name|Malloc
@@ -405,7 +405,7 @@ name|VF_READING_CONFIG
 condition|)
 comment|/* go through to the bitter end, */
 return|return;
-comment|/* We have a problem here: we want to unlock the      * configuration, which implies tidying up, but      * if we find an error while tidying up, we could      * recurse for ever.  Use this kludge to only try      * once */
+comment|/*      * We have a problem here: we want to unlock the      * configuration, which implies tidying up, but      * if we find an error while tidying up, we could      * recurse for ever.  Use this kludge to only try      * once       */
 name|was_finishing
 operator|=
 name|finishing
@@ -536,7 +536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find index of volume in vinum_conf.  Return the index  * if found, or -1 if not */
+comment|/*  * Find index of volume in vinum_conf.  Return the index  * if found, or -1 if not   */
 end_comment
 
 begin_function
@@ -588,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find index of plex in vinum_conf.  Return the index  * if found, or -1 if not */
+comment|/*  * Find index of plex in vinum_conf.  Return the index  * if found, or -1 if not   */
 end_comment
 
 begin_function
@@ -640,7 +640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find index of subdisk in vinum_conf.  Return the index  * if found, or -1 if not */
+comment|/*  * Find index of subdisk in vinum_conf.  Return the index  * if found, or -1 if not   */
 end_comment
 
 begin_function
@@ -692,7 +692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find index of drive in vinum_conf.  Return the index  * if found, or -1 if not */
+comment|/*  * Find index of drive in vinum_conf.  Return the index  * if found, or -1 if not   */
 end_comment
 
 begin_function
@@ -744,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check a volume to see if the plex is already assigned to it.  * Return index in volume->plex, or -1 if not assigned */
+comment|/*  * Check a volume to see if the plex is already assigned to it.  * Return index in volume->plex, or -1 if not assigned   */
 end_comment
 
 begin_function
@@ -813,7 +813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check a plex to see if the subdisk is already assigned to it.  * Return index in plex->sd, or -1 if not assigned */
+comment|/*  * Check a plex to see if the subdisk is already assigned to it.  * Return index in plex->sd, or -1 if not assigned   */
 end_comment
 
 begin_function
@@ -881,7 +881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check that this operation is being done in the kernel.  * longjmp out if not.  op the name of the operation. */
+comment|/*  * Check that this operation is being done in the kernel.  * longjmp out if not.  op is the name of the operation.   */
 end_comment
 
 begin_function
@@ -937,7 +937,7 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
-comment|/* XXX It's not an error for the plex to already      * belong to the volume, but we need to check a      * number of things to make sure it's done right.      * Some day. */
+comment|/*      * XXX It's not an error for the plex to already      * belong to the volume, but we need to check a      * number of things to make sure it's done right.      * Some day.       */
 if|if
 condition|(
 name|my_plex
@@ -1059,7 +1059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add subdisk to a plex if possible */
+comment|/*  * Add subdisk to a plex if possible   */
 end_comment
 
 begin_function
@@ -1086,7 +1086,7 @@ name|sd
 modifier|*
 name|sd
 decl_stmt|;
-comment|/* XXX It's not an error for the sd to already      * belong to the plex, but we need to check a      * number of things to make sure it's done right.      * Some day. */
+comment|/*      * XXX It's not an error for the sd to already      * belong to the plex, but we need to check a      * number of things to make sure it's done right.      * Some day.       */
 name|i
 operator|=
 name|my_sd
@@ -1316,7 +1316,7 @@ name|length
 argument_list|)
 expr_stmt|;
 comment|/* adjust its size */
-comment|/* We need to check that the subdisks don't overlap,      * but we can't do that until a point where we *must*      * know the size of all the subdisks.  That's not      * here.  But we need to sort them by offset */
+comment|/*      * We need to check that the subdisks don't overlap,      * but we can't do that until a point where we *must*      * know the size of all the subdisks.  That's not      * here.  But we need to sort them by offset       */
 for|for
 control|(
 name|i
@@ -1414,7 +1414,7 @@ name|i
 return|;
 block|}
 block|}
-comment|/* The plex doesn't have any subdisk with a larger      * offset.  Insert it */
+comment|/*      * The plex doesn't have any subdisk with a larger      * offset.  Insert it       */
 name|plex
 operator|->
 name|sdnos
@@ -1438,7 +1438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Add a subdisk to drive if possible.  The pointer to the drive  * must already be stored in the sd structure, but the drive  * doesn't know about the subdisk yet.  */
+comment|/*  * Add a subdisk to drive if possible.  The pointer to the drive  * must already be stored in the sd structure, but the drive  * doesn't know about the subdisk yet.    */
 end_comment
 
 begin_function
@@ -1723,7 +1723,7 @@ name|drive
 operator|->
 name|freelist_entries
 condition|)
-comment|/* Didn't find anything.  Although the drive has 	     * enough space, it's too fragmented */
+comment|/* 	     * Didn't find anything.  Although the drive has 	     * enough space, it's too fragmented  	     */
 block|{
 name|sd
 operator|->
@@ -1755,7 +1755,7 @@ block|}
 else|else
 block|{
 comment|/* specific offset */
-comment|/* For a specific offset to work, the space must be 	 * entirely in a single freelist entry.  Look for it. */
+comment|/* 	 * For a specific offset to work, the space must be 	 * entirely in a single freelist entry.  Look for it.  	 */
 name|u_int64_t
 name|sdend
 init|=
@@ -1847,7 +1847,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* We've found the space, and we can allocate it. 		 * We don't need to say that to the subdisk, which 		 * already knows about it.  We need to tell it to 		 * the free list, though.  We have four possibilities: 		 * 		 * 1.  The subdisk exactly eats up the entry.  That's the 		 *     same as above. 		 * 2.  The subdisk starts at the beginning and leaves space 		 *     at the end. 		 * 3.  The subdisk starts after the beginning and leaves 		 *     space at the end as well: we end up with another 		 *     fragment. 		 * 4.  The subdisk leaves space at the beginning and finishes 		 *     at the end. 		 */
+comment|/* 		 * We've found the space, and we can allocate it. 		 * We don't need to say that to the subdisk, which 		 * already knows about it.  We need to tell it to 		 * the free list, though.  We have four possibilities: 		 * 		 * 1.  The subdisk exactly eats up the entry.  That's the 		 *     same as above. 		 * 2.  The subdisk starts at the beginning and leaves space 		 *     at the end. 		 * 3.  The subdisk starts after the beginning and leaves 		 *     space at the end as well: we end up with another 		 *     fragment. 		 * 4.  The subdisk leaves space at the beginning and finishes 		 *     at the end. 		 */
 name|drive
 operator|->
 name|sectors_available
@@ -2238,7 +2238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the named drive in vinum_conf.drive, return a pointer  * return the index in vinum_conf.drive.  * Don't mark the drive as allocated (XXX SMP)  * If create != 0, create an entry if it doesn't exist  */
+comment|/*  * Find the named drive in vinum_conf.drive, return a pointer  * return the index in vinum_conf.drive.  * Don't mark the drive as allocated (XXX SMP)  * If create != 0, create an entry if it doesn't exist  */
 end_comment
 
 begin_comment
@@ -2418,7 +2418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find a drive given its device name.  * devname must be valid.  * Otherwise the same as find_drive above */
+comment|/*  * Find a drive given its device name.  * devname must be valid.  * Otherwise the same as find_drive above   */
 end_comment
 
 begin_function
@@ -2795,7 +2795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the named subdisk in vinum_conf.sd.   * If create != 0, create an entry if it doesn't exist  *  * Return index in vinum_conf.sd  */
+comment|/*  * Find the named subdisk in vinum_conf.sd.  *  * If create != 0, create an entry if it doesn't exist  *  * Return index in vinum_conf.sd  */
 end_comment
 
 begin_function
@@ -2923,7 +2923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free an allocated sd entry  * This performs memory management only.  remove()  * is responsible for checking relationships.  */
+comment|/*  * Free an allocated sd entry  * This performs memory management only.  remove()  * is responsible for checking relationships.  */
 end_comment
 
 begin_function
@@ -3040,7 +3040,7 @@ name|fe
 operator|++
 control|)
 empty_stmt|;
-comment|/* Now we are pointing to the last entry, the first 	 * with a higher offset than the subdisk, or both. */
+comment|/* 	 * Now we are pointing to the last entry, the first 	 * with a higher offset than the subdisk, or both.  	 */
 if|if
 condition|(
 operator|(
@@ -3102,7 +3102,7 @@ operator|.
 name|sectors
 expr_stmt|;
 comment|/* end of the entry */
-comment|/* At this point, we are pointing to the correct 	 * place in the free list.  A number of possibilities 	 * exist: 	 * 	 * 1.  The block to be freed immediately follows 	 *     the block to which we are pointing.  Just 	 *     enlarge it. 	 * 2.  The block to be freed starts at the end of 	 *     the current block and ends at the beginning 	 *     of the following block.  Merge the three 	 *     areas into a single block. 	 * 3.  The block to be freed starts after the end 	 *     of the block and ends before the start of 	 *     the following block.  Create a new free block. 	 * 4.  The block to be freed starts after the end 	 *     of the block, but ends at the start of the 	 *     following block.  Enlarge the following block 	 *     downwards. 	 * 	 */
+comment|/* 	 * At this point, we are pointing to the correct 	 * place in the free list.  A number of possibilities 	 * exist: 	 * 	 * 1.  The block to be freed immediately follows 	 *     the block to which we are pointing.  Just 	 *     enlarge it. 	 * 2.  The block to be freed starts at the end of 	 *     the current block and ends at the beginning 	 *     of the following block.  Merge the three 	 *     areas into a single block. 	 * 3.  The block to be freed starts after the end 	 *     of the block and ends before the start of 	 *     the following block.  Create a new free block. 	 * 4.  The block to be freed starts after the end 	 *     of the block, but ends at the start of the 	 *     following block.  Enlarge the following block 	 *     downwards. 	 * 	 */
 if|if
 condition|(
 name|sd
@@ -3621,7 +3621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the named plex in vinum_conf.plex   * If create != 0, create an entry if it doesn't exist  * return index in vinum_conf.plex  */
+comment|/*  * Find the named plex in vinum_conf.plex  *  * If create != 0, create an entry if it doesn't exist  * return index in vinum_conf.plex  */
 end_comment
 
 begin_function
@@ -3750,7 +3750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free an allocated plex entry  * and its associated memory areas */
+comment|/*  * Free an allocated plex entry  * and its associated memory areas   */
 end_comment
 
 begin_function
@@ -3960,7 +3960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the named volume in vinum_conf.volume.   * If create != 0, create an entry if it doesn't exist  * return the index in vinum_conf  */
+comment|/*  * Find the named volume in vinum_conf.volume.  *  * If create != 0, create an entry if it doesn't exist  * return the index in vinum_conf  */
 end_comment
 
 begin_function
@@ -4095,7 +4095,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free an allocated volume entry  * and its associated memory areas */
+comment|/*  * Free an allocated volume entry  * and its associated memory areas   */
 end_comment
 
 begin_function
@@ -4147,7 +4147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a drive definition.  We store the information in the global variable  * drive, so we don't need to allocate.  *  * If we find an error, print a message and return  */
+comment|/*  * Handle a drive definition.  We store the information in the global variable  * drive, so we don't need to allocate.  *  * If we find an error, print a message and return  */
 end_comment
 
 begin_function
@@ -4249,7 +4249,7 @@ name|drive_uninit
 condition|)
 block|{
 comment|/* we already know this drive */
-comment|/* XXX Check which definition is more up-to-date.  Give 	 * preference for the definition on its own drive */
+comment|/* 	 * XXX Check which definition is more up-to-date.  Give 	 * preference for the definition on its own drive  	 */
 return|return;
 comment|/* XXX */
 block|}
@@ -4467,7 +4467,7 @@ name|DL_OURS
 case|:
 break|break;
 block|}
-comment|/* read_drive_label overwrites the device name. 	     * If we get here, we can have the drive, 	     * so put it back again */
+comment|/* 	     * read_drive_label overwrites the device name. 	     * If we get here, we can have the drive, 	     * so put it back again  	     */
 name|bcopy
 argument_list|(
 name|token
@@ -4588,7 +4588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a subdisk definition.  We store the information in the global variable  * sd, so we don't need to allocate.  *  * If we find an error, print a message and return  */
+comment|/*  * Handle a subdisk definition.  We store the information in the global variable  * sd, so we don't need to allocate.  *  * If we find an error, print a message and return  */
 end_comment
 
 begin_function
@@ -4948,7 +4948,7 @@ argument_list|)
 expr_stmt|;
 comment|/* insert plex information */
 break|break;
-comment|/* Set the state.  We can't do this directly, 	     * because give_sd_to_plex may change it */
+comment|/* 	     * Set the state.  We can't do this directly, 	     * because give_sd_to_plex may change it  	     */
 case|case
 name|kw_state
 case|:
@@ -5211,7 +5211,7 @@ operator|=
 name|sd_up
 expr_stmt|;
 comment|/* must be up */
-comment|/* register the subdisk with the drive.  This action      * will have the side effect of setting the offset if      * we haven't specified one, and causing an error      * message if it overlaps with another subdisk. */
+comment|/*      * register the subdisk with the drive.  This action      * will have the side effect of setting the offset if      * we haven't specified one, and causing an error      * message if it overlaps with another subdisk.       */
 name|give_sd_to_drive
 argument_list|(
 name|sdno
@@ -5221,7 +5221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a plex definition.  */
+comment|/*  * Handle a plex definition.  */
 end_comment
 
 begin_function
@@ -5781,7 +5781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a volume definition.  * If we find an error, print a message, deallocate the nascent volume, and return  */
+comment|/*  * Handle a volume definition.  * If we find an error, print a message, deallocate the nascent volume, and return  */
 end_comment
 
 begin_function
@@ -6187,7 +6187,7 @@ argument_list|)
 expr_stmt|;
 comment|/* set the state */
 break|break;
-comment|/* XXX experimental ideas.  These are not 	     * documented, and will not be until I 	     * decide they're worth keeping */
+comment|/* 	     * XXX experimental ideas.  These are not 	     * documented, and will not be until I 	     * decide they're worth keeping  	     */
 case|case
 name|kw_writethrough
 case|:
@@ -6262,7 +6262,7 @@ name|VINUM_VOLUME_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* also note device number */
-comment|/* Before we can actually use the volume, we need      * a volume label.  We could start to fake one here,      * but it will be a lot easier when we have some      * to copy from the drives, so defer it until we      * set up the configuration. XXX */
+comment|/*      * Before we can actually use the volume, we need      * a volume label.  We could start to fake one here,      * but it will be a lot easier when we have some      * to copy from the drives, so defer it until we      * set up the configuration. XXX       */
 if|if
 condition|(
 name|vol
@@ -6321,7 +6321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a config entry.  CARE!  This destroys the original contents of the  * config entry, which we don't really need after this.  More specifically, it  * places \0 characters at the end of each token.  *  * Return 0 if all is well, otherwise EINVAL */
+comment|/*  * Parse a config entry.  CARE!  This destroys the original contents of the  * config entry, which we don't really need after this.  More specifically, it  * places \0 characters at the end of each token.  *  * Return 0 if all is well, otherwise EINVAL   */
 end_comment
 
 begin_function
@@ -6478,7 +6478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* parse a line handed in from userland via ioctl.  * This differs only by the error reporting mechanism:  * we return the error indication in the reply to the  * ioctl, so we need to set a global static pointer in  * this file.  This technique works because we have  * ensured that configuration is performed in a single-  * threaded manner */
+comment|/*  * parse a line handed in from userland via ioctl.  * This differs only by the error reporting mechanism:  * we return the error indication in the reply to the  * ioctl, so we need to set a global static pointer in  * this file.  This technique works because we have  * ensured that configuration is performed in a single-  * threaded manner   */
 end_comment
 
 begin_function
@@ -7101,8 +7101,8 @@ operator|->
 name|subdisks
 operator|--
 expr_stmt|;
-comment|/* removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out 	     * of the structure, and it needs to be 	     * reinitialized */
-comment|/* XXX Think about this.  Maybe we should just 	     * leave a hole */
+comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out 	     * of the structure, and it needs to be 	     * reinitialized  	     */
+comment|/* 	     * XXX Think about this.  Maybe we should just 	     * leave a hole  	     */
 if|if
 condition|(
 name|plex
@@ -7360,7 +7360,7 @@ literal|0
 condition|)
 block|{
 comment|/* we are part of a volume */
-comment|/* XXX This should be more intelligent.  We should 	 * be able to remove a plex as long as the volume 	 * does not lose any data, which is normally the 	 * case when it has more than one plex.  To do it 	 * right we must compare the completeness of the 	 * mapping of all the plexes in the volume */
+comment|/* 	 * XXX This should be more intelligent.  We should 	 * be able to remove a plex as long as the volume 	 * does not lose any data, which is normally the 	 * case when it has more than one plex.  To do it 	 * right we must compare the completeness of the 	 * mapping of all the plexes in the volume  	 */
 if|if
 condition|(
 name|force
@@ -7782,7 +7782,7 @@ name|plex_up
 decl_stmt|;
 comment|/* state we want the plex in */
 comment|/* XXX Insert checks here for sparse plexes and volumes */
-comment|/* Check that our subdisks make sense.  For      * striped and RAID5 plexes, we need at least      * two subdisks, and they must all be the same      * size */
+comment|/*      * Check that our subdisks make sense.  For      * striped and RAID5 plexes, we need at least      * two subdisks, and they must all be the same      * size       */
 if|if
 condition|(
 operator|(
@@ -7949,7 +7949,7 @@ name|subdisks
 condition|)
 block|{
 comment|/* plex has subdisks, calculate size */
-comment|/* XXX We shouldn't need to calculate the size any 	 * more.  Check this some time */
+comment|/* 	 * XXX We shouldn't need to calculate the size any 	 * more.  Check this some time  	 */
 if|if
 condition|(
 name|plex
@@ -8138,7 +8138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Update the global configuration.  * kernelstate is != 0 if we're reading in a config  * from disk.  In this case, we don't try to  * bring the devices up, though we will bring  * them down if there's some error which got  * missed when writing to disk.  */
+comment|/*  * Update the global configuration.  * kernelstate is != 0 if we're reading in a config  * from disk.  In this case, we don't try to  * bring the devices up, though we will bring  * them down if there's some error which got  * missed when writing to disk.  */
 end_comment
 
 begin_function
@@ -8221,7 +8221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start manual changes to the configuration and lock out  * others who may wish to do so.  * XXX why do we need this and lock_config too? */
+comment|/*  * Start manual changes to the configuration and lock out  * others who may wish to do so.  * XXX why do we need this and lock_config too?   */
 end_comment
 
 begin_function
@@ -8279,7 +8279,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* We need two flags here: VF_CONFIGURING      * tells other processes to hold off (this      * function), and VF_CONFIG_INCOMPLETE      * tells the state change routines not to      * propagate incrememntal state changes */
+comment|/*      * We need two flags here: VF_CONFIGURING      * tells other processes to hold off (this      * function), and VF_CONFIG_INCOMPLETE      * tells the state change routines not to      * propagate incrememntal state changes       */
 name|vinum_conf
 operator|.
 name|flags
@@ -8313,7 +8313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Update the config if update is 1, and unlock  * it.  We won't update the configuration if we  * are called in a recursive loop via throw_rude_remark.  */
+comment|/*  * Update the config if update is 1, and unlock  * it.  We won't update the configuration if we  * are called in a recursive loop via throw_rude_remark.  */
 end_comment
 
 begin_function

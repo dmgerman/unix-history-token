@@ -4,7 +4,7 @@ comment|/* daemon.c: kernel part of Vinum daemon */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.1 1999/01/21 00:31:31 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.3 1999/01/18 04:32:50 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -181,7 +181,7 @@ operator|->
 name|type
 condition|)
 block|{
-comment|/* We had an I/O error on a request.  Go through the 		 * request and try to salvage it */
+comment|/* 		 * We had an I/O error on a request.  Go through the 		 * request and try to salvage it  		 */
 case|case
 name|daemonrq_ioerror
 case|:
@@ -255,7 +255,7 @@ argument_list|)
 expr_stmt|;
 comment|/* the failed request */
 break|break;
-comment|/* Write the config to disk.  We could end up with 		 * quite a few of these in a row.  Only honour the 		 * last one */
+comment|/* 		 * Write the config to disk.  We could end up with 		 * quite a few of these in a row.  Only honour the 		 * last one  		 */
 case|case
 name|daemonrq_saveconfig
 case|:
@@ -388,7 +388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Recover a failed I/O operation.   * The correct way to do this is to examine the request and determine  * how to recover each individual failure.  In the case of a write,  * this could be as simple as doing nothing: the defective drives may  * already be down, and there may be nothing else to do.  In case of  * a read, it will be necessary to retry if there are alternative  * copies of the data.  *  * The easy way (here) is just to reissue the request.  This will take  * a little longer, but nothing like as long as the failure will have  * taken.  *  */
+comment|/*  * Recover a failed I/O operation.  *  * The correct way to do this is to examine the request and determine  * how to recover each individual failure.  In the case of a write,  * this could be as simple as doing nothing: the defective drives may  * already be down, and there may be nothing else to do.  In case of  * a read, it will be necessary to retry if there are alternative  * copies of the data.  *  * The easy way (here) is just to reissue the request.  This will take  * a little longer, but nothing like as long as the failure will have  * taken.  *  */
 end_comment
 
 begin_function
@@ -525,7 +525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* see if the daemon is running.  Return 0 (no error)  * if it is, ESRCH otherwise */
+comment|/*  * see if the daemon is running.  Return 0 (no error)  * if it is, ESRCH otherwise   */
 end_comment
 
 begin_function
