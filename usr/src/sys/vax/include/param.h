@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.4.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -170,6 +170,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|KERNBASE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* start of kernel virtual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTOPKERNBASE
+value|((u_long)KERNBASE>> PGSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NBPG
 value|512
 end_define
@@ -237,6 +255,17 @@ directive|define
 name|BLKDEV_IOSIZE
 value|2048
 end_define
+
+begin_define
+define|#
+directive|define
+name|MAXPHYS
+value|(63 * 1024)
+end_define
+
+begin_comment
+comment|/* max raw I/O transfer size */
+end_comment
 
 begin_else
 else|#
