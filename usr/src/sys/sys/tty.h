@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.9	82/01/30	*/
+comment|/*	tty.h	4.10	82/02/08	*/
 end_comment
 
 begin_ifdef
@@ -682,6 +682,13 @@ define|#
 directive|define
 name|DMBIC
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMGET
+value|3
 end_define
 
 end_unit
