@@ -5469,7 +5469,7 @@ name|NXTNUM
 parameter_list|(
 name|n
 parameter_list|)
-value|{ \ 	cp = tp, tp = word(cp); \ 	if (tp == NULL) \ 		tp = cp; \ 	(n) = atoi(cp); \      }
+value|{ \ 	if (tp == NULL) { \ 		fprintf(stderr, "line %d: too few numeric fields\n", lineno); \ 		errors++; \ 		break; \ 	} else { \ 		cp = tp, tp = word(cp); \ 		if (tp == NULL) \ 			tp = cp; \ 		(n) = atoi(cp); \ 	} \      }
 name|NXTNUM
 argument_list|(
 name|v
