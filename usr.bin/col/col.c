@@ -441,18 +441,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|wrerr
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 modifier|*
 name|xmalloc
 name|__P
@@ -542,7 +530,7 @@ parameter_list|(
 name|ch
 parameter_list|)
 define|\
-value|do {				\ 		if (putchar(ch) == EOF) \ 			wrerr();	\ 	} while (0)
+value|do {					\ 		if (putchar(ch) == EOF)		\ 			errx(1, "write error");	\ 	} while (0)
 end_define
 
 begin_function
@@ -1206,16 +1194,8 @@ name|l
 operator|->
 name|l_line
 operator|=
-operator|(
-name|CHAR
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|l
 operator|->
 name|l_line
@@ -1447,10 +1427,6 @@ name|void
 operator|)
 name|free
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|l
 operator|->
 name|l_line
@@ -1657,16 +1633,8 @@ name|l_lsize
 expr_stmt|;
 name|sorted
 operator|=
-operator|(
-name|CHAR
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|sorted
 argument_list|,
 operator|(
@@ -1700,16 +1668,8 @@ literal|1
 expr_stmt|;
 name|count
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|count
 argument_list|,
 operator|(
@@ -1726,10 +1686,6 @@ expr_stmt|;
 block|}
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|count
 argument_list|,
 literal|0
@@ -2121,16 +2077,8 @@ condition|)
 block|{
 name|l
 operator|=
-operator|(
-name|LINE
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 sizeof|sizeof
@@ -2253,10 +2201,6 @@ operator|!
 operator|(
 name|p
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|p
@@ -2269,6 +2213,10 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2298,21 +2246,6 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|wrerr
-parameter_list|()
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"write error"
 argument_list|)
 expr_stmt|;
 block|}
