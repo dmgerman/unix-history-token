@@ -68,7 +68,6 @@ name|EXTATTR_NAMESPACE_USER
 case|:
 if|if
 condition|(
-operator|*
 name|string
 operator|!=
 name|NULL
@@ -91,7 +90,6 @@ name|EXTATTR_NAMESPACE_SYSTEM
 case|:
 if|if
 condition|(
-operator|*
 name|string
 operator|!=
 name|NULL
