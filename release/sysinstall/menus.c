@@ -9253,7 +9253,7 @@ block|,
 block|{
 literal|" USA CapsLock->Ctrl"
 block|,
-literal|"US standard with Caps Lock acting as left Control"
+literal|"US standard with Caps Lock acting as left Ctrl"
 block|,
 name|dmenuVarCheck
 block|,
