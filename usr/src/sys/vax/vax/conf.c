@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	6.1	83/07/29	*/
+comment|/*	conf.c	6.2	84/07/27	*/
 end_comment
 
 begin_include
@@ -459,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|tmreset
-value|nodev
+value|nulldev
 end_define
 
 begin_endif
@@ -571,7 +571,7 @@ begin_define
 define|#
 directive|define
 name|tsreset
-value|nodev
+value|nulldev
 end_define
 
 begin_endif
@@ -2961,7 +2961,7 @@ begin_define
 define|#
 directive|define
 name|ikreset
-value|nodev
+value|nulldev
 end_define
 
 begin_endif
@@ -3056,7 +3056,7 @@ begin_define
 define|#
 directive|define
 name|psreset
-value|nodev
+value|nulldev
 end_define
 
 begin_endif
@@ -3202,13 +3202,32 @@ begin_define
 define|#
 directive|define
 name|adreset
-value|nodev
+value|nulldev
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|logopen
+argument_list|()
+decl_stmt|,
+name|logclose
+argument_list|()
+decl_stmt|,
+name|logread
+argument_list|()
+decl_stmt|,
+name|logioctl
+argument_list|()
+decl_stmt|,
+name|logselect
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3661,7 +3680,7 @@ name|ptyioctl
 block|,
 name|ptsstop
 block|,
-name|nodev
+name|nulldev
 block|,
 name|pt_tty
 block|,
@@ -3682,7 +3701,7 @@ name|ptyioctl
 block|,
 name|nulldev
 block|,
-name|nodev
+name|nulldev
 block|,
 name|pt_tty
 block|,
@@ -3745,7 +3764,7 @@ name|nodev
 block|,
 name|nodev
 block|,
-name|nodev
+name|nulldev
 block|,
 literal|0
 block|,
@@ -3767,7 +3786,7 @@ name|gpibioctl
 block|,
 name|nulldev
 block|,
-name|nodev
+name|nulldev
 block|,
 literal|0
 block|,
@@ -3830,7 +3849,7 @@ name|ibioctl
 block|,
 name|nodev
 block|,
-name|nodev
+name|nulldev
 block|,
 literal|0
 block|,
@@ -3919,6 +3938,27 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
+block|,
+name|logopen
+block|,
+name|logclose
+block|,
+name|logread
+block|,
+name|nodev
+block|,
+comment|/* 33 */
+name|logioctl
+block|,
+name|nodev
+block|,
+name|nulldev
+block|,
+literal|0
+block|,
+name|logselect
 block|,
 name|nodev
 block|, }
