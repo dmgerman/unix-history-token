@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.16 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2081,6 +2081,7 @@ name|m_flags
 operator|&
 name|M_PKTHDR
 condition|)
+block|{
 name|M_COPY_PKTHDR
 argument_list|(
 name|m
@@ -2088,6 +2089,14 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+name|n
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_PKTHDR
+expr_stmt|;
+block|}
 block|}
 name|space
 operator|=
