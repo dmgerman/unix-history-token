@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	8.2 (Berkeley) %G%"
+literal|"@(#)rec_open.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,8 @@ parameter_list|,
 name|mode
 parameter_list|,
 name|openinfo
+parameter_list|,
+name|dflags
 parameter_list|)
 specifier|const
 name|char
@@ -125,6 +127,8 @@ name|int
 name|flags
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|dflags
 decl_stmt|;
 specifier|const
 name|RECNOINFO
@@ -281,6 +285,8 @@ name|S_IWUSR
 argument_list|,
 operator|&
 name|btopeninfo
+argument_list|,
+name|dflags
 argument_list|)
 expr_stmt|;
 block|}
@@ -298,6 +304,8 @@ operator||
 name|S_IWUSR
 argument_list|,
 name|NULL
+argument_list|,
+name|dflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -885,6 +893,37 @@ name|dbp
 operator|->
 name|internal
 expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* In-memory database can't have a file descriptor. */
 if|if
 condition|(
 name|ISSET
