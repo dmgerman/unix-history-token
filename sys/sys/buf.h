@@ -1765,6 +1765,21 @@ parameter_list|)
 value|{							\ 	bzero((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid = 0;						\ }
 end_define
 
+begin_comment
+comment|/*  * Flags for getblk's last parameter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GB_LOCK_NOWAIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Fail if we block on a buf lock. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2149,6 +2164,8 @@ name|vnode
 modifier|*
 parameter_list|,
 name|daddr_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,

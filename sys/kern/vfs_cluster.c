@@ -438,6 +438,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|origblkno
@@ -967,6 +969,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rbp
@@ -1464,6 +1468,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1832,6 +1838,8 @@ operator|+
 name|i
 argument_list|,
 name|size
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

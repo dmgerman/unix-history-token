@@ -1566,6 +1566,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -4446,6 +4448,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -4470,6 +4474,8 @@ argument_list|,
 name|pmp
 operator|->
 name|pm_bpcluster
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

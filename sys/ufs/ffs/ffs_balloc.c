@@ -861,6 +861,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1101,6 +1103,8 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -1414,6 +1418,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -1673,6 +1679,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -1909,6 +1917,8 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3034,6 +3044,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3704,6 +3716,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3944,6 +3958,8 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -4257,6 +4273,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -4516,6 +4534,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nbp
@@ -4753,6 +4773,8 @@ argument_list|,
 name|fs
 operator|->
 name|fs_bsize
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

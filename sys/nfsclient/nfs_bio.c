@@ -4203,6 +4203,8 @@ argument_list|,
 name|PCATCH
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 while|while
@@ -4243,6 +4245,8 @@ argument_list|,
 literal|2
 operator|*
 name|hz
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4258,6 +4262,8 @@ argument_list|,
 name|bn
 argument_list|,
 name|size
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

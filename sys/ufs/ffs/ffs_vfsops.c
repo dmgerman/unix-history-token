@@ -7231,6 +7231,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -7412,6 +7414,8 @@ operator|)
 name|fs
 operator|->
 name|fs_sbsize
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

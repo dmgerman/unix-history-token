@@ -3399,6 +3399,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|clrbuf
@@ -5650,6 +5652,8 @@ argument_list|,
 name|pmp
 operator|->
 name|pm_bpcluster
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
