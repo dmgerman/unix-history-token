@@ -19500,23 +19500,13 @@ name|void
 name|key_srandom
 parameter_list|()
 block|{
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
-name|srandom
-argument_list|(
-name|tv
-operator|.
-name|tv_usec
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Already called in kern/init_main.c:proc0_post() */
+block|struct timeval tv;  	microtime(&tv);  	srandom(tv.tv_usec);
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
