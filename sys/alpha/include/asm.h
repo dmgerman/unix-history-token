@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: asm.h,v 1.1 1998/01/10 22:09:52 jb Exp $ */
+comment|/* $Id: asm.h,v 1.2 1998/06/10 10:54:23 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -658,11 +658,21 @@ begin_comment
 comment|/*  * MCOUNT  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|GPROF
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PROF
+argument_list|)
+end_if
 
 begin_define
 define|#
