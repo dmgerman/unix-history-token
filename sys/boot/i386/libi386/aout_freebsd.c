@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aout_freebsd.c,v 1.6 1998/09/29 09:11:49 peter Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aout_freebsd.c,v 1.7 1998/09/30 19:42:06 peter Exp $  */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ decl_stmt|;
 name|struct
 name|i386_devdesc
 modifier|*
-name|currdev
+name|rootdev
 decl_stmt|;
 name|struct
 name|module_metadata
@@ -157,6 +157,10 @@ name|entry
 decl_stmt|;
 name|u_int
 name|pad
+decl_stmt|;
+name|char
+modifier|*
+name|rootdevname
 decl_stmt|;
 if|if
 condition|(
@@ -193,6 +197,50 @@ operator|->
 name|md_data
 operator|)
 expr_stmt|;
+comment|/*       * Allow the environment variable 'rootdev' to override the supplied device       * This should perhaps go to MI code and/or have $rootdev tested/set by      * MI code before launching the kernel.      */
+name|rootdevname
+operator|=
+name|getenv
+argument_list|(
+literal|"rootdev"
+argument_list|)
+expr_stmt|;
+name|i386_getdev
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|(
+operator|&
+name|rootdev
+operator|)
+argument_list|,
+name|rootdevname
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rootdev
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* bad $rootdev/$currdev */
+name|printf
+argument_list|(
+literal|"can't determine root device\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 comment|/* Boot from whatever the current device is */
 name|i386_getdev
 argument_list|(
@@ -203,7 +251,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|currdev
+name|rootdev
 operator|)
 argument_list|,
 name|NULL
@@ -213,7 +261,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|currdev
+name|rootdev
 operator|->
 name|d_type
 condition|)
@@ -221,52 +269,27 @@ block|{
 case|case
 name|DEVT_DISK
 case|:
-name|major
+comment|/* pass in the BIOS device number of the current disk */
+name|bi
+operator|.
+name|bi_bios_dev
 operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX work out the best possible major here */
-name|bootdevnr
-operator|=
-name|MAKEBOOTDEV
+name|bd_unit2bios
 argument_list|(
-name|major
-argument_list|,
-name|currdev
-operator|->
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|slice
-operator|>>
-literal|4
-argument_list|,
-name|currdev
-operator|->
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|slice
-operator|&
-literal|0xf
-argument_list|,
-name|currdev
+name|rootdev
 operator|->
 name|d_kind
 operator|.
 name|biosdisk
 operator|.
 name|unit
-argument_list|,
-name|currdev
-operator|->
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|partition
+argument_list|)
+expr_stmt|;
+name|bootdevnr
+operator|=
+name|bd_getdev
+argument_list|(
+name|rootdev
 argument_list|)
 expr_stmt|;
 break|break;
@@ -275,7 +298,7 @@ name|printf
 argument_list|(
 literal|"aout_exec: WARNING - don't know how to boot from device type %d\n"
 argument_list|,
-name|currdev
+name|rootdev
 operator|->
 name|d_type
 argument_list|)
@@ -283,7 +306,7 @@ expr_stmt|;
 block|}
 name|free
 argument_list|(
-name|currdev
+name|rootdev
 argument_list|)
 expr_stmt|;
 comment|/* legacy bootinfo structure */
