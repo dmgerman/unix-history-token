@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	5.7 (Berkeley) %G%"
+literal|"@(#)parser.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4097,6 +4097,20 @@ name|out
 argument_list|)
 expr_stmt|;
 comment|/* permit 3 calls to USTPUTC */
+if|if
+condition|(
+name|parsebackquote
+operator|&&
+name|c
+operator|==
+literal|'\\'
+condition|)
+name|c
+operator|=
+name|pgetc
+argument_list|()
+expr_stmt|;
+comment|/* XXX - compat with old /bin/sh */
 switch|switch
 condition|(
 name|syntax
