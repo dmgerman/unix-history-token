@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.10 %G%"
+literal|"@(#)GETNAME.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,7 +297,7 @@ index|]
 operator|=
 name|filep
 expr_stmt|;
-comment|/* 		 * Link the newrecord into the file chain. 		 */
+comment|/* 		 * Link the new record into the file chain. 		 */
 name|prev
 operator|=
 operator|(
@@ -347,10 +347,21 @@ condition|)
 comment|/* 			 * Must order global files so that all dynamic files 			 * within a record are grouped together. 			 */
 while|while
 condition|(
+operator|(
 name|next
 operator|!=
 name|FILNIL
+operator|)
 operator|&&
+operator|(
+name|next
+operator|->
+name|flev
+operator|==
+name|GLVL
+operator|)
+operator|&&
+operator|(
 operator|(
 expr|struct
 name|iorec
@@ -359,6 +370,7 @@ operator|)
 name|filep
 operator|>
 name|next
+operator|)
 condition|)
 block|{
 name|prev
