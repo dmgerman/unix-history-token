@@ -193,9 +193,7 @@ name|disk
 decl_stmt|;
 comment|/* disklabel/slice stuff */
 name|dev_t
-name|dev1
-decl_stmt|,
-name|dev2
+name|dev
 decl_stmt|;
 comment|/* device place holder */
 block|}

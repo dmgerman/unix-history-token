@@ -220,66 +220,6 @@ name|addisk_cdevsw
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|fakewd_cdevsw
-init|=
-block|{
-comment|/* open */
-name|adopen
-block|,
-comment|/* close */
-name|nullclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|adstrategy
-block|,
-comment|/* name */
-literal|"wd"
-block|,
-comment|/* maj */
-literal|3
-block|,
-comment|/* dump */
-name|addump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_DISK
-block|,
-comment|/* bmaj */
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|fakewddisk_cdevsw
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -400,7 +340,7 @@ name|TUNABLE_INT_DECL
 argument_list|(
 literal|"hw.ata.wc"
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|ata_wc
 argument_list|)
@@ -1147,49 +1087,7 @@ name|DEV_BSIZE
 expr_stmt|;
 name|adp
 operator|->
-name|dev1
-operator|=
 name|dev
-expr_stmt|;
-name|dev
-operator|=
-name|disk_create
-argument_list|(
-name|adp
-operator|->
-name|lun
-argument_list|,
-operator|&
-name|adp
-operator|->
-name|disk
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|fakewd_cdevsw
-argument_list|,
-operator|&
-name|fakewddisk_cdevsw
-argument_list|)
-expr_stmt|;
-name|dev
-operator|->
-name|si_drv1
-operator|=
-name|adp
-expr_stmt|;
-name|dev
-operator|->
-name|si_iosize_max
-operator|=
-literal|256
-operator|*
-name|DEV_BSIZE
-expr_stmt|;
-name|adp
-operator|->
-name|dev2
 operator|=
 name|dev
 expr_stmt|;
@@ -1509,14 +1407,7 @@ name|disk_destroy
 argument_list|(
 name|adp
 operator|->
-name|dev1
-argument_list|)
-expr_stmt|;
-name|disk_destroy
-argument_list|(
-name|adp
-operator|->
-name|dev2
+name|dev
 argument_list|)
 expr_stmt|;
 name|devstat_remove_entry

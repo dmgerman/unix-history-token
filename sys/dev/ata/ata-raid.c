@@ -1248,7 +1248,7 @@ operator|->
 name|drive
 index|]
 operator|->
-name|dev1
+name|dev
 expr_stmt|;
 else|else
 name|buf1
@@ -1266,7 +1266,7 @@ operator|->
 name|drive
 index|]
 operator|->
-name|dev1
+name|dev
 expr_stmt|;
 block|}
 else|else
@@ -1285,7 +1285,7 @@ operator|->
 name|drive
 index|]
 operator|->
-name|dev1
+name|dev
 expr_stmt|;
 if|if
 condition|(
@@ -1348,7 +1348,7 @@ operator|->
 name|drive
 index|]
 operator|->
-name|dev1
+name|dev
 expr_stmt|;
 name|buf2
 operator|->
@@ -1595,7 +1595,7 @@ operator|->
 name|drive
 index|]
 operator|->
-name|dev1
+name|dev
 expr_stmt|;
 name|buf
 operator|->
