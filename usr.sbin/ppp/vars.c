@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP configuration variables  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.c,v 1.5 1995/09/02 17:20:54 amurai Exp $  *  */
+comment|/*  *		PPP configuration variables  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.c,v 1.3.4.2 1995/10/06 11:24:47 davidg Exp $  *  */
 end_comment
 
 begin_include
@@ -59,7 +59,7 @@ name|char
 name|VarLocalVersion
 index|[]
 init|=
-literal|"$Date: 1995/09/02 17:20:54 $"
+literal|"$Date: 1995/10/06 11:24:47 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,10 @@ block|,
 literal|30
 block|,
 literal|3
+block|,
+name|REDIAL_PERIOD
+block|,
+literal|1
 block|,
 name|MODEM_DEV
 block|,
@@ -801,10 +805,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -814,7 +814,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Please Enter passwd for manupilating.\n"
+literal|"Please Enter passwd for manipulating.\n"
 argument_list|)
 expr_stmt|;
 return|return

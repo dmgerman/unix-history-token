@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.2 1995/02/26 12:17:55 amurai Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $Id: pred.c,v 1.3 1995/05/30 03:50:55 rgrimes Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment
@@ -263,9 +263,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
 while|while
 condition|(
 name|len
@@ -791,7 +788,7 @@ argument_list|)
 expr_stmt|;
 name|HdlcOutput
 argument_list|(
-name|pri
+name|PRI_NORMAL
 argument_list|,
 name|PROTO_COMPD
 argument_list|,
@@ -949,6 +946,17 @@ name|len1
 condition|)
 block|{
 comment|/* Error is detected. Send reset request */
+name|LogPrintf
+argument_list|(
+name|LOG_LCP
+argument_list|,
+literal|"%s: Length Error\n"
+argument_list|,
+name|CcpFsm
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
 name|CcpSendResetReq
 argument_list|(
 operator|&
@@ -958,6 +966,11 @@ expr_stmt|;
 name|pfree
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|pfree
+argument_list|(
+name|wp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1036,9 +1049,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|if
+condition|(
+name|fcs
+operator|!=
+name|GOODFCS
+condition|)
 name|logprintf
 argument_list|(
-literal|"fcs = %04x (%s), len = %x, olen = %x\n"
+literal|"fcs = 0x%04x (%s), len = 0x%x, olen = 0x%x\n"
 argument_list|,
 name|fcs
 argument_list|,
@@ -1142,6 +1161,23 @@ name|DecodePacket
 argument_list|(
 name|proto
 argument_list|,
+name|wp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|LogDumpBp
+argument_list|(
+name|LOG_HDLC
+argument_list|,
+literal|"Bad FCS"
+argument_list|,
+name|wp
+argument_list|)
+expr_stmt|;
+name|pfree
+argument_list|(
 name|wp
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.6 1995/09/17 16:14:47 amurai Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.4.4.2 1995/10/06 11:24:40 davidg Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ccp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lqr.h"
 end_include
 
@@ -67,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_function_decl
@@ -695,7 +707,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" his side: MRU %d, ACCMAP %08x, PROTOCOMP %d, ACFCOMP %d MAGIC %08x\n"
+literal|" his side: MRU %ld, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d MAGIC %08lx\n"
 argument_list|,
 name|lcp
 operator|->
@@ -720,7 +732,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" my  side: MRU %d, ACCMAP %08x, PROTOCOMP %d, ACFCOMP %d MAGIC %08x\n"
+literal|" my  side: MRU %ld, ACCMAP %08lx, PROTOCOMP %d, ACFCOMP %d MAGIC %08lx\n"
 argument_list|,
 name|lcp
 operator|->
@@ -745,7 +757,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nDefaults:   MRU = %d, ACCMAP = %08x\t"
+literal|"\nDefaults:   MRU = %ld, ACCMAP = %08x\t"
 argument_list|,
 name|VarMRU
 argument_list|,
@@ -807,6 +819,7 @@ argument_list|)
 expr_stmt|;
 name|tl
 operator|+=
+operator|(
 name|tval
 operator|.
 name|tv_sec
@@ -814,6 +827,7 @@ operator|^
 name|tval
 operator|.
 name|tv_usec
+operator|)
 operator|+
 name|getppid
 argument_list|()
@@ -1052,6 +1066,10 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
+name|struct
+name|in_addr
+name|ina
+decl_stmt|;
 name|cp
 operator|=
 operator|*
@@ -1083,6 +1101,15 @@ operator|==
 name|TY_IPADDR
 condition|)
 block|{
+name|ina
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|LOG_LCP
@@ -1098,10 +1125,7 @@ name|len
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|htonl
-argument_list|(
-name|val
-argument_list|)
+name|ina
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1752,6 +1776,9 @@ operator|.
 name|authtimer
 argument_list|)
 expr_stmt|;
+name|StopLqrTimer
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1944,11 +1971,6 @@ argument_list|)
 expr_stmt|;
 name|StopAllTimers
 argument_list|()
-expr_stmt|;
-name|StopLqr
-argument_list|(
-name|LQM_LQR
-argument_list|)
 expr_stmt|;
 name|OsLinkdown
 argument_list|()

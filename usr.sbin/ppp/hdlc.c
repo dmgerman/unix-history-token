@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.3.4.1 1995/07/30 18:22:43 davidg Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.3.4.2 1995/08/26 12:11:39 davidg Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -37,6 +37,24 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pred.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"modem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ccp.h"
 end_include
 
 begin_struct
@@ -174,6 +192,7 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|u_short
+specifier|const
 name|fcstab
 index|[
 literal|256
@@ -756,6 +775,7 @@ comment|/*  *  HDLC FCS computation. Read RFC 1171 Appendix B and CCITT X.25 sec
 end_comment
 
 begin_function
+specifier|inline
 name|u_short
 name|HdlcFcs
 parameter_list|(
@@ -1286,30 +1306,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|DecodePacket
-argument_list|(
-argument|proto
-argument_list|,
-argument|bp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|proto
+parameter_list|,
+name|bp
+parameter_list|)
 name|u_short
 name|proto
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|bp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -1490,7 +1502,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -1528,7 +1540,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   %-9s: %8u, %8u"
+literal|"   %-9s: %8lu, %8lu"
 argument_list|,
 name|statp
 operator|->

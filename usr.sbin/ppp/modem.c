@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.9 1995/09/02 17:20:53 amurai Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.6.4.2 1995/10/06 11:24:44 davidg Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdlc.h"
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"lcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
 end_include
 
 begin_include
@@ -188,7 +200,7 @@ name|struct
 name|mqueue
 name|OutputQueues
 index|[
-name|PRI_URGENT
+name|PRI_LINK
 operator|+
 literal|1
 index|]
@@ -201,6 +213,12 @@ name|int
 name|dev_is_modem
 decl_stmt|;
 end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|QDEBUG
+end_undef
 
 begin_function
 name|void
@@ -309,13 +327,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
 name|bp
 operator|=
 name|queue
 operator|->
 name|top
+expr_stmt|;
+if|if
+condition|(
+name|bp
 condition|)
 block|{
 name|queue
@@ -2673,12 +2693,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|CloseModem
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -2706,7 +2724,7 @@ name|uucplock
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write to modem. Actualy, requested packets are queued, and goes out  * to the line when ModemStartOutput() is called.  */
@@ -2759,6 +2777,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+comment|/* Should be NORMAL and LINK only.    * All IP frames get here marked NORMAL.   */
 name|Enqueue
 argument_list|(
 operator|&
@@ -2871,7 +2890,7 @@ name|PRI_NORMAL
 init|;
 name|i
 operator|<=
-name|PRI_URGENT
+name|PRI_LINK
 condition|;
 name|i
 operator|++
@@ -2927,11 +2946,25 @@ condition|(
 name|modemout
 operator|==
 name|NULL
+operator|&&
+name|ModemQlen
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|IpStartOutput
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|modemout
+operator|==
+name|NULL
 condition|)
 block|{
 name|i
 operator|=
-literal|0
+name|PRI_LINK
 expr_stmt|;
 for|for
 control|(
@@ -2940,7 +2973,7 @@ operator|=
 operator|&
 name|OutputQueues
 index|[
-name|PRI_URGENT
+name|PRI_LINK
 index|]
 init|;
 name|queue
@@ -2971,8 +3004,8 @@ name|QDEBUG
 if|if
 condition|(
 name|i
-operator|<
-literal|2
+operator|>
+name|PRI_NORMAL
 condition|)
 block|{
 name|struct
@@ -3012,7 +3045,7 @@ directive|endif
 break|break;
 block|}
 name|i
-operator|++
+operator|--
 expr_stmt|;
 block|}
 block|}
@@ -3047,6 +3080,7 @@ name|fd
 operator|=
 literal|1
 expr_stmt|;
+comment|/* XXX WTFO!  This is bogus */
 name|nw
 operator|=
 name|write
