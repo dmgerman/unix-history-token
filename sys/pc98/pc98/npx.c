@@ -1469,16 +1469,9 @@ name|npx_ex16
 operator|=
 literal|1
 expr_stmt|;
-name|dvp
-operator|->
-name|id_irq
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+literal|0
 operator|)
 return|;
 endif|#
