@@ -649,6 +649,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ask
 parameter_list|(
@@ -660,6 +661,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gfrsub
 parameter_list|(
@@ -670,6 +672,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|linecnt
 parameter_list|(
@@ -680,6 +683,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|next
 parameter_list|(
@@ -690,11 +694,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|nxtfld
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 parameter_list|)
@@ -702,6 +706,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|onsusp
 parameter_list|(
@@ -711,6 +716,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|onintr
 parameter_list|(
@@ -720,6 +726,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prmesg
 parameter_list|(
@@ -2803,6 +2810,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prmesg
 parameter_list|(
@@ -3018,6 +3026,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|onintr
 parameter_list|(
@@ -3115,6 +3124,7 @@ comment|/*  * We have just gotten a susp.  Suspend and prepare to resume.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|onsusp
 parameter_list|(
@@ -3165,6 +3175,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|linecnt
 parameter_list|(
@@ -3230,6 +3241,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|next
 parameter_list|(
@@ -3270,6 +3282,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ask
 parameter_list|(
@@ -3757,6 +3770,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gfrsub
 parameter_list|(
@@ -4077,11 +4091,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|nxtfld
 parameter_list|(
-name|unsigned
 name|char
 modifier|*
 name|s
