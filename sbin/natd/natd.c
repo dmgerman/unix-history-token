@@ -874,7 +874,8 @@ name|LOG_DAEMON
 expr_stmt|;
 name|logIpfwDenied
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 comment|/*  * Mark packet buffer empty.  */
 name|packetSock
@@ -892,6 +893,18 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+comment|/*  * Log ipfw(8) denied packets by default in verbose mode.  */
+if|if
+condition|(
+name|logIpfwDenied
+operator|==
+operator|-
+literal|1
+condition|)
+name|logIpfwDenied
+operator|=
+name|verbose
 expr_stmt|;
 comment|/*  * Open syslog channel.  */
 name|openlog
