@@ -817,7 +817,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to use the last process; don't let root 	 * exceed the limit. The variable nprocs is the current number of 	 * processes, maxproc is the limit. 	 */
+comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to use the last ten processes; don't let root 	 * exceed the limit. The variable nprocs is the current number of 	 * processes, maxproc is the limit. 	 */
 name|uid
 operator|=
 name|p1
