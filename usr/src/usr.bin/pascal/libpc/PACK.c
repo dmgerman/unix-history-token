@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
+comment|/*-  * Copyright (c) 1979 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PACK.c 1.3 %G%"
+literal|"@(#)PACK.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * pack(a,i,z)  *  * with:	a: array[m..n] of t  *	z: packed array[u..v] of t  *  * semantics:	for j := u to v do  *			z[j] := a[j-u+i];  *  * need to check:  *	1. i>= m  *	2. i+(v-u)<= n		(i.e. i-m<= (n-m)-(v-u))  *  * on stack:	lv(z), lv(a), rv(i) (len 4)  *  * move w(t)*(v-u+1) bytes from lv(a)+w(t)*(i-m) to lv(z)  */
