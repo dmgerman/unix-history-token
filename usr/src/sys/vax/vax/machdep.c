@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.61	82/09/04	*/
+comment|/*	machdep.c	4.62	82/10/04	*/
 end_comment
 
 begin_include
@@ -1165,10 +1165,6 @@ name|TODRZERO
 operator|)
 operator|/
 literal|100
-operator|+
-name|timezone
-operator|*
-literal|60
 expr_stmt|;
 while|while
 condition|(
@@ -1289,10 +1285,6 @@ init|=
 name|time
 operator|.
 name|tv_sec
-operator|-
-name|timezone
-operator|*
-literal|60
 decl_stmt|;
 comment|/* 	 * Whittle the time down to an offset in the current year, 	 * by subtracting off whole years as long as possible. 	 */
 for|for
