@@ -1533,14 +1533,15 @@ define|#
 directive|define
 name|SIXMONTHS
 value|((365 / 2) * 86400)
+comment|/* "%Ef" is a FreeBSD strftime definition for "%e %b" or "%b %e". 	 * Actually format is locale sensitive. 	 */
 if|if
 condition|(
 name|f_sectime
 condition|)
-comment|/* Mmm dd hh:mm:ss yyyy */
+comment|/* mmm dd hh:mm:ss yyyy || dd mmm hh:mm:ss yyyy */
 name|format
 operator|=
-literal|"%b %e %T %Y "
+literal|"%Ef %T %Y "
 expr_stmt|;
 elseif|else
 if|if
@@ -1557,16 +1558,16 @@ name|now
 operator|+
 name|SIXMONTHS
 condition|)
-comment|/* Mmm dd hh:mm */
+comment|/* mmm dd hh:mm || dd mmm hh:mm */
 name|format
 operator|=
-literal|"%b %e %R "
+literal|"%Ef %R "
 expr_stmt|;
 else|else
-comment|/* Mmm dd yyyy */
+comment|/* mmm dd  yyyy || dd mmm  yyyy */
 name|format
 operator|=
-literal|"%b %e %Y "
+literal|"%Ef  %Y "
 expr_stmt|;
 name|strftime
 argument_list|(
