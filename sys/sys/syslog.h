@@ -474,6 +474,17 @@ begin_comment
 comment|/* security subsystems (firewalling, etc.) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOG_CONSOLE
+value|(14<<3)
+end_define
+
+begin_comment
+comment|/* /dev/console output */
+end_comment
+
 begin_comment
 comment|/* other codes through 15 reserved for system use */
 end_comment
@@ -624,6 +635,12 @@ block|{
 literal|"authpriv"
 block|,
 name|LOG_AUTHPRIV
+block|,	}
+block|,
+block|{
+literal|"console"
+block|,
+name|LOG_CONSOLE
 block|,	}
 block|,
 block|{
