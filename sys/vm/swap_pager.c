@@ -360,21 +360,10 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|swdevt
-name|should_be_malloced
+name|swdevt
 index|[
 name|NSWAPDEV
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|swdevt
-modifier|*
-name|swdevt
-init|=
-name|should_be_malloced
 decl_stmt|;
 end_decl_stmt
 
@@ -388,15 +377,6 @@ end_decl_stmt
 begin_comment
 comment|/* first block after the interleaved devs */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|nswdev
-init|=
-name|NSWAPDEV
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -612,7 +592,7 @@ name|BLK2DEVIDX
 parameter_list|(
 name|blk
 parameter_list|)
-value|(nswdev> 1 ? blk / dmmax % nswdev : 0)
+value|(NSWAPDEV> 1 ? blk / dmmax % NSWAPDEV : 0)
 end_define
 
 begin_comment
@@ -7055,7 +7035,7 @@ expr_stmt|;
 comment|/* 	 * Convert interleaved swap into per-device swap.  Note that 	 * the block size is left in PAGE_SIZE'd chunks (for the newswap) 	 * here. 	 */
 if|if
 condition|(
-name|nswdev
+name|NSWAPDEV
 operator|>
 literal|1
 condition|)
@@ -7110,11 +7090,11 @@ name|index
 operator|=
 name|seg
 operator|%
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 name|seg
 operator|/=
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 name|bp
 operator|->
@@ -7763,7 +7743,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Swfree(index) frees the index'th portion of the swap map.  * Each of the nswdev devices provides 1/nswdev'th of the swap  * space, which is laid out with blocks of dmmax pages circularly  * among the devices.  *  * The new swap code uses page-sized blocks.  The old swap code used  * DEV_BSIZE'd chunks.  */
+comment|/*  * Swfree(index) frees the index'th portion of the swap map.  * Each of the NSWAPDEV devices provides 1/NSWAPDEV'th of the swap  * space, which is laid out with blocks of dmmax pages circularly  * among the devices.  *  * The new swap code uses page-sized blocks.  The old swap code used  * DEV_BSIZE'd chunks.  */
 end_comment
 
 begin_function
@@ -7879,7 +7859,7 @@ literal|0
 init|;
 name|index
 operator|<
-name|nswdev
+name|NSWAPDEV
 condition|;
 name|index
 operator|++
@@ -8071,7 +8051,7 @@ literal|0x40000000
 operator|/
 name|BLIST_META_RADIX
 operator|/
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 if|if
 condition|(
@@ -8082,7 +8062,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: reducing size to maximum of %d blocks per swap unit\n"
+literal|"WARNING: reducing size to maximum of %lu blocks per swap unit\n"
 argument_list|,
 name|mblocks
 argument_list|)
@@ -8178,7 +8158,7 @@ if|if
 condition|(
 name|aligned_nblks
 operator|*
-name|nswdev
+name|NSWAPDEV
 operator|>
 name|nswap
 condition|)
@@ -8186,7 +8166,7 @@ name|nswap
 operator|=
 name|aligned_nblks
 operator|*
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 if|if
 condition|(
@@ -8246,7 +8226,7 @@ name|dmmax
 operator|+
 name|dvbase
 operator|*
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 name|blist_free
 argument_list|(
@@ -8460,7 +8440,7 @@ literal|0
 init|;
 name|index
 operator|<
-name|nswdev
+name|NSWAPDEV
 condition|;
 name|index
 operator|++
@@ -8614,7 +8594,7 @@ name|dmmax
 operator|+
 name|dvbase
 operator|*
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 name|vm_swap_size
 operator|-=
@@ -8691,7 +8671,7 @@ name|sp
 operator|<
 name|swdevt
 operator|+
-name|nswdev
+name|NSWAPDEV
 condition|;
 name|sp
 operator|++
@@ -8744,7 +8724,7 @@ name|nswap
 operator|=
 name|aligned_nblks
 operator|*
-name|nswdev
+name|NSWAPDEV
 expr_stmt|;
 if|if
 condition|(
@@ -8854,7 +8834,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nswdev
+name|NSWAPDEV
 condition|;
 name|i
 operator|++
@@ -8952,7 +8932,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nswdev
+name|NSWAPDEV
 condition|;
 name|i
 operator|++
@@ -9059,10 +9039,9 @@ name|nswapdev
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-operator|&
-name|nswdev
-argument_list|,
 literal|0
+argument_list|,
+name|NSWAPDEV
 argument_list|,
 literal|"Number of swap devices"
 argument_list|)
