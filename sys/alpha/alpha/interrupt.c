@@ -137,6 +137,12 @@ name|mc_received
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int32_t
+name|intr_nesting_level
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void

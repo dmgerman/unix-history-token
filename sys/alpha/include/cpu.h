@@ -155,16 +155,18 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|u_int32_t
 name|intr_nesting_level
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* bookeeping only; counts software intr */
+comment|/* bookeeping only; counts sw intrs */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|u_int32_t
 name|want_resched
 decl_stmt|;

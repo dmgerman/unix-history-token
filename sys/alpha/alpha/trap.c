@@ -225,6 +225,12 @@ end_endif
 
 begin_decl_stmt
 name|u_int32_t
+name|want_resched
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32_t
 name|astpending
 decl_stmt|;
 end_decl_stmt
