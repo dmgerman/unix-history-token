@@ -1106,24 +1106,6 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_UTMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_UTMP
-value|"/etc/utmp"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|_PATH_FSTAB
 end_ifndef
 
