@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.5 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2213,6 +2213,64 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	**  Output introductory information. 	*/
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"The original message was received at %s"
+argument_list|,
+name|arpadate
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|expand
+argument_list|(
+literal|"from \201_"
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|fp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Output error message header (if specified and available). 	*/
 if|if
 condition|(
@@ -2667,7 +2725,7 @@ name|SendBody
 condition|)
 name|putline
 argument_list|(
-literal|"   ----- Unsent message follows -----\n"
+literal|"   ----- Original message follows -----\n"
 argument_list|,
 name|fp
 argument_list|,
