@@ -259,54 +259,6 @@ directive|include
 file|"miibus_if.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLD_MODULE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NMIIBUS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"miibus.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|NMIIBUS
-operator|<
-literal|1
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"You need to add 'device miibus' to your kernel config!"
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/*  * NOTE!  On the Alpha, we have an alignment constraint.  The  * card DMAs the packet immediately following the RFA.  However,  * the first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the RFA 2 bytes into the cluster.  This  * alignes the packet after the Ethernet header at a 32-bit  * boundary.  HOWEVER!  This means that the RFA is misaligned!  */
 end_comment
@@ -7799,15 +7751,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NMIIBUS> 0 */
-end_comment
 
 end_unit
 
