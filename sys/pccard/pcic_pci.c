@@ -721,6 +721,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Chipset specific flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_NO_MFUNC
+value|0x10000
+end_define
+
 begin_struct
 struct|struct
 name|pcic_pci_table
@@ -750,7 +761,7 @@ index|[]
 init|=
 block|{
 block|{
-name|PCI_DEVICE_ID_OMEGA_82C094
+name|PCIC_ID_OMEGA_82C094
 block|,
 literal|"Omega 82C094G"
 block|,
@@ -763,9 +774,9 @@ name|pcic_pci_pd67xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6729
+name|PCIC_ID_CLPD6729
 block|,
-literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
+literal|"Cirrus Logic PD6729/6730 PCI-PCMCIA Bridge"
 block|,
 name|PCIC_PD6729
 block|,
@@ -776,7 +787,7 @@ name|pcic_pci_pd67xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6832
+name|PCIC_ID_CLPD6832
 block|,
 literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
 block|,
@@ -789,7 +800,7 @@ name|pcic_pci_pd68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6833
+name|PCIC_ID_CLPD6833
 block|,
 literal|"Cirrus Logic PD6833 PCI-CardBus Bridge"
 block|,
@@ -802,7 +813,7 @@ name|pcic_pci_pd68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_CLPD6834
+name|PCIC_ID_CLPD6834
 block|,
 literal|"Cirrus Logic PD6834 PCI-CardBus Bridge"
 block|,
@@ -815,7 +826,7 @@ name|pcic_pci_pd68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6729
+name|PCIC_ID_OZ6729
 block|,
 literal|"O2micro OZ6729 PC-Card Bridge"
 block|,
@@ -828,7 +839,7 @@ name|pcic_pci_oz67xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6730
+name|PCIC_ID_OZ6730
 block|,
 literal|"O2micro OZ6730 PC-Card Bridge"
 block|,
@@ -841,7 +852,7 @@ name|pcic_pci_oz67xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6832
+name|PCIC_ID_OZ6832
 block|,
 literal|"O2micro 6832/6833 PCI-Cardbus Bridge"
 block|,
@@ -854,7 +865,7 @@ name|pcic_pci_oz68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6860
+name|PCIC_ID_OZ6860
 block|,
 literal|"O2micro 6836/6860 PCI-Cardbus Bridge"
 block|,
@@ -867,7 +878,7 @@ name|pcic_pci_oz68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6872
+name|PCIC_ID_OZ6872
 block|,
 literal|"O2micro 6812/6872 PCI-Cardbus Bridge"
 block|,
@@ -880,7 +891,7 @@ name|pcic_pci_oz68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6912
+name|PCIC_ID_OZ6912
 block|,
 literal|"O2micro 6912 PCI-Cardbus Bridge"
 block|,
@@ -893,7 +904,7 @@ name|pcic_pci_oz68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6922
+name|PCIC_ID_OZ6922
 block|,
 literal|"O2micro 6922 PCI-Cardbus Bridge"
 block|,
@@ -906,7 +917,7 @@ name|pcic_pci_oz68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_OZ6933
+name|PCIC_ID_OZ6933
 block|,
 literal|"O2micro 6933 PCI-Cardbus Bridge"
 block|,
@@ -919,7 +930,7 @@ name|pcic_pci_oz68xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C465
+name|PCIC_ID_RICOH_RL5C465
 block|,
 literal|"Ricoh RL5C465 PCI-CardBus Bridge"
 block|,
@@ -932,7 +943,7 @@ name|pcic_pci_ricoh_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C475
+name|PCIC_ID_RICOH_RL5C475
 block|,
 literal|"Ricoh RL5C475 PCI-CardBus Bridge"
 block|,
@@ -945,7 +956,7 @@ name|pcic_pci_ricoh_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C476
+name|PCIC_ID_RICOH_RL5C476
 block|,
 literal|"Ricoh RL5C476 PCI-CardBus Bridge"
 block|,
@@ -958,7 +969,7 @@ name|pcic_pci_ricoh_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C477
+name|PCIC_ID_RICOH_RL5C477
 block|,
 literal|"Ricoh RL5C477 PCI-CardBus Bridge"
 block|,
@@ -971,7 +982,7 @@ name|pcic_pci_ricoh_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_RICOH_RL5C478
+name|PCIC_ID_RICOH_RL5C478
 block|,
 literal|"Ricoh RL5C478 PCI-CardBus Bridge"
 block|,
@@ -984,7 +995,7 @@ name|pcic_pci_ricoh_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1031
+name|PCIC_ID_TI1031
 block|,
 literal|"TI PCI-1031 PCI-PCMCIA Bridge"
 block|,
@@ -997,7 +1008,7 @@ name|pcic_pci_ti113x_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1130
+name|PCIC_ID_TI1130
 block|,
 literal|"TI PCI-1130 PCI-CardBus Bridge"
 block|,
@@ -1010,7 +1021,7 @@ name|pcic_pci_ti113x_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1131
+name|PCIC_ID_TI1131
 block|,
 literal|"TI PCI-1131 PCI-CardBus Bridge"
 block|,
@@ -1023,7 +1034,7 @@ name|pcic_pci_ti113x_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1210
+name|PCIC_ID_TI1210
 block|,
 literal|"TI PCI-1210 PCI-CardBus Bridge"
 block|,
@@ -1036,7 +1047,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1211
+name|PCIC_ID_TI1211
 block|,
 literal|"TI PCI-1211 PCI-CardBus Bridge"
 block|,
@@ -1049,7 +1060,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1220
+name|PCIC_ID_TI1220
 block|,
 literal|"TI PCI-1220 PCI-CardBus Bridge"
 block|,
@@ -1062,7 +1073,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1221
+name|PCIC_ID_TI1221
 block|,
 literal|"TI PCI-1221 PCI-CardBus Bridge"
 block|,
@@ -1075,7 +1086,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1225
+name|PCIC_ID_TI1225
 block|,
 literal|"TI PCI-1225 PCI-CardBus Bridge"
 block|,
@@ -1088,46 +1099,52 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1250
+name|PCIC_ID_TI1250
 block|,
 literal|"TI PCI-1250 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
 name|PCIC_CARDBUS_POWER
+operator||
+name|TI_NO_MFUNC
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1251
+name|PCIC_ID_TI1251
 block|,
 literal|"TI PCI-1251 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
 name|PCIC_CARDBUS_POWER
+operator||
+name|TI_NO_MFUNC
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1251B
+name|PCIC_ID_TI1251B
 block|,
 literal|"TI PCI-1251B PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
 name|PCIC_CARDBUS_POWER
+operator||
+name|TI_NO_MFUNC
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1260
+name|PCIC_ID_TI1260
 block|,
 literal|"TI PCI-1260 PCI-CardBus Bridge"
 block|,
@@ -1140,7 +1157,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1260B
+name|PCIC_ID_TI1260B
 block|,
 literal|"TI PCI-1260B PCI-CardBus Bridge"
 block|,
@@ -1153,7 +1170,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1410
+name|PCIC_ID_TI1410
 block|,
 literal|"TI PCI-1410 PCI-CardBus Bridge"
 block|,
@@ -1166,7 +1183,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1420
+name|PCIC_ID_TI1420
 block|,
 literal|"TI PCI-1420 PCI-CardBus Bridge"
 block|,
@@ -1179,7 +1196,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1421
+name|PCIC_ID_TI1421
 block|,
 literal|"TI PCI-1421 PCI-CardBus Bridge"
 block|,
@@ -1192,20 +1209,22 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1450
+name|PCIC_ID_TI1450
 block|,
 literal|"TI PCI-1450 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
 name|PCIC_CARDBUS_POWER
+operator||
+name|TI_NO_MFUNC
 block|,
 operator|&
 name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI1451
+name|PCIC_ID_TI1451
 block|,
 literal|"TI PCI-1451 PCI-CardBus Bridge"
 block|,
@@ -1218,7 +1237,33 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI4410
+name|PCIC_ID_TI1510
+block|,
+literal|"TI PCI-1510 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_CARDBUS_POWER
+block|,
+operator|&
+name|pcic_pci_ti12xx_chip
+block|}
+block|,
+block|{
+name|PCIC_ID_TI1520
+block|,
+literal|"TI PCI-1520 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_CARDBUS_POWER
+block|,
+operator|&
+name|pcic_pci_ti12xx_chip
+block|}
+block|,
+block|{
+name|PCIC_ID_TI4410
 block|,
 literal|"TI PCI-4410 PCI-CardBus Bridge"
 block|,
@@ -1231,7 +1276,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI4450
+name|PCIC_ID_TI4450
 block|,
 literal|"TI PCI-4450 PCI-CardBus Bridge"
 block|,
@@ -1244,7 +1289,7 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_PCIC_TI4451
+name|PCIC_ID_TI4451
 block|,
 literal|"TI PCI-4451 PCI-CardBus Bridge"
 block|,
@@ -1257,7 +1302,20 @@ name|pcic_pci_ti12xx_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
+name|PCIC_ID_TI4510
+block|,
+literal|"TI PCI-4510 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_CARDBUS_POWER
+block|,
+operator|&
+name|pcic_pci_ti12xx_chip
+block|}
+block|,
+block|{
+name|PCIC_ID_TOPIC95
 block|,
 literal|"Toshiba ToPIC95 PCI-CardBus Bridge"
 block|,
@@ -1270,7 +1328,7 @@ name|pcic_pci_topic_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC95B
+name|PCIC_ID_TOPIC95B
 block|,
 literal|"Toshiba ToPIC95B PCI-CardBus Bridge"
 block|,
@@ -1283,7 +1341,7 @@ name|pcic_pci_topic_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+name|PCIC_ID_TOPIC97
 block|,
 literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
 block|,
@@ -1296,7 +1354,7 @@ name|pcic_pci_topic_chip
 block|}
 block|,
 block|{
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+name|PCIC_ID_TOPIC100
 block|,
 literal|"Toshiba ToPIC100 PCI-CardBus Bridge"
 block|,
@@ -1972,7 +2030,7 @@ if|if
 condition|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_PCIC_CLPD6832
+name|PCIC_ID_CLPD6832
 condition|)
 block|{
 name|bcr
@@ -2018,7 +2076,7 @@ if|if
 condition|(
 name|device_id
 operator|!=
-name|PCI_DEVICE_ID_PCIC_CLPD6832
+name|PCIC_ID_CLPD6832
 condition|)
 block|{
 name|cm1
@@ -2220,10 +2278,10 @@ name|device_id
 condition|)
 block|{
 case|case
-name|PCI_DEVICE_ID_RICOH_RL5C465
+name|PCIC_ID_RICOH_RL5C465
 case|:
 case|case
-name|PCI_DEVICE_ID_RICOH_RL5C466
+name|PCIC_ID_RICOH_RL5C466
 case|:
 comment|/* 		 * Ricoh chips have a legacy bridge enable different than most 		 * Code cribbed from NEWBUS's bridge code since I can't find a 		 * datasheet for them that has register definitions. 		 */
 name|brgcntl
@@ -2479,6 +2537,189 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+name|u_int32_t
+name|syscntl
+decl_stmt|,
+name|devcntl
+decl_stmt|,
+name|cardcntl
+decl_stmt|,
+name|mfunc
+decl_stmt|;
+name|device_t
+name|dev
+init|=
+name|sp
+operator|->
+name|sc
+operator|->
+name|dev
+decl_stmt|;
+name|syscntl
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI113X_PCI_SYSTEM_CONTROL
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|devcntl
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI113X_PCI_DEVICE_CONTROL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|cardcntl
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI113X_PCI_CARD_CONTROL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Special code for the Orinoco cards (and a few others).  They 	 * seem to need this special code to make them work only over pci 	 * interrupts.  Sadly, doing this code also causes problems for 	 * many laptops, so we have to make it controlled by a tunable. 	 * Actually, experience has shown that this rarely, if ever, 	 * helps. 	 */
+if|if
+condition|(
+name|way
+operator|==
+name|pcic_iw_pci
+condition|)
+block|{
+comment|/* 		 * pcic_init_routing seems to do nothing useful towards 		 * fixing the hang problems.  I plan on removing it in 		 * 4.8 or so. 		 */
+if|if
+condition|(
+name|pcic_init_routing
+condition|)
+block|{
+name|devcntl
+operator|&=
+operator|~
+name|TI113X_DEVCNTL_INTR_MASK
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI113X_PCI_DEVICE_CONTROL
+argument_list|,
+name|devcntl
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|syscntl
+operator||=
+name|TI113X_SYSCNTL_INTRTIE
+expr_stmt|;
+block|}
+comment|/*  		 * I'm not sure that this helps/hurts things at all and 		 * plan on removing it in the 4.8 time frame unless someone 		 * can show that it really helps. 		 */
+name|syscntl
+operator|&=
+operator|~
+name|TI113X_SYSCNTL_SMIENB
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI113X_PCI_SYSTEM_CONTROL
+argument_list|,
+name|syscntl
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Some PCI add-in cards don't have good EEPROMs on them, 		 * so they get this MUX register wrong.  The MUX register 		 * defaults to 0, which is usually wrong for this register, 		 * so we initialize it to make sense. 		 * 		 * We don't bother to turn it off in the ISA case since it 		 * is an initialization issue. 		 * 		 * A few weird TI bridges don't have MFUNC, so filter 		 * those out too. 		 */
+if|if
+condition|(
+operator|(
+name|sp
+operator|->
+name|sc
+operator|->
+name|flags
+operator|&
+name|TI_NO_MFUNC
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|mfunc
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI12XX_PCI_MFUNC
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mfunc
+operator|==
+literal|0
+condition|)
+block|{
+name|mfunc
+operator|=
+operator|(
+name|mfunc
+operator|&
+operator|~
+name|TI12XX_MFUNC_PIN0
+operator|)
+operator||
+name|TI12XX_MFUNC_PIN0_INTA
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|syscntl
+operator|&
+name|TI113X_SYSCNTL_INTRTIE
+operator|)
+operator|==
+literal|0
+condition|)
+name|mfunc
+operator|=
+operator|(
+name|mfunc
+operator|&
+operator|~
+name|TI12XX_MFUNC_PIN1
+operator|)
+operator||
+name|TI12XX_MFUNC_PIN1_INTB
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI12XX_PCI_MFUNC
+argument_list|,
+name|mfunc
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 return|return
 operator|(
 name|pcic_pci_gen_func
@@ -2546,35 +2787,25 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|struct
-name|pcic_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|int
 name|ti113x
 init|=
 operator|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_PCIC_TI1031
+name|PCIC_ID_TI1031
 operator|)
 operator|||
 operator|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_PCIC_TI1130
+name|PCIC_ID_TI1130
 operator|)
 operator|||
 operator|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_PCIC_TI1131
+name|PCIC_ID_TI1131
 operator|)
 decl_stmt|;
 name|syscntl
@@ -2684,7 +2915,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Turn off Zoom Video.  Some cards have this enabled, 		 * some do not but it causes problems when enabled.  This 		 * register doesn't exist on the 1130 (and likely the 1131, 		 * but without a datasheet it is impossible to know). 		 * Some 12xx chips may not have it, but setting it is 		 * believed to be harmless. 		 */
+comment|/* 		 * Turn off Zoom Video.  Some cards have this enabled, 		 * some do not but it causes problems when enabled.  This 		 * register doesn't exist on the 1130 (and likely the 1131, 		 * but without a datasheet it is impossible to know). 		 * Some 12xx chips may not have it, but setting it is 		 * believed to be harmless on those models. 		 */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -2694,70 +2925,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|4
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Special code for the Orinoco cards (and a few others).  They 	 * seem to need this special code to make them work only over pci 	 * interrupts.  Sadly, doing this code also causes problems for 	 * many laptops, so we have to make it controlled by a tunable. 	 */
-if|if
-condition|(
-name|sc
-operator|->
-name|func_route
-operator|==
-name|pcic_iw_pci
-condition|)
-block|{
-if|if
-condition|(
-name|pcic_init_routing
-condition|)
-block|{
-name|devcntl
-operator|&=
-operator|~
-name|TI113X_DEVCNTL_INTR_MASK
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|TI113X_PCI_DEVICE_CONTROL
-argument_list|,
-name|devcntl
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|devcntl
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|TI113X_PCI_DEVICE_CONTROL
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|syscntl
-operator||=
-name|TI113X_SYSCNTL_INTRTIE
-expr_stmt|;
-block|}
-name|syscntl
-operator|&=
-operator|~
-name|TI113X_SYSCNTL_SMIENB
-expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-name|TI113X_PCI_SYSTEM_CONTROL
-argument_list|,
-name|syscntl
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2979,11 +3146,11 @@ if|if
 condition|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+name|PCIC_ID_TOPIC100
 operator|||
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+name|PCIC_ID_TOPIC97
 condition|)
 block|{
 name|scr
@@ -3097,11 +3264,11 @@ if|if
 condition|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+name|PCIC_ID_TOPIC100
 operator|||
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+name|PCIC_ID_TOPIC97
 condition|)
 block|{
 name|reg
@@ -3138,11 +3305,11 @@ if|if
 condition|(
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+name|PCIC_ID_TOPIC100
 operator|||
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+name|PCIC_ID_TOPIC97
 condition|)
 block|{
 comment|/* 		 * We need to enable voltage sense and 3V cards explicitly 		 * in the bridge.  The datasheets I have for both the 		 * ToPIC 97 and 100 both lists these ports.  Without 		 * datasheets for the ToPIC95s, I can't tell if we need 		 * to do it there or not. 		 */
@@ -4034,7 +4201,7 @@ name|pcic_iw_pci
 operator|&&
 name|device_id
 operator|!=
-name|PCI_DEVICE_ID_PCIC_CLPD6729
+name|PCIC_ID_CLPD6729
 operator|)
 operator|||
 operator|(
@@ -4044,7 +4211,7 @@ name|pcic_iw_pci
 operator|&&
 name|device_id
 operator|==
-name|PCI_DEVICE_ID_PCIC_CLPD6729
+name|PCIC_ID_CLPD6729
 operator|)
 condition|)
 block|{
