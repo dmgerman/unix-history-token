@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	4.7	83/01/09	*/
+comment|/*	fs.h	4.8	83/03/21	*/
 end_comment
 
 begin_comment
@@ -584,7 +584,7 @@ parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(NBBY * ((fs)->fs_bsize - (sizeof (struct cg)))>> (fs)->fs_fragshift)
+value|(fragstoblks((fs), (NBBY * ((fs)->fs_bsize - (sizeof (struct cg))))))
 end_define
 
 begin_comment
@@ -746,7 +746,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	((((x) % (fs)->fs_ipg) / INOPB(fs))<< (fs)->fs_fragshift)))
+value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	(blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
 end_define
 
 begin_comment
@@ -908,6 +908,51 @@ parameter_list|)
 comment|/* calculates roundup(size, fs->fs_fsize) */
 define|\
 value|(((size) + (fs)->fs_fsize - 1)& (fs)->fs_fmask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|fragstoblks
+parameter_list|(
+name|fs
+parameter_list|,
+name|frags
+parameter_list|)
+comment|/* calculates (frags / fs->fs_frag) */
+define|\
+value|((frags)>> (fs)->fs_fragshift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|blkstofrags
+parameter_list|(
+name|fs
+parameter_list|,
+name|blks
+parameter_list|)
+comment|/* calculates (blks * fs->fs_frag) */
+define|\
+value|((blks)<< (fs)->fs_fragshift)
+end_define
+
+begin_comment
+comment|/*  * Determine the number of available frags given a  * percentage to hold in reserve  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|freespace
+parameter_list|(
+name|fs
+parameter_list|,
+name|percentreserved
+parameter_list|)
+define|\
+value|(blkstofrags((fs), (fs)->fs_cstotal.cs_nbfree) + \ 	(fs)->fs_cstotal.cs_nffree - ((fs)->fs_dsize * (percentreserved) / 100))
 end_define
 
 begin_comment
