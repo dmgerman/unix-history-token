@@ -5786,12 +5786,6 @@ name|backing_object
 operator|->
 name|backing_object_offset
 expr_stmt|;
-comment|/* XXX */
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Discard backing_object. 			 * 			 * Since the backing object has no pages, no pager left, 			 * and no object references within it, all that is 			 * necessary is to dispose of it. 			 */
 name|KASSERT
 argument_list|(
@@ -5833,12 +5827,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_object_list_mtx
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 name|uma_zfree
