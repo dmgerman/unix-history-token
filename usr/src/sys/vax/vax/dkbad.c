@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dkbad.c	4.1	81/05/08	*/
+comment|/*	dkbad.c	4.2	81/05/09	*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DKBAD
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOBADBLOCK
+end_ifndef
 
 begin_include
 include|#
@@ -62,6 +62,9 @@ name|blk
 decl_stmt|,
 name|bblk
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BADMAGIC
 if|if
 condition|(
 name|bt
@@ -76,6 +79,8 @@ operator|-
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 name|blk
 operator|=
 operator|(
