@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.30 1997/10/12 20:25:59 phk Exp $  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.31 1997/10/28 19:01:02 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -61,23 +61,24 @@ begin_struct
 struct|struct
 name|malloc_type
 block|{
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|ks_shortdesc
-decl_stmt|;
-comment|/* Short description */
-name|u_long
-name|ks_magic
-decl_stmt|;
-comment|/* If if's not magic, don't touch it */
 name|struct
 name|malloc_type
 modifier|*
 name|ks_next
 decl_stmt|;
 comment|/* Next pointer */
+name|long
+name|ks_memuse
+decl_stmt|;
+comment|/* total memory held in bytes */
+name|long
+name|ks_limit
+decl_stmt|;
+comment|/* most that are allowed to exist */
+name|long
+name|ks_size
+decl_stmt|;
+comment|/* sizes of this thing that are allocated */
 name|long
 name|ks_inuse
 decl_stmt|;
@@ -87,9 +88,20 @@ name|ks_calls
 decl_stmt|;
 comment|/* total packets of this type ever allocated */
 name|long
-name|ks_memuse
+name|ks_maxused
 decl_stmt|;
-comment|/* total memory held in bytes */
+comment|/* maximum number ever used */
+name|u_long
+name|ks_magic
+decl_stmt|;
+comment|/* If if's not magic, don't touch it */
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|ks_shortdesc
+decl_stmt|;
+comment|/* Short description */
 name|u_short
 name|ks_limblocks
 decl_stmt|;
@@ -98,18 +110,6 @@ name|u_short
 name|ks_mapblocks
 decl_stmt|;
 comment|/* number of times blocked for kernel map */
-name|long
-name|ks_maxused
-decl_stmt|;
-comment|/* maximum number ever used */
-name|long
-name|ks_limit
-decl_stmt|;
-comment|/* most that are allowed to exist */
-name|long
-name|ks_size
-decl_stmt|;
-comment|/* sizes of this thing that are allocated */
 block|}
 struct|;
 end_struct
@@ -282,21 +282,21 @@ name|kb_last
 decl_stmt|;
 comment|/* last free block */
 name|long
-name|kb_calls
-decl_stmt|;
-comment|/* total calls to allocate this size */
-name|long
 name|kb_total
 decl_stmt|;
 comment|/* total number of blocks allocated */
+name|long
+name|kb_elmpercl
+decl_stmt|;
+comment|/* # of elements in this sized allocation */
 name|long
 name|kb_totalfree
 decl_stmt|;
 comment|/* # of free elements in this bucket */
 name|long
-name|kb_elmpercl
+name|kb_calls
 decl_stmt|;
-comment|/* # of elements in this sized allocation */
+comment|/* total calls to allocate this size */
 name|long
 name|kb_highwat
 decl_stmt|;
