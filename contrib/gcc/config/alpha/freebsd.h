@@ -13,6 +13,12 @@ directive|include
 file|"alpha/alpha.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"alpha/elf.h"
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -37,23 +43,6 @@ define|#
 directive|define
 name|WCHAR_TYPE_SIZE
 value|32
-end_define
-
-begin_comment
-comment|/* FreeBSD-specific things: */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-D__FreeBSD__ -D__alpha__ -D__alpha"
 end_define
 
 begin_comment
@@ -175,41 +164,6 @@ name|ASM_FINAL_SPEC
 end_undef
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LIB_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LIB_SPEC
-value|"%{!shared:%{!pg:%{!pthread:-lc}%{pthread:-lpthread -lc}}%{pg:%{!pthread:-lc_p}%{pthread:-lpthread_p -lc_p}}}"
-end_define
-
-begin_comment
-comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static, -assert, and -nostdlib.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e __start}}} -dc -dp %{static:-Bstatic} %{assert*}"
-end_define
-
-begin_comment
 comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg. */
 end_comment
 
@@ -269,6 +223,142 @@ define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
 value|DBX_DEBUG
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_VERSION
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (FreeBSD/alpha ELF)");
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SDB_DEBUGGING_INFO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SDB_DEBUGGING_INFO
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|DBS_DEBUGGING_INFO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_DEBUGGING_INFO
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+define|\
+value|((len> 1&& !strncmp (str, "gsdb", len)) ? SDB_DEBUG : DBX_DEBUG)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_PREDEFINES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_PREDEFINES
+value|"-Dunix -D__alpha -D__alpha__ -D__ELF__ -D__FreeBSD__=3 -Asystem(unix) -Asystem(FreeBSD) -Acpu(alpha) -Amachine(alpha)"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"-m elf64alpha					\   %{O*:-O3} %{!O*:-O1}						\   %{assert*}							\   %{shared:-shared}						\   %{!shared:							\     -dc -dp							\     %{!nostdlib:%{!r*:%{!e*:-e _start}}}			\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-static}}"
+end_define
+
+begin_comment
+comment|/* Provide a STARTFILE_SPEC for FreeBSD that is compatible with the    non-aout version used on i386. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \     %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+end_define
+
+begin_comment
+comment|/* Provide a ENDFILE_SPEC appropriate for FreeBSD.  Here we tack on    the file which provides part of the support for getting C++    file-scope static object deconstructed after exiting `main' */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+define|\
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s}"
+end_define
+
+begin_comment
+comment|/* Handle #pragma weak and #pragma pack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 end_unit
