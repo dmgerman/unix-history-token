@@ -302,6 +302,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|THR_RUNQ_REMOVE
 argument_list|(
 name|thread
@@ -314,6 +315,7 @@ argument_list|,
 name|PS_SUSPENDED
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|NOT_YET

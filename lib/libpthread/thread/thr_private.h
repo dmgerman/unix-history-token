@@ -2199,6 +2199,27 @@ parameter_list|)
 value|(((thrd)->sflags& THR_FLAGS_IN_SYNCQ) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|THR_IS_SUSPENDED
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|(((thrd)->state == PS_SUSPENDED) || \ 	(((thrd)->flags& THR_FLAGS_SUSPENDED) != 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_IS_EXITING
+parameter_list|(
+name|thrd
+parameter_list|)
+value|(((thrd)->flags& THR_FLAGS_EXITING) != 0)
+end_define
+
 begin_comment
 comment|/*  * Global variables for the pthread kernel.  */
 end_comment
