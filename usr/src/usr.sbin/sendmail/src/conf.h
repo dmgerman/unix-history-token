@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.92 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.93 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2843,7 +2843,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... **	From Karl London<karl@borg.demon.co.uk> and John Kennedy **<warlock@csuchico.edu>.  Conversion for "native (non-BSD) **	mode" from Florian La Roche<rzsfl@rzluxt.rz.uni-sb.de>. */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[03/02/94 @ 05:34 PM (Wednesday)] **	sendmail 8.6.6.b9	named 4.9.2-931205-p1	db-1.73 **	gcc 2.5.8		libc.so.4.5.19 **	slackware 1.1.2		linux 0.99.15 */
 end_comment
 
 begin_ifdef
@@ -2913,12 +2913,9 @@ name|GIDSET_T
 value|gid_t
 end_define
 
-begin_define
-define|#
-directive|define
-name|sleep
-value|sleepXX
-end_define
+begin_comment
+comment|/* from<linux/types.h> */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2930,7 +2927,7 @@ begin_define
 define|#
 directive|define
 name|LA_TYPE
-value|LA_FLOAT
+value|LA_PROC
 end_define
 
 begin_endif
@@ -2942,18 +2939,12 @@ begin_define
 define|#
 directive|define
 name|SFS_TYPE
-value|SFS_MOUNT
+value|SFS_VFS
 end_define
 
 begin_comment
-comment|/* use<sys/mount.h> statfs() impl */
+comment|/* use<sys/vfs.h> statfs() impl */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<linux/fs.h>
-end_include
 
 begin_include
 include|#
@@ -2966,6 +2957,10 @@ undef|#
 directive|undef
 name|atol
 end_undef
+
+begin_comment
+comment|/* wounded in<stdlib.h> */
+end_comment
 
 begin_endif
 endif|#
