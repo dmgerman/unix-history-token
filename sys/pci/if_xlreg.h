@@ -3224,6 +3224,13 @@ name|TC_DEVICEID_HURRICANE_SOHO100TX
 value|0x7646
 end_define
 
+begin_define
+define|#
+directive|define
+name|TC_DEVICEID_TORNADO_HOMECONNECT
+value|0x4500
+end_define
+
 begin_comment
 comment|/*  * Texas Instruments PHY identifiers  *  * The ThunderLAN manual has a curious and confusing error in it.  * In chapter 7, which describes PHYs, it says that TI PHYs have  * the following ID codes, where xx denotes a revision:  *  * 0x4000501xx			internal 10baseT PHY  * 0x4000502xx			TNETE211 100VG-AnyLan PMI  *  * The problem here is that these are not valid 32-bit hex numbers:  * there's one digit too many. My guess is that they mean the internal  * 10baseT PHY is 0x4000501x and the TNETE211 is 0x4000502x since these  * are the only numbers that make sense.  */
 end_comment
