@@ -130,7 +130,7 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
-comment|/*               * XXX              * temporary backwards compatability with instbsdi.exe              * remove after a while.              */
+comment|/*               * XXX              * temporary backwards compatibility with instbsdi.exe              * remove after a while.              */
 name|fprintf
 argument_list|(
 name|stderr
@@ -163,7 +163,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"*** This compatability hack is not permanent.\n"
+literal|"*** This compatibility hack is not permanent.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
