@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.46 1999/02/04 10:24:45 markm Exp $"
+literal|"$Id: mkioconf.c,v 1.47 1999/02/05 16:49:18 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4273,7 +4273,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d,   0, %3d, 0x%04X, %5d,    0,       0,       0, %6d, %8d,   0 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d, {0}, %3d, 0x%04X, %5d,    0,       0,       0, %6d, %8d,   0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4520,7 +4520,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d,   0, %3d, 0x%04X,     0,    0,       0,       0, %6d, %8d,   0 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d, {0}, %3d, 0x%04X,     0,    0,       0,       0, %6d, %8d,   0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
