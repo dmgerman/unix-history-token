@@ -7084,6 +7084,7 @@ name|AAC_QUEUE_ALIGN
 expr_stmt|;
 name|qoffset
 operator|&=
+operator|~
 operator|(
 name|AAC_QUEUE_ALIGN
 operator|-
