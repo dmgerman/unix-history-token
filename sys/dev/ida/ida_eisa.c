@@ -257,7 +257,7 @@ name|ida
 argument_list|,
 name|R_EISA_LOCAL_DOORBELL
 argument_list|,
-name|EISA_CHANNEL_CLEAR
+name|EISA_CHANNEL_BUSY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1011,6 +1011,17 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|eisa_add_iospace
+argument_list|(
+name|dev
+argument_list|,
+name|io_base
+argument_list|,
+literal|0x100
+argument_list|,
+name|RESVADDR_NONE
+argument_list|)
+expr_stmt|;
 name|eisa_add_iospace
 argument_list|(
 name|dev
