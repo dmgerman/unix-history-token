@@ -151,12 +151,6 @@ directive|include
 file|"pcib_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|CBB_DEBUG
-end_define
-
 begin_if
 if|#
 directive|if
@@ -2238,14 +2232,6 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-name|struct
-name|pccbb_sclist
-modifier|*
-name|sclist
-decl_stmt|;
-name|u_int32_t
-name|sockbase
-decl_stmt|;
 name|u_int32_t
 name|tmp
 decl_stmt|;
@@ -2394,14 +2380,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|sc
 operator|->
 name|sc_base_res
-operator|==
-name|NULL
 condition|)
 block|{
 comment|/* 		 * XXX eVILE HACK BAD THING! XXX 		 * The pci bus device should do this for us. 		 * Some BIOSes doesn't assign a memory space properly. 		 * So we try to manually put one in... 		 */
+name|u_int32_t
+name|sockbase
+decl_stmt|;
 name|sockbase
 operator|=
 name|pci_read_config
@@ -2465,8 +2453,13 @@ name|sc
 operator|->
 name|sc_base_res
 operator|=
-name|bus_alloc_resource
+name|bus_generic_alloc_resource
 argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY
@@ -2490,11 +2483,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|sc
 operator|->
 name|sc_base_res
-operator|==
-name|NULL
 condition|)
 block|{
 name|device_printf
@@ -2704,9 +2696,11 @@ argument_list|,
 name|sc
 argument_list|,
 operator|&
+operator|(
 name|sc
 operator|->
 name|sc_intrhand
+operator|)
 argument_list|)
 condition|)
 block|{
@@ -2778,7 +2772,6 @@ name|sc_cbdev
 operator|==
 name|NULL
 condition|)
-block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
@@ -2788,7 +2781,6 @@ literal|"WARNING: cannot add cardbus bus.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2840,7 +2832,6 @@ name|sc_pccarddev
 operator|==
 name|NULL
 condition|)
-block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
@@ -2850,7 +2841,6 @@ literal|"WARNING: cannot add pccard bus.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2880,6 +2870,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|KLD_MODULE
 if|if
 condition|(
 name|sc
@@ -2953,6 +2946,14 @@ return|return
 name|ENOMEM
 return|;
 block|}
+endif|#
+directive|endif
+block|{
+name|struct
+name|pccbb_sclist
+modifier|*
+name|sclist
+decl_stmt|;
 name|sclist
 operator|=
 name|malloc
@@ -2984,6 +2985,7 @@ argument_list|,
 name|entries
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
