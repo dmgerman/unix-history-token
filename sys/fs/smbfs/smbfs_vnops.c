@@ -1312,8 +1312,11 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* 	 * Use DENYNONE to give unixy semantics of permitting 	 * everything not forbidden by permissions.  Ie denial 	 * is up to server with clients/openers needing to use 	 * advisory locks for further control. 	 */
 name|accmode
 operator|=
+name|SMB_SM_DENYNONE
+operator||
 name|SMB_AM_OPENREAD
 expr_stmt|;
 if|if
@@ -1332,6 +1335,8 @@ literal|0
 condition|)
 name|accmode
 operator|=
+name|SMB_SM_DENYNONE
+operator||
 name|SMB_AM_OPENRW
 expr_stmt|;
 name|smb_makescred
@@ -1374,8 +1379,26 @@ condition|)
 return|return
 name|EACCES
 return|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|accmode
 operator|=
+name|SMB_SM_DENYNONE
+operator||
 name|SMB_AM_OPENREAD
 expr_stmt|;
 name|error
@@ -1390,6 +1413,7 @@ operator|&
 name|scred
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2215,6 +2239,8 @@ name|smbfs_smb_open
 argument_list|(
 name|np
 argument_list|,
+name|SMB_SM_DENYNONE
+operator||
 name|SMB_AM_OPENRW
 argument_list|,
 operator|&
