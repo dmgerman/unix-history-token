@@ -1966,11 +1966,20 @@ begin_comment
 comment|/* by the error code */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KERNEL_PLL
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NTP_SYSCALLS_LIBC
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
