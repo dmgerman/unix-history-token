@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.50 (Berkeley) %G%"
+literal|"@(#)conf.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6637,6 +6637,7 @@ name|solaris_gethostbyname
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -6715,6 +6716,7 @@ name|len
 parameter_list|,
 name|type
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|addr
