@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.11	81/11/20	*/
+comment|/*	trap.c	4.12	82/03/31	*/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"assym.s"
 end_include
 
 begin_include
