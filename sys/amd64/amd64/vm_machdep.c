@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.58 1996/04/07 17:39:28 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.59 1996/04/18 21:34:28 phk Exp $  */
 end_comment
 
 begin_include
@@ -2072,6 +2072,10 @@ name|sp
 decl_stmt|,
 name|offset
 decl_stmt|;
+specifier|volatile
+name|int
+name|retval
+decl_stmt|;
 comment|/* 	 * Copy pcb and stack from proc p1 to p2. 	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 * this is tricky, as the final pcb is constructed by savectx, 	 * but its frame isn't yet on the stack when the stack is copied. 	 * This should be done differently, with a single call 	 * that copies and updates the pcb+stack, 	 * replacing the bcopy and savectx. 	 */
 asm|__asm __volatile("movl %%esp,%0" : "=r" (sp));
 name|offset
@@ -2083,6 +2087,11 @@ name|int
 operator|)
 name|kstack
 expr_stmt|;
+name|retval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* return 1 in child */
 name|bcopy
 argument_list|(
 operator|(
@@ -2148,22 +2157,19 @@ operator|.
 name|pm_pdir
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Returns (0) in parent, (1) in child. 	 */
-name|sp
+name|retval
 operator|=
-literal|1
+literal|0
 expr_stmt|;
+comment|/* return 0 in parent */
 name|savectx
 argument_list|(
 name|pcb2
-argument_list|,
-operator|&
-name|sp
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|sp
+name|retval
 operator|)
 return|;
 block|}
