@@ -2444,26 +2444,6 @@ begin_comment
 comment|/*  * misc. support routines.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|CARDTYPE
-name|cards
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|TUNER
-name|tuners
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
