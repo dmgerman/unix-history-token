@@ -77,6 +77,16 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
