@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.c	7.6 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.c	7.7 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -296,10 +296,11 @@ name|size
 expr_stmt|;
 name|object
 operator|->
-name|can_persist
+name|flags
 operator|=
-name|FALSE
+name|OBJ_INTERNAL
 expr_stmt|;
+comment|/* vm_allocate_with_pager will reset */
 name|object
 operator|->
 name|paging_in_progress
@@ -319,19 +320,6 @@ name|pager
 operator|=
 name|NULL
 expr_stmt|;
-name|object
-operator|->
-name|pager_ready
-operator|=
-name|FALSE
-expr_stmt|;
-name|object
-operator|->
-name|internal
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* vm_allocate_with_pager will reset */
 name|object
 operator|->
 name|paging_offset
@@ -486,7 +474,9 @@ if|if
 condition|(
 name|object
 operator|->
-name|can_persist
+name|flags
+operator|&
+name|OBJ_CANPERSIST
 condition|)
 block|{
 name|queue_enter
@@ -712,9 +702,9 @@ name|active
 operator|=
 name|FALSE
 expr_stmt|;
-name|vm_stat
+name|cnt
 operator|.
-name|active_count
+name|v_active_count
 operator|--
 expr_stmt|;
 block|}
@@ -743,9 +733,9 @@ name|inactive
 operator|=
 name|FALSE
 expr_stmt|;
-name|vm_stat
+name|cnt
 operator|.
-name|inactive_count
+name|v_inactive_count
 operator|--
 expr_stmt|;
 block|}
@@ -787,10 +777,15 @@ expr_stmt|;
 comment|/* 	 *	Clean and free the pages, as appropriate. 	 *	All references to the object are gone, 	 *	so we don't need to lock it. 	 */
 if|if
 condition|(
-operator|!
+operator|(
 name|object
 operator|->
-name|internal
+name|flags
+operator|&
+name|OBJ_INTERNAL
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|vm_object_lock
@@ -1784,9 +1779,13 @@ name|pager
 operator|==
 name|NULL
 operator|||
+operator|(
 name|src_object
 operator|->
-name|internal
+name|flags
+operator|&
+name|OBJ_INTERNAL
+operator|)
 condition|)
 block|{
 comment|/* 		 *	Make another reference to the object 		 */
@@ -2628,9 +2627,9 @@ name|object
 expr_stmt|;
 name|object
 operator|->
-name|can_persist
-operator|=
-name|TRUE
+name|flags
+operator||=
+name|OBJ_CANPERSIST
 expr_stmt|;
 name|vm_object_cache_lock
 argument_list|()
@@ -2944,10 +2943,15 @@ expr_stmt|;
 comment|/* 		 *	... 		 *		The backing object is not read_only, 		 *		and no pages in the backing object are 		 *		currently being paged out. 		 *		The backing object is internal. 		 */
 if|if
 condition|(
-operator|!
+operator|(
 name|backing_object
 operator|->
-name|internal
+name|flags
+operator|&
+name|OBJ_INTERNAL
+operator|)
+operator|==
+literal|0
 operator|||
 name|backing_object
 operator|->
