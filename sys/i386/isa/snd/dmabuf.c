@@ -740,10 +740,6 @@ condition|(
 name|ret
 operator|==
 name|EINTR
-operator|||
-name|ret
-operator|==
-name|ERESTART
 condition|)
 name|d
 operator|->
@@ -761,6 +757,10 @@ condition|(
 name|ret
 operator|==
 name|EINTR
+operator|||
+name|ret
+operator|==
+name|ERESTART
 condition|)
 break|break ;
 continue|continue;
@@ -2012,10 +2012,6 @@ condition|(
 name|ret
 operator|==
 name|EINTR
-operator|||
-name|ret
-operator|==
-name|ERESTART
 condition|)
 name|d
 operator|->
@@ -2033,6 +2029,10 @@ condition|(
 name|ret
 operator|==
 name|EINTR
+operator|||
+name|ret
+operator|==
+name|ERESTART
 condition|)
 break|break ;
 continue|continue;
@@ -2266,10 +2266,11 @@ block|{
 name|d
 operator|->
 name|flags
-operator||=
+operator|&=
 operator|~
 name|SND_F_ABORTING
 expr_stmt|;
+comment|/* XXX */
 name|splx
 argument_list|(
 name|s
