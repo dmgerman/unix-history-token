@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -46,10 +46,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _POSIX_SOURCE */
-end_comment
 
 begin_define
 define|#
@@ -503,6 +499,17 @@ end_endif
 
 begin_typedef
 typedef|typedef
+name|int
+name|sig_atomic_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* XXX should be machine dependent. */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|unsigned
 name|int
 name|sigset_t
@@ -695,7 +702,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* do not restart system on signal return */
+comment|/* restart system on signal return */
 end_comment
 
 begin_endif
@@ -944,6 +951,13 @@ name|SIG_IGN
 value|(void (*)())1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIG_ERR
+value|(void (*)())-1
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1134,6 +1148,7 @@ name|__P
 argument_list|(
 operator|(
 name|unsigned
+name|int
 operator|,
 specifier|const
 name|char
