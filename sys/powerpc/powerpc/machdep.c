@@ -598,6 +598,16 @@ begin_comment
 comment|/* defined in locore.S */
 end_comment
 
+begin_function_decl
+name|void
+name|asm_panic
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|long
 name|Maxmem
@@ -963,56 +973,6 @@ modifier|*
 name|extsize
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX: interrupt handler.  We'll get to this later */
-end_comment
-
-begin_endif
-unit|extern void	ext_intr(void);
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_extern
-extern|extern		ddblow
-operator|,
-extern|ddbsize;
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPKDB
-end_ifdef
-
-begin_extern
-extern|extern		ipkdblow
-operator|,
-extern|ipkdbsize;
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -3341,6 +3301,23 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|asm_panic
+parameter_list|(
+name|char
+modifier|*
+name|pstr
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+name|pstr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
