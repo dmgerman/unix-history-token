@@ -63,11 +63,15 @@ define|\
 value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)					\    || !strcmp (STR, "rpath") || !strcmp (STR, "rpath-link")		\    || !strcmp (STR, "soname") || !strcmp (STR, "defsym") 		\    || !strcmp (STR, "assert") || !strcmp (STR, "dynamic-linker"))
 end_define
 
+begin_comment
+comment|/* Place spaces around this string.  We depend on string splicing to produce    the final CPP_PREDEFINES value.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|CPP_FBSD_PREDEFINES
-value|"-Dunix -D__ELF__ -D__FreeBSD__=4 -D__FreeBSD_cc_version=400002 -Asystem(unix) -Asystem(FreeBSD)"
+value|" -Dunix -D__ELF__ -D__FreeBSD__=4 -D__FreeBSD_cc_version=400002 -Asystem(unix) -Asystem(FreeBSD) "
 end_define
 
 begin_comment
