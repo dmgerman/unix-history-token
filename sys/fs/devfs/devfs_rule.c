@@ -2628,7 +2628,25 @@ name|dev
 operator|->
 name|si_name
 expr_stmt|;
-comment|/* XXX: Support symlinks (check d_type == DT_LNK here). */
+elseif|else
+if|if
+condition|(
+name|de
+operator|->
+name|de_dirent
+operator|->
+name|d_type
+operator|==
+name|DT_LNK
+condition|)
+name|pname
+operator|=
+name|de
+operator|->
+name|de_dirent
+operator|->
+name|d_name
+expr_stmt|;
 else|else
 return|return
 operator|(
