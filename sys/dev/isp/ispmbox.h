@@ -504,6 +504,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_RESOURCE_COUNT
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_EXEC_COMMAND_IOCB_A64
 value|0x54
 end_define
