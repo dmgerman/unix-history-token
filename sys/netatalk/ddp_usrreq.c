@@ -873,11 +873,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|soisdisconnected
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splnet
