@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: nlist.c,v 1.8 1997/09/24 06:44:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -783,7 +783,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|Elf32_Sym
+name|Elf_Sym
 modifier|*
 name|sbuf
 decl_stmt|;
@@ -799,11 +799,11 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|Elf32_Ehdr
+name|Elf_Ehdr
 modifier|*
 name|eh
 decl_stmt|;
-name|Elf32_Shdr
+name|Elf_Shdr
 modifier|*
 name|sh
 init|=
@@ -927,7 +927,7 @@ comment|/* Read in exec structure. */
 name|eh
 operator|=
 operator|(
-name|Elf32_Ehdr
+name|Elf_Ehdr
 operator|*
 operator|)
 name|filep
@@ -950,7 +950,7 @@ return|;
 name|sh
 operator|=
 operator|(
-name|Elf32_Shdr
+name|Elf_Shdr
 operator|*
 operator|)
 operator|&
@@ -1163,14 +1163,14 @@ name|symsize
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|Elf32_Sym
+name|Elf_Sym
 argument_list|)
 control|)
 block|{
 name|sbuf
 operator|=
 operator|(
-name|Elf32_Sym
+name|Elf_Sym
 operator|*
 operator|)
 operator|&
@@ -1206,7 +1206,7 @@ expr_stmt|;
 comment|/*XXX type conversion is pretty rude... */
 switch|switch
 condition|(
-name|ELF32_ST_TYPE
+name|ELF_ST_TYPE
 argument_list|(
 name|sbuf
 operator|->
@@ -1247,7 +1247,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|ELF32_ST_BIND
+name|ELF_ST_BIND
 argument_list|(
 name|sbuf
 operator|->
