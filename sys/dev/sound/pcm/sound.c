@@ -4199,13 +4199,6 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"x: %d\n"
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
 name|pcm_inprog
 argument_list|(
 name|d
