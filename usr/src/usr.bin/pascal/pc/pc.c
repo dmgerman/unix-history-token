@@ -291,7 +291,7 @@ begin_decl_stmt
 name|int
 name|pc3argx
 init|=
-literal|1
+literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +310,7 @@ value|pc0args
 end_define
 
 begin_comment
-comment|/* char	*pc3args[NARGS] =	{ "pc3", 0 }; */
+comment|/* char	*pc3args[NARGS] =	{ "pc3", /usr/lib/pcexterns.o, 0 }; */
 end_comment
 
 begin_comment
@@ -1475,13 +1475,20 @@ condition|)
 name|done
 argument_list|()
 expr_stmt|;
-comment|/* char	*pc3args[NARGS] =	{ "pc3", 0 }; */
+comment|/* char	*pc3args[NARGS] =	{ "pc3", "/usr/lib/pcexterns.o", 0 }; */
 name|pc3args
 index|[
 literal|0
 index|]
 operator|=
 literal|"pc3"
+expr_stmt|;
+name|pc3args
+index|[
+literal|1
+index|]
+operator|=
+literal|"/usr/lib/pcexterns.o"
 expr_stmt|;
 for|for
 control|(
