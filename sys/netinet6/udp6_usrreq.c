@@ -512,7 +512,7 @@ name|ulen
 decl_stmt|;
 name|struct
 name|sockaddr_in6
-name|udp_in6
+name|fromsa
 decl_stmt|;
 name|IP6_EXTHDR_CHECK
 argument_list|(
@@ -696,13 +696,13 @@ comment|/* 		 * Construct sockaddr format source address. 		 */
 name|init_sin6
 argument_list|(
 operator|&
-name|udp_in6
+name|fromsa
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
 comment|/* general init */
-name|udp_in6
+name|fromsa
 operator|.
 name|sin6_port
 operator|=
@@ -962,7 +962,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|udp_in6
+name|fromsa
 argument_list|,
 name|n
 argument_list|,
@@ -1156,7 +1156,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|udp_in6
+name|fromsa
 argument_list|,
 name|m
 argument_list|,
@@ -1378,13 +1378,13 @@ comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source addres
 name|init_sin6
 argument_list|(
 operator|&
-name|udp_in6
+name|fromsa
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
 comment|/* general init */
-name|udp_in6
+name|fromsa
 operator|.
 name|sin6_port
 operator|=
@@ -1448,7 +1448,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|udp_in6
+name|fromsa
 argument_list|,
 name|m
 argument_list|,

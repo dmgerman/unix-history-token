@@ -391,7 +391,7 @@ name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr_in6
-name|rip6src
+name|fromsa
 decl_stmt|;
 name|rip6stat
 operator|.
@@ -429,7 +429,7 @@ block|}
 name|init_sin6
 argument_list|(
 operator|&
-name|rip6src
+name|fromsa
 argument_list|,
 name|m
 argument_list|)
@@ -707,7 +707,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|rip6src
+name|fromsa
 argument_list|,
 name|n
 argument_list|,
@@ -882,7 +882,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|rip6src
+name|fromsa
 argument_list|,
 name|m
 argument_list|,
