@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmdtab.c	4.2	81/05/26	*/
+comment|/*	cmdtab.c	4.3	81/05/31	*/
 end_comment
 
 begin_include
@@ -46,6 +46,9 @@ name|cu_put
 argument_list|()
 decl_stmt|,
 name|dollar
+argument_list|()
+decl_stmt|,
+name|genbrk
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -182,6 +185,16 @@ block|,
 literal|"get this summary"
 block|,
 name|help
+block|}
+block|,
+block|{
+literal|'#'
+block|,
+name|NORM
+block|,
+literal|"send break"
+block|,
+name|genbrk
 block|}
 block|,
 block|{
