@@ -37,6 +37,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -52,46 +58,32 @@ begin_comment
 comment|/*  * SOCKDGRAM is unreliable, so we must repeat messages if we have  * not recieved an acknowledgement within a reasonable amount  * of time  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ctl_transact
-argument_list|(
-argument|target
-argument_list|,
-argument|msg
-argument_list|,
-argument|type
-argument_list|,
-argument|response
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|target
+parameter_list|,
+name|msg
+parameter_list|,
+name|type
+parameter_list|,
+name|response
+parameter_list|)
 name|struct
 name|in_addr
 name|target
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CTL_MSG
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CTL_RESPONSE
 modifier|*
 name|response
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sockaddr
@@ -228,6 +220,10 @@ name|select
 argument_list|(
 literal|32
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 operator|&
 name|read_mask
 argument_list|,
@@ -337,6 +333,10 @@ name|select
 argument_list|(
 literal|32
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 operator|&
 name|read_mask
 argument_list|,
@@ -373,7 +373,7 @@ name|type
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -37,21 +37,29 @@ directive|include
 file|"ctl.h"
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|getlogin
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -60,43 +68,26 @@ name|msg
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|struct
-name|hostent
-modifier|*
-name|gethostbyname
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Determine the local and remote user, tty, and machines  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|get_names
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|hostname
@@ -432,7 +423,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

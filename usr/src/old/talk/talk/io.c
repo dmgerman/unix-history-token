@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -56,7 +56,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -88,12 +100,10 @@ begin_comment
 comment|/*  * The routine to do the actual talking  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|talk
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -164,6 +174,10 @@ name|select
 argument_list|(
 literal|32
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 operator|&
 name|read_set
 argument_list|,
@@ -309,28 +323,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -338,21 +336,18 @@ begin_comment
 comment|/*  * p_error prints the system error message on the standard location  * on the screen and then exits. (i.e. a curses version of perror)  */
 end_comment
 
-begin_macro
+begin_function
+name|__dead
+name|void
 name|p_error
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -360,20 +355,10 @@ name|sys
 decl_stmt|;
 name|sys
 operator|=
-literal|"Unknown error"
-expr_stmt|;
-if|if
-condition|(
+name|strerror
+argument_list|(
 name|errno
-operator|<
-name|sys_nerr
-condition|)
-name|sys
-operator|=
-name|sys_errlist
-index|[
-name|errno
-index|]
+argument_list|)
 expr_stmt|;
 name|wmove
 argument_list|(
@@ -428,27 +413,23 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Display string in the standard location  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|message
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|wmove
 argument_list|(
@@ -484,7 +465,7 @@ name|x_win
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

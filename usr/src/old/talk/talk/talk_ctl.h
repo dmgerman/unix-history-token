@@ -89,5 +89,25 @@ name|msg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|ctl_transact
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|,
+name|CTL_MSG
+operator|,
+name|int
+operator|,
+name|CTL_RESPONSE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

@@ -49,6 +49,12 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * There wasn't an invitation waiting, so send a request containing  * our sockt address to the remote talk daemon so it can invite  * him   */
 end_comment
@@ -78,20 +84,12 @@ name|invitebuf
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|invite_remote
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
-name|nfd
-decl_stmt|,
-name|read_mask
-decl_stmt|,
-name|template
-decl_stmt|,
 name|new_sockt
 decl_stmt|;
 name|struct
@@ -290,7 +288,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routine called on interupt to re-invite the callee  */
@@ -335,12 +333,10 @@ begin_comment
 comment|/*  * Transmit the invitation and process the response  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|announce_invite
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|CTL_RESPONSE
 name|response
@@ -453,18 +449,16 @@ operator|.
 name|id_num
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Tell the daemon to remove your invitation  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|send_delete
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|msg
 operator|.
@@ -578,7 +572,7 @@ literal|"send_delete local"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

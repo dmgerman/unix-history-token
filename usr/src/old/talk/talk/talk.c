@@ -57,6 +57,7 @@ comment|/*  * talk:	A visual form of write. Using sockets, a two way   *		connec
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -109,6 +110,11 @@ expr_stmt|;
 name|talk
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

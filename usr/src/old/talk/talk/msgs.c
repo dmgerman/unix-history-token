@@ -60,13 +60,6 @@ name|MSG_INTERVAL
 value|4
 end_define
 
-begin_define
-define|#
-directive|define
-name|LONG_TIME
-value|100000
-end_define
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -104,20 +97,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|timeval
-name|undo
-init|=
-block|{
-name|LONG_TIME
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|disp_msg
@@ -131,12 +110,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|start_msgs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|message
 argument_list|(
@@ -176,14 +153,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|end_msgs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -224,7 +199,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

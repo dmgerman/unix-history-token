@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look_up.c	6.4 (Berkeley) %G%"
+literal|"@(#)look_up.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,16 +35,58 @@ directive|include
 file|"talk_ctl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_decl_stmt
+name|int
+name|look_for_invite
+name|__P
+argument_list|(
+operator|(
+name|CTL_RESPONSE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|swapresponse
+name|__P
+argument_list|(
+operator|(
+name|CTL_RESPONSE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * See if the local daemon has a invitation for us  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|check_local
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|CTL_RESPONSE
 name|response
@@ -174,32 +216,23 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look for an invitation on 'machine'  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|look_for_invite
-argument_list|(
-argument|response
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|response
+parameter_list|)
 name|CTL_RESPONSE
 modifier|*
 name|response
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|struct
-name|in_addr
-name|machine_addr
-decl_stmt|;
 name|current_state
 operator|=
 literal|"Checking for invitation on caller's machine"
@@ -248,7 +281,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*    * heuristic to detect if need to reshuffle CTL_RESPONSE structure  */
@@ -274,11 +307,13 @@ parameter_list|)
 value|((swapshort(a)<< 16) | (swapshort(((unsigned)a>> 16))))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
 
 begin_struct
 struct|struct
@@ -304,21 +339,16 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|void
 name|swapresponse
-argument_list|(
-argument|rsp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rsp
+parameter_list|)
 name|CTL_RESPONSE
 modifier|*
 name|rsp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ctl_response_vax
@@ -412,18 +442,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+end_if
 
 begin_struct
 struct|struct
@@ -459,21 +491,16 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|void
 name|swapresponse
-argument_list|(
-argument|rsp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rsp
+parameter_list|)
 name|CTL_RESPONSE
 modifier|*
 name|rsp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ctl_response_sun
@@ -600,7 +627,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
