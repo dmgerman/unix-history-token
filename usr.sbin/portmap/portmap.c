@@ -747,7 +747,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"run_svc returned unexpectedly"
+literal|"svc_run returned unexpectedly"
 argument_list|)
 expr_stmt|;
 name|abort
