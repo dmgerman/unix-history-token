@@ -22,85 +22,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WSTATE_32BIT
-value|1
-end_define
-
-begin_comment
-comment|/* if set, probably 32-bit mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTATE_ASSUME
-value|2
-end_define
-
-begin_comment
-comment|/* if set, assume 32 or 64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTATE_TRANSITION
-value|4
-end_define
-
-begin_comment
-comment|/* if set, force user window */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTATE_TEST64
-value|0
-end_define
-
-begin_comment
-comment|/* test, but anticipate 64-bit mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTATE_TEST32
-value|1
-end_define
-
-begin_comment
-comment|/* test, but anticipate 32-bit mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTATE_ASSUME64
-value|2
-end_define
-
-begin_comment
-comment|/* assume 64-bit mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WSTATE_ASSUME32
-value|3
-end_define
-
-begin_comment
-comment|/* assume 32-bit mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|WSTATE_NORMAL_MASK
-value|3
+value|1
 end_define
 
 begin_comment
@@ -121,6 +44,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WSTATE_OTHER_MASK
+comment|/* wstate other minus nested */
+define|\
+value|(WSTATE_NORMAL_MASK<< WSTATE_OTHER_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|WSTATE_KERNEL
 value|0
 end_define
@@ -128,6 +60,48 @@ end_define
 begin_comment
 comment|/* normal kernel wstate */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WSTATE_USER_64
+value|0
+end_define
+
+begin_comment
+comment|/* normal 64bit user wstate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WSTATE_USER_32
+value|1
+end_define
+
+begin_comment
+comment|/* normal 32bit user wstate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WSTATE_TRANSITION
+value|2
+end_define
+
+begin_comment
+comment|/* if set, force user window */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WSTATE_NESTED
+comment|/* if set, spill must not fault */
+define|\
+value|(WSTATE_TRANSITION<< WSTATE_OTHER_SHIFT)
+end_define
 
 begin_endif
 endif|#
