@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.12 1996/04/13 13:31:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.13 1996/04/23 01:29:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -73,6 +73,27 @@ directive|undef
 name|CD9660
 end_undef
 
+begin_define
+define|#
+directive|define
+name|CD_UNMOUNTED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_ALREADY_MOUNTED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_WE_MOUNTED_IT
+value|2
+end_define
+
 begin_comment
 comment|/*  * This isn't static, like the others, since it's often useful to know whether  * or not we have a CDROM available in some of the other installation screens.  * This also isn't a boolean like the others since we have 3 states for it:  * 0 = cdrom isn't mounted, 1 = cdrom is mounted and we mounted it, 2 = cdrom  * was already mounted when we came in and we should leave it that way when  * we leave.  */
 end_comment
@@ -96,22 +117,11 @@ name|struct
 name|iso_args
 name|args
 decl_stmt|;
-name|struct
-name|stat
-name|sb
-decl_stmt|;
-name|char
-name|specialrel
-index|[
-literal|80
-index|]
-decl_stmt|;
 if|if
 condition|(
-operator|!
-name|RunningAsInit
-operator|||
 name|cdromMounted
+operator|!=
+name|CD_UNMOUNTED
 condition|)
 return|return
 name|TRUE
@@ -153,18 +163,16 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
+comment|/* If this cdrom's not already mounted or can't be mounted, yell */
 if|if
 condition|(
+operator|!
 name|directory_exists
 argument_list|(
 literal|"/cdrom/dists"
 argument_list|)
 condition|)
-name|cdromMounted
-operator|=
-literal|2
-expr_stmt|;
-elseif|else
+block|{
 if|if
 condition|(
 name|mount
@@ -206,78 +214,16 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/*      * Do a very simple check to see if this looks roughly like a FreeBSD CDROM      * Unfortunately FreeBSD won't let us read the ``label'' AFAIK, which is one      * sure way of telling the disc version :-(      */
-name|snprintf
-argument_list|(
-name|specialrel
-argument_list|,
-literal|80
-argument_list|,
-literal|"/cdrom/%s/dists"
-argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_RELNAME
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-literal|"/cdrom/dists"
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|&&
-name|stat
-argument_list|(
-name|specialrel
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Couldn't locate the directory `dists' anywhere on the CD.\n"
-literal|"Is this a FreeBSD CDROM?  Is the release version set properly\n"
-literal|"in the Options editor?"
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
 else|else
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Error trying to stat the CDROM's dists directory: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-block|}
 name|cdromMounted
 operator|=
-literal|1
+name|CD_WE_MOUNTED_IT
+expr_stmt|;
+block|}
+else|else
+name|cdromMounted
+operator|=
+name|CD_ALREADY_MOUNTED
 expr_stmt|;
 name|msgDebug
 argument_list|(
@@ -442,17 +388,12 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+comment|/* Only undo it if we did it */
 if|if
 condition|(
-operator|!
-name|RunningAsInit
-operator|||
-operator|!
 name|cdromMounted
-operator|||
-name|cdromMounted
-operator|==
-literal|2
+operator|!=
+name|CD_WE_MOUNTED_IT
 condition|)
 return|return;
 name|msgDebug
@@ -475,6 +416,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Could not unmount the CDROM from /cdrom: %s"
@@ -485,6 +427,14 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|cdromMounted
+operator|=
+name|CD_ALREADY_MOUNTED
+expr_stmt|;
+comment|/* Guess somebody else got it */
+block|}
+else|else
+block|{
 name|msgDebug
 argument_list|(
 literal|"Unmount successful\n"
@@ -492,9 +442,9 @@ argument_list|)
 expr_stmt|;
 name|cdromMounted
 operator|=
-literal|0
+name|CD_UNMOUNTED
 expr_stmt|;
-return|return;
+block|}
 block|}
 end_function
 
