@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.26	%G%	*/
+comment|/*	machdep.c	3.27	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.26) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.27) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1594,13 +1594,6 @@ name|howto
 operator|=
 name|arghowto
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"howto %d\n"
-argument_list|,
-name|howto
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1625,7 +1618,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"updating (wait"
+literal|"syncing disks... "
 argument_list|)
 expr_stmt|;
 while|while
@@ -1633,14 +1626,8 @@ condition|(
 operator|++
 name|waittime
 operator|<=
-literal|10
+literal|5
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"."
-argument_list|)
-expr_stmt|;
 name|sleep
 argument_list|(
 operator|(
@@ -1652,10 +1639,9 @@ argument_list|,
 name|PZERO
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
-literal|") done\n"
+literal|"done\n"
 argument_list|)
 expr_stmt|;
 block|}
