@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.2 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1370,7 +1370,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh host [ -l login ] [ -p passwd ] command\n"
+literal|"usage: rsh host [ -l login ] [ -n ] command\n"
 argument_list|)
 expr_stmt|;
 name|exit
