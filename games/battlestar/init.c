@@ -86,11 +86,8 @@ argument_list|(
 literal|"Admiral D.W. Riggle\n"
 argument_list|)
 expr_stmt|;
-name|srand
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|getutmp
 argument_list|(

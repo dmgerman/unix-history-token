@@ -272,7 +272,9 @@ name|start
 goto|;
 default|default:
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -27,6 +27,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -48,7 +54,7 @@ name|rnd
 parameter_list|(
 name|x
 parameter_list|)
-value|(rand() % (x))
+value|(random() % (x))
 end_define
 
 begin_define
