@@ -605,6 +605,22 @@ block|,
 block|{
 literal|0x9005
 block|,
+literal|0x0285
+block|,
+literal|0x9005
+block|,
+literal|0x0293
+block|,
+name|AAC_HWIF_I960RX
+block|,
+name|AAC_FLAGS_NO4GB
+block|,
+literal|"Adaptec SCSI RAID 21610SA"
+block|}
+block|,
+block|{
+literal|0x9005
+block|,
 literal|0x0286
 block|,
 literal|0x9005
