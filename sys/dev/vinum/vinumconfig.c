@@ -7969,7 +7969,28 @@ name|vol
 operator|->
 name|plexes
 condition|)
+block|{
 comment|/* didn't find it.  Huh? */
+if|if
+condition|(
+name|force
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"volume %s does not contain plex %s"
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+else|else
 name|throw_rude_remark
 argument_list|(
 name|ENOENT
@@ -7985,6 +8006,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|myplexno
