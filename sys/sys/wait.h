@@ -23,26 +23,11 @@ begin_comment
 comment|/*  * Macros to test the exit status returned by wait and extract the relevant  * values.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_SOURCE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_W_INT
-parameter_list|(
-name|i
-parameter_list|)
-value|(i)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -63,6 +48,21 @@ define|#
 directive|define
 name|WCOREFLAG
 value|0200
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_W_INT
+parameter_list|(
+name|i
+parameter_list|)
+value|(i)
 end_define
 
 begin_endif
@@ -165,11 +165,11 @@ begin_comment
 comment|/* 0x13 == SIGCONT */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -245,6 +245,12 @@ begin_comment
 comment|/* Report a job control continued process. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -256,11 +262,16 @@ begin_comment
 comment|/* Wait for kthread spawned from linux_clone. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/* POSIX extensions and 4.2/4.3 compatibility: */
@@ -480,7 +491,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_SOURCE */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_ifndef
@@ -539,11 +550,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_function_decl
 name|pid_t
@@ -597,6 +608,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_SYS_WAIT_H_ */
+end_comment
 
 end_unit
 
