@@ -6,19 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -30,7 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -488,27 +494,15 @@ name|status_fd
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|errx
 argument_list|(
-literal|"rpc.statd"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Unable to open status file %s\n"
+literal|"unable to open status file %s"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* File now open.  mmap() it, with a generous size to allow for	*/
 comment|/* later growth, where we will extend the file but not re-map it.	*/
 name|status_info
@@ -544,20 +538,11 @@ operator|*
 operator|)
 name|MAP_FAILED
 condition|)
-block|{
-name|perror
+name|warn
 argument_list|(
-literal|"rpc.statd"
+literal|"unable to mmap() status file"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Unable to mmap() status file\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|status_file_len
 operator|=
 name|lseek
@@ -603,11 +588,9 @@ operator|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rpc.statd: status file is corrupt\n"
+literal|"status file is corrupt"
 argument_list|)
 expr_stmt|;
 name|new_file
