@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.19 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -838,6 +838,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|old_bufp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|new_bufp
 operator|=
 name|__get_buf
@@ -849,6 +861,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|new_bufp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|old_bufp
 operator|->
 name|flags
