@@ -276,6 +276,47 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Print address family.  */
+end_comment
+
+begin_function
+name|void
+name|p_proto
+parameter_list|(
+name|proto
+parameter_list|)
+name|int
+name|proto
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|proto
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
+name|printf
+argument_list|(
+literal|"inet"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+name|proto
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * Print routing tables.  */
 end_comment
 
@@ -768,11 +809,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nRoute Tree for Protocol Family %d:\n"
-argument_list|,
+literal|"\nRoute Tree for Protocol Family "
+argument_list|)
+expr_stmt|;
+name|p_proto
+argument_list|(
 name|head
 operator|.
 name|rnh_af
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|":\n"
 argument_list|)
 expr_stmt|;
 name|do_rtent
@@ -2033,7 +2082,7 @@ operator|->
 name|rt_gateway
 argument_list|)
 argument_list|,
-literal|0
+name|RTF_HOST
 argument_list|,
 literal|18
 argument_list|)
