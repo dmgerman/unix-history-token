@@ -3404,6 +3404,14 @@ name|ithd
 operator|->
 name|it_proc
 operator|->
+name|p_intr_nesting_level
+operator|=
+literal|0
+expr_stmt|;
+name|ithd
+operator|->
+name|it_proc
+operator|->
 name|p_stat
 operator|=
 name|SRUN
