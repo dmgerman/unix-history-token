@@ -2067,6 +2067,9 @@ name|session
 modifier|*
 name|savesess
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|sx_assert
 argument_list|(
 operator|&
@@ -2153,10 +2156,12 @@ argument_list|(
 name|savesess
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+operator|--
 name|savesess
 operator|->
 name|s_count
-operator|--
 expr_stmt|;
 name|SESS_UNLOCK
 argument_list|(
@@ -2170,9 +2175,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|savesess
-operator|->
-name|s_count
+name|i
 operator|==
 literal|0
 condition|)
