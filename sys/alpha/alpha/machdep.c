@@ -9743,6 +9743,10 @@ expr_stmt|;
 if|if
 condition|(
 name|p
+operator|!=
+name|NULL
+operator|&&
+name|p
 operator|==
 name|PCPU_GET
 argument_list|(
