@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.2 (Berkeley) %G%"
+literal|"@(#)uuq.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1093,7 +1093,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't examine spooling area"
+literal|"can't examine spooling area\n"
 argument_list|)
 expr_stmt|;
 name|exit
