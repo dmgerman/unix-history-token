@@ -1436,6 +1436,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|legacy_pcib_attach
 parameter_list|(
