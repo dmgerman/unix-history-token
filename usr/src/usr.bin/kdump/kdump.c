@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	1.9 (Berkeley) %G%"
+literal|"@(#)kdump.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vis.h>
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_define
@@ -73,7 +91,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/errno.h>
 end_include
 
 begin_undef
@@ -81,6 +99,30 @@ undef|#
 directive|undef
 name|KERNEL
 end_undef
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -120,26 +162,6 @@ name|ktr_header
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|size
-init|=
-literal|1024
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* initial size - grow as needed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USAGE
-define|\
-value|"usage: kdump [-dnlT] [-t trops] [-f trfile] [-m maxdata]\n\ 	trops: c = syscalls, n = namei, g = generic-i/o, a = everything\n"
-end_define
-
 begin_define
 define|#
 directive|define
@@ -159,6 +181,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -178,9 +203,11 @@ name|int
 name|ch
 decl_stmt|,
 name|ktrlen
+decl_stmt|,
+name|size
 decl_stmt|;
 specifier|register
-name|char
+name|void
 modifier|*
 name|m
 decl_stmt|;
@@ -200,7 +227,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"t:f:dnlTRm:"
+literal|"f:dlm:nRTt:"
 argument_list|)
 operator|)
 operator|!=
@@ -214,39 +241,6 @@ operator|)
 name|ch
 condition|)
 block|{
-case|case
-literal|'t'
-case|:
-name|trpoints
-operator|=
-name|getpoints
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|trpoints
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kdump: unknown trace point in %s\n"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
 case|case
 literal|'f'
 case|:
@@ -264,37 +258,12 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'n'
-case|:
-name|fancy
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
 literal|'l'
 case|:
 name|tail
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-case|case
-literal|'T'
-case|:
-name|timestamp
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'R'
-case|:
-name|timestamp
-operator|=
-literal|2
-expr_stmt|;
-comment|/* relative timestamp */
 break|break;
 case|case
 literal|'m'
@@ -307,12 +276,58 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
+case|case
+literal|'n'
+case|:
+name|fancy
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|timestamp
+operator|=
+literal|2
+expr_stmt|;
+comment|/* relative timestamp */
+break|break;
+case|case
+literal|'T'
+case|:
+name|timestamp
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|trpoints
+operator|=
+name|getpoints
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trpoints
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|USAGE
+literal|"kdump: unknown trace point in %s\n"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|exit
@@ -321,10 +336,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 name|argv
 operator|+=
 name|optind
-operator|,
+expr_stmt|;
 name|argc
 operator|-=
 name|optind
@@ -335,77 +356,20 @@ name|argc
 operator|>
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|USAGE
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|eqs
-argument_list|(
-name|tracefile
-argument_list|,
-literal|"-"
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|freopen
-argument_list|(
-name|tracefile
-argument_list|,
-literal|"r"
-argument_list|,
-name|stdin
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kdump: %s: "
-argument_list|,
-name|tracefile
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|m
 operator|=
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|malloc
 argument_list|(
 name|size
-operator|+
-literal|1
+operator|=
+literal|1025
 argument_list|)
 expr_stmt|;
 if|if
@@ -415,11 +379,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kdump: ain't gots no memory\n"
+literal|"kdump: %s.\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|ENOMEM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -442,10 +414,6 @@ name|ktr_header
 argument_list|)
 argument_list|,
 literal|1
-argument_list|,
-name|stdin
-argument_list|,
-name|tail
 argument_list|)
 condition|)
 block|{
@@ -480,6 +448,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -505,7 +476,7 @@ block|{
 name|m
 operator|=
 operator|(
-name|char
+name|void
 operator|*
 operator|)
 name|realloc
@@ -524,11 +495,19 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kdump: out of memory\n"
+literal|"kdump: %s.\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|ENOMEM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -553,20 +532,19 @@ argument_list|,
 name|ktrlen
 argument_list|,
 literal|1
-argument_list|,
-name|stdin
-argument_list|,
-name|tail
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kdump: data too short\n"
+literal|"kdump: data too short.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -610,8 +588,6 @@ name|ktr_syscall
 operator|*
 operator|)
 name|m
-argument_list|,
-name|ktrlen
 argument_list|)
 expr_stmt|;
 break|break;
@@ -626,8 +602,6 @@ name|ktr_sysret
 operator|*
 operator|)
 name|m
-argument_list|,
-name|ktrlen
 argument_list|)
 expr_stmt|;
 break|break;
@@ -669,8 +643,6 @@ name|ktr_psig
 operator|*
 operator|)
 name|m
-argument_list|,
-name|ktrlen
 argument_list|)
 expr_stmt|;
 break|break;
@@ -679,6 +651,9 @@ if|if
 condition|(
 name|tail
 condition|)
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -696,10 +671,6 @@ argument_list|,
 argument|size
 argument_list|,
 argument|num
-argument_list|,
-argument|stream
-argument_list|,
-argument|tail
 argument_list|)
 end_macro
 
@@ -711,9 +682,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|stream
+name|int
+name|num
+decl_stmt|,
+name|size
 decl_stmt|;
 end_decl_stmt
 
@@ -735,7 +707,7 @@ name|size
 argument_list|,
 name|num
 argument_list|,
-name|stream
+name|stdin
 argument_list|)
 operator|)
 operator|==
@@ -744,6 +716,9 @@ operator|&&
 name|tail
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 literal|1
@@ -751,7 +726,7 @@ argument_list|)
 expr_stmt|;
 name|clearerr
 argument_list|(
-name|stream
+name|stdin
 argument_list|)
 expr_stmt|;
 block|}
@@ -846,6 +821,9 @@ literal|"PSIG"
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|unknown
@@ -862,6 +840,9 @@ operator|=
 name|unknown
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%6d %-8s "
@@ -909,9 +890,12 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%d.%06d "
+literal|"%ld.%06ld "
 argument_list|,
 name|kth
 operator|->
@@ -927,6 +911,9 @@ name|tv_usec
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s  "
@@ -984,8 +971,6 @@ begin_expr_stmt
 name|ktrsyscall
 argument_list|(
 name|ktr
-argument_list|,
-name|len
 argument_list|)
 specifier|register
 expr|struct
@@ -1028,6 +1013,9 @@ name|ktr_code
 operator|<
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"[%d]"
@@ -1038,6 +1026,9 @@ name|ktr_code
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s"
@@ -1099,6 +1090,9 @@ if|if
 condition|(
 name|decimal
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"(%d"
@@ -1108,6 +1102,9 @@ name|ip
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"(%#x"
@@ -1136,6 +1133,9 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|",%s"
@@ -1149,6 +1149,9 @@ if|if
 condition|(
 name|decimal
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|",%d"
@@ -1158,6 +1161,9 @@ name|ip
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|",%#x "
@@ -1187,6 +1193,9 @@ if|if
 condition|(
 name|decimal
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%c%d"
@@ -1198,6 +1207,9 @@ name|ip
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%c%#x"
@@ -1219,12 +1231,18 @@ name|narg
 operator|--
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|')'
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1237,8 +1255,6 @@ begin_macro
 name|ktrsysret
 argument_list|(
 argument|ktr
-argument_list|,
-argument|len
 argument_list|)
 end_macro
 
@@ -1286,6 +1302,9 @@ name|code
 operator|<
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"[%d] "
@@ -1294,6 +1313,9 @@ name|code
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s "
@@ -1316,6 +1338,9 @@ condition|(
 name|fancy
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%d"
@@ -1333,6 +1358,9 @@ name|ret
 operator|>
 literal|9
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"/%#x"
@@ -1347,6 +1375,9 @@ if|if
 condition|(
 name|decimal
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%d"
@@ -1355,6 +1386,9 @@ name|ret
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%#x"
@@ -1371,6 +1405,9 @@ name|error
 operator|==
 name|ERESTART
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"RESTART"
@@ -1383,6 +1420,9 @@ name|error
 operator|==
 name|EJUSTRETURN
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"JUSTRETURN"
@@ -1390,6 +1430,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"-1 errno %d"
@@ -1403,6 +1446,9 @@ if|if
 condition|(
 name|fancy
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -1416,6 +1462,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1442,6 +1491,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\"%.*s\"\n"
@@ -1512,10 +1564,6 @@ name|int
 name|col
 init|=
 literal|0
-decl_stmt|;
-specifier|register
-name|char
-name|c
 decl_stmt|;
 specifier|register
 name|width
@@ -1613,6 +1661,9 @@ name|datalen
 operator|=
 name|maxdata
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"       \""
@@ -1668,6 +1719,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\t'
@@ -1691,6 +1745,9 @@ name|col
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1733,6 +1790,9 @@ literal|2
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\\\n\t"
@@ -1749,6 +1809,9 @@ name|width
 expr_stmt|;
 do|do
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 operator|*
@@ -1770,11 +1833,17 @@ name|col
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"       "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\"\n"
@@ -1870,8 +1939,6 @@ begin_macro
 name|ktrpsig
 argument_list|(
 argument|psig
-argument_list|,
-argument|len
 argument_list|)
 end_macro
 
@@ -1885,6 +1952,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"SIG%s "
@@ -1905,17 +1975,25 @@ name|action
 operator|==
 name|SIG_DFL
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"SIG_DFL\n"
 argument_list|)
 expr_stmt|;
 else|else
-block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"caught handler=0x%x mask=0x%x code=0x%x\n"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|psig
 operator|->
 name|action
@@ -1930,6 +2008,30 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: kdump [-dnlRT] [-f trfile] [-m maxdata] [-t [cnis]]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
