@@ -149,7 +149,7 @@ name|f
 parameter_list|,
 name|func
 parameter_list|)
-value|{ \ 	if (fieldwidth) \ 		if (precision) \ 			(void)printf(f, fieldwidth, precision, func); \ 		else \ 			(void)printf(f, fieldwidth, func); \ 	else if (precision) \ 		(void)printf(f, precision, func); \ 	else \ 		(void)printf(f, func); \ }
+value|{ \ 	char *b = NULL; \ 	if (fieldwidth) \ 		if (precision) \ 			(void)asprintf(&b, f, fieldwidth, precision, func); \ 		else \ 			(void)asprintf(&b, f, fieldwidth, func); \ 	else if (precision) \ 		(void)asprintf(&b, f, precision, func); \ 	else \ 		(void)asprintf(&b, f, func); \ 	if (b) { \ 		(void)fputs(b, stdout); \ 		free(b); \ 	} \ }
 end_define
 
 begin_decl_stmt
