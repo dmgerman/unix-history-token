@@ -4748,7 +4748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * magicasksearch<<forw|back>><<n>>  * search<<forw|back>><<n>><<<noinvert|invert>><searchstring>>  * research<<forw|back>><<n>>  *   * Arguments specifying an option (ie.<<forw|back>> and<<noinvert|invert>>  * may be specified either as text (eg. "forw"), or as a number, in which case  * even numbers specify the former setting and odd numbers the latter setting.  *  * The magicasksearch will ask the user for a regexp and intuit whether they  * want to invert the sense of matching or not: if the first character of the  * regexp is a '!', it is removed and the sense is inverted.  *  * The toggle options are called _ls_direction and _ls_sense.  In addition,  * ${_ls_regexp} is set to the regexp used.  These variables are only set  * when the search and magicsearch commands are used.  */
+comment|/*  * magicasksearch<<forw|back>><<n>>  * search<<forw|back>><<n>><<<noinvert|invert>><searchstring>>  * research<<forw|back>><<n>>  *   * Arguments specifying an option (ie.<<forw|back>> and<<noinvert|invert>>  * may be specified either as text (eg. "forw"), or as a number, in which case  * even numbers specify the former setting and odd numbers the latter setting.  *  * The magicasksearch will ask the user for a regexp and intuit whether they  * want to invert the sense of matching or not: if the first character of the  * regexp is a '!', it is removed and the sense is inverted.  If the regexp  * entered is null, then we will use ${_ls_regexp} (error if not set).  *  * The toggle options are called _ls_direction and _ls_sense.  In addition,  * ${_ls_regexp} is set to the regexp used.  These variables are only set  * when the search and magicsearch commands are used.  */
 end_comment
 
 begin_function
@@ -4908,13 +4908,6 @@ name|buf
 condition|)
 block|{
 case|case
-literal|'\0'
-case|:
-comment|/* Cancelled */
-return|return
-name|args
-return|;
-case|case
 literal|'!'
 case|:
 comment|/* Magic */
@@ -4993,21 +4986,15 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+case|case
+literal|'\0'
+case|:
 name|sense
 operator|=
 name|NOINVERT
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-operator|!
-operator|*
-name|buf
-condition|)
-return|return
-name|args
-return|;
 name|str
 operator|=
 name|buf
@@ -5063,6 +5050,11 @@ argument_list|,
 literal|"invert"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|str
+condition|)
 name|setvar
 argument_list|(
 literal|"_ls_regexp"
@@ -5071,6 +5063,7 @@ name|str
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * XXX Currently search() contains magic to deal with (*str=='\0'). 	 * This magic should be moved into this function so that we can work 	 * as described in the function comment header. 	 */
 name|search
 argument_list|(
 operator|!
