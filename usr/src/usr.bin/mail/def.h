@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.11 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.12 %G%";  */
 end_comment
 
 begin_comment
@@ -1444,6 +1444,17 @@ name|fsize
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|int
+argument_list|(
+operator|*
+name|sigset
+argument_list|()
+argument_list|)
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|struct
