@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#84 $  */
+comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#86 $  */
 end_comment
 
 begin_ifdef
@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|ID_ALL_IROC_MASK
-value|0xFFFFFF7FFFFFFFFFull
+value|0xFF7FFFFFFFFFFFFFull
 end_define
 
 begin_define
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|ID_9005_GENERIC_IROC_MASK
-value|0xFFF0FF7F00000000ull
+value|0xFF70FFFF00000000ull
 end_define
 
 begin_define
@@ -286,6 +286,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVID_9005_HOSTRAID
+parameter_list|(
+name|id
+parameter_list|)
+value|((id)& 0x80)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVID_9005_TYPE
 parameter_list|(
 name|id
@@ -313,17 +323,6 @@ end_define
 
 begin_comment
 comment|/* 2 External Ports */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVID_9005_TYPE_IROC
-value|0x8
-end_define
-
-begin_comment
-comment|/* Raid(0,1,10) Card */
 end_comment
 
 begin_define
@@ -595,7 +594,7 @@ comment|/* Generic chip probes for devices we don't know 'exactly' */
 block|{
 name|ID_AIC7901
 operator|&
-name|ID_DEV_VENDOR_MASK
+name|ID_9005_GENERIC_MASK
 block|,
 name|ID_DEV_VENDOR_MASK
 block|,
@@ -968,6 +967,15 @@ argument_list|,
 name|subvendor
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are configured to attach to HostRAID 	 * controllers, mask out the IROC/HostRAID bit 	 * in the  	 */
+if|if
+condition|(
+name|ahd_attach_to_HostRAID_controllers
+condition|)
+name|full_id
+operator|&=
+name|ID_ALL_IROC_MASK
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1064,6 +1072,9 @@ name|uint32_t
 name|devconfig
 decl_stmt|;
 name|uint16_t
+name|device
+decl_stmt|;
+name|uint16_t
 name|subvendor
 decl_stmt|;
 name|int
@@ -1080,6 +1091,34 @@ operator|=
 name|entry
 operator|->
 name|name
+expr_stmt|;
+comment|/* 	 * Record if this is a HostRAID board. 	 */
+name|device
+operator|=
+name|aic_pci_read_config
+argument_list|(
+name|ahd
+operator|->
+name|dev_softc
+argument_list|,
+name|PCIR_DEVICE
+argument_list|,
+comment|/*bytes*/
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DEVID_9005_HOSTRAID
+argument_list|(
+name|device
+argument_list|)
+condition|)
+name|ahd
+operator|->
+name|flags
+operator||=
+name|AHD_HOSTRAID_BOARD
 expr_stmt|;
 comment|/* 	 * Record if this is an HP board. 	 */
 name|subvendor
