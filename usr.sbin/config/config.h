@@ -314,6 +314,14 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|env
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|hints
 decl_stmt|;
 end_decl_stmt
@@ -322,6 +330,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|do_trace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|envmode
 decl_stmt|;
 end_decl_stmt
 

@@ -1595,6 +1595,21 @@ name|kern_envp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|static_env
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|envmode
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef

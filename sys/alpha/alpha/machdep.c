@@ -2275,6 +2275,17 @@ name|bootinfo
 operator|.
 name|modptr
 expr_stmt|;
+if|if
+condition|(
+name|envmode
+operator|==
+literal|1
+condition|)
+name|kern_envp
+operator|=
+name|static_env
+expr_stmt|;
+else|else
 name|kern_envp
 operator|=
 name|bootinfo
