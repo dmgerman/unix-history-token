@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.13 (Berkeley) %G%"
+literal|"@(#)headers.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2547,6 +2547,10 @@ condition|(
 name|c
 operator|==
 literal|'"'
+operator|&&
+name|cmtlev
+operator|<=
+literal|0
 condition|)
 block|{
 name|qmode
