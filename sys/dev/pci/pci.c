@@ -204,12 +204,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpica/acpivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acpi_if.h"
 end_include
 
@@ -9641,7 +9635,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some drivers apparently write to these registers w/o updating our 	 * cahced copy.  No harm happens if we update the copy, so do so here 	 * so we can restore them.  The COMMAND register is modified by the 	 * bus w/o updating the cache.  This should represent the normally 	 * writable portion of the 'defined' part of type 0 headers.  In 	 * theory we also need to save/restore the PCI capability structures 	 * we know about, but apart from power we don't know any that are 	 * writable. 	 */
+comment|/* 	 * Some drivers apparently write to these registers w/o updating our 	 * cached copy.  No harm happens if we update the copy, so do so here 	 * so we can restore them.  The COMMAND register is modified by the 	 * bus w/o updating the cache.  This should represent the normally 	 * writable portion of the 'defined' part of type 0 headers.  In 	 * theory we also need to save/restore the PCI capability structures 	 * we know about, but apart from power we don't know any that are 	 * writable. 	 */
 name|dinfo
 operator|->
 name|cfg
