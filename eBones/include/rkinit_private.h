@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rkinit_private.h,v 1.4 1993/12/23 16:47:39 dglo Exp $  * $Source: /usr/sww/share/src/kerberosIV.BSD/include/RCS/rkinit_private.h,v $  * $Author: dglo $  *  * Header file for rkinit library and server internal use  */
+comment|/*   * $Id: rkinit_private.h,v 1.1 1995/09/15 06:19:14 gibbs Exp $  *  * Header file for rkinit library and server internal use  */
 end_comment
 
 begin_ifndef
@@ -14,42 +14,6 @@ define|#
 directive|define
 name|__RKINIT_PRIVATE_H__
 end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SABER
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|rcsid_rkinit_private_h
-init|=
-literal|"$Id: rkinit_private.h,v 1.4 1993/12/23 16:47:39 dglo Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint || SABER */
-end_comment
 
 begin_include
 include|#

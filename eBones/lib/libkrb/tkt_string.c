@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tkt_string.c,v 4.6 89/01/05 12:31:51 raeburn Exp $  *	$Id: tkt_string.c,v 1.3 1995/07/18 16:39:52 mark Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tkt_string.c,v 4.6 89/01/05 12:31:51 raeburn Exp $  *	$Id: tkt_string.c,v 1.3 1995/09/07 21:38:35 markm Exp $  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char *rcsid = "$Id: tkt_string.c,v 1.3 1995/07/18 16:39:52 mark Exp $";
+unit|static char *rcsid = "$Id: tkt_string.c,v 1.3 1995/09/07 21:38:35 markm Exp $";
 endif|#
 directive|endif
 end_endif
@@ -155,7 +155,7 @@ name|sprintf
 argument_list|(
 name|krb_ticket_string
 argument_list|,
-literal|"%s%ld"
+literal|"%s%d"
 argument_list|,
 name|TKT_ROOT
 argument_list|,

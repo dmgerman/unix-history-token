@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atof-ieee.c,v 1.2 1993/11/03 00:53:04 paul Exp $"
+literal|"$Id: atof-ieee.c,v 1.3 1995/05/30 04:46:46 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,13 +417,7 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-operator|(
-name|unsigned
-operator|)
-operator|-
-literal|1
-operator|)
+name|LITTLENUM_MASK
 operator|>>
 literal|1
 expr_stmt|;
