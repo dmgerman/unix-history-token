@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.28 1994/11/12 16:24:54 ache Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.29 1994/12/30 12:43:34 bde Exp $  */
 end_comment
 
 begin_comment
@@ -969,40 +969,98 @@ argument_list|)
 expr_stmt|;
 asm|__asm __volatile(".byte 0x0f, 0x31" : "=a"(eax), "=d"(edx) : );
 comment|/* 	 * This assumes that you will never have a clock rate higher 	 * than 4GHz, probably a good assumption. 	 */
+comment|/* The following C code is correct, but our current gcc 2.6.3 	 * seems to produce bad assembly code for it , ATS , XXXX */
+if|#
+directive|if
+literal|0
+block|cycles_per_sec = ((long long)edx<< 32) + eax; 	cycles_per_sec -= ((long long)lastedx<< 32) + lasteax; 	pentium_mhz = ((long)cycles_per_sec + 500000) / 1000000;
+comment|/* round up */
+else|#
+directive|else
+comment|/* produce a workaround for the code above */
+block|{
+union|union
+block|{
+name|long
+name|long
+name|extralong
+decl_stmt|;
+name|long
+name|shorty
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|tmp
+union|;
+name|tmp
+operator|.
+name|shorty
+index|[
+literal|0
+index|]
+operator|=
+name|eax
+expr_stmt|;
+name|tmp
+operator|.
+name|shorty
+index|[
+literal|1
+index|]
+operator|=
+name|edx
+expr_stmt|;
 name|cycles_per_sec
 operator|=
-operator|(
-name|long
-name|long
-operator|)
-name|edx
-operator|+
-name|eax
+name|tmp
+operator|.
+name|extralong
+expr_stmt|;
+name|tmp
+operator|.
+name|shorty
+index|[
+literal|0
+index|]
+operator|=
+name|lasteax
+expr_stmt|;
+name|tmp
+operator|.
+name|shorty
+index|[
+literal|1
+index|]
+operator|=
+name|lastedx
 expr_stmt|;
 name|cycles_per_sec
 operator|-=
-operator|(
-name|long
-name|long
-operator|)
-name|lastedx
-operator|+
-name|lasteax
+name|tmp
+operator|.
+name|extralong
 expr_stmt|;
+comment|/* round up */
 name|pentium_mhz
 operator|=
-operator|(
-operator|(
+call|(
 name|long
-operator|)
+call|)
+argument_list|(
+operator|(
 name|cycles_per_sec
 operator|+
 literal|500000
 operator|)
 operator|/
 literal|1000000
+argument_list|)
 expr_stmt|;
-comment|/* round up */
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
