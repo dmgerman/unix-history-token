@@ -3691,7 +3691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  *  * In order to be able to swap to a file, the VOP_BMAP operation may not  * deadlock on memory.  See hpfs_bmap() for details. XXXXXXX (not impl)  */
+comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  *  * In order to be able to swap to a file, the hpfs_hpbmap operation may not  * deadlock on memory.  See hpfs_bmap() for details. XXXXXXX (not impl)  */
 end_comment
 
 begin_function
@@ -3727,10 +3727,18 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
+specifier|register
 name|struct
-name|vnode
+name|hpfsnode
 modifier|*
-name|nvp
+name|hp
+init|=
+name|VTOHP
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
 decl_stmt|;
 name|int
 name|error
@@ -3774,23 +3782,18 @@ condition|)
 block|{
 name|error
 operator|=
-name|VOP_BMAP
+name|hpfs_hpbmap
 argument_list|(
-name|vp
+name|hp
 argument_list|,
 name|bp
 operator|->
 name|b_lblkno
 argument_list|,
 operator|&
-name|nvp
-argument_list|,
-operator|&
 name|bp
 operator|->
 name|b_blkno
-argument_list|,
-name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -3802,7 +3805,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hpfs_strategy: VOP_BMAP FAILED %d\n"
+literal|"hpfs_strategy: hpfs_bpbmap FAILED %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -3876,13 +3879,17 @@ name|bp
 operator|->
 name|b_dev
 operator|=
-name|nvp
+name|hp
+operator|->
+name|h_devvp
 operator|->
 name|v_rdev
 expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
-name|nvp
+name|hp
+operator|->
+name|h_devvp
 argument_list|,
 name|bp
 argument_list|)
