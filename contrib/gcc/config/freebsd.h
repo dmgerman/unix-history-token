@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.8 1999/04/22 17:45:01 obrien Exp $ */
+comment|/* $Id: freebsd.h,v 1.9 1999/04/27 15:43:56 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|NO_IMPLICIT_EXTERN_C
 end_define
 
 begin_comment
-comment|/* This defines which switch letters take arguments.  On svr4, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker).  We have a slightly different mix.  We    have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
+comment|/* This defines which switch letters take arguments.  On FreeBSD, most of    the normal cases (defined in gcc.c) apply, and we also have -h* and    -z* options (for the linker) (comming from svr4).    We also have -R (alias --rpath), no -z, --soname (-h), --assert etc. */
 end_comment
 
 begin_define
@@ -39,7 +39,7 @@ parameter_list|(
 name|CHAR
 parameter_list|)
 define|\
-value|(   (CHAR) == 'D' \    || (CHAR) == 'U' \    || (CHAR) == 'o' \    || (CHAR) == 'e' \    || (CHAR) == 'T' \    || (CHAR) == 'u' \    || (CHAR) == 'I' \    || (CHAR) == 'm' \    || (CHAR) == 'x' \    || (CHAR) == 'L' \    || (CHAR) == 'A' \    || (CHAR) == 'V' \    || (CHAR) == 'B' \    || (CHAR) == 'b' \    || (CHAR) == 'h' \    || (CHAR) == 'z'
+value|(DEFAULT_SWITCH_TAKES_ARG (CHAR) \    || (CHAR) == 'h' \    || (CHAR) == 'z'
 comment|/* ignored by ld */
 value|\    || (CHAR) == 'R')
 end_define
