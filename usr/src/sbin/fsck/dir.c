@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.4 (Berkeley) %G%"
+literal|"@(#)dir.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,14 @@ modifier|*
 name|lfname
 init|=
 literal|"lost+found"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfmode
+init|=
+literal|01777
 decl_stmt|;
 end_decl_stmt
 
@@ -1994,6 +2002,8 @@ argument_list|(
 name|ROOTINO
 argument_list|,
 literal|0
+argument_list|,
+name|lfmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -2126,6 +2136,8 @@ argument_list|(
 name|ROOTINO
 argument_list|,
 literal|0
+argument_list|,
+name|lfmode
 argument_list|)
 operator|)
 operator|==
@@ -3110,6 +3122,8 @@ argument_list|(
 argument|parent
 argument_list|,
 argument|request
+argument_list|,
+argument|mode
 argument_list|)
 end_macro
 
@@ -3118,6 +3132,12 @@ name|ino_t
 name|parent
 decl_stmt|,
 name|request
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mode
 decl_stmt|;
 end_decl_stmt
 
@@ -3147,7 +3167,7 @@ name|request
 argument_list|,
 name|IFDIR
 operator||
-literal|0755
+name|mode
 argument_list|)
 expr_stmt|;
 name|dirhead

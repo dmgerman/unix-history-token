@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.3 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,6 +159,8 @@ argument_list|(
 name|ROOTINO
 argument_list|,
 name|ROOTINO
+argument_list|,
+literal|0755
 argument_list|)
 operator|!=
 name|ROOTINO
@@ -205,6 +207,8 @@ argument_list|(
 name|ROOTINO
 argument_list|,
 name|ROOTINO
+argument_list|,
+literal|0755
 argument_list|)
 operator|!=
 name|ROOTINO
@@ -285,6 +289,8 @@ argument_list|(
 name|ROOTINO
 argument_list|,
 name|ROOTINO
+argument_list|,
+literal|0755
 argument_list|)
 operator|!=
 name|ROOTINO

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -316,6 +322,65 @@ literal|'d'
 case|:
 name|debug
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+name|errexit
+argument_list|(
+literal|"-m flag requires a mode\n"
+argument_list|)
+expr_stmt|;
+name|sscanf
+argument_list|(
+operator|*
+operator|++
+name|argv
+argument_list|,
+literal|"%o"
+argument_list|,
+operator|&
+name|lfmode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lfmode
+operator|&
+operator|~
+literal|07777
+condition|)
+name|errexit
+argument_list|(
+literal|"bad mode to -m: %o\n"
+argument_list|,
+name|lfmode
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"** lost+found creation mode %o\n"
+argument_list|,
+name|lfmode
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
