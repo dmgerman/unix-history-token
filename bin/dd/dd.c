@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -268,8 +274,6 @@ end_comment
 begin_decl_stmt
 name|u_int
 name|ddflags
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
