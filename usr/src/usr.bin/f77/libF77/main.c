@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.10	%G%"
+literal|"@(#)main.c	2.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +201,7 @@ block|,
 comment|/* SIGILL  */
 else|#
 directive|else
+else|UCBVAX
 block|{
 literal|"Illegal instruction"
 block|,
@@ -210,6 +211,7 @@ block|,
 comment|/* SIGILL  */
 endif|#
 directive|endif
+endif|UCBVAX
 block|{
 literal|"Trace Trap"
 block|,
@@ -243,6 +245,7 @@ block|,
 comment|/* SIGFPE  */
 else|#
 directive|else
+else|UCBVAX
 block|{
 literal|"Floating Point Exception"
 block|,
@@ -252,6 +255,7 @@ block|,
 comment|/* SIGFPE  */
 endif|#
 directive|endif
+endif|UCBVAX
 block|{
 literal|0
 block|,
@@ -419,6 +423,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
+endif|UCBVAX
 end_endif
 
 begin_macro
@@ -630,6 +635,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+else|UCBVAX
 name|fprintf
 argument_list|(
 name|units
@@ -648,6 +654,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|UCBVAX
 block|}
 name|f_exit
 argument_list|()
@@ -663,9 +670,9 @@ name|core
 condition|)
 block|{
 comment|/* now get a core */
-ifdef|#
-directive|ifdef
-name|VAX
+if|#
+directive|if
+name|vax
 name|signal
 argument_list|(
 name|SIGILL
@@ -675,6 +682,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+else|vax
 name|signal
 argument_list|(
 name|SIGIOT
@@ -684,6 +692,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|vax
 name|abort
 argument_list|()
 expr_stmt|;
