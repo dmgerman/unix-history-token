@@ -3461,6 +3461,33 @@ name|struct
 name|bcache_devdata
 name|bcd
 decl_stmt|;
+name|struct
+name|open_disk
+modifier|*
+name|od
+init|=
+operator|(
+expr|struct
+name|open_disk
+operator|*
+operator|)
+operator|(
+operator|(
+operator|(
+expr|struct
+name|i386_devdesc
+operator|*
+operator|)
+name|devdata
+operator|)
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|data
+operator|)
+decl_stmt|;
 name|bcd
 operator|.
 name|dv_strategy
@@ -3480,9 +3507,17 @@ argument_list|(
 operator|&
 name|bcd
 argument_list|,
+name|od
+operator|->
+name|od_unit
+argument_list|,
 name|rw
 argument_list|,
 name|dblk
+operator|+
+name|od
+operator|->
+name|od_boff
 argument_list|,
 name|size
 argument_list|,
@@ -3613,13 +3648,9 @@ name|BIOSDISK_SECSIZE
 expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"read %d from %d+%d to %p"
+literal|"read %d from %d to %p"
 argument_list|,
 name|blks
-argument_list|,
-name|od
-operator|->
-name|od_boff
 argument_list|,
 name|dblk
 argument_list|,
@@ -3644,10 +3675,6 @@ argument_list|(
 name|od
 argument_list|,
 name|dblk
-operator|+
-name|od
-operator|->
-name|od_boff
 argument_list|,
 name|blks
 argument_list|,
@@ -3671,13 +3698,9 @@ directive|ifdef
 name|BD_SUPPORT_FRAGS
 name|DEBUG
 argument_list|(
-literal|"bd_strategy: frag read %d from %d+%d+d to %p"
+literal|"bd_strategy: frag read %d from %d+%d to %p"
 argument_list|,
 name|fragsize
-argument_list|,
-name|od
-operator|->
-name|od_boff
 argument_list|,
 name|dblk
 argument_list|,
@@ -3701,10 +3724,6 @@ argument_list|(
 name|od
 argument_list|,
 name|dblk
-operator|+
-name|od
-operator|->
-name|od_boff
 operator|+
 name|blks
 argument_list|,
