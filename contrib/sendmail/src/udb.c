@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.153.4.5 2003/04/03 16:31:00 ca Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.160 2003/04/03 16:32:46 ca Exp $ (with USERDB)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.153.4.5 2003/04/03 16:31:00 ca Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.160 2003/04/03 16:32:46 ca Exp $ (without USERDB)"
 argument_list|)
 end_macro
 
@@ -1459,6 +1459,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false
@@ -2247,6 +2250,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false
@@ -2526,6 +2532,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false

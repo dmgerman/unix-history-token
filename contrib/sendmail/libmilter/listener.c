@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.85.2.17 2003/10/21 17:22:57 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.109 2004/02/04 22:55:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -119,7 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  MI_OPENSOCKET -- create the socket where this filter and the MTA will meet ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		dbg -- debug level **		rmsocket -- if true, try to unlink() the socket first **		            (UNIX domain sockets only) **		smfi -- filter structure to use ** **	Return value: **		MI_SUCCESS/MI_FAILURE */
+comment|/* **  MI_OPENSOCKET -- create the socket where this filter and the MTA will meet ** **	Parameters: **		conn -- connection description **		backlog -- listen backlog **		dbg -- debug level **		rmsocket -- if true, try to unlink() the socket first **			(UNIX domain sockets only) **		smfi -- filter structure to use ** **	Return value: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function
@@ -268,7 +268,7 @@ block|}
 if|#
 directive|if
 operator|!
-name|_FFR_USE_POLL
+name|SM_CONF_POLL
 if|if
 condition|(
 operator|!
@@ -308,7 +308,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* !_FFR_USE_POLL */
+comment|/* !SM_CONF_POLL */
 return|return
 name|MI_SUCCESS
 return|;
@@ -2144,17 +2144,11 @@ name|sockpath
 operator|!=
 name|NULL
 operator|&&
-if|#
-directive|if
-name|_FFR_MILTER_ROOT_UNSAFE
 name|geteuid
 argument_list|()
 operator|!=
 literal|0
 operator|&&
-endif|#
-directive|endif
-comment|/* _FFR_MILTER_ROOT_UNSAFE */
 name|fstat
 argument_list|(
 name|listenfd
@@ -2317,7 +2311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		rmsocket -- if true, try to unlink() the socket first **			(UNIX domain sockets only) **		smfi -- filter structure to use **		timeout -- timeout for reads/writes **		backlog -- listen queue backlog size ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
+comment|/* **  MI_LISTENER -- Generic listener harness ** **	Open up listen port **	Wait for connections ** **	Parameters: **		conn -- connection description **		dbg -- debug level **		smfi -- filter structure to use **		timeout -- timeout for reads/writes **		backlog -- listen queue backlog size ** **	Returns: **		MI_SUCCESS -- Exited normally **			   (session finished or we were told to exit) **		MI_FAILURE -- Network initialization failed. */
 end_comment
 
 begin_if
@@ -2405,6 +2399,17 @@ name|connfd
 init|=
 name|INVALID_SOCKET
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_DUP_FD
+name|socket_t
+name|dupfd
+init|=
+name|INVALID_SOCKET
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DUP_FD */
 name|int
 name|sockopt
 init|=
@@ -2844,7 +2849,7 @@ block|}
 if|#
 directive|if
 operator|!
-name|_FFR_USE_POLL
+name|SM_CONF_POLL
 comment|/* check if acceptable for select() */
 if|if
 condition|(
@@ -2879,7 +2884,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !_FFR_USE_POLL */
+comment|/* !SM_CONF_POLL */
 if|if
 condition|(
 operator|!
@@ -2894,6 +2899,86 @@ condition|(
 name|save_errno
 operator|==
 name|EINTR
+ifdef|#
+directive|ifdef
+name|EAGAIN
+operator|||
+name|save_errno
+operator|==
+name|EAGAIN
+endif|#
+directive|endif
+comment|/* EAGAIN */
+ifdef|#
+directive|ifdef
+name|ECONNABORTED
+operator|||
+name|save_errno
+operator|==
+name|ECONNABORTED
+endif|#
+directive|endif
+comment|/* ECONNABORTED */
+ifdef|#
+directive|ifdef
+name|EMFILE
+operator|||
+name|save_errno
+operator|==
+name|EMFILE
+endif|#
+directive|endif
+comment|/* EMFILE */
+ifdef|#
+directive|ifdef
+name|ENFILE
+operator|||
+name|save_errno
+operator|==
+name|ENFILE
+endif|#
+directive|endif
+comment|/* ENFILE */
+ifdef|#
+directive|ifdef
+name|ENOBUFS
+operator|||
+name|save_errno
+operator|==
+name|ENOBUFS
+endif|#
+directive|endif
+comment|/* ENOBUFS */
+ifdef|#
+directive|ifdef
+name|ENOMEM
+operator|||
+name|save_errno
+operator|==
+name|ENOMEM
+endif|#
+directive|endif
+comment|/* ENOMEM */
+ifdef|#
+directive|ifdef
+name|ENOSR
+operator|||
+name|save_errno
+operator|==
+name|ENOSR
+endif|#
+directive|endif
+comment|/* ENOSR */
+ifdef|#
+directive|ifdef
+name|EWOULDBLOCK
+operator|||
+name|save_errno
+operator|==
+name|EWOULDBLOCK
+endif|#
+directive|endif
+comment|/* EWOULDBLOCK */
 condition|)
 continue|continue;
 name|acnt
@@ -2948,6 +3033,57 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset error counter for accept() */
+if|#
+directive|if
+name|_FFR_DUP_FD
+name|dupfd
+operator|=
+name|fcntl
+argument_list|(
+name|connfd
+argument_list|,
+name|F_DUPFD
+argument_list|,
+literal|256
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ValidSocket
+argument_list|(
+name|dupfd
+argument_list|)
+if|#
+directive|if
+operator|!
+name|SM_CONF_POLL
+operator|&&
+name|SM_FD_OK_SELECT
+argument_list|(
+name|dupfd
+argument_list|)
+endif|#
+directive|endif
+comment|/* !SM_CONF_POLL */
+condition|)
+block|{
+name|close
+argument_list|(
+name|connfd
+argument_list|)
+expr_stmt|;
+name|connfd
+operator|=
+name|dupfd
+expr_stmt|;
+name|dupfd
+operator|=
+name|INVALID_SOCKET
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_DUP_FD */
 if|if
 condition|(
 name|setsockopt

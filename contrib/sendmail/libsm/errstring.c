@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: errstring.c,v 1.12.2.4 2003/06/24 17:16:09 ca Exp $"
+literal|"@(#)$Id: errstring.c,v 1.19 2003/12/10 03:53:05 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -389,11 +389,188 @@ case|:
 return|return
 literal|"Berkeley DB version mismatch between include file and library"
 return|;
-block|}
-comment|/* 	**  LDAP error messages. 	*/
 if|#
 directive|if
 name|LDAPMAP
+comment|/* 	**  LDAP URL error messages. 	*/
+comment|/* OpenLDAP errors */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_MEM
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_MEM
+case|:
+return|return
+literal|"LDAP URL can't allocate memory space"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_MEM */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_PARAM
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_PARAM
+case|:
+return|return
+literal|"LDAP URL parameter is bad"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_PARAM */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADSCHEME
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADSCHEME
+case|:
+return|return
+literal|"LDAP URL doesn't begin with \"ldap[si]://\""
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADSCHEME */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADENCLOSURE
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADENCLOSURE
+case|:
+return|return
+literal|"LDAP URL is missing trailing \">\""
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADENCLOSURE */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADURL
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADURL
+case|:
+return|return
+literal|"LDAP URL is bad"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADURL */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADHOST
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADHOST
+case|:
+return|return
+literal|"LDAP URL host port is bad"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADHOST */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADATTRS
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADATTRS
+case|:
+return|return
+literal|"LDAP URL bad (or missing) attributes"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADATTRS */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADSCOPE
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADSCOPE
+case|:
+return|return
+literal|"LDAP URL scope string is invalid (or missing)"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADSCOPE */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADFILTER
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADFILTER
+case|:
+return|return
+literal|"LDAP URL bad or missing filter"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADFILTER */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_BADEXTS
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_BADEXTS
+case|:
+return|return
+literal|"LDAP URL bad or missing extensions"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_BADEXTS */
+comment|/* Sun LDAP errors */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_NOTLDAP
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_NOTLDAP
+case|:
+return|return
+literal|"LDAP URL doesn't begin with \"ldap://\""
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_NOTLDAP */
+ifdef|#
+directive|ifdef
+name|LDAP_URL_ERR_NODN
+case|case
+name|E_LDAPURLBASE
+operator|+
+name|LDAP_URL_ERR_NODN
+case|:
+return|return
+literal|"LDAP URL has no DN (required)"
+return|;
+endif|#
+directive|endif
+comment|/* LDAP_URL_ERR_NODN */
+endif|#
+directive|endif
+comment|/* LDAPMAP */
+block|}
+if|#
+directive|if
+name|LDAPMAP
+comment|/* 	**  LDAP error messages. 	*/
 if|if
 condition|(
 name|errnum

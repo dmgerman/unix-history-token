@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.437.2.10 2003/05/05 23:51:47 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.451 2004/03/01 21:50:36 ca Exp $"
 argument_list|)
 end_macro
 
@@ -360,6 +360,9 @@ argument_list|)
 expr_stmt|;
 name|mci_dump
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|mci
 argument_list|,
 name|false
@@ -536,6 +539,8 @@ argument_list|,
 name|esmtp_check
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -786,6 +791,8 @@ argument_list|,
 name|helo_options
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -955,10 +962,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
+comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	**  If we're running as MSP, "propagate" -v flag if possible. 	*/
 if|if
 condition|(
-name|false
+operator|(
+name|UseMSP
+operator|&&
+name|Verbose
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_VERB
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+operator|)
 if|#
 directive|if
 operator|!
@@ -975,28 +995,6 @@ argument_list|)
 endif|#
 directive|endif
 comment|/* !_FFR_DEPRECATE_MAILER_FLAG_I */
-if|#
-directive|if
-name|_FFR_MSP_VERBOSE
-comment|/* If we're running as MSP, "propagate" -v flag if possible. */
-operator|||
-operator|(
-name|UseMSP
-operator|&&
-name|Verbose
-operator|&&
-name|bitset
-argument_list|(
-name|MCIF_VERB
-argument_list|,
-name|mci
-operator|->
-name|mci_flags
-argument_list|)
-operator|)
-endif|#
-directive|endif
-comment|/* _FFR_MSP_VERBOSE */
 condition|)
 block|{
 comment|/* tell it to be verbose */
@@ -1027,6 +1025,8 @@ name|NULL
 argument_list|,
 operator|&
 name|enhsc
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7201,9 +7201,6 @@ condition|(
 name|out
 operator|==
 name|NULL
-if|#
-directive|if
-name|_FFR_SASL_INITIAL_WORKAROUND
 comment|/* login and digest-md5 up to 1.5.28 set out="" */
 operator|||
 operator|(
@@ -7231,9 +7228,6 @@ operator|==
 literal|0
 operator|)
 operator|)
-endif|#
-directive|endif
-comment|/* _FFR_SASL_INITIAL_WORKAROUND */
 condition|)
 block|{
 comment|/* no initial response */
@@ -7362,6 +7356,8 @@ argument_list|,
 name|getsasldata
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_AUTH
 argument_list|)
 expr_stmt|;
 for|for
@@ -7528,6 +7524,8 @@ argument_list|,
 name|getsasldata
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_AUTH
 argument_list|)
 expr_stmt|;
 return|return
@@ -7628,6 +7626,8 @@ argument_list|,
 name|getsasldata
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_AUTH
 argument_list|)
 expr_stmt|;
 block|}
@@ -9149,6 +9149,8 @@ name|NULL
 argument_list|,
 operator|&
 name|enhsc
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -10143,6 +10145,8 @@ name|NULL
 argument_list|,
 operator|&
 name|enhsc
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 name|save_errno
@@ -10765,6 +10769,8 @@ name|NULL
 argument_list|,
 operator|&
 name|enhsc
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11423,6 +11429,8 @@ name|NULL
 argument_list|,
 operator|&
 name|enhsc
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11817,6 +11825,8 @@ name|NULL
 argument_list|,
 operator|&
 name|enhsc
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12146,6 +12156,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 name|SuprErrs
@@ -12367,6 +12379,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12481,6 +12495,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|XS_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -12508,7 +12524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. **		pfunc -- processing function called on each line of response. **			If null, no special processing is done. **		enhstat -- optional, returns enhanced error code string (if set) ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
+comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. **		pfunc -- processing function called on each line of response. **			If null, no special processing is done. **		enhstat -- optional, returns enhanced error code string (if set) **		rtype -- type of SmtpMsgBuffer: does it contains secret data? ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
 end_comment
 
 begin_decl_stmt
@@ -12526,6 +12542,8 @@ argument_list|,
 name|pfunc
 argument_list|,
 name|enhstat
+argument_list|,
+name|rtype
 argument_list|)
 name|MAILER
 modifier|*
@@ -12568,6 +12586,12 @@ name|char
 modifier|*
 modifier|*
 name|enhstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rtype
 decl_stmt|;
 end_decl_stmt
 
@@ -13137,6 +13161,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -13150,7 +13175,25 @@ name|SM_TIME_DEFAULT
 argument_list|,
 literal|">>> %s\n"
 argument_list|,
+operator|(
+name|rtype
+operator|==
+name|XS_STARTTLS
+operator|)
+condition|?
+literal|"STARTTLS dialogue"
+else|:
+operator|(
+operator|(
+name|rtype
+operator|==
+name|XS_AUTH
+operator|)
+condition|?
+literal|"AUTH dialogue"
+else|:
 name|SmtpMsgBuffer
+operator|)
 argument_list|)
 expr_stmt|;
 name|SmtpMsgBuffer
@@ -13160,6 +13203,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 comment|/* now log the message as from the other side */
 operator|(
 name|void

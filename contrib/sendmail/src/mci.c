@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.205.2.4 2003/03/31 17:35:27 ca Exp $"
+literal|"@(#)$Id: mci.c,v 8.211 2003/03/31 17:35:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1672,7 +1672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MCI_DUMP -- dump the contents of an MCI structure. ** **	Parameters: **		mci -- the MCI structure to dump. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  MCI_DUMP -- dump the contents of an MCI structure. ** **	Parameters: **		fp -- output file pointer **		mci -- the MCI structure to dump. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_struct
@@ -1839,10 +1839,16 @@ begin_function
 name|void
 name|mci_dump
 parameter_list|(
+name|fp
+parameter_list|,
 name|mci
 parameter_list|,
 name|logit
 parameter_list|)
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 name|MCI
 modifier|*
@@ -2258,7 +2264,7 @@ name|void
 operator|)
 name|sm_io_fprintf
 argument_list|(
-name|smioout
+name|fp
 argument_list|,
 name|SM_TIME_DEFAULT
 argument_list|,
@@ -2271,15 +2277,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  MCI_DUMP_ALL -- print the entire MCI cache ** **	Parameters: **		logit -- if set, log the result instead of printing **			to stdout. ** **	Returns: **		none. */
+comment|/* **  MCI_DUMP_ALL -- print the entire MCI cache ** **	Parameters: **		fp -- output file pointer **		logit -- if set, log the result instead of printing **			to stdout. ** **	Returns: **		none. */
 end_comment
 
 begin_function
 name|void
 name|mci_dump_all
 parameter_list|(
+name|fp
+parameter_list|,
 name|logit
 parameter_list|)
+name|SM_FILE_T
+modifier|*
+name|fp
+decl_stmt|;
 name|bool
 name|logit
 decl_stmt|;
@@ -2310,6 +2322,8 @@ operator|++
 control|)
 name|mci_dump
 argument_list|(
+name|fp
+argument_list|,
 name|MciCache
 index|[
 name|i
@@ -3384,6 +3398,9 @@ argument_list|)
 condition|)
 name|mci_dump
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|mci
 argument_list|,
 name|false

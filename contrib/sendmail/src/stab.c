@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stab.c,v 8.86.4.1 2003/03/31 17:44:24 ca Exp $"
+literal|"@(#)$Id: stab.c,v 8.88 2003/05/21 15:36:30 ca Exp $"
 argument_list|)
 end_macro
 
@@ -541,6 +541,23 @@ operator|->
 name|s_quegrp
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|SOCKETMAP
+case|case
+name|ST_SOCKETMAP
+case|:
+name|len
+operator|=
+sizeof|sizeof
+name|s
+operator|->
+name|s_socketmap
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* SOCKETMAP */
 default|default:
 comment|/* 		**  Each mailer has its own MCI stab entry: 		** 		**  s = stab(host, ST_MCI + m->m_mno, ST_ENTER); 		** 		**  Therefore, anything ST_MCI or larger is an s_mci. 		*/
 if|if

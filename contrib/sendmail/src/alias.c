@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: alias.c,v 8.214.2.2 2003/10/06 20:43:29 ca Exp $"
+literal|"@(#)$Id: alias.c,v 8.217 2003/07/28 17:47:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -460,6 +460,9 @@ argument_list|)
 expr_stmt|;
 name|printaddr
 argument_list|(
+name|sm_debug_file
+argument_list|()
+argument_list|,
 name|a
 argument_list|,
 name|false

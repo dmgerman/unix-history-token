@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.20 2004/01/07 00:52:16 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2004 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.116 2004/07/26 18:08:35 ca Exp $  */
 end_comment
 
 begin_comment
@@ -2889,6 +2889,28 @@ begin_comment
 comment|/* /dev/[u]random added in S9 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASCLOSEFROM
+value|1
+end_define
+
+begin_comment
+comment|/* closefrom(3c) added in S9 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFDWALK
+value|1
+end_define
+
+begin_comment
+comment|/* fdwalk(3c) added in S9 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -3261,7 +3283,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has Posix setsid(2) call */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -3400,7 +3422,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has Posix setsid(2) call */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -4706,7 +4728,7 @@ comment|/* NeXT */
 end_comment
 
 begin_comment
-comment|/* **  Apple Darwin (aka Rhapsody) ** **      Contributed by Wilfredo Sanchez<wsanchez@mit.edu> */
+comment|/* **  Apple Darwin **      Contributed by Wilfredo Sanchez<wsanchez@mit.edu> */
 end_comment
 
 begin_if
@@ -4781,7 +4803,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has the setsid(2) */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -5344,7 +5366,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has the setsid(2) POSIX syscall */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -5723,7 +5745,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has the setsid(2) POSIX syscall */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -5947,7 +5969,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has the setsid(2) POSIX syscall */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -5980,7 +6002,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* fchown(2) */
+comment|/* has fchown(2) syscall */
 end_comment
 
 begin_define
@@ -6111,6 +6133,42 @@ begin_comment
 comment|/* ! LA_TYPE */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NetBSD_Version__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|200040000
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SFS_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATVFS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -6121,6 +6179,11 @@ end_define
 begin_comment
 comment|/* use<sys/mount.h> statfs() impl */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -6219,6 +6282,111 @@ end_endif
 begin_comment
 comment|/* defined(__NetBSD__)&& ((__NetBSD_Version__> 102070000) || (NetBSD1_2> 8) || defined(NetBSD1_4) || defined(NetBSD1_3)) */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NetBSD_Version__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|104170000
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSETUSERCONTEXT
+value|1
+end_define
+
+begin_comment
+comment|/* BSDI-style login classes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__NetBSD_Version__
+argument_list|)
+operator|&&
+name|__NetBSD_Version__
+operator|>=
+literal|200060000
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASCLOSEFROM
+value|1
+end_define
+
+begin_comment
+comment|/* closefrom(3) added in 2.0F */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USESYSCTL
+value|1
+end_define
+
+begin_comment
+comment|/* use sysctl(3) for getting ncpus */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -6639,6 +6807,34 @@ end_endif
 
 begin_comment
 comment|/* OpenBSD>= 200012 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|OpenBSD
+operator|>=
+literal|200405
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASCLOSEFROM
+value|1
+end_define
+
+begin_comment
+comment|/* closefrom(3) added in 3.5 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OpenBSD>= 200405 */
 end_comment
 
 begin_endif
@@ -9289,6 +9485,23 @@ begin_comment
 comment|/* LINUX_VERSION_CODE< 66399 */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|LINUX_VERSION_CODE
+operator|<
+name|KERNEL_VERSION
+argument_list|(
+literal|2
+operator|,
+literal|4
+operator|,
+literal|0
+argument_list|)
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -9298,6 +9511,35 @@ end_define
 
 begin_comment
 comment|/* flock(2) fixed after 1.3.95 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* (LINUX_VERSION_CODE< KERNEL_VERSION(2,4,0)) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|0
+end_define
+
+begin_comment
+comment|/* flock(2) is broken (again) after 2.4.0 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* (LINUX_VERSION_CODE< KERNEL_VERSION(2,4,0)) */
 end_comment
 
 begin_endif
@@ -9428,12 +9670,6 @@ name|__GLIBC_MINOR__
 argument_list|)
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASSTRERROR
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -9443,15 +9679,6 @@ end_define
 
 begin_comment
 comment|/* has strerror(3) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HASSTRERROR */
 end_comment
 
 begin_endif
@@ -10708,14 +10935,27 @@ comment|/* _SEQUENT_ */
 end_comment
 
 begin_comment
-comment|/* **  Cray Unicos ** **	Ported by David L. Kensiski, Sterling Sofware<kensiski@nas.nasa.gov> */
+comment|/* **  Cray UNICOS, UNICOS/mk, and UNICOS/mp ** **    UNICOS: **	Ported by David L. Kensiski, Sterling Sofware<kensiski@nas.nasa.gov> **	Update Brian Ginsbach<ginsbach@cray.com> **    UNICOS/mk (Cray T3E): **	Contributed by Manu Mahonen<mailadm@csc.fi> **	of Center for Scientific Computing. **	Update Brian Ginsbach<ginsbach@cray.com> **    UNICOS/mp: **	From Aaron Davis<awd@cray.com>& Brian Ginsbach<ginsbach@cray.com> */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_CRAY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|UNICOS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_UNICOSMP
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -10731,26 +10971,96 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYS5SIGNALS
+name|HASFCHMOD
 value|1
 end_define
 
 begin_comment
-comment|/* SysV signal semantics -- reset on each sig */
+comment|/* has fchmod(2) syscall */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXPATHLEN
-value|PATHSIZE
+name|HASFCHOWN
+value|1
 end_define
+
+begin_comment
+comment|/* has fchown(2) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|LA_TYPE
-value|LA_ZERO
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* has usable seteuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* has getdtablesize(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTRERROR
+value|1
+end_define
+
+begin_comment
+comment|/* has strerror(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
 end_define
 
 begin_define
@@ -10775,6 +11085,151 @@ begin_comment
 comment|/* alternate field name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SAFENFSPATHCONF
+value|1
+end_define
+
+begin_comment
+comment|/* pathconf(2) pessimizes on NFS filesystems */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNICOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_MAILDIR
+value|"/usr/spool/mail"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_IPOPT_DST
+parameter_list|(
+name|dst
+parameter_list|)
+value|*(struct in_addr *)&(dst)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATHSIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! MAXPATHLEN */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNICOSMK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unicosmk.ar"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unicos"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* UNICOSMK */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! _PATH_UNIX */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VENDOR_CF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! _PATH_VENDOR_CF */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -10782,6 +11237,117 @@ end_endif
 
 begin_comment
 comment|/* UNICOS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_UNICOSMP
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SC_NPROC_ONLN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_SC_NPROCESSORS_ONLN
+argument_list|)
+end_if
+
+begin_comment
+comment|/* _SC_NPROC_ONLN is 'mpadmin -u', total # of unrestricted processors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SC_NPROCESSORS_ONLN
+value|_SC_NPROC_ONLN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* if defined(_SC_NPROC_ONLN)&& !defined(_SC_NPROCESSORS_ONLN) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* has setrlimit(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_IRIX6
+end_define
+
+begin_comment
+comment|/* figure out at run time */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARGV_T
+value|char *const *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _UNICOSMP */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _CRAY */
 end_comment
 
 begin_comment
@@ -11506,6 +12072,10 @@ name|HASSETSID
 value|1
 end_define
 
+begin_comment
+comment|/* has POSIX setsid(2) call */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -11791,6 +12361,10 @@ directive|define
 name|HASSETSID
 value|1
 end_define
+
+begin_comment
+comment|/* has POSIX setsid(2) call */
+end_comment
 
 begin_define
 define|#
@@ -13060,7 +13634,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has Posix setsid(2) call */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -13587,7 +14161,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has Posix setsid(2) call */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -14237,68 +14811,6 @@ comment|/* sinix */
 end_comment
 
 begin_comment
-comment|/* **  CRAY T3E ** **	Contributed by Manu Mahonen<mailadm@csc.fi> **	of Center for Scientific Computing. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_CRAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|GET_IPOPT_DST
-parameter_list|(
-name|dst
-parameter_list|)
-value|*(struct in_addr *)&(dst)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PATH_MAILDIR
-value|"/usr/spool/mail"
-end_define
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAXPATHLEN
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXPATHLEN
-value|PATHSIZE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(MAXPATHLEN) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _CRAY */
-end_comment
-
-begin_comment
 comment|/* **  Motorola 922, MC88110, UNIX SYSTEM V/88 Release 4.0 Version 4.3 ** **	Contributed by Sergey Rusanov<rsm@utfoms.udmnet.ru> */
 end_comment
 
@@ -14328,6 +14840,10 @@ directive|define
 name|HASSETSID
 value|1
 end_define
+
+begin_comment
+comment|/* has POSIX setsid(2) call */
+end_comment
 
 begin_define
 define|#
@@ -14483,6 +14999,18 @@ name|sys_nerr
 value|__sys_nerr
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/mkdev.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|major
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -14493,6 +15021,21 @@ parameter_list|)
 value|((int)(((dev)>> 8)& 0xff))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! major */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|minor
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -14502,6 +15045,15 @@ name|dev
 parameter_list|)
 value|((int)((dev)& 0xff))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! minor */
+end_comment
 
 begin_endif
 endif|#
@@ -15215,7 +15767,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has Posix setsid(2) call */
+comment|/* has POSIX setsid(2) call */
 end_comment
 
 begin_define
@@ -15226,7 +15778,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has Posix waitpid(2) call */
+comment|/* has POSIX waitpid(2) call */
 end_comment
 
 begin_if
@@ -16453,7 +17005,7 @@ begin_define
 define|#
 directive|define
 name|EX_NOTSTICKY
-value|-5
+value|(-5)
 end_define
 
 begin_comment

@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.130.2.3 2004/01/08 21:42:56 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.136 2004/03/22 18:21:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -481,6 +481,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MimeTokenTab
+argument_list|,
+name|false
 argument_list|)
 operator|)
 operator|==
@@ -591,6 +593,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MimeTokenTab
+argument_list|,
+name|false
 argument_list|)
 operator|)
 operator|!=
@@ -3499,14 +3503,19 @@ return|return
 name|SM_IO_EOF
 return|;
 block|}
-name|atbol
-operator|=
-name|c
-operator|==
-literal|'\n'
-expr_stmt|;
 if|if
 condition|(
+name|bp
+operator|<
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|2
+index|]
+operator|&&
 name|c
 operator|!=
 name|SM_IO_EOF
@@ -3518,6 +3527,12 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+name|atbol
+operator|=
+name|c
+operator|==
+literal|'\n'
+expr_stmt|;
 name|buflen
 operator|=
 name|bp
@@ -4528,6 +4543,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MimeTokenTab
+argument_list|,
+name|false
 argument_list|)
 operator|)
 operator|==

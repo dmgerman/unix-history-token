@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: trace.c,v 8.37.4.1 2002/12/05 17:28:05 ca Exp $"
+literal|"@(#)$Id: trace.c,v 8.38 2002/12/05 17:28:35 ca Exp $"
 argument_list|)
 end_macro
 

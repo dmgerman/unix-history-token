@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stats.c,v 8.55 2002/05/21 22:28:52 gshapiro Exp $"
+literal|"@(#)$Id: stats.c,v 8.56 2002/06/27 22:47:37 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -101,9 +101,6 @@ condition|(
 name|type
 condition|)
 block|{
-if|#
-directive|if
-name|_FFR_QUARANTINE
 case|case
 name|STATS_QUARANTINE
 case|:
@@ -132,9 +129,6 @@ index|]
 operator|++
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 case|case
 name|STATS_REJECT
 case|:
@@ -665,9 +659,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|stats
 operator|.
 name|stat_nq
@@ -682,9 +673,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 name|stats
 operator|.

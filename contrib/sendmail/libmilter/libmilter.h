@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 8.33.2.13 2003/10/20 21:51:50 msk Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.50 2003/12/11 18:14:34 ca Exp $"
 argument_list|)
 end_macro
 
@@ -261,7 +261,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|_FFR_USE_POLL
+name|SM_CONF_POLL
 end_if
 
 begin_include
@@ -432,7 +432,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* _FFR_USE_POLL */
+comment|/* SM_CONF_POLL */
 end_comment
 
 begin_include
@@ -562,7 +562,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_USE_POLL */
+comment|/* SM_CONF_POLL */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.22 2002/03/05 02:17:26 ca Exp $  */
+comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.27 2003/12/20 09:23:47 gshapiro Exp $  */
 end_comment
 
 begin_ifndef
@@ -103,12 +103,6 @@ directive|if
 name|LDAPMAP
 end_if
 
-begin_if
-if|#
-directive|if
-name|_FFR_LDAP_RECURSION
-end_if
-
 begin_comment
 comment|/* Attribute types */
 end_comment
@@ -180,15 +174,6 @@ name|SM_LDAP_USE_ALLATTR
 value|0x0004
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_LDAP_RECURSION */
-end_comment
-
 begin_struct
 struct|struct
 name|sm_ldap_struct
@@ -196,29 +181,18 @@ block|{
 comment|/* needed for ldap_open or ldap_init */
 name|char
 modifier|*
-name|ldap_target
+name|ldap_uri
+decl_stmt|;
+name|char
+modifier|*
+name|ldap_host
 decl_stmt|;
 name|int
 name|ldap_port
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_LDAP_URI
-name|bool
-name|ldap_uri
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_LDAP_URI */
-if|#
-directive|if
-name|_FFR_LDAP_SETVERSION
 name|int
 name|ldap_version
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_LDAP_SETVERSION */
 name|pid_t
 name|ldap_pid
 decl_stmt|;
@@ -272,9 +246,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_LDAP_RECURSION
 name|int
 name|ldap_attr_type
 index|[
@@ -292,9 +263,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_LDAP_RECURSION */
 name|bool
 name|ldap_attrsonly
 decl_stmt|;
@@ -328,12 +296,6 @@ name|SM_LDAP_STRUCT
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|_FFR_LDAP_RECURSION
-end_if
-
 begin_struct
 struct|struct
 name|sm_ldap_recurse_entry
@@ -344,6 +306,15 @@ name|lr_search
 decl_stmt|;
 name|int
 name|lr_type
+decl_stmt|;
+name|LDAPURLDesc
+modifier|*
+name|lr_ludp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|lr_attrs
 decl_stmt|;
 name|bool
 name|lr_done
@@ -387,15 +358,6 @@ name|sm_ldap_recurse_list
 name|SM_LDAP_RECURSE_LIST
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_LDAP_RECURSION */
-end_comment
 
 begin_comment
 comment|/* functions */
@@ -449,12 +411,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|_FFR_LDAP_RECURSION
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -490,15 +446,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_LDAP_RECURSION */
-end_comment
 
 begin_decl_stmt
 specifier|extern

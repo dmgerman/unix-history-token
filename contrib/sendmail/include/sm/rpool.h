@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: rpool.h,v 1.15 2001/09/04 22:41:55 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2001, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: rpool.h,v 1.16 2003/09/05 23:07:49 ca Exp $  */
 end_comment
 
 begin_comment
@@ -391,6 +391,42 @@ begin_comment
 comment|/* SM_HEAP_CHECK */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|DO_NOT_USE_STRCPY
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sm_rpool_strdup_x
+name|__P
+argument_list|(
+operator|(
+name|SM_RPOOL_T
+operator|*
+name|rpool
+operator|,
+specifier|const
+name|char
+operator|*
+name|s
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* DO_NOT_USE_STRCPY */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -403,6 +439,15 @@ parameter_list|)
 define|\
 value|strcpy(sm_rpool_malloc_x(rpool, strlen(str) + 1), str)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DO_NOT_USE_STRCPY */
+end_comment
 
 begin_decl_stmt
 specifier|extern

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: config.c,v 1.27.2.1 2003/03/06 02:16:24 ca Exp $"
+literal|"@(#)$Id: config.c,v 1.30 2003/12/10 03:19:07 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -602,6 +602,14 @@ directive|endif
 comment|/* SM_CONF_GETOPT */
 if|#
 directive|if
+name|SM_CONF_LDAP_INITIALIZE
+literal|"SM_CONF_LDAP_INITIALIZE"
+block|,
+endif|#
+directive|endif
+comment|/* SM_CONF_LDAP_INITIALIZE */
+if|#
+directive|if
 name|SM_CONF_LDAP_MEMFREE
 literal|"SM_CONF_LDAP_MEMFREE"
 block|,
@@ -742,6 +750,14 @@ block|,
 endif|#
 directive|endif
 comment|/* SM_CONF_UID_GID */
+if|#
+directive|if
+name|DO_NOT_USE_STRCPY
+literal|"DO_NOT_USE_STRCPY"
+block|,
+endif|#
+directive|endif
+comment|/* DO_NOT_USE_STRCPY */
 if|#
 directive|if
 name|SM_HEAP_CHECK
