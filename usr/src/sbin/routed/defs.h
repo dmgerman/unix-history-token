@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.1	82/05/22	*/
+comment|/*	defs.h	4.2	82/05/25	*/
 end_comment
 
 begin_comment
 comment|/*  * Internal data structure definitions for  * user routing process.  Based on Xerox NS  * protocol specs with mods relevant to more  * general addressing scheme.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
 
 begin_comment
 comment|/*  * Internal routing table structure.  * Differs a bit from kernel tables.  */
@@ -13,7 +19,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|rt_hash
+name|rthash
 block|{
 name|struct
 name|rt_entry
@@ -43,45 +49,150 @@ name|rt_entry
 modifier|*
 name|rt_back
 decl_stmt|;
+union|union
+block|{
+name|struct
+name|rtentry
+name|rtu_rt
+decl_stmt|;
+struct|struct
+block|{
 name|u_long
-name|rt_hash
+name|rtu_hash
 decl_stmt|;
-comment|/* for net or for host */
 name|struct
 name|sockaddr
-name|rt_dst
+name|rtu_dst
 decl_stmt|;
-comment|/* match value */
 name|struct
 name|sockaddr
-name|rt_gateway
+name|rtu_gateway
 decl_stmt|;
-comment|/* who to forward to */
 name|short
-name|rt_flags
+name|rtu_flags
 decl_stmt|;
-comment|/* see below */
 name|short
-name|rt_retry
+name|rtu_retry
 decl_stmt|;
-comment|/* # ioctl retries */
 name|int
-name|rt_timer
+name|rtu_timer
 decl_stmt|;
-comment|/* for invalidation */
 name|int
-name|rt_metric
+name|rtu_metric
 decl_stmt|;
-comment|/* hop count of route */
 name|struct
 name|ifnet
 modifier|*
-name|rt_ifp
+name|rtu_ifp
 decl_stmt|;
-comment|/* corresponding interface */
+block|}
+name|rtu_entry
+struct|;
+block|}
+name|rt_rtu
+union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|rt_rt
+value|rt_rtu.rtu_rt
+end_define
+
+begin_comment
+comment|/* pass to ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_hash
+value|rt_rtu.rtu_entry.rtu_hash
+end_define
+
+begin_comment
+comment|/* for net or host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_dst
+value|rt_rtu.rtu_entry.rtu_dst
+end_define
+
+begin_comment
+comment|/* match value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_gateway
+value|rt_rtu.rtu_entry.rtu_gateway
+end_define
+
+begin_comment
+comment|/* who to forward to */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_flags
+value|rt_rtu.rtu_entry.rtu_flags
+end_define
+
+begin_comment
+comment|/* see below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_retry
+value|rt_rtu.rtu_entry.rtu_retry
+end_define
+
+begin_comment
+comment|/* retries of ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_timer
+value|rt_rtu.rtu_entry.rtu_timer
+end_define
+
+begin_comment
+comment|/* for invalidation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_metric
+value|rt_rtu.rtu_entry.rtu_metric
+end_define
+
+begin_comment
+comment|/* cost of route */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_ifp
+value|rt_rtu.rtu_entry.rtu_ifp
+end_define
+
+begin_comment
+comment|/* interface to take */
+end_comment
 
 begin_define
 define|#
@@ -140,7 +251,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|rt_hash
+name|rthash
 name|nethash
 index|[
 name|ROUTEHASHSIZ

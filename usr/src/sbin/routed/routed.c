@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.5 %G%"
+literal|"@(#)routed.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,16 +20,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
+begin_comment
+comment|/*  * Routing Table Management Daemon  */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -48,18 +46,6 @@ begin_include
 include|#
 directive|include
 file|<net/in.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
 end_include
 
 begin_include
@@ -292,6 +278,27 @@ name|packet
 index|[
 name|MAXPACKETSIZE
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|struct
+name|in_addr
+name|if_makeaddr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|if_ifwithaddr
+argument_list|()
+decl_stmt|,
+modifier|*
+name|if_ifwithnet
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -789,7 +796,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|rh
 decl_stmt|;
@@ -800,7 +807,7 @@ modifier|*
 name|rt
 decl_stmt|;
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|base
 init|=
@@ -971,7 +978,7 @@ operator|)
 operator|&
 name|rt
 operator|->
-name|rt_hash
+name|rt_rt
 argument_list|)
 operator|||
 operator|--
@@ -1014,7 +1021,7 @@ operator|)
 operator|&
 name|rt
 operator|->
-name|rt_hash
+name|rt_rt
 argument_list|)
 condition|)
 block|{
@@ -1139,8 +1146,16 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|ifnet
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Find the network interfaces attached to this machine.  * The info is used to:  *  * (1) initialize the routing tables, as done by the kernel.  * (2) ignore incoming packets we send.  * (3) figure out broadcast capability and addresses.  * (4) figure out if we're an internetwork gateway.  *  * We don't handle anything but Internet addresses.  */
+comment|/*  * Find the network interfaces attached to this machine.  * The info is used to:  *  * (1) initialize the routing tables, as done by the kernel.  * (2) ignore incoming packets we send.  * (3) figure out broadcast capability and addresses.  * (4) figure out if we're an internetwork gateway.  *  * We don't handle anything but Internet addresses.  *  * Note: this routine may be called periodically to  * scan for new interfaces.  In fact, the timer routine  * does so based on the flag lookforinterfaces.  The  * flag performnlist is set whenever something odd occurs  * while scanning the kernel; this is likely to occur  * if /vmunix isn't up to date (e.g. someone booted /ovmunix).  */
 end_comment
 
 begin_macro
@@ -1767,6 +1782,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Send "packet" to all neighbors.  */
+end_comment
+
 begin_macro
 name|sendall
 argument_list|()
@@ -1776,7 +1795,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|rh
 decl_stmt|;
@@ -1793,7 +1812,7 @@ modifier|*
 name|dst
 decl_stmt|;
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|base
 init|=
@@ -1958,7 +1977,7 @@ name|rt
 decl_stmt|;
 specifier|register
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|rh
 decl_stmt|;
@@ -1969,7 +1988,7 @@ modifier|*
 name|dst
 decl_stmt|;
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|base
 init|=
@@ -2150,7 +2169,7 @@ name|rip_nets
 decl_stmt|;
 specifier|register
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|rh
 decl_stmt|;
@@ -2161,7 +2180,7 @@ modifier|*
 name|rt
 decl_stmt|;
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|base
 init|=
@@ -2694,7 +2713,14 @@ name|printf
 argument_list|(
 literal|"input from %x\n"
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
 name|from
+operator|)
 operator|->
 name|sin_addr
 argument_list|)
@@ -2780,10 +2806,18 @@ name|printf
 argument_list|(
 literal|"dst %x hc %d..."
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
 name|n
 operator|->
 name|rip_dst
-operator|.
+operator|)
+operator|->
 name|sin_addr
 argument_list|,
 name|n
@@ -2850,10 +2884,18 @@ name|printf
 argument_list|(
 literal|"ours: gate %x hc %d timer %d\n"
 argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
 name|rt
 operator|->
 name|rt_gateway
-operator|.
+operator|)
+operator|->
 name|sin_addr
 argument_list|,
 name|rt
@@ -2935,6 +2977,86 @@ block|}
 block|}
 end_block
 
+begin_macro
+name|rtinit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|rthash
+modifier|*
+name|rh
+decl_stmt|;
+for|for
+control|(
+name|rh
+operator|=
+name|nethash
+init|;
+name|rh
+operator|<
+operator|&
+name|nethash
+index|[
+name|ROUTEHASHSIZ
+index|]
+condition|;
+name|rh
+operator|++
+control|)
+name|rh
+operator|->
+name|rt_forw
+operator|=
+name|rh
+operator|->
+name|rt_back
+operator|=
+operator|(
+expr|struct
+name|rt_entry
+operator|*
+operator|)
+name|rh
+expr_stmt|;
+for|for
+control|(
+name|rh
+operator|=
+name|hosthash
+init|;
+name|rh
+operator|<
+operator|&
+name|hosthash
+index|[
+name|ROUTEHASHSIZ
+index|]
+condition|;
+name|rh
+operator|++
+control|)
+name|rh
+operator|->
+name|rt_forw
+operator|=
+name|rh
+operator|->
+name|rt_back
+operator|=
+operator|(
+expr|struct
+name|rt_entry
+operator|*
+operator|)
+name|rh
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Lookup an entry to the appropriate dstination.  */
 end_comment
@@ -2961,7 +3083,7 @@ name|rt
 decl_stmt|;
 specifier|register
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|rh
 decl_stmt|;
@@ -3169,86 +3291,6 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|rtinit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|rt_hash
-modifier|*
-name|rh
-decl_stmt|;
-for|for
-control|(
-name|rh
-operator|=
-name|nethash
-init|;
-name|rh
-operator|<
-operator|&
-name|nethash
-index|[
-name|ROUTEHASHSIZ
-index|]
-condition|;
-name|rh
-operator|++
-control|)
-name|rh
-operator|->
-name|rt_forw
-operator|=
-name|rh
-operator|->
-name|rt_back
-operator|=
-operator|(
-expr|struct
-name|rt_entry
-operator|*
-operator|)
-name|rh
-expr_stmt|;
-for|for
-control|(
-name|rh
-operator|=
-name|hosthash
-init|;
-name|rh
-operator|<
-operator|&
-name|hosthash
-index|[
-name|ROUTEHASHSIZ
-index|]
-condition|;
-name|rh
-operator|++
-control|)
-name|rh
-operator|->
-name|rt_forw
-operator|=
-name|rh
-operator|->
-name|rt_back
-operator|=
-operator|(
-expr|struct
-name|rt_entry
-operator|*
-operator|)
-name|rh
-expr_stmt|;
-block|}
-end_block
-
 begin_comment
 comment|/*  * Add a new entry.  */
 end_comment
@@ -3294,7 +3336,7 @@ modifier|*
 name|rt
 decl_stmt|;
 name|struct
-name|rt_hash
+name|rthash
 modifier|*
 name|rh
 decl_stmt|;
@@ -3748,7 +3790,7 @@ operator|)
 operator|&
 name|rt
 operator|->
-name|rt_hash
+name|rt_rt
 argument_list|)
 operator|&&
 name|errno
@@ -4017,6 +4059,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Find the interface with address "addr".  */
+end_comment
+
 begin_function
 name|struct
 name|ifnet
@@ -4120,6 +4166,10 @@ directive|undef
 name|same
 block|}
 end_function
+
+begin_comment
+comment|/*  * Find the interface with network imbedded in  * the sockaddr "addr".  Must use per-af routine  * look for match.  */
+end_comment
 
 begin_function
 name|struct
@@ -4228,6 +4278,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Formulate an Internet address.  */
+end_comment
 
 begin_function
 name|struct
