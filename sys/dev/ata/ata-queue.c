@@ -1247,8 +1247,13 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|" LBA=%lld"
+literal|" LBA=%llu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|request
 operator|->
 name|u
