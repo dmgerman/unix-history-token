@@ -5443,6 +5443,11 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|PMAP_LOCK
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|pmap_pvo_enter
@@ -5508,6 +5513,11 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
+name|PMAP_UNLOCK
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
