@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.111 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.112 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,6 +594,27 @@ name|p
 operator|++
 operator|=
 name|MACROEXPAND
+expr_stmt|;
+comment|/* special handling for $=, $~, and $& */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'='
+operator|||
+operator|*
+name|p
+operator|==
+literal|'~'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'&'
+condition|)
+name|p
+operator|++
 expr_stmt|;
 comment|/* convert macro name to code */
 operator|*
