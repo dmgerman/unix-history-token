@@ -203,7 +203,7 @@ argument_list|)
 operator|*
 name|abs
 argument_list|(
-name|item_no
+name|cnt
 argument_list|)
 argument_list|)
 operator|)
