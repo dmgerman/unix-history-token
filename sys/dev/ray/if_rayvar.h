@@ -430,45 +430,6 @@ begin_comment
 comment|/* offsetof */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|RAY_NEED_CM_REMAPPING
-end_if
-
-begin_define
-define|#
-directive|define
-name|ATTR_READ_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|)
-define|\
-value|ray_attr_read_1((sc), (off))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATTR_WRITE_1
-parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|ray_attr_write_1((sc), (off), (val))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -496,15 +457,6 @@ parameter_list|)
 define|\
 value|bus_space_write_1((sc)->am_bst, (sc)->am_bsh, (off), (val))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RAY_NEED_CM_REMAPPING */
-end_comment
 
 begin_define
 define|#
@@ -1064,49 +1016,6 @@ end_endif
 
 begin_comment
 comment|/* RAY_RECERR */
-end_comment
-
-begin_comment
-comment|/*  * The driver assumes that the common memory is always mapped in,  * for the moment we ensure this with the following macro at the  * head of each function and by using functions to access attribute  * memory. Hysterical raisins led to the non-"reflexive" approach.  * Roll on NEWCARD and it can all die...  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|RAY_NEED_CM_REMAPPING
-end_if
-
-begin_define
-define|#
-directive|define
-name|RAY_MAP_CM
-parameter_list|(
-name|sc
-parameter_list|)
-value|ray_attr_mapcm(sc)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RAY_MAP_CM
-parameter_list|(
-name|sc
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RAY_NEED_CM_REMAPPING */
 end_comment
 
 end_unit
