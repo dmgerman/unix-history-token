@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -698,7 +698,12 @@ end_comment
 begin_function
 name|void
 name|timeoverrun
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|syslog
 argument_list|(
@@ -894,6 +899,9 @@ literal|"Amnesiac"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Limit running time to deal with broken or dead lines. 	 */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGXCPU
@@ -913,6 +921,9 @@ name|rlim_cur
 operator|=
 name|GETTY_TIMEOUT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setrlimit
 argument_list|(
 name|RLIMIT_CPU
@@ -1579,6 +1590,29 @@ comment|/*  			 * this is what login was doing anyway. 			 * soon we rewrite get
 name|set_ttydefaults
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|limit
+operator|.
+name|rlim_max
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+name|limit
+operator|.
+name|rlim_cur
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setrlimit
+argument_list|(
+name|RLIMIT_CPU
+argument_list|,
+operator|&
+name|limit
 argument_list|)
 expr_stmt|;
 name|execle
