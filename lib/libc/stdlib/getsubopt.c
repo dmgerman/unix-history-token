@@ -63,12 +63,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_comment
 comment|/*  * The SVID interface to getsubopt provides no way of figuring out which  * part of the suboptions list wasn't matched.  This makes error messages  * tricky...  The extern variable suboptarg is a pointer to the token  * which didn't match.  */
 end_comment
