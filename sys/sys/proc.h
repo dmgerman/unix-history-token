@@ -3385,15 +3385,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|procrunnable
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|remrunqueue
 parameter_list|(
