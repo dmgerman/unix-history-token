@@ -4626,7 +4626,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|__alpha__
-comment|/* 		 * The boot blocks require that the root partition is at the 		 * begining of the disk and cannot boot otherwise.  		 * Warn Alpha users if they are about to shoot themselves in 		 * the foot in this way. 		 * 		 * Since partitions may not start precisely at offset 0 we 		 * check for a "close to 0" instead. :-( 		 */
+comment|/* 		 * SRM requires that the root partition is at the 		 * begining of the disk and cannot boot otherwise.  		 * Warn Alpha users if they are about to shoot themselves in 		 * the foot in this way. 		 * 		 * Since partitions may not start precisely at offset 0 we 		 * check for a "close to 0" instead. :-( 		 */
 if|if
 condition|(
 operator|(
@@ -4646,10 +4646,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Your root partition (a) does not seem to be the first\n"
-literal|"partition. The Alpha can only boot from the first partition,\n"
-literal|"so it is unlikely that your current disk layout will\n"
-literal|"be bootable boot after installation.\n"
+literal|"Your root partition `a' does not seem to be the first\n"
+literal|"partition.  The Alpha's firmware can only boot from the\n"
+literal|"first partition.  So it is unlikely that your current\n"
+literal|"disk layout will be bootable boot after installation.\n"
 literal|"\n"
 literal|"Please allocate the root partition before allocating\n"
 literal|"any others.\n"
