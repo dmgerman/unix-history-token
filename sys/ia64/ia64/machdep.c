@@ -2047,8 +2047,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|md
+operator|==
+name|NULL
+operator|||
+name|mdcount
+operator|==
+literal|0
 condition|)
 block|{
 ifdef|#
