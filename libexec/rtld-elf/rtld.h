@@ -122,6 +122,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|Struct_Obj_Entry
 struct_decl|;
 end_struct_decl
@@ -220,6 +226,14 @@ modifier|*
 name|path
 decl_stmt|;
 comment|/* Pathname of underlying file (%) */
+name|dev_t
+name|dev
+decl_stmt|;
+comment|/* Object's filesystem's device */
+name|ino_t
+name|ino
+decl_stmt|;
+comment|/* Object's inode number */
 name|unsigned
 name|long
 name|mark
@@ -470,6 +484,11 @@ name|int
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|stat
 modifier|*
 parameter_list|)
 function_decl|;
