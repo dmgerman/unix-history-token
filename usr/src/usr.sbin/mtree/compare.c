@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.8 (Berkeley) %G%"
+literal|"@(#)compare.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,8 +191,8 @@ name|S_ISBLK
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -210,8 +210,8 @@ name|S_ISCHR
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -229,8 +229,8 @@ name|S_ISDIR
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -248,8 +248,8 @@ name|S_ISFIFO
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -267,8 +267,8 @@ name|S_ISREG
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -286,8 +286,8 @@ name|S_ISLNK
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -305,8 +305,8 @@ name|S_ISSOCK
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 condition|)
@@ -333,8 +333,8 @@ name|inotype
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 argument_list|)
@@ -361,8 +361,8 @@ name|st_uid
 operator|!=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_uid
 condition|)
 block|{
@@ -383,8 +383,8 @@ name|st_uid
 argument_list|,
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_uid
 argument_list|)
 expr_stmt|;
@@ -462,8 +462,8 @@ name|st_gid
 operator|!=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_gid
 condition|)
 block|{
@@ -482,8 +482,8 @@ name|st_gid
 argument_list|,
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_gid
 argument_list|)
 expr_stmt|;
@@ -558,8 +558,8 @@ operator|!=
 operator|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 operator|&
 name|MBITS
@@ -583,8 +583,8 @@ name|st_mode
 argument_list|,
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 operator|&
 name|MBITS
@@ -663,8 +663,8 @@ name|st_nlink
 operator|!=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_nlink
 condition|)
 block|{
@@ -685,8 +685,8 @@ name|st_nlink
 argument_list|,
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_nlink
 argument_list|)
 expr_stmt|;
@@ -709,8 +709,8 @@ name|st_size
 operator|!=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_size
 condition|)
 block|{
@@ -731,8 +731,8 @@ name|st_size
 argument_list|,
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_size
 argument_list|)
 expr_stmt|;
@@ -755,8 +755,8 @@ name|st_mtime
 operator|!=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mtime
 condition|)
 block|{
@@ -792,8 +792,8 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mtime
 argument_list|)
 argument_list|)
