@@ -473,7 +473,7 @@ name|size_t
 parameter_list|)
 function_decl|;
 name|size_t
-name|wiredlen
+name|validlen
 decl_stmt|;
 block|}
 struct|;
