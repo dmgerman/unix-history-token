@@ -279,7 +279,7 @@ operator|->
 name|ace
 argument_list|)
 expr_stmt|;
-name|g_dettach
+name|g_detach
 argument_list|(
 name|cp
 argument_list|)
@@ -310,7 +310,7 @@ name|dev_taste
 block|,
 name|NULL
 block|,
-name|G_CLASS_INITSTUFF
+name|G_CLASS_INITIALIZER
 block|}
 decl_stmt|;
 end_decl_stmt
