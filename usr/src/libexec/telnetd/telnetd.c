@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.3 (Berkeley) %G%"
+literal|"@(#)telnetd.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +328,8 @@ name|int
 name|options
 init|=
 name|SO_ACCEPTCONN
+operator||
+name|SO_KEEPALIVE
 decl_stmt|;
 end_decl_stmt
 
