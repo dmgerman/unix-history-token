@@ -3777,6 +3777,18 @@ block|,
 block|{
 name|USB_VENDOR_PALM
 block|,
+name|USB_PRODUCT_PALM_M515
+block|,
+literal|0
+block|,
+literal|"Palm Computing"
+block|,
+literal|"Palm m515"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_PALM
+block|,
 name|USB_PRODUCT_PALM_M125
 block|,
 literal|0

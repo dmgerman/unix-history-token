@@ -6929,6 +6929,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_PALM_M515
+value|0x0003
+end_define
+
+begin_comment
+comment|/* Palm m515 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_PALM_M125
 value|0x0040
 end_define
