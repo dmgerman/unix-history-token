@@ -1098,7 +1098,13 @@ name|scb
 operator|->
 name|hscb
 argument_list|,
-literal|32
+sizeof|sizeof
+argument_list|(
+operator|*
+name|scb
+operator|->
+name|hscb
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|q_hscb
