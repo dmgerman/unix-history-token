@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.45 1997/09/21 04:23:39 dyson Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.46 1997/10/15 09:21:39 phk Exp $ */
 end_comment
 
 begin_comment
