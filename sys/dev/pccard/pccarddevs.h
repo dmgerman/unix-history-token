@@ -3607,24 +3607,28 @@ begin_comment
 comment|/* RATOC System Inc. Products */
 end_comment
 
+begin_comment
+comment|/* Don't use because both cards have same product id */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_RATOC_REX_R280
+name|PCMCIA_CIS_RATOC_REX_R280_9530
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_RATOC_REX_R280
+name|PCMCIA_PRODUCT_RATOC_REX_R280_9530
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_RATOC_REX_R280
+name|PCMCIA_STR_RATOC_REX_R280_9530
 value|"RATOC REX-R280/REX-9530"
 end_define
 
@@ -6050,6 +6054,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_RATOC_REX_R280
+value|{ "RATOC System Inc.", "10BASE_T CARD R280", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_RATOC_REX_R280
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_RATOC_REX_R280
+value|"RATOC REX-R280"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_RATOC_REX5536
 value|{ "1195 RATOC System Inc.", "REX5536 SCSI2 CARD", NULL, NULL }
 end_define
@@ -6129,6 +6154,27 @@ define|#
 directive|define
 name|PCMCIA_STR_RATOC_REX5572
 value|"RATOC REX-5572"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_RATOC_REX9530
+value|{ "RATOC System Inc.", "SCSI2 CARD 37", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_RATOC_REX9530
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_RATOC_REX9530
+value|"RATOC REX-9530"
 end_define
 
 begin_define
