@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.52	82/04/07	*/
+comment|/*	if_en.c	4.53	82/04/07	*/
 end_comment
 
 begin_include
@@ -2316,7 +2316,7 @@ operator|&
 literal|0x00ffff00
 condition|)
 goto|goto
-name|drop
+name|bad
 goto|;
 name|dest
 operator|=
