@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.47 1999/04/30 12:51:20 des Exp $"
+literal|"$Id: syslogd.c,v 1.46.2.1 1999/05/01 18:49:17 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2040,7 +2040,7 @@ block|}
 if|if
 condition|(
 name|SecureMode
-operator|>
+operator|<=
 literal|1
 condition|)
 name|finet
