@@ -1564,6 +1564,11 @@ modifier|*
 name|class
 decl_stmt|;
 name|struct
+name|g_geom
+modifier|*
+name|geom
+decl_stmt|;
+name|struct
 name|g_provider
 modifier|*
 name|provider
@@ -1577,12 +1582,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|ptr
-decl_stmt|;
-comment|/* Valid on return */
-name|struct
-name|g_geom
-modifier|*
-name|geom
 decl_stmt|;
 block|}
 struct|;
@@ -1599,6 +1598,10 @@ name|class
 decl_stmt|;
 name|struct
 name|geomidorname
+name|geom
+decl_stmt|;
+name|struct
+name|geomidorname
 name|provider
 decl_stmt|;
 name|u_int
@@ -1612,9 +1615,6 @@ modifier|*
 name|ptr
 decl_stmt|;
 comment|/* Valid on return */
-name|uintptr_t
-name|geom
-decl_stmt|;
 block|}
 struct|;
 end_struct
