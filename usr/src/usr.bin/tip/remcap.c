@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	remcap.c	4.4	81/07/11	*/
+comment|/*	remcap.c	4.5	81/07/13	*/
 end_comment
 
 begin_comment
@@ -42,11 +42,22 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"local/uparm.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * remcap - routines for dealing with the remote host data base  *  *	Made from termcap with the following defines.  */

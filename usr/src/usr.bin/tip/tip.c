@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.5	81/07/11	*/
+comment|/*	tip.c	4.6	81/07/13	*/
 end_comment
 
 begin_comment
@@ -550,6 +550,9 @@ operator|&
 name|defchars
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|ioctl
 argument_list|(
 literal|0
@@ -564,6 +567,8 @@ operator|&
 name|odisc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|arg
 operator|=
 name|defarg
