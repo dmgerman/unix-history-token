@@ -389,7 +389,7 @@ value|0x400
 end_define
 
 begin_comment
-comment|/* transmission in progress */
+comment|/* tx hardware queue is full */
 end_comment
 
 begin_define
