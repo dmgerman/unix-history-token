@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.1 (Berkeley) %G%"
+literal|"@(#)man.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,6 +336,10 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
 name|argv
 operator|+=
 name|optind
