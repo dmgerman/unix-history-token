@@ -287,7 +287,7 @@ name|machine
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Machine class"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,7 +317,7 @@ name|cpu_model
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Machine model"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -533,6 +533,8 @@ literal|4
 index|]
 decl_stmt|,
 name|nreg
+init|=
+literal|0
 decl_stmt|;
 name|cpu_class
 operator|=
@@ -2286,31 +2288,49 @@ name|cpu_feature
 argument_list|,
 literal|"\020"
 literal|"\001FPU"
+comment|/* Integral FPU */
 literal|"\002VME"
+comment|/* Extended VM86 mode support */
 literal|"\003DE"
 literal|"\004PSE"
+comment|/* 4MByte page tables */
 literal|"\005TSC"
+comment|/* Timestamp counter */
 literal|"\006MSR"
+comment|/* Machine specific registers */
 literal|"\007PAE"
+comment|/* Physical address extension */
 literal|"\010MCE"
+comment|/* Machine Check support */
 literal|"\011CX8"
+comment|/* CMPEXCH8 instruction */
 literal|"\012APIC"
+comment|/* SMP local APIC */
 literal|"\013oldMTRR"
 literal|"\014SEP"
 literal|"\015MTRR"
+comment|/* Memory Type Range Registers */
 literal|"\016PGE"
+comment|/* PG_G (global bit) support */
 literal|"\017MCA"
 literal|"\020CMOV"
+comment|/* CMOV instruction */
 literal|"\021PAT"
+comment|/* Page attributes table */
 literal|"\022PSE36"
-literal|"\023<b18>"
+comment|/* 36 bit address space support */
+literal|"\023PN"
+comment|/* Processor Serial number */
 literal|"\024<b19>"
 literal|"\025<b20>"
 literal|"\026<b21>"
 literal|"\027<b22>"
 literal|"\030MMX"
+comment|/* MMX instructions */
 literal|"\031FXSR"
-literal|"\032<b25>"
+comment|/* FXSAVE/FXRSTOR */
+literal|"\032XMM"
+comment|/* Katmai SIMD/MMX2 instructions */
 literal|"\033<b26>"
 literal|"\034<b27>"
 literal|"\035<b28>"
@@ -3760,6 +3780,7 @@ modifier|*
 name|regs
 parameter_list|)
 block|{
+comment|/* 	 * Values taken from AMD Processor Recognition 	 * http://www.amd.com/products/cpg/athlon/techdocs/pdf/20734.pdf 	 */
 name|do_cpuid
 argument_list|(
 literal|0x80000001
@@ -3782,36 +3803,56 @@ argument_list|,
 literal|"\020"
 comment|/* in hex */
 literal|"\001FPU"
+comment|/* Integral FPU */
 literal|"\002VME"
+comment|/* Extended VM86 mode support */
 literal|"\003DE"
+comment|/* Debug extensions */
 literal|"\004PSE"
+comment|/* 4MByte page tables */
 literal|"\005TSC"
+comment|/* Timestamp counter */
 literal|"\006MSR"
-literal|"\007<b6>"
+comment|/* Machine specific registers */
+literal|"\007PAE"
+comment|/* Physical address extension */
 literal|"\010MCE"
+comment|/* Machine Check support */
 literal|"\011CX8"
-literal|"\012<b9>"
+comment|/* CMPEXCH8 instruction */
+literal|"\012APIC"
+comment|/* SMP local APIC */
 literal|"\013<b10>"
 literal|"\014SYSCALL"
-literal|"\015<b12>"
+comment|/* SYSENTER/SYSEXIT instructions */
+literal|"\015MTRR"
+comment|/* Memory Type Range Registers */
 literal|"\016PGE"
-literal|"\017<b14>"
+comment|/* PG_G (global bit) support */
+literal|"\017MCA"
+comment|/* Machine Check Architecture */
 literal|"\020ICMOV"
-literal|"\021FCMOV"
-literal|"\022<b17>"
+comment|/* CMOV instruction */
+literal|"\021PAT"
+comment|/* Page attributes table */
+literal|"\022PGE36"
+comment|/* 36 bit address space support */
 literal|"\023<b18>"
 literal|"\024<b19>"
 literal|"\025<b20>"
 literal|"\026<b21>"
-literal|"\027<b22>"
+literal|"\027AMIE"
+comment|/* AMD MMX Instruction Extensions */
 literal|"\030MMX"
-literal|"\031<b24>"
+literal|"\031FXSAVE"
+comment|/* FXSAVE/FXRSTOR */
 literal|"\032<b25>"
 literal|"\033<b26>"
 literal|"\034<b27>"
 literal|"\035<b28>"
 literal|"\036<b29>"
-literal|"\037<b30>"
+literal|"\037DSP"
+comment|/* AMD 3DNow! Instruction Extensions */
 literal|"\0403DNow!"
 argument_list|)
 expr_stmt|;
