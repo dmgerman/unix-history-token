@@ -4121,6 +4121,13 @@ name|i
 operator|++
 control|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|pmap
+operator|->
+name|pm_pteobj
+argument_list|)
+expr_stmt|;
 name|ptdpg
 index|[
 name|i
@@ -4169,6 +4176,13 @@ name|VM_PAGE_BITS_ALL
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|pmap
+operator|->
+name|pm_pteobj
+argument_list|)
 expr_stmt|;
 block|}
 name|pmap_qenter
@@ -4432,6 +4446,13 @@ name|vm_page_t
 name|m
 decl_stmt|;
 comment|/* 	 * Find or fabricate a new pagetable page 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|pmap
+operator|->
+name|pm_pteobj
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|vm_page_grab
@@ -4583,6 +4604,13 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|pmap
+operator|->
+name|pm_pteobj
+argument_list|)
 expr_stmt|;
 return|return
 name|m
