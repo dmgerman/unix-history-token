@@ -229,7 +229,7 @@ define|#
 directive|define
 name|FBSD_ENDFILE_SPEC
 define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+value|" %{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s "
 end_define
 
 begin_comment
