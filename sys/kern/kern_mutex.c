@@ -226,16 +226,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RETIP
-parameter_list|(
-name|x
-parameter_list|)
-value|*(((uintptr_t *)(&x)) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SET_PRIO
 parameter_list|(
 name|p
@@ -1006,7 +996,7 @@ name|CTR5
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"TRY_ENTER %s [%p] result=%d at %s:%d"
+literal|"TRY_LOCK %s [%p] result=%d at %s:%d"
 argument_list|,
 name|m
 operator|->
@@ -1121,13 +1111,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"_mtx_lock_sleep: %p contested (lock=%p) [%p]"
+literal|"_mtx_lock_sleep: %s contested (lock=%p) at %s:%d"
 argument_list|,
 name|m
+operator|->
+name|mtx_description
 argument_list|,
 operator|(
 name|void
@@ -1137,14 +1129,9 @@ name|m
 operator|->
 name|mtx_lock
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|RETIP
-argument_list|(
-name|m
-argument_list|)
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Save our priority. Even though p_nativepri is protected by 	 * sched_lock, we don't obtain it here as it can be expensive. 	 * Since this is the only place p_nativepri is set, and since two 	 * CPUs will not be executing the same process concurrently, we know 	 * that no other CPU is going to be messing with this. Also, 	 * p_nativepri is only read when we are blocked on a mutex, so that 	 * can't be happening right now either. 	 */
@@ -1337,24 +1324,19 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
-operator|&
-operator|(
-name|P_ITHD
-operator||
-name|P_SITHD
-operator|)
+name|p_ithd
+operator|!=
+name|NULL
 condition|)
 block|{
-name|ithd_t
+name|struct
+name|ithd
 modifier|*
 name|it
 init|=
-operator|(
-name|ithd_t
-operator|*
-operator|)
 name|p
+operator|->
+name|p_ithd
 decl_stmt|;
 if|if
 condition|(
@@ -1377,7 +1359,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"_mtx_lock_sleep: 0x%x interrupted 0x%x"
+literal|"_mtx_lock_sleep: %p interrupted %p"
 argument_list|,
 name|it
 argument_list|,
@@ -2073,12 +2055,6 @@ name|NULL
 expr_stmt|;
 name|p1
 operator|->
-name|p_mtxname
-operator|=
-name|NULL
-expr_stmt|;
-name|p1
-operator|->
 name|p_stat
 operator|=
 name|SRUN
@@ -2114,24 +2090,19 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
-operator|&
-operator|(
-name|P_ITHD
-operator||
-name|P_SITHD
-operator|)
+name|p_ithd
+operator|!=
+name|NULL
 condition|)
 block|{
-name|ithd_t
+name|struct
+name|ithd
 modifier|*
 name|it
 init|=
-operator|(
-name|ithd_t
-operator|*
-operator|)
 name|p
+operator|->
+name|p_ithd
 decl_stmt|;
 if|if
 condition|(
@@ -2154,7 +2125,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"_mtx_unlock_sleep: 0x%x interrupted 0x%x"
+literal|"_mtx_unlock_sleep: %p interrupted %p"
 argument_list|,
 name|it
 argument_list|,
@@ -2250,13 +2221,13 @@ comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _re
 end_comment
 
 begin_comment
-comment|/*  * The INVARIANTS-enabled mtx_assert()  */
+comment|/*  * The backing function for the INVARIANTS-enabled mtx_assert()  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|INVARIANTS_SUPPORT
 end_ifdef
 
 begin_function
