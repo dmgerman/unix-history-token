@@ -1858,7 +1858,7 @@ name|node
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -2006,7 +2006,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -2072,7 +2072,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -2105,7 +2105,7 @@ block|}
 block|}
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 operator|||
 name|retry
 operator|>=
@@ -2738,7 +2738,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -2996,7 +2996,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -3037,7 +3037,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|printf
 argument_list|(
@@ -3173,7 +3173,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -6001,7 +6001,7 @@ name|dbcnt
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -6206,7 +6206,7 @@ else|else
 block|{
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(
@@ -12644,7 +12644,7 @@ name|fc
 expr_stmt|;
 if|if
 condition|(
-name|bootverbose
+name|firewire_debug
 condition|)
 name|device_printf
 argument_list|(

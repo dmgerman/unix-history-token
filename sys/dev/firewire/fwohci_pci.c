@@ -1260,14 +1260,12 @@ directive|endif
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|firewire_debug
-operator|=
-name|bootverbose
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (bootverbose) 		firewire_debug = bootverbose;
+endif|#
+directive|endif
 name|fwohci_pci_init
 argument_list|(
 name|self

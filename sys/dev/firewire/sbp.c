@@ -1775,14 +1775,12 @@ argument_list|,
 literal|"SBP-2/SCSI over FireWire"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|debug
-operator|=
-name|bootverbose
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (bootverbose) 		debug = bootverbose;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
