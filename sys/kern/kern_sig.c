@@ -586,6 +586,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|set_core_nodump_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nodump_coredump
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|set_core_nodump_flag
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable setting the NODUMP flag on coredump files"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Signal properties and actions.  * The array below categorizes the signals and their default actions  * according to the following properties:  */
 end_comment
@@ -12163,6 +12193,16 @@ operator|.
 name|va_size
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|set_core_nodump_flag
+condition|)
+name|vattr
+operator|.
+name|va_flags
+operator|=
+name|UF_NODUMP
 expr_stmt|;
 name|vn_lock
 argument_list|(
