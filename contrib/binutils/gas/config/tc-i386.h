@@ -147,6 +147,24 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TE_FreeBSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"a.out-i386-freebsd"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TE_NetBSD
 end_ifdef
 

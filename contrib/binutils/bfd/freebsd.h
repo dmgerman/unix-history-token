@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end definitions used by all FreeBSD targets.    Copyright (C) 1990, 1991, 1992, 1996 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* BFD back-end definitions used by all FreeBSD a.out targets.    Copyright (C) 1990, 1991, 1992, 1996 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_comment
-comment|/* FreeBSD ZMAGIC files never have the header in the text. */
+comment|/* FreeBSD QMAGIC files have the header in the text. */
 end_comment
 
 begin_define
@@ -14,52 +14,26 @@ name|N_HEADER_IN_TEXT
 parameter_list|(
 name|x
 parameter_list|)
-value|0
+value|1
 end_define
 
-begin_comment
-comment|/* ZMAGIC files start at offset 0.  Does not apply to QMAGIC files. */
-end_comment
+begin_define
+define|#
+directive|define
+name|MY_text_includes_header
+value|1
+end_define
 
 begin_define
 define|#
 directive|define
 name|TEXT_START_ADDR
-value|0
+value|(TARGET_PAGE_SIZE + 0x20)
 end_define
 
-begin_define
-define|#
-directive|define
-name|N_GETMAGIC_NET
-parameter_list|(
-name|exec
-parameter_list|)
-define|\
-value|((exec).a_info& 0xffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_GETMID_NET
-parameter_list|(
-name|exec
-parameter_list|)
-define|\
-value|(((exec).a_info>> 16)& 0x3ff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_GETFLAG_NET
-parameter_list|(
-name|ex
-parameter_list|)
-define|\
-value|(((exec).a_info>> 26)& 0x3f)
-end_define
+begin_comment
+comment|/*  * FreeBSD uses a weird mix of byte orderings for its a_info field.  * Its assembler emits NetBSD style object files, with a big-endian  * a_info.  Its linker seems to accept either byte ordering, but  * emits a little-endian a_info.  *  * Here, we accept either byte ordering, but always produce  * little-endian.  *  * FIXME - Probably we should always produce the _native_ byte  * ordering.  I.e., it should be in the architecture-specific  * file, not here.  But in reality, there is almost zero chance  * that FreeBSD will ever use a.out in a new port.  */
+end_comment
 
 begin_define
 define|#
@@ -69,7 +43,7 @@ parameter_list|(
 name|exec
 parameter_list|)
 define|\
-value|((enum machine_type) \ 	 ((N_GETMAGIC_NET (exec) == ZMAGIC) ? N_GETMID_NET (exec) : \ 	  ((exec).a_info>> 16)& 0x3ff))
+value|((enum machine_type) \ 	 ((freebsd_swap_magic(&(exec).a_info)>> 16)& 0x3ff))
 end_define
 
 begin_define
@@ -80,7 +54,7 @@ parameter_list|(
 name|exec
 parameter_list|)
 define|\
-value|((N_GETMAGIC_NET (exec) == ZMAGIC) ? N_GETFLAG_NET (exec) : \ 	 ((exec).a_info>> 26)& 0x3f)
+value|((enum machine_type) \ 	 ((freebsd_swap_magic(&(exec).a_info)>> 26)& 0x3f))
 end_define
 
 begin_define
@@ -150,10 +124,6 @@ directive|include
 file|"libaout.h"
 end_include
 
-begin_comment
-comment|/* On FreeBSD, the magic number is always in ntohl's "network" (big-endian)    format.  I think.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -161,38 +131,217 @@ name|SWAP_MAGIC
 parameter_list|(
 name|ext
 parameter_list|)
-value|bfd_getb32 (ext)
+value|(freebsd_swap_magic(ext))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_final_link
+value|freebsd_bfd_final_link
 end_define
 
 begin_define
 define|#
 directive|define
 name|MY_write_object_contents
-value|MY(write_object_contents)
+value|freebsd_write_object_contents
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|boolean
-name|MY
-parameter_list|(
-name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *abfd
-end_function_decl
+name|freebsd_bfd_final_link
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|static
+name|long
+name|freebsd_swap_magic
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+name|ext
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|freebsd_write_object_contents
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
 directive|include
 file|"aout-target.h"
 end_include
+
+begin_function
+specifier|static
+name|boolean
+name|freebsd_bfd_final_link
+parameter_list|(
+name|abfd
+parameter_list|,
+name|info
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+decl_stmt|;
+block|{
+name|obj_aout_subformat
+argument_list|(
+name|abfd
+argument_list|)
+operator|=
+name|q_magic_format
+expr_stmt|;
+return|return
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|final_link
+argument_list|)
+argument_list|(
+name|abfd
+argument_list|,
+name|info
+argument_list|,
+name|MY_final_link_callback
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Swap a magic number.  We accept either endian, whichever looks valid. */
+end_comment
+
+begin_function
+specifier|static
+name|long
+name|freebsd_swap_magic
+parameter_list|(
+name|ext
+parameter_list|)
+name|void
+modifier|*
+name|ext
+decl_stmt|;
+block|{
+name|long
+name|linfo
+init|=
+name|bfd_getl32
+argument_list|(
+name|ext
+argument_list|)
+decl_stmt|;
+name|long
+name|binfo
+init|=
+name|bfd_getb32
+argument_list|(
+name|ext
+argument_list|)
+decl_stmt|;
+name|int
+name|lmagic
+init|=
+name|linfo
+operator|&
+literal|0xffff
+decl_stmt|;
+name|int
+name|bmagic
+init|=
+name|binfo
+operator|&
+literal|0xffff
+decl_stmt|;
+name|int
+name|lmagic_ok
+init|=
+name|lmagic
+operator|==
+name|OMAGIC
+operator|||
+name|lmagic
+operator|==
+name|NMAGIC
+operator|||
+name|lmagic
+operator|==
+name|ZMAGIC
+operator|||
+name|lmagic
+operator|==
+name|QMAGIC
+decl_stmt|;
+name|int
+name|bmagic_ok
+init|=
+name|bmagic
+operator|==
+name|OMAGIC
+operator|||
+name|bmagic
+operator|==
+name|NMAGIC
+operator|||
+name|bmagic
+operator|==
+name|ZMAGIC
+operator|||
+name|bmagic
+operator|==
+name|QMAGIC
+decl_stmt|;
+return|return
+name|bmagic_ok
+operator|&&
+operator|!
+name|lmagic_ok
+condition|?
+name|binfo
+else|:
+name|linfo
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Write an object file.    Section contents have already been written.  We write the    file header, symbols, and relocation.  */
@@ -201,10 +350,7 @@ end_comment
 begin_function
 specifier|static
 name|boolean
-name|MY
-function|(
-name|write_object_contents
-function|)
+name|freebsd_write_object_contents
 parameter_list|(
 name|abfd
 parameter_list|)
