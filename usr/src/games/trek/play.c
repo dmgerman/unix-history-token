@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)play.c	5.3 (Berkeley) %G%"
+literal|"@(#)play.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,9 +84,6 @@ name|dumpgame
 argument_list|()
 decl_stmt|,
 name|rest
-argument_list|()
-decl_stmt|,
-name|shell
 argument_list|()
 decl_stmt|,
 name|srscan
@@ -237,14 +234,6 @@ block|,
 literal|"est"
 block|,
 name|rest
-block|,
-literal|0
-block|,
-literal|"shell"
-block|,
-literal|""
-block|,
-name|shell
 block|,
 literal|0
 block|,
