@@ -74,14 +74,24 @@ decl_stmt|;
 name|int
 name|pcb_dr7
 decl_stmt|;
-name|caddr_t
+ifdef|#
+directive|ifdef
+name|USER_LDT
+name|struct
+name|pcb_ldt
+modifier|*
 name|pcb_ldt
 decl_stmt|;
 comment|/* per process (user) LDT */
-name|int
-name|pcb_ldt_len
+else|#
+directive|else
+name|struct
+name|pcb_ldt
+modifier|*
+name|pcb_ldt_dontuse
 decl_stmt|;
-comment|/* number of LDT entries */
+endif|#
+directive|endif
 name|struct
 name|save87
 name|pcb_savefpu
@@ -129,7 +139,7 @@ comment|/* optional pcb extension */
 name|u_long
 name|__pcb_spare
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 comment|/* adjust to avoid core dump size changes */

@@ -2099,6 +2099,8 @@ operator|,
 expr|struct
 name|proc
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

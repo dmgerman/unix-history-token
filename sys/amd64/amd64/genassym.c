@@ -601,6 +601,9 @@ name|tss_esp0
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USER_LDT
 name|printf
 argument_list|(
 literal|"#define\tPCB_USERLDT %#x\n"
@@ -613,6 +616,8 @@ name|pcb_ldt
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"#define\tPCB_GS %#x\n"

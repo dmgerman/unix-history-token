@@ -206,6 +206,8 @@ parameter_list|(
 name|p1
 parameter_list|,
 name|p2
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|register
 name|struct
@@ -218,6 +220,12 @@ name|p2
 decl_stmt|;
 end_function
 
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -229,6 +237,17 @@ name|p2
 operator|->
 name|p_addr
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|RFPROC
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|p2
 operator|->
 name|p_md
