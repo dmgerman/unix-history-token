@@ -1,14 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit.  *  * %sccs.include.redist.c%  *  *	@(#)mdef.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit.  *  * %sccs.include.redist.c%  *  *	@(#)mdef.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * mdef.h  * Facility: m4 macro processor  * by: oz  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vms
+end_ifdef
+
+begin_include
+include|#
+directive|include
+include|stdio
+end_include
+
+begin_include
+include|#
+directive|include
+include|ctype
+end_include
+
+begin_include
+include|#
+directive|include
+include|signal
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  *  * m4 constants..  *  */
+comment|/*  * m4 constants..  */
 end_comment
 
 begin_define
@@ -309,6 +338,27 @@ name|ECOMMT
 value|'\n'
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|msdos
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|system
+parameter_list|(
+name|str
+parameter_list|)
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * other important constants  */
 end_comment
@@ -527,7 +577,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * macros for readibility and/or speed  *  *      gpbc()  - get a possibly pushed-back character  *      min()   - select the minimum of two elements  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
+comment|/*  * macros for readibility and/or speed  *  *      gpbc()  - get a possibly pushed-back character  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
 end_comment
 
 begin_define
@@ -536,18 +586,6 @@ directive|define
 name|gpbc
 parameter_list|()
 value|(bp> buf) ? *--bp : getc(infile[ilevel])
-end_define
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|((x> y) ? y : x)
 end_define
 
 begin_define

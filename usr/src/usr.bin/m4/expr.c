@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expr.c	5.3 (Berkeley) %G%"
+literal|"@(#)expr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<setjmp.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
@@ -133,9 +133,263 @@ begin_comment
 comment|/* Parser scan pointer */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|query
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lor
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|land
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bor
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bxor
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|band
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|eql
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|relat
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|shift
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|primary
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|term
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|unary
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|factor
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|constant
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|geteql
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|getrel
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|skipws
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|experr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * For longjmp  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -145,7 +399,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * macros:  *  *      ungetch - Put back the last character examined.  *      getch   - return the next character from expr string.  */
+comment|/*  * macros:  *      ungetch - Put back the last character examined.  *      getch   - return the next character from expr string.  */
 end_comment
 
 begin_define
@@ -164,21 +418,16 @@ parameter_list|()
 value|*nxtch++
 end_define
 
-begin_macro
+begin_function
+name|int
 name|expr
-argument_list|(
-argument|expbuf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|expbuf
+parameter_list|)
 name|char
 modifier|*
 name|expbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -198,9 +447,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 name|rval
 operator|=
@@ -215,28 +462,28 @@ operator|==
 name|EOS
 condition|)
 return|return
-operator|(
 name|rval
-operator|)
 return|;
-name|experr
+name|printf
 argument_list|(
-literal|"Ill-formed expression"
+literal|"m4: ill-formed expression.\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|FALSE
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * query : lor | lor '?' query ':' query  *  */
+comment|/*  * query : lor | lor '?' query ':' query  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|query
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -263,9 +510,7 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|bool
-operator|)
 return|;
 block|}
 name|true_val
@@ -282,7 +527,7 @@ literal|':'
 condition|)
 name|experr
 argument_list|(
-literal|"Bad query"
+literal|"bad query"
 argument_list|)
 expr_stmt|;
 name|false_val
@@ -291,27 +536,24 @@ name|query
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|bool
 condition|?
 name|true_val
 else|:
 name|false_val
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * lor : land { '||' land }  *  */
+comment|/*  * lor : land { '||' land }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|lor
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -368,23 +610,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * land : bor { '&&' bor }  *  */
+comment|/*  * land : bor { '&&' bor }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|land
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -441,23 +680,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * bor : bxor { '|' bxor }  *  */
+comment|/*  * bor : bxor { '|' bxor }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|bor
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -515,23 +751,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * bxor : band { '^' band }  *  */
+comment|/*  * bxor : band { '^' band }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|bxor
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -566,23 +799,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * band : eql { '&' eql }  *  */
+comment|/*  * band : eql { '&' eql }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|band
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -640,23 +870,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * eql : relat { eqrel relat }  *  */
+comment|/*  * eql : relat { eqrel relat }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|eql
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -721,23 +948,20 @@ break|break;
 block|}
 block|}
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * relat : shift { rel shift }  *  */
+comment|/*  * relat : shift { rel shift }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|relat
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -826,23 +1050,20 @@ break|break;
 block|}
 block|}
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * shift : primary { shop primary }  *  */
+comment|/*  * shift : primary { shop primary }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|shift
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -918,23 +1139,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * primary : term { addop term }  *  */
+comment|/*  * primary : term { addop term }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|primary
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -990,23 +1208,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  *<term> :=<unary> {<mulop><unary> }  *  */
+comment|/*  *<term> :=<unary> {<mulop><unary> }  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|term
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1081,23 +1296,20 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|vl
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * unary : factor | unop unary  *  */
+comment|/*  * unary : factor | unop unary  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|unary
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1139,28 +1351,22 @@ case|case
 literal|'!'
 case|:
 return|return
-operator|(
 operator|!
 name|val
-operator|)
 return|;
 case|case
 literal|'~'
 case|:
 return|return
-operator|(
 operator|~
 name|val
-operator|)
 return|;
 case|case
 literal|'-'
 case|:
 return|return
-operator|(
 operator|-
 name|val
-operator|)
 return|;
 block|}
 block|}
@@ -1168,24 +1374,21 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|factor
 argument_list|()
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * factor : constant | '(' query ')'  *  */
+comment|/*  * factor : constant | '(' query ')'  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|factor
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1213,39 +1416,33 @@ literal|')'
 condition|)
 name|experr
 argument_list|(
-literal|"Bad factor"
+literal|"bad factor"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|val
-operator|)
 return|;
 block|}
 name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|constant
 argument_list|()
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * constant: num | 'char'  *  */
+comment|/*  * constant: num | 'char'  * Note: constant() handles multi-byte constants  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|constant
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-comment|/*          * Note: constant() handles multi-byte constants          */
 specifier|register
 name|int
 name|i
@@ -1279,10 +1476,8 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|num
 argument_list|()
-operator|)
 return|;
 block|}
 for|for
@@ -1430,7 +1625,7 @@ literal|'\''
 condition|)
 name|experr
 argument_list|(
-literal|"Illegal character constant"
+literal|"illegal character constant"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1459,23 +1654,20 @@ index|]
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|value
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * num : digit | num digit  *  */
+comment|/*  * num : digit | num digit  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|num
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1559,30 +1751,29 @@ expr_stmt|;
 if|if
 condition|(
 name|ndig
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|rval
-operator|)
-return|;
 name|experr
 argument_list|(
-literal|"Bad constant"
+literal|"bad constant"
 argument_list|)
 expr_stmt|;
+return|return
+name|rval
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * eqlrel : '=' | '==' | '!='  *  */
+comment|/*  * eqlrel : '=' | '==' | '!='  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|geteql
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1618,9 +1809,7 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|EQL
-operator|)
 return|;
 case|case
 literal|'!'
@@ -1632,9 +1821,7 @@ operator|==
 literal|'='
 condition|)
 return|return
-operator|(
 name|NEQ
-operator|)
 return|;
 name|ungetch
 argument_list|()
@@ -1643,10 +1830,8 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 default|default:
 name|ungetch
@@ -1656,25 +1841,22 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * rel : '<' | '>' | '<=' | '>='  *  */
+comment|/*  * rel : '<' | '>' | '<=' | '>='  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|getrel
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1707,17 +1889,13 @@ operator|==
 literal|'='
 condition|)
 return|return
-operator|(
 name|LEQ
-operator|)
 return|;
 name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|LSS
-operator|)
 return|;
 case|case
 literal|'>'
@@ -1729,17 +1907,13 @@ operator|==
 literal|'='
 condition|)
 return|return
-operator|(
 name|GEQ
-operator|)
 return|;
 name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|GTR
-operator|)
 return|;
 default|default:
 name|ungetch
@@ -1749,25 +1923,22 @@ name|ungetch
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Skip over any white space and return terminating char.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|skipws
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -1790,36 +1961,30 @@ name|EOS
 condition|)
 empty_stmt|;
 return|return
-operator|(
 name|c
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * Error handler - resets environment to eval(), prints an error,  * and returns FALSE.  */
+comment|/*  * resets environment to eval(), prints an error   * and forces eval to return FALSE.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|experr
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
-literal|"mp: %s\n"
+literal|"m4: %s in expr.\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -1832,9 +1997,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Force eval() to return FALSE */
 block|}
-end_block
+end_function
 
 end_unit
 

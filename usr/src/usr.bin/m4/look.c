@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	5.3 (Berkeley) %G%"
+literal|"@(#)look.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/*  * look.c  * Facility: m4 macro processor  * by: oz  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -59,29 +65,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|"extr.h"
+file|"stdd.h"
 end_include
 
-begin_comment
-comment|/*  *  hash - compute hash value using the proverbial  *	   hashing function. Taken from K&R.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_expr_stmt
+begin_function
+name|int
 name|hash
-argument_list|(
+parameter_list|(
 name|name
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|name
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
-name|int
+name|unsigned
+name|long
 name|h
 init|=
 literal|0
@@ -92,7 +99,15 @@ operator|*
 name|name
 condition|)
 name|h
-operator|+=
+operator|=
+operator|(
+name|h
+operator|<<
+literal|5
+operator|)
+operator|+
+name|h
+operator|+
 operator|*
 name|name
 operator|++
@@ -105,10 +120,10 @@ name|HASHSIZE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * lookup - find name in the hash table  *  */
+comment|/*  * find name in the hash table  */
 end_comment
 
 begin_function
@@ -150,7 +165,7 @@ name|nxtptr
 control|)
 if|if
 condition|(
-name|strcmp
+name|STREQ
 argument_list|(
 name|name
 argument_list|,
@@ -158,8 +173,6 @@ name|p
 operator|->
 name|name
 argument_list|)
-operator|==
-literal|0
 condition|)
 break|break;
 return|return
@@ -171,7 +184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * addent - hash and create an entry in the hash  *	    table. The new entry is added in front  *	    of a hash bucket.  */
+comment|/*  * hash and create an entry in the hash table.  * The new entry is added in front of a hash bucket.  */
 end_comment
 
 begin_function
@@ -199,15 +212,12 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|p
 operator|=
 operator|(
 name|ndptr
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -215,11 +225,7 @@ expr|struct
 name|ndblock
 argument_list|)
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 name|p
 operator|->
 name|nxtptr
@@ -240,16 +246,9 @@ name|p
 operator|->
 name|name
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|error
-argument_list|(
-literal|"m4: no more memory."
 argument_list|)
 expr_stmt|;
 return|return
@@ -258,33 +257,91 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|freent
+parameter_list|(
+name|p
+parameter_list|)
+name|ndptr
+name|p
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|p
+operator|->
+name|type
+operator|&
+name|STATIC
+operator|)
+condition|)
+block|{
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|defn
+operator|!=
+name|null
+condition|)
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+operator|->
+name|defn
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * remhash - remove an entry from the hashtable  *  */
+comment|/*  * remove an entry from the hashtable  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|remhash
-argument_list|(
-argument|name
-argument_list|,
-argument|all
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|all
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|all
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -325,7 +382,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|STREQ
 argument_list|(
 name|mp
 operator|->
@@ -333,8 +390,6 @@ name|name
 argument_list|,
 name|name
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|mp
@@ -408,69 +463,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
-
-begin_comment
-comment|/*  * freent - free a hashtable information block  *  */
-end_comment
-
-begin_macro
-name|freent
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|ndptr
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|p
-operator|->
-name|type
-operator|&
-name|STATIC
-operator|)
-condition|)
-block|{
-name|free
-argument_list|(
-name|p
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|defn
-operator|!=
-name|null
-condition|)
-name|free
-argument_list|(
-name|p
-operator|->
-name|defn
-argument_list|)
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_function
 
 end_unit
 

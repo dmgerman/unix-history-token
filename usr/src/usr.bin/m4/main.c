@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -53,7 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -71,12 +83,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|"stdd.h"
 end_include
 
-begin_comment
-comment|/*  * m4 - macro processor  *  * PD m4 is based on the macro tool distributed with the software   * tools (VOS) package, and described in the "SOFTWARE TOOLS" and   * "SOFTWARE TOOLS IN PASCAL" books. It has been expanded to include   * most of the command set of SysV m4, the standard UN*X macro processor.  *  * Since both PD m4 and UN*X m4 are based on SOFTWARE TOOLS macro,  * there may be certain implementation similarities between  * the two. The PD m4 was produced without ANY references to m4  * sources.  *  * References:  *  *	Software Tools distribution: macro  *  *	Kernighan, Brian W. and P. J. Plauger, SOFTWARE  *	TOOLS IN PASCAL, Addison-Wesley, Mass. 1981  *  *	Kernighan, Brian W. and P. J. Plauger, SOFTWARE  *	TOOLS, Addison-Wesley, Mass. 1976  *  *	Kernighan, Brian W. and Dennis M. Ritchie,  *	THE M4 MACRO PROCESSOR, Unix Programmer's Manual,  *	Seventh Edition, Vol. 2, Bell Telephone Labs, 1979  *  *	System V man page for M4  *  * Modification History:  *  * Jan 28 1986 Oz	Break the whole thing into little  *			pieces, for easier (?) maintenance.  *  * Dec 12 1985 Oz	Optimize the code, try to squeeze  *			few microseconds out..  *  * Dec 05 1985 Oz	Add getopt interface, define (-D),  *			undefine (-U) options.  *  * Oct 21 1985 Oz	Clean up various bugs, add comment handling.  *  * June 7 1985 Oz	Add some of SysV m4 stuff (m4wrap, pushdef,  *			popdef, decr, shift etc.).  *  * June 5 1985 Oz	Initial cut.  *  * Implementation Notes:  *  * [1]	PD m4 uses a different (and simpler) stack mechanism than the one   *	described in Software Tools and Software Tools in Pascal books.   *	The triple stack nonsense is replaced with a single stack containing   *	the call frames and the arguments. Each frame is back-linked to a   * 	previous stack frame, which enables us to rewind the stack after   * 	each nested call is completed. Each argument is a character pointer   *	to the beginning of the argument string within the string space.  *	The only exceptions to this are (*) arg 0 and arg 1, which are  * 	the macro definition and macro name strings, stored dynamically  *	for the hash table.  *  *	    .					   .  *	|   .	|<-- sp			|  .  |  *	+-------+				+-----+  *	| arg 3 ------------------------------->| str |  *	+-------+				|  .  |  *	| arg 2 --------------+ 		   .  *	+-------+	      |  *	    *		      |			|     |  *	+-------+	      | 		+-----+  *	| plev	|<-- fp     +---------------->| str |  *	+-------+				|  .  |  *	| type	|				   .  *	+-------+  *	| prcf	-----------+		plev: paren level  *	+-------+  	   |		type: call type  *	|   .	| 	   |		prcf: prev. call frame  *	    .	   	   |  *	+-------+	   |  *	|<----------+  *	+-------+  *  * [2]	We have three types of null values:  *  *		nil  - nodeblock pointer type 0  *		null - null string ("")  *		NULL - Stdio-defined NULL  *  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|ndptr
@@ -312,6 +332,17 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of this program        */
+end_comment
+
+begin_decl_stmt
+name|char
 name|lquote
 init|=
 name|LQUOTE
@@ -503,10 +534,27 @@ literal|"sysval"
 block|,
 name|SYSVTYPE
 block|,
+ifdef|#
+directive|ifdef
+name|unix
 literal|"unix"
 block|,
 name|MACRTYPE
-block|, }
+block|,
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|vms
+literal|"vms"
+block|,
+name|MACRTYPE
+block|,
+endif|#
+directive|endif
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -516,30 +564,6 @@ directive|define
 name|MAXKEYS
 value|(sizeof(keywrds)/sizeof(struct keyblk))
 end_define
-
-begin_function_decl
-specifier|extern
-name|ndptr
-name|lookup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|ndptr
-name|addent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|onintr
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -556,7 +580,30 @@ name|optarg
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|macro
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|initkwds
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|getopt
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -568,8 +615,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -584,6 +631,21 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|ifp
+decl_stmt|;
+name|progname
+operator|=
+name|basename
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|signal
@@ -602,14 +664,6 @@ argument_list|,
 name|onintr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NONZEROPAGES
-name|initm4
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|initkwds
 argument_list|()
 expr_stmt|;
@@ -697,35 +751,40 @@ comment|/* specific output   */
 case|case
 literal|'?'
 case|:
-default|default:
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|infile
-index|[
-literal|0
-index|]
-operator|=
-name|stdin
+name|argc
+operator|-=
+name|optind
 expr_stmt|;
-comment|/* default input (naturally) */
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 name|active
 operator|=
 name|stdout
 expr_stmt|;
 comment|/* default active output     */
+comment|/* filename for diversions   */
 name|m4temp
 operator|=
 name|mktemp
 argument_list|(
-name|strdup
+name|xstrdup
 argument_list|(
-name|DIVNAM
+name|_PATH_DIVNAME
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* filename for diversions   */
+if|if
+condition|(
+operator|!
+name|argc
+condition|)
+block|{
 name|sp
 operator|=
 operator|-
@@ -737,10 +796,88 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* frame pointer initialized */
+name|infile
+index|[
+literal|0
+index|]
+operator|=
+name|stdin
+expr_stmt|;
+comment|/* default input (naturally) */
 name|macro
 argument_list|()
 expr_stmt|;
-comment|/* get some work done here   */
+block|}
+else|else
+while|while
+condition|(
+name|argc
+operator|--
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ifp
+operator|=
+name|fopen
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|oops
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|sp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|fp
+operator|=
+literal|0
+expr_stmt|;
+name|infile
+index|[
+literal|0
+index|]
+operator|=
+name|ifp
+expr_stmt|;
+name|macro
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
+name|argv
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -838,6 +975,19 @@ index|]
 operator|=
 literal|'0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vms
+operator|(
+name|void
+operator|)
+name|remove
+argument_list|(
+name|m4temp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -846,12 +996,12 @@ argument_list|(
 name|m4temp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-name|exit
-argument_list|(
+return|return
 literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -863,19 +1013,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* forward ... */
+comment|/*  * macro - the work horse..  */
 end_comment
 
-begin_comment
-comment|/*  * macro - the work horse..  *  */
-end_comment
-
-begin_macro
+begin_function
+name|void
 name|macro
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|token
@@ -978,7 +1122,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * real thing.. First build a call frame: 		 * 		 */
+comment|/* 		 * real thing.. First build a call frame: 		 */
 name|pushf
 argument_list|(
 name|fp
@@ -1004,7 +1148,7 @@ operator|=
 name|sp
 expr_stmt|;
 comment|/* new frame pointer */
-comment|/* 		 * now push the string arguments: 		 * 		 */
+comment|/* 		 * now push the string arguments: 		 */
 name|pushs
 argument_list|(
 name|p
@@ -1071,9 +1215,11 @@ operator|>
 operator|-
 literal|1
 condition|)
-name|error
+name|oops
 argument_list|(
-literal|"m4: unexpected end of input"
+literal|"unexpected end of input"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1100,7 +1246,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * non-alpha single-char token seen.. 	 * [the order of else if .. stmts is 	 * important.] 	 * 	 */
+comment|/* 	 * non-alpha single-char token seen.. 	 * [the order of else if .. stmts is important.] 	 */
 elseif|else
 if|if
 condition|(
@@ -1147,9 +1293,11 @@ name|l
 operator|==
 name|EOF
 condition|)
-name|error
+name|oops
 argument_list|(
-literal|"m4: missing right quote"
+literal|"missing right quote"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1310,9 +1458,11 @@ name|sp
 operator|==
 name|STACKMAX
 condition|)
-name|error
+name|oops
 argument_list|(
-literal|"m4: internal stack overflow"
+literal|"internal stack overflow"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1323,6 +1473,11 @@ name|MACRTYPE
 condition|)
 name|expand
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|mstack
 operator|+
 name|fp
@@ -1337,6 +1492,11 @@ expr_stmt|;
 else|else
 name|eval
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|mstack
 operator|+
 name|fp
@@ -1417,7 +1577,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * build an input token..  * consider only those starting with _ or A-Za-z. This is a  * combo with lookup to speed things up.  */
@@ -1435,12 +1595,6 @@ modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|h
-init|=
-literal|0
-decl_stmt|;
 specifier|register
 name|char
 name|c
@@ -1465,12 +1619,15 @@ specifier|register
 name|ndptr
 name|p
 decl_stmt|;
+specifier|register
+name|unsigned
+name|long
+name|h
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
-name|tp
-operator|<
-name|etp
-operator|&&
 operator|(
 name|isalnum
 argument_list|(
@@ -1484,9 +1641,21 @@ name|c
 operator|==
 literal|'_'
 operator|)
+operator|&&
+name|tp
+operator|<
+name|etp
 condition|)
 name|h
-operator|+=
+operator|=
+operator|(
+name|h
+operator|<<
+literal|5
+operator|)
+operator|+
+name|h
+operator|+
 operator|(
 operator|*
 name|tp
@@ -1506,9 +1675,11 @@ name|tp
 operator|==
 name|etp
 condition|)
-name|error
+name|oops
 argument_list|(
-literal|"m4: token too long"
+literal|"token too long"
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1539,7 +1710,7 @@ name|nxtptr
 control|)
 if|if
 condition|(
-name|strcmp
+name|STREQ
 argument_list|(
 name|name
 argument_list|,
@@ -1547,97 +1718,22 @@ name|p
 operator|->
 name|name
 argument_list|)
-operator|==
-literal|0
 condition|)
 break|break;
 return|return
-operator|(
 name|p
-operator|)
 return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NONZEROPAGES
-end_ifdef
-
 begin_comment
-comment|/*  * initm4 - initialize various tables. Useful only if your system   * does not know anything about demand-zero pages.  *  */
+comment|/*  * initkwds - initialise m4 keywords as fast as possible.   * This very similar to install, but without certain overheads,  * such as calling lookup. Malloc is not used for storing the   * keyword strings, since we simply use the static  pointers  * within keywrds block.  */
 end_comment
 
-begin_macro
-name|initm4
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|HASHSIZE
-condition|;
-name|i
-operator|++
-control|)
-name|hashtab
-index|[
-name|i
-index|]
-operator|=
-name|nil
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAXOUT
-condition|;
-name|i
-operator|++
-control|)
-name|outfile
-index|[
-name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * initkwds - initialise m4 keywords as fast as possible.   * This very similar to install, but without certain overheads,  * such as calling lookup. Malloc is not used for storing the   * keyword strings, since we simply use the static  pointers  * within keywrds block. We also assume that there is enough memory   * to at least install the keywords (i.e. malloc won't fail).  *  */
-end_comment
-
-begin_macro
+begin_function
+name|void
 name|initkwds
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1682,7 +1778,7 @@ operator|=
 operator|(
 name|ndptr
 operator|)
-name|malloc
+name|xalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1739,7 +1835,7 @@ name|STATIC
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
