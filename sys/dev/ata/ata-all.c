@@ -7420,6 +7420,15 @@ literal|0xf
 operator|)
 argument_list|)
 expr_stmt|;
+name|atadev
+operator|->
+name|channel
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ATA_48BIT_ACTIVE
+expr_stmt|;
 block|}
 switch|switch
 condition|(

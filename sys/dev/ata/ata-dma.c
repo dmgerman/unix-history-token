@@ -9933,13 +9933,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ch
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ATA_48BIT_ACTIVE
-expr_stmt|;
 block|}
 block|}
 name|error
