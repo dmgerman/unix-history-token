@@ -1540,10 +1540,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|test_write
+operator|&&
 name|fixate
 operator|&&
 operator|!
 name|dao
+operator|&&
+operator|!
+name|dvdrw
 condition|)
 block|{
 if|if
