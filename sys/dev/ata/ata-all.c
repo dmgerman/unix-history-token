@@ -2791,7 +2791,7 @@ if|if
 condition|(
 name|request
 operator|->
-name|error
+name|result
 condition|)
 name|iocmd
 operator|->
@@ -2803,7 +2803,7 @@ name|error
 operator|=
 name|request
 operator|->
-name|error
+name|result
 expr_stmt|;
 else|else
 block|{
