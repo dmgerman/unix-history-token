@@ -40,6 +40,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<i386/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/i82365.h>
 end_include
 
@@ -59,18 +71,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
 
 begin_include
 include|#
