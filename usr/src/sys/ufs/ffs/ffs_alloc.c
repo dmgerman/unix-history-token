@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.9	82/07/22	*/
+comment|/*	ffs_alloc.c	2.10	82/08/03	*/
 end_comment
 
 begin_include
