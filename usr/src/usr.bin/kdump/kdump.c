@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	5.2 (Berkeley) %G%"
+literal|"@(#)kdump.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -397,6 +403,42 @@ argument_list|,
 name|strerror
 argument_list|(
 name|ENOMEM
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|freopen
+argument_list|(
+name|tracefile
+argument_list|,
+literal|"r"
+argument_list|,
+name|stdin
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"kdump: %s: %s.\n"
+argument_list|,
+name|tracefile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
