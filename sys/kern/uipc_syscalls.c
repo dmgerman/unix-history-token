@@ -9401,6 +9401,17 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 	 * sendfile cannot be restarted. 	 */
+if|if
+condition|(
+name|error
+operator|==
+name|ERESTART
+condition|)
+name|error
+operator|=
+name|EINTR
+expr_stmt|;
 return|return
 operator|(
 name|error
