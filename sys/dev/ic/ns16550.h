@@ -128,5 +128,16 @@ begin_comment
 comment|/* modem status register (R/W) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|com_scr
+value|7
+end_define
+
+begin_comment
+comment|/* scratch register for 16450 up (R/W) */
+end_comment
+
 end_unit
 
