@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.7	%G%	*/
+comment|/*	machdep.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version machdep.c) 81/02/07 \n"
+literal|"VM/UNIX (Berkeley Version 4.8) %D% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,47 +755,6 @@ operator|-
 name|oicr
 operator|)
 return|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TRACE
-end_ifdef
-
-begin_comment
-comment|/*  * Put the current time into the trace,  * in fractional seconds (i.e. 12345 means the  * current time is ``n.12345'' for some n.  */
-end_comment
-
-begin_macro
-name|ttime
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|trace
-argument_list|(
-literal|"%d "
-argument_list|,
-operator|(
-name|lbolt
-operator|*
-literal|16667
-operator|+
-name|mfpr
-argument_list|(
-name|ICR
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1466,58 +1425,40 @@ name|MEMINTVL
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
-end_if
-
 begin_define
 define|#
 directive|define
-name|MHIERR
+name|M780_HIERR
 value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MERLOG
+name|M780_ERLOG
 value|0x10000000
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
 directive|define
-name|MUNCORR
+name|M750_UNCORR
 value|0xc0000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCORERR
+name|M750_CORERR
 value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MERLOG
+name|M750_ERLOG
 value|(MUNCORR|MCORERR)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|memchk
@@ -1526,48 +1467,48 @@ end_macro
 
 begin_block
 block|{
+specifier|register
+name|int
+name|c
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|#
 directive|if
 name|VAX
 operator|==
 literal|780
-specifier|register
-name|int
-name|c
-init|=
+name|error
+operator|=
 name|mcr
 index|[
 literal|2
 index|]
-decl_stmt|;
+operator|&
+name|M780_ERLOG
+expr_stmt|;
 else|#
 directive|else
-specifier|register
-name|int
-name|c
-init|=
+name|error
+operator|=
 name|mcr
 index|[
 literal|0
 index|]
-decl_stmt|;
+operator|&
+name|M750_ERLOG
+expr_stmt|;
 endif|#
 directive|endif
 if|if
 condition|(
-name|c
-operator|&
-name|MERLOG
+name|error
 condition|)
 block|{
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
 name|printf
 argument_list|(
-literal|"MEMERR: mcra %X mcrb %X mcrc %X\n"
+literal|"MEMERR: %x %x %x\n"
 argument_list|,
 name|mcr
 index|[
@@ -1579,39 +1520,28 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|c
+name|mcr
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 name|mcr
 index|[
 literal|2
 index|]
 operator|=
-operator|(
-name|MERLOG
+name|M780_ERLOG
 operator||
-name|MHIERR
-operator|)
+name|M780_MHIERR
 expr_stmt|;
 else|#
 directive|else
-name|printf
-argument_list|(
-literal|"MEMERR: csr0 %X csr1 %X csr2 %X\n"
-argument_list|,
-name|c
-argument_list|,
-name|mcr
-index|[
-literal|1
-index|]
-argument_list|,
-name|mcr
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
 name|mcr
 index|[
 literal|0
@@ -1622,6 +1552,21 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+if|#
+directive|if
+name|VAX
+operator|==
+literal|750
+name|mcr
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* report errors */
+endif|#
+directive|endif
 if|if
 condition|(
 name|memintvl
