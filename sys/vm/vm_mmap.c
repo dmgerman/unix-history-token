@@ -2922,12 +2922,6 @@ name|cend
 condition|)
 block|{
 comment|/* 			 * Check pmap first, it is likely faster, also 			 * it can provide info as to whether we are the 			 * one referencing or modifying the page. 			 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|mincoreinfo
 operator|=
 name|pmap_mincore
@@ -2935,12 +2929,6 @@ argument_list|(
 name|pmap
 argument_list|,
 name|addr
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
