@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,12 +127,16 @@ index|]
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|envtmp
 operator|=
 name|getenv
 argument_list|(
 literal|"TMPDIR"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -141,11 +145,16 @@ name|sprintf
 argument_list|(
 name|path
 argument_list|,
-literal|"%s/%s"
+literal|"%s%s"
 argument_list|,
 name|envtmp
 argument_list|,
+name|strrchr
+argument_list|(
 name|_PATH_RANTMP
+argument_list|,
+literal|'/'
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -197,7 +206,7 @@ literal|1
 condition|)
 name|error
 argument_list|(
-name|tname
+name|path
 argument_list|)
 expr_stmt|;
 operator|(
