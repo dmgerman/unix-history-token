@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.64 1996/02/19 00:03:50 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.65 1996/03/10 07:12:49 gibbs Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -157,12 +157,27 @@ begin_comment
 comment|/* **    Number of logic units supported by the driver. **    n enables logic unit numbers 0..n-1. **    The common SCSI devices require only **    one lun, so take 1 as the default. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX_LUN
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MAX_LUN
 value|(8)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MAX_LUN */
+end_comment
 
 begin_comment
 comment|/* **    The maximum number of jobs scheduled for starting. **    There should be one slot per target, and one slot **    for each tag of each target in use. **    The calculation below is actually quite silly ... */
@@ -3095,7 +3110,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.64 1996/02/19 00:03:50 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.65 1996/03/10 07:12:49 gibbs Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -10175,9 +10190,47 @@ literal|7
 index|]
 condition|)
 block|{
+comment|/* 		**	negotiate wide transfers ? 		*/
+if|if
+condition|(
+operator|!
+name|tp
+operator|->
+name|widedone
+condition|)
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|inqdata
+index|[
+literal|7
+index|]
+operator|&
+name|INQ7_WIDE16
+condition|)
+block|{
+name|nego
+operator|=
+name|NS_WIDE
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|widedone
+operator|=
+literal|1
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* 		**	negotiate synchronous transfers? 		*/
 if|if
 condition|(
+operator|!
+name|nego
+operator|&&
 operator|!
 name|tp
 operator|->
@@ -10192,16 +10245,6 @@ directive|if
 name|defined
 argument_list|(
 name|CDROM_ASYNC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|GENERIC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BOOTMFS
 argument_list|)
 operator|&&
 operator|(
@@ -10264,46 +10307,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-block|}
-empty_stmt|;
-comment|/* 		**	negotiate wide transfers ? 		*/
-if|if
-condition|(
-operator|!
-name|tp
-operator|->
-name|widedone
-condition|)
-block|{
-if|if
-condition|(
-name|tp
-operator|->
-name|inqdata
-index|[
-literal|7
-index|]
-operator|&
-name|INQ7_WIDE16
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|nego
-condition|)
-name|nego
-operator|=
-name|NS_WIDE
-expr_stmt|;
-block|}
-else|else
-name|tp
-operator|->
-name|widedone
-operator|=
-literal|1
-expr_stmt|;
 block|}
 empty_stmt|;
 block|}
