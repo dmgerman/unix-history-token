@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)errno.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)errno.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -811,6 +811,87 @@ end_define
 
 begin_comment
 comment|/* Disc quota exceeded */
+end_comment
+
+begin_comment
+comment|/* Network File System */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESTALE
+value|70
+end_define
+
+begin_comment
+comment|/* Stale NFS file handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EREMOTE
+value|71
+end_define
+
+begin_comment
+comment|/* Too many levels of remote in path */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EBADRPC
+value|72
+end_define
+
+begin_comment
+comment|/* RPC struct is bad */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERPCMISMATCH
+value|73
+end_define
+
+begin_comment
+comment|/* RPC version wrong */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPROGUNAVAIL
+value|74
+end_define
+
+begin_comment
+comment|/* RPC prog. not avail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPROGMISMATCH
+value|75
+end_define
+
+begin_comment
+comment|/* Program version wrong */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EPROCUNAVAIL
+value|76
+end_define
+
+begin_comment
+comment|/* Bad procedure for program */
 end_comment
 
 begin_comment
