@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.31 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.32 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.31 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.32 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,16 @@ end_endif
 
 begin_comment
 comment|/* not lint */
+end_comment
+
+begin_decl_stmt
+name|int
+name|la
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* load average */
 end_comment
 
 begin_ifdef
@@ -1047,6 +1057,14 @@ name|on
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -1254,6 +1272,13 @@ name|EX_TEMPFAIL
 operator|)
 return|;
 default|default:
+block|{
+specifier|extern
+name|char
+modifier|*
+name|errstring
+parameter_list|()
+function_decl|;
 name|message
 argument_list|(
 name|Arpa_Info
@@ -1271,6 +1296,7 @@ operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
+block|}
 block|}
 block|}
 comment|/* connection ok, put it into canonical form */
