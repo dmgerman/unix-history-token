@@ -1500,6 +1500,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|strchr
+argument_list|(
+name|lusername
+argument_list|,
+literal|'-'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tried to pass user \"%s\" to login"
+argument_list|,
+name|lusername
+argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|"invalid user"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|authenticated
 condition|)
 block|{
