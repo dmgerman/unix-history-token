@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prof.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prof.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_comment
@@ -255,9 +261,13 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|calloc
+name|malloc
 argument_list|(
 name|ssiz
+argument_list|,
+name|M_GPROF
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -286,9 +296,13 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|calloc
+name|malloc
 argument_list|(
 name|fromssize
+argument_list|,
+name|M_GPROF
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -303,11 +317,11 @@ argument_list|(
 literal|"No space for monitor buffer(s)\n"
 argument_list|)
 expr_stmt|;
-name|cfreemem
+name|free
 argument_list|(
 name|sbuf
 argument_list|,
-name|ssiz
+name|M_GPROF
 argument_list|)
 expr_stmt|;
 name|sbuf
@@ -368,9 +382,13 @@ expr|struct
 name|tostruct
 operator|*
 operator|)
-name|calloc
+name|malloc
 argument_list|(
 name|tossize
+argument_list|,
+name|M_GPROF
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -385,22 +403,22 @@ argument_list|(
 literal|"No space for monitor buffer(s)\n"
 argument_list|)
 expr_stmt|;
-name|cfreemem
+name|free
 argument_list|(
 name|sbuf
 argument_list|,
-name|ssiz
+name|M_GPROF
 argument_list|)
 operator|,
 name|sbuf
 operator|=
 literal|0
 expr_stmt|;
-name|cfreemem
+name|free
 argument_list|(
 name|froms
 argument_list|,
-name|fromssize
+name|M_GPROF
 argument_list|)
 operator|,
 name|froms
