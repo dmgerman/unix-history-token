@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.32 (Berkeley) %G%"
+literal|"@(#)mount.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,7 @@ literal|'u'
 case|:
 name|updateflg
 operator|=
-name|M_UPDATE
+name|MNT_UPDATE
 expr_stmt|;
 break|break;
 case|case
@@ -637,7 +637,7 @@ argument_list|)
 condition|)
 name|flags
 operator|=
-name|M_UPDATE
+name|MNT_UPDATE
 expr_stmt|;
 else|else
 name|flags
@@ -1268,13 +1268,13 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_RDONLY
+name|MNT_RDONLY
 condition|)
 name|args
 operator|.
 name|exflags
 operator|=
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 expr_stmt|;
 else|else
 name|args
@@ -1685,7 +1685,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_UPDATE
+name|MNT_UPDATE
 condition|)
 name|fprintf
 argument_list|(
@@ -1814,7 +1814,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_RDONLY
+name|MNT_RDONLY
 condition|)
 name|printf
 argument_list|(
@@ -1825,7 +1825,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_NOEXEC
+name|MNT_NOEXEC
 condition|)
 name|printf
 argument_list|(
@@ -1836,7 +1836,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_NOSUID
+name|MNT_NOSUID
 condition|)
 name|printf
 argument_list|(
@@ -1847,7 +1847,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_NODEV
+name|MNT_NODEV
 condition|)
 name|printf
 argument_list|(
@@ -1858,7 +1858,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_SYNCHRONOUS
+name|MNT_SYNCHRONOUS
 condition|)
 name|printf
 argument_list|(
@@ -1869,7 +1869,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_QUOTA
+name|MNT_QUOTA
 condition|)
 name|printf
 argument_list|(
@@ -1880,7 +1880,7 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_LOCAL
+name|MNT_LOCAL
 condition|)
 name|printf
 argument_list|(
@@ -1891,13 +1891,13 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_EXPORTED
+name|MNT_EXPORTED
 condition|)
 if|if
 condition|(
 name|flags
 operator|&
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 condition|)
 name|printf
 argument_list|(
@@ -2144,7 +2144,7 @@ block|{
 operator|*
 name|flagp
 operator||=
-name|M_RDONLY
+name|MNT_RDONLY
 expr_stmt|;
 continue|continue;
 block|}
@@ -2166,7 +2166,7 @@ operator|*
 name|flagp
 operator|&=
 operator|~
-name|M_RDONLY
+name|MNT_RDONLY
 expr_stmt|;
 continue|continue;
 block|}
@@ -2188,14 +2188,14 @@ condition|)
 operator|*
 name|flagp
 operator||=
-name|M_NOEXEC
+name|MNT_NOEXEC
 expr_stmt|;
 else|else
 operator|*
 name|flagp
 operator|&=
 operator|~
-name|M_NOEXEC
+name|MNT_NOEXEC
 expr_stmt|;
 continue|continue;
 block|}
@@ -2217,14 +2217,14 @@ condition|)
 operator|*
 name|flagp
 operator||=
-name|M_NOSUID
+name|MNT_NOSUID
 expr_stmt|;
 else|else
 operator|*
 name|flagp
 operator|&=
 operator|~
-name|M_NOSUID
+name|MNT_NOSUID
 expr_stmt|;
 continue|continue;
 block|}
@@ -2246,14 +2246,14 @@ condition|)
 operator|*
 name|flagp
 operator||=
-name|M_NODEV
+name|MNT_NODEV
 expr_stmt|;
 else|else
 operator|*
 name|flagp
 operator|&=
 operator|~
-name|M_NODEV
+name|MNT_NODEV
 expr_stmt|;
 continue|continue;
 block|}
@@ -2276,14 +2276,14 @@ condition|)
 operator|*
 name|flagp
 operator||=
-name|M_SYNCHRONOUS
+name|MNT_SYNCHRONOUS
 expr_stmt|;
 else|else
 operator|*
 name|flagp
 operator|&=
 operator|~
-name|M_SYNCHRONOUS
+name|MNT_SYNCHRONOUS
 expr_stmt|;
 continue|continue;
 block|}

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.5 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2579,7 +2579,7 @@ condition|)
 block|{
 name|exflags
 operator|=
-name|M_EXPORTED
+name|MNT_EXPORTED
 expr_stmt|;
 name|rootuid
 operator|=
@@ -2747,7 +2747,7 @@ literal|'o'
 case|:
 name|exflags
 operator||=
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 expr_stmt|;
 break|break;
 case|case
@@ -3093,7 +3093,7 @@ name|ep
 operator|->
 name|ex_dirp
 argument_list|,
-name|M_UPDATE
+name|MNT_UPDATE
 argument_list|,
 operator|&
 name|args
