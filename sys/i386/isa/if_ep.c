@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_ep.c,v 1.5 1994/01/26 09:13:56 nate Exp $  */
+comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_ep.c,v 1.6 1994/01/26 20:18:56 nate Exp $  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"sys/param.h"
 end_include
 
 begin_if
@@ -45,13 +45,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|"sys/kernel.h"
 end_include
 
 begin_endif
@@ -62,31 +62,31 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
+file|"sys/mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|"sys/socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|"sys/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|"sys/errno.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
+file|"sys/syslog.h"
 end_include
 
 begin_if
@@ -101,7 +101,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
+file|"sys/select.h"
 end_include
 
 begin_endif
@@ -112,31 +112,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/netisr.h>
+file|"net/if_dl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
+file|"net/if_types.h"
 end_include
 
 begin_ifdef
@@ -148,31 +136,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|"netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
+file|"netinet/in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_var.h>
+file|"netinet/in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip.h>
+file|"netinet/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|"netinet/if_ether.h"
 end_include
 
 begin_endif
@@ -189,13 +177,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netns/ns.h>
+file|"netns/ns.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netns/ns_if.h>
+file|"netns/ns_if.h"
 end_include
 
 begin_endif
@@ -214,13 +202,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|"net/bpf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/bpfdesc.h>
+file|"net/bpfdesc.h"
 end_include
 
 begin_endif
@@ -231,31 +219,31 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/pio.h>
+file|"machine/pio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
+file|"i386/isa/isa.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa_device.h>
+file|"i386/isa/isa_device.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/icu.h>
+file|"i386/isa/icu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_epreg.h>
+file|"i386/isa/if_epreg.h"
 end_include
 
 begin_define
@@ -2263,6 +2251,9 @@ expr|struct
 name|trailer_header
 argument_list|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|trailer_header
 operator|.
@@ -3531,7 +3522,7 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|ep_ac
+name|arpcom
 operator|.
 name|ac_if
 operator|.
@@ -3561,7 +3552,7 @@ name|ether_dhost
 argument_list|,
 name|sc
 operator|->
-name|ep_ac
+name|arpcom
 operator|.
 name|ac_enaddr
 argument_list|,
