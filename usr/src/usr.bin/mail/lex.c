@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.8 %G%"
+literal|"@(#)lex.c	1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -885,7 +885,7 @@ name|com
 operator|->
 name|c_argtype
 operator|&
-name|C
+name|F
 operator|)
 operator|==
 literal|0
@@ -1065,7 +1065,7 @@ name|c_argtype
 operator|&
 operator|~
 operator|(
-name|C
+name|F
 operator||
 name|P
 operator||
