@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.5 1995/10/08 18:44:20 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.6 1995/10/22 14:47:00 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -12,6 +12,46 @@ undef|#
 directive|undef
 name|EXTRA_SANITY
 end_undef
+
+begin_comment
+comment|/*  * Defining MALLOC_STATS will enable you to call malloc_dump() and set  * the [dD] options in the MALLOC_OPTIONS environment variable.  * It has no run-time performance hit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MALLOC_STATS
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EXTRA_SANITY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MALLOC_STATS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MALLOC_STATS
+end_define
+
+begin_comment
+comment|/* required for EXTRA_SANITY */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * What to use for Junk  */
@@ -650,7 +690,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_STATS
 end_ifdef
 
 begin_comment
@@ -670,7 +710,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_STATS */
 end_comment
 
 begin_comment
@@ -749,7 +789,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_STATS
 end_ifdef
 
 begin_function
@@ -1173,7 +1213,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_STATS */
 end_comment
 
 begin_function
@@ -1222,7 +1262,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_STATS
 if|if
 condition|(
 name|malloc_stats
@@ -1234,7 +1274,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_STATS */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -1712,6 +1752,8 @@ name|old
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|oldlen
 decl_stmt|;
 comment|/* Make it this many pages */
 name|i
@@ -1730,6 +1772,16 @@ name|i
 operator|+=
 literal|2
 expr_stmt|;
+comment|/* remember the old mapping size */
+name|oldlen
+operator|=
+name|malloc_ninfo
+operator|*
+sizeof|sizeof
+expr|*
+name|page_dir
+expr_stmt|;
+comment|/*      * NOTE: we allocate new pages and copy the directory rather than tempt      * fate by trying to "grow" the region.. There is nothing to prevent      * us from accidently re-mapping space that's been allocated by our caller      * via dlopen() or other mmap().      *      * The copy problem is not too bad, as there is 4K of page index per      * 4MB of malloc arena.      *      * We can totally avoid the copy if we open a file descriptor to associate      * the anon mappings with.  Then, when we remap the pages at the new      * address, the old pages will be "magically" remapped..  But this means      * keeping open a "secret" file descriptor.....      */
 comment|/* Get new pages */
 name|new
 operator|=
@@ -1739,33 +1791,45 @@ name|pginfo
 operator|*
 operator|*
 operator|)
-name|map_pages
+name|mmap
 argument_list|(
+literal|0
+argument_list|,
 name|i
+operator|*
+name|malloc_pagesize
+argument_list|,
+name|PROT_READ
+operator||
+name|PROT_WRITE
+argument_list|,
+name|MAP_ANON
+operator||
+name|MAP_PRIVATE
+argument_list|,
+operator|-
+literal|1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|new
+operator|==
+operator|(
+expr|struct
+name|pginfo
+operator|*
+operator|*
+operator|)
+operator|-
+literal|1
 condition|)
 return|return
 literal|0
 return|;
 comment|/* Copy the old stuff */
-name|memset
-argument_list|(
-name|new
-argument_list|,
-literal|0
-argument_list|,
-name|i
-operator|*
-name|malloc_pagesize
-argument_list|)
-expr_stmt|;
 name|memcpy
 argument_list|(
 name|new
@@ -1799,40 +1863,15 @@ name|page_dir
 operator|=
 name|new
 expr_stmt|;
-comment|/* Mark the pages */
-name|index
-operator|=
-name|ptr2index
-argument_list|(
-name|new
-argument_list|)
-expr_stmt|;
-name|page_dir
-index|[
-name|index
-index|]
-operator|=
-name|MALLOC_FIRST
-expr_stmt|;
-while|while
-condition|(
-operator|--
-name|i
-condition|)
-block|{
-name|page_dir
-index|[
-operator|++
-name|index
-index|]
-operator|=
-name|MALLOC_FOLLOW
-expr_stmt|;
-block|}
 comment|/* Now free the old stuff */
-name|free
+name|munmap
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|old
+argument_list|,
+name|oldlen
 argument_list|)
 expr_stmt|;
 return|return
@@ -1907,7 +1946,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|EXTRA_SANITY
+name|MALLOC_STATS
 case|case
 literal|'d'
 case|:
@@ -1926,7 +1965,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* EXTRA_SANITY */
+comment|/* MALLOC_STATS */
 case|case
 literal|'r'
 case|:
@@ -2165,8 +2204,21 @@ name|pginfo
 operator|*
 operator|*
 operator|)
-name|map_pages
+name|mmap
 argument_list|(
+literal|0
+argument_list|,
+name|malloc_pagesize
+argument_list|,
+name|PROT_READ
+operator||
+name|PROT_WRITE
+argument_list|,
+name|MAP_ANON
+operator||
+name|MAP_PRIVATE
+argument_list|,
+operator|-
 literal|1
 argument_list|,
 literal|0
@@ -2174,8 +2226,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|page_dir
+operator|==
+operator|(
+expr|struct
+name|pginfo
+operator|*
+operator|*
+operator|)
+operator|-
+literal|1
 condition|)
 name|wrterror
 argument_list|(
@@ -2186,24 +2246,26 @@ comment|/*      * We need a maximum of malloc_pageshift buckets, steal these fro
 name|malloc_origo
 operator|=
 operator|(
+operator|(
 name|u_long
 operator|)
-name|page_dir
+name|pageround
+argument_list|(
+operator|(
+name|u_long
+operator|)
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+operator|)
 operator|>>
 name|malloc_pageshift
 expr_stmt|;
 name|malloc_origo
 operator|-=
 name|malloc_pageshift
-expr_stmt|;
-name|memset
-argument_list|(
-name|page_dir
-argument_list|,
-literal|0
-argument_list|,
-name|malloc_pagesize
-argument_list|)
 expr_stmt|;
 name|malloc_ninfo
 operator|=
@@ -2212,17 +2274,6 @@ operator|/
 sizeof|sizeof
 expr|*
 name|page_dir
-expr_stmt|;
-comment|/* Plug the page directory into itself */
-name|page_dir
-index|[
-name|ptr2index
-argument_list|(
-name|page_dir
-argument_list|)
-index|]
-operator|=
-name|MALLOC_FIRST
 expr_stmt|;
 comment|/* Been here, done that */
 name|initialized
