@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	1.1 %G%"
+literal|"@(#)collect.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,6 +611,8 @@ name|linebuf
 index|[
 literal|2
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
