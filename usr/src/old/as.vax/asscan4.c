@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan4.c 4.3 %G%"
+literal|"@(#)asscan4.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,22 +69,25 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|BACK
+parameter_list|(
+name|backval
+parameter_list|)
+value|intval = backval; goto stuffback;
+end_define
+
 begin_function
 name|int
 name|number
 parameter_list|(
 name|ch
-parameter_list|,
-name|cpp
 parameter_list|)
 name|reg
 name|int
 name|ch
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|cpp
 decl_stmt|;
 block|{
 name|int
@@ -109,6 +112,10 @@ name|char
 modifier|*
 name|inbufptr
 decl_stmt|;
+name|reg
+name|int
+name|inbufcnt
+decl_stmt|;
 name|char
 name|ch1
 decl_stmt|;
@@ -123,10 +130,7 @@ comment|/* overflow flag */
 name|int
 name|maxstrlg
 decl_stmt|;
-name|inbufptr
-operator|=
-operator|*
-name|cpp
+name|MEMTOREGBUF
 expr_stmt|;
 name|cp
 operator|=
@@ -160,16 +164,11 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
-expr_stmt|;
-return|return
-operator|(
+name|BACK
+argument_list|(
 name|BFINT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 case|case
 literal|'f'
 case|:
@@ -197,16 +196,11 @@ name|yylval
 operator|=
 literal|1
 expr_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
-expr_stmt|;
-return|return
-operator|(
+name|BACK
+argument_list|(
 name|BFINT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*FALLTHROUGH*/
 case|case
@@ -374,16 +368,11 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
-expr_stmt|;
-return|return
-operator|(
+name|BACK
+argument_list|(
 name|BFINT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 case|case
 literal|'b'
 case|:
@@ -400,16 +389,11 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
-expr_stmt|;
-return|return
-operator|(
+name|BACK
+argument_list|(
 name|BFINT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 default|default:
 name|ungetc
 argument_list|(
@@ -653,16 +637,11 @@ operator|=
 operator|-
 name|intval
 expr_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
-expr_stmt|;
-return|return
-operator|(
+name|BACK
+argument_list|(
 name|INT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|bignum
 label|:
 empty_stmt|;
@@ -678,36 +657,36 @@ operator|&
 name|overflow
 argument_list|)
 expr_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
-expr_stmt|;
-return|return
-operator|(
+name|BACK
+argument_list|(
 name|BIGNUM
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|floatnum
 label|:
 empty_stmt|;
-operator|*
-name|cpp
-operator|=
-name|inbufptr
+name|REGTOMEMBUF
 expr_stmt|;
 name|yybignum
 operator|=
 name|floatnumber
 argument_list|(
 name|ch
-argument_list|,
-name|cpp
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|BIGNUM
+operator|)
+return|;
+name|stuffback
+label|:
+empty_stmt|;
+name|REGTOMEMBUF
+expr_stmt|;
+return|return
+operator|(
+name|intval
 operator|)
 return|;
 block|}
@@ -717,7 +696,8 @@ begin_define
 define|#
 directive|define
 name|TOOLONG
-value|if(cp ==&numbuf[NUMSIZE]){if (passno == 2)yywarning(toolong); goto process;}
+define|\
+value|if (cp ==&numbuf[NUMSIZE]){ \ 		if (passno == 2) \ 			yywarning(toolong); \ 			goto process; \ 	}
 end_define
 
 begin_define
@@ -727,7 +707,8 @@ name|scanit
 parameter_list|(
 name|sign
 parameter_list|)
-value|*cpp = inbufptr; error |= scanint(sign,&cp, cpp); inbufptr = *cpp; ch = getchar(); TOOLONG;
+define|\
+value|REGTOMEMBUF; \ 	error |= scanint(sign,&cp); \ 	MEMTOREGBUF; \ 	ch = getchar(); \ 	TOOLONG;
 end_define
 
 begin_function
@@ -735,18 +716,10 @@ name|Bignum
 name|floatnumber
 parameter_list|(
 name|fltradix
-parameter_list|,
-name|cpp
 parameter_list|)
 name|int
 name|fltradix
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|cpp
-decl_stmt|;
-comment|/* call by copy return semantics */
 block|{
 name|char
 modifier|*
@@ -782,10 +755,11 @@ name|char
 modifier|*
 name|inbufptr
 decl_stmt|;
-name|inbufptr
-operator|=
-operator|*
-name|cpp
+name|reg
+name|int
+name|inbufcnt
+decl_stmt|;
+name|MEMTOREGBUF
 expr_stmt|;
 name|cp
 operator|=
@@ -975,12 +949,9 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 *	The overflow value is lost in the call to as_atof 	 */
-operator|*
-name|cpp
-operator|=
-name|inbufptr
+name|REGTOMEMBUF
 expr_stmt|;
+comment|/* 	 *	The overflow value is lost in the call to as_atof 	 */
 return|return
 operator|(
 name|as_atof
@@ -1008,8 +979,6 @@ parameter_list|(
 name|signOK
 parameter_list|,
 name|dstcpp
-parameter_list|,
-name|srccpp
 parameter_list|)
 name|int
 name|signOK
@@ -1019,12 +988,6 @@ modifier|*
 modifier|*
 name|dstcpp
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|srccpp
-decl_stmt|;
-comment|/* call by copy return */
 block|{
 name|int
 name|ch
@@ -1038,10 +1001,13 @@ name|reg
 name|char
 modifier|*
 name|inbufptr
-init|=
-operator|*
-name|srccpp
 decl_stmt|;
+name|reg
+name|int
+name|inbufcnt
+decl_stmt|;
+name|MEMTOREGBUF
+expr_stmt|;
 name|ch
 operator|=
 name|getchar
@@ -1118,10 +1084,7 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-operator|*
-name|srccpp
-operator|=
-name|inbufptr
+name|REGTOMEMBUF
 expr_stmt|;
 return|return
 operator|(

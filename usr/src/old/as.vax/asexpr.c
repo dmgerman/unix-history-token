@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asexpr.c 4.4 %G%"
+literal|"@(#)asexpr.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2167,12 +2167,6 @@ block|,
 name|CNTRL
 block|,
 literal|"skip"
-block|,
-name|NEEDSBUF
-block|,
-name|CNTRL
-block|,
-literal|"need scanner buffer"
 block|,
 name|NL
 block|,

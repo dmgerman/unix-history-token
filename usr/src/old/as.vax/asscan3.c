@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan3.c 4.3 %G%"
+literal|"@(#)asscan3.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,9 +38,6 @@ name|type
 index|[]
 init|=
 block|{
-comment|/*fill up the input buffer*/
-name|NEEDSBUF
-block|,
 comment|/*hit the hard end of file*/
 name|SCANEOF
 block|,

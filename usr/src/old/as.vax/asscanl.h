@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscanl.h 4.4 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscanl.h 4.5 %G%  */
 end_comment
 
 begin_comment
@@ -25,10 +25,6 @@ directive|include
 file|"asscan.h"
 end_include
 
-begin_comment
-comment|/*  *	Maps characters to their use in assembly language  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -36,15 +32,8 @@ name|EOFCHAR
 value|(-1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NEEDCHAR
-value|(-2)
-end_define
-
 begin_comment
-comment|/*  *	The table of possible uses for each character to test set inclusion.  *	Different than the above table, which knows about tokens yylex  *	is to return.  */
+comment|/*  *	The table of possible uses for each character to test set inclusion.  */
 end_comment
 
 begin_define
@@ -224,36 +213,53 @@ parameter_list|)
 value|(charsets[val]& (kind) )
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|getchar
-end_ifdef
+begin_comment
+comment|/*  *	We use our own version of getchar/ungetc to get  *	some speed improvement  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Ginbufptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|Ginbufcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|REGTOMEMBUF
+value|Ginbufptr = inbufptr, Ginbufcnt = inbufcnt
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMTOREGBUF
+value|inbufptr = Ginbufptr, inbufcnt = Ginbufcnt
+end_define
 
 begin_undef
 undef|#
 directive|undef
 name|getchar
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|getchar
 parameter_list|()
-value|*inbufptr++
+define|\
+value|(inbufcnt--> 0 ? (*inbufptr++) : \ 		(fillinbuffer(), \ 		MEMTOREGBUF, \ 		inbufptr[-1]))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ungetc
-end_ifdef
 
 begin_undef
 undef|#
@@ -261,61 +267,22 @@ directive|undef
 name|ungetc
 end_undef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|ungetc
 parameter_list|(
-name|char
-parameter_list|)
-value|*--inbufptr = char
-end_define
-
-begin_comment
-comment|/*  *	NOTE:  *		This version of the assembler does not use fread and fwrite  *	for the token buffering.  The token buffers are integrals of BUFSIZ  *	at all times, so we use direct read and write.  fread and fwrite  *	as supplied from BTL in stdio are HORRENDOUSLY inefficient,  *	as they use putchar for each character, nested two deep in loops.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|writeTEST
-parameter_list|(
-name|pointer
-parameter_list|,
-name|size
-parameter_list|,
-name|nelements
-parameter_list|,
-name|ioptr
+name|ch
 parameter_list|)
 define|\
-value|write(ioptr->_file, pointer, nelements * size) != nelements * size
+value|(++inbufcnt, *--inbufptr = ch)
 end_define
 
-begin_define
-define|#
-directive|define
-name|readTEST
-parameter_list|(
-name|pointer
-parameter_list|,
-name|size
-parameter_list|,
-name|nelements
-parameter_list|,
-name|ioptr
-parameter_list|)
-define|\
-value|read(ioptr->_file, pointer, nelements * size) != nelements * size
-end_define
+begin_escape
+end_escape
 
 begin_comment
-comment|/*  *	Variables to manage the token buffering.  *	We scan (lexically analyze) a large number of tokens, and  *	then parse all of the tokens in the scan buffer.  *	This reduces procedure call overhead when the parser  *	demands a token, allows for an efficient reread during  *	the second pass, and confuses the line number reporting  *	for errors encountered in the scanner and in the parser.  */
+comment|/*  *	Variables and definitions to manage the token buffering.  *	We scan (lexically analyze) a large number of tokens, and  *	then parse all of the tokens in the scan buffer.  *	This reduces procedure call overhead when the parser  *	demands a token, allows for an efficient reread during  *	the second pass, and confuses the line number reporting  *	for errors encountered in the scanner and in the parser.  */
 end_comment
 
 begin_define
@@ -437,41 +404,42 @@ begin_comment
 comment|/*the last token in the current token buffer*/
 end_comment
 
+begin_comment
+comment|/*  *	as does not use fread and fwrite for the token buffering.  *	The token buffers are integrals of BUFSIZ  *	at all times, so we use direct read and write.  *	fread and fwrite in stdio are HORRENDOUSLY inefficient,  *	as they use putchar for each character, nested two deep in loops.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|bstrlg
+name|writeTEST
 parameter_list|(
-name|from
+name|pointer
 parameter_list|,
-name|length
+name|size
+parameter_list|,
+name|nelements
+parameter_list|,
+name|ioptr
 parameter_list|)
 define|\
-value|*(lgtype *)from = length; \ 	(bytetoktype *)from += sizeof(lgtype) + length
+value|write(ioptr->_file, pointer, nelements * size) != nelements * size
 end_define
 
 begin_define
 define|#
 directive|define
-name|bstrfromto
+name|readTEST
 parameter_list|(
-name|from
+name|pointer
 parameter_list|,
-name|to
+name|size
+parameter_list|,
+name|nelements
+parameter_list|,
+name|ioptr
 parameter_list|)
 define|\
-value|*(lgtype *)from = (bytetoktype *)to - (bytetoktype *)from - sizeof(lgtype); \ 	(bytetoktype *)from += sizeof(lgtype) + (bytetoktype *)to - (bytetoktype *)from
-end_define
-
-begin_define
-define|#
-directive|define
-name|eatstrlg
-parameter_list|(
-name|from
-parameter_list|)
-define|\
-value|(bytetoktype *)from +=  sizeof(lgtype) + *(lgtype *)from
+value|read(ioptr->_file, pointer, nelements * size) != nelements * size
 end_define
 
 begin_define

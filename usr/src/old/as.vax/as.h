@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.13 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.14 %G%  */
 end_comment
 
 begin_ifdef
@@ -387,18 +387,6 @@ begin_if
 if|#
 directive|if
 operator|(
-operator|(
-name|ASINBUFSIZ
-operator|<
-name|NCPString
-operator|)
-operator|||
-operator|(
-name|ASINBUFSIZ
-operator|<
-name|NCPName
-operator|)
-operator|||
 operator|(
 name|STRPOOLDALLOP
 operator|<
