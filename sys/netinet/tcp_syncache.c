@@ -1057,8 +1057,6 @@ name|tt_timerq
 index|[
 name|i
 index|]
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2580,7 +2578,8 @@ operator|*
 operator|)
 name|sin6
 argument_list|,
-name|thread0
+operator|&
+name|proc0
 argument_list|)
 condition|)
 block|{
@@ -2789,7 +2788,8 @@ operator|*
 operator|)
 name|sin
 argument_list|,
-name|thread0
+operator|&
+name|proc0
 argument_list|)
 condition|)
 block|{
