@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.42 1999/04/28 10:52:51 dt Exp $ */
+comment|/* $Id: scd.c,v 1.43 1999/05/06 18:54:19 peter Exp $ */
 end_comment
 
 begin_comment
@@ -961,13 +961,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_read_t
-name|scdread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_close_t
 name|scdclose
 decl_stmt|;
@@ -1012,7 +1005,7 @@ name|scdopen
 block|,
 name|scdclose
 block|,
-name|scdread
+name|physread
 block|,
 name|nowrite
 block|,
@@ -1635,44 +1628,6 @@ literal|0
 expr_stmt|;
 return|return
 literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|scdread
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
-block|{
-return|return
-operator|(
-name|physio
-argument_list|(
-name|scdstrategy
-argument_list|,
-name|NULL
-argument_list|,
-name|dev
-argument_list|,
-literal|1
-argument_list|,
-name|minphys
-argument_list|,
-name|uio
-argument_list|)
-operator|)
 return|;
 block|}
 end_function

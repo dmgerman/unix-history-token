@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.37 1998/12/13 23:36:16 eivind Exp $ */
+comment|/* $Id: matcd.c,v 1.38 1999/04/28 10:53:12 dt Exp $ */
 end_comment
 
 begin_comment
@@ -826,13 +826,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_read_t
-name|matcdread
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_close_t
 name|matcdclose
 decl_stmt|;
@@ -884,7 +877,7 @@ name|matcdopen
 block|,
 name|matcdclose
 block|,
-name|matcdread
+name|physread
 block|,
 name|nowrite
 block|,
@@ -2799,44 +2792,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|matcdread
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|int
-name|ioflag
-parameter_list|)
-block|{
-return|return
-operator|(
-name|physio
-argument_list|(
-name|matcdstrategy
-argument_list|,
-name|NULL
-argument_list|,
-name|dev
-argument_list|,
-literal|1
-argument_list|,
-name|minphys
-argument_list|,
-name|uio
-argument_list|)
 operator|)
 return|;
 block|}
