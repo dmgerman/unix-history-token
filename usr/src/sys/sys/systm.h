@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.33	83/02/10	*/
+comment|/*	systm.h	4.34	83/03/31	*/
 end_comment
 
 begin_comment
@@ -308,13 +308,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|dev_t
-name|getmdev
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|daddr_t
