@@ -2929,7 +2929,7 @@ case|:
 operator|*
 name|typep
 operator|=
-literal|"longlong_t"
+literal|"int64_t"
 expr_stmt|;
 operator|(
 name|void
@@ -3121,7 +3121,7 @@ expr_stmt|;
 operator|*
 name|typep
 operator|=
-literal|"ulonglong_t"
+literal|"u_int64_t"
 expr_stmt|;
 operator|(
 name|void
