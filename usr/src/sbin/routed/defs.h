@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.9	82/06/09	*/
+comment|/*	defs.h	4.10	82/06/10	*/
 end_comment
 
 begin_comment
@@ -12,6 +12,155 @@ include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_comment
+comment|/*  * An ``interface'' is similar to an ifnet structure,  * except it doesn't contain q'ing info, and it also  * handles ``logical'' interfaces (remote gateways  * that we want to keep polling even if they go down).  * The list of interfaces which we maintain is used  * in supplying the gratuitous routing table updates.  */
+end_comment
+
+begin_struct
+struct|struct
+name|interface
+block|{
+name|struct
+name|interface
+modifier|*
+name|int_next
+decl_stmt|;
+name|struct
+name|sockaddr
+name|int_addr
+decl_stmt|;
+comment|/* address on this host */
+union|union
+block|{
+name|struct
+name|sockaddr
+name|intu_broadaddr
+decl_stmt|;
+name|struct
+name|sockaddr
+name|intu_dstaddr
+decl_stmt|;
+block|}
+name|int_intu
+union|;
+define|#
+directive|define
+name|int_broadaddr
+value|int_intu.intu_broadaddr
+comment|/* broadcast address */
+define|#
+directive|define
+name|int_dstaddr
+value|int_intu.intu_dstaddr
+comment|/* other end of p-to-p link */
+name|int
+name|int_metric
+decl_stmt|;
+comment|/* init's routing entry */
+name|int
+name|int_flags
+decl_stmt|;
+comment|/* see below */
+name|int
+name|int_net
+decl_stmt|;
+comment|/* network # */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * 0x1 to 0x10 are reused from the kernel's ifnet definitions,  * the others agree with the RTS_ flags defined below  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_UP
+value|0x1
+end_define
+
+begin_comment
+comment|/* interface is up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_BROADCAST
+value|0x2
+end_define
+
+begin_comment
+comment|/* broadcast address valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_DEBUG
+value|0x4
+end_define
+
+begin_comment
+comment|/* turn on debugging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_ROUTE
+value|0x8
+end_define
+
+begin_comment
+comment|/* routing entry installed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_POINTOPOINT
+value|0x10
+end_define
+
+begin_comment
+comment|/* interface is point-to-point link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_PASSIVE
+value|0x20
+end_define
+
+begin_comment
+comment|/* can't tell if up/down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_INTERFACE
+value|0x40
+end_define
+
+begin_comment
+comment|/* hardware interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_REMOTE
+value|0x80
+end_define
+
+begin_comment
+comment|/* interface isn't on this machine */
+end_comment
 
 begin_comment
 comment|/*  * Routing table structure; differs a bit from kernel tables.  *  * Note: the union below must agree in the first 4 members  * so the ioctl's will work.  */
@@ -81,13 +230,9 @@ name|int
 name|rtu_metric
 decl_stmt|;
 name|struct
-name|ifnet
+name|interface
 modifier|*
 name|rtu_ifp
-decl_stmt|;
-name|struct
-name|sockaddr
-name|rtu_oldrouter
 decl_stmt|;
 block|}
 name|rtu_entry
@@ -201,17 +346,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|rt_oldrouter
-value|rt_rtu.rtu_entry.rtu_oldrouter
-end_define
-
-begin_comment
-comment|/* for change's */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ROUTEHASHSIZ
 value|19
 end_define
@@ -223,41 +357,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTS_DELRT
+name|RTS_CHANGED
 value|0x1
 end_define
 
 begin_comment
-comment|/* delete pending */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTS_CHGRT
-value|0x2
-end_define
-
-begin_comment
-comment|/* change command pending */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTS_ADDRT
-value|0x4
-end_define
-
-begin_comment
-comment|/* add command pending */
+comment|/* route has been altered recently */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RTS_PASSIVE
-value|0x8
+value|0x20
 end_define
 
 begin_comment
@@ -267,34 +379,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTS_DONTDELETE
-value|0x10
-end_define
-
-begin_comment
-comment|/* don't remove route if timed out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTS_DONTROUTE
-value|0x20
-end_define
-
-begin_comment
-comment|/* don't route outgoing packets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTS_HIDDEN
+name|RTS_INTERFACE
 value|0x40
 end_define
 
 begin_comment
-comment|/* deleted but still reclaimable */
+comment|/* route is for network interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTS_REMOTE
+value|0x80
+end_define
+
+begin_comment
+comment|/* route is for ``remote'' entity */
 end_comment
 
 begin_decl_stmt
@@ -426,6 +527,17 @@ end_decl_stmt
 begin_comment
 comment|/* table proper */
 end_comment
+
+begin_comment
+comment|/*  * When we find any interfaces marked down we rescan the  * kernel every CHECK_INTERVAL seconds to see if they've  * come up.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHECK_INTERVAL
+value|(1*60)
+end_define
 
 end_unit
 
