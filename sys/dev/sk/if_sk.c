@@ -6286,7 +6286,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|sk_res
+name|sk_irq
 argument_list|)
 expr_stmt|;
 goto|goto

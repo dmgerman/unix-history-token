@@ -5061,7 +5061,7 @@ literal|0
 argument_list|,
 name|sc
 operator|->
-name|tl_res
+name|tl_irq
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
