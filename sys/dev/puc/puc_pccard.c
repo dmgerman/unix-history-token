@@ -129,6 +129,8 @@ block|,
 literal|0x00
 block|,
 name|DEFAULT_RCLK
+block|,
+literal|0x100000
 block|}
 block|,
 block|{
@@ -139,6 +141,8 @@ block|,
 literal|0x00
 block|,
 name|DEFAULT_RCLK
+block|,
+literal|0
 block|}
 block|, 	}
 block|}
