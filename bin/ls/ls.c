@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.17 1997/09/18 06:42:27 sef Exp $"
+literal|"$Id: ls.c,v 1.18 1998/04/21 22:02:00 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,6 +398,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_octal_escape
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* like f_octal but use C escapes if possible */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_recursive
 decl_stmt|;
 end_decl_stmt
@@ -678,7 +688,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTWabcdfgikloqrstu"
+literal|"?1ABCFLRTWabcdfgikloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -702,6 +712,22 @@ expr_stmt|;
 name|f_column
 operator|=
 name|f_longform
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+name|f_nonprint
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal
+operator|=
+literal|1
+expr_stmt|;
+name|f_octal_escape
 operator|=
 literal|0
 expr_stmt|;
@@ -865,6 +891,10 @@ name|f_octal
 operator|=
 literal|0
 expr_stmt|;
+name|f_octal_escape
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -909,13 +939,17 @@ break|break;
 case|case
 literal|'b'
 case|:
-name|f_octal
-operator|=
-literal|1
-expr_stmt|;
 name|f_nonprint
 operator|=
 literal|0
+expr_stmt|;
+name|f_octal
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal_escape
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1739,6 +1773,8 @@ expr_stmt|;
 if|if
 condition|(
 name|f_octal
+operator|||
+name|f_octal_escape
 condition|)
 block|{
 name|int
