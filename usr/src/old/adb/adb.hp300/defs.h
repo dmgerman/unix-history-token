@@ -40,6 +40,13 @@ name|off_t
 value|Ooff_t
 end_define
 
+begin_define
+define|#
+directive|define
+name|lseek
+value|Lseek
+end_define
+
 begin_include
 include|#
 directive|include
