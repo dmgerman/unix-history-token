@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/sio.c,v 1.3 1993/07/18 21:27:57 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/sio.c,v 1.4 1993/07/20 00:22:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2920,7 +2920,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * We no longer use the flags from<sys/ttydefaults.h> 			 * since those are only relevant for logins.  It's 			 * important to have echo off initially so that the 			 * line doesn't start blathering before the echo flag 			 * can be turned off.  It's useful to have clocal on 			 * initially so that "stty changed-defaults</dev/comx" 			 * doesn't hang waiting for carrier. 			 */
+comment|/* 			 * We no longer use the flags from<sys/ttydefaults.h> 			 * since those are only relevant for logins.  It's 			 * important to have echo off initially so that the 			 * line doesn't start blathering before the echo flag 			 * can be turned off. 			 */
 name|tp
 operator|->
 name|t_iflag
@@ -2941,7 +2941,7 @@ name|CREAD
 operator||
 name|CS8
 operator||
-name|CLOCAL
+name|HUPCL
 expr_stmt|;
 name|tp
 operator|->
