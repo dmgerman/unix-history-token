@@ -3,6 +3,10 @@ begin_comment
 comment|/* Expand builtin functions.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -9341,6 +9345,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Give up for non-constant lengths.  They are broken on at least 	 i386's.  */
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|len_rtx
+argument_list|)
+operator|!=
+name|CONST_INT
+condition|)
+return|return
+literal|0
+return|;
 name|dest_mem
 operator|=
 name|get_memory_rtx
