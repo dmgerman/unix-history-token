@@ -1321,7 +1321,7 @@ name|Length
 operator|=
 name|ACPI_SIZEOF_RESOURCE
 argument_list|(
-name|ACPI_RESOURCE_IRQ
+name|ACPI_RESOURCE_EXT_IRQ
 argument_list|)
 expr_stmt|;
 name|resbuf
