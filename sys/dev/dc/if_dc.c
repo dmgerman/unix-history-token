@@ -503,6 +503,14 @@ literal|"Abocom FE2500 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DC_VENDORID_ABOCOM
+block|,
+name|DC_DEVICEID_FE2500MX
+block|,
+literal|"Abocom FE2500MX 10/100BaseTX"
+block|}
+block|,
+block|{
 name|DC_VENDORID_CONEXANT
 block|,
 name|DC_DEVICEID_RS7112

@@ -4588,6 +4588,13 @@ name|DC_DEVICEID_FE2500
 value|0xAB02
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_FE2500MX
+value|0xab08
+end_define
+
 begin_comment
 comment|/*  * Conexant vendor ID.  */
 end_comment
