@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uux.c	5.8	(Berkeley) %G%"
+literal|"@(#)uux.c	5.9	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,28 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_comment
+comment|/*  * If you have it, include<sysexits.h> to use exit  * codes that will be understood by sendmail.  * Otherwise, define EX_NOHOST, EX_CANTCREAT, and EX_NOINPUT.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_comment
+comment|/*#define EX_NOINPUT	66	/**/
+end_comment
+
+begin_comment
+comment|/*#define EX_NOHOST	68	/**/
+end_comment
+
+begin_comment
+comment|/*#define EX_CANTCREAT	73	/**/
+end_comment
 
 begin_define
 define|#
