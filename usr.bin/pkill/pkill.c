@@ -1277,8 +1277,10 @@ name|debug_opt
 operator|>
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"* Skipped %5d %3d %s\n"
 argument_list|,
 name|kp
@@ -1510,8 +1512,10 @@ name|rv_res
 operator|=
 literal|"Matched"
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"* %s %5d %3d %s\n"
 argument_list|,
 name|rv_res
