@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetbynis.c,v 1.2 1994/09/26 02:50:43 wollman Exp $"
+literal|"@(#)$Id: getnetbynis.c,v 1.3 1995/05/30 05:40:47 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbynis.c,v 1.2 1994/09/26 02:50:43 wollman Exp $"
+literal|"$Id: getnetbynis.c,v 1.3 1995/05/30 05:40:47 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -502,11 +508,6 @@ name|str
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|;
-name|struct
-name|netent
-modifier|*
-name|np
 decl_stmt|;
 if|if
 condition|(
