@@ -1702,6 +1702,9 @@ name|pool
 modifier|*
 name|pool
 decl_stmt|;
+name|intrmask_t
+name|mask
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1719,6 +1722,12 @@ operator|<
 name|ENTROPYSOURCE
 condition|)
 block|{
+comment|/* The reseed task must not be jumped on */
+name|mask
+operator|=
+name|splsofttq
+argument_list|()
+expr_stmt|;
 name|which
 operator|=
 name|random_state
@@ -1886,6 +1895,11 @@ operator|.
 name|which
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
