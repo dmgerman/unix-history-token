@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.47.2.5 1997/04/04 04:18:20 davidg Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.47.2.6 1997/04/04 07:30:44 davidg Exp $  */
 end_comment
 
 begin_include
@@ -181,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_object.h>
 end_include
 
 begin_include
@@ -603,23 +609,6 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
-if|if
-condition|(
-name|imgp
-operator|->
-name|vp
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOEXEC
-expr_stmt|;
-goto|goto
-name|exec_fail_dealloc
-goto|;
-block|}
 comment|/* 	 * Check file permissions (also 'opens' file) 	 */
 name|error
 operator|=
@@ -651,6 +640,12 @@ name|imgp
 operator|->
 name|vp
 operator|->
+name|v_object
+operator|&&
+name|imgp
+operator|->
+name|vp
+operator|->
 name|v_mount
 operator|&&
 name|imgp
@@ -664,6 +659,28 @@ operator|.
 name|f_iosize
 operator|>=
 name|PAGE_SIZE
+operator|&&
+name|imgp
+operator|->
+name|vp
+operator|->
+name|v_object
+operator|->
+name|un_pager
+operator|.
+name|vnp
+operator|.
+name|vnp_size
+operator|>=
+name|imgp
+operator|->
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
 condition|)
 block|{
 comment|/* 		 * Get a buffer with (at least) the first page. 		 */
@@ -706,6 +723,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|resid
+decl_stmt|;
 comment|/* 		 * The filesystem block size is too small, so do this the hard 		 * way. Malloc some space and read PAGE_SIZE worth of the image 		 * header into it. 		 */
 name|imgp
 operator|->
@@ -750,9 +770,35 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|NULL
+operator|&
+name|resid
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Clear out any remaining junk. 		 */
+if|if
+condition|(
+operator|!
+name|error
+operator|&&
+name|resid
+condition|)
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|imgp
+operator|->
+name|image_header
+operator|+
+name|PAGE_SIZE
+operator|-
+name|resid
+argument_list|,
+name|resid
 argument_list|)
 expr_stmt|;
 block|}
