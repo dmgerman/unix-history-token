@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT-54X and BT-445 cards  *  * Copyright (c) 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_isa.c,v 1.1 1998/09/15 07:32:54 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT-54X and BT-445 cards  *  * Copyright (c) 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_isa.c,v 1.2 1998/09/24 10:43:42 bde Exp $  */
 end_comment
 
 begin_include
@@ -260,6 +260,10 @@ return|return
 literal|0
 return|;
 block|}
+name|max_port_index
+operator|=
+name|port_index
+expr_stmt|;
 block|}
 comment|/* Attempt to find an adapter */
 for|for
@@ -300,6 +304,17 @@ name|ioport
 argument_list|)
 operator|!=
 literal|0
+condition|)
+continue|continue;
+comment|/* 		 * Make sure that we do not conflict with another device's 		 * I/O address. 		 */
+if|if
+condition|(
+name|haveseen_isadev
+argument_list|(
+name|dev
+argument_list|,
+name|CC_IOADDR
+argument_list|)
 condition|)
 continue|continue;
 comment|/* Allocate a softc for use during probing */
@@ -503,6 +518,75 @@ name|id_intr
 operator|=
 name|bt_isa_intr
 expr_stmt|;
+comment|/* 		 * OK, check to make sure that we're not stepping on 		 * someone else's IRQ or DRQ 		 */
+if|if
+condition|(
+name|haveseen_isadev
+argument_list|(
+name|dev
+argument_list|,
+name|CC_DRQ
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt_isa_probe: Bt card at I/O 0x%x's drq %d "
+literal|"conflicts, ignoring card.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_iobase
+argument_list|,
+name|dev
+operator|->
+name|id_drq
+argument_list|)
+expr_stmt|;
+name|bt_free
+argument_list|(
+name|bt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|haveseen_isadev
+argument_list|(
+name|dev
+argument_list|,
+name|CC_IRQ
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt_isa_probe: Bt card at I/O 0x%x's irq %d "
+literal|"conflicts, ignoring card.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_iobase
+argument_list|,
+name|config_data
+operator|.
+name|irq
+operator|+
+literal|9
+argument_list|)
+expr_stmt|;
+name|bt_free
+argument_list|(
+name|bt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|bt_unit
 operator|++
 expr_stmt|;
