@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<geom/geom_stats.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/limits.h>
 end_include
 
