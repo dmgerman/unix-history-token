@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -911,6 +911,70 @@ name|sigterm
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Compatibility with old systems.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_PATH_FSTAB
+value|"/etc/fstab"
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|sig_t
+function_decl|)
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strdup
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
