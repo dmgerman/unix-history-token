@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.7 83/03/23"
+literal|"@(#)main.c	4.8 83/05/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmac.h>
 end_include
 
 begin_include
@@ -1136,9 +1142,10 @@ name|ctob
 argument_list|(
 name|Sysmap
 index|[
+name|btop
+argument_list|(
 name|base
-operator|>>
-name|PGSHIFT
+argument_list|)
 index|]
 operator|.
 name|pg_pfnum
