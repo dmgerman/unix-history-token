@@ -987,7 +987,7 @@ name|sin_family
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
-literal|0
+name|IPPROTO_TCP
 argument_list|)
 operator|)
 operator|<

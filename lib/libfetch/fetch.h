@@ -21,6 +21,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_define
 define|#
 directive|define
