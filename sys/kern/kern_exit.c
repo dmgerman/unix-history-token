@@ -997,7 +997,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|IBCS2
+name|COMPAT_IBCS2
 argument_list|)
 name|int
 name|compat
@@ -1019,7 +1019,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|IBCS2
+name|COMPAT_IBCS2
 argument_list|)
 end_if
 
@@ -1427,7 +1427,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|IBCS2
+name|COMPAT_IBCS2
 argument_list|)
 if|if
 condition|(
@@ -1539,7 +1539,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|IBCS2
+name|COMPAT_IBCS2
 argument_list|)
 if|if
 condition|(
@@ -1953,7 +1953,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|IBCS2
+name|COMPAT_IBCS2
 argument_list|)
 if|if
 condition|(
