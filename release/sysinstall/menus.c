@@ -3035,7 +3035,7 @@ block|,
 block|{
 literal|" France #1"
 block|,
-literal|"ftp1.fr.freebsd.org"
+literal|"ftp.fr.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -3044,7 +3044,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp1.fr.freebsd.org"
+literal|"=ftp://ftp.fr.freebsd.org"
 block|}
 block|,
 block|{
@@ -3104,7 +3104,22 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.fr.freebsd.org"
+literal|"=ftp://ftp65fr.freebsd.org"
+block|}
+block|,
+block|{
+literal|" France #6"
+block|,
+literal|"ftp6.fr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp6.fr.freebsd.org"
 block|}
 block|,
 block|{
