@@ -5044,7 +5044,7 @@ block|,
 block|{
 literal|"All"
 block|,
-literal|"All system sources, binaries and X Window System)"
+literal|"All system sources, binaries and X Window System"
 block|,
 name|checkDistEverything
 block|,
