@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	6.1	83/07/29	*/
+comment|/*	kern_synch.c	6.2	84/05/22	*/
 end_comment
 
 begin_include
@@ -202,27 +202,18 @@ for|for
 control|(
 name|p
 operator|=
-name|proc
+name|allproc
 init|;
 name|p
-operator|<
-name|procNPROC
+operator|!=
+name|NULL
 condition|;
 name|p
-operator|++
+operator|=
+name|p
+operator|->
+name|p_nxt
 control|)
-if|if
-condition|(
-name|p
-operator|->
-name|p_stat
-operator|&&
-name|p
-operator|->
-name|p_stat
-operator|!=
-name|SZOMB
-condition|)
 block|{
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	6.1	83/07/29	*/
+comment|/*	kern_proc.c	6.2	84/05/22	*/
 end_comment
 
 begin_include
@@ -460,6 +460,74 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * init the process queues  */
+end_comment
+
+begin_macro
+name|pqinit
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+comment|/* 	 * most procs are initially on freequeue 	 *	nb: we place them there in their "natural" order. 	 */
+name|freeproc
+operator|=
+name|NULL
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|procNPROC
+init|;
+operator|--
+name|p
+operator|>
+name|proc
+condition|;
+name|freeproc
+operator|=
+name|p
+control|)
+name|p
+operator|->
+name|p_nxt
+operator|=
+name|freeproc
+expr_stmt|;
+comment|/* 	 * but proc[0] is special ... 	 */
+name|allproc
+operator|=
+name|p
+expr_stmt|;
+name|p
+operator|->
+name|p_nxt
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|p_prev
+operator|=
+operator|&
+name|allproc
+expr_stmt|;
+name|zombproc
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

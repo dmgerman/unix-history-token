@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.2	83/09/08	*/
+comment|/*	kern_sig.c	6.3	84/05/22	*/
 end_comment
 
 begin_include
@@ -1229,25 +1229,19 @@ literal|0
 operator|,
 name|p
 operator|=
-name|proc
+name|allproc
 init|;
 name|p
-operator|<
-name|procNPROC
+operator|!=
+name|NULL
 condition|;
 name|p
-operator|++
-control|)
-block|{
-if|if
-condition|(
+operator|=
 name|p
 operator|->
-name|p_stat
-operator|==
-name|NULL
-condition|)
-continue|continue;
+name|p_nxt
+control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1396,14 +1390,17 @@ for|for
 control|(
 name|p
 operator|=
-name|proc
+name|allproc
 init|;
 name|p
-operator|<
-name|procNPROC
+operator|!=
+name|NULL
 condition|;
 name|p
-operator|++
+operator|=
+name|p
+operator|->
+name|p_nxt
 control|)
 if|if
 condition|(

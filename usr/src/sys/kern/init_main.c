@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	6.2	84/01/03	*/
+comment|/*	init_main.c	6.3	84/05/22	*/
 end_comment
 
 begin_include
@@ -373,7 +373,7 @@ name|rlim_max
 operator|=
 name|ctob
 argument_list|(
-name|MAXDSIZ
+name|MAXSSIZ
 argument_list|)
 expr_stmt|;
 name|u
@@ -407,9 +407,12 @@ name|RLIM_INFINITY
 operator|/
 name|NBPG
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|QUOTA
+argument_list|)
 name|qtinit
 argument_list|()
 expr_stmt|;
@@ -494,6 +497,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|pqinit
+argument_list|()
+expr_stmt|;
 name|ihinit
 argument_list|()
 expr_stmt|;
@@ -677,6 +683,16 @@ operator|=
 name|SZOMB
 expr_stmt|;
 comment|/* force it to be in proc slot 2 */
+name|p
+operator|=
+name|freeproc
+expr_stmt|;
+name|freeproc
+operator|=
+name|p
+operator|->
+name|p_nxt
+expr_stmt|;
 if|if
 condition|(
 name|newproc
@@ -740,6 +756,16 @@ operator|.
 name|p_szpt
 operator|=
 name|CLSIZE
+expr_stmt|;
+name|p
+operator|->
+name|p_nxt
+operator|=
+name|freeproc
+expr_stmt|;
+name|freeproc
+operator|=
+name|p
 expr_stmt|;
 if|if
 condition|(
