@@ -14,7 +14,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_include
@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
