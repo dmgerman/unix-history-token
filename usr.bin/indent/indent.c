@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -33,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)indent.c	5.17 (Berkeley) 6/7/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.17 (Berkeley) 6/7/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -140,6 +161,19 @@ name|MAXPATHLEN
 index|]
 init|=
 literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -731,6 +765,8 @@ condition|)
 comment|/* check for open error */
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|in_name
 argument_list|)
 expr_stmt|;
@@ -766,16 +802,11 @@ literal|0
 condition|)
 block|{
 comment|/* attempt to overwrite 							 * the file */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: input and output files must be different\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"input and output files must be different"
 argument_list|)
 expr_stmt|;
 block|}
@@ -797,26 +828,23 @@ condition|)
 comment|/* check for create error */
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|out_name
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"indent: unknown parameter: %s\n"
+literal|"unknown parameter: %s"
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -838,17 +866,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: usage: indent file [ outfile ] [ options ]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -5227,6 +5246,27 @@ comment|/* end of main while (1) loop */
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: indent file [ outfile ] [ options ]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * copy input file to backup file if in_name is /blah/blah/blah/file, then  * backup file will be ".Bfile" then make the backup file the input and  * original input file the output  */
 end_comment
@@ -5323,6 +5363,8 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
@@ -5358,6 +5400,8 @@ name|n
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
@@ -5369,6 +5413,8 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|in_name
 argument_list|)
 expr_stmt|;
@@ -5400,6 +5446,8 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|bakfile
 argument_list|)
 expr_stmt|;
@@ -5427,60 +5475,12 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
+literal|1
+argument_list|,
 name|in_name
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_macro
-name|err
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"indent: %s: %s\n"
-argument_list|,
-name|msg
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)args.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)args.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +48,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -1394,21 +1413,16 @@ condition|)
 goto|goto
 name|found
 goto|;
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"indent: %s: unknown parameter \"%s\"\n"
+literal|"%s: unknown parameter \"%s\""
 argument_list|,
 name|option_source
 argument_list|,
 name|arg
 operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1532,20 +1546,15 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"\ indent: set_option: internal error: p_special %d\n"
+literal|"set_option: internal error: p_special %d"
 argument_list|,
 name|p
 operator|->
 name|p_special
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1592,21 +1601,16 @@ condition|)
 block|{
 name|need_param
 label|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"indent: %s: ``%s'' requires a parameter\n"
+literal|"%s: ``%s'' requires a parameter"
 argument_list|,
 name|option_source
 argument_list|,
 name|arg
 operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1641,20 +1645,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"indent: set_option: internal error: p_type %d\n"
+literal|"set_option: internal error: p_type %d"
 argument_list|,
 name|p
 operator|->
 name|p_type
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
