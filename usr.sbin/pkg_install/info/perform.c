@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.22 1997/10/08 07:47:29 charnier Exp $"
+literal|"$Id: perform.c,v 1.23 1997/10/13 15:03:53 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,9 +916,7 @@ expr_stmt|;
 name|bail
 label|:
 name|leave_playpen
-argument_list|(
-name|Home
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -943,11 +941,26 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|leave_playpen
-argument_list|(
-name|Home
-argument_list|)
+specifier|static
+name|int
+name|in_cleanup
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|in_cleanup
+condition|)
+block|{
+name|in_cleanup
+operator|=
+literal|1
 expr_stmt|;
+name|leave_playpen
+argument_list|()
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1

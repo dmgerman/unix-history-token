@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.47 1998/01/17 12:26:19 jkh Exp $"
+literal|"$Id: perform.c,v 1.48 1998/01/21 06:08:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1239,9 +1239,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Nuke the temporary playpen */
 name|leave_playpen
-argument_list|(
-name|cp
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2143,9 +2141,7 @@ name|Plist
 argument_list|)
 expr_stmt|;
 name|leave_playpen
-argument_list|(
-name|Home
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 name|code
@@ -2247,6 +2243,22 @@ name|int
 name|signo
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|in_cleanup
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|in_cleanup
+condition|)
+block|{
+name|in_cleanup
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|signo
@@ -2278,10 +2290,9 @@ name|LogDir
 argument_list|)
 expr_stmt|;
 name|leave_playpen
-argument_list|(
-name|Home
-argument_list|)
+argument_list|()
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1
