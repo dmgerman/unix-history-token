@@ -645,24 +645,6 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
-block|{
-comment|/* 		 * Infortrend IFT-3102 SCSI to SCSI controller 		 * (firmware version 2.23). 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"IFT"
-block|,
-literal|"3102"
-block|,
-literal|"*"
-block|}
-block|,
-comment|/* quirks*/
-name|DA_Q_NO_SYNC_CACHE
-block|}
-block|,
 comment|/* Below a list of quirks for USB devices supported by umass. */
 block|{
 comment|/* 		 * This USB floppy drive uses the UFI command set. This 		 * command set is a derivative of the ATAPI command set and 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
