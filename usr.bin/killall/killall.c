@@ -1855,7 +1855,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"kill -%s %d"
+literal|"warning: kill -%s %d"
 argument_list|,
 name|upper
 argument_list|(
