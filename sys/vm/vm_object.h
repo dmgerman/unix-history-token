@@ -89,6 +89,10 @@ argument_list|)
 name|memq
 expr_stmt|;
 comment|/* list of resident pages */
+name|vm_page_t
+name|root
+decl_stmt|;
+comment|/* root of the resident page splay tree */
 name|int
 name|generation
 decl_stmt|;

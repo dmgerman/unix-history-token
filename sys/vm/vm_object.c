@@ -559,6 +559,12 @@ argument_list|)
 expr_stmt|;
 name|object
 operator|->
+name|root
+operator|=
+name|NULL
+expr_stmt|;
+name|object
+operator|->
 name|type
 operator|=
 name|type

@@ -71,12 +71,6 @@ argument_list|)
 name|pageq
 expr_stmt|;
 comment|/* queue info for FIFO queue or free list (P) */
-name|struct
-name|vm_page
-modifier|*
-name|hnext
-decl_stmt|;
-comment|/* hash table link (O,P)	*/
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
@@ -84,6 +78,18 @@ argument_list|)
 name|listq
 expr_stmt|;
 comment|/* pages in same object (O) 	*/
+name|struct
+name|vm_page
+modifier|*
+name|left
+decl_stmt|;
+comment|/* splay tree link (O)		*/
+name|struct
+name|vm_page
+modifier|*
+name|right
+decl_stmt|;
+comment|/* splay tree link (O)		*/
 name|vm_object_t
 name|object
 decl_stmt|;
