@@ -6249,7 +6249,7 @@ name|p
 operator|->
 name|p_dupfd
 operator|=
-name|minor
+name|dev2unit
 argument_list|(
 name|dev
 argument_list|)
@@ -6886,6 +6886,29 @@ operator|<=
 literal|2
 condition|)
 return|return;
+comment|/* Don't clone higher than it makes sense */
+if|if
+condition|(
+name|u
+operator|>=
+name|maxfilesperproc
+condition|)
+return|return;
+comment|/* And don't clone higher than our minors will support */
+if|if
+condition|(
+name|u
+operator|>
+literal|0xffffff
+condition|)
+return|return;
+name|u
+operator|=
+name|unit2minor
+argument_list|(
+name|u
+argument_list|)
+expr_stmt|;
 operator|*
 name|dev
 operator|=
