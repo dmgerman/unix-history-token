@@ -523,7 +523,7 @@ name|char
 name|usage_str
 index|[]
 init|=
-literal|"\ usage: %s [-acfhlnz] [-e command] [-r command] [-s speed] [-u command] \\\n\ 	  [-K timeout] [-O timeout] [-U unit] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n\   -K #    -- set SLIP \"keep alive\" timeout (default 0)\n\   -O #    -- set SLIP \"out fill\" timeout (default 0)\n\   -U #    -- set SLIP unit number (default is dynamic)\n\ "
+literal|"\ usage: %s [-acfhlnz] [-e command] [-r command] [-s speed] [-u command] \\\n\ 	  [-K timeout] [-O timeout] [-S unit] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n\   -K #    -- set SLIP \"keep alive\" timeout (default 0)\n\   -O #    -- set SLIP \"out fill\" timeout (default 0)\n\   -S #    -- set SLIP unit number (default is dynamic)\n\ "
 decl_stmt|;
 end_decl_stmt
 
@@ -567,7 +567,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ace:fhlnr:s:u:zK:O:U:"
+literal|"ace:fhlnr:s:u:zK:O:S:"
 argument_list|)
 operator|)
 operator|!=
@@ -725,7 +725,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'U'
+literal|'S'
 case|:
 name|sl_unit
 operator|=
