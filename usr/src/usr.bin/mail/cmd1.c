@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	2.7 %G%"
+literal|"@(#)cmd1.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1059,6 +1059,72 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Type out messages, honor ignored fields.  */
+end_comment
+
+begin_macro
+name|type
+argument_list|(
+argument|msgvec
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|msgvec
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|type1
+argument_list|(
+name|msgvec
+argument_list|,
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Type out messages, even printing ignored fields.  */
+end_comment
+
+begin_macro
+name|Type
+argument_list|(
+argument|msgvec
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+modifier|*
+name|msgvec
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|type1
+argument_list|(
+name|msgvec
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Type out the messages requested.  */
 end_comment
 
@@ -1069,9 +1135,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|type
+name|type1
 argument_list|(
 argument|msgvec
+argument_list|,
+argument|doign
 argument_list|)
 end_macro
 
@@ -1313,6 +1381,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 expr_stmt|;
 block|}
@@ -1398,6 +1468,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 specifier|register
 expr|struct
@@ -1460,6 +1532,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+name|doign
 argument_list|)
 expr_stmt|;
 block|}
