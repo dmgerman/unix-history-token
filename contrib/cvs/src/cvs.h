@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 
 end_comment
 
 begin_comment
-comment|/*  * basic information used in all source files  *  */
+comment|/*  * basic information used in all source files  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1627,6 +1627,8 @@ block|,
 name|gserver_method
 block|,
 name|ext_method
+block|,
+name|fork_method
 block|}
 name|CVSmethod
 typedef|;
@@ -1644,6 +1646,18 @@ end_decl_stmt
 begin_comment
 comment|/* change this in root.c if you change 				   the enum above */
 end_comment
+
+begin_comment
+comment|/* This global variable holds the global -d option.  It is NULL if -d    was not used, which means that we must get the CVSroot information    from the CVSROOT environment variable or from a CVS/Root file.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|CVSroot_cmdline
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1714,6 +1728,26 @@ end_decl_stmt
 begin_comment
 comment|/* the directory name */
 end_comment
+
+begin_comment
+comment|/* These variables keep track of all of the CVSROOT directories that    have been seen by the client and the current one of those selected.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|List
+modifier|*
+name|root_directories
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|current_root
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1794,29 +1828,25 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUTH_SERVER_SUPPORT
+name|CLIENT_SUPPORT
 end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|List
 modifier|*
-name|Pserver_Repos
+name|dirs_sent_to_server
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* used to check that same repos is                                    transmitted in pserver auth and in                                    CVS protocol. */
+comment|/* used to decide which "Argument 				     xxx" commands to send to each 				     server in multiroot mode. */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* AUTH_SERVER_SUPPORT */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -2182,6 +2212,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|date_to_internet
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|Name_Repository
@@ -2403,7 +2449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|void
 modifier|*
 name|xmalloc
 name|PROTO
@@ -3074,6 +3120,18 @@ name|char
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* LockDir setting from CVSROOT/config.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|lock_dir
 decl_stmt|;
 end_decl_stmt
 
@@ -4287,6 +4345,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|resolve_symlink
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+name|filename
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* flags for run_exec(), the fast system() for CVS */
 end_comment
@@ -4490,27 +4564,6 @@ name|PROTO
 argument_list|(
 operator|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|filter_stream_through_program
-name|PROTO
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|pid_t
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

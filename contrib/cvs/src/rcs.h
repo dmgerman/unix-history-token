@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * RCS source control definitions needed by rcs.c and friends  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * RCS source control definitions needed by rcs.c and friends  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -471,6 +471,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|RCS_setattic
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|RCS_check_kflag
@@ -894,6 +910,22 @@ name|PROTO
 argument_list|(
 operator|(
 name|RCSNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_setexpand
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
