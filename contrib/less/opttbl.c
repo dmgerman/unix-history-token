@@ -287,6 +287,28 @@ begin_comment
 comment|/* Hilite first unread line */
 end_comment
 
+begin_decl_stmt
+name|public
+name|int
+name|shift_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of positions to shift horizontally */
+end_comment
+
+begin_decl_stmt
+name|public
+name|int
+name|status_col
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Display a status column */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -511,6 +533,20 @@ name|j_optname
 init|=
 block|{
 literal|"jump-target"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|J__optname
+init|=
+block|{
+literal|"status-column"
 block|,
 name|NULL
 block|}
@@ -887,6 +923,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|optname
+name|pound_optname
+init|=
+block|{
+literal|"shift"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Table of all options and their semantics.  */
 end_comment
@@ -1201,6 +1251,30 @@ block|,
 literal|"Target line: "
 block|,
 literal|"Position target at screen line %d"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|'J'
+block|,
+operator|&
+name|J__optname
+block|,
+name|BOOL
+operator||
+name|REPAINT
+block|,
+name|OPT_OFF
+block|,
+operator|&
+name|status_col
+block|,
+name|NULL
+block|,
+literal|"Don't display a status column"
+block|,
+literal|"Display a status column"
 block|,
 name|NULL
 block|}
@@ -1766,6 +1840,28 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|'#'
+block|,
+operator|&
+name|pound_optname
+block|,
+name|NUMBER
+block|,
+literal|0
+block|,
+operator|&
+name|shift_count
+block|,
+name|NULL
+block|,
+literal|"Horizontal shift: "
+block|,
+literal|"Horizontal shift %d positions"
 block|,
 name|NULL
 block|}
