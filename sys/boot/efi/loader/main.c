@@ -242,6 +242,9 @@ operator|)
 operator|(
 operator|)
 expr_stmt|;
+name|efinet_init_driver
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"

@@ -70,6 +70,9 @@ index|[]
 init|=
 block|{
 operator|&
+name|netdev
+block|,
+operator|&
 name|efifs_dev
 block|,
 name|NULL
@@ -92,10 +95,29 @@ operator|&
 name|ufs_fsops
 block|,
 operator|&
+name|nfs_fsops
+block|,
+operator|&
 name|zipfs_fsops
 block|,
 name|NULL
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|netif_driver
+modifier|*
+name|netif_drivers
+index|[]
+init|=
+block|{
+operator|&
+name|efi_net
+block|,
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Consoles   *  * We don't prototype these in libalpha.h because they require  * data structures from bootstrap.h as well.  */
+comment|/*   * Consoles   *  * We don't prototype these in efiboot.h because they require  * data structures from bootstrap.h as well.  */
 end_comment
 
 begin_decl_stmt
