@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -177,6 +177,27 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SCCSID
+parameter_list|(
+name|arg
+parameter_list|)
+value|static char SccsId[] = #arg;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -186,6 +207,11 @@ name|arg
 parameter_list|)
 value|static char SccsId[] = "arg";
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
