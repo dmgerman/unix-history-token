@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Foxborough Mass.  *  * This software is furnished under a license and may only be used  * or copied in accordance with the terms of that license.  *  */
+comment|/*  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1986 MICOM-Interlan, Inc., Foxborough Mass.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)npload.c	6.1 (Berkeley) %G%"
+literal|"@(#)npload.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
