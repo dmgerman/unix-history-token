@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)dterm.c	1.9	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -m	print margins.  Default action is to cut printing area down  *		to only the part of the page with information on it.  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c, -m and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
+comment|/* @(#)dterm.c	1.10	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -m	print margins.  Default action is to cut printing area down  *		to only the part of the page with information on it.  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c, -m and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
 end_comment
 
 begin_include
@@ -147,18 +147,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|arcmove
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|{ hgoto(x); vmot(-vpos-(y)); }
-end_define
-
-begin_define
-define|#
-directive|define
 name|sqr
 parameter_list|(
 name|x
@@ -171,7 +159,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)dterm.c	1.9	(Berkeley)	%G%"
+literal|"@(#)dterm.c	1.10	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,18 +440,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* step size for drawing */
-end_comment
-
-begin_decl_stmt
-name|int
-name|drawdot
-init|=
-literal|'.'
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* draw with this character */
 end_comment
 
 begin_decl_stmt
@@ -3499,7 +3475,7 @@ argument_list|)
 expr_stmt|;
 name|put1
 argument_list|(
-name|drawdot
+literal|'|'
 argument_list|)
 expr_stmt|;
 for|for
@@ -3523,7 +3499,7 @@ argument_list|)
 expr_stmt|;
 name|put1
 argument_list|(
-name|drawdot
+literal|'|'
 argument_list|)
 expr_stmt|;
 block|}
@@ -3563,7 +3539,7 @@ argument_list|)
 expr_stmt|;
 name|put1
 argument_list|(
-name|drawdot
+literal|'-'
 argument_list|)
 expr_stmt|;
 for|for
@@ -3587,7 +3563,7 @@ argument_list|)
 expr_stmt|;
 name|put1
 argument_list|(
-name|drawdot
+literal|'-'
 argument_list|)
 expr_stmt|;
 block|}
@@ -3720,7 +3696,7 @@ argument_list|)
 expr_stmt|;
 name|put1
 argument_list|(
-name|drawdot
+literal|'*'
 argument_list|)
 expr_stmt|;
 for|for
@@ -3791,7 +3767,7 @@ expr_stmt|;
 block|}
 name|put1
 argument_list|(
-name|drawdot
+literal|'*'
 argument_list|)
 expr_stmt|;
 block|}
@@ -4283,7 +4259,7 @@ argument_list|)
 expr_stmt|;
 name|put1
 argument_list|(
-name|drawdot
+literal|'*'
 argument_list|)
 expr_stmt|;
 name|pxp
@@ -5476,19 +5452,34 @@ name|DP
 operator|==
 literal|0
 condition|)
-name|putdot
+block|{
+name|hgoto
 argument_list|(
 operator|(
 name|int
 operator|)
 name|xc
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|vmot
+argument_list|(
+operator|-
+name|vpos
+operator|-
+operator|(
 operator|(
 name|int
 operator|)
 name|yc
+operator|)
 argument_list|)
 expr_stmt|;
+name|put1
+argument_list|(
+literal|'*'
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|Yc
@@ -5762,32 +5753,6 @@ operator|-
 name|oy1
 argument_list|,
 literal|"."
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|putdot
-argument_list|(
-argument|x
-argument_list|,
-argument|y
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|arcmove
-argument_list|(
-name|x
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-name|put1
-argument_list|(
-name|drawdot
 argument_list|)
 expr_stmt|;
 block|}
