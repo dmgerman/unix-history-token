@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ungetc.c	5.2 (Berkeley) %G%"
+literal|"@(#)ungetc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,11 +99,25 @@ name|iop
 operator|->
 name|_base
 condition|)
+if|if
+condition|(
+name|iop
+operator|->
+name|_cnt
+operator|==
+literal|0
+condition|)
 name|iop
 operator|->
 name|_ptr
 operator|++
 expr_stmt|;
+else|else
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
 name|iop
 operator|->
 name|_cnt
