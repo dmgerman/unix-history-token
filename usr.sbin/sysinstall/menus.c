@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.2 1995/04/27 18:03:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.3 1995/04/29 19:33:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -11,6 +11,10 @@ end_include
 
 begin_comment
 comment|/* All the system menus go here.  *  * Hardcoded things like version number strings will disappear from  * these menus just as soon as I add the code for doing inline variable  * expansion.  */
+end_comment
+
+begin_comment
+comment|/* Forward decls for submenus */
 end_comment
 
 begin_decl_stmt
@@ -41,6 +45,13 @@ name|MenuInstallOptions
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuDistributions
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The initial installation menu */
 end_comment
@@ -58,10 +69,10 @@ comment|/* title */
 literal|"This is the main menu of the FreeBSD installation system.  Please\n\ select one of the options below by using the arrow keys or typing the\n\ first character of the option name you're interested in.  Invoke an\n\ option by pressing enter."
 block|,
 comment|/* prompt */
-literal|"Press F1 for further help"
+literal|"Press F1 for usage instructions"
 block|,
 comment|/* help line */
-literal|"help/initial.hlp"
+literal|"usage.hlp"
 block|,
 comment|/* help file */
 block|{
@@ -77,7 +88,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"help/initial.hlp"
+literal|"usage.hlp"
 block|,
 literal|0
 block|}
@@ -170,6 +181,23 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Bootmsg"
+block|,
+literal|"Read the boot messages again."
+block|,
+comment|/* B */
+name|DMENU_SYSTEM_COMMAND_BOX
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"dmesg"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -193,10 +221,9 @@ block|,
 comment|/* Title */
 literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file.  If you're having other problems, you may find\n\ answers in the FAQ."
 block|,
-literal|"Having trouble?  Press F1 for help!"
+literal|"Confused?  Press F1 for help."
 block|,
-comment|/* help line */
-literal|"help/usage.hlp"
+literal|"usage.hlp"
 block|,
 comment|/* help file */
 block|{
@@ -212,7 +239,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"help/readme.hlp"
+literal|"readme.hlp"
 block|,
 literal|0
 block|}
@@ -229,7 +256,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"help/hardware.hlp"
+literal|"hardware.hlp"
 block|,
 literal|0
 block|}
@@ -246,7 +273,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"help/install.hlp"
+literal|"install.hlp"
 block|,
 literal|0
 block|}
@@ -263,7 +290,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"help/faq.hlp"
+literal|"faq.hlp"
 block|,
 literal|0
 block|}
@@ -296,13 +323,13 @@ block|,
 literal|"Natural language selection"
 block|,
 comment|/* title */
-literal|"Please specify the language you'd like to use by default.\n\n\ While almost all of the system's documentation is still\n\ written in english (and may never be translated), there are a few\n\ guides and types of system documentation that may be written in your\n\ preferred language.  When such are found, they will be used instead\n\ of the english versions."
+literal|"Please specify the language you'd like to use by default.\n\n\ While almost all of the system's documentation is still written\n\ in english (and may never be translated), there are a few guides\n\ and types of system documentation that may be written in your\n\ preferred language.  When such are found, they will be used instead\n\ of the english versions."
 block|,
 comment|/* prompt */
 literal|"Press F1 for more information"
 block|,
 comment|/* help line */
-literal|"help/language.hlp"
+literal|"language.hlp"
 block|,
 comment|/* help file */
 block|{
@@ -318,7 +345,24 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=en"
+literal|"LANG=da_DK.ISO8859-1"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Dutch"
+block|,
+literal|"Dutch language and character set (ISO-8859-1)"
+block|,
+comment|/* D */
+name|DMENU_SET_VARIABLE
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"LANG=nl_NL.ISO8859-1"
 block|,
 literal|0
 block|}
@@ -335,7 +379,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=en"
+literal|"LANG=en_US.ISO8859-1"
 block|,
 literal|0
 block|}
@@ -352,7 +396,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=fr"
+literal|"LANG=fr_FR.ISO8859-1"
 block|,
 literal|0
 block|}
@@ -369,7 +413,24 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=de"
+literal|"LANG=de_DE.ISO8859-1"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Italian"
+block|,
+literal|"Italian language and character set (ISO-8859-1)"
+block|,
+comment|/* I */
+name|DMENU_SET_VARIABLE
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"LANG=it_IT.ISO8859-1"
 block|,
 literal|0
 block|}
@@ -386,7 +447,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=jp"
+literal|"LANG=ja_JP.EUC"
 block|,
 literal|0
 block|}
@@ -403,7 +464,24 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"LANG=ru"
+literal|"LANG=ru_SU.KOI8-R"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Spanish"
+block|,
+literal|"Spanish language and character set (ISO-8859-1)"
+block|,
+comment|/* S */
+name|DMENU_SET_VARIABLE
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"LANG=es_ES.ISO8859-1"
 block|,
 literal|0
 block|}
@@ -429,11 +507,11 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Installation Media"
 block|,
-literal|"FreeBSD can be installed from a variety of different installation\n\ media, from floppies to the Internet.  If you're installing FreeBSD from\n\ a supported CDROM drive then this is generally the best method to\n\ use unless you have some overriding reason for using another method."
+literal|"FreeBSD can be installed from a variety of different installation\n\ media, ranging from floppies to the Internet.  If you're installing\n\ FreeBSD from a supported CDROM drive then this is generally the best\n\ method to use unless you have some overriding reason for using another\n\ method. Please also note that the DES distribution is NOT available on \n\ CDROM due to U.S. export restrictions."
 block|,
 literal|"Press F1 for more information on the various media types"
 block|,
-literal|"help/media.hlp"
+literal|"media.hlp"
 block|,
 block|{
 block|{
@@ -553,13 +631,282 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"Choose Installation Type"
 block|,
-literal|"blah blah"
+literal|"As a convenience, we provide several `canned' installation types. \ These pick what we consider to be the most reasonable defaults for the \ type of system in question.  If you would prefer to pick and choose \ the list of distributions yourself, simply select `custom'."
 block|,
-name|NULL
+literal|"Press F1 for more information on the various distributions"
 block|,
-name|NULL
+literal|"install_types.hlp"
 block|,
 block|{
+block|{
+literal|"Developer"
+block|,
+literal|"Includes full sources, binaries and doc but no games."
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|installSetDeveloper
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"X-Developer"
+block|,
+literal|"Same as above, but includes XFree86."
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|installSetXDeveloper
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"User"
+block|,
+literal|"General user.  Binaries and doc but no sources."
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|installSetUser
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"X-User"
+block|,
+literal|"Same as above, but includes XFree86."
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|installSetXUser
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Minimal"
+block|,
+literal|"The smallest configuration possible."
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|installSetMinimum
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Everything"
+block|,
+literal|"The entire kitchen sink, plus bedroom suite."
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|installSetEverything
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Custom"
+block|,
+literal|"I don't want it canned!  I want to drive!"
+block|,
+name|DMENU_SUBMENU
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|MenuDistributions
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuDistributions
+init|=
+block|{
+name|DMENU_MULTIPLE_TYPE
+block|,
+literal|"Select the distributions you wish to install."
+block|,
+literal|"Please check off the distributions you wish to install."
+block|,
+literal|"Press F1 for a more complete description of these distributions."
+block|,
+literal|"distribution_types.hlp"
+block|,
+block|{
+block|{
+literal|"*bin"
+block|,
+literal|"Binary base distribution (required)"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"commercial"
+block|,
+literal|"Commercial demos and shareware"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"compat1x"
+block|,
+literal|"FreeBSD 1.x binary compatability package"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"DES"
+block|,
+literal|"DES encryption code and sources"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dict"
+block|,
+literal|"Spelling checker disctionary files"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"games"
+block|,
+literal|"Games and other amusements (non-commercial)"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"info"
+block|,
+literal|"GNU info files"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"man"
+block|,
+literal|"System manual pages - strongly recommended"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"proflibs"
+block|,
+literal|"Profiled versions of the libraries"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"src"
+block|,
+literal|"Sources for everything but DES"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"XFree86"
+block|,
+literal|"The XFree86 3.1.1 distribution"
+block|,
+name|DMENU_NOP
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|,
 block|{
 name|NULL
 block|}
@@ -596,6 +943,30 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|DMenu
+name|MenuDiskDevices
+init|=
+block|{
+name|DMENU_MULTIPLE_TYPE
+block|,
+literal|"Select Drive(s)"
+block|,
+literal|"Please select the drive, or drives, on which you wish to install\n\ FreeBSD.  You need to select at least one drive containing some free\n\ space, though FreeBSD can be installed across several drives if you do\n\ not have the required space on a single drive.  If you wish to boot\n\ off a drive that's not a `zero drive', you will have the option to install\n\ a boot manager later."
+block|,
+literal|"drives.hlp"
+block|,
+literal|"Press F1 for more information on what you see here."
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The main installation menu */
 end_comment
@@ -614,7 +985,7 @@ literal|"Before installation can continue, you need to specify a few items\n\ of
 block|,
 literal|"You may wish to read the install guide - press F1 to do so"
 block|,
-literal|"help/install.hlp"
+literal|"install.hlp"
 block|,
 block|{
 block|{

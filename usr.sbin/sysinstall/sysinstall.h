@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.2 1995/04/27 18:03:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.3 1995/04/29 19:33:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,10 @@ include|#
 directive|include
 file|<dialog.h>
 end_include
+
+begin_comment
+comment|/*** Defines ***/
+end_comment
 
 begin_comment
 comment|/* Bitfields for menu options */
@@ -94,7 +98,36 @@ comment|/* Select item then exit	*/
 end_comment
 
 begin_comment
-comment|/* Types */
+comment|/* variable limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VAR_NAME_MAX
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_VALUE_MAX
+value|1024
+end_define
+
+begin_comment
+comment|/* device limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEV_NAME_MAX
+value|128
+end_define
+
+begin_comment
+comment|/*** Types ***/
 end_comment
 
 begin_typedef
@@ -133,6 +166,9 @@ comment|/* Call back a C function	*/
 name|DMENU_CANCEL
 block|,
 comment|/* Cancel out of this menu	*/
+name|DMENU_NOP
+block|,
+comment|/* Do nothing special for item	*/
 block|}
 name|DMenuItemType
 typedef|;
@@ -162,7 +198,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 comment|/* Generic data ptr		*/
-name|int
+name|Boolean
 name|disabled
 decl_stmt|;
 comment|/* Are we temporarily disabled?	*/
@@ -228,9 +264,15 @@ modifier|*
 name|next
 decl_stmt|;
 name|char
+name|name
+index|[
+name|VAR_NAME_MAX
+index|]
+decl_stmt|;
+name|char
 name|value
 index|[
-literal|1024
+name|VAR_VALUE_MAX
 index|]
 decl_stmt|;
 block|}
@@ -238,8 +280,55 @@ name|Variable
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|DEVICE_TYPE_ANY
+block|,
+name|DEVICE_TYPE_DISK
+block|,
+name|DEVICE_TYPE_FLOPPY
+block|,
+name|DEVICE_TYPE_NETWORK
+block|,
+name|DEVICE_TYPE_CDROM
+block|,
+name|DEVICE_TYPE_TAPE
+block|,
+name|DEVICE_TYPE_SERIAL
+block|,
+name|DEVICE_TYPE_PARALLEL
+block|, }
+name|DeviceType
+typedef|;
+end_typedef
+
 begin_comment
-comment|/* Externs */
+comment|/* A "device" from sysinstall's point of view */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_device
+block|{
+name|char
+name|name
+index|[
+name|DEV_NAME_MAX
+index|]
+decl_stmt|;
+name|DeviceType
+name|type
+decl_stmt|;
+block|}
+name|Device
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*** Externs ***/
 end_comment
 
 begin_decl_stmt
@@ -325,7 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Prototypes */
+comment|/*** Prototypes ***/
 end_comment
 
 begin_comment
@@ -351,7 +440,9 @@ specifier|extern
 name|int
 name|installCustom
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -361,7 +452,9 @@ specifier|extern
 name|int
 name|installExpress
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -371,7 +464,81 @@ specifier|extern
 name|int
 name|installMaint
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installSetDeveloper
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installSetXDeveloper
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installSetUser
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installSetXUser
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installSetMinimum
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installSetEverything
+parameter_list|(
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -446,6 +613,23 @@ parameter_list|(
 name|char
 modifier|*
 name|file
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|systemHelpFile
+parameter_list|(
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|char
+modifier|*
+name|buf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -561,6 +745,18 @@ parameter_list|(
 name|void
 modifier|*
 name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|safe_malloc
+parameter_list|(
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -718,6 +914,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|msgConfirm
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|msgYesNo
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* media.c */
 end_comment
@@ -727,7 +951,9 @@ specifier|extern
 name|int
 name|mediaSetCDROM
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -737,7 +963,9 @@ specifier|extern
 name|int
 name|mediaSetFloppy
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -747,7 +975,9 @@ specifier|extern
 name|int
 name|mediaSetDOS
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -757,7 +987,9 @@ specifier|extern
 name|int
 name|mediaSetTape
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -767,7 +999,9 @@ specifier|extern
 name|int
 name|mediaSetFTP
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -777,7 +1011,73 @@ specifier|extern
 name|int
 name|mediaSetFS
 parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* devices.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|Device
+modifier|*
+name|device_get_all
+parameter_list|(
+name|DeviceType
+name|type
+parameter_list|,
+name|int
+modifier|*
+name|ndevs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|device_slice_disk
+parameter_list|(
+name|char
+modifier|*
+name|disk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* variables.c */
+end_comment
+
+begin_function_decl
+specifier|extern
 name|void
+name|variable_set
+parameter_list|(
+name|char
+modifier|*
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|variable_set2
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|value
 parameter_list|)
 function_decl|;
 end_function_decl
