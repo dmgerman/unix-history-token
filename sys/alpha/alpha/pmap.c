@@ -10129,6 +10129,9 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
+name|int
+name|user_addr
+decl_stmt|;
 comment|/* 	 * Convert process and virtual address to physical address. 	 */
 if|if
 condition|(
@@ -10152,6 +10155,10 @@ name|vtopte
 argument_list|(
 name|v
 argument_list|)
+expr_stmt|;
+name|user_addr
+operator|=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -10194,6 +10201,10 @@ name|pmap
 argument_list|,
 name|v
 argument_list|)
+expr_stmt|;
+name|user_addr
+operator|=
+literal|1
 expr_stmt|;
 block|}
 ifdef|#
@@ -10278,6 +10289,17 @@ name|PG_FOR
 operator||
 name|PG_FOE
 expr_stmt|;
+if|if
+condition|(
+name|user_addr
+operator|&&
+name|mtx_trylock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+condition|)
+block|{
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -10285,6 +10307,13 @@ argument_list|,
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|write
