@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.8 (Berkeley) %G%"
+literal|"@(#)map.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +223,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DBM_MAP_LOOKUP -- look up a datum in a DBM-type map ** **	Parameters: **		map -- the map to look up in. **		buf -- a pointer to to the buffer containing the key. **			This is a null terminated string. **		bufsiz -- the size of buf -- note that this is in general **			larger that strlen(buf), and buf can be changed **			in place if desired. **		av -- arguments from the config file (can be interpolated **			into the final result). ** **	Returns: **		A pointer to the rewritten result. **		NULL if not found in the map. */
+comment|/* **  DBM_MAP_LOOKUP -- look up a datum in a DBM-type map ** **	Parameters: **		map -- the map to look up in. **		buf -- a pointer to to the buffer containing the key. **			This is a null terminated string. **		bufsiz -- the size of buf -- note that this is in general **			larger that strlen(buf), and buf can be changed **			in place if desired. **		av -- arguments from the config file (can be interpolated **			into the final result). **		statp -- pointer to status word (out-parameter). ** **	Returns: **		A pointer to the rewritten result. **		NULL if not found in the map. */
 end_comment
 
 begin_function
@@ -238,6 +238,8 @@ parameter_list|,
 name|bufsiz
 parameter_list|,
 name|av
+parameter_list|,
+name|statp
 parameter_list|)
 name|MAP
 modifier|*
@@ -254,6 +256,10 @@ name|char
 modifier|*
 modifier|*
 name|av
+decl_stmt|;
+name|int
+modifier|*
+name|statp
 decl_stmt|;
 block|{
 name|datum
@@ -716,7 +722,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* **  DB_MAP_LOOKUP -- look up a datum in a BTREE- or HASH-type map ** **	Parameters: **		map -- the map to look up in. **		buf -- a pointer to to the buffer containing the key. **			This is a null terminated string. **		bufsiz -- the size of buf -- note that this is in general **			larger that strlen(buf), and buf can be changed **			in place if desired. **		av -- arguments from the config file (can be interpolated **			into the final result). ** **	Returns: **		A pointer to the rewritten result. **		NULL if not found in the map. */
+comment|/* **  DB_MAP_LOOKUP -- look up a datum in a BTREE- or HASH-type map ** **	Parameters: **		map -- the map to look up in. **		buf -- a pointer to to the buffer containing the key. **			This is a null terminated string. **		bufsiz -- the size of buf -- note that this is in general **			larger that strlen(buf), and buf can be changed **			in place if desired. **		av -- arguments from the config file (can be interpolated **			into the final result). **		statp -- pointer to status word (out-parameter). ** **	Returns: **		A pointer to the rewritten result. **		NULL if not found in the map. */
 end_comment
 
 begin_function
@@ -731,6 +737,8 @@ parameter_list|,
 name|bufsiz
 parameter_list|,
 name|av
+parameter_list|,
+name|statp
 parameter_list|)
 name|MAP
 modifier|*
@@ -747,6 +755,10 @@ name|char
 modifier|*
 modifier|*
 name|av
+decl_stmt|;
+name|int
+modifier|*
+name|statp
 decl_stmt|;
 block|{
 name|DBT
@@ -1400,7 +1412,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  NIS_MAP_LOOKUP -- look up a datum in a NIS map ** **	Parameters: **		map -- the map to look up in. **		buf -- a pointer to to the buffer containing the key. **			This is a null terminated string. **		bufsiz -- the size of buf -- note that this is in general **			larger that strlen(buf), and buf can be changed **			in place if desired. **		av -- arguments from the config file (can be interpolated **			into the final result). ** **	Returns: **		A pointer to the rewritten result. **		NULL if not found in the map. */
+comment|/* **  NIS_MAP_LOOKUP -- look up a datum in a NIS map ** **	Parameters: **		map -- the map to look up in. **		buf -- a pointer to to the buffer containing the key. **			This is a null terminated string. **		bufsiz -- the size of buf -- note that this is in general **			larger that strlen(buf), and buf can be changed **			in place if desired. **		av -- arguments from the config file (can be interpolated **			into the final result). **		statp -- pointer to status word (out-parameter). ** **	Returns: **		A pointer to the rewritten result. **		NULL if not found in the map. */
 end_comment
 
 begin_function
@@ -1415,6 +1427,8 @@ parameter_list|,
 name|bufsiz
 parameter_list|,
 name|av
+parameter_list|,
+name|statp
 parameter_list|)
 name|MAP
 modifier|*
@@ -1431,6 +1445,10 @@ name|char
 modifier|*
 modifier|*
 name|av
+decl_stmt|;
+name|int
+modifier|*
+name|statp
 decl_stmt|;
 block|{
 name|char

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.38 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -246,6 +246,9 @@ name|char
 modifier|*
 name|delimptrbuf
 decl_stmt|;
+name|bool
+name|queueup
+decl_stmt|;
 name|char
 name|pvpbuf
 index|[
@@ -418,6 +421,12 @@ operator|)
 return|;
 block|}
 comment|/* 	**  Apply rewriting rules. 	**	Ruleset 0 does basic parsing.  It must resolve. 	*/
+name|queueup
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
 name|rewrite
 argument_list|(
 name|pvp
@@ -426,7 +435,15 @@ literal|3
 argument_list|,
 name|e
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+name|queueup
+operator|=
+name|TRUE
 expr_stmt|;
+if|if
+condition|(
 name|rewrite
 argument_list|(
 name|pvp
@@ -435,6 +452,12 @@ literal|0
 argument_list|,
 name|e
 argument_list|)
+operator|==
+name|EX_TEMPFAIL
+condition|)
+name|queueup
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* 	**  See if we resolved to a real mailer. 	*/
 if|if
@@ -512,6 +535,17 @@ argument_list|,
 operator|*
 name|delimptr
 argument_list|)
+expr_stmt|;
+comment|/* 	**  If there was a parsing failure, mark it for queueing. 	*/
+if|if
+condition|(
+name|queueup
+condition|)
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
 expr_stmt|;
 comment|/* 	**  Compute return value. 	*/
 if|if
@@ -2178,7 +2212,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. **		ruleset -- the ruleset to use for rewriting. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		pvp is modified. */
+comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. **		ruleset -- the ruleset to use for rewriting. **		e -- the current envelope. ** **	Returns: **		A status code.  If EX_TEMPFAIL, higher level code should **			attempt recovery. ** **	Side Effects: **		pvp is modified. */
 end_comment
 
 begin_define
@@ -2274,6 +2308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
 specifier|static
 name|char
 name|control_init_data
@@ -2427,6 +2462,12 @@ name|ruleno
 decl_stmt|;
 comment|/* current rule number */
 name|int
+name|rstat
+init|=
+name|EX_OK
+decl_stmt|;
+comment|/* return status */
+name|int
 name|subr
 decl_stmt|;
 comment|/* subroutine number if>= 0 */
@@ -2538,7 +2579,9 @@ argument_list|,
 name|ruleset
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|EX_CONFIG
+return|;
 block|}
 if|if
 condition|(
@@ -2546,7 +2589,9 @@ name|pvp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+name|EX_USAGE
+return|;
 if|if
 condition|(
 operator|++
@@ -3999,7 +4044,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|EX_CONFIG
+return|;
 block|}
 if|if
 condition|(
@@ -4929,6 +4976,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_return
+return|return
+name|rstat
+return|;
+end_return
 
 begin_escape
 unit|}
@@ -5860,6 +5913,9 @@ operator|->
 name|m_r_rwset
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|tv
@@ -6678,6 +6734,9 @@ operator|(
 name|name
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -6762,6 +6821,9 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -6785,6 +6847,9 @@ name|rwset
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -6795,6 +6860,9 @@ name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -7277,6 +7345,9 @@ operator|==
 name|NULL
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -7552,7 +7623,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DEQUOTE_MAP -- unquote an address ** **	Parameters: **		map -- the internal map structure (ignored). **		buf -- the buffer to dequote. **		bufsiz -- the size of that buffer. **		av -- arguments (ignored). ** **	Returns: **		NULL -- if there were no quotes, or if the resulting **			unquoted buffer would not be acceptable to prescan. **		else -- The dequoted buffer. */
+comment|/* **  DEQUOTE_MAP -- unquote an address ** **	Parameters: **		map -- the internal map structure (ignored). **		buf -- the buffer to dequote. **		bufsiz -- the size of that buffer. **		av -- arguments (ignored). **		statp -- pointer to status out-parameter. ** **	Returns: **		NULL -- if there were no quotes, or if the resulting **			unquoted buffer would not be acceptable to prescan. **		else -- The dequoted buffer. */
 end_comment
 
 begin_function
@@ -7567,6 +7638,8 @@ parameter_list|,
 name|bufsiz
 parameter_list|,
 name|av
+parameter_list|,
+name|statp
 parameter_list|)
 name|MAP
 modifier|*
@@ -7583,6 +7656,10 @@ name|char
 modifier|*
 modifier|*
 name|av
+decl_stmt|;
+name|int
+modifier|*
+name|statp
 decl_stmt|;
 block|{
 specifier|register

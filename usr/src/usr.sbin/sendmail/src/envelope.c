@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.30 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2275,6 +2275,9 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -2284,6 +2287,9 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp
@@ -2293,6 +2299,9 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|rewrite
 argument_list|(
 name|pvp

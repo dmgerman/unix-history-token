@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.36 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.37 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.36 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.37 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2477,7 +2477,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to this map (unused). **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. **		avp -- unused -- for compatibility with other mapping **			functions. ** **	Returns: **		The mapping, if found. **		NULL if no mapping found. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, return the canonical **		name. */
+comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to this map (unused). **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. **		avp -- unused -- for compatibility with other mapping **			functions. **		statp -- an exit status (out parameter) -- set to **			EX_TEMPFAIL if the name server is unavailable. ** **	Returns: **		The mapping, if found. **		NULL if no mapping found. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, return the canonical **		name. */
 end_comment
 
 begin_function
@@ -2492,6 +2492,8 @@ parameter_list|,
 name|hbsize
 parameter_list|,
 name|avp
+parameter_list|,
+name|statp
 parameter_list|)
 name|MAP
 modifier|*
@@ -2508,6 +2510,10 @@ name|char
 modifier|*
 modifier|*
 name|avp
+decl_stmt|;
+name|int
+modifier|*
+name|statp
 decl_stmt|;
 block|{
 specifier|register
@@ -2600,6 +2606,16 @@ return|;
 block|}
 else|else
 block|{
+specifier|register
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -2611,11 +2627,97 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"FAIL\n"
+literal|"FAIL (%d)\n"
+argument_list|,
+name|h_errno
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|h_errno
+condition|)
+block|{
+case|case
+name|TRY_AGAIN
+case|:
+operator|*
+name|statp
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+break|break;
+case|case
+name|HOST_NOT_FOUND
+case|:
+operator|*
+name|statp
+operator|=
+name|EX_NOHOST
+expr_stmt|;
+break|break;
+case|case
+name|NO_RECOVERY
+case|:
+operator|*
+name|statp
+operator|=
+name|EX_SOFTWARE
+expr_stmt|;
+break|break;
+default|default:
+operator|*
+name|statp
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|*
+name|statp
+operator|!=
+name|EX_TEMPFAIL
+operator|||
+name|UseNameServer
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* 			**  Try to look it up in /etc/hosts 			*/
+name|hp
+operator|=
+name|gethostbyname
+argument_list|(
+name|hbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* no dice there either */
+operator|*
+name|statp
+operator|=
+name|EX_NOHOST
 expr_stmt|;
 return|return
 name|NULL
+return|;
+block|}
+operator|*
+name|statp
+operator|=
+name|EX_OK
+expr_stmt|;
+return|return
+name|hp
+operator|->
+name|h_name
 return|;
 block|}
 block|}
@@ -3301,7 +3403,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to the database map. **		hbuf -- a buffer containing a hostname. **		avp -- a pointer to a (cf file defined) argument vector. ** **	Returns: **		mapped host name **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
+comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to the database map. **		hbuf -- a buffer containing a hostname. **		hbsize -- size of hbuf. **		avp -- a pointer to a (cf file defined) argument vector. **		statp -- an exit status (out parameter). ** **	Returns: **		mapped host name **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
 end_comment
 
 begin_comment
@@ -3320,6 +3422,8 @@ parameter_list|,
 name|hbsize
 parameter_list|,
 name|avp
+parameter_list|,
+name|statp
 parameter_list|)
 name|MAP
 modifier|*
@@ -3337,7 +3441,40 @@ modifier|*
 modifier|*
 name|avp
 decl_stmt|;
+name|char
+modifier|*
+name|statp
+decl_stmt|;
 block|{
+specifier|register
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
+name|hp
+operator|=
+name|gethostbyname
+argument_list|(
+name|hbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hp
+operator|!=
+name|NULL
+condition|)
+return|return
+name|hp
+operator|->
+name|h_name
+return|;
+operator|*
+name|statp
+operator|=
+name|EX_NOHOST
+expr_stmt|;
 return|return
 name|NULL
 return|;

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.54 (Berkeley) %G%"
+literal|"@(#)main.c	6.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3653,6 +3653,11 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+name|int
+name|stat
+decl_stmt|;
+name|stat
+operator|=
 name|rewrite
 argument_list|(
 name|pvp
@@ -3663,6 +3668,21 @@ name|p
 argument_list|)
 argument_list|,
 name|CurEnv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|!=
+name|EX_OK
+condition|)
+name|printf
+argument_list|(
+literal|"== Ruleset %s status %d\n"
+argument_list|,
+name|p
+argument_list|,
+name|stat
 argument_list|)
 expr_stmt|;
 while|while
