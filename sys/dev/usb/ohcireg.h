@@ -896,11 +896,11 @@ decl_stmt|;
 define|#
 directive|define
 name|OHCI_HALTED
-value|0x00000002
+value|0x00000001
 define|#
 directive|define
 name|OHCI_TOGGLECARRY
-value|0x00000001
+value|0x00000002
 define|#
 directive|define
 name|OHCI_HEADMASK
