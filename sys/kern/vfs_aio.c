@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.13 1997/11/29 02:57:46 dyson Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.14 1997/11/30 04:36:31 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -2500,6 +2500,7 @@ goto|goto
 name|restart2
 goto|;
 block|}
+comment|/*  * Note the use of lots of splbio here, trying to avoid  * splbio for long chains of I/O.  Probably unnecessary.  */
 name|restart3
 label|:
 name|s
@@ -2544,6 +2545,11 @@ goto|goto
 name|restart3
 goto|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|restart4
 label|:
 name|s
