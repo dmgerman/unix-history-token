@@ -2072,7 +2072,7 @@ while|while
 condition|(
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|BUFSIZE
 argument_list|,

@@ -4668,7 +4668,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|len
 argument_list|,

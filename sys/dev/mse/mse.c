@@ -1219,7 +1219,7 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
