@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -284,6 +284,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Generic description of an I/O "adaptor"  * (any top-level I/O bus visible to software  * and requiring autoconfiguration).  * The remainder of the description  * is pointed to by io_details.  */
+end_comment
+
 begin_struct
 struct|struct
 name|iobus
@@ -326,22 +330,19 @@ modifier|*
 name|psb_nexbase
 decl_stmt|;
 comment|/* base of nexus space */
-comment|/* we should be able to have just one address for the unibus memories */
-comment|/* and calculate successive addresses by adding to the base, but the 750 */
-comment|/* doesn't obey the sensible rule: uba1 has a lower address than uba0! */
-name|caddr_t
-modifier|*
-name|psb_umaddr
+name|short
+name|psb_ubatype
 decl_stmt|;
-comment|/* unibus memory addresses */
+comment|/* type of "unibus adaptor" */
 name|short
 name|psb_nubabdp
 decl_stmt|;
 comment|/* number of bdp's per uba */
-name|short
-name|psb_haveubasr
+name|caddr_t
+modifier|*
+name|psb_umaddr
 decl_stmt|;
-comment|/* have uba status register */
+comment|/* "unibus" memory addresses */
 comment|/* the 750 has some slots which don't promise to tell you their types */
 comment|/* if this pointer is non-zero, then you get the type from this array */
 comment|/* rather than from the (much more sensible) low byte of the config register */
@@ -350,6 +351,40 @@ modifier|*
 name|psb_nextype
 decl_stmt|;
 comment|/* botch */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Description of a Q-bus configuration.  */
+end_comment
+
+begin_struct
+struct|struct
+name|qbus
+block|{
+name|int
+name|qb_type
+decl_stmt|;
+comment|/* type of "unibus adaptor" */
+name|int
+name|qb_memsize
+decl_stmt|;
+comment|/* size of (used) memory, pages */
+name|struct
+name|pte
+modifier|*
+name|qb_map
+decl_stmt|;
+comment|/* base of map registers */
+name|caddr_t
+name|qb_maddr
+decl_stmt|;
+comment|/* "unibus" memory address */
+name|caddr_t
+name|qb_iopage
+decl_stmt|;
+comment|/* "unibus" IO page address */
 block|}
 struct|;
 end_struct

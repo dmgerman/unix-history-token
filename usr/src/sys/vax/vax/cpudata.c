@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -44,7 +44,7 @@ comment|/*  * Initialization of per-cpu data structures.  */
 end_comment
 
 begin_comment
-comment|/*  * These are the (fixed) addresses of the (last 8k bytes of)  * unibus memory for each of the possible unibus adapters.  Note that the  * unibus memory addresses are actually indexed by the unibus adapter type code.  */
+comment|/*  * These are the (fixed) physical addresses of the  * unibus memory for each of the possible unibus adapters.  * Note that on some machines the unibus memory addresses  * are actually indexed by the unibus adapter type code.  */
 end_comment
 
 begin_if
@@ -263,33 +263,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|VAX630
-end_if
-
-begin_decl_stmt
-name|caddr_t
-name|umaddr630
-index|[
-literal|1
-index|]
-init|=
-block|{
-operator|(
-name|caddr_t
-operator|)
-name|UMEM630
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Information to patch around the stupidity of configuration  * registers not returning types on some of the processors.  */
 end_comment
@@ -404,11 +377,11 @@ name|NNEX8600
 block|,
 name|NEXA8600
 block|,
-name|umaddr8600a
+name|DW780
 block|,
 name|NBDP8600
 block|,
-literal|1
+name|umaddr8600a
 block|,
 literal|0
 block|}
@@ -418,11 +391,11 @@ name|NNEX8600
 block|,
 name|NEXB8600
 block|,
-name|umaddr8600b
+name|DW780
 block|,
 name|NBDP8600
 block|,
-literal|1
+name|umaddr8600b
 block|,
 literal|0
 block|}
@@ -488,30 +461,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX630
-end_if
-
-begin_decl_stmt
-name|short
-name|nexty630
-index|[
-name|NNEX630
-index|]
-init|=
-block|{
-name|NEX_UBA0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
 name|VAX780
 end_if
 
@@ -525,11 +474,11 @@ name|NNEX780
 block|,
 name|NEX780
 block|,
-name|umaddr780
+name|DW780
 block|,
 name|NBDP780
 block|,
-literal|1
+name|umaddr780
 block|,
 literal|0
 block|, }
@@ -579,11 +528,11 @@ name|NNEX750
 block|,
 name|NEX750
 block|,
-name|umaddr750
+name|DW750
 block|,
 name|NBDP750
 block|,
-literal|0
+name|umaddr750
 block|,
 name|nexty750
 block|, }
@@ -633,11 +582,11 @@ name|NNEX730
 block|,
 name|NEX730
 block|,
-name|umaddr730
+name|DW730
 block|,
 name|NBDP730
 block|,
-literal|0
+name|umaddr730
 block|,
 name|nexty730
 block|, }
@@ -679,22 +628,26 @@ end_if
 
 begin_decl_stmt
 name|struct
-name|nexusconnect
-name|xxx630
+name|qbus
+name|qbus630
 init|=
 block|{
-name|NNEX630
+name|QBA
 block|,
-name|NEX630
+name|QBAPAGES
 block|,
-name|umaddr630
+name|QBAMAP630
 block|,
-name|NBDP630
+operator|(
+name|caddr_t
+operator|)
+name|QMEM630
 block|,
-literal|0
-block|,
-name|nexty630
-block|, }
+operator|(
+name|caddr_t
+operator|)
+name|QIOPAGE630
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -715,7 +668,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|xxx630
+name|qbus630
 block|}
 decl_stmt|;
 end_decl_stmt
