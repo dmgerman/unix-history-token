@@ -739,9 +739,6 @@ comment|/* 208 = nosys */
 literal|"#209"
 block|,
 comment|/* 209 = nosys */
-ifdef|#
-directive|ifdef
-name|LKM
 literal|"lkmnosys"
 block|,
 comment|/* 210 = lkmnosys */
@@ -772,40 +769,6 @@ comment|/* 218 = lkmnosys */
 literal|"lkmnosys"
 block|,
 comment|/* 219 = lkmnosys */
-else|#
-directive|else
-literal|"#210"
-block|,
-comment|/* 210 = nosys */
-literal|"#211"
-block|,
-comment|/* 211 = nosys */
-literal|"#212"
-block|,
-comment|/* 212 = nosys */
-literal|"#213"
-block|,
-comment|/* 213 = nosys */
-literal|"#214"
-block|,
-comment|/* 214 = nosys */
-literal|"#215"
-block|,
-comment|/* 215 = nosys */
-literal|"#216"
-block|,
-comment|/* 216 = nosys */
-literal|"#217"
-block|,
-comment|/* 217 = nosys */
-literal|"#218"
-block|,
-comment|/* 218 = nosys */
-literal|"#219"
-block|,
-comment|/* 219 = nosys */
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1449,21 +1449,5 @@ argument|munlock
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LKM
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 

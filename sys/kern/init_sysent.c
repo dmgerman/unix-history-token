@@ -1166,12 +1166,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LKM
-end_ifdef
-
 begin_function_decl
 name|int
 name|lkmnosys
@@ -1241,16 +1235,6 @@ name|lkmnosys
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1640,22 +1624,6 @@ begin_ifdef
 ifdef|#
 directive|ifdef
 name|LFS
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LKM
 end_ifdef
 
 begin_else
@@ -3424,9 +3392,6 @@ name|nosys
 block|}
 block|,
 comment|/* 209 = nosys */
-ifdef|#
-directive|ifdef
-name|LKM
 block|{
 literal|0
 block|,
@@ -3497,80 +3462,6 @@ name|lkmnosys
 block|}
 block|,
 comment|/* 219 = lkmnosys */
-else|#
-directive|else
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 210 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 211 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 212 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 213 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 214 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 215 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 216 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 217 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 218 = nosys */
-block|{
-literal|0
-block|,
-name|nosys
-block|}
-block|,
-comment|/* 219 = nosys */
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
