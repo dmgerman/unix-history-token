@@ -654,13 +654,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|signanosleep
-value|_signanosleep
-end_define
-
-begin_define
-define|#
-directive|define
 name|sigpending
 value|_sigpending
 end_define

@@ -516,12 +516,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|signanosleep
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|sigpending
 end_undef
 
