@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pppctl.c,v 1.15 1997/12/27 13:44:42 brian Exp $  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pppctl.c,v 1.16 1998/03/22 00:43:04 brian Exp $  */
 end_comment
 
 begin_include
@@ -925,6 +925,8 @@ decl_stmt|,
 name|len
 decl_stmt|,
 name|verbose
+decl_stmt|,
+name|err
 decl_stmt|;
 name|unsigned
 name|TimeoutVal
@@ -1580,6 +1582,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|err
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|TimeoutVal
@@ -1605,6 +1611,7 @@ if|if
 condition|(
 name|TimedOut
 condition|)
+block|{
 name|fputs
 argument_list|(
 literal|"Timeout: "
@@ -1612,16 +1619,44 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot connect to socket %s\n"
+literal|"Cannot connect to socket %s"
 argument_list|,
 name|argv
 index|[
 name|arg
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|": %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
 argument_list|)
 expr_stmt|;
 name|close
