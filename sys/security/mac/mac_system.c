@@ -510,6 +510,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.enforce_pipe"
+argument_list|,
+operator|&
+name|mac_enforce_pipe
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -618,6 +629,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enforce MAC policy on vm operations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"security.mac.enforce_vm"
+argument_list|,
+operator|&
+name|mac_enforce_vm
 argument_list|)
 expr_stmt|;
 end_expr_stmt
