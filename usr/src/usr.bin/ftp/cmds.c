@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.19 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -242,7 +248,7 @@ modifier|*
 name|hookup
 argument_list|()
 decl_stmt|;
-name|int
+name|short
 name|port
 decl_stmt|;
 if|if
@@ -1236,6 +1242,22 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|char
+modifier|*
+name|stype
+index|[]
+init|=
+block|{
+literal|"type"
+block|,
+literal|""
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Set binary transfer type.  */
 end_comment
@@ -1251,15 +1273,18 @@ end_macro
 
 begin_block
 block|{
-name|call
-argument_list|(
-name|settype
-argument_list|,
-literal|"type"
-argument_list|,
+name|stype
+index|[
+literal|1
+index|]
+operator|=
 literal|"binary"
+expr_stmt|;
+name|settype
+argument_list|(
+literal|2
 argument_list|,
-literal|0
+name|stype
 argument_list|)
 expr_stmt|;
 block|}
@@ -1280,15 +1305,18 @@ end_macro
 
 begin_block
 block|{
-name|call
-argument_list|(
-name|settype
-argument_list|,
-literal|"type"
-argument_list|,
+name|stype
+index|[
+literal|1
+index|]
+operator|=
 literal|"ascii"
+expr_stmt|;
+name|settype
+argument_list|(
+literal|2
 argument_list|,
-literal|0
+name|stype
 argument_list|)
 expr_stmt|;
 block|}
@@ -1309,15 +1337,18 @@ end_macro
 
 begin_block
 block|{
-name|call
-argument_list|(
-name|settype
-argument_list|,
-literal|"type"
-argument_list|,
+name|stype
+index|[
+literal|1
+index|]
+operator|=
 literal|"tenex"
+expr_stmt|;
+name|settype
+argument_list|(
+literal|2
 argument_list|,
-literal|0
+name|stype
 argument_list|)
 expr_stmt|;
 block|}
@@ -1338,15 +1369,18 @@ end_macro
 
 begin_block
 block|{
-name|call
-argument_list|(
-name|settype
-argument_list|,
-literal|"type"
-argument_list|,
+name|stype
+index|[
+literal|1
+index|]
+operator|=
 literal|"ebcdic"
+expr_stmt|;
+name|settype
+argument_list|(
+literal|2
 argument_list|,
-literal|0
+name|stype
 argument_list|)
 expr_stmt|;
 block|}
@@ -1872,7 +1906,8 @@ name|i
 decl_stmt|;
 name|int
 name|ointer
-decl_stmt|,
+decl_stmt|;
+name|sig_t
 argument_list|(
 operator|*
 name|oldintr
@@ -2423,6 +2458,10 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|gargs
 argument_list|)
 expr_stmt|;
@@ -2565,6 +2604,10 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|gargs
 argument_list|)
 expr_stmt|;
@@ -2979,12 +3022,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|sig_t
 name|mabort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|ointer
@@ -3060,7 +3101,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get multiple files.  */
@@ -3102,7 +3143,8 @@ index|]
 decl_stmt|;
 name|int
 name|ointer
-decl_stmt|,
+decl_stmt|;
+name|sig_t
 argument_list|(
 operator|*
 name|oldintr
@@ -4633,6 +4675,12 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|getwd
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|argc
@@ -4879,7 +4927,8 @@ name|cp
 decl_stmt|;
 name|int
 name|ointer
-decl_stmt|,
+decl_stmt|;
+name|sig_t
 argument_list|(
 operator|*
 name|oldintr
@@ -5530,7 +5579,8 @@ name|int
 name|ointer
 decl_stmt|,
 name|i
-decl_stmt|,
+decl_stmt|;
+name|sig_t
 argument_list|(
 operator|*
 name|oldintr
@@ -5899,7 +5949,8 @@ begin_block
 block|{
 name|int
 name|pid
-decl_stmt|,
+decl_stmt|;
+name|sig_t
 argument_list|(
 operator|*
 name|old1
@@ -7850,6 +7901,10 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|globbed
 argument_list|)
 expr_stmt|;
@@ -7886,6 +7941,10 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|globbed
 argument_list|)
 expr_stmt|;
@@ -8036,12 +8095,10 @@ name|abortprox
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|sig_t
 name|proxabort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -8089,7 +8146,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|doproxy
@@ -8116,7 +8173,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|sig_t
 argument_list|(
 operator|*
 name|oldintr
@@ -10596,11 +10653,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|fputs
+name|printf
 argument_list|(
-name|reply_string
+literal|"%s\n"
 argument_list|,
-name|stdout
+name|reply_string
 argument_list|)
 expr_stmt|;
 name|verbose
