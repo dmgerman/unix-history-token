@@ -11469,7 +11469,7 @@ operator|->
 name|aac_container_lock
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|co
 argument_list|,
