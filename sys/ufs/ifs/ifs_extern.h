@@ -158,12 +158,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|vop_bmap_args
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|vop_fsync_args
 struct_decl|;
 end_struct_decl
