@@ -272,7 +272,7 @@ comment|/*  * quick version of vm_fault  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|vm_fault_quick
 parameter_list|(
 name|v
@@ -286,12 +286,17 @@ name|int
 name|prot
 decl_stmt|;
 block|{
+name|int
+name|r
+decl_stmt|;
 if|if
 condition|(
 name|prot
 operator|&
 name|VM_PROT_WRITE
 condition|)
+name|r
+operator|=
 name|subyte
 argument_list|(
 name|v
@@ -303,11 +308,18 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+name|r
+operator|=
 name|fubyte
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|r
+operator|)
+return|;
 block|}
 end_function
 
