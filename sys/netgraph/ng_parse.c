@@ -2089,11 +2089,17 @@ if|if
 condition|(
 name|val
 operator|<
+operator|(
+name|long
+operator|)
 operator|-
 literal|0x80000000
 operator|||
 name|val
 operator|>
+operator|(
+name|u_long
+operator|)
 literal|0xffffffff
 operator|||
 name|eptr
