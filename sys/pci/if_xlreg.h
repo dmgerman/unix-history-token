@@ -3107,6 +3107,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TC_DEVICEID_TORNADO_10_100BT_SERV
+value|0x9805
+end_define
+
+begin_define
+define|#
+directive|define
 name|TC_DEVICEID_HURRICANE_SOHO100TX
 value|0x7646
 end_define
