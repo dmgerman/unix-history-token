@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_vnops.c	8.13 (Berkeley) 6/10/95  * $Id: lfs_vnops.c,v 1.22 1997/09/02 20:06:49 bde Exp $  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_vnops.c	8.13 (Berkeley) 6/10/95  * $Id: lfs_vnops.c,v 1.23 1997/09/14 02:58:06 peter Exp $  */
 end_comment
 
 begin_include
@@ -601,7 +601,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|lfs_reclaim
+name|ufs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1161,7 +1161,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|lfs_reclaim
+name|ufs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1721,7 +1721,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|lfs_reclaim
+name|ufs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -2473,77 +2473,6 @@ name|vp
 operator|->
 name|v_interlock
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Reclaim an inode so that it can be used for other purposes.  */
-end_comment
-
-begin_function
-name|int
-name|lfs_reclaim
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_reclaim_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-specifier|register
-name|struct
-name|vnode
-modifier|*
-name|vp
-init|=
-name|ap
-operator|->
-name|a_vp
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-if|if
-condition|(
-name|error
-operator|=
-name|ufs_reclaim
-argument_list|(
-name|vp
-argument_list|,
-name|ap
-operator|->
-name|a_p
-argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-name|FREE
-argument_list|(
-name|vp
-operator|->
-name|v_data
-argument_list|,
-name|M_LFSNODE
-argument_list|)
-expr_stmt|;
-name|vp
-operator|->
-name|v_data
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
