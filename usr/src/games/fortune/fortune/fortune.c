@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.11 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<machine/endian.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1548,7 +1548,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aDfilm:osw"
+literal|"aDefilm:osw"
 argument_list|)
 operator|)
 operator|!=
@@ -1567,7 +1567,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"afilm:osw"
+literal|"aefilm:osw"
 argument_list|)
 operator|)
 operator|!=
@@ -6274,6 +6274,7 @@ name|Fort_len
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* extra length, "%\n" is appended */
 name|Fortbuf
 operator|=
 name|do_malloc
@@ -6283,6 +6284,8 @@ name|unsigned
 name|int
 operator|)
 name|Fort_len
+operator|+
+literal|10
 argument_list|)
 expr_stmt|;
 name|Found_one
