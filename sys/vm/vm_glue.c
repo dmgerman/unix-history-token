@@ -685,22 +685,6 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
-comment|/* 	 * Allocate object for the upage. 	 */
-name|upobj
-operator|=
-name|vm_object_allocate
-argument_list|(
-name|OBJT_DEFAULT
-argument_list|,
-name|UAREA_PAGES
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_upages_obj
-operator|=
-name|upobj
-expr_stmt|;
 comment|/* 	 * Get a kernel virtual address for the U area for this process. 	 */
 name|up
 operator|=
@@ -735,6 +719,27 @@ operator|*
 operator|)
 name|up
 expr_stmt|;
+comment|/* 	 * Allocate object and page(s) for the U area. 	 */
+name|upobj
+operator|=
+name|vm_object_allocate
+argument_list|(
+name|OBJT_DEFAULT
+argument_list|,
+name|UAREA_PAGES
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_upages_obj
+operator|=
+name|upobj
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|upobj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -749,7 +754,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Get a uarea page. 		 */
 name|m
 operator|=
 name|vm_page_grab
@@ -780,13 +784,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_ZERO
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|valid
@@ -797,6 +794,11 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|upobj
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enter the pages into the kernel address space. 	 */
 name|pmap_qenter
 argument_list|(
