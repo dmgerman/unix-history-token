@@ -5220,9 +5220,15 @@ operator|->
 name|mnt_syncer
 argument_list|)
 expr_stmt|;
-comment|/* Move process cdir/rdir refs on fs root to underlying vnode. */
+comment|/* 	 * For forced unmounts, move process cdir/rdir refs on the fs root 	 * vnode to the covered vnode.  For non-forced unmounts we want 	 * such references to cause an EBUSY error. 	 */
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|MNT_FORCE
+operator|)
+operator|&&
 name|VFS_ROOT
 argument_list|(
 name|mp
@@ -5337,6 +5343,12 @@ block|{
 comment|/* Undo cdir/rdir and rootvnode changes made above. */
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|MNT_FORCE
+operator|)
+operator|&&
 name|VFS_ROOT
 argument_list|(
 name|mp
