@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)cy.c	1.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1429,9 +1429,6 @@ name|struct
 name|yc_softc
 modifier|*
 name|yc
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|ycunit
 operator|=
@@ -2964,12 +2961,15 @@ name|tpsize
 operator|=
 name|htoms
 argument_list|(
-name|min
+name|imin
 argument_list|(
 name|yc
 operator|->
 name|yc_blksize
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bp
 operator|->
 name|b_bcount
@@ -3174,6 +3174,10 @@ name|imin
 argument_list|(
 name|imax
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 literal|10
 operator|*
 name|htoms
@@ -3183,6 +3187,7 @@ operator|->
 name|cy_tpb
 operator|.
 name|tprec
+argument_list|)
 argument_list|)
 argument_list|,
 literal|60
@@ -5514,7 +5519,8 @@ argument_list|,
 name|value
 argument_list|)
 specifier|register
-name|caddr_t
+name|u_char
+operator|*
 name|reg
 expr_stmt|;
 end_expr_stmt
