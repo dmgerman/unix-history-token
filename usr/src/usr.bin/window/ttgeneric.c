@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttgeneric.c	3.27 %G%"
+literal|"@(#)ttgeneric.c	3.28 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -916,12 +916,6 @@ name|tt
 operator|.
 name|tt_nmodes
 argument_list|)
-expr_stmt|;
-name|tt
-operator|.
-name|tt_col
-operator|+=
-name|n
 expr_stmt|;
 if|if
 condition|(
