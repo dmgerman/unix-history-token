@@ -117,7 +117,7 @@ name|logout
 parameter_list|(
 name|line
 parameter_list|)
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|line
