@@ -933,10 +933,23 @@ condition|(
 name|key
 operator|!=
 literal|'\n'
+operator|&&
+name|key
+operator|!=
+literal|' '
+operator|&&
+name|key
+operator|!=
+literal|'\033'
 condition|)
 name|key
 operator|=
 name|wgetch
+argument_list|(
+name|window
+argument_list|)
+expr_stmt|;
+name|delwin
 argument_list|(
 name|window
 argument_list|)
