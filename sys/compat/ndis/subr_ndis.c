@@ -8018,7 +8018,7 @@ name|np_private
 operator|.
 name|npp_validcounts
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 operator|*
 name|packet
