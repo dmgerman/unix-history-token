@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.18 (Berkeley) %G%"
+literal|"@(#)local2.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3521,6 +3521,42 @@ operator|.
 name|op
 operator|==
 name|ICON
+operator|&&
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
+operator|(
+name|src
+operator|->
+name|tn
+operator|.
+name|name
+operator|==
+name|NULL
+operator|||
+operator|*
+name|src
+operator|->
+name|tn
+operator|.
+name|name
+operator|==
+literal|'\0'
+operator|)
+else|#
+directive|else
+name|src
+operator|->
+name|tn
+operator|.
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+endif|#
+directive|endif
 condition|)
 block|{
 if|if
