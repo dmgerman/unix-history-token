@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.125
+literal|3.126
 operator|%
 name|G
 operator|%
@@ -2425,9 +2425,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|OutChannel
-operator|!=
-name|stdout
+name|Smtp
+operator|||
+name|HoldErrs
 condition|)
 block|{
 operator|(
@@ -2445,7 +2445,7 @@ name|dup
 argument_list|(
 name|fileno
 argument_list|(
-name|OutChannel
+name|Xscript
 argument_list|)
 argument_list|)
 expr_stmt|;

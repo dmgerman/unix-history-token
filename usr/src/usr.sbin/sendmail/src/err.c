@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.30
+literal|3.31
 operator|%
 name|G
 operator|%
@@ -158,6 +158,8 @@ expr_stmt|;
 name|putmsg
 argument_list|(
 name|MsgBuf
+argument_list|,
+name|HoldErrs
 argument_list|)
 expr_stmt|;
 comment|/* determine exit status if not already set */
@@ -318,6 +320,8 @@ expr_stmt|;
 name|putmsg
 argument_list|(
 name|MsgBuf
+argument_list|,
+name|HoldErrs
 argument_list|)
 expr_stmt|;
 if|if
@@ -409,6 +413,8 @@ expr_stmt|;
 name|putmsg
 argument_list|(
 name|MsgBuf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -487,6 +493,8 @@ expr_stmt|;
 name|putmsg
 argument_list|(
 name|MsgBuf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -496,13 +504,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
+comment|/* **  PUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
 end_comment
 
 begin_macro
 name|putmsg
 argument_list|(
 argument|msg
+argument_list|,
+argument|holdmsg
 argument_list|)
 end_macro
 
@@ -510,6 +520,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|holdmsg
 decl_stmt|;
 end_decl_stmt
 
@@ -537,7 +553,7 @@ comment|/* output to channel if appropriate */
 if|if
 condition|(
 operator|!
-name|HoldErrs
+name|holdmsg
 operator|&&
 operator|(
 name|Verbose

@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.130
+literal|3.131
 operator|%
 name|G
 operator|%
@@ -3716,15 +3716,11 @@ expr_stmt|;
 comment|/* 	**  Set OutChannel to something useful if stdout isn't it. 	**	This arranges that any extra stuff the mailer produces 	**	gets sent back to the user on error (because it is 	**	tucked away in the transcript). 	*/
 if|if
 condition|(
-operator|(
 name|Mode
 operator|==
 name|MD_DAEMON
 operator|&&
 name|QueueRun
-operator|)
-operator|||
-name|HoldErrs
 condition|)
 name|OutChannel
 operator|=
