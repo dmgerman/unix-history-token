@@ -230,26 +230,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Default to old FreeBSD behaviour of 2 filemarks  * at EOD for all (except QIC) devices.  */
+comment|/*  * Additional options that can be set for config: SA_1FM_AT_EOT  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SA_2FM_AT_EOD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SA_2FM_AT_EOD
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -836,6 +818,25 @@ block|,
 literal|"Seagate"
 block|,
 literal|"STT8000N*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_1FM
+block|,
+literal|0
+block|}
+block|,
+block|{
+comment|/* mike@sentex.net */
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Seagate"
+block|,
+literal|"STT20000*"
 block|,
 literal|"*"
 block|}
@@ -8009,11 +8010,9 @@ operator|=
 name|MTIO_DSREG_REST
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|SA_2FM_AT_EOD
-operator|==
-literal|1
+ifdef|#
+directive|ifdef
+name|SA_1FM_AT_EOD
 if|if
 condition|(
 operator|(
@@ -8021,7 +8020,7 @@ name|softc
 operator|->
 name|quirks
 operator|&
-name|SA_QUIRK_1FM
+name|SA_QUIRK_2FM
 operator|)
 operator|==
 literal|0
@@ -8030,7 +8029,7 @@ name|softc
 operator|->
 name|quirks
 operator||=
-name|SA_QUIRK_2FM
+name|SA_QUIRK_1FM
 expr_stmt|;
 else|#
 directive|else
@@ -8041,7 +8040,7 @@ name|softc
 operator|->
 name|quirks
 operator|&
-name|SA_QUIRK_2FM
+name|SA_QUIRK_1FM
 operator|)
 operator|==
 literal|0
@@ -8050,7 +8049,7 @@ name|softc
 operator|->
 name|quirks
 operator||=
-name|SA_QUIRK_1FM
+name|SA_QUIRK_2FM
 expr_stmt|;
 endif|#
 directive|endif
