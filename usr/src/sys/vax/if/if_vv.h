@@ -7,11 +7,11 @@ begin_comment
 comment|/*  * Local network header for V2LNI Ring  * This is arbitrated by "V2LNI-PEOPLE@MIT-MC"  * (aka Joel N. Chiappa)  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|NEW_BROADCAST
-end_undef
+end_define
 
 begin_comment
 comment|/* new plas for broadcast problem */
