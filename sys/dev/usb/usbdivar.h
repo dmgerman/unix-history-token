@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.58 2000/06/24 04:12:53 thorpej Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.60 2000/12/28 10:40:36 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -372,6 +372,10 @@ define|#
 directive|define
 name|USBREV_1_1
 value|3
+define|#
+directive|define
+name|USBREV_2_0
+value|4
 define|#
 directive|define
 name|USBREV_STR
