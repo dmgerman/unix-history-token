@@ -222,8 +222,17 @@ name|struct
 name|pcm_channel
 modifier|*
 name|c
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 block|{
+if|if
+condition|(
+name|dir
+operator|==
+name|PCMDIR_PLAY
+condition|)
 name|c
 operator|->
 name|lock
@@ -234,7 +243,21 @@ name|c
 operator|->
 name|name
 argument_list|,
-literal|"pcm channel"
+literal|"pcm play channel"
+argument_list|)
+expr_stmt|;
+else|else
+name|c
+operator|->
+name|lock
+operator|=
+name|snd_mtxcreate
+argument_list|(
+name|c
+operator|->
+name|name
+argument_list|,
+literal|"pcm record channel"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3389,6 +3412,8 @@ decl_stmt|;
 name|chn_lockinit
 argument_list|(
 name|c
+argument_list|,
+name|dir
 argument_list|)
 expr_stmt|;
 name|b
