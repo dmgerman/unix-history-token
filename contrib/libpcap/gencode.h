@@ -161,6 +161,27 @@ name|Q_MOPDL
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|Q_ISO
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ESIS
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ISIS
+value|18
+end_define
+
 begin_comment
 comment|/* Directional qualifiers. */
 end_comment
