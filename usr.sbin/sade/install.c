@@ -1011,6 +1011,14 @@ operator|=
 name|DITEM_FAILURE
 expr_stmt|;
 comment|/* stick a helpful shell over on the 4th VTY */
+if|if
+condition|(
+operator|!
+name|variable_get
+argument_list|(
+name|VAR_NO_HOLOSHELL
+argument_list|)
+condition|)
 name|systemCreateHoloshell
 argument_list|()
 expr_stmt|;

@@ -681,6 +681,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_NO_HOLOSHELL
+value|"noHoloShell"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_NO_WARN
 value|"noWarn"
 end_define
