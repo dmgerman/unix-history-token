@@ -33,11 +33,22 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -78,31 +89,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/device_port.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
 end_include
 
 begin_ifdef
@@ -110,6 +97,12 @@ ifdef|#
 directive|ifdef
 name|__NetBSD__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
 
 begin_include
 include|#
@@ -146,22 +139,11 @@ directive|include
 file|<dev/isa/pisaif.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<machine/dvcfg.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
 
 begin_include
 include|#
@@ -215,18 +197,6 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
 
 begin_include
 include|#
@@ -545,11 +515,13 @@ argument_list|)
 operator|==
 name|PISA_EVENT_INSERT
 operator|&&
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sl_start
-operator|.
-name|tqh_first
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -616,11 +588,13 @@ name|PISA_EVENT_QUERY_SUSPEND
 case|:
 if|if
 condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sl_start
-operator|.
-name|tqh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
