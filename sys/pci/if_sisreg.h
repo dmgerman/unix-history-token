@@ -1514,7 +1514,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|{ if (++(x) == y) x=0 ; }
+value|{ if (++(x) == y) x = 0; }
 end_define
 
 begin_define

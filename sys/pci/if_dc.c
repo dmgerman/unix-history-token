@@ -12913,7 +12913,7 @@ condition|(
 operator|!
 name|status
 condition|)
-return|return ;
+return|return;
 comment|/* ack what we have */
 name|CSR_WRITE_4
 argument_list|(
@@ -13095,7 +13095,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return ;
+return|return;
 name|DC_LOCK
 argument_list|(
 name|sc
