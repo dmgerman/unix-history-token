@@ -3706,7 +3706,7 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: mount [-dfpruvw] [-o options] [-t ufs | external_type] special node"
 argument_list|,
-literal|"       mount [-adfpruvw] [ -F fstab] [-t ufs | external_type]"
+literal|"       mount [-adfpruvw] [-o options] [ -F fstab] [-t ufs | external_type]"
 argument_list|,
 literal|"       mount [-dfpruvw] special | node"
 argument_list|)
