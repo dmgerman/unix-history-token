@@ -777,11 +777,17 @@ argument_list|,
 name|acl_text
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|acl_free
 argument_list|(
 name|acl
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|acl_free
 argument_list|(
 name|acl_text
