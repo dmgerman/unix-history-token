@@ -109,6 +109,9 @@ block|,
 operator|&
 name|cd9660_fsops
 block|,
+operator|&
+name|splitfs_fsops
+block|,
 ifdef|#
 directive|ifdef
 name|LOADER_GZIP_SUPPORT

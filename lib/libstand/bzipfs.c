@@ -595,6 +595,14 @@ name|cp
 argument_list|,
 literal|".bz2"
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|".split"
+argument_list|)
 operator|)
 condition|)
 return|return

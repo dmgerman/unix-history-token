@@ -424,6 +424,14 @@ name|ext2fs_fsops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
+name|splitfs_fsops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* where values for lseek(2) */
 end_comment
