@@ -1020,6 +1020,13 @@ block|,
 name|USB_PRODUCT_PERACOM_SERIAL1
 block|}
 block|,
+comment|/* Vodafone */
+block|{
+name|USB_VENDOR_VODAFONE
+block|,
+name|USB_PRODUCT_VODAFONE_MC3G
+block|}
+block|,
 block|{
 literal|0
 block|,
