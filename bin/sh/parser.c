@@ -675,6 +675,10 @@ block|{
 name|int
 name|t
 decl_stmt|;
+name|tokpushback
+operator|=
+literal|0
+expr_stmt|;
 name|doprompt
 operator|=
 name|interact
