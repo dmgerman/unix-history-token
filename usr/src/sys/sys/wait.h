@@ -1,11 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wait.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wait.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * This file holds definitions relevent to the wait system call.  * Some of the options here are available only through the ``wait3''  * entry point; the old entry point with one argument has more fixed  * semantics, never returning status of unstopped children, hanging until  * a process terminates if any are outstanding, and never returns  * detailed information about process resource utilization (<vtimes.h>).  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENDIAN
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/machparam.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Structure of the information in the first word returned by both  * wait and wait3.  If w_stopval==WSTOPPED, then the second structure  * describes the information returned, else the first.  See WUNTRACED below.  */
@@ -22,6 +39,11 @@ comment|/* used in syscall */
 comment|/* 	 * Terminated process status. 	 */
 struct|struct
 block|{
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|LITTLE
 name|unsigned
 name|short
 name|w_Termsig
@@ -43,12 +65,50 @@ range|:
 literal|8
 decl_stmt|;
 comment|/* exit code if w_termsig==0 */
+endif|#
+directive|endif
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|BIG
+name|unsigned
+name|short
+name|w_Filler
+decl_stmt|;
+comment|/* upper bits filler */
+name|unsigned
+name|char
+name|w_Retcode
+decl_stmt|;
+comment|/* exit code if w_termsig==0 */
+name|unsigned
+name|char
+name|w_Coredump
+range|:
+literal|1
+decl_stmt|;
+comment|/* core dump indicator */
+name|unsigned
+name|char
+name|w_Termsig
+range|:
+literal|7
+decl_stmt|;
+comment|/* termination signal */
+endif|#
+directive|endif
 block|}
 name|w_T
 struct|;
 comment|/* 	 * Stopped process status.  Returned 	 * only for traced children unless requested 	 * with the WUNTRACED option bit. 	 */
 struct|struct
 block|{
+if|#
+directive|if
+name|ENDIAN
+operator|==
+name|LITTLE
 name|unsigned
 name|short
 name|w_Stopval
@@ -63,6 +123,25 @@ range|:
 literal|8
 decl_stmt|;
 comment|/* signal that stopped us */
+else|#
+directive|else
+name|unsigned
+name|short
+name|w_Filler
+decl_stmt|;
+comment|/* upper bits filler */
+name|unsigned
+name|char
+name|w_Stopsig
+decl_stmt|;
+comment|/* signal that stopped us */
+name|unsigned
+name|char
+name|w_Stopval
+decl_stmt|;
+comment|/* == W_STOPPED if stopped */
+endif|#
+directive|endif
 block|}
 name|w_S
 struct|;
