@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.26 91/01/21$  *  *	@(#)dcm.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.26 91/01/21$  *  *	@(#)dcm.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -145,9 +145,6 @@ name|int
 name|dcmprobe
 argument_list|()
 decl_stmt|,
-name|dcmstart
-argument_list|()
-decl_stmt|,
 name|dcmintr
 argument_list|()
 decl_stmt|,
@@ -155,6 +152,13 @@ name|dcmparam
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|dcmstart
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -4642,20 +4646,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|dcmstart
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -5313,7 +5315,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stop output on a line.  */
