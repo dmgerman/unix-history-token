@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|CRITICAL_FORK
-value|(mfmsr() | PSL_EE)
+value|(mfmsr() | PSL_EE | PSL_RI)
 end_define
 
 begin_ifdef
@@ -171,7 +171,11 @@ argument_list|(
 name|msr
 operator|&
 operator|~
+operator|(
 name|PSL_EE
+operator||
+name|PSL_RI
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -200,6 +204,8 @@ argument_list|(
 name|msr
 operator||
 name|PSL_EE
+operator||
+name|PSL_RI
 argument_list|)
 expr_stmt|;
 block|}
@@ -239,13 +245,41 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
-operator|(
+name|u_int
+name|msr
+decl_stmt|;
+name|critical_t
+name|crit
+decl_stmt|;
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|crit
+operator|=
 operator|(
 name|critical_t
 operator|)
-name|save_intr
-argument_list|()
+name|msr
+expr_stmt|;
+name|msr
+operator|&=
+operator|~
+operator|(
+name|PSL_EE
+operator||
+name|PSL_RI
+operator|)
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|crit
 operator|)
 return|;
 block|}
@@ -280,18 +314,11 @@ name|critical_t
 name|msr
 parameter_list|)
 block|{
-return|return
-operator|(
-name|restore_intr
+name|mtmsr
 argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
 name|msr
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
