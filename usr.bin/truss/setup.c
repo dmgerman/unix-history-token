@@ -4,7 +4,7 @@ comment|/*  * Various setup functions for truss.  Not the cleanest-written code,
 end_comment
 
 begin_comment
-comment|/*  * $Id: setup.c,v 1.1 1997/12/06 05:23:05 sef Exp $  */
+comment|/*  * $Id: setup.c,v 1.2 1997/12/06 08:01:00 sef Exp $  */
 end_comment
 
 begin_include
@@ -143,7 +143,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"vfork failed\n"
+literal|"vfork failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -182,12 +182,7 @@ name|err
 argument_list|(
 literal|2
 argument_list|,
-literal|"cannot open /proc/curproc/mem: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"cannot open /proc/curproc/mem"
 argument_list|)
 expr_stmt|;
 name|fcntl
@@ -218,12 +213,7 @@ name|err
 argument_list|(
 literal|3
 argument_list|,
-literal|"PIOCBIS: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"PIOCBIS"
 argument_list|)
 expr_stmt|;
 name|execvp
@@ -315,14 +305,9 @@ name|err
 argument_list|(
 literal|5
 argument_list|,
-literal|"cannot open %s:  %s\n"
+literal|"cannot open %s"
 argument_list|,
 name|buf
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -344,12 +329,7 @@ name|err
 argument_list|(
 literal|6
 argument_list|,
-literal|"PIOCWAIT: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"PIOCWAIT"
 argument_list|)
 expr_stmt|;
 if|if
