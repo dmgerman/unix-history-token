@@ -24,7 +24,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_if
@@ -45,7 +45,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"ad1848_mixer.h"
+file|<i386/isa/sound/ad1848_mixer.h>
 end_include
 
 begin_define
@@ -6112,7 +6112,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"mad16.h"
+file|<i386/isa/sound/mad16.h>
 end_include
 
 begin_endif

@@ -12,13 +12,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"midi_ctrl.h"
+file|<i386/isa/sound/midi_ctrl.h>
 end_include
 
 begin_decl_stmt
@@ -219,7 +219,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"tuning.h"
+file|<i386/isa/sound/tuning.h>
 end_include
 
 begin_define

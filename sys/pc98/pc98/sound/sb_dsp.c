@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_if
@@ -27,13 +27,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sb.h"
+file|<i386/isa/sound/sb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sb_mixer.h"
+file|<i386/isa/sound/sb_mixer.h>
 end_include
 
 begin_undef
@@ -2761,7 +2761,7 @@ directive|ifdef
 name|SMW_MIDI0001_INCLUDED
 include|#
 directive|include
-file|"smw-midi0001.h"
+file|<i386/isa/sound/smw-midi0001.h>
 else|#
 directive|else
 name|unsigned

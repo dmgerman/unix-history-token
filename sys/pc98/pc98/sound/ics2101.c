@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_if
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gus_hw.h"
+file|<i386/isa/sound/gus_hw.h>
 end_include
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.6 1996/09/07 02:13:32 asami Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.7 1996/09/10 09:37:35 asami Exp $  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"opt_perfmon.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_userconfig.h"
 end_include
 
 begin_include
@@ -1845,6 +1851,9 @@ operator|&
 name|RB_CONFIG
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USERCONFIG
 name|userconfig
 argument_list|()
 expr_stmt|;
@@ -1852,6 +1861,15 @@ name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* the preferred console may have changed */
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Sorry! no userconfig in this kernel\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -5426,24 +5444,6 @@ literal|1024
 argument|); 			     pa< ISA_HOLE_START; pa += PAGE_SIZE) { 				unsigned *pte;  				pte = (unsigned *)vtopte(pa + KERNBASE); 				*pte = pa | PG_RW | PG_V; 			} 		} 		if (bootinfo.bi_extmem != biosextmem) 			printf(
 literal|"BIOS extmem (%ldK) != RTC extmem (%dK)\n"
 argument|, 			       bootinfo.bi_extmem, biosextmem); 	}
-endif|#
-directive|endif
-comment|/* 	 * Some 386 machines might give us a bogus number for extended 	 *	mem. If this happens, stop now. 	 */
-ifndef|#
-directive|ifndef
-name|PC98
-ifndef|#
-directive|ifndef
-name|LARGEMEM
-argument|if (biosextmem>
-literal|65536
-argument|) { 		panic(
-literal|"extended memory beyond limit of 64MB"
-argument|);
-comment|/* NOTREACHED */
-argument|}
-endif|#
-directive|endif
 endif|#
 directive|endif
 argument|pagesinbase = biosbasemem *

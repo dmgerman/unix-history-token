@@ -7290,10 +7290,6 @@ argument_list|,
 name|ata
 operator|->
 name|debug
-argument_list|,
-name|ata
-operator|->
-name|parent
 argument_list|)
 operator|>=
 literal|0

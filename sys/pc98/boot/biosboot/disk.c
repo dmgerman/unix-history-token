@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.1.1.1 1996/06/14 10:04:37 asami Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.2 1996/07/23 07:45:36 asami Exp $  */
 end_comment
 
 begin_comment
@@ -128,13 +128,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|iodest
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|fs
 modifier|*
@@ -164,26 +157,11 @@ decl_stmt|,
 name|boff
 decl_stmt|,
 name|poff
-decl_stmt|,
-name|bnum
-decl_stmt|,
-name|cnt
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/*#define EMBEDDED_DISKLABEL 1*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I_ADDR
-value|((void *) 0)
-end_define
-
-begin_comment
-comment|/* XXX where all reads go */
 end_comment
 
 begin_comment
@@ -247,12 +225,9 @@ name|disklabel
 modifier|*
 name|dl
 decl_stmt|;
-name|int
-name|dosdev
-init|=
-name|inode
-operator|.
-name|i_dev
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|i
@@ -263,13 +238,6 @@ literal|0
 decl_stmt|,
 name|di
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Save space, already have hard error for cyl> 1023 in Bread */
-block|u_long bend;
-endif|#
-directive|endif
 name|di
 operator|=
 name|get_diskinfo
@@ -293,6 +261,9 @@ argument_list|(
 name|di
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RAWBOOT
 if|if
 condition|(
 operator|(
@@ -337,6 +308,8 @@ else|EMBEDDED_DISKLABEL
 ifdef|#
 directive|ifdef
 name|PC98
+name|p
+operator|=
 name|Bread
 argument_list|(
 name|dosdev
@@ -426,6 +399,8 @@ expr_stmt|;
 comment|/* structure copy (maybe useful later)*/
 else|#
 directive|else
+name|p
+operator|=
 name|Bread
 argument_list|(
 name|dosdev
@@ -441,13 +416,7 @@ name|dos_partition
 operator|*
 operator|)
 operator|(
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|)
+name|p
 operator|+
 name|DOSPARTOFF
 operator|)
@@ -495,6 +464,8 @@ name|dp_start
 expr_stmt|;
 break|break;
 block|}
+name|p
+operator|=
 name|Bread
 argument_list|(
 name|dosdev
@@ -512,7 +483,7 @@ expr|struct
 name|disklabel
 operator|*
 operator|)
-literal|0
+name|p
 operator|)
 expr_stmt|;
 name|disklabel
@@ -628,13 +599,6 @@ index|]
 operator|.
 name|p_size
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Save space, already have hard error for cyl> 1023 in Bread */
-block|bend = boff + bsize - 1 ; 		if (bend / spc>= 1024) { 			printf("boot partition end>= cyl 1024, BIOS can't load kernel stored beyond this limit\n");
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -761,6 +725,8 @@ expr_stmt|;
 do|do
 block|{
 comment|/* XXX: what if the "DOS sector"< 512 bytes ??? */
+name|p
+operator|=
 name|Bread
 argument_list|(
 name|dosdev
@@ -777,7 +743,7 @@ expr|struct
 name|dkbad
 operator|*
 operator|)
-literal|0
+name|p
 expr_stmt|;
 comment|/* XXX why is this not in<sys/dkbad.h> ??? */
 define|#
@@ -852,34 +818,42 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DO_BAD144
+comment|/* DO_BAD144 */
 block|}
+endif|#
+directive|endif
+comment|/* RAWBOOT */
 return|return
 literal|0
 return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Be aware that cnt is rounded up to N*BPS  */
+end_comment
+
 begin_function
 name|void
 name|devread
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|iodest
+parameter_list|,
+name|int
+name|sector
+parameter_list|,
+name|int
+name|cnt
 parameter_list|)
 block|{
 name|int
 name|offset
-decl_stmt|,
-name|sector
-init|=
-name|bnum
 decl_stmt|;
-name|int
-name|dosdev
-init|=
-name|inode
-operator|.
-name|i_dev
+name|char
+modifier|*
+name|p
 decl_stmt|;
 for|for
 control|(
@@ -896,6 +870,8 @@ operator|+=
 name|BPS
 control|)
 block|{
+name|p
+operator|=
 name|Bread
 argument_list|(
 name|dosdev
@@ -911,7 +887,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-literal|0
+name|p
 argument_list|,
 name|iodest
 operator|+
@@ -925,7 +901,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|char
+modifier|*
 name|Bread
 parameter_list|(
 name|int
@@ -1105,8 +1082,8 @@ operator|+
 name|nsec
 expr_stmt|;
 block|}
-name|bcopy
-argument_list|(
+return|return
+operator|(
 name|ra_buf
 operator|+
 operator|(
@@ -1116,12 +1093,8 @@ name|ra_first
 operator|)
 operator|*
 name|BPS
-argument_list|,
-name|I_ADDR
-argument_list|,
-name|BPS
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -1136,12 +1109,21 @@ name|int
 name|sector
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DO_BAD144
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|RAWBOOT
+argument_list|)
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DO_BAD144
 if|if
 condition|(
 name|do_bad144
@@ -1378,11 +1360,10 @@ return|return
 name|newsec
 return|;
 block|}
-endif|#
-directive|endif
-endif|DO_BAD144
 name|no_remap
 label|:
+endif|#
+directive|endif
 return|return
 name|sector
 return|;

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_ifdef
@@ -24,13 +24,13 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"ulaw.h"
+file|<i386/isa/sound/ulaw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"coproc.h"
+file|<i386/isa/sound/coproc.h>
 end_include
 
 begin_define

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sound_config.h"
+file|<i386/isa/sound/sound_config.h>
 end_include
 
 begin_if
@@ -39,13 +39,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"sb.h"
+file|<i386/isa/sound/sb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sb_mixer.h"
+file|<i386/isa/sound/sb_mixer.h>
 end_include
 
 begin_undef
