@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -233,12 +233,14 @@ name|pkcb
 modifier|*
 name|pk_next
 decl_stmt|;
-name|struct
-name|x25_ifaddr
-modifier|*
-name|pk_ia
+name|short
+name|pk_state
 decl_stmt|;
-comment|/* backpointer to ifaddr */
+comment|/* packet level status */
+name|short
+name|pk_maxlcn
+decl_stmt|;
+comment|/* local copy of xc_maxlcn */
 name|int
 function_decl|(
 modifier|*
@@ -251,29 +253,18 @@ name|caddr_t
 name|pk_llnext
 decl_stmt|;
 comment|/* handle for next level down */
-name|int
-function_decl|(
-modifier|*
-name|pk_start
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* connect, confirm method */
 name|struct
 name|x25config
 modifier|*
 name|pk_xcp
 decl_stmt|;
 comment|/* network specific configuration */
-name|short
-name|pk_state
-decl_stmt|;
-comment|/* packet level status */
 name|struct
-name|x25config
-name|pk_xc
+name|x25_ifaddr
+modifier|*
+name|pk_ia
 decl_stmt|;
-comment|/* network specific configuration */
+comment|/* backpointer to ifaddr */
 name|struct
 name|pklcd
 modifier|*
@@ -281,11 +272,6 @@ modifier|*
 name|pk_chan
 decl_stmt|;
 comment|/* actual size == xc_maxlcn+1 */
-define|#
-directive|define
-name|pk_maxlcn
-value|pk_xc.xc_maxlcn
-comment|/* local copy of xc_maxlcn */
 block|}
 struct|;
 end_struct
@@ -312,31 +298,27 @@ directive|define
 name|ia_flags
 value|ia_ifa.ifa_flags
 name|struct
-name|pkcb
-name|ia_pkcb
+name|x25config
+name|ia_xc
 decl_stmt|;
-comment|/* per network information */
+comment|/* network specific configuration */
 define|#
 directive|define
 name|ia_maxlcn
-value|ia_pkcb.pk_maxlcn
-define|#
-directive|define
-name|ia_chan
-value|ia_pkcb.pk_chan
-define|#
-directive|define
-name|ia_xc
-value|ia_pkcb.pk_xc
-define|#
-directive|define
-name|ia_xcp
-value|ia_pkcb.pk_xcp
+value|ia_xc.xc_maxlcn
+name|int
+function_decl|(
+modifier|*
+name|ia_start
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* connect, confirm method */
 name|struct
 name|sockaddr_x25
-name|ia_sockmask
+name|ia_dstaddr
 decl_stmt|;
-comment|/* reserve space for netmask */
+comment|/* reserve space for route dst */
 block|}
 struct|;
 end_struct
@@ -426,14 +408,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|LXS_CONNECTED
+name|LXS_CONNECTING
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LXS_CONNECTING
+name|LXS_CONNECTED
 value|4
 end_define
 
