@@ -2460,7 +2460,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Found svr4 archive name table with %d entries\n"
+literal|"Found svr4 archive name table with %zu entries\n"
 argument_list|,
 name|entry
 argument_list|)
@@ -2570,7 +2570,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SVR4 entry offset %s is greater than %d\n"
+literal|"SVR4 entry offset %s is greater than %zu\n"
 argument_list|,
 name|name
 argument_list|,
