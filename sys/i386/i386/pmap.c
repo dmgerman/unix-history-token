@@ -8044,6 +8044,8 @@ name|pmap
 parameter_list|,
 name|addr
 parameter_list|,
+name|prot
+parameter_list|,
 name|object
 parameter_list|,
 name|pindex
@@ -8057,6 +8059,9 @@ name|pmap
 decl_stmt|;
 name|vm_offset_t
 name|addr
+decl_stmt|;
+name|vm_prot_t
+name|prot
 decl_stmt|;
 name|vm_object_t
 name|object
@@ -8087,6 +8092,14 @@ name|objpgs
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|prot
+operator|&
+name|VM_PROT_READ
+operator|)
+operator|==
+literal|0
+operator|||
 name|pmap
 operator|==
 name|NULL

@@ -7717,6 +7717,9 @@ parameter_list|,
 name|vm_offset_t
 name|addr
 parameter_list|,
+name|vm_prot_t
+name|prot
+parameter_list|,
 name|vm_object_t
 name|object
 parameter_list|,
@@ -7746,6 +7749,14 @@ name|objpgs
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|prot
+operator|&
+name|VM_PROT_READ
+operator|)
+operator|==
+literal|0
+operator|||
 name|pmap
 operator|==
 name|NULL
