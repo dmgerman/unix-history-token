@@ -1800,11 +1800,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|umask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -1859,6 +1854,11 @@ argument_list|(
 name|argc
 argument_list|,
 name|argv
+argument_list|)
+expr_stmt|;
+name|umask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|initialize_buffers
