@@ -111,7 +111,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \     crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \     %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
 begin_comment
@@ -130,6 +130,29 @@ directive|define
 name|ENDFILE_SPEC
 define|\
 value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s}"
+end_define
+
+begin_comment
+comment|/* Handle #pragma weak and #pragma pack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|".set"
 end_define
 
 end_unit
