@@ -1064,6 +1064,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When enumerating bus devices, the standard says that 		 * one should check the header type and ignore the slots whose 		 * header types that the software doesn't know about.  We use 		 * this to filter out devices. 		 */
+if|if
+condition|(
+operator|(
+name|hdrtype
+operator|&
+operator|~
+name|PCIM_MFDEV
+operator|)
+operator|>
+name|PCI_MAXHDRTYPE
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
