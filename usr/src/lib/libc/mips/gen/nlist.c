@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.5 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,12 +384,13 @@ operator|&
 name|nbuf
 init|;
 name|symbol_size
+condition|;
+name|symbol_size
 operator|-=
 sizeof|sizeof
 argument_list|(
 name|NLIST
 argument_list|)
-condition|;
 control|)
 block|{
 if|if
