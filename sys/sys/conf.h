@@ -1138,17 +1138,6 @@ begin_comment
 comment|/* XXX: Not GM */
 end_comment
 
-begin_comment
-comment|/*  * nopsize is little used, so not worth having dummy functions for.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|nopsize
-value|(NULL)
-end_define
-
 begin_decl_stmt
 name|d_open_t
 name|nullopen
