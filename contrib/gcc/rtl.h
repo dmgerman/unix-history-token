@@ -8622,6 +8622,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
+name|int
+name|reg_or_subregno
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|redirect_jump_1
 name|PARAMS

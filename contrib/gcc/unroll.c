@@ -3639,6 +3639,13 @@ name|unroll_number
 operator|=
 name|unroll_number
 expr_stmt|;
+comment|/* And whether the loop has been preconditioned.  */
+name|loop_info
+operator|->
+name|preconditioned
+operator|=
+name|loop_preconditioned
+expr_stmt|;
 comment|/* For each biv and giv, determine whether it can be safely split into      a different variable for each unrolled copy of the loop body.      We precalculate and save this info here, since computing it is      expensive.       Do this before deleting any instructions from the loop, so that      back_branch_in_range_p will work correctly.  */
 if|if
 condition|(
@@ -9834,7 +9841,7 @@ expr_stmt|;
 block|}
 name|splittable_regs
 index|[
-name|REGNO
+name|reg_or_subregno
 argument_list|(
 name|v
 operator|->
@@ -10435,7 +10442,7 @@ name|DEST_REG
 condition|)
 name|addr_combined_regs
 index|[
-name|REGNO
+name|reg_or_subregno
 argument_list|(
 name|v
 operator|->
@@ -10464,7 +10471,7 @@ block|{
 comment|/* This giv maybe hasn't been combined with any others. 		     Make sure that it's giv is marked as splittable here.  */
 name|splittable_regs
 index|[
-name|REGNO
+name|reg_or_subregno
 argument_list|(
 name|v
 operator|->
@@ -10491,7 +10498,7 @@ name|v
 expr_stmt|;
 name|addr_combined_regs
 index|[
-name|REGNO
+name|reg_or_subregno
 argument_list|(
 name|v
 operator|->
@@ -10572,7 +10579,7 @@ name|biv_count
 expr_stmt|;
 name|splittable_regs_updates
 index|[
-name|REGNO
+name|reg_or_subregno
 argument_list|(
 name|v
 operator|->

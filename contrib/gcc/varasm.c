@@ -4648,6 +4648,16 @@ expr_stmt|;
 if|if
 condition|(
 name|align
+operator|<
+name|force_align_functions_log
+condition|)
+name|align
+operator|=
+name|force_align_functions_log
+expr_stmt|;
+if|if
+condition|(
+name|align
 operator|>
 literal|0
 condition|)

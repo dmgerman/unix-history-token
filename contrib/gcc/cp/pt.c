@@ -20784,6 +20784,22 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+name|VAR_DECL
+condition|)
+name|type
+operator|=
+name|complete_type
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|TREE_TYPE
 argument_list|(
 name|r
@@ -20946,6 +20962,14 @@ argument_list|,
 name|r
 argument_list|,
 name|type
+argument_list|)
+expr_stmt|;
+comment|/* Compute the size, alignment, etc. of R.  */
+name|layout_decl
+argument_list|(
+name|r
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -26121,24 +26145,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|!=
-name|TYPE_DECL
-condition|)
-comment|/* Make sure the type is instantiated now. */
-name|complete_type
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|init
 condition|)
 name|DECL_INITIAL
@@ -26165,6 +26171,31 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|VAR_DECL
+operator|&&
+name|ANON_AGGR_TYPE_P
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+condition|)
+comment|/* Anonymous aggregates are a special case.  */
+name|finish_anon_union
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|maybe_push_decl
 argument_list|(
 name|decl
@@ -26178,7 +26209,7 @@ name|decl
 argument_list|)
 condition|)
 block|{
-comment|/* For __PRETTY_FUNCTION__ we have to adjust the 		       initializer.  */
+comment|/* For __PRETTY_FUNCTION__ we have to adjust the 			   initializer.  */
 specifier|const
 name|char
 modifier|*
@@ -26238,6 +26269,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* A DECL_STMT can also be used as an expression, in the condition 	   clause of a if/for/while construct.  If we aren't followed by 	   another statement, return our decl.  */
@@ -35645,13 +35677,24 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-name|build_tree_list
+name|expand_member_init
 argument_list|(
+name|current_class_ref
+argument_list|,
 name|decl
 argument_list|,
 name|init
+condition|?
+name|init
+else|:
+name|void_type_node
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+condition|)
 name|p
 operator|=
 operator|&

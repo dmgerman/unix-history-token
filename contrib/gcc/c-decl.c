@@ -12924,19 +12924,6 @@ block|{
 case|case
 name|TYPE_DECL
 case|:
-comment|/* typedef foo = bar  means give foo the same type as bar. 	   We haven't parsed bar yet, so `finish_decl' will fix that up. 	   Any other case of an initialization in a TYPE_DECL is an error.  */
-if|if
-condition|(
-name|pedantic
-operator|||
-name|list_length
-argument_list|(
-name|declspecs
-argument_list|)
-operator|>
-literal|1
-condition|)
-block|{
 name|error
 argument_list|(
 literal|"typedef `%s' is initialized"
@@ -12954,7 +12941,6 @@ name|initialized
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|FUNCTION_DECL
@@ -13471,16 +13457,6 @@ if|if
 condition|(
 name|init
 condition|)
-block|{
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|!=
-name|TYPE_DECL
-condition|)
 name|store_init_value
 argument_list|(
 name|decl
@@ -13488,30 +13464,6 @@ argument_list|,
 name|init
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-comment|/* typedef foo = bar; store the type of bar as the type of foo.  */
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|init
-argument_list|)
-expr_stmt|;
-name|DECL_INITIAL
-argument_list|(
-name|decl
-argument_list|)
-operator|=
-name|init
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
 comment|/* Deduce size of array from initialization, if not already known */
 if|if
 condition|(

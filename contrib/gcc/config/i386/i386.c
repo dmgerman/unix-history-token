@@ -1019,20 +1019,20 @@ literal|4
 block|,
 comment|/* cost for loading QImode using movzbl */
 block|{
-literal|4
-block|,
-literal|5
+literal|3
 block|,
 literal|4
+block|,
+literal|3
 block|}
 block|,
 comment|/* cost of loading integer registers 					   in QImode, HImode and SImode. 					   Relative to reg-reg move (2).  */
 block|{
-literal|2
-block|,
 literal|3
 block|,
-literal|2
+literal|4
+block|,
+literal|3
 block|}
 block|,
 comment|/* cost of storing integer registers */
@@ -1040,20 +1040,20 @@ literal|4
 block|,
 comment|/* cost of reg,reg fld/fst */
 block|{
-literal|6
+literal|4
 block|,
-literal|6
+literal|4
 block|,
-literal|20
+literal|12
 block|}
 block|,
 comment|/* cost of loading fp registers 					   in SFmode, DFmode and XFmode */
 block|{
-literal|4
+literal|6
 block|,
-literal|4
+literal|6
 block|,
-literal|16
+literal|8
 block|}
 block|,
 comment|/* cost of loading integer registers */
@@ -1061,16 +1061,16 @@ literal|2
 block|,
 comment|/* cost of moving MMX register */
 block|{
-literal|2
+literal|4
 block|,
-literal|2
+literal|4
 block|}
 block|,
 comment|/* cost of loading MMX registers 					   in SImode and DImode */
 block|{
-literal|2
+literal|4
 block|,
-literal|2
+literal|4
 block|}
 block|,
 comment|/* cost of storing MMX registers 					   in SImode and DImode */
@@ -1078,24 +1078,24 @@ literal|2
 block|,
 comment|/* cost of moving SSE register */
 block|{
-literal|2
+literal|4
 block|,
-literal|2
+literal|4
 block|,
-literal|8
+literal|6
 block|}
 block|,
 comment|/* cost of loading SSE registers 					   in SImode, DImode and TImode */
 block|{
-literal|2
+literal|4
 block|,
-literal|2
+literal|4
 block|,
-literal|8
+literal|5
 block|}
 block|,
 comment|/* cost of storing SSE registers 					   in SImode, DImode and TImode */
-literal|6
+literal|5
 block|,
 comment|/* MMX or SSE register to integer */
 literal|64
@@ -7924,6 +7924,14 @@ init|=
 operator|(
 name|bytes
 operator|+
+operator|(
+name|bit_offset
+operator|%
+literal|64
+operator|)
+operator|/
+literal|8
+operator|+
 name|UNITS_PER_WORD
 operator|-
 literal|1
@@ -7931,6 +7939,28 @@ operator|)
 operator|/
 name|UNITS_PER_WORD
 decl_stmt|;
+comment|/* Variable sized structures are always passed on the stack.  */
+if|if
+condition|(
+name|mode
+operator|==
+name|BLKmode
+operator|&&
+name|type
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|TYPE_SIZE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|!=
+name|INTEGER_CST
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|type
@@ -15212,7 +15242,7 @@ name|op
 argument_list|)
 expr_stmt|;
 return|return
-name|QI_REG_P
+name|ANY_QI_REG_P
 argument_list|(
 name|op
 argument_list|)
@@ -27050,9 +27080,14 @@ operator|&
 name|parts
 argument_list|)
 condition|)
-name|abort
-argument_list|()
+block|{
+name|output_operand_lossage
+argument_list|(
+literal|"Wrong address expression or operand constraint"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|base
 operator|=
 name|parts
@@ -35840,7 +35875,10 @@ name|gen_rtvec
 argument_list|(
 literal|2
 argument_list|,
+name|copy_rtx
+argument_list|(
 name|tmp
+argument_list|)
 argument_list|,
 name|clob
 argument_list|)
@@ -58831,7 +58869,7 @@ decl_stmt|,
 name|class2
 decl_stmt|;
 block|{
-comment|/* In case we require secondary memory, compute cost of the store followed      by load.  In case of copying from general_purpose_register we may emit      multiple stores followed by single load causing memory size mismatch      stall.  Count this as arbitarily high cost of 20.  */
+comment|/* In case we require secondary memory, compute cost of the store followed      by load.  In order to avoid bad register allocation choices, we need       for this to be *at least* as high as the symmetric MEMORY_MOVE_COST.  */
 if|if
 condition|(
 name|ix86_secondary_memory_needed
@@ -58847,10 +58885,57 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|add_cost
+name|cost
 init|=
-literal|0
+literal|1
 decl_stmt|;
+name|cost
+operator|+=
+name|MAX
+argument_list|(
+name|MEMORY_MOVE_COST
+argument_list|(
+name|mode
+argument_list|,
+name|class1
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|MEMORY_MOVE_COST
+argument_list|(
+name|mode
+argument_list|,
+name|class1
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cost
+operator|+=
+name|MAX
+argument_list|(
+name|MEMORY_MOVE_COST
+argument_list|(
+name|mode
+argument_list|,
+name|class2
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|MEMORY_MOVE_COST
+argument_list|(
+name|mode
+argument_list|,
+name|class2
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* In case of copying from general_purpose_register we may emit multiple          stores followed by single load causing memory size mismatch stall.          Count this as arbitarily high cost of 20.  */
 if|if
 condition|(
 name|CLASS_MAX_NREGS
@@ -58867,32 +58952,43 @@ argument_list|,
 name|mode
 argument_list|)
 condition|)
-name|add_cost
-operator|=
+name|cost
+operator|+=
+literal|20
+expr_stmt|;
+comment|/* In the case of FP/MMX moves, the registers actually overlap, and we 	 have to switch modes in order to treat them differently.  */
+if|if
+condition|(
+operator|(
+name|MMX_CLASS_P
+argument_list|(
+name|class1
+argument_list|)
+operator|&&
+name|MAYBE_FLOAT_CLASS_P
+argument_list|(
+name|class2
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|MMX_CLASS_P
+argument_list|(
+name|class2
+argument_list|)
+operator|&&
+name|MAYBE_FLOAT_CLASS_P
+argument_list|(
+name|class1
+argument_list|)
+operator|)
+condition|)
+name|cost
+operator|+=
 literal|20
 expr_stmt|;
 return|return
-operator|(
-name|MEMORY_MOVE_COST
-argument_list|(
-name|mode
-argument_list|,
-name|class1
-argument_list|,
-literal|0
-argument_list|)
-operator|+
-name|MEMORY_MOVE_COST
-argument_list|(
-name|mode
-argument_list|,
-name|class2
-argument_list|,
-literal|1
-argument_list|)
-operator|+
-name|add_cost
-operator|)
+name|cost
 return|;
 block|}
 comment|/* Moves between SSE/MMX and integer unit are expensive.  */

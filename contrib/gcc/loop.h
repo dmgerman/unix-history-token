@@ -694,6 +694,10 @@ comment|/* Nonzero if there is an indirect jump in the current function.  */
 name|int
 name|has_indirect_jump
 decl_stmt|;
+comment|/* Whether loop unrolling has emitted copies of the loop body so      that the main loop needs no exit tests.  */
+name|int
+name|preconditioned
+decl_stmt|;
 comment|/* Register or constant initial loop value.  */
 name|rtx
 name|initial_value

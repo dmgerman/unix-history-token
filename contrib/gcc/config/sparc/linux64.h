@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998, 2000 Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -118,71 +118,10 @@ end_undef
 begin_define
 define|#
 directive|define
-name|STARTFILE_SPEC32
+name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:/usr/lib/gcrt1.o%s} %{!pg:%{p:/usr/lib/gcrt1.o%s} %{!p:/usr/lib/crt1.o%s}}}\    /usr/lib/crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC64
-define|\
-value|"%{!shared: \      %{pg:/usr/lib64/gcrt1.o%s} %{!pg:%{p:/usr/lib64/gcrt1.o%s} %{!p:/usr/lib64/crt1.o%s}}}\    /usr/lib64/crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SPARC_BI_ARCH
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|DEFAULT_ARCH32_P
-end_if
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-value|"\ %{m32:" STARTFILE_SPEC32 "} \ %{m64:" STARTFILE_SPEC64 "} \ %{!m32:%{!m64:" STARTFILE_SPEC32 "}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-value|"\ %{m32:" STARTFILE_SPEC32 "} \ %{m64:" STARTFILE_SPEC64 "} \ %{!m32:%{!m64:" STARTFILE_SPEC64 "}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-value|STARTFILE_SPEC64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Provide a ENDFILE_SPEC appropriate for GNU/Linux.  Here we tack on    the GNU/Linux magical crtend.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main', followed by a normal    GNU/Linux "finalizer" file, `crtn.o'.  */
@@ -197,79 +136,10 @@ end_undef
 begin_define
 define|#
 directive|define
-name|ENDFILE_SPEC32
-define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib/crtn.o%s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENDFILE_SPEC64
-define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib64/crtn.o%s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENDFILE_SPEC_COMMON
-define|\
-value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}"
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SPARC_BI_ARCH
-end_ifdef
-
-begin_if
-if|#
-directive|if
-name|DEFAULT_ARCH32_P
-end_if
-
-begin_define
-define|#
-directive|define
 name|ENDFILE_SPEC
-value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC32 "}} " \ ENDFILE_SPEC_COMMON
+define|\
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s\    %{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ENDFILE_SPEC
-value|"\ %{m32:" ENDFILE_SPEC32 "} \ %{m64:" ENDFILE_SPEC64 "} \ %{!m32:%{!m64:" ENDFILE_SPEC64 "}} " \ ENDFILE_SPEC_COMMON
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ENDFILE_SPEC
-value|ENDFILE_SPEC64 " " ENDFILE_SPEC_COMMON
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The GNU C++ standard library requires that these macros be defined.  */

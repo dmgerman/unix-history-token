@@ -256,50 +256,6 @@ name|ASM_CPU_SPEC
 value|"\ %{mcpu=ultrasparc:" DEF_ARCH32_SPEC("-xarch=v8plusa") DEF_ARCH64_SPEC(AS_SPARC64_FLAG "a") "} \ %{mcpu=v9:" DEF_ARCH32_SPEC("-xarch=v8plus") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "} \ %{!mcpu=ultrasparc:%{!mcpu=v9:%{mcpu*:" DEF_ARCH32_SPEC("-xarch=v8") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "}}} \ %{!mcpu*:%(asm_cpu_default)} \ "
 end_define
 
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC32
-value|"\ %{ansi:values-Xc.o%s} \ %{!ansi: \  %{traditional:values-Xt.o%s} \  %{!traditional:values-Xa.o%s}}"
-end_define
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC64
-value|"\ %{ansi:/usr/lib/sparcv9/values-Xc.o%s} \ %{!ansi: \  %{traditional:/usr/lib/sparcv9/values-Xt.o%s} \  %{!traditional:/usr/lib/sparcv9/values-Xa.o%s}}"
-end_define
-
-begin_if
-if|#
-directive|if
-name|DEFAULT_ARCH32_P
-end_if
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_ARCH_SPEC
-value|"\ %{m32:" STARTFILE_SPEC32 "} \ %{m64:" STARTFILE_SPEC64 "} \ %{!m32:%{!m64:" STARTFILE_SPEC32 "}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_ARCH_SPEC
-value|"\ %{m32:" STARTFILE_SPEC32 "} \ %{m64:" STARTFILE_SPEC64 "} \ %{!m32:%{!m64:" STARTFILE_SPEC64 "}}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef
@@ -310,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"%{!shared: \ 			 %{!symbolic: \ 			  %{p:mcrt1.o%s} \                           %{!p: \ 	                    %{pg:gcrt1.o%s gmon.o%s} \                             %{!pg:crt1.o%s}}}} \ 			crti.o%s " STARTFILE_ARCH_SPEC " \ 			crtbegin.o%s"
+value|"%{!shared: \ 			 %{!symbolic: \ 			  %{p:mcrt1.o%s} \                           %{!p: \ 	                    %{pg:gcrt1.o%s gmon.o%s} \                             %{!pg:crt1.o%s}}}} \ 			crti.o%s \ 			%{ansi:values-Xc.o%s} \ 			%{!ansi: %{traditional:values-Xt.o%s} \ 				 %{!traditional:values-Xa.o%s}} \ 			crtbegin.o%s"
 end_define
 
 begin_undef
