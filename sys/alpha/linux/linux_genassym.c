@@ -59,37 +59,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|LINUX_SC_GS
-argument_list|,
-name|offsetof
-argument_list|(
-expr|struct
-name|linux_sigcontext
-argument_list|,
-name|sc_gs
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* ASSYM(LINUX_SC_GS, offsetof(struct linux_sigcontext, sc_gs)); */
+end_comment
 
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|LINUX_SC_EFLAGS
-argument_list|,
-name|offsetof
-argument_list|(
-expr|struct
-name|linux_sigcontext
-argument_list|,
-name|sc_eflags
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/* ASSYM(LINUX_SC_EFLAGS, offsetof(struct linux_sigcontext, sc_eflags)); */
+end_comment
 
 end_unit
 
