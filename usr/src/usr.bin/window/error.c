@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	2.1 83/07/30"
+literal|"@(#)error.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,26 +25,6 @@ include|#
 directive|include
 file|"defs.h"
 end_include
-
-begin_function_decl
-name|struct
-name|ww
-modifier|*
-name|openwin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|lineno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* line number in source file */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -101,7 +81,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* number of lines in errwin */
+comment|/* number of lines for errwin */
 end_comment
 
 begin_comment
@@ -151,11 +131,14 @@ if|if
 condition|(
 name|terse
 condition|)
-name|Ding
+name|wwbell
 argument_list|()
 expr_stmt|;
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|wwprintf
 argument_list|(
 name|cmdwin
@@ -179,6 +162,9 @@ argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wwputs
 argument_list|(
 literal|"  "
@@ -224,7 +210,7 @@ condition|(
 operator|(
 name|errwin
 operator|=
-name|openwin
+name|openiwin
 argument_list|(
 name|ERRLINES
 argument_list|,
@@ -235,6 +221,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|wwprintf
 argument_list|(
 name|cmdwin
@@ -278,6 +267,9 @@ name|lineno
 operator|!=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|wwprintf
 argument_list|(
 name|errwin
@@ -287,6 +279,9 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wwprintf
 argument_list|(
 name|errwin
@@ -310,6 +305,9 @@ argument_list|,
 name|h
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|wwprintf
 argument_list|(
 name|errwin
@@ -336,15 +334,13 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 name|filename
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|fn
@@ -353,6 +349,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|filename
@@ -382,7 +381,7 @@ argument_list|(
 name|errwin
 argument_list|)
 expr_stmt|;
-name|closewin
+name|closeiwin
 argument_list|(
 name|errwin
 argument_list|)

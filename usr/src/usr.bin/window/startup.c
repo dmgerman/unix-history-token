@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	2.1 83/07/30"
+literal|"@(#)startup.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,23 +25,6 @@ include|#
 directive|include
 file|"defs.h"
 end_include
-
-begin_function_decl
-name|struct
-name|ww
-modifier|*
-name|doopen
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_macro
 name|doconfig
@@ -77,6 +60,9 @@ name|home
 operator|=
 literal|""
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -123,7 +109,7 @@ condition|(
 operator|(
 name|w
 operator|=
-name|doopen
+name|openwin
 argument_list|(
 operator|-
 literal|1
@@ -147,7 +133,7 @@ name|bad
 goto|;
 if|if
 condition|(
-name|doopen
+name|openwin
 argument_list|(
 operator|-
 literal|1
@@ -176,6 +162,9 @@ expr_stmt|;
 return|return;
 name|bad
 label|:
+operator|(
+name|void
+operator|)
 name|wwputs
 argument_list|(
 literal|"Can't open default windows.  "
