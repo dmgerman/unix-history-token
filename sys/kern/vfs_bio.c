@@ -805,6 +805,34 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|recursiveflushes
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|recursiveflushes
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|recursiveflushes
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of flushes skipped due to being recursive"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|numdirtybuffers
 decl_stmt|;
 end_decl_stmt
@@ -4027,7 +4055,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If we have too many dirty buffers, don't create any more. 	 * If we are wildly over our limit, then force a complete 	 * cleanup. Otherwise, just keep the situation from getting 	 * out of control. 	 */
+comment|/* 	 * If we have too many dirty buffers, don't create any more. 	 * If we are wildly over our limit, then force a complete 	 * cleanup. Otherwise, just keep the situation from getting 	 * out of control. Note that we have to avoid a recursive 	 * disaster and not try to clean up after our own cleanup! 	 */
 name|vp
 operator|=
 name|bp
@@ -4039,6 +4067,22 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_COWINPROGRESS
+condition|)
+block|{
+name|recursiveflushes
+operator|++
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|vp
