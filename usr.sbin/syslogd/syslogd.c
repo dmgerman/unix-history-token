@@ -7098,6 +7098,21 @@ index|[
 literal|512
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|recursed
+init|=
+literal|0
+decl_stmt|;
+comment|/* If there's an error while trying to log an error, give up. */
+if|if
+condition|(
+name|recursed
+condition|)
+return|return;
+name|recursed
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -7161,6 +7176,9 @@ name|LocalHostName
 argument_list|,
 name|ADDDATE
 argument_list|)
+expr_stmt|;
+name|recursed
+operator|--
 expr_stmt|;
 block|}
 end_function
