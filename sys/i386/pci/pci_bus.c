@@ -250,6 +250,11 @@ name|dev
 argument_list|)
 argument_list|,
 name|pin
+argument_list|,
+name|pci_get_irq
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 operator|)
 return|;

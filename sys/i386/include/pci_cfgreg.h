@@ -178,6 +178,9 @@ name|device
 parameter_list|,
 name|int
 name|pin
+parameter_list|,
+name|int
+name|oldirq
 parameter_list|)
 function_decl|;
 end_function_decl
