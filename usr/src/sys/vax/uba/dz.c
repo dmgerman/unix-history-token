@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.7	%G%	*/
+comment|/*	dz.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -2372,11 +2372,21 @@ directive|ifndef
 name|IIASA
 if|if
 condition|(
+operator|(
 name|tp
 operator|->
 name|t_local
 operator|&
 name|LLITOUT
+operator|)
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|RAW
+operator|)
 condition|)
 name|lpr
 operator||=

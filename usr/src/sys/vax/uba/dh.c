@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.10	%G%	*/
+comment|/*	dh.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -1555,11 +1555,21 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|tp
+operator|->
+name|t_flag
+operator|&
+name|RAW
+operator|)
+operator|||
+operator|(
 name|tp
 operator|->
 name|t_local
 operator|&
 name|LLITOUT
+operator|)
 condition|)
 name|d
 operator||=
