@@ -83,6 +83,9 @@ directive|include
 file|<machine/frame.h>
 include|#
 directive|include
+file|<machine/md_var.h>
+include|#
+directive|include
 file|<machine/spigot.h>
 include|#
 directive|include

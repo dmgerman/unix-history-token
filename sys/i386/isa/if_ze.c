@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.29 1996/02/06 18:50:50 wollman Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.30 1996/06/12 05:03:45 gpalmer Exp $  */
 end_comment
 
 begin_include
@@ -223,6 +223,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
 end_include
 
 begin_include
