@@ -1526,6 +1526,16 @@ literal|0
 index|]
 operator|!=
 literal|0
+operator|&&
+name|s
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 name|recover
 argument_list|(
