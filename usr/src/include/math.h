@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)math.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)math.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -29,11 +29,15 @@ name|tahoe
 argument_list|)
 end_if
 
+begin_comment
+comment|/* DBL_MAX from float.h */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HUGE_VAL
-value|1.701411733192644270e+38
+value|1.701411834604692294E+38
 end_define
 
 begin_else
@@ -73,12 +77,47 @@ name|_POSIX_SOURCE
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * HUGE for the VAX and Tahoe converts to the largest possible F-float value.  * This implies an understanding of the conversion behavior of atof(3).  It  * was defined to be the largest float so that overflow didn't occur when it  * was assigned to a single precision number.  HUGE_VAL is strongly preferred.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HUGE
+value|1.701411733192644270E+38
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|HUGE
 value|HUGE_VAL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
