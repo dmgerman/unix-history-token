@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kcmd.c	8.1 (Berkeley) %G%"
+literal|"@(#)kcmd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,6 +431,9 @@ name|ahost
 operator|=
 name|host_save
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
 comment|/* If realm is null, look up from table */
 if|if
 condition|(
@@ -452,6 +455,9 @@ argument_list|(
 name|host_save
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* KERBEROS */
 name|oldmask
 operator|=
 name|sigblock
@@ -1075,6 +1081,9 @@ name|bad2
 goto|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|KERBEROS
 if|if
 condition|(
 operator|(
@@ -1121,6 +1130,9 @@ condition|)
 goto|goto
 name|bad2
 goto|;
+endif|#
+directive|endif
+comment|/* KERBEROS */
 operator|(
 name|void
 operator|)
