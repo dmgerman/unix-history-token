@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.3 1993/09/05 04:54:23 jkh Exp $"
+literal|"$Id: pen.c,v 1.4 1994/10/04 16:07:50 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,24 @@ argument_list|(
 literal|"Can't mkdir '%s'."
 argument_list|,
 name|Pen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Projected package size: %d bytes, free space: %d bytes\n"
+argument_list|,
+name|sz
+argument_list|,
+name|min_free
+argument_list|(
+name|Pen
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
