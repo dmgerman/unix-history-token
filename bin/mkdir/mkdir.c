@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkdir.c,v 1.12 1998/10/20 06:37:01 msmith Exp $"
+literal|"$Id: mkdir.c,v 1.13 1998/10/20 08:04:15 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,8 +347,8 @@ name|exitval
 operator|=
 literal|1
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|mkdir
@@ -375,9 +375,22 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * The mkdir() and umask() calls both honor only the low 		 * nine bits, so if you try to set a mode including the 		 * sticky, setuid, setgid bits you lose them.  So chmod(). 		 */
+comment|/* 		 * The mkdir() and umask() calls both honor only the low 		 * nine bits, so if you try to set a mode including the 		 * sticky, setuid, setgid bits you lose them.  Don't do 		 * this unless the user has specifically requested a mode, 		 * as chmod will (obviously) ignore the umask. 		 */
 if|if
 condition|(
+operator|(
+name|exitval
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|mode
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
 name|chmod
 argument_list|(
 operator|*
@@ -388,11 +401,12 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"chmod %s"
 argument_list|,
 operator|*
 name|argv
@@ -629,36 +643,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/*                          * The mkdir() and umask() calls both honor only the 			 * low nine bits, so if you try to set a mode  			 * including the sticky, setuid, setgid bits you lose  			 * them. So chmod() the last path component to try 			 * to do what the caller has asked for.                          */
-if|if
-condition|(
-name|last
-operator|&&
-operator|(
-name|chmod
-argument_list|(
-name|path
-argument_list|,
-name|omode
-argument_list|)
-operator|==
-operator|-
-literal|1
-operator|)
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -700,6 +684,11 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|last
+condition|)
 operator|*
 name|p
 operator|=
