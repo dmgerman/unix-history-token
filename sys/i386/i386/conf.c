@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.42 1994/12/03 00:18:15 wollman Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.43 1994/12/04 07:14:16 phk Exp $  */
 end_comment
 
 begin_include
@@ -1094,6 +1094,61 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"vn.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NVN
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|d_open_t
+name|vnopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
+name|vnclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|vnstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|vnioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_dump_t
+name|vndump
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_psize_t
+name|vnsize
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1135,6 +1190,11 @@ directive|define
 name|vnsize
 value|(d_psize_t *)0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -4982,6 +5042,14 @@ argument_list|)
 condition|)
 block|{
 case|case
+literal|15
+case|:
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+case|case
 literal|0
 case|:
 case|case
@@ -5022,10 +5090,10 @@ case|case
 literal|13
 case|:
 case|case
-literal|15
+literal|29
 case|:
 case|case
-literal|29
+literal|43
 case|:
 if|if
 condition|(
@@ -5050,126 +5118,12 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|MAXDEV
-value|32
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|chrtoblktbl
-index|[
-name|MAXDEV
-index|]
-init|=
-block|{
-comment|/* VCHR */
-comment|/* VBLK */
-comment|/* 0 */
-name|NODEV
-block|,
-comment|/* 1 */
-name|NODEV
-block|,
-comment|/* 2 */
-name|NODEV
-block|,
-comment|/* 3 */
-literal|0
-block|,
-comment|/* 4 */
-name|NODEV
-block|,
-comment|/* 5 */
-name|NODEV
-block|,
-comment|/* 6 */
-name|NODEV
-block|,
-comment|/* 7 */
-name|NODEV
-block|,
-comment|/* 8 */
-name|NODEV
-block|,
-comment|/* 9 */
-literal|2
-block|,
-comment|/* 10 */
-literal|3
-block|,
-comment|/* 11 */
-name|NODEV
-block|,
-comment|/* 12 */
-name|NODEV
-block|,
-comment|/* 13 */
-literal|4
-block|,
-comment|/* 14 */
-literal|5
-block|,
-comment|/* 15 */
-literal|6
-block|,
-comment|/* 16 */
-name|NODEV
-block|,
-comment|/* 17 */
-name|NODEV
-block|,
-comment|/* 18 */
-name|NODEV
-block|,
-comment|/* 19 */
-name|NODEV
-block|,
-comment|/* 20 */
-name|NODEV
-block|,
-comment|/* 21 */
-name|NODEV
-block|,
-comment|/* 22 */
-name|NODEV
-block|,
-comment|/* 23 */
-name|NODEV
-block|,
-comment|/* 25 */
-name|NODEV
-block|,
-comment|/* 26 */
-name|NODEV
-block|,
-comment|/* 27 */
-name|NODEV
-block|,
-comment|/* 28 */
-name|NODEV
-block|,
-comment|/* 29 */
-literal|7
-block|,
-comment|/* 30 */
-name|NODEV
-block|,
-comment|/* 31 */
-name|NODEV
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Routine to convert from character to block device number.  *  * A minimal stub routine can always return NODEV.  */
 end_comment
 
 begin_function
-name|int
+name|dev_t
 name|chrtoblk
 parameter_list|(
 name|dev
@@ -5181,34 +5135,85 @@ block|{
 name|int
 name|blkmaj
 decl_stmt|;
-if|if
+switch|switch
 condition|(
 name|major
 argument_list|(
 name|dev
 argument_list|)
-operator|>=
-name|MAXDEV
-operator|||
-operator|(
+condition|)
+block|{
+case|case
+literal|3
+case|:
 name|blkmaj
 operator|=
-name|chrtoblktbl
-index|[
-name|major
-argument_list|(
-name|dev
-argument_list|)
-index|]
-operator|)
-operator|==
-name|NODEV
-condition|)
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|9
+case|:
+name|blkmaj
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
+literal|10
+case|:
+name|blkmaj
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
+literal|13
+case|:
+name|blkmaj
+operator|=
+literal|4
+expr_stmt|;
+break|break;
+case|case
+literal|14
+case|:
+name|blkmaj
+operator|=
+literal|5
+expr_stmt|;
+break|break;
+case|case
+literal|15
+case|:
+name|blkmaj
+operator|=
+literal|6
+expr_stmt|;
+break|break;
+case|case
+literal|29
+case|:
+name|blkmaj
+operator|=
+literal|7
+expr_stmt|;
+break|break;
+case|case
+literal|43
+case|:
+name|blkmaj
+operator|=
+literal|15
+expr_stmt|;
+break|break;
+default|default:
 return|return
 operator|(
 name|NODEV
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|makedev
