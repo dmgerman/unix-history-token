@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.30 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -235,10 +252,6 @@ name|int
 name|mnt_flag
 decl_stmt|;
 comment|/* flags */
-name|uid_t
-name|mnt_exroot
-decl_stmt|;
-comment|/* XXX - deprecated */
 name|struct
 name|statfs
 name|mnt_stat
@@ -701,6 +714,9 @@ name|fid
 operator|*
 name|fhp
 operator|,
+name|int
+name|setgen
+operator|,
 expr|struct
 name|vnode
 operator|*
@@ -855,9 +871,12 @@ name|MP
 parameter_list|,
 name|FIDP
 parameter_list|,
+name|SG
+parameter_list|,
 name|VPP
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
+define|\
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, SG, VPP)
 end_define
 
 begin_define
@@ -929,7 +948,7 @@ name|struct
 name|fid
 name|fh_fid
 decl_stmt|;
-comment|/* Id of file */
+comment|/* File sys specific id */
 block|}
 struct|;
 end_struct
@@ -943,25 +962,124 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Arguments to mount UFS-based filesystems  */
+comment|/*  * Network address hash list element  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
+begin_union
+union|union
+name|nethostaddr
+block|{
+name|u_long
+name|had_inetaddr
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|had_nam
+decl_stmt|;
+block|}
+union|;
+end_union
 
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
-end_include
+begin_struct
+struct|struct
+name|netaddrhash
+block|{
+name|struct
+name|netaddrhash
+modifier|*
+name|neth_next
+decl_stmt|;
+name|struct
+name|ucred
+name|neth_anon
+decl_stmt|;
+name|u_short
+name|neth_family
+decl_stmt|;
+name|union
+name|nethostaddr
+name|neth_haddr
+decl_stmt|;
+name|union
+name|nethostaddr
+name|neth_hmask
+decl_stmt|;
+name|int
+name|neth_exflags
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|neth_inetaddr
+value|neth_haddr.had_inetaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|neth_inetmask
+value|neth_hmask.had_inetaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|neth_nam
+value|neth_haddr.had_nam
+end_define
+
+begin_define
+define|#
+directive|define
+name|neth_msk
+value|neth_hmask.had_nam
+end_define
+
+begin_comment
+comment|/*  * Network address hashing defs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETHASHSZ
+value|8
+end_define
+
+begin_comment
+comment|/* Must be a power of 2<= 256 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETMASK_HASH
+value|NETHASHSZ
+end_define
+
+begin_comment
+comment|/* Last hash table element is for networks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETADDRHASH
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|(((a)->sa_family == AF_INET) ? ((a)->sa_data[5]& (NETHASHSZ - 1)) : \ 	 (((a)->sa_family == AF_ISO) ? iso_addrhash(a) : 0))
+end_define
+
+begin_comment
+comment|/*  * Arguments to mount UFS-based filesystems  */
+end_comment
 
 begin_struct
 struct|struct
@@ -1099,6 +1217,10 @@ name|addr
 decl_stmt|;
 comment|/* file server address */
 name|int
+name|addrlen
+decl_stmt|;
+comment|/* length of address */
+name|int
 name|sotype
 decl_stmt|;
 comment|/* Socket type */
@@ -1131,6 +1253,22 @@ name|int
 name|retrans
 decl_stmt|;
 comment|/* times to retry send */
+name|int
+name|maxgrouplist
+decl_stmt|;
+comment|/* Max. size of group list */
+name|int
+name|readahead
+decl_stmt|;
+comment|/* # of blocks to readahead */
+name|int
+name|leaseterm
+decl_stmt|;
+comment|/* Term (sec) of lease */
+name|int
+name|deadthresh
+decl_stmt|;
+comment|/* Retrans threshold */
 name|char
 modifier|*
 name|hostname
@@ -1148,7 +1286,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_SOFT
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -1159,7 +1297,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_WSIZE
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -1170,7 +1308,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_RSIZE
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -1181,7 +1319,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_TIMEO
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -1192,7 +1330,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_RETRANS
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -1202,19 +1340,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_HOSTNAME
-value|0x0020
+name|NFSMNT_MAXGRPS
+value|0x00000020
 end_define
 
 begin_comment
-comment|/* set hostname for error printf */
+comment|/* set maximum grouplist size */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NFSMNT_INT
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -1225,7 +1363,7 @@ begin_define
 define|#
 directive|define
 name|NFSMNT_NOCONN
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -1235,53 +1373,233 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFSMNT_SCKLOCK
-value|0x0100
+name|NFSMNT_NQNFS
+value|0x00000100
 end_define
 
 begin_comment
-comment|/* Lock socket against others */
+comment|/* Use Nqnfs protocol */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NFSMNT_WANTSCK
-value|0x0200
+name|NFSMNT_MYWRITE
+value|0x00000200
 end_define
 
 begin_comment
-comment|/* Want a socket lock */
+comment|/* Assume writes were mine */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NFSMNT_SPONGY
-value|0x0400
+name|NFSMNT_KERB
+value|0x00000400
 end_define
 
 begin_comment
-comment|/* spongy mount (soft for stat and lookup) */
+comment|/* Use Kerberos authentication */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NFSMNT_COMPRESS
-value|0x0800
+name|NFSMNT_DUMBTIMR
+value|0x00000800
 end_define
 
 begin_comment
-comment|/* Compress nfs rpc xdr */
+comment|/* Don't estimate rtt dynamically */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NFSMNT_LOCKBITS
-value|(NFSMNT_SCKLOCK | NFSMNT_WANTSCK)
+name|NFSMNT_RDIRALOOK
+value|0x00001000
 end_define
+
+begin_comment
+comment|/* Do lookup with readdir (nqnfs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_LEASETERM
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* set lease term (nqnfs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_READAHEAD
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* set read ahead */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DEADTHRESH
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* set dead server retry thresh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_NQLOOKLEASE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Get lease for lookup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_INTERNAL
+value|0xffe00000
+end_define
+
+begin_comment
+comment|/* Bits set internally */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_MNTD
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* Mnt server for mnt point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DISMINPROG
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Dismount in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_DISMNT
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Dismounted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_SNDLOCK
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Send socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTSND
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Want above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_RCVLOCK
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Rcv socket lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTRCV
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Want above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WAITAUTH
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Wait for authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_HASAUTH
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Has authenticator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_WANTAUTH
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Wants an authenticator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSMNT_AUTHERR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Authentication error */
+end_comment
 
 begin_endif
 endif|#
