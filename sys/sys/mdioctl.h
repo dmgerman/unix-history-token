@@ -63,10 +63,14 @@ modifier|*
 name|md_file
 decl_stmt|;
 comment|/* pathname of file to mount */
-name|unsigned
-name|md_size
+name|off_t
+name|md_mediasize
 decl_stmt|;
-comment|/* size of disk in DEV_BSIZE units */
+comment|/* size of disk in bytes */
+name|unsigned
+name|md_sectorsize
+decl_stmt|;
+comment|/* sectorsize */
 name|unsigned
 name|md_options
 decl_stmt|;
@@ -75,10 +79,6 @@ name|u_int64_t
 name|md_base
 decl_stmt|;
 comment|/* base address */
-name|int
-name|md_secsize
-decl_stmt|;
-comment|/* sectorsize */
 name|int
 name|md_fwheads
 decl_stmt|;
