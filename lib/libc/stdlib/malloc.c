@@ -933,8 +933,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|malloc_abort
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1014,8 +1012,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|malloc_junk
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
