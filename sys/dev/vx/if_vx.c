@@ -1826,6 +1826,8 @@ argument_list|,
 name|sc
 operator|->
 name|unit
+argument_list|,
+name|warning
 argument_list|)
 expr_stmt|;
 block|}
