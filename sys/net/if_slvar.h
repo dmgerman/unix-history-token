@@ -118,7 +118,7 @@ name|u_char
 modifier|*
 name|bpfbuf
 decl_stmt|;
-comment|/* hing buffer for bpf here */
+comment|/* hang buffer for bpf here */
 block|}
 struct|;
 end_struct
