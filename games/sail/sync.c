@@ -614,6 +614,10 @@ name|index
 argument_list|,
 name|isstr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 argument_list|)
 expr_stmt|;
