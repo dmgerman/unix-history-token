@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/dump/dumpoptr.c,v 1.4 1993/04/20 09:30:45 mycroft Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sbin/dump/dumpoptr.c,v 1.2 1993/07/22 16:49:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2122,6 +2122,18 @@ name|initdumptimes
 argument_list|()
 expr_stmt|;
 comment|/* /etc/dumpdates input */
+if|if
+condition|(
+name|ddatev
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* /etc/dumpdates doesn't exist */
 name|qsort
 argument_list|(
 name|ddatev
