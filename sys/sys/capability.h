@@ -22,6 +22,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|POSIX1E_CAPABILITY_EXTATTR_NAME
+value|"$posix1e.cap"
+end_define
+
+begin_define
+define|#
+directive|define
 name|__CAP_MASK_LEN
 value|2
 end_define
@@ -373,8 +380,15 @@ value|(0x20000000 | POSIX1E_CAPABILITY)
 end_define
 
 begin_comment
-comment|/*  * The following capability, borrowed from Linux, is unsafe  * #define	CAP_SETPCAP		(0x00000100 | SYSTEM_CAPABILITY)  */
+comment|/*  * The following capability, borrowed from Linux, is unsafe  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CAP_SETPCAP
+value|(0x00000100 | SYSTEM_CAPABILITY)
+end_define
 
 begin_comment
 comment|/*  * The following capability, borrowed from Linux, is not appropriate  * in the BSD file environment  * #define	CAP_LINUX_IMMUTABLE	(0x00000200 | SYSTEM_CAPABILITY)  */
@@ -500,16 +514,11 @@ name|ucred
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-name|int
-name|cap_change_on_inherit
-parameter_list|(
-name|struct
-name|cap
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_struct_decl
+struct_decl|struct
+name|vnode
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int
@@ -544,12 +553,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|cap_inherit
+name|int
+name|cap_change_on_inherit
 parameter_list|(
 name|struct
 name|cap
 modifier|*
+name|cap_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cap_inherit
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
