@@ -364,9 +364,6 @@ operator|=
 name|relocbase
 operator|+
 name|addend
-operator|+
-operator|*
-name|where
 expr_stmt|;
 if|if
 condition|(
