@@ -1293,7 +1293,7 @@ expr_stmt|;
 comment|/* 	 * Map control/status registers. 	 */
 name|rid
 operator|=
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 expr_stmt|;
 name|bktr
 operator|->
@@ -1904,7 +1904,7 @@ name|dev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 argument_list|,
 name|bktr
 operator|->
