@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Portions copyright (c) 1995,1997  * Berkeley Software Design, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	$Id: login_cap.c,v 1.14 1997/06/13 22:26:41 davidn Exp $  */
+comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Portions copyright (c) 1995,1997  * Berkeley Software Design, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	$Id: login_cap.c,v 1.15 1999/04/24 17:01:58 ache Exp $  */
 end_comment
 
 begin_include
@@ -596,9 +596,13 @@ literal|0
 decl_stmt|;
 name|uid_t
 name|euid
+init|=
+literal|0
 decl_stmt|;
 name|gid_t
 name|egid
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|char
@@ -646,6 +650,11 @@ block|}
 decl_stmt|;
 comment|/* Switch to user mode before checking/reading its ~/.login_conf */
 comment|/* - some NFSes have root read access disabled.                  */
+if|if
+condition|(
+name|dir
+condition|)
+block|{
 name|euid
 operator|=
 name|geteuid
@@ -676,6 +685,7 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dir
@@ -948,6 +958,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|dir
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -964,6 +979,7 @@ argument_list|(
 name|egid
 argument_list|)
 expr_stmt|;
+block|}
 operator|++
 name|lc_object_count
 expr_stmt|;
@@ -1009,6 +1025,11 @@ literal|"%s: unexpected cgetent() error '%s': %m"
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|dir
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1025,6 +1046,7 @@ argument_list|(
 name|egid
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|msg
