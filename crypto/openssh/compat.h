@@ -4,6 +4,10 @@ comment|/*  * Copyright (c) 1999 Markus Friedl.  All rights reserved.  *  * Redi
 end_comment
 
 begin_comment
+comment|/* RCSID("$FreeBSD$"); */
+end_comment
+
+begin_comment
 comment|/* RCSID("$OpenBSD: compat.h,v 1.11 2000/10/14 12:16:56 markus Exp $"); */
 end_comment
 
@@ -80,6 +84,13 @@ define|#
 directive|define
 name|SSH_OLD_SESSIONID
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_IGNOREMSG
+value|0x20
 end_define
 
 begin_function_decl
