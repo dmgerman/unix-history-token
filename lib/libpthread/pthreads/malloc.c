@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.1 1993/12/19 06:21:29 alm Exp $"
+literal|"$Id: malloc.c,v 1.2 1993/11/15 10:06:09 proven Exp $"
 decl_stmt|;
 end_decl_stmt
 
