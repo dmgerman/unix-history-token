@@ -4,8 +4,26 @@ comment|/* keymaps.c -- Functions and keymaps for the GNU Readline library. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1988,1989 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 1, or (at your option) any    later version.     Readline is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with Readline; see the file COPYING.  If not, write to the Free    Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1988, 1989, 1991 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     Readline is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"readline.h"
+end_include
 
 begin_include
 include|#
@@ -40,17 +58,19 @@ begin_comment
 comment|/* Remove these declarations when we have a complete libgnu.a. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|STATIC_MALLOC
-end_define
+begin_comment
+comment|/* #define STATIC_MALLOC */
+end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|STATIC_MALLOC
-end_ifndef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -87,6 +107,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* STATIC_MALLOC */
+end_comment
 
 begin_comment
 comment|/* **************************************************************** */
@@ -308,20 +332,8 @@ block|)
 operator|,
 function|rl_rubout
 parameter_list|()
-operator|,
-function|rl_do_lowercase_version
-parameter_list|()
 function|;
 end_function
-
-begin_extern
-extern|extern rl_digit_argument (
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_decl_stmt
 specifier|register
@@ -615,7 +627,26 @@ block|{
 name|char
 modifier|*
 name|temp
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pointer
+condition|)
+name|temp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|bytes
+argument_list|)
+expr_stmt|;
+else|else
+name|temp
+operator|=
 operator|(
 name|char
 operator|*
@@ -626,7 +657,7 @@ name|pointer
 argument_list|,
 name|bytes
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
