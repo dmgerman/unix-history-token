@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	3.37 (Berkeley) %G%"
+literal|"@(#)cmd2.c	3.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,11 +127,11 @@ literal|":list                   List all open windows"
 block|,
 literal|":default_nline lines    Set default window buffer size to `lines'"
 block|,
-literal|":default_smooth flag    Set default smooth scroll flag"
-block|,
 literal|":default_shell string ..."
 block|,
 literal|"                        Set default shell to `string ...'"
+block|,
+literal|":default_smooth flag    Set default smooth scroll flag"
 block|,
 literal|":select #               Select window #"
 block|,
