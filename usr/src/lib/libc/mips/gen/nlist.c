@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)nlist.c	4.3 (Berkeley) %G% */
+comment|/* @(#)nlist.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -228,7 +228,7 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|close
+name|fclose
 argument_list|(
 name|f
 argument_list|)
