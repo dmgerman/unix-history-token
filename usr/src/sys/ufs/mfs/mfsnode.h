@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfsnode.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,21 +77,21 @@ begin_define
 define|#
 directive|define
 name|mfs_lookup
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct nameidata *ndp, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_create
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \  		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_mknod
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) mfs_badop)
 end_define
 
 begin_define
@@ -161,42 +161,42 @@ begin_define
 define|#
 directive|define
 name|mfs_remove
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 	        struct vnode *vp, \ 		struct componentname *cnp))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_link
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct nameidata *ndp, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		register struct vnode *vp, \ 		struct vnode *tdvp, \ 		struct componentname *cnp))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_rename
-value|((int (*) __P(( \ 		struct nameidata *fndp, \ 		struct nameidata *tdnp, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *fdvp, \ 	        struct vnode *fvp, \ 		struct componentname *fcnp, \ 		struct vnode *tdvp, \ 		struct vnode *tvp, \ 		struct componentname *tcnp))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_mkdir
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_rmdir
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode *vp, \ 		struct componentname *cnp))) mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_symlink
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		char *target, \ 		struct proc *p))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap, \ 		char *target))) mfs_badop)
 end_define
 
 begin_define
@@ -217,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|mfs_abortop
-value|((int (*) __P(( \ 		struct nameidata *ndp))) mfs_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct componentname *cnp))) mfs_badop)
 end_define
 
 begin_define
