@@ -1254,7 +1254,11 @@ call|(
 name|u_int32_t
 call|)
 argument_list|(
+operator|(
 name|basemem
+operator|*
+literal|1024
+operator|)
 operator|-
 literal|0x400
 argument_list|)
