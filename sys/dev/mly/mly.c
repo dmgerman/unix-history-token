@@ -3300,21 +3300,6 @@ operator|->
 name|mly_regs_resource
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500005
-name|TASK_DESTROY
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_task_complete
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

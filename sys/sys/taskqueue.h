@@ -38,18 +38,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
-end_include
-
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -123,49 +111,9 @@ modifier|*
 name|ta_context
 decl_stmt|;
 comment|/* argument for handler */
-name|struct
-name|mtx
-name|ta_mutex
-decl_stmt|;
-comment|/* lock for each task */
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|void
-name|task_init
-parameter_list|(
-name|struct
-name|task
-modifier|*
-name|task
-parameter_list|,
-name|int
-name|priority
-parameter_list|,
-name|task_fn_t
-modifier|*
-name|func
-parameter_list|,
-name|void
-modifier|*
-name|context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|task_destroy
-parameter_list|(
-name|struct
-name|task
-modifier|*
-name|task
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct
@@ -263,23 +211,7 @@ name|func
 parameter_list|,
 name|context
 parameter_list|)
-define|\
-value|task_init((task), (priority), (func), (context))
-end_define
-
-begin_comment
-comment|/*  * Destroy a task structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TASK_DESTROY
-parameter_list|(
-name|task
-parameter_list|)
-define|\
-value|task_destroy((task))
+value|do {	\ 	(task)->ta_pending = 0;				\ 	(task)->ta_priority = (priority);		\ 	(task)->ta_func = (func);			\ 	(task)->ta_context = (context);			\ } while (0)
 end_define
 
 begin_comment
