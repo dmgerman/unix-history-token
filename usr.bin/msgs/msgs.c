@@ -3535,7 +3535,7 @@ index|[
 name|n
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 block|}
 else|else
@@ -3796,7 +3796,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 comment|/* 	 * Is this a normal message? 	 */
 if|if
@@ -3914,7 +3914,7 @@ block|}
 operator|*
 name|ptr
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3952,7 +3952,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 block|}
 block|}
