@@ -345,6 +345,15 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|u_int
+name|manufacturer
+decl_stmt|;
+name|u_int
+name|product
+decl_stmt|;
+name|u_int
+name|prodext
+decl_stmt|;
 name|unsigned
 name|char
 name|eaddr
