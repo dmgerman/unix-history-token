@@ -238,6 +238,8 @@ decl_stmt|,
 name|fflag
 decl_stmt|,
 name|hflag
+decl_stmt|,
+name|vflag
 decl_stmt|;
 end_decl_stmt
 
@@ -764,6 +766,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|p
+operator|->
+name|fts_accpath
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -794,6 +815,25 @@ expr_stmt|;
 name|rval
 operator|=
 literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|p
+operator|->
+name|fts_accpath
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1169,11 +1209,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: chown [-R [-H | -L | -P]] [-f] [-h] owner[:group] file ..."
+literal|"usage: chown [-R [-H | -L | -P]] [-f] [-h] [-v] owner[:group] file ..."
 argument_list|,
-literal|"       chown [-R [-H | -L | -P]] [-f] [-h] :group file ..."
+literal|"       chown [-R [-H | -L | -P]] [-f] [-h] [-v] :group file ..."
 argument_list|,
-literal|"       chgrp [-R [-H | -L | -P]] [-f] [-h] group file ..."
+literal|"       chgrp [-R [-H | -L | -P]] [-f] [-h] [-v] group file ..."
 argument_list|)
 expr_stmt|;
 name|exit

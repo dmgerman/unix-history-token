@@ -195,6 +195,9 @@ name|hflag
 decl_stmt|,
 name|rval
 decl_stmt|;
+name|int
+name|vflag
+decl_stmt|;
 name|char
 modifier|*
 name|ep
@@ -235,7 +238,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRXfgorstuwx"
+literal|"HLPRXfgorstuvwx"
 argument_list|)
 operator|)
 operator|!=
@@ -386,6 +389,14 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+case|case
+literal|'v'
+case|:
+name|vflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -745,6 +756,25 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|p
+operator|->
+name|fts_accpath
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -782,7 +812,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chmod [-f -R [-H | -L | -P]] mode file ...\n"
+literal|"usage: chmod [-f -R [-H | -L | -P] -v] mode file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
