@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.55	82/12/28	*/
+comment|/*	kern_proc.c	4.56	82/12/28	*/
 end_comment
 
 begin_include
@@ -250,8 +250,10 @@ name|len
 operator|=
 name|hostnamelen
 expr_stmt|;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -268,12 +270,6 @@ name|hostname
 argument_list|,
 name|len
 argument_list|)
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
 expr_stmt|;
 block|}
 end_block
@@ -344,8 +340,10 @@ name|uap
 operator|->
 name|len
 expr_stmt|;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -361,12 +359,6 @@ name|uap
 operator|->
 name|len
 argument_list|)
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
 expr_stmt|;
 name|hostname
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_xxx.c	4.3	82/12/28	*/
+comment|/*	vfs_xxx.c	4.4	82/12/28	*/
 end_comment
 
 begin_include
@@ -573,8 +573,10 @@ name|ip
 operator|->
 name|i_ctime
 expr_stmt|;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -593,14 +595,6 @@ argument_list|(
 name|ds
 argument_list|)
 argument_list|)
-operator|<
-literal|0
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
 expr_stmt|;
 block|}
 end_block

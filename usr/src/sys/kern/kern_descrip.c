@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.20	82/12/17	*/
+comment|/*	kern_descrip.c	5.21	82/12/28	*/
 end_comment
 
 begin_include
@@ -183,8 +183,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -206,18 +208,14 @@ expr|struct
 name|dtype
 argument_list|)
 argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
+condition|)
 return|return;
-block|}
 block|}
 end_block
 
@@ -797,8 +795,10 @@ operator|==
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -820,18 +820,14 @@ expr|struct
 name|dtype
 argument_list|)
 argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
+condition|)
 return|return;
-block|}
 comment|/* DO WRAP */
 block|}
 end_block
@@ -961,7 +957,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		if (copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    sizeof (ibits[x]))) { \ 			u.u_error = EFAULT; \ 			goto done; \ 		} \ 	} else \ 		ibits[x] = 0;
+value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    sizeof (ibits[x])); \ 		if (u.u_error) \ 			goto done; \ 	} else \ 		ibits[x] = 0;
 name|getbits
 argument_list|(
 name|in
@@ -993,8 +989,10 @@ operator|->
 name|tv
 condition|)
 block|{
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -1015,18 +1013,16 @@ argument_list|(
 name|atv
 argument_list|)
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
+condition|)
 goto|goto
 name|done
 goto|;
-block|}
 if|if
 condition|(
 name|itimerfix
@@ -1314,7 +1310,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		if (copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    sizeof (obits[x]))) \ 			u.u_error = EFAULT; \ 	}
+value|if (uap->name) { \ 		int error = copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    sizeof (obits[x])); \ 		if (error) \ 			u.u_error = error; \ 	}
 name|putbits
 argument_list|(
 name|in

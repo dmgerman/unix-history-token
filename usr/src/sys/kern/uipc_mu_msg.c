@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mu_msg.c	Melb 4.2	82/11/13	*/
+comment|/*	uipc_mu_msg.c	Melb 4.3	82/12/28	*/
 end_comment
 
 begin_ifdef
@@ -169,8 +169,10 @@ name|MSGPRI
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -193,12 +195,6 @@ argument_list|(
 name|mmsgbuf
 argument_list|)
 argument_list|)
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
 expr_stmt|;
 name|p
 operator|->
@@ -274,8 +270,10 @@ case|:
 case|case
 name|MSG_RPLY
 case|:
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -296,16 +294,14 @@ argument_list|(
 name|mmsgbuf
 argument_list|)
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
+condition|)
 return|return;
-block|}
 if|if
 condition|(
 name|uap

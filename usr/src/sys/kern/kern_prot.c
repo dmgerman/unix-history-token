@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.13	82/12/17	*/
+comment|/*	kern_prot.c	5.14	82/12/28	*/
 end_comment
 
 begin_comment
@@ -378,8 +378,10 @@ name|u
 operator|.
 name|u_groups
 expr_stmt|;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -410,16 +412,14 @@ literal|0
 index|]
 argument_list|)
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
+condition|)
 return|return;
-block|}
 name|u
 operator|.
 name|u_r
@@ -1200,8 +1200,10 @@ name|EINVAL
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -1232,16 +1234,14 @@ literal|0
 index|]
 argument_list|)
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
+condition|)
 return|return;
-block|}
 for|for
 control|(
 name|gp

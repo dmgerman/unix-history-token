@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.45	82/12/24	*/
+comment|/*	lfs_vnops.c	4.46	82/12/28	*/
 end_comment
 
 begin_include
@@ -2378,8 +2378,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -2398,14 +2400,6 @@ argument_list|(
 name|ds
 argument_list|)
 argument_list|)
-operator|<
-literal|0
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
 expr_stmt|;
 block|}
 end_block
@@ -3484,8 +3478,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
-condition|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|copyin
 argument_list|(
 operator|(
@@ -3505,16 +3501,15 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
-block|}
-else|else
+operator|==
+literal|0
+condition|)
 block|{
 name|ip
 operator|->
