@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.h	4.1	81/11/25	*/
+comment|/*	if_uba.h	4.2	81/11/26	*/
 end_comment
 
 begin_comment
@@ -70,11 +70,47 @@ name|IF_NUBAMR
 index|]
 decl_stmt|;
 comment|/* base pages for output */
+name|short
+name|ifu_hlen
+decl_stmt|;
 comment|/* ifu_xswapd is set when we have swapped write pte's to do direct output */
-comment|/* bit i of ifu_xswapd  	short	ifu_xswapd;			/* bit map of pages swapped */
+comment|/* bit i of ifu_xswapd */
+name|short
+name|ifu_xswapd
+decl_stmt|;
+comment|/* bit map of pages swapped */
+name|int
+name|ifu_ierrors
+decl_stmt|;
+name|int
+name|ifu_oerrors
+decl_stmt|;
+name|int
+name|ifu_collisions
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|if_rubaget
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

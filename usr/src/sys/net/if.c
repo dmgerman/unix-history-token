@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.2	81/11/20	*/
+comment|/*	if.c	4.3	81/11/26	*/
 end_comment
 
 begin_include
@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_include
@@ -61,18 +61,33 @@ argument_list|(
 name|IF_IFWITHADDR
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|for (ifp = ifnet; ifp; ifp = ifp->if_next) 		if (ifp->if_addr.s_addr == in.s_addr) 			break;
-else|#
-directive|else
+for|for
+control|(
 name|ifp
 operator|=
 name|ifnet
-expr_stmt|;
-endif|#
-directive|endif
+init|;
+name|ifp
+condition|;
+name|ifp
+operator|=
+name|ifp
+operator|->
+name|if_next
+control|)
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_addr
+operator|.
+name|s_addr
+operator|==
+name|in
+operator|.
+name|s_addr
+condition|)
+break|break;
 return|return
 operator|(
 name|ifp
@@ -104,20 +119,44 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int net;  COUNT(IF_IFONNETOF); 	net = 0;
+name|int
+name|net
+decl_stmt|;
+name|COUNT
+argument_list|(
+name|IF_IFONNETOF
+argument_list|)
+expr_stmt|;
+name|net
+operator|=
+name|in
+operator|.
+name|s_net
+expr_stmt|;
 comment|/* XXX */
-block|for (ifp = ifnet; ifp; ifp = ifp->if_next) 		if (ifp->if_net == net) 			break;
-else|#
-directive|else
+for|for
+control|(
 name|ifp
 operator|=
 name|ifnet
-expr_stmt|;
-endif|#
-directive|endif
+init|;
+name|ifp
+condition|;
+name|ifp
+operator|=
+name|ifp
+operator|->
+name|if_next
+control|)
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_net
+operator|==
+name|net
+condition|)
+break|break;
 return|return
 operator|(
 name|ifp
@@ -126,23 +165,31 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|struct
-name|ifnet
-name|ifen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function
 name|struct
 name|ifnet
 modifier|*
-name|ifnet
-init|=
-operator|&
-name|ifen
+name|if_gatewayfor
+parameter_list|(
+name|addr
+parameter_list|)
+name|struct
+name|in_addr
+name|addr
 decl_stmt|;
-end_decl_stmt
+block|{
+name|COUNT
+argument_list|(
+name|IF_GATEWAYFOR
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

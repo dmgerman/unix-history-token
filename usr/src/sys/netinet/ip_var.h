@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.3	81/11/18	*/
+comment|/*	ip_var.h	4.4	81/11/26	*/
 end_comment
 
 begin_comment

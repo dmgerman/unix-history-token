@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_fsm.h	4.8	81/11/25	*/
+comment|/*	tcp_fsm.h	4.9	81/11/26	*/
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPS_SYN_RCVD
+name|TCPS_SYN_RECEIVED
 value|3
 end_define
 
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|TCPS_CLOSE_WAIT
-value|8
+value|5
 end_define
 
 begin_comment
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|TCPS_FIN_WAIT_1
-value|5
+value|6
 end_define
 
 begin_comment
@@ -102,30 +102,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPS_FIN_WAIT_2
-value|6
-end_define
-
-begin_comment
-comment|/* have closed, fin is acked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPS_TIME_WAIT
-value|7
-end_define
-
-begin_comment
-comment|/* in 2*msl quiet wait after close */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPS_CLOSING
-value|9
+value|7
 end_define
 
 begin_comment
@@ -136,11 +114,37 @@ begin_define
 define|#
 directive|define
 name|TCPS_LAST_ACK
-value|10
+value|8
 end_define
 
 begin_comment
 comment|/* had fin and close; await FIN ACK */
+end_comment
+
+begin_comment
+comment|/* states> TCPS_CLOSE_WAIT&&< TCPS_FIN_WAIT_2 await ACK of FIN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPS_FIN_WAIT_2
+value|9
+end_define
+
+begin_comment
+comment|/* have closed, fin is acked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPS_TIME_WAIT
+value|10
+end_define
+
+begin_comment
+comment|/* in 2*msl quiet wait after close */
 end_comment
 
 begin_define
@@ -150,7 +154,7 @@ name|TCPS_HAVERCVDSYN
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)>= TCPS_SYN_RCVD)
+value|((s)>= TCPS_SYN_RECEIVED)
 end_define
 
 begin_define
@@ -162,6 +166,78 @@ name|s
 parameter_list|)
 value|((s)>= TCPS_TIME_WAIT)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TCPS_OURFINNOTACKED
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)> TCPS_CLOSE_WAIT&& (s)< TCPS_FIN_WAIT_2)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCPOUTFLAGS
+end_ifdef
+
+begin_comment
+comment|/*  * Flags used when sending segments in tcp_output.  * Basic flags (TH_RST,TH_ACK,TH_SYN,TH_FIN) are totally  * determined by state.  */
+end_comment
+
+begin_decl_stmt
+name|u_char
+name|tcp_outflags
+index|[
+name|TCP_NSTATES
+index|]
+init|=
+block|{
+name|TH_RST
+operator||
+name|TH_ACK
+block|,
+literal|0
+block|,
+name|TH_SYN
+block|,
+name|TH_SYN
+operator||
+name|TH_ACK
+block|,
+name|TH_ACK
+block|,
+name|TH_ACK
+block|,
+name|TH_FIN
+operator||
+name|TH_ACK
+block|,
+name|TH_FIN
+operator||
+name|TH_ACK
+block|,
+name|TH_FIN
+operator||
+name|TH_ACK
+block|,
+name|TH_FIN
+operator||
+name|TH_ACK
+block|,
+name|TH_FIN
+operator||
+name|TH_ACK
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -209,13 +285,13 @@ literal|"SYN_RCVD"
 block|,
 literal|"ESTABLISHED"
 block|,
-literal|"FIN_WAIT1"
+literal|"CLOSE_WAIT"
 block|,
-literal|"FIN_WAIT2"
+literal|"FIN_WAIT_1"
+block|,
+literal|"FIN_WAIT_2"
 block|,
 literal|"TIME_WAIT"
-block|,
-literal|"CLOSE_WAIT"
 block|,
 literal|"CLOSING"
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_pcb.c 4.8 81/11/21 */
+comment|/* in_pcb.c 4.9 81/11/26 */
 end_comment
 
 begin_include
@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet_pcb.h"
+file|"../net/in_pcb.h"
 end_include
 
 begin_comment

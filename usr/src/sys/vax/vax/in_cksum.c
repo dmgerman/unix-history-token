@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.10 81/11/18 */
+comment|/* in_cksum.c 1.11 81/11/26 */
 end_comment
 
 begin_include
@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_comment
@@ -38,7 +38,7 @@ name|vax
 end_if
 
 begin_expr_stmt
-name|inet_cksum
+name|in_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -82,7 +82,7 @@ literal|0
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|INET_CKSUM
+name|IN_CKSUM
 argument_list|)
 expr_stmt|;
 for|for

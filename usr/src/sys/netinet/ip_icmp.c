@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.7	81/11/23	*/
+comment|/*	ip_icmp.c	4.8	81/11/26	*/
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_include
@@ -130,6 +130,11 @@ name|ip
 modifier|*
 name|nip
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|ICMP_ERROR
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make sure that the old IP packet had 8 bytes of data to return; 	 * if not, don't bother.  Also don't EVER error if the old 	 * packet protocol was ICMP. 	 */
 if|if
 condition|(
@@ -357,6 +362,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|ICMP_INPUT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Locate icmp structure in mbuf, and check 	 * that not corrupted and of at least minimum length. 	 */
 name|m
 operator|->
@@ -403,7 +413,7 @@ if|if
 condition|(
 name|i
 operator|!=
-name|inet_cksum
+name|in_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -604,6 +614,11 @@ name|struct
 name|in_addr
 name|t
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|ICMP_REFLECT
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|ip
@@ -662,6 +677,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* XXX */
+name|COUNT
+argument_list|(
+name|ICMP_SEND
+argument_list|)
+expr_stmt|;
 name|icp
 operator|->
 name|icmp_cksum
@@ -672,7 +692,7 @@ name|icp
 operator|->
 name|icmp_cksum
 operator|=
-name|inet_cksum
+name|in_cksum
 argument_list|(
 name|dtom
 argument_list|(
@@ -695,6 +715,13 @@ name|dtom
 argument_list|(
 name|ip
 argument_list|)
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -727,6 +754,11 @@ name|ip_protox
 index|[]
 decl_stmt|;
 comment|/* XXX */
+name|COUNT
+argument_list|(
+name|ICMP_CTLINPUT
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|protosw
@@ -772,7 +804,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+name|COUNT
+argument_list|(
+name|ICMP_GOTREPLY
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_macro
@@ -781,7 +819,13 @@ argument_list|()
 end_macro
 
 begin_block
-block|{  }
+block|{
+name|COUNT
+argument_list|(
+name|ICMP_DRAIN
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_function
@@ -798,6 +842,11 @@ decl_stmt|;
 name|u_long
 name|t
 decl_stmt|;
+name|COUNT
+argument_list|(
+name|IPTIME
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 operator|(

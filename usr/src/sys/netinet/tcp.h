@@ -1,7 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.18 81/11/24 */
+comment|/* tcp.h 1.19 81/11/26 */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|tcp_seq
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * TCP header.  * Per RFC 793, September, 1981.  */
@@ -19,12 +26,12 @@ name|u_short
 name|th_dport
 decl_stmt|;
 comment|/* destination port */
-name|seq_t
+name|tcp_seq
 name|th_seq
 decl_stmt|;
 comment|/* sequence number */
-name|seq_t
-name|th_ackno
+name|tcp_seq
+name|th_ack
 decl_stmt|;
 comment|/* acknowledgement number */
 name|u_char

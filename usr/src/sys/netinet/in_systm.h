@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_systm.h 4.5 81/11/20 */
+comment|/* in_systm.h 4.6 81/11/26 */
 end_comment
 
 begin_comment
@@ -36,17 +36,6 @@ end_comment
 begin_typedef
 typedef|typedef
 name|u_long
-name|seq_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* sequence number */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_long
 name|n_time
 typedef|;
 end_typedef
@@ -56,7 +45,7 @@ comment|/* ms since 00:00 GMT, byte rev */
 end_comment
 
 begin_comment
-comment|/*  * The network runs as a software interrupt process.  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  Splimp is an ipl high enough to block all imps.  * While manipulating the mbuf buffer pool you have to block imps.  */
+comment|/*  * The internet code runs off software interrupts.  * There is one software interrupt level for each IP layer protocol  * (e.g. IP, PUP, etc), and each such interrupt traps to the lowest  * level routine for that protocol.  *  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  Splimp is an ipl high enough to block all imps.  * While manipulating the mbuf buffer pool you have to block imps.  */
 end_comment
 
 begin_define
@@ -69,7 +58,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|setsoftnet
+name|setipintr
 parameter_list|()
 value|mtpr(SIRR, 12)
 end_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.18 81/11/23 */
+comment|/* ip_input.c 1.19 81/11/26 */
 end_comment
 
 begin_include
@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/inet.h"
+file|"../net/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/inet_systm.h"
+file|"../net/in_systm.h"
 end_include
 
 begin_include
@@ -60,17 +60,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/imp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../net/ip.h"
 end_include
 
 begin_comment
-comment|/* belongs before inet.h */
+comment|/* belongs before in.h */
 end_comment
 
 begin_include
@@ -256,19 +250,9 @@ comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  
 end_comment
 
 begin_macro
-name|ip_input
-argument_list|(
-argument|m0
-argument_list|)
+name|ipintr
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m0
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -283,7 +267,10 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-init|=
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
 name|m0
 decl_stmt|;
 specifier|register
@@ -298,13 +285,42 @@ name|fp
 decl_stmt|;
 name|int
 name|hlen
+decl_stmt|,
+name|s
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|IP_INPUT
+name|IPINTR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check header and byteswap. 	 */
+name|next
+label|:
+comment|/* 	 * Get next datagram off input queue and get IP header 	 * in first mbuf. 	 */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|IF_DEQUEUE
+argument_list|(
+operator|&
+name|ipintrq
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+return|return;
 if|if
 condition|(
 name|m
@@ -383,7 +399,7 @@ name|ip
 operator|->
 name|ip_sum
 operator|=
-name|inet_cksum
+name|in_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -459,6 +475,9 @@ literal|0
 expr_stmt|;
 for|for
 control|(
+name|m0
+operator|=
+name|m
 init|;
 name|m
 operator|!=
@@ -530,13 +549,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ifnet
+operator|&&
 name|ip
 operator|->
 name|ip_dst
 operator|.
 name|s_addr
 operator|!=
-name|n_lhost
+name|ifnet
+operator|->
+name|if_addr
 operator|.
 name|s_addr
 operator|&&
@@ -569,7 +592,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|next
+goto|;
 block|}
 name|ip_output
 argument_list|(
@@ -577,9 +602,18 @@ name|dtom
 argument_list|(
 name|ip
 argument_list|)
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|next
+goto|;
 block|}
 comment|/* 	 * Look for queue of fragments 	 * of this datagram. 	 */
 for|for
@@ -738,7 +772,9 @@ name|ip
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|next
+goto|;
 name|hlen
 operator|=
 name|ip
@@ -787,7 +823,9 @@ operator|(
 name|m
 operator|)
 expr_stmt|;
-return|return;
+goto|goto
+name|next
+goto|;
 name|bad
 label|:
 name|m_freem
@@ -795,6 +833,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+goto|goto
+name|next
+goto|;
 block|}
 end_block
 
