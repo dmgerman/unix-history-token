@@ -648,8 +648,22 @@ block|{
 case|case
 literal|'C'
 case|:
+if|if
+condition|(
 name|chdir
 argument_list|(
+name|optarg
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"chdir %s"
+argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
