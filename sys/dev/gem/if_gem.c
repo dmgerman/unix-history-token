@@ -5902,6 +5902,8 @@ condition|)
 name|bpf_mtap
 argument_list|(
 name|ifp
+operator|->
+name|if_bpf
 argument_list|,
 name|m0
 argument_list|)
@@ -7049,11 +7051,6 @@ init|=
 name|sc
 operator|->
 name|sc_h
-decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
 decl_stmt|;
 name|struct
 name|gem_rxsoft
