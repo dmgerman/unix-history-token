@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -683,13 +683,13 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|9
+literal|15
 condition|)
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
-literal|"%s queueup: qf=%s, df=%s\n"
+literal|"%s: queueup, qf=%s, df=%s\n"
 argument_list|,
 name|e
 operator|->
