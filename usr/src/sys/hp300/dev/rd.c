@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.38 90/10/12$  *  *	@(#)rd.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.38 90/10/12$  *  *	@(#)rd.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1646,9 +1646,6 @@ literal|8
 index|]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|UTAH
 name|RDSZ
 argument_list|(
 literal|15990
@@ -1713,74 +1710,6 @@ block|,
 literal|413
 block|,
 comment|/* H=cyl 413 thru 697 */
-else|#
-directive|else
-name|RDSZ
-argument_list|(
-literal|15990
-argument_list|)
-block|,
-literal|1
-block|,
-comment|/* A=cyl 1 thru 10 */
-name|RDSZ
-argument_list|(
-literal|67158
-argument_list|)
-block|,
-literal|11
-block|,
-comment|/* B=cyl 11 thru 52 */
-name|RDSZ
-argument_list|(
-literal|1116102
-argument_list|)
-block|,
-literal|0
-block|,
-comment|/* C=cyl 0 thru 697 */
-name|RDSZ
-argument_list|(
-literal|15990
-argument_list|)
-block|,
-literal|53
-block|,
-comment|/* D=cyl 53 thru 62 */
-name|RDSZ
-argument_list|(
-literal|246246
-argument_list|)
-block|,
-literal|63
-block|,
-comment|/* E=cyl 63 thru 216 */
-name|RDSZ
-argument_list|(
-literal|246246
-argument_list|)
-block|,
-literal|217
-block|,
-comment|/* F=cyl 217 thru 370 */
-name|RDSZ
-argument_list|(
-literal|1031355
-argument_list|)
-block|,
-literal|53
-block|,
-comment|/* G=cyl 53 thru 697 */
-name|RDSZ
-argument_list|(
-literal|522873
-argument_list|)
-block|,
-literal|371
-block|,
-comment|/* H=cyl 371 thru 697 */
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
