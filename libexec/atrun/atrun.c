@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: atrun.c,v 1.12 1997/11/20 07:21:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -943,12 +943,16 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Job %s - userid %d does not match file uid %d"
+literal|"Job %s - userid %ld does not match file uid %lu"
 argument_list|,
 name|filename
 argument_list|,
 name|nuid
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -969,12 +973,16 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Job %s - groupid %d does not match file gid %d"
+literal|"Job %s - groupid %ld does not match file gid %lu"
 argument_list|,
 name|filename
 argument_list|,
 name|ngid
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|gid
 argument_list|)
 expr_stmt|;

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.6 1997/12/02 12:33:17 charnier Exp $"
+literal|"$Id: print.c,v 1.7 1997/12/24 19:39:57 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: %s: id %d, l_user %s, r_user %s, r_tty %s"
+literal|"%s: %s: id %lu, l_user %s, r_user %s, r_tty %s"
 argument_list|,
 name|cp
 argument_list|,

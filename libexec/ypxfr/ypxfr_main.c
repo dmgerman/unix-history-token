@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ypxfr_main.c,v 1.11 1997/12/08 07:49:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1726,7 +1726,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%lu"
 argument_list|,
 name|ypxfr_order
 argument_list|)

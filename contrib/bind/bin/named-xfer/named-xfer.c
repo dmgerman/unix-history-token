@@ -6070,10 +6070,14 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"writemsg(%d,%#x,%d) failed: %s"
+literal|"writemsg(%d,%p,%d) failed: %s"
 argument_list|,
 name|rfd
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|msg
 argument_list|,
 name|msglen
