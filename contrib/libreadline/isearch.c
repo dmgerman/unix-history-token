@@ -952,6 +952,13 @@ name|c
 operator|==
 name|RUBOUT
 operator|)
+operator|&&
+name|c
+operator|!=
+name|CTRL
+argument_list|(
+literal|'g'
+argument_list|)
 condition|)
 block|{
 name|rl_execute_next

@@ -974,7 +974,7 @@ name|O_TRUNC
 operator||
 name|O_BINARY
 argument_list|,
-literal|0666
+literal|0600
 argument_list|)
 operator|)
 operator|!=
@@ -1096,7 +1096,7 @@ name|output
 argument_list|,
 name|mode
 argument_list|,
-literal|0666
+literal|0600
 argument_list|)
 operator|)
 operator|==
