@@ -1027,7 +1027,6 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-operator|&
 name|sc
 operator|->
 name|wi_intrhand
