@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.23 (Berkeley) %G%"
+literal|"@(#)dir.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,18 +807,6 @@ condition|)
 goto|goto
 name|dpok
 goto|;
-name|idesc
-operator|->
-name|id_loc
-operator|+=
-name|DIRBLKSIZ
-expr_stmt|;
-name|idesc
-operator|->
-name|id_filesize
-operator|-=
-name|DIRBLKSIZ
-expr_stmt|;
 name|fix
 operator|=
 name|dofix
@@ -899,6 +887,18 @@ name|dirty
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+name|idesc
+operator|->
+name|id_loc
+operator|+=
+name|DIRBLKSIZ
+expr_stmt|;
+name|idesc
+operator|->
+name|id_filesize
+operator|-=
+name|DIRBLKSIZ
 expr_stmt|;
 return|return
 operator|(
