@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pix.c 1.3 %G%"
+literal|"@(#)pix.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"config.h"
 end_include
 
 begin_define
@@ -318,7 +324,7 @@ expr_stmt|;
 do|do
 name|execv
 argument_list|(
-name|PI_COMP
+name|pi_comp
 argument_list|,
 name|argv
 argument_list|)
@@ -445,7 +451,7 @@ expr_stmt|;
 do|do
 name|execv
 argument_list|(
-name|PX_DEBUG
+name|px_debug
 argument_list|,
 operator|&
 name|argv
