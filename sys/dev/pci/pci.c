@@ -3834,6 +3834,8 @@ name|b
 decl_stmt|,
 name|i
 decl_stmt|,
+name|irq
+decl_stmt|,
 name|f
 decl_stmt|,
 name|s
@@ -3989,10 +3991,8 @@ argument_list|(
 name|SMP
 argument_list|)
 operator|)
-comment|/* 		 * Re-route interrupts on ia64 so that we can get the 		 * I/O SAPIC interrupt numbers (the BIOS leaves legacy 		 * PIC interrupt numbers in the intline registers). 		 */
-name|cfg
-operator|->
-name|intline
+comment|/* 		 * Try to re-route interrupts. Sometimes the BIOS or 		 * firmware may leave bogus values in these registers. 		 * If the re-route fails, then just stick with what we 		 * have. 		 */
+name|irq
 operator|=
 name|PCIB_ROUTE_INTERRUPT
 argument_list|(
@@ -4005,8 +4005,28 @@ operator|->
 name|intpin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|PCI_INTERRUPT_VALID
+argument_list|(
+name|irq
+argument_list|)
+condition|)
+name|cfg
+operator|->
+name|intline
+operator|=
+name|irq
+expr_stmt|;
+else|else
 endif|#
 directive|endif
+name|irq
+operator|=
+name|cfg
+operator|->
+name|intline
+expr_stmt|;
 name|resource_list_add
 argument_list|(
 name|rl
@@ -4015,13 +4035,9 @@ name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
-name|cfg
-operator|->
-name|intline
+name|irq
 argument_list|,
-name|cfg
-operator|->
-name|intline
+name|irq
 argument_list|,
 literal|1
 argument_list|)
