@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ping.c,v 1.17 1997/03/01 20:19:18 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,7 +972,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:LQRT:c:adfh:i:l:np:qrs:v"
+literal|"I:LQRT:c:adfi:l:np:qrs:v"
 argument_list|)
 operator|)
 operator|!=
@@ -1196,6 +1196,28 @@ literal|"invalid preload value: `%s'"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+condition|)
+block|{
+name|errno
+operator|=
+name|EPERM
+expr_stmt|;
+name|err
+argument_list|(
+name|EX_NOPERM
+argument_list|,
+literal|"-l flag"
+argument_list|)
+expr_stmt|;
+block|}
+name|options
+operator||=
+name|F_FLOOD
 expr_stmt|;
 name|preload
 operator|=
@@ -2370,6 +2392,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Make the compiler happy */
 block|}
 end_function
 
@@ -3265,7 +3293,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * We've got something other than an ECHOREPLY. 		 * See if it's a reply to something that we sent. 		 * We can compare IP destination, protocol, 		 * and ICMP type and ID. 		 */
+comment|/* 		 * We've got something other than an ECHOREPLY. 		 * See if it's a reply to something that we sent. 		 * We can compare IP destination, protocol, 		 * and ICMP type and ID. 		 * 		 * Only print all the error messages if we are running 		 * as root to avoid leaking information not normally  		 * available to those not running as root. 		 */
 ifndef|#
 directive|ifndef
 name|icmp_data
@@ -3316,9 +3344,16 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|options
 operator|&
 name|F_VERBOSE
+operator|)
+operator|&&
+name|getuid
+argument_list|()
+operator|==
+literal|0
 operator|)
 operator|||
 operator|(
@@ -5289,7 +5324,11 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|80
+literal|16
+operator|+
+literal|3
+operator|+
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 if|if
@@ -5806,16 +5845,31 @@ modifier|*
 name|argv0
 decl_stmt|;
 block|{
-name|warnx
+if|if
+condition|(
+name|strrchr
 argument_list|(
-literal|"usage:"
+name|argv0
+argument_list|,
+literal|'/'
 argument_list|)
+condition|)
+name|argv0
+operator|=
+name|strrchr
+argument_list|(
+name|argv0
+argument_list|,
+literal|'/'
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s [-QRadfnqrv] [-c count] [-i wait] [-l preload] "
+literal|"usage: %s [-QRadfnqrv] [-c count] [-i wait] [-l preload] "
 literal|"[-p pattern]\n\t\t[-s packetsize] "
 literal|"[host | [-L] [-I iface] [-T ttl] mcast-group]\n"
 argument_list|,
