@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.8 %G%"
+literal|"@(#)lcmd2.c	3.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,9 +1202,6 @@ name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 specifier|register
 name|struct
@@ -1733,6 +1730,10 @@ index|]
 operator|.
 name|v_str
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|)
@@ -1742,6 +1743,11 @@ condition|)
 block|{
 name|p_memerror
 argument_list|()
+expr_stmt|;
+name|str_free
+argument_list|(
+name|str
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
