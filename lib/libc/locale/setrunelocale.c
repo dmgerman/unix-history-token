@@ -246,6 +246,7 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+comment|/* Range checking already done at upper level caller */
 operator|(
 name|void
 operator|)

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strftime.c,v 1.11 1996/07/19 15:17:44 wollman Exp $"
+literal|"$Id: strftime.c,v 1.11.2.1 1996/11/28 21:47:29 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2118,6 +2118,7 @@ condition|)
 goto|goto
 name|no_locale
 goto|;
+comment|/* Range checking already done at upper level caller */
 name|strcpy
 argument_list|(
 name|filename
