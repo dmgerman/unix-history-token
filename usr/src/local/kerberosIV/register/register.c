@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)register.c	1.10 (Berkeley) %G%"
+literal|"@(#)register.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -55,6 +61,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -67,12 +97,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<kerberosIV/des.h>
 end_include
 
@@ -80,24 +104,6 @@ begin_include
 include|#
 directive|include
 file|<kerberosIV/krb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
 end_include
 
 begin_include
@@ -118,6 +124,10 @@ directive|define
 name|SERVICE
 value|"krbupdate"
 end_define
+
+begin_comment
+comment|/* service to add to KDC's database */
+end_comment
 
 begin_define
 define|#
@@ -169,18 +179,14 @@ specifier|static
 name|char
 name|password
 index|[
-literal|255
+name|_PASSWORD_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* extern char	*sys_errlist; */
+end_comment
 
 begin_function_decl
 name|int
@@ -188,6 +194,19 @@ name|die
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|setup_key
+argument_list|()
+decl_stmt|,
+name|type_info
+argument_list|()
+decl_stmt|,
+name|cleanup
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -412,6 +431,9 @@ name|host
 operator|->
 name|h_addrtype
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|bcopy
 argument_list|(
 name|host
@@ -497,6 +519,9 @@ argument_list|(
 literal|"connect"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|sock
@@ -541,6 +566,9 @@ argument_list|(
 literal|"getsockname"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|sock
@@ -839,6 +867,9 @@ block|}
 name|cleanup
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|sock
@@ -847,12 +878,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|bzero
 argument_list|(
@@ -862,13 +891,7 @@ literal|255
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
+end_function
 
 begin_function_decl
 specifier|extern
@@ -918,6 +941,7 @@ decl_stmt|,
 modifier|*
 name|namep
 decl_stmt|;
+comment|/* NB: we must run setuid-root to get at the real pw file */
 if|if
 condition|(
 operator|(
@@ -945,11 +969,17 @@ literal|0
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|seteuid
 argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|pname
@@ -1060,6 +1090,9 @@ literal|"Kerberos password (may be the same):"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|password
@@ -1114,21 +1147,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|setup_key
-argument_list|(
-argument|local
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|local
+parameter_list|)
 name|struct
 name|sockaddr_in
 name|local
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|struct
@@ -1270,15 +1298,14 @@ argument_list|,
 name|schedule
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|type_info
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|printf
 argument_list|(
@@ -1317,14 +1344,12 @@ name|_PATH_KPASSWD
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|die
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -1347,7 +1372,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
