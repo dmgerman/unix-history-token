@@ -9,12 +9,6 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FBSDID
-end_ifdef
-
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -22,11 +16,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
