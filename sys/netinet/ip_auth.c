@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.4 2000/08/05 14:48:50 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.5 2001/01/10 06:18:35 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,7 +1985,7 @@ name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|fr_info_t
+name|frauth_t
 argument_list|)
 argument_list|)
 expr_stmt|;
