@@ -6022,6 +6022,38 @@ comment|/*       * Check rtc and BIOS data area.      * XXX: we don't use BIOSDA
 ifndef|#
 directive|ifndef
 name|VGA_NO_BIOS
+if|if
+condition|(
+operator|*
+operator|(
+name|u_int32_t
+operator|*
+operator|)
+name|BIOS_PADDRTOVADDR
+argument_list|(
+literal|0x4a8
+argument_list|)
+condition|)
+block|{
+comment|/* EGA/VGA BIOS is present */
+name|fill_adapter_param
+argument_list|(
+name|readb
+argument_list|(
+name|BIOS_PADDRTOVADDR
+argument_list|(
+literal|0x488
+argument_list|)
+argument_list|)
+operator|&
+literal|0x0f
+argument_list|,
+name|biosadapter
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 switch|switch
 condition|(
 operator|(
@@ -6040,7 +6072,7 @@ comment|/* bit 4 and 5 */
 case|case
 literal|0
 case|:
-comment|/* EGA/VGA */
+comment|/* EGA/VGA: shouldn't be happening */
 name|fill_adapter_param
 argument_list|(
 name|readb
@@ -6133,6 +6165,7 @@ name|DCC_CGA80
 index|]
 expr_stmt|;
 break|break;
+block|}
 block|}
 else|#
 directive|else
