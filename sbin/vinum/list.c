@@ -4,7 +4,7 @@ comment|/*      list.c: vinum interface program, list routines  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.20 1999/10/12 05:40:49 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -252,13 +252,14 @@ name|sflag
 operator|&
 operator|(
 operator|!
-name|verbose
+name|vflag
 operator|)
 condition|)
 comment|/* just summary stats, */
 name|printf
 argument_list|(
-literal|"Object\t\t  Reads\t\tBytes\tAverage\tRecover\t Writes\t\tBytes\tAverage\t  Mblock  Mstripe\n\n"
+literal|"Object\t\t  Reads\t\tBytes\tAverage\tRecover\t Writes"
+literal|"\t\tBytes\tAverage\t  Mblock  Mstripe\n\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -438,7 +439,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
 name|printf
@@ -611,6 +612,19 @@ else|else
 name|printf
 argument_list|(
 literal|"\t\tLast error: none\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tActive requests:\t%d\n\t\tMaximum active:\t\t%d\n"
+argument_list|,
+name|drive
+operator|.
+name|active
+argument_list|,
+name|drive
+operator|.
+name|maxactive
 argument_list|)
 expr_stmt|;
 if|if
@@ -796,19 +810,12 @@ operator|.
 name|label
 operator|.
 name|drive_size
-operator|==
+operator|!=
 literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* can't print percentages */
-else|else
-name|printf
-argument_list|(
-literal|" (%d%%)\n"
+literal|" (%d%%)"
 argument_list|,
 call|(
 name|int
@@ -848,7 +855,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 operator|||
 name|Verbose
 condition|)
@@ -1012,7 +1019,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\n"
+literal|"%7qd"
 argument_list|,
 name|drive
 operator|.
@@ -1023,14 +1030,13 @@ operator|.
 name|writes
 argument_list|)
 expr_stmt|;
-else|else
+block|}
+block|}
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 end_function
@@ -1205,7 +1211,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
 name|printf
@@ -1385,7 +1391,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 operator|||
 name|Verbose
 condition|)
@@ -1787,7 +1793,7 @@ block|}
 block|}
 if|if
 condition|(
-name|verbose
+name|vflag
 operator|==
 literal|0
 condition|)
@@ -1972,7 +1978,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
 name|printf
@@ -2224,6 +2230,7 @@ operator|!
 name|sflag
 condition|)
 block|{
+comment|/* non-verbose list */
 name|char
 modifier|*
 name|org
@@ -2277,7 +2284,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"P %-18s %2s State: %s\tSubdisks: %5d\tSize: %s\n"
+literal|"P %-18s %2s State: %s\tSubdisks: %5d\tSize: %s"
 argument_list|,
 name|plex
 operator|.
@@ -2316,7 +2323,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 operator|||
 name|Verbose
 condition|)
@@ -2811,6 +2818,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -2985,7 +2997,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
 name|printf
@@ -3154,6 +3166,73 @@ name|revive_interval
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sd
+operator|.
+name|state
+operator|==
+name|sd_initializing
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\t\tInitialize pointer:\t%s (%d%%)\n"
+argument_list|,
+name|roughlength
+argument_list|(
+name|sd
+operator|.
+name|initialized
+operator|<<
+name|DEV_BSHIFT
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+call|(
+name|u_int64_t
+call|)
+argument_list|(
+name|sd
+operator|.
+name|initialized
+operator|*
+literal|100
+argument_list|)
+operator|)
+operator|/
+name|sd
+operator|.
+name|sectors
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t\tInitialize blocksize:\t%s\n"
+literal|"\t\tInitialize interval:\t%10d seconds\n"
+argument_list|,
+name|roughlength
+argument_list|(
+name|sd
+operator|.
+name|init_blocksize
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|sd
+operator|.
+name|init_interval
+argument_list|)
+expr_stmt|;
+block|}
 name|get_drive_info
 argument_list|(
 operator|&
@@ -3307,7 +3386,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|verbose
+name|vflag
 operator|||
 name|Verbose
 condition|)
@@ -3502,7 +3581,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -3693,7 +3772,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%3d drives\n"
+literal|"%d drives:\n"
 argument_list|,
 name|vinum_conf
 operator|.
@@ -3726,7 +3805,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%3d volumes\n"
+literal|"%d volumes:\n"
 argument_list|,
 name|vinum_conf
 operator|.
@@ -3759,7 +3838,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%3d plexes\n"
+literal|"%d plexes:\n"
 argument_list|,
 name|vinum_conf
 operator|.
@@ -3792,7 +3871,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%3d subdisks\n"
+literal|"%d subdisks:\n"
 argument_list|,
 name|vinum_conf
 operator|.
@@ -4004,9 +4083,22 @@ operator|.
 name|malloced
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d requests active, maximum %d active\n"
+argument_list|,
+name|vinum_conf
+operator|.
+name|active
+argument_list|,
+name|vinum_conf
+operator|.
+name|maxactive
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 operator|&&
 operator|(
 operator|!
