@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.25 1997/09/21 04:24:04 dyson Exp $  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.26 1997/10/10 14:05:34 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -48,7 +48,7 @@ end_define
 
 begin_struct
 struct|struct
-name|kmemstats
+name|malloc_type
 block|{
 name|char
 modifier|*
@@ -61,7 +61,7 @@ name|ks_longdesc
 decl_stmt|;
 comment|/* Long description */
 name|struct
-name|kmemstats
+name|malloc_type
 modifier|*
 name|ks_next
 decl_stmt|;
@@ -108,7 +108,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|kmemstats
+name|malloc_type
 name|malloc_type_t
 index|[
 literal|1
@@ -236,18 +236,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_HTABLE
-argument_list|,
-literal|"hosttbl"
-argument_list|,
-literal|"IMP host tables"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_FTABLE
 argument_list|,
 literal|"fragtbl"
@@ -308,18 +296,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_NAMEI
-argument_list|,
-literal|"namei"
-argument_list|,
-literal|"namei path name buffer"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_GPROF
 argument_list|,
 literal|"gprof"
@@ -337,18 +313,6 @@ argument_list|,
 literal|"ioctlops"
 argument_list|,
 literal|"ioctl data buffer"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_MAPMEM
-argument_list|,
-literal|"mapmem"
-argument_list|,
-literal|"mapped memory descriptors"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -409,18 +373,6 @@ argument_list|,
 literal|"mount"
 argument_list|,
 literal|"vfs mount struct"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_FHANDLE
-argument_list|,
-literal|"fhandle"
-argument_list|,
-literal|"network file handle"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -536,42 +488,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_VMMAPENT
-argument_list|,
-literal|"VM mapent"
-argument_list|,
-literal|"VM map entry structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_VMOBJ
-argument_list|,
-literal|"VM object"
-argument_list|,
-literal|"VM object structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_VMOBJHASH
-argument_list|,
-literal|"VM objhash"
-argument_list|,
-literal|"VM object hash structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_VMPMAP
 argument_list|,
 literal|"VM pmap"
@@ -582,32 +498,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* XXX */
+comment|/* XXX only free() ??? */
 end_comment
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_VMPVENT
-argument_list|,
-literal|"VM pvmap"
-argument_list|,
-literal|"VM phys-virt mapping entry"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_VMPAGER
-argument_list|,
-literal|"VM pager"
-argument_list|,
-literal|"XXX: VM pager struct"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
@@ -972,18 +864,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_DEVFSFRONT
-argument_list|,
-literal|"DEVFS front"
-argument_list|,
-literal|"DEVFS Front node"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_DEVFSNODE
 argument_list|,
 literal|"DEVFS node"
@@ -1056,18 +936,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_PKTCLASS
-argument_list|,
-literal|"PktClass"
-argument_list|,
-literal|"structures used in packet classifier"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_SYSCTL
 argument_list|,
 literal|"sysctl"
@@ -1128,54 +996,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
 argument_list|(
-name|M_GEOM_DEV
-argument_list|,
-literal|"GEOM dev"
-argument_list|,
-literal|"geometry device"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_GEOM_MOD
-argument_list|,
-literal|"GEOM mod"
-argument_list|,
-literal|"geometry module"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_GEOM_REQ
-argument_list|,
-literal|"GEOM req"
-argument_list|,
-literal|"geometry request"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
-name|M_GEOM_MISC
-argument_list|,
-literal|"GEOM misc"
-argument_list|,
-literal|"geometry misc"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_MAKE_TYPE
-argument_list|(
 name|M_VFSCONF
 argument_list|,
 literal|"VFS conf"
@@ -1184,6 +1004,10 @@ literal|"vfsconf structure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* XXX only free() ??? */
+end_comment
 
 begin_expr_stmt
 name|MALLOC_MAKE_TYPE
@@ -1512,7 +1336,9 @@ name|unsigned
 name|long
 name|size
 operator|,
-name|int
+expr|struct
+name|malloc_type
+operator|*
 name|type
 operator|,
 name|int
@@ -1549,7 +1375,7 @@ operator|*
 name|addr
 operator|,
 expr|struct
-name|kmemstats
+name|malloc_type
 operator|*
 name|type
 operator|)
@@ -1569,7 +1395,7 @@ name|long
 name|size
 operator|,
 expr|struct
-name|kmemstats
+name|malloc_type
 operator|*
 name|type
 operator|,
