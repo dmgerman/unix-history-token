@@ -4275,7 +4275,7 @@ decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"\ndymmynet: %d q: %2u "
+literal|"\ndummynet: %d q: %2u "
 argument|, (int) curr_time, q_size);
 argument_list|)
 comment|/* average queue size estimation */
