@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imp.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imp.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,39 +14,39 @@ block|{
 name|u_char
 name|dl_format
 decl_stmt|;
-comment|/* leader format */
+comment|/* 1-8   leader format */
 name|u_char
 name|dl_network
 decl_stmt|;
-comment|/* src/dest network */
+comment|/* 9-16  src/dest network */
 name|u_char
 name|dl_flags
 decl_stmt|;
-comment|/* leader flags */
+comment|/* 17-24 leader flags */
 name|u_char
 name|dl_mtype
 decl_stmt|;
-comment|/* message type */
+comment|/* 25-32 message type */
 name|u_char
 name|dl_htype
 decl_stmt|;
-comment|/* handling type */
+comment|/* 33-40 handling type */
 name|u_char
 name|dl_host
 decl_stmt|;
-comment|/* host number */
+comment|/* 41-48 host number */
 name|u_short
 name|dl_imp
 decl_stmt|;
-comment|/* imp field */
+comment|/* 49-64 imp field */
 name|u_char
 name|dl_link
 decl_stmt|;
-comment|/* link number */
+comment|/* 65-72 link number */
 name|u_char
 name|dl_subtype
 decl_stmt|;
-comment|/* message subtype */
+comment|/* 73-80 message subtype */
 block|}
 struct|;
 end_struct
@@ -106,12 +106,12 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IMP_DROPCNT
-value|2
+name|IMP_NOOPCNT
+value|3
 end_define
 
 begin_comment
-comment|/* # of noops from imp to ignore */
+comment|/* # of noops to send imp on reset */
 end_comment
 
 begin_comment
@@ -123,6 +123,13 @@ define|#
 directive|define
 name|IMPMTU
 value|((8159 / NBBY)& ~01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMP_RCVBUF
+value|((8159 / NBBY + 2)& ~01)
 end_define
 
 begin_comment
@@ -149,17 +156,6 @@ end_define
 
 begin_comment
 comment|/* trace message route */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMP_DMASK
-value|0x3
-end_define
-
-begin_comment
-comment|/* host going down mask */
 end_comment
 
 begin_comment
@@ -325,7 +321,18 @@ comment|/* ready for next message */
 end_comment
 
 begin_comment
-comment|/*  * IMPTYPE_DOWN subtypes.  */
+comment|/*  * IMPTYPE_DOWN subtypes, in link number field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMP_DMASK
+value|0x3
+end_define
+
+begin_comment
+comment|/* host going down mask */
 end_comment
 
 begin_define
@@ -371,6 +378,83 @@ end_define
 begin_comment
 comment|/* emergency restart */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPDOWN_WHENMASK
+value|0x3c
+end_define
+
+begin_comment
+comment|/* mask for "how soon" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPDOWN_WHENSHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* shift for "how soon" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPDOWN_WHENUNIT
+value|5
+end_define
+
+begin_comment
+comment|/* unit for "how soon", 5 min. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPTV_DOWN
+value|30
+end_define
+
+begin_comment
+comment|/* going down timer 30 secs */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IMPMESSAGES
+end_ifdef
+
+begin_comment
+comment|/*  * Messages from IMP regarding why  * it's going down.  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|impmessage
+index|[]
+init|=
+block|{
+literal|"in 30 seconds"
+block|,
+literal|"for hardware PM"
+block|,
+literal|"to reload software"
+block|,
+literal|"for emergency reset"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * IMPTYPE_BADLEADER subtypes.  */
@@ -715,14 +799,34 @@ begin_comment
 comment|/* connection block unavailable */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RFNMTIMER
+value|(120*PR_SLOWHZ)
+end_define
+
 begin_comment
-comment|/*  * Data structure shared between IMP protocol module and hardware  * interface driver.  Used to allow layering of IMP routines on top  * of varying device drivers.  NOTE: there's a possible problem   * with ambiguity in the ``unit'' definition which is implicitly  * shared by the both IMP and device code.  If we have two IMPs,  * with each on top of a device of the same unit, things won't work.  * The assumption is if you've got multiple IMPs, then they all run  * on top of the same type of device, or they must have different units.  */
+comment|/* time to wait for RFNM for msg. */
+end_comment
+
+begin_comment
+comment|/*  * Data structure shared between IMP protocol module and hardware  * interface driver.  Used to allow layering of IMP routines on top  * of varying device drivers.  */
 end_comment
 
 begin_struct
 struct|struct
 name|impcb
 block|{
+name|int
+name|ic_hwunit
+decl_stmt|;
+comment|/* H/W unit number */
+name|char
+modifier|*
+name|ic_hwname
+decl_stmt|;
+comment|/* H/W type name */
 name|char
 name|ic_oactive
 decl_stmt|;
@@ -743,9 +847,72 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* hardware start output routine */
+name|int
+function_decl|(
+modifier|*
+name|ic_stop
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* hardware "drop ready" routine */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * IMP software status per interface.  * (partially shared with the hardware specific module)  *  * Each interface is referenced by a network interface structure,  * imp_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its  * address, ...  IMP specific structures used in connecting the  * IMP software modules to the hardware specific interface routines  * are stored here.  The common structures are made visible to the  * interface driver by passing a pointer to the hardware routine  * at "attach" time.  */
+end_comment
+
+begin_struct
+struct|struct
+name|imp_softc
+block|{
+name|struct
+name|ifnet
+name|imp_if
+decl_stmt|;
+comment|/* network visible interface */
+name|struct
+name|impcb
+name|imp_cb
+decl_stmt|;
+comment|/* hooks to hardware module */
+name|int
+name|imp_state
+decl_stmt|;
+comment|/* current state of IMP */
+name|int
+name|imp_dropcnt
+decl_stmt|;
+comment|/* used during initialization */
+name|u_long
+name|imp_lostrfnm
+decl_stmt|;
+comment|/* rfnm's timed out */
+name|u_long
+name|imp_badrfnm
+decl_stmt|;
+comment|/* rfnm/incompl after timeout/bogus */
+name|u_long
+name|imp_incomplete
+decl_stmt|;
+comment|/* incomplete's received */
+name|u_long
+name|imp_garbage
+decl_stmt|;
+comment|/* bad messages received */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|struct
+name|imp_softc
+modifier|*
+name|impattach
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * State of an IMP.  */
@@ -759,18 +926,18 @@ value|0
 end_define
 
 begin_comment
-comment|/* unavailable, don't use */
+comment|/* unavailable, host not ready */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IMPS_GOINGDOWN
+name|IMPS_WINIT
 value|1
 end_define
 
 begin_comment
-comment|/* been told we go down soon */
+comment|/* imp not ready, waiting for init */
 end_comment
 
 begin_define
@@ -798,23 +965,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IMPS_RESET
+name|IMPS_GOINGDOWN
 value|4
 end_define
 
 begin_comment
-comment|/* reset in progress */
+comment|/* been told we go down soon */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IMPTV_DOWN
-value|(30*60)
+name|IMPS_RUNNING
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)>= IMPS_UP)
 end_define
 
 begin_comment
-comment|/* going down timer 30 secs */
+comment|/* ready for messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMPS_IMPREADY
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)>= IMPS_INIT)
+end_define
+
+begin_comment
+comment|/* IMP ready line on */
 end_comment
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imphost.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imphost.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,11 +17,18 @@ modifier|*
 name|h_q
 decl_stmt|;
 comment|/* holding queue */
-name|struct
-name|in_addr
-name|h_addr
+name|u_short
+name|h_imp
 decl_stmt|;
-comment|/* host's address */
+comment|/* host's imp number */
+name|u_char
+name|h_host
+decl_stmt|;
+comment|/* host's number on imp */
+name|u_char
+name|h_unit
+decl_stmt|;
+comment|/* imp unit number */
 name|u_char
 name|h_qcnt
 decl_stmt|;
@@ -67,6 +74,20 @@ name|HF_UNREACH
 value|(1<<IMPTYPE_HOSTUNREACH)
 end_define
 
+begin_comment
+comment|/*  * Mark a host structure free  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|hostfree
+parameter_list|(
+name|hp
+parameter_list|)
+value|{ \ 	(hp)->h_flags&= ~HF_INUSE; \ }
+end_define
+
 begin_define
 define|#
 directive|define
@@ -79,7 +100,7 @@ comment|/* keep structure around awhile */
 end_comment
 
 begin_comment
-comment|/*  * Host structures, as seen inside an mbuf.  * Hashing on the host address is used to  * select an index into the first mbuf.  Collisions  * are then resolved by searching successive  * mbuf's at the same index.  Reclamation is done  * automatically at the time a structure is free'd.  */
+comment|/*  * Host structures, as seen inside an mbuf.  * Hashing on the host and imp is used to  * select an index into the first mbuf.  Collisions  * are then resolved by searching successive  * mbuf's at the same index.  Reclamation is done  * automatically at the time a structure is free'd.  */
 end_comment
 
 begin_define
@@ -92,7 +113,14 @@ end_define
 begin_if
 if|#
 directive|if
-name|vax
+name|defined
+argument_list|(
+name|notdef
+argument_list|)
+operator|&&
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 end_if
 
 begin_define
@@ -100,9 +128,28 @@ define|#
 directive|define
 name|HOSTHASH
 parameter_list|(
-name|a
+name|imp
+parameter_list|,
+name|host
 parameter_list|)
-value|((((a).s_addr>>24)+(a).s_addr) % HPMBUF)
+value|(((imp)+(host)) % HPMBUF)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HOSTHASH
+parameter_list|(
+name|imp
+parameter_list|,
+name|host
+parameter_list|)
+value|((ntohs(imp)+(host)) % HPMBUF)
 end_define
 
 begin_endif
