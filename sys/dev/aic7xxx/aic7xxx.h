@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#40 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#51 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -440,7 +440,7 @@ begin_define
 define|#
 directive|define
 name|AHC_BUSRESET_DELAY
-value|250
+value|25
 end_define
 
 begin_comment
@@ -912,7 +912,17 @@ comment|/* Device uses edge triggered ints */
 name|AHC_39BIT_ADDRESSING
 init|=
 literal|0x1000000
+block|,
 comment|/* Use 39 bit addressing scheme. */
+name|AHC_LSCBS_ENABLED
+init|=
+literal|0x2000000
+block|,
+comment|/* 64Byte SCBs enabled */
+name|AHC_SCB_CONFIG_USED
+init|=
+literal|0x4000000
+comment|/* No SEEPROM but SCB2 had info. */
 block|}
 name|ahc_flag
 typedef|;
@@ -1704,19 +1714,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The synchronouse transfer rate table.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ahc_syncrate
-name|ahc_syncrates
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Indexes into our table of syncronous transfer rates.  */
 end_comment
 
@@ -2328,6 +2325,11 @@ name|bugs
 decl_stmt|;
 name|ahc_flag
 name|flags
+decl_stmt|;
+name|struct
+name|seeprom_config
+modifier|*
+name|seep_config
 decl_stmt|;
 comment|/* Values to store in the SEQCTL register for pause and unpause */
 name|uint8_t
@@ -3269,6 +3271,36 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ahc_search_untagged_queues
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|ahc_io_ctx_t
+name|ctx
+parameter_list|,
+name|int
+name|target
+parameter_list|,
+name|char
+name|channel
+parameter_list|,
+name|int
+name|lun
+parameter_list|,
+name|uint32_t
+name|status
+parameter_list|,
+name|ahc_search_action
+name|action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ahc_search_disc_list
 parameter_list|(
 name|struct
@@ -3782,7 +3814,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|uint32_t
 name|ahc_debug
 decl_stmt|;
 end_decl_stmt
@@ -3790,15 +3822,78 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|AHC_SHOWMISC
-value|0x1
+name|AHC_SHOW_MISC
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|AHC_SHOWSENSE
-value|0x2
+name|AHC_SHOW_SENSE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_DUMP_SEEPROM
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_TERMCTL
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_MEMORY
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_MESSAGES
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_SELTO
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_QFULL
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_QUEUE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOW_TQIN
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_DEBUG_SEQUENCER
+value|0x1000
 end_define
 
 begin_endif
@@ -3826,6 +3921,38 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ahc_print_register
+parameter_list|(
+name|ahc_reg_parse_entry_t
+modifier|*
+name|table
+parameter_list|,
+name|u_int
+name|num_entries
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|u_int
+name|address
+parameter_list|,
+name|u_int
+name|value
+parameter_list|,
+name|u_int
+modifier|*
+name|cur_column
+parameter_list|,
+name|u_int
+name|wrap_point
 parameter_list|)
 function_decl|;
 end_function_decl

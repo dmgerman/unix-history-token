@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD platform specific driver option settings, data structures,  * function declarations and includes.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  *  * $FreeBSD$  */
+comment|/*  * FreeBSD platform specific driver option settings, data structures,  * function declarations and includes.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/aic7xxx/freebsd/dev/aic7xxx/aic7xxx_osm.h#10 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -25,23 +25,6 @@ begin_comment
 comment|/* for config options */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NPCI
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<pci.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -63,6 +46,25 @@ end_include
 begin_comment
 comment|/* For device_t */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -87,6 +89,37 @@ include|#
 directive|include
 file|<sys/queue.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<pci.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NPCI
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -662,7 +695,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|HAVE_BSWAP_MACROS
+name|__FreeBSD_version
+operator|>=
+literal|500000
 end_if
 
 begin_define
@@ -790,10 +825,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* !HAVE_BSWAP_MACROS */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -801,7 +832,7 @@ name|ahc_htobe16
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -811,7 +842,7 @@ name|ahc_htobe32
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -821,7 +852,7 @@ name|ahc_htobe64
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -831,7 +862,7 @@ name|ahc_htole16
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -841,7 +872,7 @@ name|ahc_htole32
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -851,7 +882,7 @@ name|ahc_htole64
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -861,7 +892,7 @@ name|ahc_be16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -871,7 +902,7 @@ name|ahc_be32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -881,7 +912,7 @@ name|ahc_be64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -891,7 +922,7 @@ name|ahc_le16toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -901,7 +932,7 @@ name|ahc_le32toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_define
@@ -911,7 +942,7 @@ name|ahc_le64toh
 parameter_list|(
 name|x
 parameter_list|)
-value|x
+value|(x)
 end_define
 
 begin_endif
@@ -920,12 +951,38 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_BSWAP_MACROS */
-end_comment
-
-begin_comment
 comment|/***************************** Core Includes **********************************/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|AHC_REG_PRETTY_PRINT
+end_if
+
+begin_define
+define|#
+directive|define
+name|AIC_DEBUG_REGISTERS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AIC_DEBUG_REGISTERS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1145,6 +1202,49 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Lock held during ahc_list manipulation and ahc softc frees */
+end_comment
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|ahc_list_lockinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|ahc_list_lock
+parameter_list|(
+name|unsigned
+name|long
+modifier|*
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|ahc_list_unlock
+parameter_list|(
+name|unsigned
+name|long
+modifier|*
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|__inline
@@ -1259,6 +1359,47 @@ name|ahc_softc
 modifier|*
 name|ahc
 parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|flags
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/* Lock held during ahc_list manipulation and ahc softc frees */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ahc_list_lockinit
+parameter_list|()
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ahc_list_lock
+parameter_list|(
+name|unsigned
+name|long
+modifier|*
+name|flags
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ahc_list_unlock
+parameter_list|(
 name|unsigned
 name|long
 modifier|*

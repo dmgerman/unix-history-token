@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994-1998, 2000, 2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7770.c#16 $  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994-1998, 2000, 2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7770.c#25 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -93,7 +93,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|aha2840_load_seeprom
 parameter_list|(
 name|struct
@@ -268,8 +268,14 @@ name|u_int
 name|io
 parameter_list|)
 block|{
+name|u_long
+name|l
+decl_stmt|;
 name|int
 name|error
+decl_stmt|;
+name|int
+name|have_seeprom
 decl_stmt|;
 name|u_int
 name|hostconf
@@ -288,6 +294,10 @@ name|setup
 argument_list|(
 name|ahc
 argument_list|)
+expr_stmt|;
+name|have_seeprom
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -601,7 +611,19 @@ name|AHC_TERM_ENB_B
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * We have no way to tell, so assume extended 		 * translation is enabled. 		 */
+if|if
+condition|(
+operator|(
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|HA_274_BIOSGLOBAL
+argument_list|)
+operator|&
+name|HA_274_EXTENDED_TRANS
+operator|)
+condition|)
 name|ahc
 operator|->
 name|flags
@@ -616,6 +638,8 @@ case|case
 name|AHC_VL
 case|:
 block|{
+name|have_seeprom
+operator|=
 name|aha2840_load_seeprom
 argument_list|(
 name|ahc
@@ -625,6 +649,29 @@ break|break;
 block|}
 default|default:
 break|break;
+block|}
+if|if
+condition|(
+name|have_seeprom
+operator|==
+literal|0
+condition|)
+block|{
+name|free
+argument_list|(
+name|ahc
+operator|->
+name|seep_config
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|seep_config
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/* 	 * Ensure autoflush is enabled 	 */
 name|ahc_outb
@@ -699,12 +746,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Link this softc in with all other ahc instances. 	 */
-name|ahc_softc_insert
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|aic7770_map_int
@@ -725,6 +766,18 @@ operator|(
 name|error
 operator|)
 return|;
+name|ahc_list_lock
+argument_list|(
+operator|&
+name|l
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Link this softc in with all other ahc instances. 	 */
+name|ahc_softc_insert
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enable the board's BUS drivers 	 */
 name|ahc_outb
 argument_list|(
@@ -735,12 +788,10 @@ argument_list|,
 name|ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allow interrupts. 	 */
-name|ahc_intr_enable
+name|ahc_list_unlock
 argument_list|(
-name|ahc
-argument_list|,
-name|TRUE
+operator|&
+name|l
 argument_list|)
 expr_stmt|;
 return|return
@@ -757,7 +808,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|aha2840_load_seeprom
 parameter_list|(
 name|struct
@@ -772,13 +823,14 @@ name|sd
 decl_stmt|;
 name|struct
 name|seeprom_config
+modifier|*
 name|sc
-decl_stmt|;
-name|uint8_t
-name|scsi_conf
 decl_stmt|;
 name|int
 name|have_seeprom
+decl_stmt|;
+name|uint8_t
+name|scsi_conf
 decl_stmt|;
 name|sd
 operator|.
@@ -846,6 +898,12 @@ name|sd_DI
 operator|=
 name|DI_2840
 expr_stmt|;
+name|sc
+operator|=
+name|ahc
+operator|->
+name|seep_config
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -894,7 +952,6 @@ if|if
 condition|(
 name|ahc_verify_cksum
 argument_list|(
-operator|&
 name|sc
 argument_list|)
 operator|==
@@ -963,7 +1020,12 @@ name|i
 decl_stmt|;
 name|int
 name|max_targ
-init|=
+decl_stmt|;
+name|uint16_t
+name|discenable
+decl_stmt|;
+name|max_targ
+operator|=
 operator|(
 name|ahc
 operator|->
@@ -977,10 +1039,7 @@ condition|?
 literal|16
 else|:
 literal|8
-decl_stmt|;
-name|uint16_t
-name|discenable
-decl_stmt|;
+expr_stmt|;
 name|discenable
 operator|=
 literal|0
@@ -1006,7 +1065,7 @@ name|target_settings
 operator|=
 operator|(
 name|sc
-operator|.
+operator|->
 name|device_flags
 index|[
 name|i
@@ -1020,7 +1079,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|device_flags
 index|[
 name|i
@@ -1035,7 +1094,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|device_flags
 index|[
 name|i
@@ -1050,7 +1109,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|device_flags
 index|[
 name|i
@@ -1117,7 +1176,7 @@ operator|->
 name|our_id
 operator|=
 name|sc
-operator|.
+operator|->
 name|brtime_id
 operator|&
 name|CFSCSIID
@@ -1135,7 +1194,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|adapter_control
 operator|&
 name|CFSPARITY
@@ -1147,7 +1206,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|adapter_control
 operator|&
 name|CFRESETB
@@ -1159,7 +1218,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|bios_control
 operator|&
 name|CF284XEXTEND
@@ -1183,7 +1242,7 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
-operator|.
+operator|->
 name|adapter_control
 operator|&
 name|CF284XSTERM
@@ -1195,6 +1254,11 @@ operator||=
 name|AHC_TERM_ENB_A
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|have_seeprom
+operator|)
+return|;
 block|}
 end_function
 
