@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)listrefs.c	2.3	%G%"
+literal|"@(#)listrefs.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,8 +157,7 @@ begin_decl_stmt
 name|int
 name|numrefs
 init|=
-operator|-
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
