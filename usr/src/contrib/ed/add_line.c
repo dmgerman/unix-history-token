@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)add_line.c	5.3 (Berkeley) %G%"
+literal|"@(#)add_line.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,7 +163,7 @@ argument_list|(
 name|fhtmp
 argument_list|)
 expr_stmt|;
-comment|/* keeps user time down 20%approx */
+comment|/* keeps user time down 20% approx. */
 name|file_loc
 operator|=
 name|l_key
@@ -181,6 +181,10 @@ name|len
 argument_list|,
 name|fhtmp
 argument_list|)
+expr_stmt|;
+name|sigspecial2
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -225,6 +229,8 @@ decl_stmt|;
 specifier|static
 name|recno_t
 name|l_key
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|l_jmp_flag
@@ -310,6 +316,10 @@ argument_list|(
 name|R_NOOVERWRITE
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|sigspecial2
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -412,6 +422,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+name|sigspecial2
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|tmp
