@@ -69,6 +69,14 @@ decl_stmt|;
 name|bus_space_handle_t
 name|bsh
 decl_stmt|;
+name|driver_intr_t
+modifier|*
+name|intr
+decl_stmt|;
+name|void
+modifier|*
+name|argp
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -126,7 +134,7 @@ comment|/* Uses IBM KING regs  */
 define|#
 directive|define
 name|PCIC_RICOH_POWER
-value|0x00000020
+value|0x0000020
 comment|/* Uses the ricoh power regs */
 name|enum
 name|pcic_irq_type
