@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|<sys/wait.h>
 end_include
 
 begin_expr_stmt
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
