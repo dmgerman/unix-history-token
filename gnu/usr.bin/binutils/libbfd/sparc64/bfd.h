@@ -9050,7 +9050,7 @@ operator|*
 name|abfd
 operator|,
 name|int
-name|index
+name|_index
 operator|)
 argument_list|)
 decl_stmt|;
