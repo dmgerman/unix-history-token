@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.33 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'x'
+case|:
+name|encrypt
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 case|case
@@ -658,6 +666,20 @@ condition|)
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+name|vacuous
+condition|)
+name|fatal
+argument_list|(
+name|f
+argument_list|,
+literal|"Remote host requires Kerberos authentication"
 argument_list|)
 expr_stmt|;
 name|alarm
