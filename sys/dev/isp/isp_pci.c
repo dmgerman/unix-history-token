@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.9 1998/04/17 17:44:36 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.1 1998/04/22 18:10:34 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -679,7 +679,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isp%ld: cannot allocate softc\n"
+literal|"isp%d: cannot allocate softc\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -814,7 +814,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isp%ld: unable to map any ports!\n"
+literal|"isp%d: unable to map any ports!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1047,6 +1047,10 @@ block|{
 name|printf
 argument_list|(
 literal|"%s: could not map interrupt\n"
+argument_list|,
+name|isp
+operator|->
+name|isp_name
 argument_list|)
 expr_stmt|;
 name|free
@@ -2445,7 +2449,7 @@ name|isp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s: PCI Status Command/Status=%x\n"
+literal|"%s: PCI Status Command/Status=%lx\n"
 argument_list|,
 name|pci
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995,1996 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Shunsuke Akiyama OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.40 1998/06/17 14:13:14 bde Exp $  */
+comment|/*  * Copyright (c) 1995,1996 Shunsuke Akiyama.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shunsuke Akiyama.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Shunsuke Akiyama AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Shunsuke Akiyama OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: od.c,v 1.41 1998/07/04 22:30:24 julian Exp $  */
 end_comment
 
 begin_comment
@@ -945,8 +945,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%ldMB (%ld %d byte sectors)"
+literal|"%luMB (%lu %u byte sectors)"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|dp
 operator|->
 name|disksize
@@ -962,7 +966,11 @@ name|dp
 operator|->
 name|secsiz
 operator|)
+argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|dp
 operator|->
 name|disksize
@@ -1256,10 +1264,16 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"od_open: dev=0x%lx (unit %ld, partition %d)\n"
+literal|"od_open: dev=0x%lx (unit %lu, partition %d)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|dev
 operator|,
+operator|(
+name|u_long
+operator|)
 name|unit
 operator|,
 name|PARTITION
@@ -1448,8 +1462,11 @@ break|break;
 default|default :
 name|printf
 argument_list|(
-literal|"od%ld: Can't deal with %d bytes logical blocks\n"
+literal|"od%lu: Can't deal with %u bytes logical blocks\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|,
 name|od
@@ -1648,10 +1665,16 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"open %ld %ld\n"
+literal|"open %lu %lu\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|odstrats
 operator|,
+operator|(
+name|u_long
+operator|)
 name|odqueues
 operator|)
 argument_list|)
@@ -2077,12 +2100,15 @@ name|EINVAL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"od_strategy: Invalid b_bcount %d at block number: 0x%x\n"
+literal|"od_strategy: Invalid b_bcount %ld at block number: 0x%lx\n"
 argument_list|,
 name|bp
 operator|->
 name|b_bcount
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -2616,8 +2642,11 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"od%ld: oops not queued\n"
+literal|"od%lu: oops not queued\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -2698,7 +2727,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"odioctl (0x%x)"
+literal|"odioctl (0x%lx)"
 operator|,
 name|cmd
 operator|)
@@ -3133,8 +3162,11 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"%ld cyls, %d heads, %d rpm\n"
+literal|"%lu cyls, %d heads, %lu rpm\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|scsi_3btou
 argument_list|(
 operator|&
@@ -3155,6 +3187,9 @@ name|rigid_geometry
 operator|.
 name|nheads
 operator|,
+operator|(
+name|u_long
+operator|)
 name|scsi_2btou
 argument_list|(
 operator|&

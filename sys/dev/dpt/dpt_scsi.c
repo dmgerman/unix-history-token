@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.5 1998/03/11 00:30:08 julian Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.6 1998/06/02 00:32:38 eivind Exp $"
 end_empty
 
 begin_define
@@ -8189,9 +8189,9 @@ argument_list|(
 literal|"dpt%d: Unsupported option...\n"
 literal|"      I refuse to Reset b%dt%du%d...!\n"
 argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
+name|dpt
+operator|->
+name|unit
 argument_list|,
 name|channel
 argument_list|,
@@ -9240,7 +9240,7 @@ directive|ifdef
 name|DPT_DEBUG_MINPHYS
 name|printf
 argument_list|(
-literal|"DPT: Block size of %x is larger than %x.  Truncating\n"
+literal|"DPT: Block size of %lx is larger than %x. Truncating\n"
 argument_list|,
 name|bp
 operator|->
@@ -9999,12 +9999,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dpt%d: BAD (%x) CCB in SP (AUX status = %s).\n"
+literal|"dpt%d: BAD (%p) CCB in SP (AUX status = %s).\n"
 argument_list|,
 name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dccb
 argument_list|,
 name|i2bin
@@ -10091,12 +10095,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dpt%d: %x is not in the SUBMITTED queue\n"
+literal|"dpt%d: %p is not in the SUBMITTED queue\n"
 argument_list|,
 name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
@@ -10142,12 +10150,16 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"dpt%d: %x is in the COMPLETED queue\n"
+literal|"dpt%d: %p is in the COMPLETED queue\n"
 argument_list|,
 name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
@@ -10193,12 +10205,16 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"dpt%d: %x is in the WAITING queue\n"
+literal|"dpt%d: %p is in the WAITING queue\n"
 argument_list|,
 name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
@@ -10244,12 +10260,16 @@ name|NULL
 condition|)
 name|printf
 argument_list|(
-literal|"dpt%d: %x is in the FREE queue\n"
+literal|"dpt%d: %p is in the FREE queue\n"
 argument_list|,
 name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dccb
 argument_list|)
 expr_stmt|;
@@ -10378,10 +10398,6 @@ name|printf
 argument_list|(
 literal|"      Incomplete Code; Re-queue the lost "
 literal|"commands\n"
-argument_list|,
-name|dpt
-operator|->
-name|unit
 argument_list|)
 expr_stmt|;
 name|Debugger
@@ -11150,12 +11166,16 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"dpt%d: Improper argumet to process_completion (%p%p)\n"
+literal|"dpt%d: Improper argumet to process_completion (%p)\n"
 argument_list|,
 name|dpt
 operator|->
 name|unit
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ccb
 argument_list|)
 expr_stmt|;

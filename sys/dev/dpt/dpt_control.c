@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.5 1998/06/02 00:32:38 eivind Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.6 1998/06/07 17:09:42 dfr Exp $"
 end_empty
 
 begin_include
@@ -4064,7 +4064,7 @@ block|}
 default|default:
 name|printf
 argument_list|(
-literal|"dpt%d: Invalid (%x) IOCTL\n"
+literal|"dpt%d: Invalid (%lx) IOCTL\n"
 argument_list|,
 name|dpt
 operator|->

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.38 1998/06/08 09:47:36 bde Exp $ */
+comment|/* $Id: scd.c,v 1.39 1998/07/04 22:30:17 julian Exp $ */
 end_comment
 
 begin_comment
@@ -1720,6 +1720,9 @@ literal|"scd%d: DEBUG: strategy: block=%ld, bcount=%ld\n"
 operator|,
 name|unit
 operator|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -1757,6 +1760,9 @@ literal|"scd%d: strategy failure: blkno = %ld, bcount = %ld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -2196,7 +2202,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"scd%d: ioctl: cmd=0x%x\n"
+literal|"scd%d: ioctl: cmd=0x%lx\n"
 operator|,
 name|unit
 operator|,
@@ -2499,7 +2505,7 @@ return|;
 default|default:
 name|printf
 argument_list|(
-literal|"scd%d: unsupported ioctl (cmd=0x%x)\n"
+literal|"scd%d: unsupported ioctl (cmd=0x%lx)\n"
 argument_list|,
 name|unit
 argument_list|,
