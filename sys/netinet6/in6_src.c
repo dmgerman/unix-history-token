@@ -854,6 +854,12 @@ argument_list|,
 literal|0UL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
 name|RT_UNLOCK
 argument_list|(
 name|ro
