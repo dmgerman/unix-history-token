@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.78 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.79 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3418,16 +3418,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|NAMEI_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"not found\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cnp
@@ -3494,16 +3484,6 @@ literal|0
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|NAMEI_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"found\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|dp
 operator|=
 operator|*
@@ -3520,16 +3500,20 @@ operator|->
 name|v_type
 operator|==
 name|VLNK
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|FOLLOW
+operator|)
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"relookup: symlink found.\n"
 argument_list|)
 expr_stmt|;
-block|}
-empty_stmt|;
-comment|/* 	 * Check to see if the vnode has been mounted on; 	 * if so find the root of the mounted file system. 	 */
 endif|#
 directive|endif
 name|nextname
