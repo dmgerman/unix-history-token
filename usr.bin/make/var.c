@@ -2712,7 +2712,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 	 * Error - there is only a dollar sign! 	 */
+comment|/* 	 * Error, there is only a dollar sign in the input string. 	 */
 operator|*
 name|freePtr
 operator|=
