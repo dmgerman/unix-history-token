@@ -2118,7 +2118,7 @@ condition|)
 goto|goto
 name|no_locale
 goto|;
-comment|/* Range checking already done at upper level caller */
+comment|/* Range checking not needed, name has fixed size */
 name|strcpy
 argument_list|(
 name|filename
