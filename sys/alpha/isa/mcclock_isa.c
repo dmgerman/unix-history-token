@@ -387,7 +387,7 @@ operator|->
 name|port
 argument_list|)
 decl_stmt|;
-name|bus_space_tag_t
+name|bus_space_handle_t
 name|ioh
 init|=
 name|rman_get_bushandle
@@ -454,7 +454,7 @@ operator|->
 name|port
 argument_list|)
 decl_stmt|;
-name|bus_space_tag_t
+name|bus_space_handle_t
 name|ioh
 init|=
 name|rman_get_bushandle
