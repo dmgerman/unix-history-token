@@ -1455,16 +1455,6 @@ name|vp
 expr_stmt|;
 name|nbp
 operator|->
-name|b_pfcent
-operator|=
-operator|(
-name|int
-operator|)
-name|bp
-expr_stmt|;
-comment|/* XXX */
-name|nbp
-operator|->
 name|b_rcred
 operator|=
 name|vn
