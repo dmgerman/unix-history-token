@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup.h	4.4	82/03/13	*/
+comment|/*	pup.h	4.5	82/04/10	*/
 end_comment
 
 begin_comment
@@ -138,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|sp_socket
-value|spup_addr.pp_port
+value|spup_addr.pp_socket
 end_define
 
 end_unit
