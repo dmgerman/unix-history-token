@@ -206,6 +206,10 @@ name|proto
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Creating DISK %s%d\n"
