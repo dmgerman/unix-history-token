@@ -15,6 +15,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bootstrap.h"
+end_include
+
 begin_define
 define|#
 directive|define

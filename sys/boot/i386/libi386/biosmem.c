@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libi386.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"btxv86.h"
 end_include
 

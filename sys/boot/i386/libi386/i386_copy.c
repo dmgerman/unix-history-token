@@ -33,9 +33,10 @@ value|(16 * 1024)
 end_define
 
 begin_function
-name|int
+name|ssize_t
 name|i386_copyin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|src
@@ -43,6 +44,7 @@ parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -88,9 +90,10 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|i386_copyout
 parameter_list|(
+specifier|const
 name|vm_offset_t
 name|src
 parameter_list|,
@@ -98,6 +101,7 @@ name|void
 modifier|*
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -143,15 +147,17 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|i386_readin
 parameter_list|(
+specifier|const
 name|int
 name|fd
 parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -265,6 +271,9 @@ argument_list|(
 name|dest
 argument_list|)
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|got
 argument_list|)
 expr_stmt|;

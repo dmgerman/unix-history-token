@@ -133,21 +133,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|bcache_nblks
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|bcache_blksize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|bcache_hits
 decl_stmt|,
 name|bcache_misses
@@ -160,14 +160,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|bcache_flushes
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|bcache_bcount
 decl_stmt|;
 end_decl_stmt
@@ -208,7 +208,7 @@ begin_function
 name|int
 name|bcache_init
 parameter_list|(
-name|int
+name|u_int
 name|nblks
 parameter_list|,
 name|size_t
@@ -360,9 +360,11 @@ end_comment
 begin_function
 name|void
 name|bcache_flush
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|bcache_flushes
@@ -431,7 +433,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -460,22 +462,21 @@ operator|)
 name|devdata
 decl_stmt|;
 name|int
-name|nblk
-decl_stmt|,
 name|p_size
+decl_stmt|,
+name|result
 decl_stmt|;
 name|daddr_t
 name|p_blk
-decl_stmt|;
-name|caddr_t
-name|p_buf
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|result
+name|nblk
+decl_stmt|;
+name|caddr_t
+name|p_buf
 decl_stmt|;
 name|bcache_ops
 operator|++
@@ -895,11 +896,12 @@ name|time_t
 name|now
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|cand
 decl_stmt|,
 name|ocount
+decl_stmt|;
+name|u_int
+name|i
 decl_stmt|;
 name|time
 argument_list|(
@@ -1060,7 +1062,7 @@ block|{
 name|time_t
 name|now
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|time
@@ -1187,7 +1189,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 for|for

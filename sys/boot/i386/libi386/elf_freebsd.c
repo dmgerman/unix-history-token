@@ -95,14 +95,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|bootinfo
-name|bi
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * There is an a.out kernel and one or more a.out modules loaded.    * We wish to start executing the kernel image, so make such   * preparations as are required, and do so.  */
 end_comment

@@ -149,7 +149,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|debug
+name|pxe_debug
 init|=
 literal|0
 decl_stmt|;
@@ -249,7 +249,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -433,24 +433,6 @@ name|struct
 name|netif_stats
 name|pxe_st
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|in_addr
-name|rootip
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|rootpath
-index|[
-name|FNAME_SIZE
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1093,7 +1075,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -1210,7 +1192,7 @@ return|;
 block|}
 if|if
 condition|(
-name|debug
+name|pxe_debug
 condition|)
 name|printf
 argument_list|(
@@ -1415,7 +1397,7 @@ directive|ifdef
 name|PXE_DEBUG
 if|if
 condition|(
-name|debug
+name|pxe_debug
 condition|)
 name|printf
 argument_list|(
@@ -1472,7 +1454,7 @@ directive|ifdef
 name|PXE_DEBUG
 if|if
 condition|(
-name|debug
+name|pxe_debug
 condition|)
 name|printf
 argument_list|(
@@ -1577,6 +1559,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PXE_DEBUG
 name|t_PXENV_UNLOAD_STACK
 modifier|*
 name|unload_stack_p
@@ -1597,6 +1582,8 @@ operator|*
 operator|)
 name|scratch_buffer
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pxe_call
@@ -1614,7 +1601,7 @@ directive|ifdef
 name|PXE_DEBUG
 if|if
 condition|(
-name|debug
+name|pxe_debug
 operator|&&
 name|undi_shutdown_p
 operator|->
@@ -1643,7 +1630,7 @@ directive|ifdef
 name|PXE_DEBUG
 if|if
 condition|(
-name|debug
+name|pxe_debug
 operator|&&
 name|unload_stack_p
 operator|->
@@ -1690,7 +1677,7 @@ directive|ifdef
 name|PXE_DEBUG
 if|if
 condition|(
-name|debug
+name|pxe_debug
 condition|)
 name|printf
 argument_list|(
@@ -1815,7 +1802,7 @@ directive|ifdef
 name|PXE_DEBUG
 if|if
 condition|(
-name|debug
+name|pxe_debug
 condition|)
 name|printf
 argument_list|(

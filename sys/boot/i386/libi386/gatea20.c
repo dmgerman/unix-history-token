@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stand.h>
 end_include
 
 begin_include
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stand.h>
+file|<bootstrap.h>
 end_include
 
 begin_include
@@ -151,7 +151,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|IBM_L40
+comment|/* !IBM_L40 */
 while|while
 condition|(
 name|inb
@@ -225,7 +225,7 @@ condition|)
 empty_stmt|;
 endif|#
 directive|endif
-endif|IBM_L40
+comment|/* IBM_L40 */
 asm|__asm("popfl");
 block|}
 end_function

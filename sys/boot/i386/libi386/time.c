@@ -15,6 +15,18 @@ directive|include
 file|<btxv86.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bootstrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libi386.h"
+end_include
+
 begin_comment
 comment|/*  * Return the time in seconds since the beginning of the day.  *  * If we pass midnight, don't wrap back to 0.  *  * XXX uses undocumented BCD support from libstand.  */
 end_comment
@@ -37,7 +49,7 @@ decl_stmt|;
 name|int
 name|hr
 decl_stmt|,
-name|min
+name|minute
 decl_stmt|,
 name|sec
 decl_stmt|;
@@ -79,7 +91,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* hour in %ch */
-name|min
+name|minute
 operator|=
 name|bcd2bin
 argument_list|(
@@ -113,7 +125,7 @@ name|hr
 operator|*
 literal|3600
 operator|+
-name|min
+name|minute
 operator|*
 literal|60
 operator|+

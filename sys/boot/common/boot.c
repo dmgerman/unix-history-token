@@ -43,6 +43,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|default_bootfiles
@@ -101,9 +102,6 @@ name|cp
 decl_stmt|;
 name|int
 name|try
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/*      * See if the user has specified an explicit kernel to boot.      */
 if|if
@@ -561,7 +559,7 @@ name|int
 name|autoboot
 parameter_list|(
 name|int
-name|delay
+name|timeout
 parameter_list|,
 name|char
 modifier|*
@@ -599,7 +597,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|delay
+name|timeout
 operator|==
 operator|-
 literal|1
@@ -618,7 +616,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|delay
+name|timeout
 operator|=
 name|strtol
 argument_list|(
@@ -636,7 +634,7 @@ name|cp
 operator|==
 name|ep
 condition|)
-name|delay
+name|timeout
 operator|=
 operator|-
 literal|1
@@ -645,13 +643,13 @@ block|}
 block|}
 if|if
 condition|(
-name|delay
+name|timeout
 operator|==
 operator|-
 literal|1
 condition|)
 comment|/* all else fails */
-name|delay
+name|timeout
 operator|=
 literal|10
 expr_stmt|;
@@ -666,7 +664,7 @@ name|when
 operator|=
 name|otime
 operator|+
-name|delay
+name|timeout
 expr_stmt|;
 comment|/* when to boot */
 name|yes
@@ -875,7 +873,7 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 comment|/* we use dynamic storage */

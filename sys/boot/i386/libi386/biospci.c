@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -54,6 +48,7 @@ block|{
 name|int
 name|pi_code
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pi_name
@@ -405,6 +400,7 @@ block|{
 name|int
 name|ps_subclass
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ps_name
@@ -739,6 +735,7 @@ block|{
 name|int
 name|pc_class
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pc_name
@@ -885,7 +882,7 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|index
+name|device_index
 decl_stmt|,
 name|locator
 decl_stmt|,
@@ -1046,12 +1043,12 @@ block|{
 comment|/* Scan for matches */
 for|for
 control|(
-name|index
+name|device_index
 operator|=
 literal|0
 init|;
 condition|;
-name|index
+name|device_index
 operator|++
 control|)
 block|{
@@ -1102,7 +1099,7 @@ name|v86
 operator|.
 name|esi
 operator|=
-name|index
+name|device_index
 expr_stmt|;
 name|v86int
 argument_list|()

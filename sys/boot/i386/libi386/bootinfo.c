@@ -67,6 +67,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|ev
@@ -129,6 +130,16 @@ block|}
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|vm_offset_t
+name|bi_copymodules
+parameter_list|(
+name|vm_offset_t
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -770,7 +781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Load the information expected by an i386 kernel.  *  * - The 'boothowto' argument is constructed  * - The 'botdev' argument is constructed  * - The 'bootinfo' struct is constructed, and copied into the kernel space.  * - The kernel environment is copied into kernel space.  * - Module metadata are formatted and placed in kernel space.  */
+comment|/*  * Load the information expected by an i386 kernel.  *  * - The 'boothowto' argument is constructed  * - The 'bootdev' argument is constructed  * - The 'bootinfo' struct is constructed, and copied into the kernel space.  * - The kernel environment is copied into kernel space.  * - Module metadata are formatted and placed in kernel space.  */
 end_comment
 
 begin_function
@@ -806,8 +817,6 @@ name|rootdev
 decl_stmt|;
 name|vm_offset_t
 name|addr
-decl_stmt|,
-name|bootinfo_addr
 decl_stmt|;
 name|char
 modifier|*
@@ -896,6 +905,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Do legacy rootdev guessing */
+comment|/* XXX - use a default bootdev of 0.  Is this ok??? */
+name|bootdevnr
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|rootdev

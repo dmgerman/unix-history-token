@@ -56,7 +56,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|int
 name|i386_getdev
 parameter_list|(
@@ -80,7 +79,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|i386_fmtdev
@@ -93,7 +91,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|i386_setcurrdev
 parameter_list|(
@@ -178,7 +175,6 @@ comment|/* return geometry in bootinfo format */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|bd_bios2unit
 parameter_list|(
@@ -193,7 +189,6 @@ comment|/* xlate BIOS device -> biosdisk unit */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|bd_unit2bios
 parameter_list|(
@@ -208,7 +203,6 @@ comment|/* xlate biosdisk unit -> BIOS device */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|bd_getdev
 parameter_list|(
@@ -225,10 +219,10 @@ comment|/* return dev_t for (dev) */
 end_comment
 
 begin_function_decl
-specifier|extern
-name|int
+name|ssize_t
 name|i386_copyin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|src
@@ -236,6 +230,7 @@ parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -243,10 +238,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
+name|ssize_t
 name|i386_copyout
 parameter_list|(
+specifier|const
 name|vm_offset_t
 name|src
 parameter_list|,
@@ -254,6 +249,7 @@ name|void
 modifier|*
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -261,16 +257,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
+name|ssize_t
 name|i386_readin
 parameter_list|(
+specifier|const
 name|int
 name|fd
 parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -278,7 +275,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|bios_getmem
 parameter_list|(
@@ -317,7 +313,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|gateA20
 parameter_list|(
@@ -327,7 +322,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|i386_autoload
 parameter_list|(
@@ -337,7 +331,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|bi_getboothowto
 parameter_list|(
@@ -349,7 +342,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|vm_offset_t
 name|bi_copyenv
 parameter_list|(
@@ -360,7 +352,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|bi_load
 parameter_list|(
@@ -384,7 +375,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|pxe_enable
 parameter_list|(

@@ -16,30 +16,6 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/* XXX debugging */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|console
-name|vidconsole
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MARK
-parameter_list|(
-name|s
-parameter_list|,
-name|c
-parameter_list|)
-value|{vidconsole.c_out(s); vidconsole.c_out(c); while (!vidconsole.c_ready()) ; vidconsole.c_in();}
-end_define
-
-begin_comment
 comment|/*  * Generic device specifier; architecture-dependant   * versions may be larger, but should be allowed to  * overlap.  */
 end_comment
 
@@ -132,7 +108,6 @@ comment|/* interp.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|interact
 parameter_list|(
@@ -142,13 +117,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|include
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* interp_backslash.c */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|backslash
+parameter_list|(
+name|char
+modifier|*
+name|str
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -158,7 +149,6 @@ comment|/* interp_parse.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|parse
 parameter_list|(
@@ -184,7 +174,6 @@ comment|/* interp_forth.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|bf_init
 parameter_list|(
@@ -194,7 +183,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|bf_run
 parameter_list|(
@@ -210,12 +198,11 @@ comment|/* boot.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|autoboot
 parameter_list|(
 name|int
-name|delay
+name|timeout
 parameter_list|,
 name|char
 modifier|*
@@ -225,7 +212,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|autoboot_maybe
 parameter_list|(
@@ -235,7 +221,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|getrootmount
 parameter_list|(
@@ -251,7 +236,6 @@ comment|/* misc.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|unargv
@@ -268,7 +252,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|hexdump
 parameter_list|(
@@ -282,7 +265,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|size_t
 name|strlenout
 parameter_list|(
@@ -293,7 +275,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|strdupout
@@ -309,11 +290,10 @@ comment|/* bcache.c */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|bcache_init
 parameter_list|(
-name|int
+name|u_int
 name|nblks
 parameter_list|,
 name|size_t
@@ -323,10 +303,42 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|bcache_flush
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bcache_strategy
+parameter_list|(
+name|void
+modifier|*
+name|devdata
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|int
+name|rw
+parameter_list|,
+name|daddr_t
+name|blk
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+modifier|*
+name|rsize
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -357,7 +369,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -382,10 +394,12 @@ begin_struct
 struct|struct
 name|console
 block|{
+specifier|const
 name|char
 modifier|*
 name|c_name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c_desc
@@ -479,7 +493,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|cons_probe
 parameter_list|(
@@ -496,6 +509,7 @@ begin_struct
 struct|struct
 name|pnphandler
 block|{
+specifier|const
 name|char
 modifier|*
 name|pp_name
@@ -600,7 +614,6 @@ comment|/* provided by MD code */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|pnp_addident
 parameter_list|(
@@ -617,7 +630,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|pnpinfo
 modifier|*
@@ -629,7 +641,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|pnp_freeinfo
 parameter_list|(
@@ -642,7 +653,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|pnp_addinfo
 parameter_list|(
@@ -655,7 +665,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|pnp_eisaformat
@@ -700,7 +709,7 @@ decl_stmt|;
 name|char
 name|md_data
 index|[
-literal|0
+literal|1
 index|]
 decl_stmt|;
 comment|/* data are immediately appended */
@@ -862,7 +871,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|int
 name|mod_load
 parameter_list|(
@@ -882,7 +890,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|mod_loadobj
 parameter_list|(
@@ -1003,7 +1010,6 @@ comment|/* MI module loaders */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|aout_loadfile
 parameter_list|(
@@ -1024,7 +1030,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|vm_offset_t
 name|aout_findsym
 parameter_list|(
@@ -1041,7 +1046,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|elf_loadfile
 parameter_list|(
@@ -1220,7 +1224,7 @@ parameter_list|,
 name|func
 parameter_list|)
 define|\
-value|static bootblk_cmd_t func;						\     static struct bootblk_command _cmd_ ## tag = { key, desc, func };	\     DATA_SET(Xcommand_set, _cmd_ ## tag);
+value|static bootblk_cmd_t func;						\     static struct bootblk_command _cmd_ ## tag = { key, desc, func };	\     DATA_SET(Xcommand_set, _cmd_ ## tag)
 end_define
 
 begin_decl_stmt
@@ -1245,7 +1249,9 @@ function_decl|(
 modifier|*
 name|arch_autoload
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* Locate the device for (name), return pointer to tail in (*path) */
 name|int
@@ -1272,12 +1278,13 @@ name|path
 parameter_list|)
 function_decl|;
 comment|/* Copy from local address space to module address space, similar to bcopy() */
-name|int
+name|ssize_t
 function_decl|(
 modifier|*
 name|arch_copyin
 function_decl|)
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|src
@@ -1285,17 +1292,19 @@ parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
 function_decl|;
 comment|/* Copy to local address space from module address space, similar to bcopy() */
-name|int
+name|ssize_t
 function_decl|(
 modifier|*
 name|arch_copyout
 function_decl|)
 parameter_list|(
+specifier|const
 name|vm_offset_t
 name|src
 parameter_list|,
@@ -1303,23 +1312,26 @@ name|void
 modifier|*
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
 function_decl|;
 comment|/* Read from file to module address space, same semantics as read() */
-name|int
+name|ssize_t
 function_decl|(
 modifier|*
 name|arch_readin
 function_decl|)
 parameter_list|(
+specifier|const
 name|int
 name|fd
 parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -1365,7 +1377,6 @@ comment|/* This must be provided by the MD code, but should it be in the archsw?
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|delay
 parameter_list|(
@@ -1376,7 +1387,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dev_cleanup
 parameter_list|(

@@ -164,6 +164,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|exit
+parameter_list|(
+name|int
+name|code
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* from vers.c */
 end_comment
@@ -198,7 +208,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|void
@@ -471,6 +481,12 @@ name|interact
 argument_list|()
 expr_stmt|;
 comment|/* doesn't return */
+comment|/* if we ever get here, it is an error */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -488,7 +504,7 @@ parameter_list|)
 block|{
 name|struct
 name|i386_devdesc
-name|currdev
+name|new_currdev
 decl_stmt|;
 name|int
 name|major
@@ -496,18 +512,18 @@ decl_stmt|,
 name|biosdev
 decl_stmt|;
 comment|/* Assume we are booting from a BIOS disk by default */
-name|currdev
+name|new_currdev
 operator|.
 name|d_dev
 operator|=
 operator|&
 name|biosdisk
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_type
 operator|=
-name|currdev
+name|new_currdev
 operator|.
 name|d_dev
 operator|->
@@ -537,7 +553,7 @@ literal|0
 condition|)
 block|{
 comment|/* we are booting from a CD with cdldr */
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -548,7 +564,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -578,24 +594,24 @@ literal|0
 condition|)
 block|{
 comment|/* we are booting from pxeldr */
-name|currdev
+name|new_currdev
 operator|.
 name|d_dev
 operator|=
 operator|&
 name|pxedisk
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_type
 operator|=
-name|currdev
+name|new_currdev
 operator|.
 name|d_dev
 operator|->
 name|dv_type
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -605,11 +621,16 @@ name|unit
 operator|=
 literal|0
 expr_stmt|;
+name|biosdev
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* we don't know what our boot device is */
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -620,7 +641,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -650,7 +671,7 @@ name|B_DEVMAGIC
 condition|)
 block|{
 comment|/* The passed-in boot device is bad */
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -661,7 +682,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -679,7 +700,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -703,7 +724,7 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -763,7 +784,7 @@ comment|/*      * If we are booting off of a BIOS disk and we didn't succeed in 
 if|if
 condition|(
 operator|(
-name|currdev
+name|new_currdev
 operator|.
 name|d_type
 operator|==
@@ -777,7 +798,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -804,7 +825,7 @@ argument_list|,
 name|biosdev
 argument_list|)
 expr_stmt|;
-name|currdev
+name|new_currdev
 operator|.
 name|d_kind
 operator|.
@@ -824,7 +845,7 @@ argument_list|,
 name|i386_fmtdev
 argument_list|(
 operator|&
-name|currdev
+name|new_currdev
 argument_list|)
 argument_list|,
 name|i386_setcurrdev
@@ -841,7 +862,7 @@ argument_list|,
 name|i386_fmtdev
 argument_list|(
 operator|&
-name|currdev
+name|new_currdev
 argument_list|)
 argument_list|,
 name|env_noset

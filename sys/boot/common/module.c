@@ -176,6 +176,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|default_searchpath
@@ -1987,6 +1988,13 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|file_metadata
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_data
 argument_list|)
 operator|+
 name|size

@@ -57,28 +57,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|pnp_readconf
-parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pnp_scankernel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Perform complete enumeration sweep  */
 end_comment
