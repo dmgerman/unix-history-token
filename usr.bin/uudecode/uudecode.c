@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uudecode.c,v 1.4.2.3 1997/09/17 03:04:44 davidg Exp $"
+literal|"$Id: uudecode.c,v 1.4.2.4 1998/03/08 14:16:32 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,7 +532,7 @@ name|sscanf
 argument_list|(
 name|buf
 argument_list|,
-literal|"begin %o %s"
+literal|"begin %o %[^\n\r]"
 argument_list|,
 operator|&
 name|mode
