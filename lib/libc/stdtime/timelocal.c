@@ -249,11 +249,8 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|__part_load_locale
 argument_list|(
 name|name
@@ -278,10 +275,6 @@ operator|)
 operator|&
 name|_time_locale
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ret
 operator|)
 return|;
 block|}
