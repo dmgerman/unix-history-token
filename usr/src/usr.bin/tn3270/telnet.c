@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	6.2 (Berkeley) %G%"
+literal|"@(#)telnet.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8028,9 +8028,17 @@ comment|/* defined(TN3270) */
 comment|/* 		     * The 'crmod' hack (see following) is needed 		     * since we can't * set CRMOD on output only. 		     * Machines like MULTICS like to send \r without 		     * \n; since we must turn off CRMOD to get proper 		     * input, the mapping is done here (sigh). 		     */
 if|if
 condition|(
+operator|(
 name|c
 operator|==
 literal|'\r'
+operator|)
+operator|&&
+operator|!
+name|hisopts
+index|[
+name|TELOPT_BINARY
+index|]
 condition|)
 block|{
 if|if
@@ -9721,6 +9729,12 @@ name|obits
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -9748,6 +9762,33 @@ name|ibits
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* defined(TN3270) */
+if|if
+condition|(
+operator|(
+name|tcc
+operator|==
+literal|0
+operator|)
+operator|&&
+name|NETROOM
+argument_list|()
+condition|)
+block|{
+name|FD_SET
+argument_list|(
+name|tin
+argument_list|,
+operator|&
+name|ibits
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* defined(TN3270) */
 endif|#
 directive|endif
 comment|/* !defined(MSDOS) */
@@ -10622,6 +10663,15 @@ block|{
 break|break;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|myopts
+index|[
+name|TELOPT_BINARY
+index|]
+condition|)
+block|{
 switch|switch
 condition|(
 name|c
@@ -10630,7 +10680,7 @@ block|{
 case|case
 literal|'\n'
 case|:
-comment|/* 			 * If we are in CRMOD mode (\r ==> \n) 			 * on our local machine, then probably 			 * a newline (unix) is CRLF (TELNET). 			 */
+comment|/* 			     * If we are in CRMOD mode (\r ==> \n) 			     * on our local machine, then probably 			     * a newline (unix) is CRLF (TELNET). 			     */
 if|if
 condition|(
 name|MODE_LOCAL_CHARS
@@ -10688,6 +10738,31 @@ name|c
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+name|IAC
+condition|)
+block|{
+name|NET2ADD
+argument_list|(
+name|IAC
+argument_list|,
+name|IAC
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|NETADD
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|#
@@ -16253,6 +16328,12 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
 if|if
 condition|(
 name|shell_active
@@ -16264,6 +16345,15 @@ name|setconnmode
 argument_list|()
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* defined(TN3270) */
+name|setconnmode
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(TN3270) */
 block|}
 block|}
 end_function
