@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -749,16 +749,20 @@ directive|ifndef
 name|KERNEL
 end_ifndef
 
+begin_comment
+comment|/*  * Don't use va_list in the vsyslog() prototype.   Va_list is typedef'd in two  * places (<machine/varargs.h> and<machine/stdarg.h>), so if we include one  * of them here we may collide with the utility's includes.  It's unreasonable  * for utilities to have to include one of them to include syslog.h, so we get  * _VA_LIST_ from<machine/ansi.h> and use it.  */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<machine/ansi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_decl_stmt
@@ -834,7 +838,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|va_list
+name|_VA_LIST_
 operator|)
 argument_list|)
 decl_stmt|;
