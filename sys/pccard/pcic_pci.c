@@ -3307,7 +3307,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"BAD Vcc request"
+literal|"BAD Vcc request\n"
 argument_list|)
 expr_stmt|;
 comment|/* Ack the interrupt */
