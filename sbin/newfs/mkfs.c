@@ -155,37 +155,6 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FSIRAND
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|long
-name|random
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|srandomdev
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * make file system for cylinder-group style file systems  */
 end_comment
@@ -622,22 +591,11 @@ name|fso
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FSIRAND
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|randinit
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|daddr_t
@@ -888,9 +846,6 @@ operator|&
 name|utime
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 if|if
 condition|(
 operator|!
@@ -905,8 +860,6 @@ name|srandomdev
 argument_list|()
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|fsi
 operator|=
 name|fi
@@ -3770,9 +3723,6 @@ name|fs_clean
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 name|sblock
 operator|.
 name|fs_id
@@ -3795,8 +3745,6 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Dump out summary information about file system. 	 */
 name|printf
 argument_list|(
@@ -4245,22 +4193,16 @@ name|dmax
 decl_stmt|,
 name|blkno
 decl_stmt|;
-name|long
-name|i
-decl_stmt|;
 name|struct
 name|csum
 modifier|*
 name|cs
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 name|long
+name|i
+decl_stmt|,
 name|j
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Determine block bounds for cylinder group. 	 * Allow space for super block summary information in first 	 * cylinder group. 	 */
 name|cbase
 operator|=
@@ -4760,9 +4702,6 @@ operator|.
 name|fs_frag
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|FSIRAND
 for|for
 control|(
 name|j
@@ -4794,8 +4733,6 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|wtfs
 argument_list|(
 name|fsbtodb
@@ -6894,9 +6831,6 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 name|ip
 operator|->
 name|di_gen
@@ -6904,8 +6838,6 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|c
 operator|=
 name|ino_to_cg
