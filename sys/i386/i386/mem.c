@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/buf.h>
 end_include
 
@@ -345,7 +351,7 @@ block|{
 case|case
 literal|14
 case|:
-name|curproc
+name|p
 operator|->
 name|p_md
 operator|.
@@ -415,9 +421,15 @@ literal|1
 case|:
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|FWRITE
+operator|)
+operator|&&
 name|securelevel
-operator|>=
-literal|1
+operator|>
+literal|0
 condition|)
 return|return
 operator|(
@@ -457,7 +469,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-name|curproc
+name|p
 operator|->
 name|p_md
 operator|.
