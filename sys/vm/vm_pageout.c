@@ -1407,18 +1407,9 @@ operator|->
 name|valid
 operator|==
 name|VM_PAGE_BITS_ALL
-operator|&&
-name|mc
-index|[
-name|i
-index|]
-operator|->
-name|dirty
-operator|==
-name|VM_PAGE_BITS_ALL
 argument_list|,
 operator|(
-literal|"vm_pageout_flush page %p index %d/%d: partially dirty page"
+literal|"vm_pageout_flush page %p index %d/%d: partially invalid page"
 operator|,
 name|mc
 index|[
