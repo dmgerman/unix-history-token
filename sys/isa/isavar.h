@@ -305,13 +305,13 @@ name|ISA_IVAR_MADDR
 block|,
 name|ISA_IVAR_MADDR_1
 block|,
-name|ISA_IVAR_MSIZE
+name|ISA_IVAR_MEMSIZE
 block|,
-name|ISA_IVAR_MSIZE_0
+name|ISA_IVAR_MEMSIZE_0
 init|=
-name|ISA_IVAR_MSIZE
+name|ISA_IVAR_MEMSIZE
 block|,
-name|ISA_IVAR_MSIZE_1
+name|ISA_IVAR_MEMSIZE_1
 block|,
 name|ISA_IVAR_IRQ
 block|,
@@ -388,14 +388,14 @@ define|#
 directive|define
 name|ISA_ACCESSOR
 parameter_list|(
-name|A
+name|var
 parameter_list|,
-name|B
+name|ivar
 parameter_list|,
-name|T
+name|type
 parameter_list|)
-define|\ 									\
-value|static __inline T isa_get_ ## A(device_t dev)				\ {									\ 	uintptr_t v;							\ 	BUS_READ_IVAR(device_get_parent(dev), dev, ISA_IVAR_ ## B,&v);	\ 	return (T) v;							\ }									\ 									\ static __inline void isa_set_ ## A(device_t dev, T t)			\ {									\ 	u_long v = (u_long) t;						\ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, ISA_IVAR_ ## B, v);	\ }
+define|\
+value|__BUS_ACCESSOR(isa, var, ISA, ivar, type)
 end_define
 
 begin_macro
@@ -458,7 +458,7 @@ name|ISA_ACCESSOR
 argument_list|(
 argument|msize
 argument_list|,
-argument|MSIZE
+argument|MEMSIZE
 argument_list|,
 argument|int
 argument_list|)

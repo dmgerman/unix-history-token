@@ -3121,7 +3121,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|ISA_IVAR_MSIZE_0
+name|ISA_IVAR_MEMSIZE_0
 case|:
 name|rle
 operator|=
@@ -3153,7 +3153,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|ISA_IVAR_MSIZE_1
+name|ISA_IVAR_MEMSIZE_1
 case|:
 name|rle
 operator|=
@@ -3434,10 +3434,10 @@ case|case
 name|ISA_IVAR_MADDR_1
 case|:
 case|case
-name|ISA_IVAR_MSIZE_0
+name|ISA_IVAR_MEMSIZE_0
 case|:
 case|case
-name|ISA_IVAR_MSIZE_1
+name|ISA_IVAR_MEMSIZE_1
 case|:
 case|case
 name|ISA_IVAR_IRQ_0
