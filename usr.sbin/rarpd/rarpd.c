@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rarpd.c,v 1.7.2.4 1997/11/05 07:27:19 charnier Exp $"
+literal|"$Id: rarpd.c,v 1.7.2.5 1998/03/09 13:52:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3863,23 +3863,13 @@ specifier|static
 name|pid_t
 name|pid
 decl_stmt|;
-specifier|static
 name|int
 name|r
-decl_stmt|,
-name|seq
 decl_stmt|;
 specifier|static
-name|init
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|init
-condition|)
-block|{
+name|int
+name|seq
+decl_stmt|;
 name|r
 operator|=
 name|socket
@@ -3916,10 +3906,6 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-operator|++
-name|init
-expr_stmt|;
-block|}
 name|ar
 operator|=
 operator|&
@@ -4064,6 +4050,11 @@ argument_list|,
 literal|"rtmsg get write: %m"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 do|do
@@ -4118,6 +4109,11 @@ argument_list|,
 literal|"rtmsg get read: %m"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|ll2
@@ -4160,6 +4156,11 @@ operator|->
 name|sdl_family
 argument_list|,
 name|ipaddr
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|r
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4353,6 +4354,11 @@ argument_list|,
 literal|"rtmsg add write: %m"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 do|do
@@ -4393,6 +4399,11 @@ name|pid
 operator|)
 condition|)
 do|;
+name|close
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cc
