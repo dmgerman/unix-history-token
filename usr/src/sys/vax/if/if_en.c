@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.45	82/03/30	*/
+comment|/*	if_en.c	4.46	82/03/30	*/
 end_comment
 
 begin_include
@@ -1855,17 +1855,6 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|off
-condition|)
-name|len
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -1899,17 +1888,6 @@ argument_list|)
 operator|->
 name|pup_length
 expr_stmt|;
-if|if
-condition|(
-name|off
-condition|)
-name|len
-operator|-=
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -1929,6 +1907,17 @@ goto|goto
 name|setup
 goto|;
 block|}
+if|if
+condition|(
+name|off
+condition|)
+name|len
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
