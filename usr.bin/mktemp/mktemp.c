@@ -470,7 +470,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mktemp [-d] [-q] [-t prefix] [-u] [template ...]\n"
+literal|"usage: mktemp [-d] [-q] [-t prefix] [-u] template ...\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       mktemp [-d] [-q] [-u] -t prefix \n"
 argument_list|)
 expr_stmt|;
 name|exit
