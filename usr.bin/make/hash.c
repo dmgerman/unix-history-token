@@ -98,7 +98,6 @@ name|t
 parameter_list|,
 name|numBuckets
 parameter_list|)
-specifier|register
 name|Hash_Table
 modifier|*
 name|t
@@ -109,11 +108,9 @@ name|numBuckets
 decl_stmt|;
 comment|/* How many buckets to create for starters. 				 * This number is rounded up to a power of 				 * two.   If<= 0, a reasonable default is 				 * chosen. The table will grow in size later 				 * as needed. */
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|struct
 name|Hash_Entry
 modifier|*
@@ -223,7 +220,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|Hash_Entry
 modifier|*
@@ -238,7 +234,6 @@ name|nexth
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -342,16 +337,13 @@ name|key
 decl_stmt|;
 comment|/* A hash key. */
 block|{
-specifier|register
 name|Hash_Entry
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|unsigned
 name|h
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -460,7 +452,6 @@ name|key
 parameter_list|,
 name|newPtr
 parameter_list|)
-specifier|register
 name|Hash_Table
 modifier|*
 name|t
@@ -477,16 +468,13 @@ name|newPtr
 decl_stmt|;
 comment|/* Filled in with TRUE if new entry created, 				 * FALSE otherwise. */
 block|{
-specifier|register
 name|Hash_Entry
 modifier|*
 name|e
 decl_stmt|;
-specifier|register
 name|unsigned
 name|h
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -733,7 +721,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-specifier|register
 name|Hash_Entry
 modifier|*
 modifier|*
@@ -851,7 +838,6 @@ modifier|*
 name|t
 decl_stmt|;
 comment|/* Table to be searched. */
-specifier|register
 name|Hash_Search
 modifier|*
 name|searchPtr
@@ -896,14 +882,12 @@ name|Hash_EnumNext
 parameter_list|(
 name|searchPtr
 parameter_list|)
-specifier|register
 name|Hash_Search
 modifier|*
 name|searchPtr
 decl_stmt|;
-comment|/* Area used to keep state about 					    search. */
+comment|/* Area used to keep state about search. */
 block|{
-specifier|register
 name|Hash_Entry
 modifier|*
 name|e
@@ -996,13 +980,11 @@ name|RebuildTable
 parameter_list|(
 name|t
 parameter_list|)
-specifier|register
 name|Hash_Table
 modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Hash_Entry
 modifier|*
 name|e
@@ -1020,13 +1002,11 @@ modifier|*
 modifier|*
 name|xp
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|mask
 decl_stmt|;
-specifier|register
 name|Hash_Entry
 modifier|*
 modifier|*

@@ -243,7 +243,6 @@ name|name
 decl_stmt|;
 comment|/* the name to stick in the new node */
 block|{
-specifier|register
 name|GNode
 modifier|*
 name|gn
@@ -750,12 +749,10 @@ name|Lst
 name|nodes
 decl_stmt|;
 comment|/* result list */
-specifier|register
 name|LstNode
 name|ln
 decl_stmt|;
 comment|/* name list element */
-specifier|register
 name|GNode
 modifier|*
 name|gn
@@ -1284,12 +1281,10 @@ name|Targ_PrintType
 parameter_list|(
 name|type
 parameter_list|)
-specifier|register
 name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|tbit
 decl_stmt|;

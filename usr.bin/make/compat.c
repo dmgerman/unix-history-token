@@ -490,7 +490,6 @@ modifier|*
 name|cmdStart
 decl_stmt|;
 comment|/* Start of expanded command */
-specifier|register
 name|char
 modifier|*
 name|cp

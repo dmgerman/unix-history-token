@@ -196,13 +196,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|len1
 decl_stmt|,
 name|len2
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|result
@@ -362,7 +360,6 @@ name|store_argc
 parameter_list|,
 name|expand
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|str
@@ -375,13 +372,11 @@ name|Boolean
 name|expand
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|argc
 decl_stmt|,
 name|ch
 decl_stmt|;
-specifier|register
 name|char
 name|inquote
 decl_stmt|,
@@ -828,7 +823,6 @@ name|string
 parameter_list|,
 name|substring
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|string
@@ -840,7 +834,6 @@ name|substring
 decl_stmt|;
 comment|/* Substring to find in string */
 block|{
-specifier|register
 name|char
 modifier|*
 name|a
@@ -937,13 +930,11 @@ name|string
 parameter_list|,
 name|pattern
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|string
 decl_stmt|;
 comment|/* String */
-specifier|register
 name|char
 modifier|*
 name|pattern

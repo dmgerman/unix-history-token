@@ -446,7 +446,6 @@ name|name
 decl_stmt|;
 comment|/* name to check */
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1601,13 +1600,11 @@ name|path
 decl_stmt|;
 comment|/* the Lst of directories to search */
 block|{
-specifier|register
 name|char
 modifier|*
 name|p1
 decl_stmt|;
 comment|/* pointer into p->name */
-specifier|register
 name|char
 modifier|*
 name|p2
@@ -1617,19 +1614,16 @@ name|LstNode
 name|ln
 decl_stmt|;
 comment|/* a list element */
-specifier|register
 name|char
 modifier|*
 name|file
 decl_stmt|;
 comment|/* the current filename to check */
-specifier|register
 name|Path
 modifier|*
 name|p
 decl_stmt|;
 comment|/* current path member */
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -3018,7 +3012,6 @@ name|LstNode
 name|ln
 decl_stmt|;
 comment|/* node in case Path structure is found */
-specifier|register
 name|Path
 modifier|*
 name|p
@@ -3029,7 +3022,6 @@ modifier|*
 name|d
 decl_stmt|;
 comment|/* for reading directory */
-specifier|register
 name|struct
 name|dirent
 modifier|*

@@ -538,7 +538,6 @@ name|parens
 decl_stmt|;
 comment|/* TRUE if arg should be bounded by parens */
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -546,7 +545,6 @@ decl_stmt|;
 name|int
 name|argLen
 decl_stmt|;
-specifier|register
 name|Buffer
 name|buf
 decl_stmt|;
@@ -1290,7 +1288,6 @@ name|str
 parameter_list|,
 name|value
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|str
@@ -1319,7 +1316,6 @@ literal|'x'
 operator|)
 condition|)
 block|{
-specifier|register
 name|long
 name|i
 decl_stmt|;

@@ -6118,7 +6118,6 @@ name|previous
 decl_stmt|;
 comment|/* The previous Job structure for this node, 			       * if any. */
 block|{
-specifier|register
 name|Job
 modifier|*
 name|job
@@ -7224,12 +7223,10 @@ name|endp
 parameter_list|,
 name|msg
 parameter_list|)
-specifier|register
 name|Job
 modifier|*
 name|job
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -7247,7 +7244,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|ecp
@@ -7418,7 +7414,6 @@ name|job
 parameter_list|,
 name|finish
 parameter_list|)
-specifier|register
 name|Job
 modifier|*
 name|job
@@ -7439,17 +7434,14 @@ name|Boolean
 name|fbuf
 decl_stmt|;
 comment|/* true if our buffer filled up */
-specifier|register
 name|int
 name|nr
 decl_stmt|;
 comment|/* number of bytes read */
-specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* auxiliary index into outBuf */
-specifier|register
 name|int
 name|max
 decl_stmt|;
@@ -7950,7 +7942,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -8097,7 +8088,6 @@ name|int
 name|pid
 decl_stmt|;
 comment|/* pid of dead child */
-specifier|register
 name|Job
 modifier|*
 name|job
@@ -8434,11 +8424,9 @@ decl_stmt|;
 name|fd_set
 name|readfds
 decl_stmt|;
-specifier|register
 name|LstNode
 name|ln
 decl_stmt|;
-specifier|register
 name|Job
 modifier|*
 name|job
@@ -9174,7 +9162,6 @@ name|name
 decl_stmt|;
 comment|/* Final component of shell path */
 block|{
-specifier|register
 name|Shell
 modifier|*
 name|sh
@@ -9185,7 +9172,6 @@ modifier|*
 name|match
 decl_stmt|;
 comment|/* Longest-matching shell */
-specifier|register
 name|char
 modifier|*
 name|cp1
@@ -9342,13 +9328,11 @@ decl_stmt|;
 name|int
 name|wordCount
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-specifier|register
 name|int
 name|argc
 decl_stmt|;
@@ -10915,7 +10899,6 @@ name|hostID
 decl_stmt|;
 comment|/* ID of host we used, for matching children. */
 block|{
-specifier|register
 name|Job
 modifier|*
 name|job

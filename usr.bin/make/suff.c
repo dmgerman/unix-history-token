@@ -633,13 +633,11 @@ name|pref
 parameter_list|,
 name|str
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|pref
 decl_stmt|;
 comment|/* possible prefix */
-specifier|register
 name|char
 modifier|*
 name|str
@@ -692,7 +690,6 @@ name|s
 parameter_list|,
 name|str
 parameter_list|)
-specifier|register
 name|Suff
 modifier|*
 name|s
@@ -704,13 +701,11 @@ name|str
 decl_stmt|;
 comment|/* string to examine */
 block|{
-specifier|register
 name|char
 modifier|*
 name|p1
 decl_stmt|;
 comment|/* Pointer into suffix name */
-specifier|register
 name|char
 modifier|*
 name|p2
@@ -1476,23 +1471,19 @@ name|targPtr
 decl_stmt|;
 comment|/* Place to store target of trans. */
 block|{
-specifier|register
 name|LstNode
 name|srcLn
 decl_stmt|;
 comment|/* element in suffix list of trans source*/
-specifier|register
 name|Suff
 modifier|*
 name|src
 decl_stmt|;
 comment|/* Source of transformation */
-specifier|register
 name|LstNode
 name|targLn
 decl_stmt|;
 comment|/* element in suffix list of trans target*/
-specifier|register
 name|char
 modifier|*
 name|str2
@@ -2628,12 +2619,10 @@ name|void
 name|Suff_DoPaths
 parameter_list|()
 block|{
-specifier|register
 name|Suff
 modifier|*
 name|s
 decl_stmt|;
-specifier|register
 name|LstNode
 name|ln
 decl_stmt|;
@@ -3971,7 +3960,6 @@ name|LstNode
 name|ln
 decl_stmt|;
 comment|/* General-purpose list node */
-specifier|register
 name|GNode
 modifier|*
 name|t

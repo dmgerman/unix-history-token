@@ -396,7 +396,6 @@ name|ctxt
 decl_stmt|;
 comment|/* Context in which to expand variables */
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp

@@ -265,7 +265,6 @@ name|Make_OODate
 parameter_list|(
 name|gn
 parameter_list|)
-specifier|register
 name|GNode
 modifier|*
 name|gn
@@ -772,26 +771,22 @@ name|cgn
 parameter_list|,
 name|pgn
 parameter_list|)
-specifier|register
 name|GNode
 modifier|*
 name|cgn
 decl_stmt|;
 comment|/* The .USE node */
-specifier|register
 name|GNode
 modifier|*
 name|pgn
 decl_stmt|;
 comment|/* The target of the .USE node */
 block|{
-specifier|register
 name|GNode
 modifier|*
 name|gn
 decl_stmt|;
 comment|/* A child of the .USE node */
-specifier|register
 name|LstNode
 name|ln
 decl_stmt|;
@@ -1032,26 +1027,22 @@ name|Make_Update
 parameter_list|(
 name|cgn
 parameter_list|)
-specifier|register
 name|GNode
 modifier|*
 name|cgn
 decl_stmt|;
 comment|/* the child node */
 block|{
-specifier|register
 name|GNode
 modifier|*
 name|pgn
 decl_stmt|;
 comment|/* the parent node */
-specifier|register
 name|char
 modifier|*
 name|cname
 decl_stmt|;
 comment|/* the child's name */
-specifier|register
 name|LstNode
 name|ln
 decl_stmt|;
@@ -1864,7 +1855,6 @@ name|Boolean
 name|MakeStartJobs
 parameter_list|()
 block|{
-specifier|register
 name|GNode
 modifier|*
 name|gn
@@ -2314,13 +2304,11 @@ name|targs
 decl_stmt|;
 comment|/* the initial list of targets */
 block|{
-specifier|register
 name|GNode
 modifier|*
 name|gn
 decl_stmt|;
 comment|/* a temporary pointer */
-specifier|register
 name|Lst
 name|examine
 decl_stmt|;

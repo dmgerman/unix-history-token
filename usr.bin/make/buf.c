@@ -139,7 +139,6 @@ name|bp
 parameter_list|,
 name|byte
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -206,7 +205,6 @@ name|numBytes
 parameter_list|,
 name|bytesPtr
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -275,7 +273,6 @@ name|bp
 parameter_list|,
 name|byte
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -495,7 +492,6 @@ name|numBytes
 parameter_list|,
 name|bytesPtr
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -728,7 +724,6 @@ name|Buf_GetByte
 parameter_list|(
 name|bp
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -836,7 +831,6 @@ name|numBytes
 parameter_list|,
 name|bytesPtr
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -952,7 +946,6 @@ name|bp
 parameter_list|,
 name|numBytesPtr
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;
@@ -1009,7 +1002,6 @@ name|bp
 parameter_list|,
 name|numBytes
 parameter_list|)
-specifier|register
 name|Buffer
 name|bp
 decl_stmt|;

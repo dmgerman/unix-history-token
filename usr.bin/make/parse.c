@@ -977,7 +977,6 @@ name|str
 decl_stmt|;
 comment|/* String to find */
 block|{
-specifier|register
 name|int
 name|start
 decl_stmt|,
@@ -985,7 +984,6 @@ name|end
 decl_stmt|,
 name|cur
 decl_stmt|;
-specifier|register
 name|int
 name|diff
 decl_stmt|;
@@ -1440,7 +1438,6 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * If the node was the object of a :: operator, we need to create a 	 * new instance of it for the children and commands on this dependency 	 * line. The new instance is placed on the 'cohorts' list of the 	 * initial one (note the initial one is not on its own cohorts list) 	 * and the new instance is linked to all parents of the initial 	 * instance. 	 */
-specifier|register
 name|GNode
 modifier|*
 name|cohort
@@ -1906,12 +1903,10 @@ operator|==
 name|OP_DOUBLEDEP
 condition|)
 block|{
-specifier|register
 name|GNode
 modifier|*
 name|cohort
 decl_stmt|;
-specifier|register
 name|LstNode
 name|ln
 decl_stmt|;
@@ -3807,21 +3802,18 @@ name|Parse_IsVar
 parameter_list|(
 name|line
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|line
 decl_stmt|;
 comment|/* the line to check */
 block|{
-specifier|register
 name|Boolean
 name|wasSpace
 init|=
 name|FALSE
 decl_stmt|;
 comment|/* set TRUE if found a space */
-specifier|register
 name|Boolean
 name|haveName
 init|=
@@ -6228,12 +6220,10 @@ name|Buffer
 name|buf
 decl_stmt|;
 comment|/* Buffer for current line */
-specifier|register
 name|int
 name|c
 decl_stmt|;
 comment|/* the current character */
-specifier|register
 name|int
 name|lastc
 decl_stmt|;
@@ -6972,7 +6962,6 @@ name|stream
 decl_stmt|;
 comment|/* Stream open to makefile to parse */
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp

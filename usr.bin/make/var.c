@@ -1309,7 +1309,6 @@ name|ctxt
 decl_stmt|;
 comment|/* context in which to set it */
 block|{
-specifier|register
 name|Var
 modifier|*
 name|v
@@ -1556,7 +1555,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
 name|Var
 modifier|*
 name|v
@@ -1640,7 +1638,6 @@ name|ctxt
 decl_stmt|;
 comment|/* context in which to set it */
 block|{
-specifier|register
 name|Var
 modifier|*
 name|v
@@ -1786,7 +1783,6 @@ name|ctxt
 decl_stmt|;
 comment|/* Context in which this should occur */
 block|{
-specifier|register
 name|Var
 modifier|*
 name|v
@@ -2210,7 +2206,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|slash
@@ -2366,7 +2361,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|slash
@@ -2504,7 +2498,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|dot
@@ -2627,7 +2620,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|dot
@@ -3093,12 +3085,10 @@ name|patternp
 decl_stmt|;
 comment|/* Pattern for substitution */
 block|{
-specifier|register
 name|int
 name|wordLen
 decl_stmt|;
 comment|/* Length of word */
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -3470,7 +3460,6 @@ block|}
 else|else
 block|{
 comment|/* 	     * Pattern is unanchored: search for the pattern in the word using 	     * String_FindSubstring, copying unmatched portions and the 	     * right-hand-side for each match found, handling non-global 	     * substitutions correctly, etc. When the loop is done, any 	     * remaining part of the word (word and wordLen are adjusted 	     * accordingly through the loop) is copied straight into the 	     * buffer. 	     * addSpace is set FALSE as soon as a space is added to the 	     * buffer. 	     */
-specifier|register
 name|Boolean
 name|done
 decl_stmt|;
@@ -5314,7 +5303,6 @@ name|freePtr
 decl_stmt|;
 comment|/* OUT: TRUE if caller should free result */
 block|{
-specifier|register
 name|char
 modifier|*
 name|tstr
@@ -5334,12 +5322,10 @@ name|Boolean
 name|haveModifier
 decl_stmt|;
 comment|/* TRUE if have modifiers for the variable */
-specifier|register
 name|char
 name|endc
 decl_stmt|;
 comment|/* Ending character when variable in parens 				 * or braces */
-specifier|register
 name|char
 name|startc
 init|=
@@ -6968,7 +6954,6 @@ block|{
 name|VarPattern
 name|pattern
 decl_stmt|;
-specifier|register
 name|char
 name|delim
 decl_stmt|;
