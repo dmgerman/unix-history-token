@@ -4207,11 +4207,15 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|amr_state
 operator|&
-name|AMR_STATE_INTEN
+name|AMR_STATE_CRASHDUMP
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|count
@@ -7838,9 +7842,8 @@ expr_stmt|;
 name|sc
 operator|->
 name|amr_state
-operator|&=
-operator|~
-name|AMR_STATE_INTEN
+operator||=
+name|AMR_STATE_CRASHDUMP
 expr_stmt|;
 comment|/* get ourselves a command buffer */
 if|if
@@ -7951,8 +7954,9 @@ expr_stmt|;
 name|sc
 operator|->
 name|amr_state
-operator||=
-name|AMR_STATE_INTEN
+operator|&=
+operator|~
+name|AMR_STATE_CRASHDUMP
 expr_stmt|;
 return|return
 operator|(

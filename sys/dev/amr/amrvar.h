@@ -419,6 +419,10 @@ define|#
 directive|define
 name|AMR_STATE_SHUTDOWN
 value|(1<<3)
+define|#
+directive|define
+name|AMR_STATE_CRASHDUMP
+value|(1<<4)
 comment|/* per-controller queues */
 name|struct
 name|bio_queue_head
