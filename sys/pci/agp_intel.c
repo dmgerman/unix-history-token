@@ -313,6 +313,14 @@ literal|"Intel 82865 host to AGP bridge"
 operator|)
 return|;
 case|case
+literal|0x255d8086
+case|:
+return|return
+operator|(
+literal|"Intel E7205 host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x25788086
 case|:
 return|return
@@ -331,20 +339,6 @@ operator|)
 return|;
 block|}
 empty_stmt|;
-if|if
-condition|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x8086
-condition|)
-return|return
-operator|(
-literal|"Intel Generic host to PCI bridge"
-operator|)
-return|;
 return|return
 name|NULL
 return|;
@@ -744,6 +738,10 @@ literal|0x33408086
 case|:
 comment|/* i855 */
 case|case
+literal|0x255d8086
+case|:
+comment|/* E7205 */
+case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
@@ -859,6 +857,10 @@ case|case
 literal|0x33408086
 case|:
 comment|/* i855 */
+case|case
+literal|0x255d8086
+case|:
+comment|/* E7205 */
 case|case
 literal|0x25318086
 case|:
@@ -1100,6 +1102,10 @@ case|case
 literal|0x33408086
 case|:
 comment|/* i855 */
+case|case
+literal|0x255d8086
+case|:
+comment|/* E7205 */
 case|case
 literal|0x25708086
 case|:
