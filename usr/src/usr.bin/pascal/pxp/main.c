@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,8 +157,7 @@ operator|==
 literal|'a'
 condition|)
 name|howfile
-operator|=
-operator|+
+operator|+=
 literal|9
 expr_stmt|;
 name|argc
@@ -693,15 +692,13 @@ init|;
 name|c
 condition|;
 name|c
-operator|=
-operator|/
+operator|/=
 literal|10
 control|)
 operator|*
 operator|--
 name|cp
-operator|=
-operator||
+operator||=
 operator|(
 name|c
 operator|%

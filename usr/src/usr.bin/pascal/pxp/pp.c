@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pp.c	5.1 (Berkeley) %G%"
+literal|"@(#)pp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -952,8 +952,7 @@ name|pplev
 index|[
 name|lv
 index|]
-operator|=
-operator|+
+operator|+=
 name|unit
 expr_stmt|;
 block|}
@@ -1177,13 +1176,11 @@ case|case
 literal|'\t'
 case|:
 name|outcol
-operator|=
-operator|+
+operator|+=
 literal|8
 expr_stmt|;
 name|outcol
-operator|=
-operator|&
+operator|&=
 operator|~
 literal|07
 expr_stmt|;

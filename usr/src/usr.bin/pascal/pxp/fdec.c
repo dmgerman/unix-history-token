@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c	5.1 (Berkeley) %G%"
+literal|"@(#)fdec.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,8 +86,7 @@ literal|'z'
 operator|-
 literal|'a'
 index|]
-operator|=
-operator|<<
+operator|<<=
 literal|1
 expr_stmt|;
 name|optstk
@@ -96,8 +95,7 @@ literal|'z'
 operator|-
 literal|'a'
 index|]
-operator|=
-operator||
+operator||=
 name|opts
 index|[
 literal|'z'
@@ -1004,8 +1002,7 @@ literal|'z'
 operator|-
 literal|'a'
 index|]
-operator|=
-operator|>>
+operator|>>=
 literal|1
 expr_stmt|;
 block|}

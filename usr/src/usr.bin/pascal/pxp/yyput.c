@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyput.c	5.1 (Berkeley) %G%"
+literal|"@(#)yyput.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -952,8 +952,7 @@ literal|0
 condition|)
 block|{
 name|printed
-operator|=
-operator||
+operator||=
 literal|02
 expr_stmt|;
 name|header

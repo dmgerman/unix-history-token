@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yycomm.c	5.1 (Berkeley) %G%"
+literal|"@(#)yycomm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1023,8 +1023,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 name|i
-operator|=
-operator||
+operator||=
 literal|1
 operator|<<
 name|cp
@@ -1427,13 +1426,11 @@ case|case
 literal|'\t'
 case|:
 name|i
-operator|=
-operator|+
+operator|+=
 literal|8
 expr_stmt|;
 name|i
-operator|=
-operator|&
+operator|&=
 operator|~
 literal|7
 expr_stmt|;
