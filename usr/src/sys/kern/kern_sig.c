@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -132,7 +138,7 @@ comment|/* for coredump */
 end_comment
 
 begin_comment
-comment|/*  * Can process p, with pcred pc, send the signal signo to process q?  */
+comment|/*  * Can process p, with pcred pc, send the signal signum to process q?  */
 end_comment
 
 begin_define
@@ -146,10 +152,10 @@ name|pc
 parameter_list|,
 name|q
 parameter_list|,
-name|signo
+name|signum
 parameter_list|)
 define|\
-value|((pc)->pc_ucred->cr_uid == 0 || \ 	    (pc)->p_ruid == (q)->p_cred->p_ruid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (pc)->p_ruid == (q)->p_ucred->cr_uid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_ucred->cr_uid || \ 	    ((signo) == SIGCONT&& (q)->p_session == (p)->p_session))
+value|((pc)->pc_ucred->cr_uid == 0 || \ 	    (pc)->p_ruid == (q)->p_cred->p_ruid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (pc)->p_ruid == (q)->p_ucred->cr_uid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_ucred->cr_uid || \ 	    ((signum) == SIGCONT&& (q)->p_session == (p)->p_session))
 end_define
 
 begin_struct
@@ -157,7 +163,7 @@ struct|struct
 name|sigaction_args
 block|{
 name|int
-name|signo
+name|signum
 decl_stmt|;
 name|struct
 name|sigaction
@@ -236,34 +242,34 @@ name|p_sigacts
 decl_stmt|;
 specifier|register
 name|int
-name|sig
+name|signum
 decl_stmt|;
 name|int
 name|bit
 decl_stmt|,
 name|error
 decl_stmt|;
-name|sig
+name|signum
 operator|=
 name|uap
 operator|->
-name|signo
+name|signum
 expr_stmt|;
 if|if
 condition|(
-name|sig
+name|signum
 operator|<=
 literal|0
 operator|||
-name|sig
+name|signum
 operator|>=
 name|NSIG
 operator|||
-name|sig
+name|signum
 operator|==
 name|SIGKILL
 operator|||
-name|sig
+name|signum
 operator|==
 name|SIGSTOP
 condition|)
@@ -292,7 +298,7 @@ name|ps
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 name|sa
@@ -303,14 +309,14 @@ name|ps
 operator|->
 name|ps_catchmask
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 name|bit
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 name|sa
@@ -439,7 +445,7 @@ name|setsigvec
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 name|sa
 argument_list|)
@@ -458,7 +464,7 @@ name|setsigvec
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 name|sa
 argument_list|)
@@ -472,7 +478,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|sig
+name|signum
 decl_stmt|;
 end_decl_stmt
 
@@ -505,7 +511,7 @@ name|bit
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Change setting atomically. 	 */
@@ -519,7 +525,7 @@ name|ps
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 operator|=
 name|sa
@@ -530,7 +536,7 @@ name|ps
 operator|->
 name|ps_catchmask
 index|[
-name|sig
+name|signum
 index|]
 operator|=
 name|sa
@@ -617,7 +623,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|sig
+name|signum
 operator|==
 name|SIGCHLD
 condition|)
@@ -657,7 +663,7 @@ operator|||
 operator|(
 name|sigprop
 index|[
-name|sig
+name|signum
 index|]
 operator|&
 name|SA_IGNORE
@@ -680,7 +686,7 @@ expr_stmt|;
 comment|/* never to be seen again */
 if|if
 condition|(
-name|sig
+name|signum
 operator|!=
 name|SIGCONT
 condition|)
@@ -1169,7 +1175,7 @@ struct|struct
 name|osigvec_args
 block|{
 name|int
-name|signo
+name|signum
 decl_stmt|;
 name|struct
 name|sigvec
@@ -1248,34 +1254,34 @@ name|sv
 decl_stmt|;
 specifier|register
 name|int
-name|sig
+name|signum
 decl_stmt|;
 name|int
 name|bit
 decl_stmt|,
 name|error
 decl_stmt|;
-name|sig
+name|signum
 operator|=
 name|uap
 operator|->
-name|signo
+name|signum
 expr_stmt|;
 if|if
 condition|(
-name|sig
+name|signum
 operator|<=
 literal|0
 operator|||
-name|sig
+name|signum
 operator|>=
 name|NSIG
 operator|||
-name|sig
+name|signum
 operator|==
 name|SIGKILL
 operator|||
-name|sig
+name|signum
 operator|==
 name|SIGSTOP
 condition|)
@@ -1310,7 +1316,7 @@ name|ps
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 name|sv
@@ -1321,14 +1327,14 @@ name|ps
 operator|->
 name|ps_catchmask
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 name|bit
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 name|sv
@@ -1494,7 +1500,7 @@ name|setsigvec
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 operator|(
 expr|struct
@@ -2317,7 +2323,7 @@ name|int
 name|pid
 decl_stmt|;
 name|int
-name|signo
+name|signum
 decl_stmt|;
 block|}
 struct|;
@@ -2381,11 +2387,11 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|signo
+name|signum
 operator|>=
 name|NSIG
 condition|)
@@ -2404,6 +2410,9 @@ literal|0
 condition|)
 block|{
 comment|/* kill single process */
+if|if
+condition|(
+operator|(
 name|p
 operator|=
 name|pfind
@@ -2412,12 +2421,9 @@ name|uap
 operator|->
 name|pid
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
+operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2437,7 +2443,7 @@ name|p
 argument_list|,
 name|uap
 operator|->
-name|signo
+name|signum
 argument_list|)
 condition|)
 return|return
@@ -2449,7 +2455,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|signo
+name|signum
 condition|)
 name|psignal
 argument_list|(
@@ -2457,7 +2463,7 @@ name|p
 argument_list|,
 name|uap
 operator|->
-name|signo
+name|signum
 argument_list|)
 expr_stmt|;
 return|return
@@ -2486,7 +2492,7 @@ name|cp
 argument_list|,
 name|uap
 operator|->
-name|signo
+name|signum
 argument_list|,
 literal|0
 argument_list|,
@@ -2506,7 +2512,7 @@ name|cp
 argument_list|,
 name|uap
 operator|->
-name|signo
+name|signum
 argument_list|,
 literal|0
 argument_list|,
@@ -2524,7 +2530,7 @@ name|cp
 argument_list|,
 name|uap
 operator|->
-name|signo
+name|signum
 argument_list|,
 operator|-
 name|uap
@@ -2562,7 +2568,7 @@ name|int
 name|pgid
 decl_stmt|;
 name|int
-name|signo
+name|signum
 decl_stmt|;
 block|}
 struct|;
@@ -2612,11 +2618,11 @@ block|{
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|uap
 operator|->
-name|signo
+name|signum
 operator|>=
 name|NSIG
 condition|)
@@ -2633,7 +2639,7 @@ name|p
 argument_list|,
 name|uap
 operator|->
-name|signo
+name|signum
 argument_list|,
 name|uap
 operator|->
@@ -2664,7 +2670,7 @@ name|killpg1
 argument_list|(
 name|cp
 argument_list|,
-name|signo
+name|signum
 argument_list|,
 name|pgid
 argument_list|,
@@ -2680,7 +2686,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|signo
+name|signum
 decl_stmt|,
 name|pgid
 decl_stmt|,
@@ -2770,7 +2776,7 @@ name|pc
 argument_list|,
 name|p
 argument_list|,
-name|signo
+name|signum
 argument_list|)
 condition|)
 continue|continue;
@@ -2779,13 +2785,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|signo
+name|signum
 condition|)
 name|psignal
 argument_list|(
 name|p
 argument_list|,
-name|signo
+name|signum
 argument_list|)
 expr_stmt|;
 block|}
@@ -2873,7 +2879,7 @@ name|pc
 argument_list|,
 name|p
 argument_list|,
-name|signo
+name|signum
 argument_list|)
 condition|)
 continue|continue;
@@ -2882,13 +2888,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|signo
+name|signum
 condition|)
 name|psignal
 argument_list|(
 name|p
 argument_list|,
-name|signo
+name|signum
 argument_list|)
 expr_stmt|;
 block|}
@@ -2906,7 +2912,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Send the specified signal to  * all processes with 'pgid' as  * process group.  */
+comment|/*  * Send a signal to a process group.  */
 end_comment
 
 begin_function
@@ -2915,12 +2921,12 @@ name|gsignal
 parameter_list|(
 name|pgid
 parameter_list|,
-name|sig
+name|signum
 parameter_list|)
 name|int
 name|pgid
 decl_stmt|,
-name|sig
+name|signum
 decl_stmt|;
 block|{
 name|struct
@@ -2945,7 +2951,7 @@ name|pgsignal
 argument_list|(
 name|pgrp
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 literal|0
 argument_list|)
@@ -2954,7 +2960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send sig to every member of a process group.  * If checktty is 1, limit to members which have a controlling  * terminal.  */
+comment|/*  * Send a signal to a  process group.  If checktty is 1,  * limit to members which have a controlling terminal.  */
 end_comment
 
 begin_function
@@ -2963,7 +2969,7 @@ name|pgsignal
 parameter_list|(
 name|pgrp
 parameter_list|,
-name|sig
+name|signum
 parameter_list|,
 name|checkctty
 parameter_list|)
@@ -2973,7 +2979,7 @@ modifier|*
 name|pgrp
 decl_stmt|;
 name|int
-name|sig
+name|signum
 decl_stmt|,
 name|checkctty
 decl_stmt|;
@@ -3022,7 +3028,7 @@ name|psignal
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 block|}
@@ -3038,7 +3044,7 @@ name|trapsignal
 parameter_list|(
 name|p
 parameter_list|,
-name|sig
+name|signum
 parameter_list|,
 name|code
 parameter_list|)
@@ -3049,9 +3055,9 @@ name|p
 decl_stmt|;
 specifier|register
 name|int
-name|sig
+name|signum
 decl_stmt|;
-name|unsigned
+name|u_int
 name|code
 decl_stmt|;
 block|{
@@ -3072,7 +3078,7 @@ name|mask
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 if|if
@@ -3135,13 +3141,13 @@ name|p
 operator|->
 name|p_tracep
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 name|ps
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 argument_list|,
 name|p
@@ -3159,10 +3165,10 @@ name|ps
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 name|p
 operator|->
@@ -3179,7 +3185,7 @@ name|ps
 operator|->
 name|ps_catchmask
 index|[
-name|sig
+name|signum
 index|]
 operator||
 name|mask
@@ -3198,7 +3204,7 @@ name|psignal
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 block|}
@@ -3206,7 +3212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the specified signal to the specified process.  * If the signal has an action, the action is usually performed  * by the target process rather than the caller; we simply add  * the signal to the set of pending signals for the process.  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the default  *     action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  * Other ignored signals are discarded immediately.  */
+comment|/*  * Send the signal to the process.  If the signal has an action, the action  * is usually performed by the target process rather than the caller; we add  * the signal to the set of pending signals for the process.  *  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the  *     default action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  *  * Other ignored signals are discarded immediately.  */
 end_comment
 
 begin_function
@@ -3215,7 +3221,7 @@ name|psignal
 parameter_list|(
 name|p
 parameter_list|,
-name|sig
+name|signum
 parameter_list|)
 specifier|register
 name|struct
@@ -3225,7 +3231,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|int
-name|sig
+name|signum
 decl_stmt|;
 block|{
 specifier|register
@@ -3244,33 +3250,33 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
-name|sig
+name|signum
 operator|>=
 name|NSIG
 operator|||
-name|sig
+name|signum
 operator|==
 literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"psignal sig"
+literal|"psignal signal number"
 argument_list|)
 expr_stmt|;
 name|mask
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 name|prop
 operator|=
 name|sigprop
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 comment|/* 	 * If proc is traced, always give parent a chance. 	 */
@@ -3549,7 +3555,7 @@ name|p
 operator|->
 name|p_xstat
 operator|=
-name|sig
+name|signum
 expr_stmt|;
 if|if
 condition|(
@@ -3606,7 +3612,7 @@ goto|;
 comment|/* 		 * Kill signal always sets processes running. 		 */
 if|if
 condition|(
-name|sig
+name|signum
 operator|==
 name|SIGKILL
 condition|)
@@ -3758,7 +3764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If the current process has a signal to process (should be caught  * or cause termination, should interrupt current syscall),  * return the signal number.  Stop signals with default action  * are processed immediately, then cleared; they aren't returned.  * This is checked after each entry to the system for a syscall  * or trap (though this can usually be done without actually calling  * issig by checking the pending signal masks in the CURSIG macro.)  * The normal call sequence is  *  *	while (sig = CURSIG(curproc))  *		psig(sig);  */
+comment|/*  * If the current process has received a signal (should be caught or cause  * termination, should interrupt current syscall), return the signal number.  * Stop signals with default action are processed immediately, then cleared;  * they aren't returned.  This is checked after each entry to the system for  * a syscall or trap (though this can usually be done without calling issig  * by checking the pending signal masks in the CURSIG macro.) The normal call  * sequence is  *  *	while (signum = CURSIG(curproc))  *		psig(signum);  */
 end_comment
 
 begin_expr_stmt
@@ -3778,7 +3784,7 @@ begin_block
 block|{
 specifier|register
 name|int
-name|sig
+name|signum
 decl_stmt|,
 name|mask
 decl_stmt|,
@@ -3826,7 +3832,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|sig
+name|signum
 operator|=
 name|ffs
 argument_list|(
@@ -3840,14 +3846,14 @@ name|mask
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 name|prop
 operator|=
 name|sigprop
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 comment|/* 		 * We should see pending but ignored signals 		 * only if STRC was on when they were posted. 		 */
@@ -3903,7 +3909,7 @@ name|p
 operator|->
 name|p_xstat
 operator|=
-name|sig
+name|signum
 expr_stmt|;
 name|psignal
 argument_list|(
@@ -3963,7 +3969,7 @@ operator|~
 name|mask
 expr_stmt|;
 comment|/* clear the old signal */
-name|sig
+name|signum
 operator|=
 name|p
 operator|->
@@ -3971,7 +3977,7 @@ name|p_xstat
 expr_stmt|;
 if|if
 condition|(
-name|sig
+name|signum
 operator|==
 literal|0
 condition|)
@@ -3981,7 +3987,7 @@ name|mask
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 name|p
@@ -4012,7 +4018,7 @@ name|p_sigacts
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 condition|)
 block|{
@@ -4041,7 +4047,7 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4085,7 +4091,7 @@ name|p
 operator|->
 name|p_xstat
 operator|=
-name|sig
+name|signum
 expr_stmt|;
 name|stop
 argument_list|(
@@ -4135,7 +4141,7 @@ block|}
 else|else
 return|return
 operator|(
-name|sig
+name|signum
 operator|)
 return|;
 comment|/*NOTREACHED*/
@@ -4174,7 +4180,7 @@ default|default:
 comment|/* 			 * This signal has an action, let 			 * psig process it. 			 */
 return|return
 operator|(
-name|sig
+name|signum
 operator|)
 return|;
 block|}
@@ -4192,7 +4198,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Put the argument process into the stopped  * state and notify the parent via wakeup.  * Signals are handled elsewhere.  * The process must not be on the run queue.  */
+comment|/*  * Put the argument process into the stopped state and notify the parent  * via wakeup.  Signals are handled elsewhere.  The process must not be  * on the run queue.  */
 end_comment
 
 begin_expr_stmt
@@ -4244,11 +4250,11 @@ begin_function
 name|void
 name|psig
 parameter_list|(
-name|sig
+name|signum
 parameter_list|)
 specifier|register
 name|int
-name|sig
+name|signum
 decl_stmt|;
 block|{
 specifier|register
@@ -4283,7 +4289,7 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|sig
+name|signum
 operator|==
 literal|0
 condition|)
@@ -4298,7 +4304,7 @@ name|mask
 operator|=
 name|sigmask
 argument_list|(
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 name|p
@@ -4314,7 +4320,7 @@ name|ps
 operator|->
 name|ps_sigact
 index|[
-name|sig
+name|signum
 index|]
 expr_stmt|;
 ifdef|#
@@ -4335,7 +4341,7 @@ name|p
 operator|->
 name|p_tracep
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 name|action
 argument_list|,
@@ -4370,7 +4376,7 @@ name|sigexit
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -4447,7 +4453,7 @@ name|ps
 operator|->
 name|ps_catchmask
 index|[
-name|sig
+name|signum
 index|]
 operator||
 name|mask
@@ -4471,7 +4477,7 @@ name|sendsig
 argument_list|(
 name|action
 argument_list|,
-name|sig
+name|signum
 argument_list|,
 name|returnmask
 argument_list|,
@@ -4547,7 +4553,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Force the current process to exit with the specified  * signal, dumping core if appropriate.  We bypass the normal  * tests for masked and caught signals, allowing unrecoverable  * failures to terminate the process without changing signal state.  * Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  * Calls exit and does not return.  */
+comment|/*  * Force the current process to exit with the specified signal, dumping core  * if appropriate.  We bypass the normal tests for masked and caught signals,  * allowing unrecoverable failures to terminate the process without changing  * signal state.  Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  Calls exit and  * does not return.  */
 end_comment
 
 begin_expr_stmt
@@ -4555,7 +4561,7 @@ name|sigexit
 argument_list|(
 name|p
 argument_list|,
-name|sig
+name|signum
 argument_list|)
 specifier|register
 expr|struct
@@ -4567,7 +4573,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|sig
+name|signum
 decl_stmt|;
 end_decl_stmt
 
@@ -4583,7 +4589,7 @@ if|if
 condition|(
 name|sigprop
 index|[
-name|sig
+name|signum
 index|]
 operator|&
 name|SA_CORE
@@ -4595,7 +4601,7 @@ name|p_sigacts
 operator|->
 name|ps_sig
 operator|=
-name|sig
+name|signum
 expr_stmt|;
 if|if
 condition|(
@@ -4606,7 +4612,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|sig
+name|signum
 operator||=
 name|WCOREFLAG
 expr_stmt|;
@@ -4619,7 +4625,7 @@ name|W_EXITCODE
 argument_list|(
 literal|0
 argument_list|,
-name|sig
+name|signum
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4628,7 +4634,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Create a core dump.  * The file name is "core.progname".  * Core dumps are not created if the process is setuid.  */
+comment|/*  * Dump core, into a file named "core.progname".  * Do not drop core if the process was setuid/setgid.  */
 end_comment
 
 begin_expr_stmt
@@ -4703,7 +4709,7 @@ operator|+
 literal|6
 index|]
 decl_stmt|;
-comment|/* core.progname */
+comment|/* progname.core */
 if|if
 condition|(
 name|pcred
@@ -4760,7 +4766,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"core.%s"
+literal|"%s.core"
 argument_list|,
 name|p
 operator|->
@@ -4796,7 +4802,13 @@ name|O_CREAT
 operator||
 name|FWRITE
 argument_list|,
-literal|0644
+name|S_IRUSR
+operator||
+name|S_IWUSR
+operator||
+name|S_IRGRP
+operator||
+name|S_IROTH
 argument_list|)
 condition|)
 return|return
@@ -4810,6 +4822,7 @@ name|nd
 operator|.
 name|ni_vp
 expr_stmt|;
+comment|/* Don't dump to non-regular files or files with links. */
 if|if
 condition|(
 name|vp

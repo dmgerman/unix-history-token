@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -152,7 +152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Components of process 0;  * never freed.  */
+comment|/* Components of the first process -- never freed. */
 end_comment
 
 begin_decl_stmt
@@ -243,17 +243,6 @@ name|proc0paddr
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|mountroot
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|vnode
@@ -286,17 +275,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * System startup; initialize the world, create process 0,  * mount root filesystem, and fork to create init and pagedaemon.  * Most of the hard work is done in the lower-level initialization  * routines including startup(), which does memory initialization  * and autoconfiguration.  */
+comment|/*  * System startup; initialize the world, create process 0, mount root  * filesystem, and fork to create init and pagedaemon.  Most of the  * hard work is done in the lower-level initialization routines including  * startup(), which does memory initialization and autoconfiguration.  */
 end_comment
 
 begin_function
 name|main
 parameter_list|()
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 specifier|register
 name|struct
 name|proc
@@ -315,6 +300,10 @@ name|pdevinit
 modifier|*
 name|pdev
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|int
 name|s
 decl_stmt|,
@@ -323,12 +312,28 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+extern|extern int (*mountroot
+block|)
+function|__P
+parameter_list|(
+function|(void
+end_function
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 specifier|extern
 name|struct
 name|pdevinit
 name|pdevinit
 index|[]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|roundrobin
@@ -340,6 +345,9 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|schedcpu
@@ -351,44 +359,83 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* 	 * Initialize curproc before any possible traps/probes 	 * to simplify trap processing. 	 */
+end_decl_stmt
+
+begin_comment
+comment|/* 	 * Initialize the current process pointer (curproc) before 	 * any possible traps/probes to simplify trap processing. 	 */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|=
 operator|&
 name|proc0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|curproc
 operator|=
 name|p
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Attempt to find console and initialize 	 * in case of early panic or other messages. 	 */
+end_comment
+
+begin_expr_stmt
 name|consinit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 name|copyright
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|vm_mem_init
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|kmeminit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cpu_startup
 argument_list|()
 expr_stmt|;
-comment|/* 	 * set up system process 0 (swapper) 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* Create process 0 (the swapper). */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|=
 operator|&
 name|proc0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|curproc
 operator|=
 name|p
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|allproc
 operator|=
 operator|(
@@ -399,6 +446,9 @@ operator|*
 operator|)
 name|p
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_prev
@@ -412,6 +462,9 @@ operator|)
 operator|&
 name|allproc
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_pgrp
@@ -419,6 +472,9 @@ operator|=
 operator|&
 name|pgrp0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pgrphash
 index|[
 literal|0
@@ -427,12 +483,18 @@ operator|=
 operator|&
 name|pgrp0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pgrp0
 operator|.
 name|pg_mem
 operator|=
 name|p
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pgrp0
 operator|.
 name|pg_session
@@ -440,18 +502,27 @@ operator|=
 operator|&
 name|session0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|session0
 operator|.
 name|s_count
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|session0
 operator|.
 name|s_leader
 operator|=
 name|p
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_flag
@@ -460,18 +531,27 @@ name|SLOAD
 operator||
 name|SSYS
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_stat
 operator|=
 name|SRUN
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_nice
 operator|=
 name|NZERO
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bcopy
 argument_list|(
 literal|"swapper"
@@ -486,13 +566,22 @@ literal|"swapper"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup credentials 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* Create credentials. */
+end_comment
+
+begin_expr_stmt
 name|cred0
 operator|.
 name|p_refcnt
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_cred
@@ -500,6 +589,9 @@ operator|=
 operator|&
 name|cred0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_ucred
@@ -507,6 +599,9 @@ operator|=
 name|crget
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_ucred
@@ -515,13 +610,25 @@ name|cr_ngroups
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* group 0 */
-comment|/* 	 * Create the file descriptor table for process 0. 	 */
+end_comment
+
+begin_comment
+comment|/* Create the file descriptor table. */
+end_comment
+
+begin_expr_stmt
 name|fdp
 operator|=
 operator|&
 name|filedesc0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_fd
@@ -531,6 +638,9 @@ name|fdp
 operator|->
 name|fd_fd
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
@@ -539,6 +649,9 @@ name|fd_refcnt
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
@@ -547,6 +660,9 @@ name|fd_cmask
 operator|=
 name|cmask
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
@@ -557,6 +673,9 @@ name|fdp
 operator|->
 name|fd_dfiles
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
@@ -567,6 +686,9 @@ name|fdp
 operator|->
 name|fd_dfileflags
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
@@ -575,7 +697,13 @@ name|fd_nfiles
 operator|=
 name|NDFILE
 expr_stmt|;
-comment|/* 	 * Set initial limits 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* Create the limits structures. */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_limit
@@ -583,6 +711,9 @@ operator|=
 operator|&
 name|limit0
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|i
@@ -631,6 +762,9 @@ name|rlim_max
 operator|=
 name|RLIM_INFINITY
 expr_stmt|;
+end_for
+
+begin_expr_stmt
 name|limit0
 operator|.
 name|pl_rlimit
@@ -642,6 +776,9 @@ name|rlim_cur
 operator|=
 name|NOFILE
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|limit0
 operator|.
 name|pl_rlimit
@@ -653,6 +790,9 @@ name|rlim_cur
 operator|=
 name|MAXUPRC
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|i
 operator|=
 name|ptoa
@@ -662,6 +802,9 @@ operator|.
 name|v_free_count
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|limit0
 operator|.
 name|pl_rlimit
@@ -673,6 +816,9 @@ name|rlim_max
 operator|=
 name|i
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|limit0
 operator|.
 name|pl_rlimit
@@ -684,6 +830,9 @@ name|rlim_max
 operator|=
 name|i
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|limit0
 operator|.
 name|pl_rlimit
@@ -697,13 +846,22 @@ name|i
 operator|/
 literal|3
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|limit0
 operator|.
 name|p_refcnt
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Allocate a prototype map so we have something to fork 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* Allocate a prototype map so we have something to fork. */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_vmspace
@@ -711,12 +869,18 @@ operator|=
 operator|&
 name|vmspace0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|vmspace0
 operator|.
 name|vm_refcnt
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|pmap_pinit
 argument_list|(
 operator|&
@@ -725,6 +889,9 @@ operator|.
 name|vm_pmap
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|vm_map_init
 argument_list|(
 operator|&
@@ -747,6 +914,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|vmspace0
 operator|.
 name|vm_map
@@ -758,14 +928,26 @@ name|vmspace0
 operator|.
 name|vm_pmap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_addr
 operator|=
 name|proc0paddr
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* XXX */
-comment|/* 	 * We continue to place resource usage info 	 * and signal actions in the user struct so they're pageable. 	 */
+end_comment
+
+begin_comment
+comment|/* 	 * We continue to place resource usage info and signal 	 * actions in the user struct so they're pageable. 	 */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_stats
@@ -777,6 +959,9 @@ name|p_addr
 operator|->
 name|u_stats
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_sigacts
@@ -788,10 +973,19 @@ name|p_addr
 operator|->
 name|u_sigacts
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Initialize per uid information structure and charge 	 * root for one process. 	 */
+end_comment
+
+begin_expr_stmt
 name|usrinfoinit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -802,39 +996,92 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|rqinit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Configure virtual memory system, set vm rlimits. */
+end_comment
+
+begin_expr_stmt
 name|vm_init_limits
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Initialize the file systems. */
+end_comment
+
+begin_expr_stmt
 name|vfsinit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Start real time and statistics clocks. */
+end_comment
+
+begin_expr_stmt
 name|initclocks
 argument_list|()
 expr_stmt|;
-comment|/* Initialize tables. */
+end_expr_stmt
+
+begin_comment
+comment|/* Initialize mbuf's. */
+end_comment
+
+begin_expr_stmt
 name|mbinit
 argument_list|()
 expr_stmt|;
-name|cinit
+end_expr_stmt
+
+begin_comment
+comment|/* Initialize clists. */
+end_comment
+
+begin_expr_stmt
+name|clist_init
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYSVSHM
+end_ifdef
+
+begin_comment
+comment|/* Initialize System V style shared memory. */
+end_comment
+
+begin_expr_stmt
 name|shminit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Attach pseudo-devices. */
+end_comment
+
+begin_for
 for|for
 control|(
 name|pdev
@@ -862,43 +1109,86 @@ operator|->
 name|pdev_count
 argument_list|)
 expr_stmt|;
+end_for
+
+begin_comment
 comment|/* 	 * Initialize protocols.  Block reception of incoming packets 	 * until everything is ready. 	 */
+end_comment
+
+begin_expr_stmt
 name|s
 operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ifinit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|domaininit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|GPROF
+end_ifdef
+
+begin_comment
+comment|/* Initialize kernel profiling. */
+end_comment
+
+begin_expr_stmt
 name|kmstartup
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
-comment|/* kick off timeout driven events by calling first time */
+end_endif
+
+begin_comment
+comment|/* Kick off timeout driven events by calling first time. */
+end_comment
+
+begin_expr_stmt
 name|roundrobin
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|schedcpu
 argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up the root file system and vnode. 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* Mount the root file system. */
+end_comment
+
+begin_if
 if|if
 condition|(
 call|(
@@ -912,7 +1202,13 @@ argument_list|(
 literal|"cannot mount root"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get vnode for '/'. 	 * Setup rootdir and fdp->fd_fd.fd_cdir to point to it. 	 */
+end_if
+
+begin_comment
+comment|/* Get the vnode for '/'.  Set fdp->fd_fd.fd_cdir to reference it. */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|VFS_ROOT
@@ -920,7 +1216,7 @@ argument_list|(
 name|rootfs
 argument_list|,
 operator|&
-name|rootdir
+name|rootvnode
 argument_list|)
 condition|)
 name|panic
@@ -928,14 +1224,20 @@ argument_list|(
 literal|"cannot find root vnode"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
 operator|.
 name|fd_cdir
 operator|=
-name|rootdir
+name|rootvnode
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|VREF
 argument_list|(
 name|fdp
@@ -945,11 +1247,17 @@ operator|.
 name|fd_cdir
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|VOP_UNLOCK
 argument_list|(
-name|rootdir
+name|rootvnode
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fdp
 operator|->
 name|fd_fd
@@ -958,10 +1266,19 @@ name|fd_rdir
 operator|=
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|swapinit
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Now can look at time, having had a chance to verify the time 	 * from the file system.  Reset p->p_rtime as it may have been 	 * munched in swtch() after the time got set. 	 */
+end_comment
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_stats
@@ -976,6 +1293,9 @@ name|boottime
 operator|=
 name|time
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|p
 operator|->
 name|p_rtime
@@ -990,12 +1310,25 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * make init process 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* Initialize signal state for process 0. */
+end_comment
+
+begin_expr_stmt
 name|siginit
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Create process 1 (init(8)). */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|fork
@@ -1012,6 +1345,9 @@ argument_list|(
 literal|"fork init"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|rval
@@ -1149,7 +1485,7 @@ argument_list|(
 literal|"init: couldn't allocate at zero"
 argument_list|)
 expr_stmt|;
-comment|/* need just enough stack to exec from */
+comment|/* Need just enough stack from which to exec. */
 name|addr
 operator|=
 name|trunc_page
@@ -1242,7 +1578,13 @@ expr_stmt|;
 return|return;
 comment|/* returns to icode */
 block|}
-comment|/* 	 * Start up pageout daemon (process 2). 	 */
+end_if
+
+begin_comment
+comment|/* Create process 2 (the pageout daemon). */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|fork
@@ -1259,6 +1601,9 @@ argument_list|(
 literal|"fork pager"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|rval
@@ -1302,14 +1647,24 @@ expr_stmt|;
 name|vm_pageout
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
-comment|/* 	 * enter scheduling loop 	 */
-name|sched
+end_if
+
+begin_comment
+comment|/* The scheduler is an infinite loop. */
+end_comment
+
+begin_expr_stmt
+name|scheduler
 argument_list|()
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
+begin_comment
+comment|/* NOTREACHED */
+end_comment
+
+unit|}
 end_unit
 
