@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ukbd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -4586,6 +4592,11 @@ return|return
 operator|-
 literal|1
 return|;
+operator|++
+name|kbd
+operator|->
+name|kb_count
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UKBD_EMULATE_ATSCANCODE
@@ -5048,6 +5059,11 @@ condition|)
 return|return
 name|NOKEY
 return|;
+operator|++
+name|kbd
+operator|->
+name|kb_count
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UKBD_EMULATE_ATSCANCODE

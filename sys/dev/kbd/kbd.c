@@ -565,12 +565,6 @@ name|KB_DELAY2
 expr_stmt|;
 name|kbd
 operator|->
-name|kb_prev_key
-operator|=
-literal|0
-expr_stmt|;
-name|kbd
-operator|->
 name|kb_count
 operator|=
 literal|0L
@@ -4941,11 +4935,9 @@ name|LSHA
 case|:
 if|if
 condition|(
-name|kbd
-operator|->
-name|kb_prev_key
-operator|==
-name|keycode
+name|state
+operator|&
+name|SHIFTAON
 condition|)
 block|{
 name|set_lockkey_state
@@ -4982,11 +4974,9 @@ name|RSHA
 case|:
 if|if
 condition|(
-name|kbd
-operator|->
-name|kb_prev_key
-operator|==
-name|keycode
+name|state
+operator|&
+name|SHIFTAON
 condition|)
 block|{
 name|set_lockkey_state
@@ -5023,11 +5013,9 @@ name|LCTRA
 case|:
 if|if
 condition|(
-name|kbd
-operator|->
-name|kb_prev_key
-operator|==
-name|keycode
+name|state
+operator|&
+name|SHIFTAON
 condition|)
 block|{
 name|set_lockkey_state
@@ -5064,11 +5052,9 @@ name|RCTRA
 case|:
 if|if
 condition|(
-name|kbd
-operator|->
-name|kb_prev_key
-operator|==
-name|keycode
+name|state
+operator|&
+name|SHIFTAON
 condition|)
 block|{
 name|set_lockkey_state
@@ -5105,11 +5091,9 @@ name|LALTA
 case|:
 if|if
 condition|(
-name|kbd
-operator|->
-name|kb_prev_key
-operator|==
-name|keycode
+name|state
+operator|&
+name|SHIFTAON
 condition|)
 block|{
 name|set_lockkey_state
@@ -5146,11 +5130,9 @@ name|RALTA
 case|:
 if|if
 condition|(
-name|kbd
-operator|->
-name|kb_prev_key
-operator|==
-name|keycode
+name|state
+operator|&
+name|SHIFTAON
 condition|)
 block|{
 name|set_lockkey_state
@@ -5282,6 +5264,9 @@ operator|*
 name|shiftstate
 operator|=
 name|state
+operator|&
+operator|~
+name|SHIFTAON
 expr_stmt|;
 return|return
 operator|(
@@ -5294,6 +5279,12 @@ operator|)
 return|;
 block|}
 comment|/* release events of regular keys are not reported */
+operator|*
+name|shiftstate
+operator|&=
+operator|~
+name|SHIFTAON
+expr_stmt|;
 return|return
 name|NOKEY
 return|;
@@ -5301,6 +5292,11 @@ block|}
 else|else
 block|{
 comment|/* make: key pressed */
+name|state
+operator|&=
+operator|~
+name|SHIFTAON
+expr_stmt|;
 if|if
 condition|(
 name|key
@@ -5460,6 +5456,10 @@ break|break;
 case|case
 name|LSHA
 case|:
+name|state
+operator||=
+name|SHIFTAON
+expr_stmt|;
 name|action
 operator|=
 name|LSH
@@ -5476,6 +5476,10 @@ break|break;
 case|case
 name|RSHA
 case|:
+name|state
+operator||=
+name|SHIFTAON
+expr_stmt|;
 name|action
 operator|=
 name|RSH
@@ -5492,6 +5496,10 @@ break|break;
 case|case
 name|LCTRA
 case|:
+name|state
+operator||=
+name|SHIFTAON
+expr_stmt|;
 name|action
 operator|=
 name|LCTR
@@ -5508,6 +5516,10 @@ break|break;
 case|case
 name|RCTRA
 case|:
+name|state
+operator||=
+name|SHIFTAON
+expr_stmt|;
 name|action
 operator|=
 name|RCTR
@@ -5524,6 +5536,10 @@ break|break;
 case|case
 name|LALTA
 case|:
+name|state
+operator||=
+name|SHIFTAON
+expr_stmt|;
 name|action
 operator|=
 name|LALT
@@ -5540,6 +5556,10 @@ break|break;
 case|case
 name|RALTA
 case|:
+name|state
+operator||=
+name|SHIFTAON
+expr_stmt|;
 name|action
 operator|=
 name|RALT
@@ -5571,6 +5591,11 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* is this an accent (dead) key? */
+operator|*
+name|shiftstate
+operator|=
+name|state
+expr_stmt|;
 if|if
 condition|(
 name|action
@@ -5661,7 +5686,13 @@ operator||=
 name|FKEY
 expr_stmt|;
 comment|/* XXX: return fkey string for the FKEY? */
-break|break;
+return|return
+operator|(
+name|SPCLKEY
+operator||
+name|action
+operator|)
+return|;
 block|}
 operator|*
 name|shiftstate
@@ -5679,6 +5710,11 @@ block|}
 else|else
 block|{
 comment|/* regular keys */
+operator|*
+name|shiftstate
+operator|=
+name|state
+expr_stmt|;
 if|if
 condition|(
 operator|*

@@ -250,10 +250,6 @@ define|#
 directive|define
 name|KB_DELAY2
 value|100
-name|int
-name|kb_prev_key
-decl_stmt|;
-comment|/* keycode previously seen */
 name|unsigned
 name|long
 name|kb_count
@@ -1315,6 +1311,13 @@ define|#
 directive|define
 name|ALKDOWN
 value|(1<< 29)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHIFTAON
+value|(1<< 30)
 end_define
 
 begin_comment
