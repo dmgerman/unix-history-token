@@ -2206,11 +2206,24 @@ block|{
 name|int
 name|bootopt
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DDB
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|RESTARTABLE_PANICS
+argument_list|)
 name|int
 name|holding_giant
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|va_list
 name|ap
 decl_stmt|;
@@ -2290,6 +2303,15 @@ else|else
 name|panicstr
 operator|=
 name|fmt
+expr_stmt|;
+comment|/* Test that the console is still working. */
+name|printf
+argument_list|(
+literal|"              \\|/ ____ \\|/\n"
+literal|"              \"@'/ .. \\`@\"\n"
+literal|"              /_| \\__/ |_\\\n"
+literal|"                 \\__U_/\n"
+argument_list|)
 expr_stmt|;
 name|va_start
 argument_list|(
