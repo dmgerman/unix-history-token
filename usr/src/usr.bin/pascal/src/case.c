@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)case.c	5.1 (Berkeley) %G%"
+literal|"@(#)case.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,31 +23,6 @@ begin_endif
 endif|#
 directive|endif
 endif|not lint
-end_endif
-
-begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)case.c 5.1 %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
 end_endif
 
 begin_include
