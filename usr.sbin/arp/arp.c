@@ -698,7 +698,7 @@ argument_list|)
 expr_stmt|;
 name|so_mask
 operator|.
-name|sin_family
+name|sin_len
 operator|=
 literal|8
 expr_stmt|;
@@ -3801,7 +3801,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|s
+name|sock
 argument_list|,
 name|SIOCGIFCONF
 argument_list|,
@@ -3910,7 +3910,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|s
+name|sock
 argument_list|,
 name|SIOCGIFFLAGS
 argument_list|,
@@ -3955,7 +3955,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|s
+name|sock
 argument_list|,
 name|SIOCGIFNETMASK
 argument_list|,
@@ -4128,7 +4128,7 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|s
+name|sock
 argument_list|)
 expr_stmt|;
 name|printf
