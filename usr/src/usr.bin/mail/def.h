@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.2 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.3 %G%";  */
 end_comment
 
 begin_comment
@@ -457,6 +457,17 @@ end_define
 
 begin_comment
 comment|/* Illegal from send mode bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|W
+value|0400
+end_define
+
+begin_comment
+comment|/* Illegal when read only bit */
 end_comment
 
 begin_comment
@@ -1149,6 +1160,14 @@ begin_function_decl
 name|char
 modifier|*
 name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|getfilename
 parameter_list|()
 function_decl|;
 end_function_decl
