@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.8 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.8.1.1 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,9 @@ name|D_INFO
 operator|->
 name|id
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ONE
 comment|/* Re-Initialize bad sector map relocation pointers */
 name|zero_bad_sector_map
 argument_list|()
@@ -216,9 +219,15 @@ expr_stmt|;
 name|format_maintenence_area
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ONE */
 name|format_users_data_area
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ONE
 comment|/* verify the surface */
 name|verify_relocation_area
 argument_list|()
@@ -229,6 +238,9 @@ expr_stmt|;
 name|verify_users_data_area
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ONE */
 operator|(
 name|void
 operator|)
@@ -356,6 +368,9 @@ name|substate
 operator|=
 name|sub_fmt
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ONE
 name|sector_count
 operator|=
 call|(
@@ -371,6 +386,23 @@ operator|->
 name|d_nsectors
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* ONE */
+name|sector_count
+operator|=
+call|(
+name|long
+call|)
+argument_list|(
+name|lab
+operator|->
+name|d_nsectors
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ONE */
 name|dskaddr
 operator|.
 name|track
@@ -389,6 +421,9 @@ name|char
 operator|)
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ONE
 for|for
 control|(
 name|cyl
@@ -415,6 +450,24 @@ name|cylinder
 operator|=
 name|cyl
 expr_stmt|;
+else|#
+directive|else
+comment|/* ONE */
+name|dskaddr
+operator|.
+name|cylinder
+operator|=
+literal|183
+expr_stmt|;
+name|dskaddr
+operator|.
+name|track
+operator|=
+literal|7
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ONE */
 name|format_sectors
 argument_list|(
 operator|&
@@ -433,7 +486,13 @@ condition|(
 name|kill_processes
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|ONE
 block|}
+endif|#
+directive|endif
+comment|/* ONE */
 block|}
 end_block
 
@@ -789,6 +848,31 @@ operator|*
 operator|)
 name|scratch
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ONE
+name|printf
+argument_list|(
+literal|"format %d @ %d/%d/%d\n"
+argument_list|,
+name|count
+argument_list|,
+name|dskaddr
+operator|->
+name|cylinder
+argument_list|,
+name|dskaddr
+operator|->
+name|track
+argument_list|,
+name|dskaddr
+operator|->
+name|sector
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ONE */
 name|dcb
 operator|.
 name|trail
