@@ -2774,9 +2774,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_bump_syncid
-operator|=
-name|G_MIRROR_BUMP_ON_FIRST_WRITE
+name|sc_bump_id
+operator||=
+name|G_MIRROR_BUMP_SYNCID_OFW
 expr_stmt|;
 name|g_mirror_event_send
 argument_list|(
