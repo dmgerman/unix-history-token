@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extract.c	5.2 (Berkeley) %G%"
+literal|"@(#)extract.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,10 +154,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|file
-decl_stmt|,
-modifier|*
-name|rname
-argument_list|()
 decl_stmt|;
 name|eval
 operator|=
@@ -336,10 +332,7 @@ name|printf
 argument_list|(
 literal|"x - %s\n"
 argument_list|,
-name|rname
-argument_list|(
 name|file
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cf

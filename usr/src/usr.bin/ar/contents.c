@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)contents.c	5.3 (Berkeley) %G%"
+literal|"@(#)contents.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,9 @@ modifier|*
 name|tp
 decl_stmt|;
 name|char
+modifier|*
+name|file
+decl_stmt|,
 name|buf
 index|[
 literal|25
@@ -175,13 +178,32 @@ block|{
 if|if
 condition|(
 name|all
-operator|||
+condition|)
+name|file
+operator|=
+name|chdr
+operator|.
+name|name
+expr_stmt|;
+else|else
+block|{
+name|file
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|files
 argument_list|(
 name|argv
 argument_list|)
 condition|)
-block|{
+goto|goto
+name|next
+goto|;
+block|}
 if|if
 condition|(
 name|options
@@ -261,9 +283,7 @@ literal|"%s %s\n"
 argument_list|,
 name|buf
 argument_list|,
-name|chdr
-operator|.
-name|name
+name|file
 argument_list|)
 expr_stmt|;
 block|}
@@ -275,9 +295,7 @@ name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|chdr
-operator|.
-name|name
+name|file
 argument_list|)
 expr_stmt|;
 if|if
@@ -290,7 +308,8 @@ operator|*
 name|argv
 condition|)
 break|break;
-block|}
+name|next
+label|:
 name|skipobj
 argument_list|(
 name|afd

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.4 (Berkeley) %G%"
+literal|"@(#)replace.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,9 @@ begin_block
 block|{
 specifier|extern
 name|char
+modifier|*
+name|posarg
+decl_stmt|,
 modifier|*
 name|posname
 decl_stmt|;
@@ -365,9 +368,7 @@ name|printf
 argument_list|(
 literal|"r - %s\n"
 argument_list|,
-name|chdr
-operator|.
-name|name
+name|file
 argument_list|)
 expr_stmt|;
 comment|/* Read from disk, write to an archive; pad on write */
@@ -521,7 +522,7 @@ name|stderr
 argument_list|,
 literal|"ar: %s: archive member not found.\n"
 argument_list|,
-name|posname
+name|posarg
 argument_list|)
 expr_stmt|;
 name|close_archive
@@ -560,10 +561,7 @@ name|printf
 argument_list|(
 literal|"a - %s\n"
 argument_list|,
-name|rname
-argument_list|(
 name|file
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

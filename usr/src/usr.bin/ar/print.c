@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.3 (Berkeley) %G%"
+literal|"@(#)print.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,10 @@ decl_stmt|;
 name|int
 name|eval
 decl_stmt|;
+name|char
+modifier|*
+name|file
+decl_stmt|;
 name|afd
 operator|=
 name|open_archive
@@ -158,9 +162,23 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|all
-operator|&&
+condition|)
+name|file
+operator|=
+name|chdr
+operator|.
+name|name
+expr_stmt|;
+else|else
+block|{
+name|file
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|files
 argument_list|(
@@ -174,6 +192,7 @@ name|afd
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -189,9 +208,7 @@ name|printf
 argument_list|(
 literal|"\n<%s>\n\n"
 argument_list|,
-name|chdr
-operator|.
-name|name
+name|file
 argument_list|)
 expr_stmt|;
 operator|(

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	5.7 (Berkeley) %G%"
+literal|"@(#)ar.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,9 @@ name|archive
 decl_stmt|,
 modifier|*
 name|envtmp
+decl_stmt|,
+modifier|*
+name|posarg
 decl_stmt|,
 modifier|*
 name|posname
@@ -551,7 +554,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|posname
+name|posarg
 operator|=
 operator|*
 name|argv
@@ -577,7 +580,7 @@ name|posname
 operator|=
 name|rname
 argument_list|(
-name|posname
+name|posarg
 argument_list|)
 expr_stmt|;
 block|}

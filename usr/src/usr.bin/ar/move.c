@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.3 (Berkeley) %G%"
+literal|"@(#)move.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,9 +141,12 @@ block|{
 specifier|extern
 name|char
 modifier|*
+name|posarg
+decl_stmt|,
+modifier|*
 name|posname
 decl_stmt|;
-comment|/* positioning file name */
+comment|/* positioning file names */
 name|CF
 name|cf
 decl_stmt|;
@@ -166,6 +169,10 @@ decl_stmt|,
 name|tfd2
 decl_stmt|,
 name|tfd3
+decl_stmt|;
+name|char
+modifier|*
+name|file
 decl_stmt|;
 name|afd
 operator|=
@@ -234,8 +241,12 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|file
+operator|=
 operator|*
 name|argv
+operator|)
 operator|&&
 name|files
 argument_list|(
@@ -256,9 +267,7 @@ name|printf
 argument_list|(
 literal|"m - %s\n"
 argument_list|,
-name|chdr
-operator|.
-name|name
+name|file
 argument_list|)
 expr_stmt|;
 name|cf
@@ -373,7 +382,7 @@ name|stderr
 argument_list|,
 literal|"ar: %s: archive member not found.\n"
 argument_list|,
-name|posname
+name|posarg
 argument_list|)
 expr_stmt|;
 name|close_archive
