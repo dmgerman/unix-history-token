@@ -4974,6 +4974,9 @@ decl_stmt|;
 name|int
 name|np_txidx
 decl_stmt|;
+name|kspin_lock
+name|np_lock
+decl_stmt|;
 block|}
 struct|;
 end_struct
