@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -139,6 +145,12 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vflag
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +217,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"m:p"
+literal|"m:pv"
 argument_list|)
 operator|)
 operator|!=
@@ -221,6 +233,14 @@ case|case
 literal|'p'
 case|:
 name|pflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
 operator|=
 literal|1
 expr_stmt|;
@@ -386,6 +406,22 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -655,6 +691,18 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+elseif|else
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -743,12 +791,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkdir [-p] [-m mode] directory ...\n"
+literal|"usage: mkdir [-p] [-m mode] [-v] directory ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
