@@ -5837,13 +5837,7 @@ name|periph
 operator|->
 name|unit_number
 argument_list|,
-operator|(
 name|speed
-operator|%
-literal|1000
-operator|)
-operator|*
-literal|1000
 argument_list|)
 expr_stmt|;
 if|if
