@@ -276,7 +276,7 @@ argument_list|)
 return|;
 else|else
 return|return
-name|pci_alloc_resource
+name|alpha_pci_alloc_resource
 argument_list|(
 name|bus
 argument_list|,

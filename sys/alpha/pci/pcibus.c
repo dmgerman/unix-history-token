@@ -983,7 +983,7 @@ begin_function
 name|struct
 name|resource
 modifier|*
-name|pci_alloc_resource
+name|alpha_pci_alloc_resource
 parameter_list|(
 name|device_t
 name|bus
