@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vx.c	1.10	87/01/11	*/
+comment|/*	vx.c	1.11	87/09/06	*/
 end_comment
 
 begin_include
@@ -2762,10 +2762,20 @@ name|vs_vers
 operator|==
 name|VXV_NEW
 condition|)
-name|vxstart
-argument_list|(
+operator|(
+operator|*
+name|linesw
+index|[
 name|tp
-argument_list|)
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_start
+operator|)
+operator|(
+name|tp
+operator|)
 expr_stmt|;
 else|else
 block|{
@@ -2806,10 +2816,20 @@ condition|;
 name|tp
 operator|++
 control|)
-name|vxstart
-argument_list|(
+operator|(
+operator|*
+name|linesw
+index|[
 name|tp
-argument_list|)
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_start
+operator|)
+operator|(
+name|tp
+operator|)
 expr_stmt|;
 if|if
 condition|(
