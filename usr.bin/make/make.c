@@ -2481,7 +2481,7 @@ expr_stmt|;
 block|}
 name|errors
 operator|=
-name|Job_End
+name|Job_Finish
 argument_list|()
 expr_stmt|;
 comment|/*      * Print the final status of each target. E.g. if it wasn't made      * because some inferior reported an error.      */

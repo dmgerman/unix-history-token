@@ -2823,6 +2823,16 @@ condition|(
 operator|!
 name|ReadMakefile
 argument_list|(
+literal|"BSDmakefile"
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+if|if
+condition|(
+operator|!
+name|ReadMakefile
+argument_list|(
 literal|"makefile"
 argument_list|,
 name|NULL

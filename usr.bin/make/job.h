@@ -501,7 +501,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|Job_End
+name|Job_Finish
 parameter_list|(
 name|void
 parameter_list|)
