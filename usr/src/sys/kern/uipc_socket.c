@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.62	82/10/31	*/
+comment|/*	uipc_socket.c	4.63	82/11/02	*/
 end_comment
 
 begin_include
@@ -1032,7 +1032,7 @@ name|sostat
 argument_list|(
 argument|so
 argument_list|,
-argument|sb
+argument|ub
 argument_list|)
 end_macro
 
@@ -1048,22 +1048,26 @@ begin_decl_stmt
 name|struct
 name|stat
 modifier|*
-name|sb
+name|ub
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|sb
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|sb
 argument_list|)
 argument_list|)
