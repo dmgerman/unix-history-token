@@ -1151,7 +1151,7 @@ modifier|*
 specifier|const
 name|common
 init|=
-literal|"[-b blocksize] [-P pipecmd | -f file] [-s fileno]"
+literal|"[-b blocksize] [-f file | -P pipecommand] [-s fileno]"
 decl_stmt|;
 specifier|const
 name|char
@@ -1171,25 +1171,25 @@ argument_list|,
 literal|"usage:\t%s %s\n\t%s %s\n\t%s %s\n"
 literal|"\t%s %s %s\n\t%s %s %s\n"
 argument_list|,
-literal|"restore -i [-cdhmNuvy]"
+literal|"restore -i [-dhmNuvy]"
 argument_list|,
 name|common
 argument_list|,
-literal|"restore -r [-cdNuvy]"
+literal|"restore -R [-dNuvy]"
 argument_list|,
 name|common
 argument_list|,
-literal|"restore -R [-cdNuvy]"
+literal|"restore -r [-dNuvy]"
 argument_list|,
 name|common
 argument_list|,
-literal|"restore -x [-cdhmNuvy]"
+literal|"restore -t [-dhNuvy]"
 argument_list|,
 name|common
 argument_list|,
 name|fileell
 argument_list|,
-literal|"restore -t [-cdhNuvy]"
+literal|"restore -x [-dhmNuvy]"
 argument_list|,
 name|common
 argument_list|,

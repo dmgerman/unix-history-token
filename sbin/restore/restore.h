@@ -223,6 +223,17 @@ begin_comment
 comment|/* need byte swapping on inodes and dirs */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldinofmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* reading tape with FreeBSD 1 format inodes */
+end_comment
+
 begin_comment
 comment|/*  * Each file in the file system is described by one of these entries  */
 end_comment
@@ -613,6 +624,17 @@ directive|define
 name|FAIL
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|NFS_DR_NEWINODEFMT
+value|0x2
+end_define
+
+begin_comment
+comment|/* Tape uses 4.4 BSD inode format */
+end_comment
 
 end_unit
 
