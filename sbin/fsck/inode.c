@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inode.c,v 1.14 1998/06/15 07:07:12 charnier Exp $"
+literal|"$Id: inode.c,v 1.15 1998/06/28 19:23:02 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1929,7 +1929,6 @@ modifier|*
 modifier|*
 name|inpp
 decl_stmt|;
-name|unsigned
 name|int
 name|blks
 decl_stmt|;
