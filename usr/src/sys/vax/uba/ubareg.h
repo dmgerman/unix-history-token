@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.22	81/04/03	*/
+comment|/*	ubareg.h	4.23	81/10/29	*/
 end_comment
 
 begin_comment
@@ -554,6 +554,19 @@ begin_comment
 comment|/* buffered UNIBUS address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UBA_PURGE780
+parameter_list|(
+name|uba
+parameter_list|,
+name|bdp
+parameter_list|)
+define|\
+value|((uba)->uba_dpr[bdp] |= UBADPR_BNE)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -609,6 +622,19 @@ end_define
 begin_comment
 comment|/* purge bdp */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UBA_PURGE750
+parameter_list|(
+name|uba
+parameter_list|,
+name|bdp
+parameter_list|)
+define|\
+value|((uba)->uba_dpr[bdp] |= (UBADPR_PURGE|UBADPR_NXM|UBADPR_UCE))
+end_define
 
 begin_endif
 endif|#

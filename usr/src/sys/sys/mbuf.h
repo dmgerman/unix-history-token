@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.1 81/10/29 */
+comment|/* mbuf.h 4.2 81/10/29 */
 end_comment
 
 begin_comment
@@ -228,7 +228,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = spl_imp(); \ 	  if ((m)=mfree) \ 		{ netcb.n_bufs--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ mbstat.m_bufs--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -241,7 +241,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = spl_imp(); \ 	  if ((m)=mpfree) \ 	      { ++mprefcnt[mtopf(m)]; nmpfree--; mpfree = (m)->m_next; } \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mpfree) \ 	      { ++mprefcnt[mtopf(m)]; nmpfree--; mpfree = (m)->m_next; } \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -254,7 +254,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = spl_imp(); \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mprefcnt[mtopf(n)] == 0) \ 		    { (n)->m_next = mpfree; mpfree = (n); nmpfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); netcb.n_bufs++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mprefcnt[mtopf(n)] == 0) \ 		    { (n)->m_next = mpfree; mpfree = (n); nmpfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_bufs++; \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -267,6 +267,30 @@ end_define
 begin_comment
 comment|/* mbufs/page */
 end_comment
+
+begin_struct
+struct|struct
+name|mbstat
+block|{
+name|short
+name|m_bufs
+decl_stmt|;
+comment|/* # free msg buffers */
+name|short
+name|m_hiwat
+decl_stmt|;
+comment|/* # free mbufs allocated */
+name|short
+name|m_lowat
+decl_stmt|;
+comment|/* min. # free mbufs */
+name|short
+name|m_pages
+decl_stmt|;
+comment|/* # pages owned by network */
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -300,50 +324,17 @@ begin_comment
 comment|/* page tables to map Netutl */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|mbstat
+name|mbstat
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|short
-name|n_bufs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # free msg buffers */
-end_comment
-
-begin_decl_stmt
-name|short
-name|n_hiwat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # free mbufs allocated */
-end_comment
-
-begin_decl_stmt
-name|short
-name|n_lowat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* min. # free mbufs */
-end_comment
-
-begin_decl_stmt
-name|short
-name|n_pages
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # pages owned by network */
-end_comment
 
 end_unit
 

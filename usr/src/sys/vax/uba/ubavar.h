@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.19	81/08/31	*/
+comment|/*	ubavar.h	4.20	81/10/29	*/
 end_comment
 
 begin_comment
@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|UBA_NEEDBDP
-value|1
+value|0x1
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|UBA_CANTWAIT
-value|2
+value|0x2
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|UBA_NEED16
-value|3
+value|0x4
 end_define
 
 begin_comment
