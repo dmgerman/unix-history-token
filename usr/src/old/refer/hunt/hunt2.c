@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt2.c	4.4 (Berkeley) %G%"
+literal|"@(#)hunt2.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,15 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_union
+begin_decl_stmt
+name|unsigned
+modifier|*
+name|master
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 union|union
 name|ptr
 block|{
@@ -120,12 +128,8 @@ modifier|*
 name|b
 decl_stmt|;
 block|}
-name|master
+name|umaster
 union|;
-end_union
-
-begin_block
-block|{
 name|long
 name|k
 decl_stmt|;
@@ -253,6 +257,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|iflong
+condition|)
+name|umaster
+operator|.
+name|b
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+name|master
+expr_stmt|;
+else|else
+name|umaster
+operator|.
+name|a
+operator|=
+name|master
+expr_stmt|;
 name|_assert
 argument_list|(
 name|lmaster
@@ -353,7 +378,7 @@ name|prevdrop
 operator|.
 name|a
 operator|=
-name|master
+name|umaster
 operator|.
 name|a
 expr_stmt|;
@@ -609,7 +634,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -622,7 +647,7 @@ name|fb
 argument_list|)
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -652,10 +677,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"master has %ld\n"
+literal|"umaster has %ld\n"
 argument_list|,
 operator|(
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -669,10 +694,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"master has %d\n"
+literal|"umaster has %d\n"
 argument_list|,
 operator|(
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -697,7 +722,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -713,7 +738,7 @@ else|else
 block|{
 if|if
 condition|(
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -795,7 +820,7 @@ index|[
 name|j
 index|]
 operator|=
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -810,7 +835,7 @@ index|[
 name|j
 index|]
 operator|=
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1119,7 +1144,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1134,7 +1159,7 @@ name|j
 index|]
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1175,7 +1200,7 @@ literal|" not skip g %d doc %d coord %d note %d\n"
 argument_list|,
 name|g
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1191,7 +1216,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1210,7 +1235,7 @@ literal|" not skip g %d doc %ld coord %d nterm %d\n"
 argument_list|,
 name|g
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1276,7 +1301,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1286,7 +1311,7 @@ operator|=
 name|k
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1324,7 +1349,7 @@ literal|" at g %d item %ld coord %d note %ld\n"
 argument_list|,
 name|g
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1340,7 +1365,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1359,7 +1384,7 @@ literal|" at g %d item %d coord %d note %d\n"
 argument_list|,
 name|g
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1375,7 +1400,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1400,7 +1425,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1410,7 +1435,7 @@ operator|=
 name|k
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1482,7 +1507,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1497,7 +1522,7 @@ name|j
 index|]
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1535,7 +1560,7 @@ name|stderr
 argument_list|,
 literal|"copied over %ld coord %d\n"
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1559,7 +1584,7 @@ name|stderr
 argument_list|,
 literal|"copied over %d coord %d\n"
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1673,7 +1698,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1681,7 +1706,7 @@ name|g
 operator|++
 index|]
 operator|=
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1689,7 +1714,7 @@ name|j
 index|]
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1697,7 +1722,7 @@ name|g
 operator|++
 index|]
 operator|=
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -1801,7 +1826,7 @@ name|stderr
 argument_list|,
 literal|":%ld\n"
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -1816,7 +1841,7 @@ name|stderr
 argument_list|,
 literal|":%d\n"
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[

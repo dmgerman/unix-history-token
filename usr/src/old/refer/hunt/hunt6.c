@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt6.c	4.2 (Berkeley) %G%"
+literal|"@(#)hunt6.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,22 +91,12 @@ argument|full
 argument_list|)
 end_macro
 
-begin_union
-union|union
-name|ptr
-block|{
+begin_decl_stmt
 name|unsigned
 modifier|*
-name|a
-decl_stmt|;
-name|long
-modifier|*
-name|b
-decl_stmt|;
-block|}
 name|master
-union|;
-end_union
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -129,6 +119,20 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* checks list of drops for real bad drops; finds items with "deliv" */
+union|union
+name|ptr
+block|{
+name|unsigned
+modifier|*
+name|a
+decl_stmt|;
+name|long
+modifier|*
+name|b
+decl_stmt|;
+block|}
+name|umaster
+union|;
 name|int
 name|i
 decl_stmt|,
@@ -170,6 +174,27 @@ name|colevel
 decl_stmt|,
 name|reached
 decl_stmt|;
+if|if
+condition|(
+name|iflong
+condition|)
+name|umaster
+operator|.
+name|b
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+name|master
+expr_stmt|;
+else|else
+name|umaster
+operator|.
+name|a
+operator|=
+name|master
+expr_stmt|;
 if|#
 directive|if
 name|D1
@@ -181,25 +206,25 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"in baddrop, nf %d master %ld %ld %ld\n"
+literal|"in baddrop, nf %d umaster %ld %ld %ld\n"
 argument_list|,
 name|nf
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
 literal|0
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
 literal|1
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -212,25 +237,25 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"in baddrop, nf %d master %d %d %d\n"
+literal|"in baddrop, nf %d umaster %d %d %d\n"
 argument_list|,
 name|nf
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
 literal|0
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
 literal|1
 index|]
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -260,14 +285,14 @@ name|lp
 operator|=
 name|iflong
 condition|?
-name|master
+name|umaster
 operator|.
 name|b
 index|[
 name|i
 index|]
 else|:
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -285,11 +310,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"i %d master %lo lp %lo\n"
+literal|"i %d umaster %lo lp %lo\n"
 argument_list|,
 name|i
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -304,11 +329,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"i %d master %o lp %lo\n"
+literal|"i %d umaster %o lp %lo\n"
 argument_list|,
 name|i
 argument_list|,
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -642,7 +667,7 @@ if|if
 condition|(
 name|iflong
 condition|)
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -650,7 +675,7 @@ name|g
 operator|++
 index|]
 operator|=
-name|master
+name|umaster
 operator|.
 name|b
 index|[
@@ -658,7 +683,7 @@ name|i
 index|]
 expr_stmt|;
 else|else
-name|master
+name|umaster
 operator|.
 name|a
 index|[
@@ -666,7 +691,7 @@ name|g
 operator|++
 index|]
 operator|=
-name|master
+name|umaster
 operator|.
 name|a
 index|[

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt5.c	4.2 (Berkeley) %G%"
+literal|"@(#)hunt5.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,22 +63,12 @@ argument|fc
 argument_list|)
 end_macro
 
-begin_union
-union|union
-name|ptr
-block|{
+begin_decl_stmt
 name|unsigned
 modifier|*
-name|a
-decl_stmt|;
-name|long
-modifier|*
-name|b
-decl_stmt|;
-block|}
 name|master
-union|;
-end_union
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -111,6 +101,41 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+union|union
+name|ptr
+block|{
+name|unsigned
+modifier|*
+name|a
+decl_stmt|;
+name|long
+modifier|*
+name|b
+decl_stmt|;
+block|}
+name|umaster
+union|;
+if|if
+condition|(
+name|iflong
+condition|)
+name|umaster
+operator|.
+name|b
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+name|master
+expr_stmt|;
+else|else
+name|umaster
+operator|.
+name|a
+operator|=
+name|master
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -129,14 +154,14 @@ name|lp
 operator|=
 name|iflong
 condition|?
-name|master
+name|umaster
 operator|.
 name|b
 index|[
 name|i
 index|]
 else|:
-name|master
+name|umaster
 operator|.
 name|a
 index|[
