@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.5 (Berkeley) %G%"
+literal|"@(#)sort.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,11 +60,11 @@ name|C
 value|20
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|pdp11
+end_ifndef
 
 begin_define
 define|#
@@ -3901,6 +3901,10 @@ operator|==
 literal|0
 operator|||
 name|muflg
+operator|||
+name|i
+operator|==
+literal|1
 operator|||
 call|(
 modifier|*
