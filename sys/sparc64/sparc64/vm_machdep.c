@@ -619,7 +619,7 @@ literal|1
 expr_stmt|;
 name|fp
 operator|->
-name|f_local
+name|fr_local
 index|[
 literal|0
 index|]
@@ -631,7 +631,7 @@ name|fork_return
 expr_stmt|;
 name|fp
 operator|->
-name|f_local
+name|fr_local
 index|[
 literal|1
 index|]
@@ -643,7 +643,7 @@ name|td2
 expr_stmt|;
 name|fp
 operator|->
-name|f_local
+name|fr_local
 index|[
 literal|2
 index|]
@@ -855,7 +855,7 @@ operator|)
 expr_stmt|;
 name|fp
 operator|->
-name|f_local
+name|fr_local
 index|[
 literal|0
 index|]
@@ -867,7 +867,7 @@ name|func
 expr_stmt|;
 name|fp
 operator|->
-name|f_local
+name|fr_local
 index|[
 literal|1
 index|]

@@ -29,6 +29,17 @@ name|SPOFF
 value|2047
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIAS
+value|SPOFF
+end_define
+
+begin_comment
+comment|/* XXX - open/netbsd compat */
+end_comment
+
 begin_struct
 struct|struct
 name|trapframe
@@ -132,19 +143,19 @@ struct|struct
 name|frame
 block|{
 name|u_long
-name|f_local
+name|fr_local
 index|[
 literal|8
 index|]
 decl_stmt|;
 name|u_long
-name|f_in
+name|fr_in
 index|[
 literal|8
 index|]
 decl_stmt|;
 name|u_long
-name|f_pad
+name|fr_pad
 index|[
 literal|8
 index|]
@@ -156,15 +167,32 @@ end_struct
 begin_define
 define|#
 directive|define
-name|f_fp
-value|f_in[6]
+name|fr_arg
+value|fr_in
 end_define
 
 begin_define
 define|#
 directive|define
-name|f_pc
-value|f_in[7]
+name|fr_fp
+value|fr_in[6]
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_pc
+value|fr_in[7]
+end_define
+
+begin_define
+define|#
+directive|define
+name|v9next_frame
+parameter_list|(
+name|fp
+parameter_list|)
+value|((struct frame *)(fp->fr_fp + BIAS))
 end_define
 
 begin_comment

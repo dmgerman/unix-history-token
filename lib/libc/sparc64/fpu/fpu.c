@@ -791,7 +791,7 @@ return|return
 operator|(
 name|frm
 operator|->
-name|f_local
+name|fr_local
 index|[
 name|reg
 operator|-

@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/emul.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -252,7 +258,7 @@ argument_list|(
 expr|struct
 name|frame
 argument_list|,
-name|f_local
+name|fr_local
 index|[
 name|reg
 operator|-
@@ -382,7 +388,7 @@ argument_list|(
 expr|struct
 name|frame
 argument_list|,
-name|f_local
+name|fr_local
 index|[
 name|reg
 operator|-
