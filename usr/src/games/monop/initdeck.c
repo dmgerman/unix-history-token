@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initdeck.c	5.3 (Berkeley) %G%"
+literal|"@(#)initdeck.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,37 +457,28 @@ if|if
 condition|(
 name|ac
 operator|>
-literal|2
+literal|1
 condition|)
-block|{
 name|infile
 operator|=
 name|av
 index|[
-literal|2
+literal|1
 index|]
-condition|?
-name|av
-index|[
-literal|2
-index|]
-else|:
-name|infile
 expr_stmt|;
 if|if
 condition|(
 name|ac
 operator|>
-literal|3
+literal|2
 condition|)
 name|outfile
 operator|=
 name|av
 index|[
-literal|3
+literal|2
 index|]
 expr_stmt|;
-block|}
 block|}
 end_block
 
