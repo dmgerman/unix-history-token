@@ -1011,6 +1011,7 @@ define|#
 directive|define
 name|SETPFX_OBJID
 value|12
+comment|/* ATM Forum says 1=valid, 2=invalid, not 0! */
 block|{
 block|{
 literal|12
@@ -1130,6 +1131,35 @@ block|,
 literal|0
 block|}
 block|}
+block|,
+define|#
+directive|define
+name|MADGE_OBJECT1
+value|16
+comment|/* I don't have a clue ... -RH */
+block|{
+block|{
+literal|9
+block|,
+literal|43
+block|,
+literal|6
+block|,
+literal|1
+block|,
+literal|4
+block|,
+literal|1
+block|,
+literal|353
+block|,
+literal|2
+block|,
+literal|7
+block|,
+literal|99
+block|}
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1229,6 +1259,27 @@ comment|/* Normal processing */
 block|}
 enum|;
 end_enum
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|ILMI_State
+index|[]
+init|=
+block|{
+literal|"UNKNOWN"
+block|,
+literal|"COLDSTART"
+block|,
+literal|"INIT"
+block|,
+literal|"REG"
+block|,
+literal|"RUNNING"
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Our (incrementing) Request ID  */
