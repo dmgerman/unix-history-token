@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.4	82/08/24	*/
+comment|/*	kern_prot.c	5.5	82/08/24	*/
 end_comment
 
 begin_comment
@@ -1155,7 +1155,8 @@ expr_stmt|;
 operator|*
 name|gp
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_block
