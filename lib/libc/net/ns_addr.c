@@ -126,9 +126,9 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|buf
@@ -136,9 +136,9 @@ index|[
 sizeof|sizeof
 argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 index|]
 operator|=
 literal|'\0'
