@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -408,6 +408,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Setup credentials 	 */
+name|cred0
+operator|.
+name|p_refcnt
+operator|=
+literal|1
+expr_stmt|;
 name|p
 operator|->
 name|p_cred
