@@ -419,6 +419,19 @@ end_comment
 
 begin_decl_stmt
 name|char
+name|pidfilename
+index|[
+literal|40
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* e.g. /var/run/slattach.tty01.pid */
+end_comment
+
+begin_decl_stmt
+name|char
 modifier|*
 name|redial_cmd
 init|=
@@ -490,6 +503,10 @@ decl_stmt|;
 specifier|extern
 name|int
 name|optind
+decl_stmt|;
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 while|while
 condition|(
@@ -643,6 +660,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"%s: Invalid option -- '%c'\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
 name|option
 argument_list|)
@@ -811,6 +833,38 @@ operator|=
 name|tty_path
 expr_stmt|;
 block|}
+name|cp
+operator|=
+name|strrchr
+argument_list|(
+name|dev
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+comment|/* always succeeds */
+name|cp
+operator|++
+expr_stmt|;
+comment|/* trailing tty pathname component */
+name|sprintf
+argument_list|(
+name|pidfilename
+argument_list|,
+literal|"%sslattach.%s.pid"
+argument_list|,
+name|_PATH_VARRUN
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|pidfilename
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1025,8 +1079,9 @@ name|ttydisc
 init|=
 name|TTYDISC
 decl_stmt|;
-name|int
-name|pgrp
+name|FILE
+modifier|*
+name|pidfile
 decl_stmt|;
 name|ioctl
 argument_list|(
@@ -1107,6 +1162,49 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent to die. */
+comment|/* create PID file */
+if|if
+condition|(
+operator|(
+name|pidfile
+operator|=
+name|fopen
+argument_list|(
+name|pidfilename
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"cannot create PID file: %m"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|pidfile
+argument_list|,
+literal|"%ld\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pidfile
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2093,6 +2191,15 @@ condition|)
 name|close
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+comment|/* Remove the PID file */
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|pidfilename
 argument_list|)
 expr_stmt|;
 comment|/* invoke a shell for exit_cmd. */
