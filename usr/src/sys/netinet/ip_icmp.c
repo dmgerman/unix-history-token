@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_icmp.c	7.8.1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_icmp.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1084,24 +1084,6 @@ expr_stmt|;
 name|deliver
 label|:
 comment|/* 		 * Problem with datagram; advise higher level routines. 		 */
-name|icp
-operator|->
-name|icmp_ip
-operator|.
-name|ip_len
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|icp
-operator|->
-name|icmp_ip
-operator|.
-name|ip_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|icmplen
@@ -1114,6 +1096,22 @@ name|ICMP_ADVLEN
 argument_list|(
 name|icp
 argument_list|)
+operator|||
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_hl
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|>>
+literal|2
+operator|)
 condition|)
 block|{
 name|icmpstat
@@ -1125,6 +1123,15 @@ goto|goto
 name|freeit
 goto|;
 block|}
+name|NTOHS
+argument_list|(
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_len
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ICMPPRINTFS
@@ -1187,6 +1194,14 @@ operator|*
 operator|)
 operator|&
 name|icmpsrc
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|icp
+operator|->
+name|icmp_ip
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1739,6 +1754,9 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|raw_input
 argument_list|(
 name|m
