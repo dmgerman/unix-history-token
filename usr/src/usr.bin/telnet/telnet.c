@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.41 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flushline
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|linemode
 decl_stmt|;
 end_decl_stmt
 
@@ -1853,6 +1859,21 @@ name|option
 argument_list|)
 condition|)
 block|{
+switch|switch
+condition|(
+name|option
+condition|)
+block|{
+case|case
+name|TELOPT_LINEMODE
+case|:
+name|linemode
+operator|=
+literal|0
+expr_stmt|;
+comment|/* put us back to the default state */
+break|break;
+block|}
 comment|/* we always accept a DONT */
 name|set_my_want_state_wont
 argument_list|(
@@ -2643,12 +2664,6 @@ return|return;
 block|}
 block|}
 end_block
-
-begin_decl_stmt
-name|int
-name|linemode
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|lm_do
