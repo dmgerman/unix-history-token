@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<queue.h>
 end_include
 
 begin_comment
