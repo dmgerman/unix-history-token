@@ -192,7 +192,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ULPT_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -2230,7 +2230,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ULPT_DEBUG
+name|USB_DEBUG
 argument_list|)
 operator|&&
 name|defined

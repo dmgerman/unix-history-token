@@ -134,7 +134,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UVISOR_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -1558,7 +1558,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|UVISOR_DEBUG
+name|USB_DEBUG
 block|{
 name|int
 name|i

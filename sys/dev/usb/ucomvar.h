@@ -724,37 +724,5 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|UCOM_DEBUG
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPLCOM_DEBUG
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|UVSCOM_DEBUG
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 

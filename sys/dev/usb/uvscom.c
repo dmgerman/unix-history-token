@@ -201,7 +201,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UVSCOM_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -209,7 +209,7 @@ specifier|static
 name|int
 name|uvscomdebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 

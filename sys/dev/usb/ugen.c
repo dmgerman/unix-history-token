@@ -192,7 +192,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UGEN_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -6015,7 +6015,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|UGEN_DEBUG
+name|USB_DEBUG
 case|case
 name|USB_SETDEBUG
 case|:

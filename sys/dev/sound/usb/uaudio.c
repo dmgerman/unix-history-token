@@ -281,7 +281,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -2534,7 +2534,7 @@ literal|1
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|bootverbose
@@ -3702,7 +3702,7 @@ name|mc
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uaudiodebug
@@ -4209,7 +4209,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|struct
 name|usb_audio_input_terminal
 modifier|*
@@ -4293,7 +4293,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|struct
 name|usb_audio_output_terminal
 modifier|*
@@ -4840,7 +4840,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|struct
 name|usb_audio_selector_unit
 modifier|*
@@ -6251,7 +6251,7 @@ case|:
 default|default:
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|printf
 argument_list|(
 literal|"uaudio_add_processing: unit %d, type=%d not impl.\n"
@@ -7106,7 +7106,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|printf
 argument_list|(
 literal|"%s: ignored setting with precision %d\n"
@@ -7485,7 +7485,7 @@ break|break;
 default|default:
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|printf
 argument_list|(
 literal|"%s: ignored audio interface with %d "
@@ -9592,7 +9592,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|err
@@ -11210,7 +11210,7 @@ return|;
 comment|/* Some devices do not support this request, so ignore errors. */
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 name|err
 operator|=
 name|uaudio_set_speed
@@ -11833,7 +11833,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uaudiodebug
@@ -12296,7 +12296,7 @@ name|total
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UAUDIO_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uaudiodebug

@@ -198,7 +198,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USCANNER_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define

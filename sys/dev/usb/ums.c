@@ -170,7 +170,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMS_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -199,7 +199,7 @@ begin_decl_stmt
 name|int
 name|umsdebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1483,7 +1483,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMS_DEBUG
+name|USB_DEBUG
 name|DPRINTF
 argument_list|(
 operator|(

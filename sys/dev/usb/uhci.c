@@ -280,7 +280,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1494,7 +1494,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -1957,7 +1957,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|UHCI_DEBUG
+name|USB_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -2082,7 +2082,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|thesc
 operator|=
 name|sc
@@ -3539,7 +3539,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -3856,7 +3856,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -3882,7 +3882,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function
@@ -5023,7 +5023,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcinoloop
@@ -5085,7 +5085,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcinoloop
@@ -5940,7 +5940,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -6099,7 +6099,7 @@ name|UHCI_STS_RD
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|printf
 argument_list|(
 literal|"%s: resume detect\n"
@@ -6201,7 +6201,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|uhci_dump_all
 argument_list|(
 name|sc
@@ -6742,7 +6742,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|printf
 argument_list|(
 literal|"uhci_idone: ii is done!\n   "
@@ -6865,7 +6865,7 @@ index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -6964,7 +6964,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|DPRINTFN
 argument_list|(
 literal|10
@@ -7122,7 +7122,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|char
 name|sbuf
 index|[
@@ -9202,7 +9202,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -9357,7 +9357,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -10182,7 +10182,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -10365,7 +10365,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -11181,7 +11181,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -11308,7 +11308,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -11945,7 +11945,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -13127,7 +13127,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|uhci_dump_ii
 argument_list|(
 name|ii
@@ -13181,7 +13181,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 name|uhci_dump_ii
 argument_list|(
 name|ii
@@ -13394,7 +13394,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhcidebug

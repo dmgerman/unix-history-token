@@ -390,7 +390,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -408,7 +408,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -2526,9 +2526,6 @@ operator|&
 literal|0x000000ff
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHCI_DEBUG
 name|uhcidebug
 operator|=
 operator|(
@@ -2546,11 +2543,6 @@ operator|)
 operator|>>
 literal|8
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|OHCI_DEBUG
 name|ohcidebug
 operator|=
 operator|(
@@ -2568,8 +2560,6 @@ operator|)
 operator|>>
 literal|16
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 endif|#
 directive|endif

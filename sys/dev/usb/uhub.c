@@ -147,7 +147,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHUB_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define

@@ -248,7 +248,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHID_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -1625,7 +1625,7 @@ name|addr
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UHID_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|uhiddebug
