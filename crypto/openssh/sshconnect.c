@@ -1185,24 +1185,12 @@ condition|(
 name|ai
 condition|)
 block|{
-if|if
-condition|(
-name|ai
-operator|->
-name|ai_canonname
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|host
-operator|=
-name|xstrdup
-argument_list|(
-name|ai
-operator|->
-name|ai_canonname
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (ai->ai_canonname != NULL) 				*host = xstrdup(ai->ai_canonname);
+endif|#
+directive|endif
 break|break;
 comment|/* Successful connection. */
 block|}
