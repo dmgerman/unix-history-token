@@ -1876,17 +1876,6 @@ argument_list|(
 literal|"ffs_reload: dirty1"
 argument_list|)
 expr_stmt|;
-name|vfs_object_create
-argument_list|(
-name|devvp
-argument_list|,
-name|td
-argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|)
-expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
@@ -2645,15 +2634,6 @@ name|td_ucred
 else|:
 name|NOCRED
 expr_stmt|;
-name|vfs_object_create
-argument_list|(
-name|devvp
-argument_list|,
-name|td
-argument_list|,
-name|cred
-argument_list|)
-expr_stmt|;
 name|ronly
 operator|=
 operator|(
@@ -2697,13 +2677,6 @@ else|:
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
-block|vfs_object_create(devvp, td, cred);
-endif|#
-directive|endif
 comment|/* 	 * If we are a root mount, drop the E flag so fsck can do its magic. 	 * We will pick it up again when we remounte R/W. 	 */
 if|if
 condition|(
