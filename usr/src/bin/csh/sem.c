@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sem.c	5.8 (Berkeley) %G%"
+literal|"@(#)sem.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,8 +348,10 @@ index|]
 condition|)
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
+literal|"+-"
+argument_list|,
 name|t
 operator|->
 name|t_dcom
@@ -359,8 +361,6 @@ index|]
 index|[
 literal|0
 index|]
-argument_list|,
-literal|"+-"
 argument_list|)
 condition|)
 if|if
