@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	4.2 (Berkeley) %G%"
+literal|"@(#)res_debug.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,14 +165,14 @@ end_comment
 begin_macro
 name|p_query
 argument_list|(
-argument|buf
+argument|msg
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|buf
+name|msg
 decl_stmt|;
 end_decl_stmt
 
@@ -199,11 +199,11 @@ operator|(
 name|HEADER
 operator|*
 operator|)
-name|buf
+name|msg
 expr_stmt|;
 name|cp
 operator|=
-name|buf
+name|msg
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -407,7 +407,7 @@ name|p_cdname
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 if|if
@@ -496,7 +496,7 @@ name|p_rr
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 if|if
@@ -545,7 +545,7 @@ name|p_rr
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 if|if
@@ -594,7 +594,7 @@ name|p_rr
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 if|if
@@ -616,14 +616,14 @@ name|p_cdname
 parameter_list|(
 name|cp
 parameter_list|,
-name|buf
+name|msg
 parameter_list|)
 name|char
 modifier|*
 name|cp
 decl_stmt|,
 decl|*
-name|buf
+name|msg
 decl_stmt|;
 end_function
 
@@ -645,7 +645,7 @@ name|n
 operator|=
 name|dn_expand
 argument_list|(
-name|buf
+name|msg
 argument_list|,
 name|cp
 argument_list|,
@@ -718,14 +718,14 @@ name|p_rr
 parameter_list|(
 name|cp
 parameter_list|,
-name|buf
+name|msg
 parameter_list|)
 name|char
 modifier|*
 name|cp
 decl_stmt|,
 decl|*
-name|buf
+name|msg
 decl_stmt|;
 end_function
 
@@ -759,7 +759,7 @@ name|p_cdname
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 operator|)
 operator|==
@@ -1001,7 +1001,7 @@ name|p_cdname
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1074,7 +1074,7 @@ name|p_cdname
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1088,7 +1088,7 @@ name|p_cdname
 argument_list|(
 name|cp
 argument_list|,
-name|buf
+name|msg
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1174,6 +1174,38 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 name|u_long
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|T_MINFO
+case|:
+name|printf
+argument_list|(
+literal|"\trequests = "
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|p_cdname
+argument_list|(
+name|cp
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\terrors = "
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|p_cdname
+argument_list|(
+name|cp
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 break|break;
