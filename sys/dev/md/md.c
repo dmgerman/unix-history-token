@@ -599,9 +599,6 @@ comment|/* MD_SWAP related fields */
 name|vm_object_t
 name|object
 decl_stmt|;
-name|unsigned
-name|npage
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -5149,13 +5146,16 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|md_s
 modifier|*
 name|sc
+decl_stmt|;
+name|vm_ooffset_t
+name|npage
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
@@ -5237,15 +5237,13 @@ name|EDOM
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate an OBJT_SWAP object. 	 * 	 * sc_nsect is in units of DEV_BSIZE. 	 * sc_npage is in units of PAGE_SIZE. 	 * 	 * Note the truncation. 	 */
+comment|/* 	 * Allocate an OBJT_SWAP object. 	 * 	 * sc_nsect is in units of DEV_BSIZE. 	 * npage is in units of PAGE_SIZE. 	 * 	 * Note the truncation. 	 */
 name|sc
 operator|->
 name|secsize
 operator|=
 name|DEV_BSIZE
 expr_stmt|;
-name|sc
-operator|->
 name|npage
 operator|=
 name|mdio
@@ -5262,8 +5260,6 @@ name|sc
 operator|->
 name|nsect
 operator|=
-name|sc
-operator|->
 name|npage
 operator|*
 operator|(
@@ -5316,11 +5312,6 @@ name|NULL
 argument_list|,
 name|PAGE_SIZE
 operator|*
-operator|(
-name|vm_offset_t
-operator|)
-name|sc
-operator|->
 name|npage
 argument_list|,
 name|VM_PROT_DEFAULT
@@ -5357,8 +5348,6 @@ name|object
 argument_list|,
 literal|0
 argument_list|,
-name|sc
-operator|->
 name|npage
 argument_list|)
 operator|<
