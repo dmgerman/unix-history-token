@@ -739,10 +739,6 @@ name|i
 operator|++
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|tname
 expr_stmt|;
 block|}
