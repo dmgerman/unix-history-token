@@ -169,6 +169,9 @@ name|int
 name|sc_enabled
 decl_stmt|;
 name|int
+name|sc_reset
+decl_stmt|;
+name|int
 name|sc_firmware_type
 decl_stmt|;
 define|#
