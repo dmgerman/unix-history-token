@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.11	82/04/24	*/
+comment|/*	protosw.h	4.12	82/09/27	*/
 end_comment
 
 begin_comment
@@ -181,7 +181,7 @@ comment|/* want PRU_RCVD calls */
 end_comment
 
 begin_comment
-comment|/*  * The arguments to usrreq are:  *	(*protosw[].pr_usrreq)(up, req, m, addr);  * where up is a (struct socket *), req is one of these requests,  * m is a optional mbuf chain, and addr is an optional meta-internetwork  * address representation.  The protocol is responsible for  * disposal of the mbuf chain.  A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
+comment|/*  * The arguments to usrreq are:  *	(*protosw[].pr_usrreq)(up, req, m, nam, opt);  * where up is a (struct socket *), req is one of these requests,  * m is a optional mbuf chain containing a message,  * nam is an optional mbuf chain containing an address,  * and opt is a pointer to a socketopt structure or nil.  * The protocol is responsible for disposal of the mbuf chain m,  * the caller is responsible for any space held by nam and opt.  * A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
 end_comment
 
 begin_define
@@ -209,8 +209,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRU_CONNECT
+name|PRU_BIND
 value|2
+end_define
+
+begin_comment
+comment|/* bind socket to address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_LISTEN
+value|3
+end_define
+
+begin_comment
+comment|/* listen for connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_CONNECT
+value|4
 end_define
 
 begin_comment
@@ -221,7 +243,7 @@ begin_define
 define|#
 directive|define
 name|PRU_ACCEPT
-value|3
+value|5
 end_define
 
 begin_comment
@@ -232,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|PRU_DISCONNECT
-value|4
+value|6
 end_define
 
 begin_comment
@@ -243,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SHUTDOWN
-value|5
+value|7
 end_define
 
 begin_comment
@@ -254,7 +276,7 @@ begin_define
 define|#
 directive|define
 name|PRU_RCVD
-value|6
+value|8
 end_define
 
 begin_comment
@@ -265,7 +287,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SEND
-value|7
+value|9
 end_define
 
 begin_comment
@@ -276,7 +298,7 @@ begin_define
 define|#
 directive|define
 name|PRU_ABORT
-value|8
+value|10
 end_define
 
 begin_comment
@@ -287,7 +309,7 @@ begin_define
 define|#
 directive|define
 name|PRU_CONTROL
-value|9
+value|11
 end_define
 
 begin_comment
@@ -298,7 +320,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SENSE
-value|10
+value|12
 end_define
 
 begin_comment
@@ -309,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|PRU_RCVOOB
-value|11
+value|13
 end_define
 
 begin_comment
@@ -320,7 +342,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SENDOOB
-value|12
+value|14
 end_define
 
 begin_comment
@@ -331,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SOCKADDR
-value|13
+value|15
 end_define
 
 begin_comment
@@ -346,7 +368,7 @@ begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|14
+value|16
 end_define
 
 begin_comment
@@ -357,7 +379,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
-value|15
+value|17
 end_define
 
 begin_comment
@@ -368,7 +390,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTORCV
-value|16
+value|18
 end_define
 
 begin_comment
@@ -379,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTOSEND
-value|17
+value|19
 end_define
 
 begin_comment
@@ -390,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|PRU_NREQ
-value|18
+value|20
 end_define
 
 begin_ifdef
@@ -409,6 +431,10 @@ block|{
 literal|"ATTACH"
 block|,
 literal|"DETACH"
+block|,
+literal|"BIND"
+block|,
+literal|"LISTEN"
 block|,
 literal|"CONNECT"
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.19	82/07/24	*/
+comment|/*	socket.h	4.20	82/09/27	*/
 end_comment
 
 begin_comment
@@ -420,6 +420,20 @@ directive|define
 name|AF_MAX
 value|11
 end_define
+
+begin_struct
+struct|struct
+name|socketopt
+block|{
+name|int
+name|so_optlen
+decl_stmt|;
+name|caddr_t
+name|so_optdata
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
