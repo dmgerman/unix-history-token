@@ -21,6 +21,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/*
 comment|*/
@@ -30,40 +36,15 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: main() / / FUNCTION: setup files for Phantasia 3.3.2 / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: time(), exit(), stat(), Error(), creat(), close(), fopen(),  /	fgets(), floor(), srandom(), umask(), drandom(), strcpy(), getuid(),  /	unlink(), fwrite(), fclose(), sscanf(), printf(), strlen(), fprintf() / / GLOBAL INPUTS: Curmonster, _iob[], Databuf[], *Monstfp, Enrgyvoid / / GLOBAL OUTPUTS: Curmonster, Databuf[], *Monstfp, Enrgyvoid / / DESCRIPTION:  / /	This program tries to verify the parameters specified in /	the Makefile. / /	Create all necessary files.  Note that nothing needs to be /	put in these files. /	Also, the monster binary data base is created here. / /************************************************************************/
 end_comment
 
-begin_function
-name|main
-parameter_list|()
-block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-comment|/* for opening files */
-name|struct
-name|stat
-name|fbuf
-decl_stmt|;
-comment|/* for getting files statistics */
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|filename
-decl_stmt|;
-comment|/* for pointing to file names */
-specifier|register
-name|int
-name|fd
-decl_stmt|;
-comment|/* file descriptor */
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|files
 index|[]
 init|=
-comment|/* all files to create */
 block|{
+comment|/* all files to create */
 name|_PATH_MONST
 block|,
 name|_PATH_PEOPLE
@@ -80,13 +61,106 @@ name|_PATH_VOID
 block|,
 name|_PATH_SCORE
 block|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
-block|}
+block|, }
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|monsterfile
+init|=
+literal|"monsters.asc"
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|filename
+decl_stmt|;
+comment|/* for pointing to file names */
+specifier|register
+name|int
+name|fd
+decl_stmt|;
+comment|/* file descriptor */
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+comment|/* for opening files */
+name|struct
+name|stat
+name|fbuf
+decl_stmt|;
+comment|/* for getting files statistics */
+name|int
+name|ch
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"m:"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'m'
+case|:
+name|monsterfile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+break|break;
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 name|srandom
 argument_list|(
 operator|(
@@ -321,7 +395,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"monsters.asc"
+name|monsterfile
 argument_list|,
 literal|"r"
 argument_list|)
