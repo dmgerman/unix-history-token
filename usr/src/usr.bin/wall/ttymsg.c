@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttymsg.c	5.1 (Berkeley) %G%"
+literal|"@(#)ttymsg.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
@@ -65,7 +71,7 @@ file|<paths.h>
 end_include
 
 begin_comment
-comment|/*  * display the contents of a uio structure on a terminal.  Used by  * wall(1) and syslogd(8).  */
+comment|/*  * display the contents of a uio structure on a terminal.  Used by  * wall(1) and syslogd(8).  Forks and finishes in child if write  * would block, waiting at most five minutes.  */
 end_comment
 
 begin_function
@@ -189,9 +195,30 @@ name|errno
 operator|!=
 name|EPERM
 condition|)
-goto|goto
-name|bad
-goto|;
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|errbuf
+argument_list|,
+literal|"open %s: %s\n"
+argument_list|,
+name|device
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|errbuf
+operator|)
+return|;
+block|}
 else|else
 return|return
 operator|(
@@ -256,10 +283,51 @@ condition|(
 name|fork
 argument_list|()
 condition|)
-goto|goto
-name|bad
-goto|;
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* wait at most 5 minutes */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -305,8 +373,6 @@ operator|==
 name|ENODEV
 condition|)
 break|break;
-name|bad
-label|:
 operator|(
 name|void
 operator|)
@@ -314,7 +380,7 @@ name|sprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"%s: %s\n"
+literal|"writing %s: %s\n"
 argument_list|,
 name|device
 argument_list|,
