@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<a.out.h>
+file|<machine/elf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<a.out.h>
 end_include
 
 begin_include

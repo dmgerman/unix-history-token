@@ -6,26 +6,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ELF_H_
+name|_ELF_HINTS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ELF_H_
+name|_ELF_HINTS_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/elf.h>
-end_include
 
 begin_comment
 comment|/*  * Hints file produced by ldconfig.  */
@@ -90,7 +78,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_ELF_H_ */
+comment|/* !_ELF_HINTS_H_ */
 end_comment
 
 end_unit

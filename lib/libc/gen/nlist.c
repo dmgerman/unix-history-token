@@ -124,7 +124,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<elf.h>
+file|<machine/elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<elf-hints.h>
 end_include
 
 begin_endif
