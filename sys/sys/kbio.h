@@ -1116,6 +1116,83 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PNC
+value|0x9a
+end_define
+
+begin_comment
+comment|/* force system panic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSHA
+value|0x9b
+end_define
+
+begin_comment
+comment|/* left shift key / alt lock	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSHA
+value|0x9c
+end_define
+
+begin_comment
+comment|/* right shift key / alt lock	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCTRA
+value|0x9d
+end_define
+
+begin_comment
+comment|/* left ctrl key / alt lock	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RCTRA
+value|0x9e
+end_define
+
+begin_comment
+comment|/* right ctrl key / alt lock	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LALTA
+value|0x9f
+end_define
+
+begin_comment
+comment|/* left alt key / alt lock	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RALTA
+value|0xa0
+end_define
+
+begin_comment
+comment|/* right alt key / alt lock	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|F
 parameter_list|(
 name|x
