@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cksum.c,v 1.6 1997/09/26 08:02:17 phk Exp $"
+literal|"$Id: cksum.c,v 1.7 1997/11/09 05:35:26 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,6 +261,9 @@ expr_stmt|;
 name|pfncn
 operator|=
 name|psum1
+expr_stmt|;
+operator|++
+name|argv
 expr_stmt|;
 block|}
 else|else
