@@ -1032,7 +1032,7 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogWARN
+name|LogCCP
 argument_list|,
 literal|"MPPE: MasterKey is invalid,"
 literal|" MPPE is capable only with CHAP81 authentication\n"
