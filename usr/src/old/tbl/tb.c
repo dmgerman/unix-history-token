@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tb.c	4.4 %G%"
+literal|"@(#)tb.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,6 +522,10 @@ expr_stmt|;
 block|}
 name|tp
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|thisvec
 expr_stmt|;
 name|thisvec
@@ -536,6 +540,10 @@ name|tp
 init|;
 name|q
 operator|<
+operator|(
+name|int
+operator|*
+operator|)
 name|thisvec
 condition|;
 name|q
