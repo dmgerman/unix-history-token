@@ -681,6 +681,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_undef
+undef|#
+directive|undef
+name|inb
+end_undef
+
 begin_define
 define|#
 directive|define
