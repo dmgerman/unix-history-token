@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.5 (Berkeley) %G%"
+literal|"@(#)eval.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1341,6 +1341,11 @@ name|putback
 argument_list|(
 operator|*
 name|p
+argument_list|)
+expr_stmt|;
+name|putback
+argument_list|(
+literal|'$'
 argument_list|)
 expr_stmt|;
 break|break;
