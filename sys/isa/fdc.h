@@ -138,6 +138,10 @@ name|int
 name|fdc_errs
 decl_stmt|;
 comment|/* number of logged errors */
+name|int
+name|dma_overruns
+decl_stmt|;
+comment|/* number of DMA overruns */
 name|struct
 name|bio_queue_head
 name|head
