@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.15 (Berkeley) 85/08/09"
+literal|"@(#)passwd.c	4.16 (Berkeley) 85/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,6 +193,8 @@ decl_stmt|,
 name|dochfn
 decl_stmt|,
 name|dochsh
+decl_stmt|,
+name|err
 decl_stmt|;
 name|FILE
 modifier|*
@@ -610,6 +612,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|err
+operator|=
+name|errno
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -619,7 +625,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|errno
+name|err
 operator|==
 name|EEXIST
 condition|)
@@ -631,11 +637,17 @@ literal|"password file busy - try again.\n"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|errno
+operator|=
+name|err
+expr_stmt|;
 name|perror
 argument_list|(
 name|temp
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|1
@@ -689,12 +701,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|err
+operator|=
+name|errno
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Warning: dbm_open failed: "
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|err
 expr_stmt|;
 name|perror
 argument_list|(
