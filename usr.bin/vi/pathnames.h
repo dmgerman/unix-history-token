@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_MSGCAT
-value|"./"
+value|"/usr/share/vi/catalog/"
 end_define
 
 begin_endif
