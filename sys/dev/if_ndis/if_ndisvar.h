@@ -113,6 +113,16 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|NDIS_INITIALIZED
+parameter_list|(
+name|sc
+parameter_list|)
+value|(sc->ndis_block.nmb_miniportadapterctx != NULL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NDIS_INC
 parameter_list|(
 name|x

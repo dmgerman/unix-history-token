@@ -6202,6 +6202,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* 	 * When performing shared memory allocations, create a tag 	 * with a lowaddr limit that restricts physical memory mappings 	 * so that they all fall within the first 1GB of memory. 	 * At least one device/driver combination (Linksys Instant 	 * Wireless PCI Card V2.7, Broadcom 802.11b) seems to have 	 * problems with performing DMA operations with physical 	 * that lie above the 1GB mark. I don't know if this is a 	 * hardware limitation or if the addresses are being truncated 	 * within the driver, but this seems to be the only way to 	 * make these cards work reliably in systems with more than 	 * 1GB of physical memory. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -6214,7 +6215,7 @@ literal|64
 argument_list|,
 literal|0
 argument_list|,
-name|BUS_SPACE_MAXADDR_32BIT
+name|NDIS_BUS_SPACE_SHARED_MAXADDR
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,

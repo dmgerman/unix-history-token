@@ -4297,6 +4297,13 @@ name|NDIS_MAXSEG
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|NDIS_BUS_SPACE_SHARED_MAXADDR
+value|0x3E7FFFFF
+end_define
+
 begin_struct
 struct|struct
 name|ndis_sc_list
