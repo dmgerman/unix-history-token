@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.5 2000/03/03 17:07:42 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.7 2000/03/05 22:24:30 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -47,12 +47,23 @@ begin_comment
 comment|/*  * RAY_DEBUG settings  *  *	2	Recoverable error's  *	6	Subroutine entry  *	11	Startup CM dump  *	15	State transitions for start/join  *	21	CCS info  *	31	IOCTL calls  *	51	MBUFs dumped/packet types reported  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RAY_DEBUG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RAY_DEBUG
-value|101
+value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -479,12 +490,6 @@ directive|include
 file|<net/if_mib.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/if_ieee80211.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -554,6 +559,12 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/if_raymib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/if_ieee80211.h>
 end_include
 
 begin_if
@@ -2207,7 +2218,7 @@ operator|->
 name|md
 operator|.
 name|start
-operator|=
+operator|==
 literal|0x0
 condition|)
 block|{
@@ -2405,16 +2416,12 @@ name|id_flags
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ray%d:<Raylink/IEEE 802.11> maddr 0x%lx msize 0x%x irq %d flags 0x%x on isa (PC-Card slot %d)\n"
+literal|"ray%d:<Raylink/IEEE 802.11> maddr %p msize 0x%x irq %d flags 0x%x on isa (PC-Card slot %d)\n"
 argument_list|,
 name|sc
 operator|->
 name|unit
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|sc
 operator|->
 name|maddr
@@ -3008,33 +3015,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"  maddr 0x%x\n"
-argument_list|,
-name|sc
-operator|->
-name|maddr
-argument_list|)
-expr_stmt|;
-name|RAY_DHEX8
-argument_list|(
-operator|(
-name|u_int8_t
-operator|*
-operator|)
-name|sc
-operator|->
-name|maddr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_ecf_startup
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/*      * Read startup results, check the card is okay and work out what      * version we are using.      */
 name|ep
 operator|=
