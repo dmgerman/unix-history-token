@@ -4275,6 +4275,14 @@ operator|->
 name|msg_control
 operator|!=
 name|NULL
+operator|&&
+name|bsd_args
+operator|.
+name|msg
+operator|->
+name|msg_controllen
+operator|>
+literal|0
 condition|)
 block|{
 name|cmsg
