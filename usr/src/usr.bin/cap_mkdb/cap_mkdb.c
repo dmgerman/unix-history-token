@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	1.4 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,8 @@ name|err
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 specifier|const
 name|char
 operator|*
@@ -324,6 +326,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -414,6 +418,10 @@ name|bplen
 decl_stmt|;
 name|int
 name|st
+decl_stmt|,
+name|stdb
+decl_stmt|,
+name|i
 decl_stmt|;
 name|char
 modifier|*
@@ -432,9 +440,6 @@ name|namebuf
 index|[
 name|NBUFSIZ
 index|]
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -463,6 +468,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|capdb
@@ -563,6 +570,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -645,6 +654,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|stdb
+operator|=
 name|capdbp
 operator|->
 name|put
@@ -657,13 +669,16 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-literal|0
+name|R_NOOVERWRITE
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"put: %s"
 argument_list|,
 name|strerror
@@ -672,9 +687,27 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stdb
+operator|==
+literal|1
+condition|)
+block|{
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"put: record '%s' already exists -- only first reference is stored"
+argument_list|,
+name|nf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|printf
 argument_list|(
-literal|"Hashed %d records.\r"
+literal|"Hashed %d capability records.\r"
 argument_list|,
 name|i
 operator|++
@@ -794,6 +827,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|stdb
+operator|=
 name|capdbp
 operator|->
 name|put
@@ -806,19 +842,37 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-literal|0
+name|R_NOOVERWRITE
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"put: %s"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stdb
+operator|==
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"put: record '%s' already exists -- only first reference is stored."
+argument_list|,
+name|namebuf
 argument_list|)
 expr_stmt|;
 name|np
@@ -849,6 +903,8 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -866,6 +922,8 @@ literal|1
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -883,6 +941,8 @@ literal|2
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"potential reference loop detected"
 argument_list|)
 expr_stmt|;
@@ -1011,6 +1071,8 @@ name|NULL
 condition|)
 name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s"
 argument_list|,
 name|strerror
@@ -1105,6 +1167,9 @@ directive|if
 name|__STDC__
 name|err
 parameter_list|(
+name|int
+name|fatal
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1157,6 +1222,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"cap_mkdb: "
 argument_list|)
 expr_stmt|;
@@ -1189,6 +1264,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|fatal
+condition|)
+block|{
+if|if
+condition|(
 name|docapdbunlink
 condition|)
 operator|(
@@ -1204,7 +1284,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+block|}
 block|}
 end_function
 
