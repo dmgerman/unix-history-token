@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.17 1995/07/29 13:39:44 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.18 1995/07/31 21:01:34 bde Exp $ */
 end_comment
 
 begin_comment
@@ -4623,19 +4623,9 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 	 * If there is more in the output queue, just send it now. 	 * We are being called in lieu of ttstart and must do what 	 * it would. 	 */
+comment|/* 	 * Call output process whether or not there is any output. 	 * We are being called in lieu of ttstart and must do what 	 * it would. 	 */
 if|if
 condition|(
-name|CCOUNT
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-operator|!=
-literal|0
-operator|&&
 name|tp
 operator|->
 name|t_oproc
