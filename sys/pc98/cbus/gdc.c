@@ -25,7 +25,7 @@ value|80
 end_define
 
 begin_comment
-comment|/*-  * $Id$  */
+comment|/*-  * $Id: pc98gdc.c,v 1.1 1999/01/18 08:38:07 kato Exp $  */
 end_comment
 
 begin_include
@@ -1594,6 +1594,13 @@ name|va_flags
 operator||=
 name|V_ADP_PROBED
 expr_stmt|;
+name|biosadapter
+index|[
+literal|0
+index|]
+operator|.
+name|va_mode
+operator|=
 name|biosadapter
 index|[
 literal|0
