@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	3.3 83/08/22"
+literal|"@(#)cmd3.c	3.4 83/11/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"string.h"
 end_include
 
 begin_expr_stmt
@@ -317,11 +323,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|w
@@ -330,7 +331,7 @@ name|ww_label
 operator|!=
 literal|0
 condition|)
-name|free
+name|str_free
 argument_list|(
 name|w
 operator|->
@@ -344,17 +345,9 @@ name|w
 operator|->
 name|ww_label
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|str_cpy
 argument_list|(
 name|label
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 operator|)
 operator|==
@@ -364,18 +357,6 @@ return|return
 operator|-
 literal|1
 return|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|w
-operator|->
-name|ww_label
-argument_list|,
-name|label
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
