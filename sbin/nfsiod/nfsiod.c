@@ -369,6 +369,8 @@ name|warnx
 argument_list|(
 literal|"nfsiod count %d; reset to %d"
 argument_list|,
+name|num_servers
+argument_list|,
 name|DEFNFSDCNT
 argument_list|)
 expr_stmt|;
@@ -435,6 +437,8 @@ block|{
 name|warnx
 argument_list|(
 literal|"nfsiod count %d; reset to %d"
+argument_list|,
+name|num_servers
 argument_list|,
 name|DEFNFSDCNT
 argument_list|)
