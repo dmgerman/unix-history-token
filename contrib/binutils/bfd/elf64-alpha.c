@@ -4,6 +4,10 @@ comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997, 1998 F
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* We need a published ABI spec for this.  Until one comes out, don't    assume this'll remain unchanged forever.  */
 end_comment
 
@@ -3662,7 +3666,7 @@ begin_define
 define|#
 directive|define
 name|ELF_DYNAMIC_INTERPRETER
-value|"/usr/lib/ld.so"
+value|"/usr/libexec/ld-elf.so.1"
 end_define
 
 begin_escape
