@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.12 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -917,14 +917,6 @@ operator|==
 name|NULL
 operator|&&
 operator|!
-name|tTd
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-operator|&&
-operator|!
 name|QueueRun
 operator|&&
 operator|!
@@ -1151,14 +1143,6 @@ operator|==
 name|NULL
 operator|&&
 operator|!
-name|tTd
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-operator|&&
-operator|!
 name|QueueRun
 operator|&&
 operator|!
@@ -1277,14 +1261,6 @@ operator|->
 name|q_alias
 operator|==
 name|NULL
-operator|&&
-operator|!
-name|tTd
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
 operator|&&
 operator|!
 name|QueueRun
