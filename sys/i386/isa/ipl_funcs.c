@@ -76,6 +76,21 @@ define|\
 value|void name(void)					\ {						\ 	atomic_set_int(var, bits);		\ 	sched_ithd((void *) SOFTINTR);		\ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|DO_SETBITS_AND_NO_MORE
+parameter_list|(
+name|name
+parameter_list|,
+name|var
+parameter_list|,
+name|bits
+parameter_list|)
+define|\
+value|void name(void)					\ {						\ 	atomic_set_int(var, bits);		\ }
+end_define
+
 begin_macro
 name|DO_SETBITS
 argument_list|(
@@ -164,45 +179,16 @@ argument|SWI_TQ_PENDING
 argument_list|)
 end_macro
 
-begin_comment
-comment|/*  * We don't need to schedule soft interrupts any more, it happens  * automatically.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|schedsoftcamnet
-end_define
-
-begin_define
-define|#
-directive|define
-name|schedsoftcambio
-end_define
-
-begin_define
-define|#
-directive|define
-name|schedsoftnet
-end_define
-
-begin_define
-define|#
-directive|define
-name|schedsofttty
-end_define
-
-begin_define
-define|#
-directive|define
-name|schedsoftvm
-end_define
-
-begin_define
-define|#
-directive|define
-name|schedsofttq
-end_define
+begin_macro
+name|DO_SETBITS_AND_NO_MORE
+argument_list|(
+argument|schedsofttty
+argument_list|,
+argument|&idelayed
+argument_list|,
+argument|SWI_TTY_PENDING
+argument_list|)
+end_macro
 
 begin_function
 name|unsigned
