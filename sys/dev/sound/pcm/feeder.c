@@ -1326,6 +1326,18 @@ decl_stmt|;
 name|int
 name|max
 decl_stmt|;
+comment|/* we're broken for recording currently, reject attempts */
+if|if
+condition|(
+name|c
+operator|->
+name|direction
+operator|==
+name|PCMDIR_REC
+condition|)
+return|return
+name|EINVAL
+return|;
 name|stop
 operator|=
 name|c
