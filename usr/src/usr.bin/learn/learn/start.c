@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	4.3	(Berkeley)	%G%"
+literal|"@(#)start.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,14 +42,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<whoami.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dir.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|BSD4_2
+value|1
+end_define
 
 begin_macro
 name|start
