@@ -10555,9 +10555,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_cred
-operator|->
-name|pc_ucred
+name|p_ucred
 operator|->
 name|cr_uid
 operator|!=

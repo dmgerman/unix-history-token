@@ -3287,9 +3287,7 @@ name|cred
 init|=
 name|p
 operator|->
-name|p_cred
-operator|->
-name|pc_ucred
+name|p_ucred
 decl_stmt|;
 name|int
 name|error

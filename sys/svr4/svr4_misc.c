@@ -6091,9 +6091,7 @@ name|crfree
 argument_list|(
 name|q
 operator|->
-name|p_cred
-operator|->
-name|pc_ucred
+name|p_ucred
 argument_list|)
 expr_stmt|;
 name|FREE

@@ -884,9 +884,7 @@ name|cred
 operator|=
 name|curp
 operator|->
-name|p_cred
-operator|->
-name|pc_ucred
+name|p_ucred
 expr_stmt|;
 if|if
 condition|(

@@ -1178,9 +1178,7 @@ argument_list|)
 argument_list|,
 name|p
 operator|->
-name|p_cred
-operator|->
-name|pc_ucred
+name|p_ucred
 argument_list|,
 name|p
 argument_list|,
@@ -1765,9 +1763,7 @@ name|cfid_fid
 argument_list|,
 name|p
 operator|->
-name|p_cred
-operator|->
-name|pc_ucred
+name|p_ucred
 argument_list|,
 name|p
 argument_list|,

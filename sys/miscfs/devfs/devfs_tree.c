@@ -4722,7 +4722,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|if ( VOP_OPEN(vn, FREAD, proc0.p_cred->pc_ucred,&proc0)) { 	 	vput(vn); 		return (NULL); 	}
+block|if ( VOP_OPEN(vn, FREAD, proc0.p_ucred,&proc0)) { 	 	vput(vn); 		return (NULL); 	}
 endif|#
 directive|endif
 return|return
@@ -4750,7 +4750,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|VOP_CLOSE(vn, 0, proc0.p_cred->pc_ucred,&proc0) ;
+block|VOP_CLOSE(vn, 0, proc0.p_ucred,&proc0) ;
 endif|#
 directive|endif
 name|vput
