@@ -4034,7 +4034,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Don't unlink a mounted file. 	 */
+comment|/* 	 * The root of a mounted filesystem cannot be deleted. 	 */
 if|if
 condition|(
 name|vp
@@ -6351,7 +6351,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Don't unlink a mounted file. 	 */
+comment|/* 	 * The root of a mounted filesystem cannot be deleted. 	 */
 if|if
 condition|(
 name|vp
