@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: dvmrp.h,v 1.4 1995/06/28 17:58:31 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: dvmrp.h,v 1.5 1996/01/06 21:09:43 peter Exp $  */
 end_comment
 
 begin_comment
@@ -110,6 +110,28 @@ begin_comment
 comment|/* graft acknowledgement */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DVMRP_INFO_REQUEST
+value|10
+end_define
+
+begin_comment
+comment|/* information request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DVMRP_INFO_REPLY
+value|11
+end_define
+
+begin_comment
+comment|/* information reply */
+end_comment
+
 begin_comment
 comment|/*  * 'flags' byte values in DVMRP_NEIGHBORS2 reply.  */
 end_comment
@@ -192,6 +214,32 @@ comment|/* Neighbor reports that it is a leaf */
 end_comment
 
 begin_comment
+comment|/*  * Request/reply types for info queries/replies  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DVMRP_INFO_VERSION
+value|1
+end_define
+
+begin_comment
+comment|/* version string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DVMRP_INFO_NEIGHBORS
+value|2
+end_define
+
+begin_comment
+comment|/* neighbors2 data */
+end_comment
+
+begin_comment
 comment|/*  * Limit on length of route data  */
 end_comment
 
@@ -244,6 +292,16 @@ comment|/* 224.0.0.4 */
 end_comment
 
 begin_comment
+comment|/*  * The IGMPv2<netinet/in.h> defines INADDR_ALLRTRS_GROUP, but earlier  * ones don't, so we define it conditionally here.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INADDR_ALLRTRS_GROUP
+end_ifndef
+
+begin_comment
 comment|/* address for multicast mtrace msg */
 end_comment
 
@@ -257,6 +315,11 @@ end_define
 begin_comment
 comment|/* 224.0.0.2 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -392,7 +455,7 @@ comment|/* " " after receiving a leave	    */
 end_comment
 
 begin_comment
-comment|/* Note: LEAVE_EXPIRE_TIME should ideally be shorter, but the resolution of  * the timer in mrouted doesn't allow us to follow the spec and make it any  * shorter. */
+comment|/* Note: LEAVE_EXPIRE_TIME should ideally be shorter, but the resolution of  * the timer in mrouted doesn't allow us to make it any shorter. */
 end_comment
 
 begin_define

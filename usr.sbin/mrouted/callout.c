@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.6 1995/06/28 17:58:25 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.7 1996/01/06 21:09:34 peter Exp $  */
 end_comment
 
 begin_include
@@ -170,6 +170,16 @@ name|time
 condition|)
 block|{
 comment|/* timeout has happened */
+name|Q
+operator|=
+name|Q
+operator|->
+name|next
+expr_stmt|;
+name|in_callout
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ptr
@@ -185,11 +195,9 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
-name|Q
+name|in_callout
 operator|=
-name|Q
-operator|->
-name|next
+literal|1
 expr_stmt|;
 name|free
 argument_list|(
@@ -704,6 +712,71 @@ end_endif
 begin_comment
 comment|/* IGMP_DEBUG */
 end_comment
+
+begin_function
+name|int
+name|secs_remaining
+parameter_list|(
+name|timer_id
+parameter_list|)
+name|int
+name|timer_id
+decl_stmt|;
+block|{
+name|struct
+name|timeout_q
+modifier|*
+name|ptr
+decl_stmt|;
+name|int
+name|left
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|ptr
+operator|=
+name|Q
+init|;
+name|ptr
+operator|&&
+name|ptr
+operator|->
+name|id
+operator|!=
+name|timer_id
+condition|;
+name|ptr
+operator|=
+name|ptr
+operator|->
+name|next
+control|)
+name|left
+operator|+=
+name|ptr
+operator|->
+name|time
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ptr
+condition|)
+comment|/* not found */
+return|return
+literal|0
+return|;
+return|return
+name|left
+operator|+
+name|ptr
+operator|->
+name|time
+return|;
+block|}
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: config.c,v 1.6 1995/06/28 17:58:27 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: config.c,v 1.8 1996/11/11 03:49:56 fenner Exp $  */
 end_comment
 
 begin_include
@@ -541,6 +541,12 @@ operator|->
 name|uv_metric
 operator|=
 name|DEFAULT_METRIC
+expr_stmt|;
+name|v
+operator|->
+name|uv_admetric
+operator|=
+literal|0
 expr_stmt|;
 name|v
 operator|->

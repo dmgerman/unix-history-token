@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: defs.h,v 1.5 1995/06/28 17:58:29 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: defs.h,v 1.7 1996/11/11 03:49:57 fenner Exp $  */
 end_comment
 
 begin_include
@@ -74,6 +74,23 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSV
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -221,6 +238,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|,
 name|fd_set
 operator|*
 operator|)
@@ -325,6 +344,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|VENDOR_CODE
+value|1
+end_define
+
+begin_comment
+comment|/* Get a new vendor code if you make significant 			     * changes to mrouted. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PROTOCOL_VERSION
 value|3
 end_define
@@ -337,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|MROUTED_VERSION
-value|6
+value|8
 end_define
 
 begin_comment
@@ -352,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|MROUTED_LEVEL
-value|( (MROUTED_VERSION<< 8) | PROTOCOL_VERSION | \ 			((NF_PRUNE | NF_GENID | NF_MTRACE)<< 16))
+value|((MROUTED_VERSION<< 8) | PROTOCOL_VERSION | \ 			((NF_PRUNE | NF_GENID | NF_MTRACE)<< 16) | \ 			(VENDOR_CODE<< 24))
 end_define
 
 begin_comment
@@ -509,6 +539,65 @@ begin_comment
 comment|/* RSRR */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSV
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|bcopy
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|memcpy(b, a, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|memset((s), 0, (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|setlinebuf
+parameter_list|(
+name|s
+parameter_list|)
+value|setvbuf(s, NULL, _IOLBF, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|signal
+parameter_list|(
+name|s
+parameter_list|,
+name|f
+parameter_list|)
+value|sigset(s,f)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * External declarations for global variables and functions.  */
 end_comment
@@ -517,7 +606,7 @@ begin_define
 define|#
 directive|define
 name|RECV_BUF_SIZE
-value|MAX_IP_PACKET_LEN
+value|8192
 end_define
 
 begin_decl_stmt
@@ -756,6 +845,116 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MRT_INIT
+value|DVMRP_INIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT_DONE
+value|DVMRP_DONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT_ADD_VIF
+value|DVMRP_ADD_VIF
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT_DEL_VIF
+value|DVMRP_DEL_VIF
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT_ADD_MFC
+value|DVMRP_ADD_MFC
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT_DEL_MFC
+value|DVMRP_DEL_MFC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGMP_PIM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IGMP_PIM
+value|0x14
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IGMP_MEMBERSHIP_QUERY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IGMP_MEMBERSHIP_QUERY
+value|IGMP_HOST_MEMBERSHIP_QUERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V1_MEMBERSHIP_REPORT
+value|IGMP_HOST_MEMBERSHIP_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V2_MEMBERSHIP_REPORT
+value|IGMP_HOST_NEW_MEMBERSHIP_REPORT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGMP_V2_LEAVE_GROUP
+value|IGMP_HOST_LEAVE_MESSAGE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* main.c */
 end_comment
@@ -965,7 +1164,7 @@ operator|,
 name|u_int32
 name|mask
 operator|,
-name|int
+name|u_int
 name|metric
 operator|,
 name|u_int32
@@ -1644,6 +1843,9 @@ operator|(
 name|char
 operator|*
 name|s
+operator|,
+name|int
+name|n
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2358,6 +2560,9 @@ name|rsrr_read
 name|__P
 argument_list|(
 operator|(
+name|int
+name|f
+operator|,
 name|fd_set
 operator|*
 name|rfd

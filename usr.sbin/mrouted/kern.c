@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: kern.c,v 1.5 1995/06/28 17:58:34 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: kern.c,v 1.7 1996/11/11 03:49:58 fenner Exp $  */
 end_comment
 
 begin_include
@@ -724,7 +724,9 @@ name|LOG_ERR
 argument_list|,
 name|errno
 argument_list|,
-literal|"setsockopt MRT_DEL_VIF"
+literal|"setsockopt MRT_DEL_VIF on vif %d"
+argument_list|,
+name|vifi
 argument_list|)
 expr_stmt|;
 block|}
@@ -755,9 +757,25 @@ name|struct
 name|mfcctl
 name|mc
 decl_stmt|;
-name|int
+name|vifi_t
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MFC
+name|md_log
+argument_list|(
+name|MD_ADD
+argument_list|,
+name|origin
+argument_list|,
+name|g
+operator|->
+name|gt_mcastgrp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* copy table values so that setsockopt can process it */
 name|mc
 operator|.
@@ -859,6 +877,23 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_MFC
+name|md_log
+argument_list|(
+name|MD_ADD_FAIL
+argument_list|,
+name|origin
+argument_list|,
+name|g
+operator|->
+name|gt_mcastgrp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -868,6 +903,7 @@ argument_list|,
 literal|"setsockopt MRT_ADD_MFC"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -899,6 +935,22 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_MFC
+name|md_log
+argument_list|(
+name|MD_DEL
+argument_list|,
+name|origin
+argument_list|,
+name|g
+operator|->
+name|gt_mcastgrp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* copy table values so that setsockopt can process it */
 name|mc
 operator|.
@@ -961,6 +1013,23 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_MFC
+name|md_log
+argument_list|(
+name|MD_DEL_FAIL
+argument_list|,
+name|origin
+argument_list|,
+name|g
+operator|->
+name|gt_mcastgrp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -970,6 +1039,7 @@ argument_list|,
 literal|"setsockopt MRT_DEL_MFC"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|retval
 return|;
@@ -985,6 +1055,15 @@ name|int
 name|k_get_version
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|OLD_KERNEL
+return|return
+operator|-
+literal|1
+return|;
+else|#
+directive|else
 name|int
 name|vers
 decl_stmt|;
@@ -1031,6 +1110,8 @@ expr_stmt|;
 return|return
 name|vers
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
