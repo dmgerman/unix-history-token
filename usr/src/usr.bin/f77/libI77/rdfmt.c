@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.3";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.4";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -423,6 +423,22 @@ name|p
 operator|->
 name|p1
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|recpos
+operator|+
+name|cursor
+operator|)
+operator|<
+literal|0
+condition|)
+name|cursor
+operator|=
+operator|-
+name|recpos
+expr_stmt|;
+comment|/* ANSI req'd */
 name|tab
 operator|=
 name|YES
