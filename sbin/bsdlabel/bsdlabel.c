@@ -386,29 +386,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|Warning
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|void
 name|usage
 parameter_list|(
 name|void
@@ -476,6 +453,20 @@ name|bootarea
 index|[
 name|BBSIZE
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|off_t
+name|mediasize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|secsize
 decl_stmt|;
 end_decl_stmt
 
@@ -552,6 +543,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* non-zero if we should install a boot program */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|allfields
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* present all fields in edit */
 end_comment
 
 begin_decl_stmt
@@ -693,7 +695,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Bb:em:nRrs:w"
+literal|"ABb:em:nRrs:w"
 argument_list|)
 operator|)
 operator|!=
@@ -705,6 +707,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|allfields
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'B'
 case|:
@@ -1481,7 +1491,7 @@ condition|(
 name|disable_write
 condition|)
 block|{
-name|Warning
+name|warnx
 argument_list|(
 literal|"write to disk label supressed - label was as follows:"
 argument_list|)
@@ -2016,6 +2026,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|allfields
+condition|)
+block|{
+if|if
+condition|(
 name|lp
 operator|->
 name|d_type
@@ -2381,7 +2396,15 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\n\n%u partitions:\n"
+literal|"\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"%u partitions:\n"
 argument_list|,
 name|lp
 operator|->
@@ -2608,6 +2631,21 @@ literal|""
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+name|RAW_PART
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"  # \"raw\" part, don't edit"
+argument_list|)
+expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
@@ -5122,6 +5160,11 @@ name|lab
 expr_stmt|;
 if|if
 condition|(
+name|allfields
+condition|)
+block|{
+if|if
+condition|(
 name|lp
 operator|->
 name|d_secsize
@@ -5214,7 +5257,7 @@ name|d_rpm
 operator|==
 literal|0
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"revolutions/minute 0"
 argument_list|)
@@ -5290,7 +5333,7 @@ name|lp
 operator|->
 name|d_secsize
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"boot block size %% sector-size != 0"
 argument_list|)
@@ -5303,7 +5346,7 @@ name|d_npartitions
 operator|>
 name|MAXPARTITIONS
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"number of partitions (%lu)> MAXPARTITIONS (%d)"
 argument_list|,
@@ -5317,6 +5360,100 @@ argument_list|,
 name|MAXPARTITIONS
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|struct
+name|disklabel
+modifier|*
+name|vl
+decl_stmt|;
+name|vl
+operator|=
+name|getvirginlabel
+argument_list|()
+expr_stmt|;
+name|lp
+operator|->
+name|d_secsize
+operator|=
+name|vl
+operator|->
+name|d_secsize
+expr_stmt|;
+name|lp
+operator|->
+name|d_nsectors
+operator|=
+name|vl
+operator|->
+name|d_nsectors
+expr_stmt|;
+name|lp
+operator|->
+name|d_ntracks
+operator|=
+name|vl
+operator|->
+name|d_ntracks
+expr_stmt|;
+name|lp
+operator|->
+name|d_ncylinders
+operator|=
+name|vl
+operator|->
+name|d_ncylinders
+expr_stmt|;
+name|lp
+operator|->
+name|d_rpm
+operator|=
+name|vl
+operator|->
+name|d_rpm
+expr_stmt|;
+name|lp
+operator|->
+name|d_interleave
+operator|=
+name|vl
+operator|->
+name|d_interleave
+expr_stmt|;
+name|lp
+operator|->
+name|d_secpercyl
+operator|=
+name|vl
+operator|->
+name|d_secpercyl
+expr_stmt|;
+name|lp
+operator|->
+name|d_secperunit
+operator|=
+name|vl
+operator|->
+name|d_secperunit
+expr_stmt|;
+name|lp
+operator|->
+name|d_bbsize
+operator|=
+name|vl
+operator|->
+name|d_bbsize
+expr_stmt|;
+name|lp
+operator|->
+name|d_npartitions
+operator|=
+name|vl
+operator|->
+name|d_npartitions
+expr_stmt|;
+block|}
 comment|/* first allocate space to the partitions, then offsets */
 name|total_size
 operator|=
@@ -5403,7 +5540,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"Too many '*' partitions (%c and %c)"
 argument_list|,
@@ -5494,7 +5631,7 @@ literal|'\0'
 case|:
 break|break;
 default|default:
-name|Warning
+name|warnx
 argument_list|(
 literal|"unknown size specifier '%c' (K/M/G are valid)"
 argument_list|,
@@ -5538,7 +5675,7 @@ name|d_secsize
 operator|!=
 literal|0
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c not an integer number of sectors"
 argument_list|,
@@ -5896,7 +6033,7 @@ name|seen_default_offset
 condition|)
 block|{
 comment|/*  					 * this may give unneeded warnings if  					 * partitions are out-of-order 					 */
-name|Warning
+name|warnx
 argument_list|(
 literal|"Offset %ld for partition %c doesn't match expected value %ld"
 argument_list|,
@@ -5980,7 +6117,7 @@ name|p_offset
 operator|!=
 literal|0
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c: size 0, but offset %lu"
 argument_list|,
@@ -6007,7 +6144,7 @@ name|lp
 operator|->
 name|d_secpercyl
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c: size %% cylinder-size != 0"
 argument_list|,
@@ -6024,7 +6161,7 @@ name|lp
 operator|->
 name|d_secpercyl
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c: offset %% cylinder-size != 0"
 argument_list|,
@@ -6100,7 +6237,7 @@ name|p_fstype
 operator|!=
 name|FS_UNUSED
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c is not marked as unused!"
 argument_list|,
@@ -6115,7 +6252,7 @@ name|p_offset
 operator|!=
 literal|0
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c doesn't start at 0!"
 argument_list|,
@@ -6132,7 +6269,7 @@ name|lp
 operator|->
 name|d_secperunit
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"partition %c doesn't cover the whole unit!"
 argument_list|,
@@ -6168,7 +6305,7 @@ name|d_secperunit
 operator|)
 condition|)
 block|{
-name|Warning
+name|warnx
 argument_list|(
 literal|"An incorrect partition %c may cause problems for "
 literal|"standard system utilities"
@@ -6333,7 +6470,7 @@ name|pp
 operator|->
 name|p_offset
 condition|)
-name|Warning
+name|warnx
 argument_list|(
 literal|"unused partition %c: size %d offset %lu"
 argument_list|,
@@ -6384,12 +6521,7 @@ name|int
 name|f
 decl_stmt|;
 name|u_int
-name|secsize
-decl_stmt|,
 name|u
-decl_stmt|;
-name|off_t
-name|mediasize
 decl_stmt|;
 if|if
 condition|(
@@ -6643,7 +6775,6 @@ name|d_interleave
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
 name|strncpy
 argument_list|(
 name|loclab
@@ -6699,58 +6830,6 @@ operator|&
 name|loclab
 operator|)
 return|;
-block|}
-comment|/*VARARGS1*/
-specifier|static
-name|void
-name|Warning
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning, "
-argument_list|)
-expr_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
 block|}
 specifier|static
 name|void
