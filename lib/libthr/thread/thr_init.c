@@ -678,6 +678,8 @@ name|arch_id
 operator|=
 name|_set_curthread
 argument_list|(
+name|NULL
+argument_list|,
 name|pthread
 argument_list|)
 expr_stmt|;

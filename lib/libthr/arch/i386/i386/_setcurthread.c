@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -182,6 +188,10 @@ name|void
 modifier|*
 name|_set_curthread
 parameter_list|(
+name|ucontext_t
+modifier|*
+name|uc
+parameter_list|,
 name|void
 modifier|*
 name|thr
@@ -379,6 +389,26 @@ name|abort
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set up our gs with the index into the ldt for this entry. 	 */
+if|if
+condition|(
+name|uc
+operator|!=
+name|NULL
+condition|)
+name|uc
+operator|->
+name|uc_mcontext
+operator|.
+name|mc_gs
+operator|=
+name|LSEL
+argument_list|(
+name|ldt_index
+argument_list|,
+name|SEL_UPL
+argument_list|)
+expr_stmt|;
+else|else
 name|_set_gs
 argument_list|(
 name|LSEL

@@ -1730,6 +1730,9 @@ name|void
 modifier|*
 name|_set_curthread
 parameter_list|(
+name|ucontext_t
+modifier|*
+parameter_list|,
 name|struct
 name|pthread
 modifier|*
@@ -2134,7 +2137,7 @@ begin_function_decl
 name|void
 name|_thread_start
 parameter_list|(
-name|pthread_t
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
