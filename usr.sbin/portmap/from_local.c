@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: from_local.c,v 1.5 1997/10/09 07:17:09 charnier Exp $"
+literal|"$Id: from_local.c,v 1.6 1998/01/21 10:55:39 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
