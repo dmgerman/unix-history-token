@@ -3892,7 +3892,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xpt%d: can't do nonblocking accesss\n"
+literal|"xpt%d: can't do nonblocking access\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -15115,7 +15115,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"device on run queue with no ccbs???"
+literal|"device on run queue with no ccbs???\n"
 argument_list|)
 expr_stmt|;
 name|splx
@@ -26647,7 +26647,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"camisr"
+literal|"camisr\n"
 operator|)
 argument_list|)
 expr_stmt|;
