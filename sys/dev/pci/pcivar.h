@@ -632,14 +632,14 @@ define|#
 directive|define
 name|PCI_ACCESSOR
 parameter_list|(
-name|A
+name|var
 parameter_list|,
-name|B
+name|ivar
 parameter_list|,
-name|T
+name|type
 parameter_list|)
-define|\ 									\
-value|static __inline T pci_get_ ## A(device_t dev)				\ {									\     uintptr_t v;							\     BUS_READ_IVAR(device_get_parent(dev), dev, PCI_IVAR_ ## B,&v);	\     return (T) v;							\ }									\ 									\ static __inline void pci_set_ ## A(device_t dev, T t)			\ {									\     uintptr_t v = (uintptr_t) t;					\     BUS_WRITE_IVAR(device_get_parent(dev), dev, PCI_IVAR_ ## B, v);	\ }
+define|\
+value|__BUS_ACCESSOR(pci, var, PCI, ivar, type)
 end_define
 
 begin_macro
