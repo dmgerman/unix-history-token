@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Driver for PCI to Cardbus Bridge chips  *  * References:  *  TI Datasheets:  *   http://www-s.ti.com/cgi-bin/sc/generic2.cgi?family=PCI+CARDBUS+CONTROLLERS  *  * Written by Jonathan Chen<jon@freebsd.org>  * The author would like to acknowledge:  *  * HAYAKAWA Koichi: Author of the NetBSD code for the same thing  *  * Warner Losh: Newbus/newcard guru and author of the pccard side of things  *  * YAMAMOTO Shigeru: Author of another FreeBSD cardbus driver  *  * David Cross: Author of the initial ugly hack for a specific cardbus card  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CBB_DEBUG
-end_define
-
 begin_include
 include|#
 directive|include
