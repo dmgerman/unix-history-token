@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.13 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,14 +87,14 @@ value|10
 end_define
 
 begin_comment
-comment|/*  * ROTDELAY gives the minimum number of milliseconds to initiate  * another disk transfer on the same cylinder. It is used in  * determining the rotationally optimal layout for disk blocks  * within a file; the default of fs_rotdelay is 2ms.  */
+comment|/*  * ROTDELAY gives the minimum number of milliseconds to initiate  * another disk transfer on the same cylinder. It is used in  * determining the rotationally optimal layout for disk blocks  * within a file; the default of fs_rotdelay is 4ms.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ROTDELAY
-value|2
+value|4
 end_define
 
 begin_comment
