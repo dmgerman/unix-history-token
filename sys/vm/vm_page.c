@@ -2076,7 +2076,6 @@ comment|/*  *	vm_page_select_cache:  *  *	Find a page on the cache queue with co
 end_comment
 
 begin_function
-specifier|static
 name|vm_page_t
 name|vm_page_select_cache
 parameter_list|(

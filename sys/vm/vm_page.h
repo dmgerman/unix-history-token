@@ -1533,6 +1533,15 @@ end_function_decl
 
 begin_function_decl
 name|vm_page_t
+name|vm_page_select_cache
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
 name|vm_page_splay
 parameter_list|(
 name|vm_pindex_t
