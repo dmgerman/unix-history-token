@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.58 (Berkeley) %G%"
+literal|"@(#)headers.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2171,6 +2171,45 @@ name|p
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+comment|/* check to see if this is a MIME message */
+if|if
+condition|(
+operator|(
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|e
+operator|->
+name|e_bodytype
+argument_list|,
+literal|"8BITMIME"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+name|hvalue
+argument_list|(
+literal|"MIME-Version"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_IS_MIME
 expr_stmt|;
 comment|/* 	**  From person in antiquated ARPANET mode 	**	required by UK Grey Book e-mail gateways (sigh) 	*/
 if|if
