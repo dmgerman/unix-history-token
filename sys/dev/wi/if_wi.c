@@ -4416,27 +4416,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|KASSERT
-argument_list|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_OACTIVE
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"wi_start: if_flags %x\n"
-operator|,
-name|ifp
-operator|->
-name|if_flags
-operator|)
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 operator|&
