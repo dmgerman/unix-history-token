@@ -115,6 +115,12 @@ directive|include
 file|<net/if_vlan_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
