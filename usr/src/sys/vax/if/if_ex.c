@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ex.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ex.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -465,44 +465,71 @@ define|#
 directive|define
 name|RVAL_OFF
 parameter_list|(
+name|unit
+parameter_list|,
 name|n
 parameter_list|)
-value|((u_long)(&(ex_softc[0].n)) - INCORE_BASE(&ex_softc[0]))
+define|\
+value|((u_long)(&(ex_softc[unit].n)) - INCORE_BASE(&ex_softc[unit]))
 define|#
 directive|define
 name|LVAL_OFF
 parameter_list|(
+name|unit
+parameter_list|,
 name|n
 parameter_list|)
-value|((u_long)(ex_softc[0].n) - INCORE_BASE(&ex_softc[0]))
+define|\
+value|((u_long)(ex_softc[unit].n) - INCORE_BASE(&ex_softc[unit]))
 define|#
 directive|define
 name|H2XHDR_OFFSET
-value|RVAL_OFF(xs_h2xhdr)
+parameter_list|(
+name|unit
+parameter_list|)
+value|RVAL_OFF(unit, xs_h2xhdr)
 define|#
 directive|define
 name|X2HHDR_OFFSET
-value|RVAL_OFF(xs_x2hhdr)
+parameter_list|(
+name|unit
+parameter_list|)
+value|RVAL_OFF(unit, xs_x2hhdr)
 define|#
 directive|define
 name|H2XENT_OFFSET
-value|LVAL_OFF(xs_h2xent)
+parameter_list|(
+name|unit
+parameter_list|)
+value|LVAL_OFF(unit, xs_h2xent)
 define|#
 directive|define
 name|X2HENT_OFFSET
-value|LVAL_OFF(xs_x2hent)
+parameter_list|(
+name|unit
+parameter_list|)
+value|LVAL_OFF(unit, xs_x2hent)
 define|#
 directive|define
 name|CM_OFFSET
-value|RVAL_OFF(xs_cm)
+parameter_list|(
+name|unit
+parameter_list|)
+value|RVAL_OFF(unit, xs_cm)
 define|#
 directive|define
 name|SA_OFFSET
-value|RVAL_OFF(xs_xsa)
+parameter_list|(
+name|unit
+parameter_list|)
+value|RVAL_OFF(unit, xs_xsa)
 define|#
 directive|define
 name|INCORE_SIZE
-value|RVAL_OFF(xs_end)
+parameter_list|(
+name|unit
+parameter_list|)
+value|RVAL_OFF(unit, xs_end)
 name|int
 name|xs_end
 decl_stmt|;
@@ -779,6 +806,13 @@ name|ex_msg
 modifier|*
 name|bp
 decl_stmt|;
+name|int
+name|unit
+init|=
+name|ui
+operator|->
+name|ui_unit
+decl_stmt|;
 name|ifp
 operator|->
 name|if_unit
@@ -816,6 +850,9 @@ name|xs
 argument_list|)
 argument_list|,
 name|INCORE_SIZE
+argument_list|(
+name|unit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -1366,6 +1403,9 @@ name|xs
 argument_list|)
 argument_list|,
 name|INCORE_SIZE
+argument_list|(
+name|unit
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -1857,6 +1897,9 @@ operator|->
 name|cm_h2xhdr
 operator|=
 name|H2XHDR_OFFSET
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 name|cm
 operator|->
@@ -1878,6 +1921,9 @@ operator|->
 name|cm_x2hhdr
 operator|=
 name|X2HHDR_OFFSET
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 name|cm
 operator|->
@@ -2032,6 +2078,9 @@ operator|(
 name|u_short
 operator|)
 name|H2XENT_OFFSET
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 name|xs
 operator|->
@@ -2149,6 +2198,9 @@ operator|(
 name|u_short
 operator|)
 name|X2HENT_OFFSET
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 name|xs
 operator|->
@@ -2207,6 +2259,9 @@ name|xs_ubaddr
 argument_list|)
 operator|+
 name|CM_OFFSET
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -4387,6 +4442,9 @@ name|xs_ubaddr
 argument_list|)
 operator|+
 name|SA_OFFSET
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
