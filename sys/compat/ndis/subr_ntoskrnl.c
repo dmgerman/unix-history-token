@@ -562,44 +562,39 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__stdcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist
 parameter_list|(
-name|slist_entry
-modifier|*
-parameter_list|,
-name|slist_entry
-modifier|*
+comment|/*slist_entry *, 	slist_entry * */
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__stdcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist
 parameter_list|(
-name|slist_entry
-modifier|*
+comment|/*slist_entry * */
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__stdcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist_ex
 parameter_list|(
-name|slist_entry
-modifier|*
-parameter_list|,
-name|slist_entry
-modifier|*
-parameter_list|,
+comment|/*slist_entry *, 	slist_entry *,*/
 name|kspin_lock
 modifier|*
 parameter_list|)
@@ -607,16 +602,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|__stdcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist_ex
 parameter_list|(
-name|slist_entry
-modifier|*
-parameter_list|,
-name|kspin_lock
-modifier|*
+comment|/*slist_entry *, 	kspin_lock * */
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1948,20 +1941,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note: the interlocked slist push and pop routines are  * declared to be _fastcall in Windows, which means they  * use the _cdecl calling convention here.  */
+comment|/*  * Note: the interlocked slist push and pop routines are  * declared to be _fastcall in Windows. gcc 3.4 is supposed  * to have support for this calling convention, however we  * don't have that version available yet, so we kludge things  * up using some inline assembly.  */
 end_comment
 
 begin_function
+name|__stdcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist
 parameter_list|(
-name|head
-parameter_list|,
-name|entry
+comment|/*head, entry*/
+name|void
 parameter_list|)
-name|slist_entry
+block|{
+name|slist_header
 modifier|*
 name|head
 decl_stmt|;
@@ -1969,11 +1963,12 @@ name|slist_entry
 modifier|*
 name|entry
 decl_stmt|;
-block|{
 name|slist_entry
 modifier|*
 name|oldhead
 decl_stmt|;
+asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
+asm|__asm__("movl %%edx, %%edx" : "=d" (entry));
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1984,7 +1979,9 @@ name|oldhead
 operator|=
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 expr_stmt|;
 name|entry
 operator|->
@@ -1992,11 +1989,15 @@ name|sl_next
 operator|=
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 expr_stmt|;
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 operator|=
 name|entry
 expr_stmt|;
@@ -2015,22 +2016,25 @@ block|}
 end_function
 
 begin_function
+name|__stdcall
 specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist
 parameter_list|(
-name|head
+comment|/*head*/
+name|void
 parameter_list|)
-name|slist_entry
+block|{
+name|slist_header
 modifier|*
 name|head
 decl_stmt|;
-block|{
 name|slist_entry
 modifier|*
 name|first
 decl_stmt|;
+asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2041,7 +2045,9 @@ name|first
 operator|=
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 expr_stmt|;
 if|if
 condition|(
@@ -2051,7 +2057,9 @@ name|NULL
 condition|)
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 operator|=
 name|first
 operator|->
@@ -2078,34 +2086,28 @@ name|slist_entry
 modifier|*
 name|ntoskrnl_push_slist_ex
 parameter_list|(
-name|head
-parameter_list|,
-name|entry
-parameter_list|,
+comment|/*head, entry,*/
 name|lock
 parameter_list|)
-name|slist_entry
-modifier|*
-name|head
-decl_stmt|;
-name|slist_entry
-modifier|*
-name|entry
-decl_stmt|;
 name|kspin_lock
 modifier|*
 name|lock
 decl_stmt|;
 block|{
+name|slist_header
+modifier|*
+name|head
+decl_stmt|;
+name|slist_entry
+modifier|*
+name|entry
+decl_stmt|;
 name|slist_entry
 modifier|*
 name|oldhead
 decl_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
+asm|__asm__("movl %%edx, %%edx" : "=d" (entry));
 name|mtx_lock
 argument_list|(
 operator|(
@@ -2121,7 +2123,9 @@ name|oldhead
 operator|=
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 expr_stmt|;
 name|entry
 operator|->
@@ -2129,11 +2133,15 @@ name|sl_next
 operator|=
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 expr_stmt|;
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 operator|=
 name|entry
 expr_stmt|;
@@ -2163,11 +2171,11 @@ name|slist_entry
 modifier|*
 name|ntoskrnl_pop_slist_ex
 parameter_list|(
-name|head
-parameter_list|,
-name|lock
+comment|/*head, lock*/
+name|void
 parameter_list|)
-name|slist_entry
+block|{
+name|slist_header
 modifier|*
 name|head
 decl_stmt|;
@@ -2175,16 +2183,12 @@ name|kspin_lock
 modifier|*
 name|lock
 decl_stmt|;
-block|{
 name|slist_entry
 modifier|*
 name|first
 decl_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
+asm|__asm__("movl %%edx, %%edx" : "=d" (lock));
 name|mtx_lock
 argument_list|(
 operator|(
@@ -2200,7 +2204,9 @@ name|first
 operator|=
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 expr_stmt|;
 if|if
 condition|(
@@ -2210,7 +2216,9 @@ name|NULL
 condition|)
 name|head
 operator|->
-name|sl_next
+name|slh_list
+operator|.
+name|slh_next
 operator|=
 name|first
 operator|->
