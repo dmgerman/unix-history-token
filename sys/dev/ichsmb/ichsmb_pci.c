@@ -159,6 +159,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_82801EB
+value|0x24D38086
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_SERIALBUS_SMBUS_PROGIF
 value|0x00
 end_define
@@ -424,6 +431,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 82801DC (ICH4) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_82801EB
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801EB (ICH5) SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
