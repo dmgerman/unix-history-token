@@ -595,11 +595,13 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|object
-operator|=
+name|VOP_GETVOBJECT
+argument_list|(
 name|vp
-operator|->
-name|v_object
+argument_list|,
+operator|&
+name|object
+argument_list|)
 expr_stmt|;
 name|vm_object_reference
 argument_list|(

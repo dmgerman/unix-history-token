@@ -762,11 +762,13 @@ name|data_buf
 init|=
 literal|0
 decl_stmt|;
-name|object
-operator|=
+name|VOP_GETVOBJECT
+argument_list|(
 name|vp
-operator|->
-name|v_object
+argument_list|,
+operator|&
+name|object
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
