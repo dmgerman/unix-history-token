@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.39 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7427,6 +7427,51 @@ argument_list|(
 literal|"[NULL]\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  EMPTYADDR -- return TRUE if this address is empty (``<>'') ** **	Parameters: **		a -- pointer to the address ** **	Returns: **		TRUE -- if this address is "empty" (i.e., no one should **			ever generate replies to it. **		FALSE -- if it is a "regular" (read: replyable) address. */
+end_comment
+
+begin_function
+name|bool
+name|emptyaddr
+parameter_list|(
+name|a
+parameter_list|)
+specifier|register
+name|ADDRESS
+modifier|*
+name|a
+decl_stmt|;
+block|{
+return|return
+name|strcmp
+argument_list|(
+name|a
+operator|->
+name|q_paddr
+argument_list|,
+literal|"<>"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|a
+operator|->
+name|q_user
+argument_list|,
+literal|"<>"
+argument_list|)
+operator|==
+literal|0
+return|;
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.42 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,18 +527,14 @@ name|q_owner
 operator|==
 name|NULL
 operator|&&
-name|strcmp
+operator|!
+name|emptyaddr
 argument_list|(
+operator|&
 name|e
 operator|->
 name|e_from
-operator|.
-name|q_paddr
-argument_list|,
-literal|"<>"
 argument_list|)
-operator|!=
-literal|0
 condition|)
 operator|(
 name|void
