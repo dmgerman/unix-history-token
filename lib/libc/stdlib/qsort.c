@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: qsort.c,v 1.3 1995/12/26 13:24:58 bde Exp $"
+literal|"$Id: qsort.c,v 1.4 1996/04/19 18:40:20 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,10 @@ for|for
 control|(
 name|pm
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 name|es
@@ -499,6 +503,10 @@ return|return;
 block|}
 name|pm
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 operator|(
@@ -522,6 +530,10 @@ name|a
 expr_stmt|;
 name|pn
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 operator|(
@@ -630,6 +642,10 @@ name|pa
 operator|=
 name|pb
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 name|es
@@ -638,6 +654,10 @@ name|pc
 operator|=
 name|pd
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 operator|(
@@ -789,6 +809,10 @@ for|for
 control|(
 name|pm
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 name|es
@@ -851,6 +875,10 @@ return|return;
 block|}
 name|pn
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|a
 operator|+
 name|n
