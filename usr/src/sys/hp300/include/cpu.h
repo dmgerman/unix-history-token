@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.13 89/06/23$  *  *	@(#)cpu.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  *  *	@(#)cpu.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -467,9 +467,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|long
-name|DIObase
+name|char
+modifier|*
+name|intiobase
+decl_stmt|,
+modifier|*
+name|intiolimit
 decl_stmt|;
 end_decl_stmt
 
@@ -503,33 +506,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOBASE
-value|(0x00200000)
+name|INTIOBASE
+value|(0x00400000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IOTOP
-value|(0x01000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXADDR
-value|(0xFFFFF000)
-end_define
-
-begin_comment
-comment|/* DIO space stuff */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNALHPIB
-value|(0x00478000)
+name|INTIOTOP
+value|(0x00600000)
 end_define
 
 begin_define
@@ -542,50 +527,97 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOCARDSIZE
-value|(0x10000)
+name|EXTIOTOP
+value|(0x20000000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IOMAPSIZE
-value|(btoc(IOTOP-IOBASE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOP
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) - IOBASE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOV
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) - IOBASE) + DIObase)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNIOV
-parameter_list|(
-name|x
-parameter_list|)
-value|((x) - DIObase + IOBASE)
+name|MAXADDR
+value|(0xFFFFF000)
 end_define
 
 begin_comment
-comment|/* DIO II uncached address space */
+comment|/*  * Internal IO space:  *  * Ranges from 0x400000 to 0x600000 (IIOMAPSIZE).  *  * Internal IO space is mapped in the kernel from ``intiobase'' to  * ``intiolimit'' (defined in locore.s).  Since it is always mapped,  * conversion between physical and kernel virtual addresses is easy.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISIIOVA
+parameter_list|(
+name|va
+parameter_list|)
+define|\
+value|((char *)(va)>= intiobase&& (char *)(va)< intiolimit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIOV
+parameter_list|(
+name|pa
+parameter_list|)
+value|((int)(pa)-INTIOBASE+(int)intiobase)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIOP
+parameter_list|(
+name|va
+parameter_list|)
+value|((int)(va)-(int)intiobase+INTIOBASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIOPOFF
+parameter_list|(
+name|pa
+parameter_list|)
+value|((int)(pa)-INTIOBASE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IIOMAPSIZE
+value|btoc(INTIOTOP-INTIOBASE)
+end_define
+
+begin_comment
+comment|/* 2mb */
+end_comment
+
+begin_comment
+comment|/*  * External IO space:  *  * DIO ranges from select codes 0-63 at physical addresses given by:  *	0x600000 + (sc - 32) * 0x10000  * DIO cards are addressed in the range 0-31 [0x600000-0x800000) for  * their control space and the remaining areas, [0x200000-0x400000) and  * [0x800000-0x1000000), are for additional space required by a card;  * e.g. a display framebuffer.  *  * DIO-II ranges from select codes 132-255 at physical addresses given by:  *	0x1000000 + (sc - 132) * 0x400000  * The address range of DIO-II space is thus [0x1000000-0x20000000).  *  * DIO/DIO-II space is too large to map in its entirety, instead devices  * are mapped into kernel virtual address space allocated from a range  * of EIOMAPSIZE pages (vmparam.h) starting at ``extiobase''.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOBASE
+value|(0x600000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOTOP
+value|(0x1000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCSIZE
+value|(0x10000)
+end_define
 
 begin_define
 define|#
@@ -609,14 +641,14 @@ value|(0x00400000)
 end_define
 
 begin_comment
-comment|/* base/offsets for longword read/write (for locore.s) */
+comment|/*  * HP MMU  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MMUBASE
-value|IOP(0x5F4000)
+value|IIOPOFF(0x5F4000)
 end_define
 
 begin_define
@@ -766,6 +798,10 @@ directive|define
 name|MMU_ENAB
 value|(MMU_UMEN|MMU_SMEN|MMU_IEN|MMU_FPE)
 end_define
+
+begin_comment
+comment|/*  * 68851 and 68030 MMU  */
+end_comment
 
 begin_define
 define|#
