@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.1 82/04/02"
+literal|"@(#)rwho.c	4.2 82/05/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,8 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
-
-begin_comment
-comment|/* botch in ndir.h */
-end_comment
 
 begin_include
 include|#
@@ -39,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_include
