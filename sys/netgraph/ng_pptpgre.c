@@ -998,11 +998,12 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|NG_NODE_SET_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
-operator|=
+argument_list|,
 name|priv
+argument_list|)
 expr_stmt|;
 comment|/* Initialize state */
 name|callout_handle_init
@@ -1059,9 +1060,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|hook_p
 modifier|*
@@ -1161,9 +1163,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_mesg
@@ -1470,17 +1473,19 @@ specifier|const
 name|node_p
 name|node
 init|=
+name|NG_HOOK_NODE
+argument_list|(
 name|hook
-operator|->
-name|node
+argument_list|)
 decl_stmt|;
 specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 comment|/* If not configured, reject */
 if|if
@@ -1564,9 +1569,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 comment|/* Reset node */
 name|ng_pptpgre_reset
@@ -1575,12 +1581,6 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* Take down netgraph node */
-name|node
-operator|->
-name|flags
-operator||=
-name|NG_INVALID
-expr_stmt|;
 name|bzero
 argument_list|(
 name|priv
@@ -1599,13 +1599,14 @@ argument_list|,
 name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
+name|NG_NODE_SET_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
@@ -1635,17 +1636,19 @@ specifier|const
 name|node_p
 name|node
 init|=
+name|NG_HOOK_NODE
+argument_list|(
 name|hook
-operator|->
-name|node
+argument_list|)
 decl_stmt|;
 specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 comment|/* Zero out hook pointer */
 if|if
@@ -1689,23 +1692,19 @@ comment|/* Go away if no longer connected to anything */
 if|if
 condition|(
 operator|(
+name|NG_NODE_NUMHOOKS
+argument_list|(
 name|node
-operator|->
-name|numhooks
+argument_list|)
 operator|==
 literal|0
 operator|)
 operator|&&
 operator|(
-operator|(
+name|NG_NODE_IS_VALID
+argument_list|(
 name|node
-operator|->
-name|flags
-operator|&
-name|NG_INVALID
-operator|)
-operator|==
-literal|0
+argument_list|)
 operator|)
 condition|)
 name|ng_rmnode_self
@@ -1745,9 +1744,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_pptpgre_ackp
@@ -2360,9 +2360,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|int
 name|iphlen
@@ -3389,9 +3390,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_pptpgre_ackp
@@ -3522,10 +3524,10 @@ operator|=
 name|node
 expr_stmt|;
 comment|/* insures the correct timeout event */
+name|NG_NODE_REF
+argument_list|(
 name|node
-operator|->
-name|refs
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* Be conservative: timeout() can return up to 1 tick early */
 name|ticks
@@ -3603,9 +3605,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_pptpgre_ackp
@@ -3630,12 +3633,12 @@ name|KASSERT
 argument_list|(
 name|node
 operator|->
-name|refs
+name|nd_refs
 operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"%s: no refs"
+literal|"%s: no nd_refs"
 operator|,
 name|__FUNCTION__
 operator|)
@@ -3643,19 +3646,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|NG_NODE_NOT_VALID
+argument_list|(
 name|node
-operator|->
-name|flags
-operator|&
-name|NG_INVALID
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* shutdown race condition */
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
@@ -3667,7 +3665,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
@@ -3877,9 +3875,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_pptpgre_ackp
@@ -3956,10 +3955,10 @@ name|sackTimerPtr
 operator|=
 name|node
 expr_stmt|;
+name|NG_NODE_REF
+argument_list|(
 name|node
-operator|->
-name|refs
-operator|++
+argument_list|)
 expr_stmt|;
 comment|/* Be conservative: timeout() can return up to 1 tick early */
 name|ticks
@@ -4035,9 +4034,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_pptpgre_ackp
@@ -4062,12 +4062,12 @@ name|KASSERT
 argument_list|(
 name|node
 operator|->
-name|refs
+name|nd_refs
 operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"%s: no refs"
+literal|"%s: no nd_refs"
 operator|,
 name|__FUNCTION__
 operator|)
@@ -4075,19 +4075,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|NG_NODE_NOT_VALID
+argument_list|(
 name|node
-operator|->
-name|flags
-operator|&
-name|NG_INVALID
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 comment|/* shutdown race condition */
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
@@ -4099,7 +4094,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
@@ -4164,9 +4159,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|ng_pptpgre_ackp
@@ -4362,9 +4358,10 @@ specifier|const
 name|priv_p
 name|priv
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|struct
 name|timeval

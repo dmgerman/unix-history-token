@@ -2518,7 +2518,7 @@ name|nodename
 argument_list|)
 condition|)
 block|{
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|sc
 operator|->
@@ -2532,13 +2532,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|NG_NODE_SET_PRIVATE
+argument_list|(
 name|sc
 operator|->
 name|node
-operator|->
-name|private
-operator|=
+argument_list|,
 name|sc
+argument_list|)
 expr_stmt|;
 name|callout_handle_init
 argument_list|(
@@ -10140,9 +10141,10 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 comment|/* 	 * check if it's our friend the debug hook 	 */
 if|if
@@ -10157,11 +10159,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|NG_HOOK_SET_PRIVATE
+argument_list|(
 name|hook
-operator|->
-name|private
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* paranoid */
 name|sc
@@ -10195,11 +10198,12 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|NG_HOOK_SET_PRIVATE
+argument_list|(
 name|hook
-operator|->
-name|private
-operator|=
+argument_list|,
 name|sc
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -10275,9 +10279,10 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -10525,11 +10530,13 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|NG_HOOK_NODE
+argument_list|(
 name|hook
-operator|->
-name|node
-operator|->
-name|private
+argument_list|)
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifqueue
@@ -10566,9 +10573,10 @@ expr_stmt|;
 comment|/* 	 * data doesn't come in from just anywhere (e.g control hook) 	 */
 if|if
 condition|(
+name|NG_HOOK_PRIVATE
+argument_list|(
 name|hook
-operator|->
-name|private
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -10722,16 +10730,17 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
 name|node
-operator|->
-name|private
+argument_list|)
 decl_stmt|;
 name|ar_down
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
@@ -10799,7 +10808,7 @@ argument_list|(
 literal|"node naming failed\n"
 argument_list|)
 expr_stmt|;
-name|ng_unref
+name|NG_NODE_UNREF
 argument_list|(
 name|sc
 operator|->
@@ -10813,13 +10822,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|NG_NODE_SET_PRIVATE
+argument_list|(
 name|sc
 operator|->
 name|node
-operator|->
-name|private
-operator|=
+argument_list|,
 name|sc
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -10849,13 +10859,13 @@ name|hook
 parameter_list|)
 block|{
 comment|/* probably not at splnet, force outward queueing */
+name|NG_HOOK_FORCE_QUEUE
+argument_list|(
+name|NG_HOOK_PEER
+argument_list|(
 name|hook
-operator|->
-name|peer
-operator|->
-name|flags
-operator||=
-name|HK_QUEUE
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* be really amiable and just say "YUP that's OK by me! " */
 return|return
@@ -10884,11 +10894,13 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
+name|NG_NODE_PRIVATE
+argument_list|(
+name|NG_HOOK_NODE
+argument_list|(
 name|hook
-operator|->
-name|node
-operator|->
-name|private
+argument_list|)
+argument_list|)
 decl_stmt|;
 name|int
 name|s
@@ -10896,9 +10908,10 @@ decl_stmt|;
 comment|/* 	 * If it's the data hook, then free resources etc. 	 */
 if|if
 condition|(
+name|NG_HOOK_PRIVATE
+argument_list|(
 name|hook
-operator|->
-name|private
+argument_list|)
 condition|)
 block|{
 name|s
