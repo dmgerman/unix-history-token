@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.6 1996/09/12 11:09:38 asami Exp $  **/
+comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.7 1996/10/09 21:46:01 asami Exp $  **/
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<machine/cons.h>
 end_include
 
 begin_include
@@ -586,9 +586,9 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"aic"
+literal|"ahc"
 block|,
-literal|"Adaptec 152x SCSI and compatible sound cards"
+literal|"Adaptec 274x/284x/294x SCSI controller"
 block|,
 literal|0
 block|,
@@ -596,9 +596,9 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"ahc"
+literal|"aic"
 block|,
-literal|"Adaptec 274x/284x/294x SCSI controller"
+literal|"Adaptec 152x SCSI and compatible sound cards"
 block|,
 literal|0
 block|,
@@ -663,326 +663,6 @@ block|,
 literal|0
 block|,
 name|CLS_STORAGE
-block|}
-block|,
-block|{
-literal|"ed"
-block|,
-literal|"NS8390 Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"el"
-block|,
-literal|"3C501 Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ep"
-block|,
-literal|"3C509 Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"fe"
-block|,
-literal|"Fujitsu MD86960A/MB869685A Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"fea"
-block|,
-literal|"DEC DEFEA EISA FDDI adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"fxp"
-block|,
-literal|"Intel EtherExpress Pro/100B Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ie"
-block|,
-literal|"AT&T Starlan 10 and EN100, 3C507, NI5210 Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ix"
-block|,
-literal|"Intel EtherExpress Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"le"
-block|,
-literal|"DEC Etherworks 2 and 3 Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"lnc"
-block|,
-literal|"Isolan, Novell NE2100/NE32-VL Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"vx"
-block|,
-literal|"3COM 3C590/3C595 Ethernet adapters"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"ze"
-block|,
-literal|"IBM/National Semiconductor PCMCIA Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"zp"
-block|,
-literal|"3COM PCMCIA Etherlink III Ethernet adapter"
-block|,
-literal|0
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"de"
-block|,
-literal|"DEC DC21040 Ethernet adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"fpa"
-block|,
-literal|"DEC DEFPA PCI FDDI adapter"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_NETWORK
-block|}
-block|,
-block|{
-literal|"sio"
-block|,
-literal|"8250/16450/16550 Serial port"
-block|,
-literal|0
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"lpt"
-block|,
-literal|"Parallel printer port"
-block|,
-literal|0
-block|,
-name|CLS_COMMS
-block|}
-block|,
-block|{
-literal|"mse"
-block|,
-literal|"PC-9801 Bus Mouse"
-block|,
-literal|0
-block|,
-name|CLS_INPUT
-block|}
-block|,
-block|{
-literal|"sc"
-block|,
-literal|"Syscons console driver"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_INPUT
-block|}
-block|,
-block|{
-literal|"pcm"
-block|,
-literal|"PC-9801-86 Sound Board"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"sb"
-block|,
-literal|"Soundblaster PCM (SB, SBPro, SB16, ProAudio Spectrum)"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"sbxvi"
-block|,
-literal|"Soundblaster 16"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"sbmidi"
-block|,
-literal|"Soundblaster MIDI interface"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"mss"
-block|,
-literal|"Microsoft Sound System"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"opl"
-block|,
-literal|"OPL-2/3 FM, Soundblaster, SBPro, SB16, ProAudio Spectrum"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"mpu"
-block|,
-literal|"Roland MPU401 MIDI"
-block|,
-literal|0
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"pca"
-block|,
-literal|"PC speaker PCM audio driver"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_MMEDIA
-block|}
-block|,
-block|{
-literal|"apm"
-block|,
-literal|"Advanced Power Management"
-block|,
-name|FLG_FIXED
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"npx"
-block|,
-literal|"Math coprocessor"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"lkm"
-block|,
-literal|"Loadable PCI driver support"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"vga"
-block|,
-literal|"Catchall PCI VGA driver"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
-block|}
-block|,
-block|{
-literal|"chip"
-block|,
-literal|"PCI chipset support"
-block|,
-name|FLG_INVISIBLE
-block|,
-name|CLS_MISC
 block|}
 block|,
 else|#
@@ -1147,6 +827,23 @@ block|,
 name|CLS_STORAGE
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"ed"
+block|,
+literal|"NS8390 Ethernet adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+else|#
+directive|else
 block|{
 literal|"ed"
 block|,
@@ -1157,6 +854,8 @@ block|,
 name|CLS_NETWORK
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"el"
 block|,
@@ -1307,6 +1006,9 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 literal|"cx"
 block|,
@@ -1337,6 +1039,8 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"lpt"
 block|,
@@ -1367,6 +1071,9 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|PC98
 block|{
 literal|"gp"
 block|,
@@ -1377,6 +1084,23 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"mse"
+block|,
+literal|"Bus Mouse"
+block|,
+literal|0
+block|,
+name|CLS_INPUT
+block|}
+block|,
+else|#
+directive|else
 block|{
 literal|"mse"
 block|,
@@ -1397,6 +1121,8 @@ block|,
 name|CLS_INPUT
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"joy"
 block|,
@@ -1427,6 +1153,21 @@ block|,
 name|CLS_INPUT
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"pcm"
+block|,
+literal|"PC-9801-86 Sound Board"
+block|,
+literal|0
+block|,
+name|CLS_MMEDIA
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"sb"
 block|,
@@ -1647,8 +1388,6 @@ block|,
 name|CLS_MISC
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|""
 block|,
@@ -8633,7 +8372,7 @@ comment|/* VISUAL_USERCONFIG */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.6 1996/09/12 11:09:38 asami Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.7 1996/10/09 21:46:01 asami Exp $  */
 end_comment
 
 begin_include
@@ -10556,183 +10295,409 @@ name|parms
 parameter_list|)
 block|{
 name|int
-name|y
+name|curr_item
+decl_stmt|,
+name|first_time
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|choices
+index|[]
 init|=
-literal|3
+block|{
+literal|" Skip kernel configuration and continue with installation "
+block|,
+literal|" Start kernel configuration in Visual mode                "
+block|,
+literal|" Start kernel configuration in CLI mode (experts only)    "
+block|,     }
 decl_stmt|;
 name|clear
 argument_list|()
 expr_stmt|;
 name|center
 argument_list|(
-name|y
+literal|2
 argument_list|,
-literal|"!iKernel Configuration Editor!n"
+literal|"!bKernel Configuration Menu!n"
 argument_list|)
 expr_stmt|;
-name|y
-operator|+=
-literal|2
+name|curr_item
+operator|=
+literal|0
 expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
+name|first_time
+operator|=
+literal|1
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|char
+name|tmp
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|int
+name|c
+decl_stmt|,
+name|i
+decl_stmt|,
+name|extended
+init|=
+literal|0
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
 operator|++
+control|)
+block|{
+name|tmp
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|curr_item
+operator|==
+name|i
+condition|)
+name|strcpy
+argument_list|(
+name|tmp
 argument_list|,
-literal|"In this next screen, you will be shown a full list of all the device"
+literal|"!i"
 argument_list|)
 expr_stmt|;
-name|putxy
+name|strcat
 argument_list|(
-literal|2
+name|tmp
 argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"drivers which are available in this copy of the OS kernel.  This is"
+name|choices
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
-name|putxy
+if|if
+condition|(
+name|curr_item
+operator|==
+name|i
+condition|)
+name|strcat
 argument_list|(
-literal|2
+name|tmp
 argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"!inot!n a list of devices which you necessarily have, simply those"
-argument_list|)
-expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"which this kernel is capable of supporting."
-argument_list|)
-expr_stmt|;
-operator|++
-name|y
-expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"You should go through each device category and delete all entries"
-argument_list|)
-expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"(using the DELETE key) for devices that you do not have.  This is an"
-argument_list|)
-expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"important step since it minimizes the chance of conflicts and also"
-argument_list|)
-expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"makes the kernel boot faster since there's no time wasted in trying to"
-argument_list|)
-expr_stmt|;
-name|putxy
-argument_list|(
-literal|2
-argument_list|,
-name|y
-operator|++
-argument_list|,
-literal|"detect non-existant hardware.  If you see an entry for a device which you"
+literal|"!n"
 argument_list|)
 expr_stmt|;
 name|putxy
 argument_list|(
-literal|2
+literal|10
 argument_list|,
-name|y
-operator|++
+literal|5
+operator|+
+name|i
 argument_list|,
-literal|"you !ido!n have and it's not a PCI device (which will be auto-configured),"
+name|tmp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|first_time
+condition|)
+block|{
 name|putxy
 argument_list|(
 literal|2
 argument_list|,
-name|y
-operator|++
+literal|10
 argument_list|,
-literal|"be sure that its configuration parameters match your actual hardware."
+literal|"Here you have the chance to go into kernel configuration mode, making"
 argument_list|)
 expr_stmt|;
 name|putxy
 argument_list|(
 literal|2
 argument_list|,
-name|y
-operator|++
+literal|11
 argument_list|,
-literal|"To edit a device's configuration, simply press ENTER while over it."
+literal|"any changes which may be necessary to properly adjust the kernel to"
 argument_list|)
 expr_stmt|;
 name|putxy
 argument_list|(
 literal|2
 argument_list|,
-name|y
-operator|++
+literal|12
 argument_list|,
-literal|"Once you are satisfied with your device configuration, press Q to"
+literal|"match your hardware configuration."
 argument_list|)
 expr_stmt|;
 name|putxy
 argument_list|(
 literal|2
 argument_list|,
-name|y
-operator|++
+literal|14
 argument_list|,
-literal|"proceed with the booting process."
+literal|"If you are installing FreeBSD for the first time, select Visual Mode"
 argument_list|)
 expr_stmt|;
-operator|++
-name|y
-expr_stmt|;
-name|center
+name|putxy
 argument_list|(
-name|y
+literal|2
 argument_list|,
-literal|"!iPress a key to continue!n"
+literal|15
+argument_list|,
+literal|"(press Down-Arrow then ENTER)."
 argument_list|)
 expr_stmt|;
-name|cngetc
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+literal|17
+argument_list|,
+literal|"If you need to do more specialized kernel configuration and are an"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+literal|18
+argument_list|,
+literal|"experienced FreeBSD user, select CLI mode."
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+literal|20
+argument_list|,
+literal|"If you are !icertain!n that you do not need to configure your kernel"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|2
+argument_list|,
+literal|21
+argument_list|,
+literal|"then simply press ENTER or Q now."
+argument_list|)
+expr_stmt|;
+name|first_time
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|move
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* move the cursor out of the way */
+name|c
+operator|=
+name|getchar
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|extended
+operator|==
+literal|2
+operator|)
+operator|||
+operator|(
+name|c
+operator|==
+literal|588
+operator|)
+operator|||
+operator|(
+name|c
+operator|==
+literal|596
+operator|)
+condition|)
+block|{
+comment|/* console gives "alternative" codes */
+name|extended
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no longer */
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|588
+case|:
+case|case
+literal|'A'
+case|:
+comment|/* up */
+if|if
+condition|(
+name|curr_item
+operator|>
+literal|0
+condition|)
+operator|--
+name|curr_item
+expr_stmt|;
+break|break;
+case|case
+literal|596
+case|:
+case|case
+literal|'B'
+case|:
+comment|/* down */
+if|if
+condition|(
+name|curr_item
+operator|<
+literal|2
+condition|)
+operator|++
+name|curr_item
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'\033'
+case|:
+name|extended
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'['
+case|:
+comment|/* cheat : always preceeds cursor move */
+case|case
+literal|'O'
+case|:
+comment|/* ANSI application key mode */
+if|if
+condition|(
+name|extended
+operator|==
+literal|1
+condition|)
+name|extended
+operator|=
+literal|2
+expr_stmt|;
+else|else
+name|extended
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+case|case
+literal|'q'
+case|:
+name|clear
+argument_list|()
+expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* user requests exit */
+case|case
+literal|'\r'
+case|:
+case|case
+literal|'\n'
+case|:
+name|clear
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|curr_item
+condition|)
+return|return
+literal|1
+return|;
+elseif|else
+if|if
+condition|(
+name|curr_item
+operator|==
+literal|1
+condition|)
+return|return
+name|visuserconfig
+argument_list|()
+return|;
+else|else
+block|{
+name|putxy
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|"Type \"help\" for help or \"quit\" to exit."
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+literal|0
+argument_list|,
+literal|3
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+break|break;
+block|}
+block|}
+block|}
 block|}
 endif|#
 directive|endif

@@ -108,6 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|init_cpu_accel_mem
 name|__P
@@ -121,7 +122,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|init_pc98_dmac
+name|pc98_init_dmac
 name|__P
 argument_list|(
 operator|(
@@ -408,13 +409,14 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|init_cpu_accel_mem
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|target_page
 decl_stmt|;
 comment|/* 	 * Certain 'CPU accelerator' supports over 16MB memory on 	 * the machines whose BIOS doesn't store true size.   	 * To support this, we don't trust BIOS values if Maxmem< 4096. 	 */
@@ -451,7 +453,7 @@ name|PAGE_SIZE
 comment|/* 1MB step */
 control|)
 block|{
-name|int
+name|u_int
 name|tmp
 decl_stmt|,
 name|page_bad
@@ -484,7 +486,7 @@ name|tmp
 operator|=
 operator|*
 operator|(
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -493,7 +495,7 @@ comment|/* 			 * Test for alternating 1's and 0's 			 */
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -505,7 +507,7 @@ condition|(
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -522,7 +524,7 @@ comment|/* 			 * Test for alternating 0's and 1's 			 */
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -534,7 +536,7 @@ condition|(
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -551,7 +553,7 @@ comment|/* 			 * Test for all 1's 			 */
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -563,7 +565,7 @@ condition|(
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -580,7 +582,7 @@ comment|/* 			 * Test for all 0's 			 */
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -592,7 +594,7 @@ condition|(
 operator|*
 operator|(
 specifier|volatile
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -609,7 +611,7 @@ block|}
 comment|/* 			 * Restore original value. 			 */
 operator|*
 operator|(
-name|int
+name|u_int
 operator|*
 operator|)
 name|CADDR1
@@ -651,18 +653,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-name|int
-name|dma_init_flag
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* dummy */
-end_comment
 
 begin_function
 name|void

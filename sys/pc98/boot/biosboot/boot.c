@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.4 1996/09/12 11:08:45 asami Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.5 1996/10/09 21:45:21 asami Exp $  */
 end_comment
 
 begin_comment
@@ -36,6 +36,23 @@ include|#
 directive|include
 file|<machine/bootinfo.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PROBE_KEYBOARD_LOCK
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -165,6 +182,43 @@ literal|"\nNo keyboard found."
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|PC98
+comment|/* notyet */
+ifdef|#
+directive|ifdef
+name|PROBE_KEYBOARD_LOCK
+if|if
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+literal|0x64
+argument_list|)
+operator|&
+literal|0x10
+operator|)
+condition|)
+block|{
+name|init_serial
+argument_list|()
+expr_stmt|;
+name|loadflags
+operator||=
+name|RB_SERIAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nKeyboard locked."
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#

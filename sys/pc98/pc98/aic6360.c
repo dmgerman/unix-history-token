@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.3 1996/09/03 10:23:23 asami Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.4 1996/09/10 09:37:43 asami Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -205,7 +205,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<aic.h>
+file|"aic.h"
 end_include
 
 begin_include
@@ -683,422 +683,11 @@ directive|ifdef
 name|PC98
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|SCSISEQ
-value|(iobase + 0x00)
-end_define
-
-begin_comment
-comment|/* SCSI sequence control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SXFRCTL0
-value|(iobase + 0x02)
-end_define
-
-begin_comment
-comment|/* SCSI transfer control 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SXFRCTL1
-value|(iobase + 0x04)
-end_define
-
-begin_comment
-comment|/* SCSI transfer control 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSISIGI
-value|(iobase + 0x06)
-end_define
-
-begin_comment
-comment|/* SCSI signal in */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSISIGO
-value|(iobase + 0x06)
-end_define
-
-begin_comment
-comment|/* SCSI signal out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSIRATE
-value|(iobase + 0x08)
-end_define
-
-begin_comment
-comment|/* SCSI rate control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSIID
-value|(iobase + 0x0a)
-end_define
-
-begin_comment
-comment|/* SCSI ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SELID
-value|(iobase + 0x0a)
-end_define
-
-begin_comment
-comment|/* Selection/Reselection ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSIDAT
-value|(iobase + 0x0c)
-end_define
-
-begin_comment
-comment|/* SCSI Latched Data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSIBUS
-value|(iobase + 0x0e)
-end_define
-
-begin_comment
-comment|/* SCSI Data Bus*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STCNT0
-value|(iobase + 0x10)
-end_define
-
-begin_comment
-comment|/* SCSI transfer count */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STCNT1
-value|(iobase + 0x12)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STCNT2
-value|(iobase + 0x14)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLRSINT0
-value|(iobase + 0x16)
-end_define
-
-begin_comment
-comment|/* Clear SCSI interrupts 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTAT0
-value|(iobase + 0x16)
-end_define
-
-begin_comment
-comment|/* SCSI interrupt status 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLRSINT1
-value|(iobase + 0x18)
-end_define
-
-begin_comment
-comment|/* Clear SCSI interrupts 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTAT1
-value|(iobase + 0x18)
-end_define
-
-begin_comment
-comment|/* SCSI status 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTAT2
-value|(iobase + 0x1a)
-end_define
-
-begin_comment
-comment|/* SCSI status 2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSITEST
-value|(iobase + 0x1c)
-end_define
-
-begin_comment
-comment|/* SCSI test control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTAT3
-value|(iobase + 0x1c)
-end_define
-
-begin_comment
-comment|/* SCSI status 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLRSERR
-value|(iobase + 0x1e)
-end_define
-
-begin_comment
-comment|/* Clear SCSI errors */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSTAT4
-value|(iobase + 0x1e)
-end_define
-
-begin_comment
-comment|/* SCSI status 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIMODE0
-value|(iobase + 0x20)
-end_define
-
-begin_comment
-comment|/* SCSI interrupt mode 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIMODE1
-value|(iobase + 0x22)
-end_define
-
-begin_comment
-comment|/* SCSI interrupt mode 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMACNTRL0
-value|(iobase + 0x24)
-end_define
-
-begin_comment
-comment|/* DMA control 0 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMACNTRL1
-value|(iobase + 0x26)
-end_define
-
-begin_comment
-comment|/* DMA control 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMASTAT
-value|(iobase + 0x28)
-end_define
-
-begin_comment
-comment|/* DMA status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIFOSTAT
-value|(iobase + 0x2a)
-end_define
-
-begin_comment
-comment|/* FIFO status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMADATA
-value|(iobase + 0x2c)
-end_define
-
-begin_comment
-comment|/* DMA data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMADATAL
-value|(iobase + 0x2c)
-end_define
-
-begin_comment
-comment|/* DMA data low byte */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMADATAH
-value|(iobase + 0x2e)
-end_define
-
-begin_comment
-comment|/* DMA data high byte */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BRSTCNTRL
-value|(iobase + 0x30)
-end_define
-
-begin_comment
-comment|/* Burst Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMADATALONG
-value|(iobase + 0x30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PORTA
-value|(iobase + 0x34)
-end_define
-
-begin_comment
-comment|/* Port A */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PORTB
-value|(iobase + 0x36)
-end_define
-
-begin_comment
-comment|/* Port B */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REV
-value|(iobase + 0x38)
-end_define
-
-begin_comment
-comment|/* Revision (001 for 6360) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STACK
-value|(iobase + 0x3a)
-end_define
-
-begin_comment
-comment|/* Stack */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TEST
-value|(iobase + 0x3c)
-end_define
-
-begin_comment
-comment|/* Test register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ID
-value|(iobase + 0x3e)
-end_define
-
-begin_comment
-comment|/* ID register */
-end_comment
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/aic_98.h>
+end_include
 
 begin_else
 else|#
@@ -3599,6 +3188,16 @@ comment|/* Message pointer (for multibyte messages) */
 name|u_char
 name|imlen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+modifier|*
+name|aicport
+decl_stmt|;
+comment|/* I/O port information */
+endif|#
+directive|endif
 block|}
 modifier|*
 name|aicdata
@@ -4357,6 +3956,41 @@ name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|AIC_TYPE98
+argument_list|(
+name|dev
+operator|->
+name|id_flags
+argument_list|)
+operator|==
+name|AIC98_100
+condition|)
+block|{
+comment|/* PC-9801-100 */
+name|aic
+operator|->
+name|aicport
+operator|=
+name|aicport_100
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* generic card */
+name|aic
+operator|->
+name|aicport
+operator|=
+name|aicport_generic
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|aic_find
