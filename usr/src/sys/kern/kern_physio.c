@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.7	%G%	*/
+comment|/*	kern_physio.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -2104,13 +2104,6 @@ operator|(
 name|dev_t
 operator|)
 name|NODEV
-expr_stmt|;
-name|bp
-operator|->
-name|b_hlink
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 return|return
 operator|(
