@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.37 2002/11/14 05:06:25 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.38 2002/11/28 00:57:47 non Exp   */
 end_comment
 
 begin_comment
@@ -186,6 +186,17 @@ end_define
 
 begin_comment
 comment|/* National Instruments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_QLOGIC
+value|0x0114
+end_define
+
+begin_comment
+comment|/* QLogic */
 end_comment
 
 begin_define
@@ -791,6 +802,17 @@ end_define
 
 begin_comment
 comment|/* RATOC System Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_WORKBIT
+value|0xc024
+end_define
+
+begin_comment
+comment|/* WORKBIT */
 end_comment
 
 begin_define
@@ -2614,6 +2636,27 @@ name|PCMCIA_STR_MACNICA_ME1_JEIDA
 value|"MACNICA ME1 for JEIDA"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_MACNICA_MPS110
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_MACNICA_MPS110
+value|0xa041
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_MACNICA_MPS110
+value|"MACNICA Miracle SCSI-II mPS110"
+end_define
+
 begin_comment
 comment|/* Megahertz Products */
 end_comment
@@ -3333,6 +3376,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_PANASONIC_KXLC004
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PANASONIC_KXLC004
+value|0x0604
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PANASONIC_KXLC004
+value|"Panasonic KXL-810AN Interface Card"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_PANASONIC_KXLC005
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -3490,6 +3554,31 @@ value|"Psion Gold Card"
 end_define
 
 begin_comment
+comment|/* QLogic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_QLOGIC_PC05
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_QLOGIC_PC05
+value|0x0104
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_QLOGIC_PC05
+value|"Qlogic Fast SCSI"
+end_define
+
+begin_comment
 comment|/* Quatech */
 end_comment
 
@@ -3536,7 +3625,7 @@ begin_define
 define|#
 directive|define
 name|PCMCIA_STR_RATOC_REX_R280
-value|"RATOC REX-R280"
+value|"RATOC REX-R280/REX-9530"
 end_define
 
 begin_comment
@@ -4050,6 +4139,31 @@ value|"US Robotics WorldPort 14.4 Modem"
 end_define
 
 begin_comment
+comment|/* WORKBIT Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_WORKBIT_ULTRA_NINJA_16
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_WORKBIT_ULTRA_NINJA_16
+value|0x8006
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_WORKBIT_ULTRA_NINJA_16
+value|"WORKBIT Ultra Ninja-16 (16bit mode)"
+end_define
+
+begin_comment
 comment|/* Xircom Products */
 end_comment
 
@@ -4480,6 +4594,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_FUTUREDOMAIN
+value|-1
+end_define
+
+begin_comment
+comment|/* FutureDomain */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_GEMTEK
 value|-1
 end_define
@@ -4513,6 +4638,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_IODATA3
+value|-1
+end_define
+
+begin_comment
+comment|/* I-O DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_LANTECH
 value|-1
 end_define
@@ -4541,6 +4677,17 @@ end_define
 
 begin_comment
 comment|/* NDC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_NEC
+value|-1
+end_define
+
+begin_comment
+comment|/* NEC */
 end_comment
 
 begin_define
@@ -4618,6 +4765,17 @@ end_define
 
 begin_comment
 comment|/* TEAC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_WORKBIT2
+value|-1
+end_define
+
+begin_comment
+comment|/* WORKBIT */
 end_comment
 
 begin_define
@@ -5195,6 +5353,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_EPSON_SC200
+value|{ "EPSON", "SCSI-2 PC Card SC200", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_EPSON_SC200
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_EPSON_SC200
+value|"Media Intelligent SCSI-2 PC Card MSC-200"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_EXP_EXPMULTIMEDIA
 value|{ "EXP   ", "PnPIDE", "F1", NULL }
 end_define
@@ -5300,6 +5479,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_FUTUREDOMAIN_SCSI2GO
+value|{ "Future Domain Corporation" "SCSI PCMCIA Credit Card Controller", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_FUTUREDOMAIN_SCSI2GO
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_FUTUREDOMAIN_SCSI2GO
+value|"Future Domain SCSI2GO"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_GEMTEK_WLAN
 value|{ "Intersil", "PRISM 2_5 PCMCIA ADAPTER", "ISL37300P", "Eval-RevA" }
 end_define
@@ -5316,6 +5516,27 @@ define|#
 directive|define
 name|PCMCIA_STR_GEMTEK_WLAN
 value|"GEMTEK Prism2_5 WaveLAN Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_IBM_SCSICARD
+value|{ "IBM Corp.", "SCSI PCMCIA Card", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_IBM_SCSICARD
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_IBM_SCSICARD
+value|"IBM SCSI PCMCIA Card"
 end_define
 
 begin_define
@@ -5379,6 +5600,27 @@ define|#
 directive|define
 name|PCMCIA_STR_IODATA_CBIDE2
 value|"IO-DATA CBIDE2/16-bit mode"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_IODATA3_CBSC16
+value|{ "IO DATA", "CBSC16       ", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_IODATA3_CBSC16
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_IODATA3_CBSC16
+value|"IO-DATA CBSC16"
 end_define
 
 begin_define
@@ -5463,6 +5705,27 @@ define|#
 directive|define
 name|PCMCIA_STR_LINKSYS_PCM100
 value|""
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_MACNICA_MPS100
+value|{ "MACNICA", "MIRACLE SCSI", "mPS100", "D.0" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_MACNICA_MPS100
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_MACNICA_MPS100
+value|"Macnica Miracle SCSI mPS100"
 end_define
 
 begin_define
@@ -5589,6 +5852,48 @@ define|#
 directive|define
 name|PCMCIA_STR_NEC_CMZ_RT_WP
 value|"NEC Wireless Card CMZ-RT-WP"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEC_PC9801N_J03R
+value|{ "NEC", "PC-9801N-J03R", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEC_PC9801N_J03R
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEC_PC9801N_J03R
+value|"NEC PC-9801N-J03R"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_NEWMEDIA_BASICS_SCSI
+value|{ "BASICS by New Media Corporation" "SCSI Sym53C500", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NEWMEDIA_BASICS_SCSI
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NEWMEDIA_BASICS_SCSI
+value|"New Media Corporation BASICS SCSI"
 end_define
 
 begin_define
@@ -5745,6 +6050,90 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_RATOC_REX5536
+value|{ "1195 RATOC System Inc.", "REX5536 SCSI2 CARD", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_RATOC_REX5536
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_RATOC_REX5536
+value|"RATOC REX-5536"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_RATOC_REX5536AM
+value|{ "PCMCIA SCSI MBH10404", "01", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_RATOC_REX5536AM
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_RATOC_REX5536AM
+value|"RATOC REX-5536AM"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_RATOC_REX5536M
+value|{ "PCMCIA SCSI2 CARD", "01", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_RATOC_REX5536M
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_RATOC_REX5536M
+value|"RATOC REX-5536M"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_RATOC_REX5572
+value|{ "RATOC System Inc.", "SOUND/SCSI2 CARD", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_RATOC_REX5572
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_RATOC_REX5572
+value|"RATOC REX-5572"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_SIMPLETECH_SPECTRUM24_ALT
 value|{ "Symbol Technologies", "LA4111 Spectrum24 Wireless LAN PC Card", NULL, NULL }
 end_define
@@ -5891,6 +6280,27 @@ define|#
 directive|define
 name|PCMCIA_STR_TEAC_IDECARDII
 value|"TEAC IDE Card/II"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_WORKBIT2_NINJA_SCSI3
+value|{ "WBT", "NinjaSCSI-3", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_WORKBIT2_NINJA_SCSI3
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_WORKBIT2_NINJA_SCSI3
+value|"WORKBIT Ninja SCSI series"
 end_define
 
 begin_define
