@@ -4,7 +4,7 @@ comment|/*  * awk.h -- Definitions for gawk.   */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_comment
@@ -1379,6 +1379,9 @@ comment|/* lnode is return value */
 name|Node_K_delete
 block|,
 comment|/* lnode is array, rnode is subscript */
+name|Node_K_delete_loop
+block|,
+comment|/* lnode is array, rnode is subscript */
 name|Node_K_getline
 block|,
 comment|/* lnode is opt var, rnode is redirection */
@@ -1441,6 +1444,9 @@ comment|/* an identifier in the symbol table */
 name|Node_ahash
 block|,
 comment|/* an array element */
+name|Node_array_ref
+block|,
+comment|/* array passed by ref as parameter */
 name|Node_NF
 block|,
 comment|/* variables recognized in the grammar */
@@ -1923,6 +1929,13 @@ define|#
 directive|define
 name|table_size
 value|sub.nodep.x.xl
+end_define
+
+begin_define
+define|#
+directive|define
+name|orig_array
+value|sub.nodep.x.extra
 end_define
 
 begin_define
@@ -3313,6 +3326,25 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|do_delete_loop
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|symbol
+operator|,
+name|NODE
+operator|*
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|assoc_scan
 name|P
 argument_list|(
@@ -3346,6 +3378,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|assoc_dump
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|symbol
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|do_adump
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* awktab.c */
 end_comment
@@ -3355,19 +3419,6 @@ specifier|extern
 name|char
 modifier|*
 name|tokexpand
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|nextc
 name|P
 argument_list|(
 operator|(
@@ -3467,6 +3518,22 @@ name|P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|NODE
+modifier|*
+name|stopme
+name|P
+argument_list|(
+operator|(
+name|NODE
+operator|*
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4210,6 +4277,20 @@ name|P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|flags2str
+name|P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

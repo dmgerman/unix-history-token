@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|PATCHLEVEL
-value|4
+value|6
 end_define
 
 end_unit
