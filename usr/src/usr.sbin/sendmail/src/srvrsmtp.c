@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.13.1.1 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.14 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.13.1.1 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.14 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2180,6 +2180,12 @@ name|message
 argument_list|(
 literal|"250 Reset state"
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
 expr_stmt|;
 if|if
 condition|(
