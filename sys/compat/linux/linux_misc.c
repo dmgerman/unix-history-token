@@ -900,6 +900,8 @@ argument_list|,
 name|realitexpire
 argument_list|,
 name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|timevaladd
