@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.128 1996/10/23 05:31:54 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.128.2.1 1996/11/06 10:23:40 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1006,6 +1006,61 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  *	Routine:	pmap_pte  *	Function:  *		Extract the page table entry associated  *		with the given map/virtual_address pair.  */
+end_comment
+
+begin_function
+name|PMAP_INLINE
+name|unsigned
+modifier|*
+name|pmap_pte
+parameter_list|(
+name|pmap
+parameter_list|,
+name|va
+parameter_list|)
+specifier|register
+name|pmap_t
+name|pmap
+decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|pmap
+operator|&&
+operator|*
+name|pmap_pde
+argument_list|(
+name|pmap
+argument_list|,
+name|va
+argument_list|)
+condition|)
+block|{
+return|return
+name|get_ptbase
+argument_list|(
+name|pmap
+argument_list|)
+operator|+
+name|i386_btop
+argument_list|(
+name|va
+argument_list|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	Bootstrap the system enough to run with virtual memory.  *  *	On the i386 this is called after mapping has already been enabled  *	and just syncs the pmap module with what has already been done.  *	[We can't call it easily with mapping off since the kernel is not  *	mapped with PA == VA, hence we would have to relocate every address  *	from the linked base (virtual) address "KERNBASE" to the actual  *	(physical) address starting relative to 0]  */
 end_comment
 
@@ -1149,7 +1204,7 @@ argument|CADDR2
 argument_list|,
 literal|1
 argument_list|)
-comment|/* 	 * ptmmap is used for reading arbitrary physical pages via /dev/mem. 	 */
+comment|/* 	 * ptvmmap is used for reading arbitrary physical pages via /dev/mem. 	 * XXX ptmmap is not used. 	 */
 name|SYSMAP
 argument_list|(
 argument|caddr_t
@@ -1160,7 +1215,7 @@ argument|ptvmmap
 argument_list|,
 literal|1
 argument_list|)
-comment|/* 	 * msgbufmap is used to map the system message buffer. 	 */
+comment|/* 	 * msgbufp is used to map the system message buffer. 	 * XXX msgbufmap is not used. 	 */
 name|SYSMAP
 argument_list|(
 argument|struct msgbuf *
@@ -1169,7 +1224,7 @@ argument|msgbufmap
 argument_list|,
 argument|msgbufp
 argument_list|,
-literal|1
+argument|atop(round_page(sizeof(struct msgbuf)))
 argument_list|)
 comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
 name|SYSMAP
@@ -1764,61 +1819,6 @@ name|unsigned
 operator|*
 operator|)
 name|APTmap
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Routine:	pmap_pte  *	Function:  *		Extract the page table entry associated  *		with the given map/virtual_address pair.  */
-end_comment
-
-begin_function
-name|PMAP_INLINE
-name|unsigned
-modifier|*
-name|pmap_pte
-parameter_list|(
-name|pmap
-parameter_list|,
-name|va
-parameter_list|)
-specifier|register
-name|pmap_t
-name|pmap
-decl_stmt|;
-name|vm_offset_t
-name|va
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|pmap
-operator|&&
-operator|*
-name|pmap_pde
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|)
-condition|)
-block|{
-return|return
-name|get_ptbase
-argument_list|(
-name|pmap
-argument_list|)
-operator|+
-name|i386_btop
-argument_list|(
-name|va
-argument_list|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function
