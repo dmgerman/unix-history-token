@@ -206,13 +206,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/if_wavelan_ieee.h>
+file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_wireg.h>
+file|<dev/wi/if_wireg.h>
 end_include
 
 begin_if
