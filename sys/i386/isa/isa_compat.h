@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"oltr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pcm.h"
 end_include
 
@@ -400,14 +394,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|wldriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|oltrdriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,20 +1129,6 @@ directive|endif
 endif|#
 directive|endif
 comment|/* MISC */
-if|#
-directive|if
-name|NOLTR
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_MISC
-block|,
-operator|&
-name|oltrdriver
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|NPAS
