@@ -61,6 +61,12 @@ name|tempname
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|globcnt
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|pw_copy
 argument_list|(
@@ -113,6 +119,9 @@ index|[
 literal|8192
 index|]
 decl_stmt|;
+name|int
+name|tmpcnt
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -159,6 +168,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|tmpcnt
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|done
@@ -179,6 +192,9 @@ argument_list|)
 condition|;
 control|)
 block|{
+name|tmpcnt
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -328,6 +344,10 @@ name|err
 goto|;
 continue|continue;
 block|}
+name|globcnt
+operator|=
+name|tmpcnt
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -398,6 +418,13 @@ condition|(
 operator|!
 name|done
 condition|)
+block|{
+name|globcnt
+operator|=
+name|tmpcnt
+operator|+
+literal|1
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -448,6 +475,7 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ferror
