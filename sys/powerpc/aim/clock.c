@@ -137,6 +137,12 @@ comment|/*  * Initially we assume a processor with a bus frequency of 12.5 MHz. 
 end_comment
 
 begin_decl_stmt
+name|u_int
+name|tickspending
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_long
 name|ticks_per_sec
@@ -501,13 +507,6 @@ name|tick
 operator|-
 name|ticks_per_intr
 expr_stmt|;
-comment|/* 	 * This probably needs some kind of locking. 	 */
-name|intrcnt
-index|[
-name|CNT_CLOCK
-index|]
-operator|++
-expr_stmt|;
 name|nticks
 operator|+=
 name|tickspending
@@ -517,35 +516,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Reenable interrupts 	 */
-name|msr
-operator|=
-name|mfmsr
-argument_list|()
-expr_stmt|;
-name|mtmsr
-argument_list|(
-name|msr
-operator||
-name|PSL_EE
-operator||
-name|PSL_RI
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Do standard timer interrupt stuff. 	 * Do softclock stuff only on the last iteration. 	 */
-while|while
-condition|(
-operator|--
-name|nticks
-operator|>
+if|#
+directive|if
 literal|0
-condition|)
-block|{
-name|hardclock
-argument_list|(
-name|frame
-argument_list|)
-expr_stmt|;
-block|}
+block|msr = mfmsr(); 	mtmsr(msr | PSL_EE | PSL_RI);
+endif|#
+directive|endif
+comment|/* 	 * Do standard timer interrupt stuff. 	 * Do softclock stuff only on the last iteration. 	 */
+if|#
+directive|if
+literal|0
+block|while (--nticks> 0) { 		hardclock(frame); 	}
+endif|#
+directive|endif
 name|hardclock
 argument_list|(
 name|frame
