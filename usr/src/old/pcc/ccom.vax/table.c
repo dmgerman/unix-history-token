@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.18 (Berkeley) %G%"
+literal|"@(#)table.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2192,7 +2192,7 @@ name|RESC1
 operator||
 name|RESCC
 block|,
-literal|"	movl	AL,A1\n	clrl	U1\n	ediv	A1,AR,A1,U1\n"
+literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,A1,U1\n"
 block|,
 name|ASG
 name|DIV
@@ -2252,7 +2252,7 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
-literal|"	movl	AL,A1\n	clrl	U1\n	ediv	A1,AR,AL,U1\n"
+literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,AL,U1\n"
 block|,
 name|MOD
 block|,
@@ -2360,7 +2360,7 @@ name|RESC1
 operator||
 name|RESCC
 block|,
-literal|"	movl	AL,A1\n	clrl	U1\n	ediv	A1,AR,U1,A1\n"
+literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,U1,A1\n"
 block|,
 name|MOD
 block|,
@@ -2386,7 +2386,7 @@ name|RESC1
 operator||
 name|RESCC
 block|,
-literal|"	movl	AL,A1\n	clrl	U1\n	ediv	A1,AR,U1,A1\n	tstl	A1\n"
+literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,U1,A1\n	tstl	A1\n"
 block|,
 name|ASG
 name|MOD
@@ -2500,7 +2500,7 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
-literal|"	movl	AL,A1\n	clrl	U1\n	ediv	A1,AR,A1,AL\n"
+literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,A1,AL\n"
 block|,
 name|ASG
 name|MOD
@@ -2527,7 +2527,7 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
-literal|"	movl	AL,A1\n	clrl	U1\n	ediv	A1,AR,A1,AL\n	tstl	AL\n"
+literal|"	movl	AL,A1\n	clrl	U1\n	ediv	AR,A1,A1,AL\n	tstl	AL\n"
 block|,
 name|ASG
 name|OPMUL
