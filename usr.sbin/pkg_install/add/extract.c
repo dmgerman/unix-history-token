@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.22 1998/10/12 20:01:48 jkh Exp $"
+literal|"$Id: extract.c,v 1.23 1998/10/28 22:44:24 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ name|TOOBIG
 parameter_list|(
 name|str
 parameter_list|)
-value|((strlen(str) + 22 + strlen(home) + where_count> maxargs) \ 		|| (strlen(str) + 6 + strlen(home) + perm_count> maxargs))
+value|((strlen(str) + FILENAME_MAX + where_count> maxargs) \ 		|| (strlen(str) + FILENAME_MAX + perm_count> maxargs))
 end_define
 
 begin_define
