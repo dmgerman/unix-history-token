@@ -19183,6 +19183,10 @@ name|p
 expr_stmt|;
 block|}
 comment|/* 	 * optional: pipe or queue 	 */
+name|do_pipe
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
