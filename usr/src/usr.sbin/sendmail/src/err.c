@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.4	%G%"
+literal|"@(#)err.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,7 @@ name|ArpaFmt
 condition|)
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%s\r\n"
 argument_list|,
 name|errbuf
 argument_list|)
@@ -481,6 +481,15 @@ argument_list|,
 name|d
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ArpaFmt
+condition|)
+name|printf
+argument_list|(
+literal|"\r"
 argument_list|)
 expr_stmt|;
 name|printf
