@@ -1306,7 +1306,6 @@ name|blkdone
 parameter_list|,
 name|lp
 parameter_list|)
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -1321,7 +1320,6 @@ name|pri
 decl_stmt|,
 name|blkdone
 decl_stmt|;
-specifier|register
 name|struct
 name|disklabel
 modifier|*
@@ -1358,7 +1356,6 @@ operator|->
 name|b_dev
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 argument_list|(
 argument|*pr
@@ -1387,32 +1384,6 @@ decl_stmt|;
 name|daddr_t
 name|sn
 decl_stmt|;
-if|if
-condition|(
-name|pri
-operator|!=
-name|LOG_PRINTF
-condition|)
-block|{
-name|log
-argument_list|(
-name|pri
-argument_list|,
-literal|"%s"
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|pr
-operator|=
-name|addlog
-expr_stmt|;
-block|}
-else|else
-name|pr
-operator|=
-name|printf
-expr_stmt|;
 name|sname
 operator|=
 name|dsname
@@ -1430,10 +1401,7 @@ argument_list|,
 name|partname
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%s%s: %s %sing fsbn "
 argument_list|,
@@ -1468,10 +1436,7 @@ name|b_bcount
 operator|<=
 name|DEV_BSIZE
 condition|)
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%ld"
 argument_list|,
@@ -1494,10 +1459,7 @@ name|sn
 operator|+=
 name|blkdone
 expr_stmt|;
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%ld of "
 argument_list|,
@@ -1508,10 +1470,7 @@ name|sn
 argument_list|)
 expr_stmt|;
 block|}
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|"%ld-%ld"
 argument_list|,
@@ -1588,10 +1547,7 @@ operator|.
 name|p_offset
 expr_stmt|;
 comment|/* 		 * XXX should add slice offset and not print the slice, 		 * but we don't know the slice pointer. 		 * XXX should print bp->b_pblkno so that this will work 		 * independent of slices, labels and bad sector remapping, 		 * but some drivers don't set bp->b_pblkno. 		 */
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|" (%s bn %ld; cn %ld"
 argument_list|,
@@ -1623,10 +1579,7 @@ name|lp
 operator|->
 name|d_secpercyl
 expr_stmt|;
-call|(
-modifier|*
-name|pr
-call|)
+name|printf
 argument_list|(
 literal|" tn %ld sn %ld)"
 argument_list|,
