@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -102,14 +102,14 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * size of 128 bytes (2 million cylinder groups on machines with  * 32-bit pointers, and 1 million on 64-bit machines).  */
+comment|/*  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * size of 128 bytes (2 million cylinder groups on machines with  * 32-bit pointers, and 1 million on 64-bit machines). One pointer  * is taken away to point to an array of cluster sizes that is  * computed as cylinder groups are inspected.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXCSBUFS
-value|(128 / sizeof(void *))
+value|((128 / sizeof(void *)) - 1)
 end_define
 
 begin_comment
@@ -434,6 +434,11 @@ name|MAXCSBUFS
 index|]
 decl_stmt|;
 comment|/* list of fs_cs info buffers */
+name|int32_t
+modifier|*
+name|fs_maxcluster
+decl_stmt|;
+comment|/* max cluster in each cyl group */
 name|int32_t
 name|fs_cpc
 decl_stmt|;
