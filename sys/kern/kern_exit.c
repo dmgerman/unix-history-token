@@ -439,6 +439,8 @@ operator|>
 literal|1
 condition|)
 block|{
+name|retry
+label|:
 comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
 name|thread_suspend_check
 argument_list|(
@@ -453,11 +455,9 @@ argument_list|(
 name|SINGLE_EXIT
 argument_list|)
 condition|)
-name|panic
-argument_list|(
-literal|"Exit: Single threading fouled up"
-argument_list|)
-expr_stmt|;
+goto|goto
+name|retry
+goto|;
 comment|/* 		 * All other activity in this process is now stopped. 		 * Remove excess KSEs and KSEGRPS. XXXKSE (when we have them) 		 * ... 		 * Turn off threading support. 		 */
 name|p
 operator|->
