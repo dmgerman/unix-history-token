@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Author_Id: if_xe.c,v 1.19 1999/04/15 22:15:53 scott Exp $  *	$Id: if_xe.c,v 1.19 1999/04/15 22:15:53 scott Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xe.c,v 1.20 1999/06/13 19:17:40 scott Exp $  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Portions of this software were derived from Werner Koch's xirc2ps 
 end_comment
 
 begin_comment
-comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  The  * following cards are currently known to work with the driver:  *   Xircom CreditCard 10/100 (CE3)  *   Xircom CreditCard Ethernet 10/100 + Modem 56 (CEM56)  *   Xircom RealPort Ethernet 10/100  *   Xircom RealPort Ethernet 10/100 + Modem 56 (REM56, REM56G)  *   Intel EtherExpress Pro/100 PC Card Mobile Adapter 16 (Pro/100 M16A)  *   Compaq Netelligent 10/100 PC Card (CPQ-10/100)  *  * Some other cards *should* work, but support for them is either broken or in   * an unknown state at the moment.  I'm always interested in hearing from  * people who own any of these cards:  *   Xircom CreditCard 10Base-T (PS-CE2-10)  *   Xircom CreditCard Ethernet + ModemII (CEM2)  *   Xircom CEM28 and CEM33 Ethernet/Modem cards (may be variants of CEM2?)  *  * Thanks to all who assisted with the development and testing of the driver,  * especially: Werner Koch, Duke Kamstra, Duncan Barclay, Jason George, Dru  * Nelson, Mike Kephart, Bill Rainey and Douglas Rand.  Apologies if I've left  * out anyone who deserves a mention here.  *  * Special thanks to Ade Lovett for both hosting the mailing list and doing  * the CEM56/REM56 support code; and the FreeBSD UK Users' Group for hosting  * the web pages.  *  * Contact points:  *  * Driver web page: http://ukug.uk.freebsd.org/~scott/xe_drv/  *  * Mailing list: http://www.lovett.com/lists/freebsd-xircom/  * or send "subscribe freebsd-xircom" to<majordomo@lovett.com>  *  * Author email:<scott@uk.freebsd.org>  */
+comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  The  * following cards are currently known to work with the driver:  *   Xircom CreditCard 10/100 (CE3)  *   Xircom CreditCard Ethernet + Modem 28 (CEM28)  *   Xircom CreditCard Ethernet 10/100 + Modem 56 (CEM56)  *   Xircom RealPort Ethernet 10  *   Xircom RealPort Ethernet 10/100  *   Xircom RealPort Ethernet 10/100 + Modem 56 (REM56, REM56G)  *   Intel EtherExpress Pro/100 PC Card Mobile Adapter 16 (Pro/100 M16A)  *   Compaq Netelligent 10/100 PC Card (CPQ-10/100)  *  * Some other cards *should* work, but support for them is either broken or in   * an unknown state at the moment.  I'm always interested in hearing from  * people who own any of these cards:  *   Xircom CreditCard 10Base-T (PS-CE2-10)  *   Xircom CreditCard Ethernet + ModemII (CEM2)  *   Xircom CEM28 and CEM33 Ethernet/Modem cards (may be variants of CEM2?)  *  * Thanks to all who assisted with the development and testing of the driver,  * especially: Werner Koch, Duke Kamstra, Duncan Barclay, Jason George, Dru  * Nelson, Mike Kephart, Bill Rainey and Douglas Rand.  Apologies if I've left  * out anyone who deserves a mention here.  *  * Special thanks to Ade Lovett for both hosting the mailing list and doing  * the CEM56/REM56 support code; and the FreeBSD UK Users' Group for hosting  * the web pages.  *  * Contact points:  *  * Driver web page: http://ukug.uk.freebsd.org/~scott/xe_drv/  *  * Mailing list: http://www.lovett.com/lists/freebsd-xircom/  * or send "subscribe freebsd-xircom" to<majordomo@lovett.com>  *  * Author email:<scott@uk.freebsd.org>  */
 end_comment
 
 begin_define
@@ -17,6 +17,10 @@ directive|define
 name|XE_DEBUG
 value|1
 end_define
+
+begin_comment
+comment|/* Increase for more voluminous output! */
+end_comment
 
 begin_include
 include|#
@@ -277,12 +281,12 @@ name|ifmedia
 name|ifmedia
 decl_stmt|;
 name|struct
-name|callout_handle
-name|chand
-decl_stmt|;
-name|struct
 name|ifmib_iso_8802_3
 name|mibdata
+decl_stmt|;
+name|struct
+name|callout_handle
+name|chand
 decl_stmt|;
 name|struct
 name|isa_device
@@ -327,9 +331,9 @@ name|tx_queued
 decl_stmt|;
 comment|/* Packets currently waiting to transmit */
 name|int
-name|tx_ptr
+name|tx_tpr
 decl_stmt|;
-comment|/* Last value of PTR reg on card */
+comment|/* Last value of TPR reg on card */
 name|int
 name|tx_collisions
 decl_stmt|;
@@ -347,17 +351,25 @@ name|media
 decl_stmt|;
 comment|/* Private media word */
 name|u_char
+name|version
+decl_stmt|;
+comment|/* Bonding Version register from card */
+name|u_char
 name|modem
 decl_stmt|;
-comment|/* 1 = Multifunction card with modem */
+comment|/* 1 = Card has a modem */
 name|u_char
-name|ce3
+name|ce2
 decl_stmt|;
-comment|/* 1 = CE3 class (100Mbit) adapter */
+comment|/* 1 = Card has CE2 silicon */
 name|u_char
-name|cem56
+name|mohawk
 decl_stmt|;
-comment|/* 1 = CEM56 class (CE3 + 56Kbps modem) adapter */
+comment|/* 1 = Card has Mohawk (CE3) silicon */
+name|u_char
+name|dingo
+decl_stmt|;
+comment|/* 1 = Card has Dingo (CEM56) silicon */
 name|u_char
 name|phy_ok
 decl_stmt|;
@@ -397,20 +409,6 @@ name|MAXSLOT
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|iob
-index|[
-name|MAXSLOT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX - very gross */
-end_comment
 
 begin_comment
 comment|/*  * MII command structure  */
@@ -497,7 +495,7 @@ name|XE_SELECT_PAGE
 parameter_list|(
 name|p
 parameter_list|)
-value|XE_OUTB(XE_PSR, (p))
+value|XE_OUTB(XE_PR, (p))
 end_define
 
 begin_comment
@@ -882,6 +880,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|u_int32_t
+name|xe_compute_crc
+parameter_list|(
+name|u_int8_t
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|xe_compute_hashbit
+parameter_list|(
+name|u_int32_t
+name|crc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * MII functions  */
 end_comment
@@ -1246,15 +1270,11 @@ directive|ifdef
 name|XE_DEBUG
 name|printf
 argument_list|(
-literal|"xe%d: probe, iobase = %#x\n"
+literal|"xe%d: probe\n"
 argument_list|,
 name|dev
 operator|->
 name|id_unit
-argument_list|,
-name|dev
-operator|->
-name|id_iobase
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1273,17 +1293,6 @@ literal|0
 index|]
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|iob
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-operator|=
-name|dev
-operator|->
-name|id_iobase
 expr_stmt|;
 return|return
 literal|0
@@ -1557,7 +1566,7 @@ operator|->
 name|ctrl
 expr_stmt|;
 comment|/* allocate a new I/O slot for the ethernet */
-comment|/* XXX: ctrl->mapio() always appears to return 0 (success), so    *      this may cause problems if another device is listening    *	  on 0x300 already    */
+comment|/* XXX: ctrl->mapio() always appears to return 0 (success), so    *      this may cause problems if another device is listening    *	  on 0x300 already.  In this case, you should choose a    *      known free I/O port address in the kernel config line    *      for the driver.  It will be picked up here and used    *      instead of the autodetected value.    */
 name|slt
 operator|->
 name|io
@@ -1597,19 +1606,48 @@ name|size
 operator|=
 literal|0x10
 expr_stmt|;
-if|if
-condition|(
-name|iob
-index|[
+ifdef|#
+directive|ifdef
+name|XE_IOBASE
+name|printf
+argument_list|(
+literal|"xe%d: user requested ioport 0x%x\n"
+argument_list|,
 name|scp
 operator|->
 name|unit
-index|]
-operator|==
-operator|-
+argument_list|,
+name|XE_IOBASE
+argument_list|)
+expr_stmt|;
+name|ioport
+operator|=
+name|XE_IOBASE
+expr_stmt|;
+name|slt
+operator|->
+name|io
+index|[
 literal|1
-condition|)
-block|{
+index|]
+operator|.
+name|start
+operator|=
+name|ioport
+expr_stmt|;
+name|fail
+operator|=
+name|ctrl
+operator|->
+name|mapio
+argument_list|(
+name|slt
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 for|for
 control|(
 name|ioport
@@ -1655,41 +1693,8 @@ literal|0
 condition|)
 break|break;
 block|}
-block|}
-else|else
-block|{
-name|ioport
-operator|=
-name|iob
-index|[
-name|scp
-operator|->
-name|unit
-index|]
-expr_stmt|;
-name|slt
-operator|->
-name|io
-index|[
-literal|1
-index|]
-operator|.
-name|start
-operator|=
-name|ioport
-expr_stmt|;
-name|fail
-operator|=
-name|ctrl
-operator|->
-name|mapio
-argument_list|(
-name|slt
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+endif|#
+directive|endif
 comment|/* did we find one? */
 if|if
 condition|(
@@ -1711,9 +1716,11 @@ literal|1
 return|;
 block|}
 comment|/* munge the id_iobase entry for use by the rest of the driver */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: using 0x%x for RealPort ethernet\n"
@@ -1748,16 +1755,22 @@ name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x800
+name|DINGO_ECOR
 argument_list|,
-literal|0x47
+name|DINGO_ECOR_IRQ_LEVEL
+operator||
+name|DINGO_ECOR_INT_ENABLE
+operator||
+name|DINGO_ECOR_IOB_ENABLE
+operator||
+name|DINGO_ECOR_ETH_ENABLE
 argument_list|)
 expr_stmt|;
 name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x80a
+name|DINGO_EBAR0
 argument_list|,
 name|ioport
 operator|&
@@ -1768,7 +1781,7 @@ name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x80c
+name|DINGO_EBAR1
 argument_list|,
 operator|(
 name|ioport
@@ -1783,25 +1796,27 @@ name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x820
+name|DINGO_DCOR0
 argument_list|,
-literal|0x01
+name|DINGO_DCOR0_SF_INT
 argument_list|)
 expr_stmt|;
 name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x822
+name|DINGO_DCOR1
 argument_list|,
-literal|0x0c
+name|DINGO_DCOR1_INT_LEVEL
+operator||
+name|DINGO_DCOR1_EEDIO
 argument_list|)
 expr_stmt|;
 name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x824
+name|DINGO_DCOR2
 argument_list|,
 literal|0x00
 argument_list|)
@@ -1810,7 +1825,7 @@ name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x826
+name|DINGO_DCOR3
 argument_list|,
 literal|0x00
 argument_list|)
@@ -1819,7 +1834,7 @@ name|xe_memwrite
 argument_list|(
 name|devi
 argument_list|,
-literal|0x828
+name|DINGO_DCOR4
 argument_list|,
 literal|0x00
 argument_list|)
@@ -1930,7 +1945,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xe: bad unit (%d)\n"
+literal|"xe%d: bad unit\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1954,7 +1969,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xe: unit already attached (%d)\n"
+literal|"xe%d: already attached\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2054,7 +2069,7 @@ name|media
 decl_stmt|,
 name|prod
 decl_stmt|;
-comment|/*      * Read tuples one at a time into buf.  Sucks, but it only happens once.      * XXX - If the stuff we need isn't in attribute memory, or (worse yet)      * XXX - attribute memory isn't mapped, we're FUBAR.  Maybe need to do an      * XXX - ioctl on the card device and follow links?      * XXX - Not really the driver's problem, PCCARD should handle all this!      */
+comment|/*      * Read tuples one at a time into buf.  Sucks, but it only happens once.      * XXX - This assumes that attribute has been mapped by pccardd, which      * XXX - seems to be the default situation.  If not, we're well and truly      * XXX - FUBAR.  This is a general PCCARD problem, not our fault :)      */
 if|if
 condition|(
 operator|(
@@ -2087,9 +2102,11 @@ case|case
 literal|0x15
 case|:
 comment|/* Grab version string (needed to ID some weird CE2's) */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Got version string (0x15)\n"
@@ -2157,9 +2174,11 @@ case|case
 literal|0x20
 case|:
 comment|/* Figure out what type of card we have */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Got card ID (0x20)\n"
@@ -2281,9 +2300,11 @@ operator|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Not a PCMCIA Ethernet card!\n"
@@ -2309,9 +2330,11 @@ literal|0x10
 condition|)
 block|{
 comment|/* Ethernet/modem cards */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Card is Ethernet/modem combo\n"
@@ -2349,6 +2372,12 @@ literal|2
 case|:
 name|scp
 operator|->
+name|ce2
+operator|=
+literal|1
+expr_stmt|;
+name|scp
+operator|->
 name|card_type
 operator|=
 literal|"CEM2"
@@ -2357,6 +2386,12 @@ break|break;
 case|case
 literal|3
 case|:
+name|scp
+operator|->
+name|ce2
+operator|=
+literal|1
+expr_stmt|;
 name|scp
 operator|->
 name|card_type
@@ -2369,6 +2404,12 @@ literal|4
 case|:
 name|scp
 operator|->
+name|ce2
+operator|=
+literal|1
+expr_stmt|;
+name|scp
+operator|->
 name|card_type
 operator|=
 literal|"CEM33"
@@ -2379,7 +2420,7 @@ literal|5
 case|:
 name|scp
 operator|->
-name|ce3
+name|mohawk
 operator|=
 literal|1
 expr_stmt|;
@@ -2399,13 +2440,13 @@ case|:
 comment|/* Some kind of RealPort card */
 name|scp
 operator|->
-name|ce3
+name|mohawk
 operator|=
 literal|1
 expr_stmt|;
 name|scp
 operator|->
-name|cem56
+name|dingo
 operator|=
 literal|1
 expr_stmt|;
@@ -2426,9 +2467,11 @@ block|}
 else|else
 block|{
 comment|/* Ethernet-only cards */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Card is Ethernet only\n"
@@ -2460,6 +2503,12 @@ literal|2
 case|:
 name|scp
 operator|->
+name|ce2
+operator|=
+literal|1
+expr_stmt|;
+name|scp
+operator|->
 name|card_type
 operator|=
 literal|"CE2"
@@ -2470,7 +2519,7 @@ literal|3
 case|:
 name|scp
 operator|->
-name|ce3
+name|mohawk
 operator|=
 literal|1
 expr_stmt|;
@@ -2497,18 +2546,6 @@ case|case
 literal|0x22
 case|:
 comment|/* Get MAC address */
-ifdef|#
-directive|ifdef
-name|XE_DEBUG
-name|printf
-argument_list|(
-literal|"xe%d: Got MAC address (0x22)\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -2543,6 +2580,20 @@ name|ETHER_ADDR_LEN
 operator|)
 condition|)
 block|{
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
+name|printf
+argument_list|(
+literal|"xe%d: Got MAC address (0x22)\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -2675,9 +2726,11 @@ name|str
 init|=
 name|ver_str
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Checking for weird CE2 string\n"
@@ -2870,7 +2923,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|cem56
+name|dingo
 operator|&&
 name|xe_cem56fix
 argument_list|(
@@ -2905,6 +2958,21 @@ return|return
 name|ENODEV
 return|;
 block|}
+comment|/* Hopefully safe to read this here */
+name|XE_SELECT_PAGE
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|version
+operator|=
+name|XE_INB
+argument_list|(
+name|XE_BOV
+argument_list|)
+expr_stmt|;
 comment|/* Attempt to attach the device */
 if|if
 condition|(
@@ -3246,7 +3314,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 block|{
 name|ifmedia_add
@@ -3343,7 +3411,12 @@ expr_stmt|;
 comment|/* Print some useful information */
 name|printf
 argument_list|(
-literal|"\nxe%d: %s %s%s%s\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xe%d: %s %s, bonding version %#x%s%s\n"
 argument_list|,
 name|scp
 operator|->
@@ -3359,7 +3432,11 @@ name|card_type
 argument_list|,
 name|scp
 operator|->
-name|ce3
+name|version
+argument_list|,
+name|scp
+operator|->
+name|mohawk
 condition|?
 literal|", 100Mbps capable"
 else|:
@@ -3367,13 +3444,78 @@ literal|""
 argument_list|,
 name|scp
 operator|->
-name|cem56
+name|modem
 condition|?
 literal|", with modem"
 else|:
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|mohawk
+condition|)
+block|{
+name|XE_SELECT_PAGE
+argument_list|(
+literal|0x10
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xe%d: DingoID = %#x, RevisionID = %#x, VendorID = %#x\n"
+argument_list|,
+name|scp
+operator|->
+name|unit
+argument_list|,
+name|XE_INW
+argument_list|(
+name|XE_DINGOID
+argument_list|)
+argument_list|,
+name|XE_INW
+argument_list|(
+name|XE_RevID
+argument_list|)
+argument_list|,
+name|XE_INW
+argument_list|(
+name|XE_VendorID
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|scp
+operator|->
+name|ce2
+condition|)
+block|{
+name|XE_SELECT_PAGE
+argument_list|(
+literal|0x45
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xe%d: CE2 version = %#x\n"
+argument_list|,
+name|scp
+operator|->
+name|unit
+argument_list|,
+name|XE_INB
+argument_list|(
+name|XE_REV
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Print MAC address */
 name|printf
 argument_list|(
 literal|"xe%d: Ethernet address %02x"
@@ -3447,9 +3589,11 @@ name|NBPFILTER
 operator|>
 literal|0
 comment|/* If BPF is in the kernel, call the attach for it */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: BPF listener attached\n"
@@ -3552,7 +3696,7 @@ literal|0
 expr_stmt|;
 name|scp
 operator|->
-name|tx_ptr
+name|tx_tpr
 operator|=
 literal|0
 expr_stmt|;
@@ -3625,7 +3769,7 @@ argument_list|)
 expr_stmt|;
 name|XE_OUTW
 argument_list|(
-name|XE_DOR
+name|XE_DO
 argument_list|,
 literal|0x2000
 argument_list|)
@@ -3639,7 +3783,7 @@ expr_stmt|;
 comment|/* Bit 7..0 */
 name|XE_OUTB
 argument_list|(
-name|XE_RXM0
+name|XE_RX0Msk
 argument_list|,
 literal|0xff
 argument_list|)
@@ -3647,7 +3791,7 @@ expr_stmt|;
 comment|/* ROK, RAB, rsv, RO,  CRC, AE,  PTL, MP  */
 name|XE_OUTB
 argument_list|(
-name|XE_TXM0
+name|XE_TX0Msk
 argument_list|,
 literal|0xff
 argument_list|)
@@ -3655,7 +3799,9 @@ expr_stmt|;
 comment|/* TOK, TAB, SQE, LL,  TU,  JAB, EXC, CRS */
 name|XE_OUTB
 argument_list|(
-name|XE_TXM1
+name|XE_TX0Msk
+operator|+
+literal|1
 argument_list|,
 literal|0xb0
 argument_list|)
@@ -3663,7 +3809,7 @@ expr_stmt|;
 comment|/* rsv, rsv, PTD, EXT, rsv, rsv, rsv, rsv */
 name|XE_OUTB
 argument_list|(
-name|XE_RXS0
+name|XE_RST0
 argument_list|,
 literal|0x00
 argument_list|)
@@ -3671,7 +3817,7 @@ expr_stmt|;
 comment|/* ROK, RAB, REN, RO,  CRC, AE,  PTL, MP  */
 name|XE_OUTB
 argument_list|(
-name|XE_TXS0
+name|XE_TXST0
 argument_list|,
 literal|0x00
 argument_list|)
@@ -3679,7 +3825,7 @@ expr_stmt|;
 comment|/* TOK, TAB, SQE, LL,  TU,  JAB, EXC, CRS */
 name|XE_OUTB
 argument_list|(
-name|XE_TXS1
+name|XE_TXST1
 argument_list|,
 literal|0x00
 argument_list|)
@@ -3712,11 +3858,11 @@ argument_list|)
 expr_stmt|;
 name|XE_OUTB
 argument_list|(
-name|XE_OCR
+name|XE_CMD0
 argument_list|,
-name|XE_OCR_RX_ENABLE
+name|XE_CMD0_RX_ENABLE
 operator||
-name|XE_OCR_ONLINE
+name|XE_CMD0_ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* Set up IMR, enable interrupts */
@@ -4225,7 +4371,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 block|{
 name|XE_OUTB
@@ -4241,7 +4387,7 @@ name|psr
 operator|=
 name|XE_INB
 argument_list|(
-name|XE_PSR
+name|XE_PR
 argument_list|)
 expr_stmt|;
 comment|/* Stash the current register page */
@@ -4284,12 +4430,12 @@ name|rxs
 operator|=
 name|XE_INB
 argument_list|(
-name|XE_RXS0
+name|XE_RST0
 argument_list|)
 expr_stmt|;
 name|XE_OUTB
 argument_list|(
-name|XE_RXS0
+name|XE_RST0
 argument_list|,
 operator|~
 name|rxs
@@ -4301,28 +4447,28 @@ name|txs
 operator|=
 name|XE_INB
 argument_list|(
-name|XE_TXS0
+name|XE_TXST0
 argument_list|)
 expr_stmt|;
 name|txs
 operator||=
 name|XE_INB
 argument_list|(
-name|XE_TXS1
+name|XE_TXST1
 argument_list|)
 operator|<<
 literal|8
 expr_stmt|;
 name|XE_OUTB
 argument_list|(
-name|XE_TXS0
+name|XE_TXST0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|XE_OUTB
 argument_list|(
-name|XE_TXS1
+name|XE_TXST1
 argument_list|,
 literal|0
 argument_list|)
@@ -4336,10 +4482,10 @@ if|#
 directive|if
 name|XE_DEBUG
 operator|>
-literal|3
+literal|2
 name|printf
 argument_list|(
-literal|"xe%d: ISR=%#2.2x ESR=%#2.2x RXS=%#2.2x TXS=%#4.4x\n"
+literal|"xe%d: ISR=%#2.2x ESR=%#2.2x RST=%#2.2x TXST=%#4.4x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4363,24 +4509,24 @@ name|XE_ISR_TX_PACKET
 condition|)
 block|{
 name|u_int8_t
-name|new_ptr
+name|new_tpr
 decl_stmt|,
 name|sent
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|new_ptr
+name|new_tpr
 operator|=
 name|XE_INB
 argument_list|(
-name|XE_PTR
+name|XE_TPR
 argument_list|)
 operator|)
 operator|<
 name|scp
 operator|->
-name|tx_ptr
+name|tx_tpr
 condition|)
 comment|/* Update packet count */
 name|sent
@@ -4390,20 +4536,20 @@ literal|0xff
 operator|-
 name|scp
 operator|->
-name|tx_ptr
+name|tx_tpr
 operator|)
 operator|+
-name|new_ptr
+name|new_tpr
 expr_stmt|;
-comment|/* PTR rolled over */
+comment|/* TPR rolled over */
 else|else
 name|sent
 operator|=
-name|new_ptr
+name|new_tpr
 operator|-
 name|scp
 operator|->
-name|tx_ptr
+name|tx_tpr
 expr_stmt|;
 if|if
 condition|(
@@ -4415,9 +4561,9 @@ block|{
 comment|/* Packets sent since last interrupt */
 name|scp
 operator|->
-name|tx_ptr
+name|tx_tpr
 operator|=
-name|new_ptr
+name|new_tpr
 expr_stmt|;
 name|scp
 operator|->
@@ -4659,7 +4805,7 @@ name|XE_ESR
 argument_list|)
 operator|)
 operator|&
-name|XE_ESR_FULL_PKT_RX
+name|XE_ESR_FULL_PACKET_RX
 condition|)
 block|{
 if|if
@@ -4707,7 +4853,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Limit the amount of time we spend in this loop, dropping packets if  	 * necessary.  The Linux code does this with considerably more 	 * finesse, adjusting the threshold dynamically. 	 */
-block|if ((rx_bytes += len)> 22000) { 	  ifp->if_iqdrops++; 	  scp->mibData.dot3StatsMissedFrames++; 	  XE_OUTW(XE_DOR, 0x8000); 	  continue; 	}
+block|if ((rx_bytes += len)> 22000) { 	  ifp->if_iqdrops++; 	  scp->mibData.dot3StatsMissedFrames++; 	  XE_OUTW(XE_DO, 0x8000); 	  continue; 	}
 endif|#
 directive|endif
 if|if
@@ -4846,7 +4992,7 @@ name|rhs
 operator|=
 name|XE_INW
 argument_list|(
-name|XE_RHS
+name|XE_RHSA
 argument_list|)
 expr_stmt|;
 name|XE_SELECT_PAGE
@@ -5041,7 +5187,7 @@ operator|&&
 operator|(
 name|rsr
 operator|&
-name|XE_RSR_PHYS_PKT
+name|XE_RSR_PHYS_PACKET
 operator|)
 condition|)
 block|{
@@ -5106,7 +5252,7 @@ comment|/* Success! */
 block|}
 name|XE_OUTW
 argument_list|(
-name|XE_DOR
+name|XE_DO
 argument_list|,
 literal|0x8000
 argument_list|)
@@ -5119,7 +5265,7 @@ if|if
 condition|(
 name|rsr
 operator|&
-name|XE_RSR_LONG_PKT
+name|XE_RSR_LONG_PACKET
 condition|)
 block|{
 comment|/* Packet length>1518 bytes */
@@ -5141,7 +5287,7 @@ if|if
 condition|(
 name|rsr
 operator|&
-name|XE_RSR_CRC_ERR
+name|XE_RSR_CRC_ERROR
 condition|)
 block|{
 comment|/* Bad checksum on packet */
@@ -5163,7 +5309,7 @@ if|if
 condition|(
 name|rsr
 operator|&
-name|XE_RSR_ALIGN_ERR
+name|XE_RSR_ALIGN_ERROR
 condition|)
 block|{
 comment|/* Packet alignment error */
@@ -5224,8 +5370,8 @@ name|XE_CR_ENABLE_INTR
 argument_list|)
 expr_stmt|;
 comment|/* Re-enable interrupts */
-comment|/* XXX - Could force an int here, instead of dropping packets?     */
-comment|/* XXX - XE_OUTB(XE_CR, XE_CR_ENABLE_INTR|XE_CE_FORCE_INTR); */
+comment|/* Could force an int here, instead of dropping packets? */
+comment|/* XE_OUTB(XE_CR, XE_CR_ENABLE_INTR|XE_CE_FORCE_INTR); */
 return|return
 name|result
 return|;
@@ -5570,9 +5716,11 @@ block|{
 case|case
 name|XE_AUTONEG_NONE
 case|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Waiting for idle transmitter\n"
@@ -5631,9 +5779,11 @@ operator|->
 name|phy_ok
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Starting autonegotiation\n"
@@ -5787,9 +5937,11 @@ name|PHY_BMSR_LINKSTAT
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Autonegotiation complete!\n"
@@ -5919,9 +6071,11 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Autonegotiation failed; trying 100baseTX\n"
@@ -6022,9 +6176,11 @@ operator|&
 name|PHY_BMSR_LINKSTAT
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Got 100baseTX link!\n"
@@ -6075,9 +6231,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Autonegotiation failed; disabling PHY\n"
@@ -6141,9 +6299,11 @@ operator|==
 name|XE_AUTONEG_FAIL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Selecting 10baseX\n"
@@ -6159,7 +6319,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 block|{
 name|XE_SELECT_PAGE
@@ -6278,9 +6438,11 @@ operator|->
 name|phy_ok
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Selecting 100baseTX\n"
@@ -6348,9 +6510,11 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Selecting 10baseT\n"
@@ -6425,9 +6589,11 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Selecting 10base2\n"
@@ -6460,9 +6626,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*    * Finally, the LEDs are set to match whatever media was chosen and the    * transmitter is unblocked.     */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: Setting LEDs\n"
@@ -6506,7 +6674,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|cem56
+name|dingo
 condition|)
 name|XE_OUTB
 argument_list|(
@@ -6614,7 +6782,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 name|XE_OUTB
 argument_list|(
@@ -6732,7 +6900,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 block|{
 comment|/*      * set GP1 and GP2 as outputs (bits 2& 3)      * set GP1 low to power on the ML6692 (bit 0)      * set GP2 high to power on the 10Mhz chip (bit 1)      */
@@ -6765,7 +6933,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 name|scp
 operator|->
@@ -6827,7 +6995,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 block|{
 name|scp
@@ -7039,7 +7207,7 @@ operator|&&
 operator|!
 name|scp
 operator|->
-name|cem56
+name|dingo
 condition|)
 block|{
 comment|/* This bit is just magic */
@@ -7120,7 +7288,7 @@ operator|&&
 operator|!
 name|scp
 operator|->
-name|cem56
+name|dingo
 condition|)
 block|{
 comment|/* More magic (does this work?) */
@@ -7306,9 +7474,9 @@ argument_list|)
 expr_stmt|;
 name|XE_OUTB
 argument_list|(
-name|XE_OCR
+name|XE_CMD0
 argument_list|,
-name|XE_OCR_OFFLINE
+name|XE_CMD0_OFFLINE
 argument_list|)
 expr_stmt|;
 comment|/*xe_reg_dump(scp);*/
@@ -7325,11 +7493,11 @@ argument_list|)
 expr_stmt|;
 name|XE_OUTB
 argument_list|(
-name|XE_OCR
+name|XE_CMD0
 argument_list|,
-name|XE_OCR_RX_ENABLE
+name|XE_CMD0_RX_ENABLE
 operator||
-name|XE_OCR_ONLINE
+name|XE_CMD0_ONLINE
 argument_list|)
 expr_stmt|;
 block|}
@@ -7358,7 +7526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up all on-chip addresses (for multicast).  AFAICS, there are 10  * of these things; the first is our MAC address, the other 9 are mcast  * addresses, padded with the MAC address if there aren't enough.  * XXX - This doesn't work right, but I'm not sure why yet.  We seem to be  * XXX - doing much the same as the Linux code, which is weird enough that  * XXX - it's probably right (despite my earlier comments to the contrary).  * XXX - I wonder if this thing has a multicast hash filter like most other  * XXX - Ethernet hardware seems to?  */
+comment|/*  * Set up all on-chip addresses (for multicast).  AFAICS, there are 10  * of these things; the first is our MAC address, the other 9 are mcast  * addresses, padded with the MAC address if there aren't enough.  * XXX - This doesn't work right, but I'm not sure why yet.  We seem to be  * XXX - doing much the same as the Linux code, which is weird enough that  * XXX - it's probably right (despite my earlier comments to the contrary).  */
 end_comment
 
 begin_function
@@ -7530,7 +7698,7 @@ if|#
 directive|if
 name|XE_DEBUG
 operator|>
-literal|1
+literal|2
 if|if
 condition|(
 name|i
@@ -7588,7 +7756,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 name|XE_OUTB
 argument_list|(
@@ -7618,7 +7786,7 @@ if|#
 directive|if
 name|XE_DEBUG
 operator|>
-literal|1
+literal|2
 name|printf
 argument_list|(
 literal|"\n"
@@ -7954,7 +8122,7 @@ if|if
 condition|(
 name|scp
 operator|->
-name|ce3
+name|mohawk
 condition|)
 name|XE_OUTB
 argument_list|(
@@ -8089,11 +8257,212 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Compute the 32-bit Ethernet CRC for the given buffer.  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int32_t
+name|xe_compute_crc
+parameter_list|(
+name|u_int8_t
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+name|u_int32_t
+name|crc
+init|=
+literal|0xffffffff
+decl_stmt|;
+name|u_int32_t
+name|poly
+init|=
+literal|0x04c11db6
+decl_stmt|;
+name|u_int8_t
+name|current
+decl_stmt|,
+name|crc31
+decl_stmt|,
+name|bit
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|k
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|current
+operator|=
+name|data
+index|[
+name|i
+index|]
+expr_stmt|;
+for|for
+control|(
+name|k
+operator|=
+literal|1
+init|;
+name|k
+operator|<=
+literal|8
+condition|;
+name|k
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|crc
+operator|&
+literal|0x80000000
+condition|)
+block|{
+name|crc31
+operator|=
+literal|0x01
+expr_stmt|;
+block|}
+else|else
+block|{
+name|crc31
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|bit
+operator|=
+name|crc31
+operator|^
+operator|(
+name|current
+operator|&
+literal|0x01
+operator|)
+expr_stmt|;
+name|crc
+operator|<<=
+literal|1
+expr_stmt|;
+name|current
+operator|>>=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|bit
+condition|)
+block|{
+name|crc
+operator|=
+operator|(
+name|crc
+operator|^
+name|poly
+operator|)
+operator||
+literal|1
+expr_stmt|;
+block|}
+block|}
+block|}
+return|return
+name|crc
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Convert a CRC into an index into the multicast hash table.  What we do is  * take the most-significant 6 bits of the CRC, reverse them, and use that as  * the bit number in the hash table.  Bits 5:3 of the result give the byte  * within the table (0-7); bits 2:0 give the bit number within that byte (also   * 0-7), ie. the number of shifts needed to get it into the lsb position.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|xe_compute_hashbit
+parameter_list|(
+name|u_int32_t
+name|crc
+parameter_list|)
+block|{
+name|u_int8_t
+name|hashbit
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|6
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|hashbit
+operator|>>=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|crc
+operator|&
+literal|0x80000000
+condition|)
+block|{
+name|hashbit
+operator|&=
+literal|0x80
+expr_stmt|;
+block|}
+name|crc
+operator|<<=
+literal|1
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|hashbit
+operator|>>
+literal|2
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**************************************************************  *                                                            *  *                  M I I  F U N C T I O N S                  *  *                                                            *  **************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Alternative MII/PHY handling code adapted from the xl driver.  It doesn't  * seem to work any better than the xirc2_ps stuff, but it's cleaner code.  */
+comment|/*  * Alternative MII/PHY handling code adapted from the xl driver.  It doesn't  * seem to work any better than the xirc2_ps stuff, but it's cleaner code.  * XXX - this stuff shouldn't be here.  It should all be abstracted off to  * XXX - some kind of common MII-handling code, shared by all drivers.  But  * XXX - that's a whole other mission.  */
 end_comment
 
 begin_define
@@ -8223,9 +8592,11 @@ operator|!=
 literal|0x7800
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: no PHY found, %0x\n"
@@ -8245,9 +8616,11 @@ return|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XE_DEBUG
+operator|>
+literal|1
 name|printf
 argument_list|(
 literal|"xe%d: PHY OK!\n"
