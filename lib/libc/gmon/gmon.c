@@ -943,6 +943,17 @@ operator|)
 operator|&
 name|gmonhdr
 expr_stmt|;
+name|bzero
+argument_list|(
+name|hdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|hdr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|hdr
 operator|->
 name|lpc
