@@ -2848,7 +2848,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|cr_cansee
+name|cr_canseesocket
 argument_list|(
 name|req
 operator|->
@@ -2859,8 +2859,6 @@ argument_list|,
 name|inp
 operator|->
 name|inp_socket
-operator|->
-name|so_cred
 argument_list|)
 condition|)
 continue|continue;
@@ -3210,7 +3208,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|cr_cansee
+name|cr_canseesocket
 argument_list|(
 name|req
 operator|->
@@ -3221,8 +3219,6 @@ argument_list|,
 name|inp
 operator|->
 name|inp_socket
-operator|->
-name|so_cred
 argument_list|)
 expr_stmt|;
 if|if

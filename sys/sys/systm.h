@@ -408,6 +408,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
@@ -1578,6 +1584,23 @@ name|struct
 name|ucred
 modifier|*
 name|u2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cr_canseesocket
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
 parameter_list|)
 function_decl|;
 end_function_decl
