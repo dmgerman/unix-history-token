@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2107,7 +2107,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2130,6 +2130,18 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * We don't allow exporting kernfs mounts, and currently local 	 * requests do not need cookies. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+condition|)
+name|panic
+argument_list|(
+literal|"kernfs_readdir: not hungry"
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|uio

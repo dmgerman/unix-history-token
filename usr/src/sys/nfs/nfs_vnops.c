@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8741,7 +8741,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -8786,6 +8786,18 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
+comment|/* 	 * We don't allow exporting NFS mounts, and currently local requests 	 * do not need cookies. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+condition|)
+name|panic
+argument_list|(
+literal|"nfs_readdir: not hungry"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp

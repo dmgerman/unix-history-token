@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.6 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.7 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -244,6 +244,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_open_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -381,6 +382,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_close_args
+comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -463,6 +465,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_ioctl_args
+comment|/* { 		struct vnode *a_vp; 		int a_command; 		caddr_t a_data; 		int a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -492,6 +495,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -555,6 +559,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -614,6 +619,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -785,6 +791,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -838,6 +845,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_abortop_args
+comment|/* { 		struct vnode *a_dvp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -915,6 +923,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_getattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1326,6 +1335,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_setattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1356,6 +1366,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_access_args
+comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1547,6 +1558,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2026,6 +2038,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_readdir_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2068,6 +2081,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * We don't allow exporting procfs mounts, and currently local 	 * requests do not need cookies. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+condition|)
+name|panic
+argument_list|(
+literal|"procfs_readdir: not hungry"
+argument_list|)
+expr_stmt|;
 name|pfs
 operator|=
 name|VTOPFS
