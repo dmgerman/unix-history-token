@@ -122,11 +122,11 @@ begin_define
 define|#
 directive|define
 name|U_ar0
-value|u_kproc.kp_proc.p_regs
+value|u_kproc.kp_proc.p_md.md_regs
 end_define
 
 begin_comment
-comment|/* copy of curproc->p_regs */
+comment|/* copy of curproc->p_md.md_regs */
 end_comment
 
 begin_define
