@@ -51,23 +51,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
 name|bcmp
-parameter_list|(
+argument_list|(
 specifier|const
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* LEGACY */
@@ -109,14 +110,15 @@ begin_comment
 comment|/* LEGACY */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|ffs
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -124,105 +126,112 @@ directive|ifdef
 name|__BSD_VISIBLE
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|ffsl
-parameter_list|(
+argument_list|(
 name|long
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|fls
-parameter_list|(
+argument_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|flsl
-parameter_list|(
+argument_list|(
 name|long
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|index
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* LEGACY */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|rindex
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* LEGACY */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|strcasecmp
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|strncasecmp
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|__END_DECLS
