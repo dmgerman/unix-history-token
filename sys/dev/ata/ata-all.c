@@ -3432,7 +3432,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|isalpha
+name|isprint
 argument_list|(
 name|atacap
 operator|->
@@ -3443,7 +3443,7 @@ index|]
 argument_list|)
 operator|||
 operator|!
-name|isalpha
+name|isprint
 argument_list|(
 name|atacap
 operator|->
