@@ -115,12 +115,12 @@ name|atrs
 struct|,
 name|it
 index|[
-name|OHCI_MAX_DMA_CH
+name|OHCI_DMA_ITCH
 index|]
 struct|,
 name|ir
 index|[
-name|OHCI_MAX_DMA_CH
+name|OHCI_DMA_IRCH
 index|]
 struct|;
 name|u_int

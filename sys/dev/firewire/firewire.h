@@ -2023,7 +2023,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Firewire specific system requests.  */
+comment|/*  * FireWire specific system requests.  */
 end_comment
 
 begin_define
