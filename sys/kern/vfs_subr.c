@@ -10268,7 +10268,8 @@ operator|&
 name|mntvnode_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX Does not check vn_lock error.  Should restart loop if 		 * error == ENOENT. 		 */
+name|error
+operator|=
 name|vn_lock
 argument_list|(
 name|vp
@@ -10276,31 +10277,15 @@ argument_list|,
 name|LK_INTERLOCK
 operator||
 name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This vnode could have been reclaimed while we were 		 * waiting for the lock since we are not holding a 		 * reference. 		 * Start over if the vnode was reclaimed. 		 */
 if|if
 condition|(
-name|vp
-operator|->
-name|v_mount
-operator|!=
-name|mp
+name|error
 condition|)
 block|{
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
