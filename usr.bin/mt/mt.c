@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mt.c,v 1.13 1997/08/21 05:49:29 joerg Exp $"
+literal|"$Id: mt.c,v 1.15 1998/09/15 10:28:20 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1276,11 +1276,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -1433,6 +1441,12 @@ block|,
 literal|0
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 block|{
 name|MT_ISVIPER1
 block|,
@@ -1453,6 +1467,8 @@ block|,
 name|WTER_BITS
 block|}
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* defined (__FreeBSD__) */
