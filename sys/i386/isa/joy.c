@@ -71,6 +71,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/joystick.h>
 end_include
 
@@ -203,13 +209,6 @@ index|]
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|timer0_max_count
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -325,13 +324,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|get_tick
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

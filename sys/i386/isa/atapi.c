@@ -3861,12 +3861,9 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
-name|void
-function_decl|(
+name|atapi_callback_t
 modifier|*
 name|done
-function_decl|)
-parameter_list|()
 parameter_list|,
 name|void
 modifier|*
@@ -5444,12 +5441,9 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
-name|void
-function_decl|(
+name|atapi_callback_t
 modifier|*
 name|done
-function_decl|)
-parameter_list|()
 parameter_list|,
 name|void
 modifier|*
@@ -5535,6 +5529,21 @@ name|count
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|atapi_lock
+parameter_list|(
+name|int
+name|ctlr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * XXX "ioconf.h" is not included by<sys/conf.h> for lkms, so we need this  * misplaced declaration.  */
+end_comment
 
 begin_function_decl
 specifier|extern

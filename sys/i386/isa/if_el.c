@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.19 1995/12/05 02:00:49 davidg Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.20 1995/12/10 13:38:39 phk Exp $  */
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
 end_include
 
 begin_include

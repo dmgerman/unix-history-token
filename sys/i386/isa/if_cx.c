@@ -179,6 +179,24 @@ directive|include
 file|<i386/isa/cxreg.h>
 end_include
 
+begin_comment
+comment|/* XXX exported. */
+end_comment
+
+begin_function_decl
+name|void
+name|cxswitch
+parameter_list|(
+name|cx_chan_t
+modifier|*
+name|c
+parameter_list|,
+name|cx_soft_opt_t
+name|new
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int

@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.35 1995/12/05 02:00:52 davidg Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.36 1995/12/10 13:38:41 phk Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
 end_include
 
 begin_include
@@ -292,6 +298,57 @@ include|#
 directive|include
 file|<i386/isa/if_epreg.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|eeprom_rdy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|is
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ep_look_for_board_at
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|is
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|get_e
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|is
+operator|,
+name|int
+name|offset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

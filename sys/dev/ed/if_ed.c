@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.89 1995/12/05 13:01:33 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.90 1995/12/10 13:38:37 phk Exp $  */
 end_comment
 
 begin_comment
@@ -238,7 +238,6 @@ comment|/*  * ed_softc: per line info and status  */
 end_comment
 
 begin_struct
-specifier|static
 struct|struct
 name|ed_softc
 block|{
@@ -360,12 +359,19 @@ name|kdc
 decl_stmt|;
 comment|/* kernel configuration database info */
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ed_softc
 name|ed_softc
 index|[
 name|NED
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -569,13 +575,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|ds_getmcaf
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -589,60 +605,139 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|int
 comment|/* u_short */
+name|int
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-specifier|inline
 name|void
 name|ed_rint
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-specifier|inline
 name|void
 name|ed_xmit
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-specifier|inline
 name|char
 modifier|*
 name|ed_ring_copy
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+comment|/* u_short */
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|void
 name|ed_pio_readmem
-argument_list|()
-decl_stmt|,
-name|ed_pio_writemem
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|,
+comment|/* u_short */
+name|int
+operator|,
+name|unsigned
+name|char
+operator|*
+operator|,
+comment|/* u_short */
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
+name|void
+name|ed_pio_writemem
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+comment|/* u_short */
+name|int
+operator|,
+comment|/* u_short */
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_short
 name|ed_pio_write_mbufs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ed_softc
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+comment|/* u_short */
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -692,6 +787,12 @@ begin_include
 include|#
 directive|include
 file|<pccard/card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/driver.h>
 end_include
 
 begin_include

@@ -288,8 +288,11 @@ directive|include
 file|<i386/isa/cxreg.h>
 end_include
 
+begin_comment
+comment|/* XXX imported from if_cx.c. */
+end_comment
+
 begin_function_decl
-specifier|extern
 name|void
 name|cxswitch
 parameter_list|(
@@ -303,8 +306,44 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX exported. */
+end_comment
+
+begin_function_decl
+name|void
+name|cxmint
+parameter_list|(
+name|cx_chan_t
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cxrinta
+parameter_list|(
+name|cx_chan_t
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cxtinta
+parameter_list|(
+name|cx_chan_t
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
-specifier|extern
 name|timeout_t
 name|cxtimeout
 decl_stmt|;

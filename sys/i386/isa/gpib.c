@@ -364,7 +364,12 @@ begin_function_decl
 specifier|static
 name|int
 name|gpattach
-parameter_list|()
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dvp
+parameter_list|)
 function_decl|;
 end_function_decl
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.14 1995/12/10 13:38:25 phk Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.15 1995/12/15 00:29:28 bde Exp $  */
 end_comment
 
 begin_comment
@@ -165,10 +165,31 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ctxprobe
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|devp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|ctxattach
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|devp
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
