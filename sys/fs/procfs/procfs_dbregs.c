@@ -144,6 +144,11 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
+name|PHOLD
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kl
@@ -227,6 +232,11 @@ argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
 block|}
+name|PRELE
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|uio
 operator|->
 name|uio_offset
