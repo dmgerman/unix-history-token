@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -122,6 +128,10 @@ operator|&
 name|ISDISK
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -143,6 +153,8 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
 condition|)
 name|err
 argument_list|(
@@ -158,6 +170,21 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Read the data.  If a pipe, read until satisfy the number of bytes 	 * being skipped.  No differentiation for reading complete and partial 	 * blocks for other devices. 	 */
+if|if
+condition|(
+name|in
+operator|.
+name|offset
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"skip must be positive"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|bcnt
@@ -353,6 +380,10 @@ operator|&
 name|ISDISK
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -374,6 +405,8 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
 condition|)
 name|err
 argument_list|(
@@ -443,6 +476,21 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Read it. */
+if|if
+condition|(
+name|out
+operator|.
+name|offset
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"seek must be positive"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cnt

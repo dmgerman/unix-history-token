@@ -284,7 +284,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|quad_t
-name|get_bsz
+name|get_num
 name|__P
 argument_list|(
 operator|(
@@ -898,7 +898,7 @@ block|{
 name|quad_t
 name|res
 init|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -953,7 +953,7 @@ block|{
 name|quad_t
 name|res
 init|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -1001,7 +1001,7 @@ decl_stmt|;
 block|{
 name|cpy_cnt
 operator|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -1044,17 +1044,25 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-name|quad_t
-name|res
-init|=
-name|get_bsz
+name|files_cnt
+operator|=
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+if|if
+condition|(
 name|files_cnt
-operator|=
-name|res
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"files cannot be negative"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1084,7 +1092,7 @@ block|{
 name|quad_t
 name|res
 init|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -1167,7 +1175,7 @@ block|{
 name|quad_t
 name|res
 init|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -1241,7 +1249,7 @@ name|out
 operator|.
 name|offset
 operator|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -1265,7 +1273,7 @@ name|in
 operator|.
 name|offset
 operator|=
-name|get_bsz
+name|get_num
 argument_list|(
 name|arg
 argument_list|)
@@ -1647,7 +1655,7 @@ end_comment
 begin_function
 specifier|static
 name|quad_t
-name|get_bsz
+name|get_num
 parameter_list|(
 name|val
 parameter_list|)
@@ -1683,13 +1691,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|num
-operator|==
-name|QUAD_MAX
-operator|&&
 name|errno
 condition|)
-comment|/* Overflow. */
+comment|/* Overflow or underflow. */
 name|err
 argument_list|(
 literal|1
@@ -1699,18 +1703,13 @@ argument_list|,
 name|oper
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX (BFF) - The checks in individual f_* functions are 	 * now redundant, but this is only temporary. 	 */
 if|if
 condition|(
 name|expr
 operator|==
 name|val
-operator|||
-name|num
-operator|<
-literal|0
 condition|)
-comment|/* No digits or negative. */
+comment|/* Not a valid number */
 name|errx
 argument_list|(
 literal|1
@@ -1879,7 +1878,7 @@ name|num
 expr_stmt|;
 name|num
 operator|*=
-name|get_bsz
+name|get_num
 argument_list|(
 name|expr
 operator|+
@@ -1889,9 +1888,10 @@ expr_stmt|;
 if|if
 condition|(
 name|t
-operator|>
+operator|<=
 name|num
 condition|)
+break|break;
 name|erange
 label|:
 name|errx
@@ -1908,7 +1908,6 @@ name|ERANGE
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 default|default:
 name|errx
 argument_list|(
