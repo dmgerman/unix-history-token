@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.20 (Berkeley) %G%"
+literal|"@(#)conf.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -964,6 +964,13 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|la
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|getla
 argument_list|()
@@ -1163,14 +1170,6 @@ name|long
 name|pri
 decl_stmt|;
 block|{
-name|int
-name|la
-decl_stmt|;
-name|la
-operator|=
-name|getla
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|la
