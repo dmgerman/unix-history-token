@@ -988,6 +988,12 @@ end_function
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 operator|(
 operator|(
 operator|!
@@ -1008,75 +1014,39 @@ begin_comment
 comment|/* _putchar - output a single character to the terminal.  This name is so that  *	curses(3x) can call us to send out data.  */
 end_comment
 
-begin_function
-name|void
-name|_putchar
-parameter_list|(
-name|c
-parameter_list|)
-name|char
-name|c
-decl_stmt|;
-block|{
+begin_if
+unit|void _putchar(c)     char c; {
 if|#
 directive|if
 name|defined
 argument_list|(
 name|sun
 argument_list|)
+end_if
+
+begin_comment
 comment|/* SunOS 4.0 bug */
-name|c
-operator|&=
-literal|0x7f
-expr_stmt|;
+end_comment
+
+begin_endif
+unit|c&= 0x7f;
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* defined(sun) */
-if|if
-condition|(
-name|cursesdata
-condition|)
-block|{
-name|Dump
-argument_list|(
-literal|'>'
-argument_list|,
-operator|&
-name|c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|TTYROOM
-argument_list|()
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|DataToTerminal
-argument_list|(
-operator|&
-name|c
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|TTYADD
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|if (cursesdata) { 	Dump('>',&c, 1);     }     if (!TTYROOM()) { 	(void) DataToTerminal(&c, 1);     } else { 	TTYADD(c);     } }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ((!defined(NOT43)) || defined(PUTCHAR)) */
+end_comment
 
 begin_endif
 endif|#
@@ -1084,7 +1054,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ((!defined(NOT43)) || defined(PUTCHAR)) */
+comment|/* 0 */
 end_comment
 
 begin_function
