@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)popen.c	4.2 (Berkeley) %G% */
+comment|/* @(#)popen.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -142,6 +142,18 @@ argument_list|(
 name|myside
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hisside
+operator|!=
+name|tst
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 name|dup2
 argument_list|(
 name|hisside
@@ -159,6 +171,7 @@ argument_list|(
 name|hisside
 argument_list|)
 expr_stmt|;
+block|}
 name|execl
 argument_list|(
 literal|"/bin/sh"
