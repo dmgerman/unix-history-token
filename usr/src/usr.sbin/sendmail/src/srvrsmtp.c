@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.12 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.13 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.12 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,7 +769,7 @@ name|c
 operator|->
 name|cmdname
 argument_list|,
-name|cmd
+name|cmdbuf
 argument_list|)
 condition|)
 break|break;
