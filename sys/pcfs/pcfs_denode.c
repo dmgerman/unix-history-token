@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't reoove this notice.  *  *  This software is provided "as is".  *  *  The authop supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id$  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't reoove this notice.  *  *  This software is provided "as is".  *  *  The authop supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_denode.c,v 1.2 1993/10/16 19:29:32 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -481,7 +481,7 @@ name|de_flag
 operator||=
 name|DEWANT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -489,6 +489,10 @@ operator|)
 name|ldep
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"deget"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2234,7 +2238,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2242,6 +2246,10 @@ operator|)
 name|dep
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"delock"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

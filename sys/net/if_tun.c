@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, Julian Onions.   *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  *	from: Revision 1.13  88/07/11  08:28:51  jpo  *	from: 90/02/06 15:03 - Fixed a bug in where  *				TIOCGPGRP and TIOCSPGRP were mixed up  *	$Id$  */
+comment|/*  * Copyright (c) 1988, Julian Onions.   *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  *	from: Revision 1.13  88/07/11  08:28:51  jpo  *	from: 90/02/06 15:03 - Fixed a bug in where  *				TIOCGPGRP and TIOCSPGRP were mixed up  *	$Id: if_tun.c,v 1.2 1993/10/16 17:43:24 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -2019,7 +2019,7 @@ name|tun_flags
 operator||=
 name|TUN_RWAIT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -2029,6 +2029,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+literal|"tunread"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
