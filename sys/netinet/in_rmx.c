@@ -206,14 +206,12 @@ name|RTF_MULTICAST
 operator|)
 operator|)
 condition|)
-block|{
 name|rt
 operator|->
 name|rt_flags
 operator||=
 name|RTF_PRCLONING
 expr_stmt|;
-block|}
 comment|/* 	 * A little bit of help for both IP output and input: 	 *   For host routes, we make sure that RTF_BROADCAST 	 *   is set for anything that looks like a broadcast address. 	 *   This way, we can avoid an expensive call to in_broadcast() 	 *   in ip_output() most of the time (because the route passed 	 *   to ip_output() is almost always a host route). 	 * 	 *   We also do the same for local addresses, with the thought 	 *   that this might one day be used to speed up ip_input(). 	 * 	 * We also mark routes to multicast addresses as such, because 	 * it's easy to do and might be useful (but this is much more 	 * dubious since it's so easy to inspect the address).  (This 	 * is done above.) 	 */
 if|if
 condition|(
@@ -245,8 +243,7 @@ operator||=
 name|RTF_BROADCAST
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|satosin
@@ -268,6 +265,7 @@ name|sin_addr
 operator|.
 name|s_addr
 condition|)
+block|{
 name|rt
 operator|->
 name|rt_flags
@@ -580,7 +578,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* one hour is ``really old'' */
+comment|/* one hour is "really old" */
 end_comment
 
 begin_expr_stmt
@@ -648,7 +646,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 128 cached routes is ``too many'' */
+comment|/* 128 cached routes is "too many" */
 end_comment
 
 begin_expr_stmt
@@ -751,7 +749,7 @@ operator|!=
 name|RTF_WASCLONED
 condition|)
 return|return;
-comment|/* 	 * As requested by David Greenman: 	 * If rtq_reallyold is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
+comment|/* 	 * If rtq_reallyold is 0, just delete the route without 	 * waiting for a timeout cycle to kill it. 	 */
 if|if
 condition|(
 name|rtq_reallyold
@@ -1485,9 +1483,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  * This zaps old routes when the interface goes down or interface  * address is deleted.  In the latter case, it deletes static routes  * that point to this address.  If we don't do this, we may end up  * using the old address in the future.  The ones we always want to  * get rid of are things like ARP entries, since the user might down  * the interface, walk over to a completely different network, and  * plug back in.  */
