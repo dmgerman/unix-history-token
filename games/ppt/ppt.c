@@ -77,11 +77,14 @@ begin_function_decl
 specifier|static
 name|void
 name|putppt
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -120,11 +123,13 @@ literal|1
 condition|)
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 operator|++
 name|argv
+operator|)
 condition|)
 for|for
 control|(

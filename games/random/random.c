@@ -144,10 +144,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|double
 name|denom
 decl_stmt|;
@@ -167,6 +163,10 @@ decl_stmt|;
 name|random_exit
 operator|=
 name|unbuffer_output
+operator|=
+literal|0
+expr_stmt|;
+name|denom
 operator|=
 literal|0
 expr_stmt|;
