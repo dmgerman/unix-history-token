@@ -1856,6 +1856,8 @@ operator|->
 name|ndis_irq
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|ndis_intr
 argument_list|,
