@@ -270,6 +270,8 @@ name|dev
 argument_list|,
 literal|0
 argument_list|,
+literal|0UL
+argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -295,6 +297,8 @@ argument_list|(
 name|dev
 argument_list|,
 literal|0
+argument_list|,
+literal|0UL
 argument_list|)
 operator|)
 return|;
