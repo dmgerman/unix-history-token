@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	6.6	84/11/27	*/
+comment|/*	kern_descrip.c	6.7	84/11/27	*/
 end_comment
 
 begin_include
@@ -229,6 +229,9 @@ name|uap
 operator|->
 name|i
 index|]
+operator|&
+operator|~
+name|UF_EXCLOSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -390,6 +393,9 @@ name|uap
 operator|->
 name|i
 index|]
+operator|&
+operator|~
+name|UF_EXCLOSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -587,6 +593,9 @@ name|fp
 argument_list|,
 operator|*
 name|pop
+operator|&
+operator|~
+name|UF_EXCLOSE
 argument_list|)
 expr_stmt|;
 break|break;
