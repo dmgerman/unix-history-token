@@ -171,9 +171,6 @@ specifier|extern
 name|void
 name|itlb_enter
 parameter_list|(
-name|int
-name|slot
-parameter_list|,
 name|u_long
 name|vpn
 parameter_list|,
@@ -188,9 +185,6 @@ specifier|extern
 name|void
 name|dtlb_enter
 parameter_list|(
-name|int
-name|slot
-parameter_list|,
 name|u_long
 name|vpn
 parameter_list|,
@@ -1074,28 +1068,6 @@ name|tte
 decl_stmt|;
 if|if
 condition|(
-name|dtlb_slot
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"mmu_mapin: out of dtlb_slots"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|itlb_slot
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"mmu_mapin: out of itlb_slots"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|va
 operator|+
 name|len
@@ -1231,6 +1203,29 @@ block|}
 comment|/* The mappings may have changed, be paranoid. */
 continue|continue;
 block|}
+comment|/* 			 * Actually, we can only allocate two pages less at 			 * most (depending on the kernel TSB size). 			 */
+if|if
+condition|(
+name|dtlb_slot
+operator|>=
+name|dtlb_slot_max
+condition|)
+name|panic
+argument_list|(
+literal|"mmu_mapin: out of dtlb_slots"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itlb_slot
+operator|>=
+name|itlb_slot_max
+condition|)
+name|panic
+argument_list|(
+literal|"mmu_mapin: out of itlb_slots"
+argument_list|)
+expr_stmt|;
 name|tte
 operator|.
 name|tte_vpn
@@ -1265,24 +1260,22 @@ name|TD_W
 expr_stmt|;
 name|dtlb_store
 index|[
-operator|--
 name|dtlb_slot
+operator|++
 index|]
 operator|=
 name|tte
 expr_stmt|;
 name|itlb_store
 index|[
-operator|--
 name|itlb_slot
+operator|++
 index|]
 operator|=
 name|tte
 expr_stmt|;
 name|dtlb_enter
 argument_list|(
-name|dtlb_slot
-argument_list|,
 name|tte
 operator|.
 name|tte_vpn
@@ -1294,8 +1287,6 @@ argument_list|)
 expr_stmt|;
 name|itlb_enter
 argument_list|(
-name|itlb_slot
-argument_list|,
 name|tte
 operator|.
 name|tte_vpn
@@ -1672,14 +1663,6 @@ name|panic
 argument_list|(
 literal|"init_tlb: malloc"
 argument_list|)
-expr_stmt|;
-name|dtlb_slot
-operator|=
-name|dtlb_slot_max
-expr_stmt|;
-name|itlb_slot
-operator|=
-name|itlb_slot_max
 expr_stmt|;
 block|}
 end_function

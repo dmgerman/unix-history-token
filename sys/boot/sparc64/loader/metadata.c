@@ -1228,11 +1228,7 @@ expr|struct
 name|tte
 argument_list|)
 argument_list|,
-operator|&
 name|dtlb_store
-index|[
-name|dtlb_slot
-index|]
 argument_list|)
 expr_stmt|;
 name|file_addmetadata
@@ -1249,11 +1245,7 @@ expr|struct
 name|tte
 argument_list|)
 argument_list|,
-operator|&
 name|itlb_store
-index|[
-name|itlb_slot
-index|]
 argument_list|)
 expr_stmt|;
 operator|*
