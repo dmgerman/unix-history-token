@@ -126,8 +126,12 @@ begin_define
 define|#
 directive|define
 name|MAX_LOCAL
-value|16
+value|256
 end_define
+
+begin_comment
+comment|/* overkill */
+end_comment
 
 begin_decl_stmt
 specifier|static
