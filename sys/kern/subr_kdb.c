@@ -1672,6 +1672,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|kdb_frame
+operator|=
+name|tf
+expr_stmt|;
 comment|/* Let MD code do its thing first... */
 name|kdb_cpu_trap
 argument_list|(
@@ -1679,10 +1683,6 @@ name|type
 argument_list|,
 name|code
 argument_list|)
-expr_stmt|;
-name|kdb_frame
-operator|=
-name|tf
 expr_stmt|;
 name|makectx
 argument_list|(
