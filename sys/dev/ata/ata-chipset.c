@@ -5468,6 +5468,8 @@ operator|->
 name|chip
 operator|->
 name|max_dma
+operator|<
+name|ATA_SA150
 operator|&&
 name|mode
 operator|>
