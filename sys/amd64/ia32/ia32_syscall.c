@@ -235,6 +235,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ia32_syscallnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ia32_syscall
@@ -900,7 +910,7 @@ operator|<
 name|SYS_MAXSYSCALL
 operator|)
 condition|?
-name|syscallnames
+name|ia32_syscallnames
 index|[
 name|code
 index|]
