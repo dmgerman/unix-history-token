@@ -34,26 +34,6 @@ directive|define
 name|METOO
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|GET_LOCK
-value|{ \ 	if (flock(lfd,LOCK_EX)) { \ 		perror(LOCK_FILE); \ 		exit(ERR); \ 	} \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|REL_LOCK
-value|{ \ 	if (flock(lfd,LOCK_UN)) { \ 		perror(LOCK_FILE); \ 		exit(ERR); \ 	} \ }
-end_define
-
 begin_comment
 comment|/* files */
 end_comment
@@ -62,7 +42,7 @@ begin_define
 define|#
 directive|define
 name|ACK_FILE
-value|".ack"
+value|"bug:ack"
 end_define
 
 begin_comment
@@ -72,19 +52,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEF_DIR
-value|"mail"
-end_define
-
-begin_comment
-comment|/* top-level directory */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DIST_FILE
-value|".redist"
+value|"bug:redist"
 end_define
 
 begin_comment
@@ -133,17 +102,6 @@ end_define
 
 begin_comment
 comment|/* tmp bug report */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMP_FILE
-value|"/tmp/BUG_XXXXXX"
-end_define
-
-begin_comment
-comment|/* tmp file name */
 end_comment
 
 begin_comment
@@ -297,6 +255,14 @@ name|HEADER
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|HEADER
+name|mailhead
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -406,6 +372,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/dir.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -413,11 +385,33 @@ name|bfr
 index|[
 name|MAXBSIZE
 index|]
+decl_stmt|,
+comment|/* general I/O buffer */
+name|dir
+index|[
+name|MAXNAMLEN
+index|]
+decl_stmt|,
+comment|/* subject and folder */
+name|folder
+index|[
+name|MAXNAMLEN
+index|]
+decl_stmt|,
+name|tmpname
+index|[
+sizeof|sizeof
+argument_list|(
+name|TMP_BUG
+argument_list|)
+operator|+
+literal|5
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* general I/O buffer */
+comment|/* temp bug file */
 end_comment
 
 end_unit
