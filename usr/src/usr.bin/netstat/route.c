@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.3 82/10/06"
+literal|"@(#)route.c	4.4 82/10/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,14 +634,14 @@ name|net
 decl_stmt|;
 name|net
 operator|=
-name|in_netof
+name|inet_netof
 argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
 name|lna
 operator|=
-name|in_lnaof
+name|inet_lnaof
 argument_list|(
 name|in
 argument_list|)
