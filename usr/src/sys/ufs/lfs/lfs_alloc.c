@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/ufsmount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_include
@@ -657,6 +663,22 @@ argument_list|,
 name|M_LFSNODE
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|lockinit
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|i_lock
+argument_list|,
+name|PINOD
+argument_list|,
+literal|"lfsinode"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
