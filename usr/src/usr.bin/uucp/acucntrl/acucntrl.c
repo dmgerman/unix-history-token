@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.10 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4374,13 +4374,36 @@ return|;
 block|}
 end_block
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !DIALINOUT */
+end_comment
+
+begin_function
+name|main
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"acucntrl is not supported on this system\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* DIALINOUT */
+comment|/* !DIALINOUT */
 end_comment
 
 end_unit
