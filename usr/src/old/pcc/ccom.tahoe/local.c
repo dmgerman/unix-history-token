@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local.c	1.4 (Berkeley) %G%"
+literal|"@(#)local.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -834,66 +834,7 @@ operator|=
 name|m
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* meaningful ones are conversion of int to char, int to short, 			   and short to char, and unsigned versions thereof */
-if|if
-condition|(
-name|m
-operator|==
-name|CHAR
-operator|||
-name|m
-operator|==
-name|UCHAR
-condition|)
-block|{
-if|if
-condition|(
-name|ml
-operator|!=
-name|CHAR
-operator|&&
-name|ml
-operator|!=
-name|UCHAR
-condition|)
-break|break;
-block|}
 elseif|else
-if|if
-condition|(
-name|m
-operator|==
-name|SHORT
-operator|||
-name|m
-operator|==
-name|USHORT
-condition|)
-block|{
-if|if
-condition|(
-name|ml
-operator|!=
-name|CHAR
-operator|&&
-name|ml
-operator|!=
-name|UCHAR
-operator|&&
-name|ml
-operator|!=
-name|SHORT
-operator|&&
-name|ml
-operator|!=
-name|USHORT
-condition|)
-break|break;
-block|}
-block|}
-comment|/* clobber conversion */
 if|if
 condition|(
 name|tlen
@@ -913,6 +854,9 @@ condition|)
 goto|goto
 name|inherit
 goto|;
+else|else
+break|break;
+comment|/* clobber conversion */
 name|p
 operator|->
 name|in
@@ -931,6 +875,7 @@ name|left
 operator|)
 return|;
 comment|/* conversion gets clobbered */
+break|break;
 case|case
 name|QUEST
 case|:
