@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vm_meter.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vm_meter.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -167,8 +167,8 @@ comment|/* so we don't count process 2 */
 end_comment
 
 begin_decl_stmt
-name|double
-name|avenrun
+name|fixpt_t
+name|averunnable
 index|[
 literal|3
 index|]
@@ -332,12 +332,14 @@ condition|(
 name|kmapwnt
 operator|||
 operator|(
-name|avenrun
+name|averunnable
 index|[
 literal|0
 index|]
 operator|>=
 literal|2
+operator|*
+name|FSCALE
 operator|&&
 name|imax
 argument_list|(
@@ -2044,7 +2046,7 @@ name|avefree
 expr_stmt|;
 name|loadav
 argument_list|(
-name|avenrun
+name|averunnable
 argument_list|,
 name|nrun
 argument_list|)
@@ -2057,7 +2059,7 @@ comment|/*  * Constants for averages over 1, 5, and 15 minutes  * when sampling 
 end_comment
 
 begin_decl_stmt
-name|double
+name|fixpt_t
 name|cexp
 index|[
 literal|3
@@ -2065,12 +2067,18 @@ index|]
 init|=
 block|{
 literal|0.9200444146293232
+operator|*
+name|FSCALE
 block|,
 comment|/* exp(-1/12) */
 literal|0.9834714538216174
+operator|*
+name|FSCALE
 block|,
 comment|/* exp(-1/60) */
 literal|0.9944598480048967
+operator|*
+name|FSCALE
 block|,
 comment|/* exp(-1/180) */
 block|}
@@ -2089,7 +2097,7 @@ argument_list|,
 name|n
 argument_list|)
 specifier|register
-name|double
+name|fixpt_t
 operator|*
 name|avg
 expr_stmt|;
@@ -2125,6 +2133,7 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
 name|cexp
 index|[
 name|i
@@ -2137,15 +2146,54 @@ index|]
 operator|+
 name|n
 operator|*
+name|FSCALE
+operator|*
 operator|(
-literal|1.0
+name|FSCALE
 operator|-
 name|cexp
 index|[
 name|i
 index|]
 operator|)
+operator|)
+operator|>>
+name|FSHIFT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+name|avenrun
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|double
+operator|)
+name|averunnable
+index|[
+name|i
+index|]
+operator|/
+name|FSCALE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_43 */
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -234,7 +234,7 @@ name|short
 name|p_cpticks
 decl_stmt|;
 comment|/* ticks of cpu time */
-name|float
+name|fixpt_t
 name|p_pctcpu
 decl_stmt|;
 comment|/* %cpu for this process during p_time */

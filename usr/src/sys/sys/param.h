@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -724,6 +724,28 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((((x)-1)&(x))==0)
+end_define
+
+begin_comment
+comment|/*  * Scale factor for scaled integers used to count %cpu time and load avgs.  *  * The number of CPU `tick's that map to a unique `%age' can be expressed  * by the formula (1 / (2 ^ (FSHIFT - 11))).  The maximum load average that  * can be calculated (assuming 32 bits) can be closely approximated using  * the formula (2 ^ (2 * (16 - FSHIFT))) for (FSHIFT< 15).  *  * For the scheduler to maintain a 1:1 mapping of CPU `tick' to `%age',  * FSHIFT must be at least 11; this gives us a maximum load avg of ~1024.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSHIFT
+value|11
+end_define
+
+begin_comment
+comment|/* bits to right of fixed binary point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSCALE
+value|(1<<FSHIFT)
 end_define
 
 end_unit
