@@ -327,7 +327,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p:rw"
+literal|"p:r:w:"
 argument_list|)
 operator|)
 operator|!=
