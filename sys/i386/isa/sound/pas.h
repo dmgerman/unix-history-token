@@ -1002,6 +1002,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIP_REV
+value|0xFF88
+end_define
+
+begin_comment
+comment|/* R    0=PAS, 1=PAS+, 2=CDPC, 3=PAS16C, 4=PAS16D                       */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PAS_NONE
 value|0
 end_define
