@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.c,v 1.1 1997/03/17 02:55:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.c,v 1.6 1998/02/09 06:09:54 eivind Exp $ */
+comment|/*	$Id: if_media.c,v 1.7 1999/04/16 21:22:45 peter Exp $ */
 end_comment
 
 begin_comment
@@ -752,11 +752,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ifmedia_ioctl: switching %s to "
+literal|"ifmedia_ioctl: switching %s%d to "
 argument_list|,
 name|ifp
 operator|->
-name|if_xname
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 name|ifmedia_printword
