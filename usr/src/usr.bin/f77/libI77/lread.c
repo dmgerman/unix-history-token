@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.8";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.9";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -952,6 +952,29 @@ break|break;
 case|case
 name|TYLOGICAL
 case|:
+if|if
+condition|(
+name|len
+operator|==
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+condition|)
+name|ptr
+operator|->
+name|flshort
+operator|=
+name|lx
+expr_stmt|;
+else|else
+name|ptr
+operator|->
+name|flint
+operator|=
+name|lx
+expr_stmt|;
+break|break;
 case|case
 name|TYLONG
 case|:
