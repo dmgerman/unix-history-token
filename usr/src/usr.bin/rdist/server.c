@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.2 (Berkeley) %G%"
+literal|"@(#)server.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3733,9 +3733,7 @@ name|buf
 operator|+
 literal|1
 argument_list|,
-literal|"%s:%s: Warning: remote mode %o != local mode %o\n"
-argument_list|,
-name|host
+literal|"%s: Warning: remote mode %o != local mode %o\n"
 argument_list|,
 name|target
 argument_list|,
@@ -4746,9 +4744,7 @@ name|buf
 operator|+
 literal|1
 argument_list|,
-literal|"%s: updated %s\n"
-argument_list|,
-name|host
+literal|"updated %s\n"
 argument_list|,
 name|target
 argument_list|)
