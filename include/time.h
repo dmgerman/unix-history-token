@@ -495,7 +495,7 @@ end_ifndef
 
 begin_decl_stmt
 name|time_t
-name|time32_to_time
+name|_time32_to_time
 name|__P
 argument_list|(
 operator|(
@@ -508,7 +508,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__int32_t
-name|time_to_time32
+name|_time_to_time32
 name|__P
 argument_list|(
 operator|(
@@ -521,7 +521,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|time_t
-name|time64_to_time
+name|_time64_to_time
 name|__P
 argument_list|(
 operator|(
@@ -534,7 +534,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__int64_t
-name|time_to_time64
+name|_time_to_time64
 name|__P
 argument_list|(
 operator|(
@@ -547,7 +547,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|long
-name|time_to_long
+name|_time_to_long
 name|__P
 argument_list|(
 operator|(
@@ -560,7 +560,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|time_t
-name|long_to_time
+name|_long_to_time
 name|__P
 argument_list|(
 operator|(
@@ -573,7 +573,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|time_to_int
+name|_time_to_int
 name|__P
 argument_list|(
 operator|(
@@ -586,7 +586,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|time_t
-name|int_to_time
+name|_int_to_time
 name|__P
 argument_list|(
 operator|(

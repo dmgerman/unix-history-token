@@ -21,7 +21,7 @@ end_comment
 
 begin_function
 name|time_t
-name|time32_to_time
+name|_time32_to_time
 parameter_list|(
 name|__int32_t
 name|t32
@@ -44,7 +44,7 @@ end_comment
 
 begin_function
 name|__int32_t
-name|time_to_time32
+name|_time_to_time32
 parameter_list|(
 name|time_t
 name|t
@@ -67,7 +67,7 @@ end_comment
 
 begin_function
 name|time_t
-name|time64_to_time
+name|_time64_to_time
 parameter_list|(
 name|__int64_t
 name|t64
@@ -90,7 +90,7 @@ end_comment
 
 begin_function
 name|__int64_t
-name|time_to_time64
+name|_time_to_time64
 parameter_list|(
 name|time_t
 name|t
@@ -113,7 +113,7 @@ end_comment
 
 begin_function
 name|long
-name|time_to_long
+name|_time_to_long
 parameter_list|(
 name|time_t
 name|t
@@ -133,7 +133,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|time_to_time64
+name|_time_to_time64
 argument_list|(
 name|t
 argument_list|)
@@ -152,7 +152,7 @@ end_function
 
 begin_function
 name|time_t
-name|long_to_time
+name|_long_to_time
 parameter_list|(
 name|long
 name|tlong
@@ -172,7 +172,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|tlong
 argument_list|)
@@ -195,7 +195,7 @@ end_comment
 
 begin_function
 name|int
-name|time_to_int
+name|_time_to_int
 parameter_list|(
 name|time_t
 name|t
@@ -215,7 +215,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|time_to_time64
+name|_time_to_time64
 argument_list|(
 name|t
 argument_list|)
@@ -234,7 +234,7 @@ end_function
 
 begin_function
 name|time_t
-name|int_to_time
+name|_int_to_time
 parameter_list|(
 name|int
 name|tint
@@ -254,7 +254,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|tint
 argument_list|)

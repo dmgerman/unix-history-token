@@ -648,7 +648,7 @@ name|ddp
 operator|->
 name|dd_ddate
 operator|<=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -660,7 +660,7 @@ name|spcl
 operator|.
 name|c_ddate
 operator|=
-name|time_to_time32
+name|_time_to_time32
 argument_list|(
 name|ddp
 operator|->
@@ -915,7 +915,7 @@ name|dtwalk
 operator|->
 name|dd_ddate
 operator|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -1007,7 +1007,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.

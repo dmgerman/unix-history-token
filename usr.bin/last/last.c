@@ -959,7 +959,7 @@ index|]
 operator|.
 name|ut_time
 operator|=
-name|time_to_int
+name|_time_to_int
 argument_list|(
 name|t
 argument_list|)
@@ -1180,7 +1180,7 @@ condition|)
 block|{
 name|t
 operator|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|bp
 operator|->
@@ -1307,7 +1307,7 @@ condition|)
 block|{
 name|t
 operator|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|bp
 operator|->
@@ -1578,7 +1578,7 @@ literal|'\0'
 expr_stmt|;
 name|t
 operator|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|bp
 operator|->
@@ -1836,7 +1836,7 @@ block|}
 block|}
 name|t
 operator|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|buf
 index|[
@@ -2712,7 +2712,7 @@ decl_stmt|;
 name|time_t
 name|t
 init|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|buf
 index|[

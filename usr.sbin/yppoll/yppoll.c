@@ -269,7 +269,7 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|order
 argument_list|)

@@ -1631,7 +1631,7 @@ name|wd
 operator|.
 name|wd_recvtime
 operator|=
-name|time_to_int
+name|_time_to_int
 argument_list|(
 name|t
 argument_list|)
@@ -2470,7 +2470,7 @@ name|wd_sendtime
 operator|=
 name|htonl
 argument_list|(
-name|time_to_time32
+name|_time_to_time32
 argument_list|(
 name|time
 argument_list|(
@@ -2798,7 +2798,7 @@ name|wd_boottime
 operator|=
 name|htonl
 argument_list|(
-name|time_to_time32
+name|_time_to_time32
 argument_list|(
 name|tm
 operator|.
@@ -4036,7 +4036,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|ntohl
 argument_list|(

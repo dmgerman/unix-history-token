@@ -2239,7 +2239,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|usr
 operator|.
@@ -2518,7 +2518,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|usr
 operator|.

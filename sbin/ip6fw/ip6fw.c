@@ -1013,7 +1013,7 @@ decl_stmt|;
 name|time_t
 name|t
 init|=
-name|long_to_time
+name|_long_to_time
 argument_list|(
 name|chain
 operator|->

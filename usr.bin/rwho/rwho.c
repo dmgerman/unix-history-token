@@ -785,7 +785,7 @@ decl_stmt|;
 name|time_t
 name|t
 init|=
-name|int_to_time
+name|_int_to_time
 argument_list|(
 name|mp
 operator|->

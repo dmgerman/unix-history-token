@@ -806,7 +806,7 @@ decl_stmt|;
 name|time_t
 name|t
 init|=
-name|long_to_time
+name|_long_to_time
 argument_list|(
 name|timestamp
 argument_list|)
@@ -881,7 +881,7 @@ block|{
 name|time_t
 name|tt
 init|=
-name|long_to_time
+name|_long_to_time
 argument_list|(
 name|base_time
 operator|.
@@ -2182,7 +2182,7 @@ name|TIMESTAMP_READABLE
 case|:
 name|tt
 operator|=
-name|long_to_time
+name|_long_to_time
 argument_list|(
 name|timestamp
 operator|->
@@ -2221,7 +2221,7 @@ name|TIMESTAMP_PARSEABLE
 case|:
 name|tt
 operator|=
-name|long_to_time
+name|_long_to_time
 argument_list|(
 name|timestamp
 operator|->

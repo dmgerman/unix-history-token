@@ -1158,7 +1158,7 @@ argument_list|()
 expr_stmt|;
 name|dumptime
 operator|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -1167,7 +1167,7 @@ argument_list|)
 expr_stmt|;
 name|dumpdate
 operator|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -2085,7 +2085,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|tmpbuf
 operator|.
@@ -2094,7 +2094,7 @@ argument_list|)
 operator|!=
 name|dumpdate
 operator|||
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|tmpbuf
 operator|.
@@ -2107,7 +2107,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|tmpbuf
 operator|.
@@ -2578,7 +2578,7 @@ name|t
 decl_stmt|;
 name|t
 operator|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -2600,7 +2600,7 @@ argument_list|)
 expr_stmt|;
 name|t
 operator|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -6173,7 +6173,7 @@ argument_list|)
 operator|==
 name|FAIL
 operator|||
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|header
 operator|->
@@ -6235,7 +6235,7 @@ argument_list|)
 operator|==
 name|FAIL
 operator|||
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|header
 operator|->

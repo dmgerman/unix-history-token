@@ -431,7 +431,7 @@ name|spcl
 operator|.
 name|c_date
 operator|=
-name|time_to_time32
+name|_time_to_time32
 argument_list|(
 name|time
 argument_list|(
@@ -1420,7 +1420,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
@@ -1464,7 +1464,7 @@ block|{
 name|time_t
 name|t
 init|=
-name|time32_to_time
+name|_time32_to_time
 argument_list|(
 name|spcl
 operator|.
