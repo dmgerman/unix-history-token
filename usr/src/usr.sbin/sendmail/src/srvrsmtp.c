@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.19 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.20 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.19 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.20 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,7 +541,15 @@ name|sendinghost
 operator|=
 name|NULL
 expr_stmt|;
+name|protocol
+operator|=
+name|NULL
+expr_stmt|;
 name|gothello
+operator|=
+name|FALSE
+expr_stmt|;
+name|gotmail
 operator|=
 name|FALSE
 expr_stmt|;
