@@ -386,7 +386,7 @@ name|hp
 argument_list|,
 name|dtab
 argument_list|,
-name|NSDB_HOSTS
+name|NSDB_NETWORKS
 argument_list|,
 literal|"getnetbyaddr"
 argument_list|,
