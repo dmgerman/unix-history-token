@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	4.8 (Berkeley) %G%"
+literal|"@(#)calendar.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -121,14 +127,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -162,8 +169,6 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
-name|errno
-decl_stmt|,
 name|optind
 decl_stmt|;
 name|int
@@ -476,6 +481,44 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|struct
+name|iovec
+name|header
+index|[]
+init|=
+block|{
+literal|"From: "
+block|,
+literal|6
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|" (Reminder Service)\nTo: "
+block|,
+literal|24
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|"\nSubject: "
+block|,
+literal|10
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|"'s Calendar\nPrecedence: bulk\n\n"
+block|,
+literal|30
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* 1-based month, 0-based days, cumulative */
 end_comment
@@ -657,9 +700,22 @@ literal|3
 else|:
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|header
+index|[
+literal|5
+index|]
+operator|.
+name|iov_base
+operator|=
+name|dayname
+expr_stmt|;
+name|header
+index|[
+literal|5
+index|]
+operator|.
+name|iov_len
+operator|=
 name|strftime
 argument_list|(
 name|dayname
@@ -1357,6 +1413,17 @@ name|close
 argument_list|(
 name|pdes
 index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|pdes
+index|[
 literal|1
 index|]
 argument_list|)
@@ -1435,10 +1502,6 @@ block|{
 name|struct
 name|stat
 name|sbuf
-decl_stmt|;
-name|FILE
-modifier|*
-name|iop
 decl_stmt|;
 name|int
 name|nread
@@ -1597,6 +1660,8 @@ name|execl
 argument_list|(
 name|_PATH_SENDMAIL
 argument_list|,
+literal|"sendmail"
+argument_list|,
 literal|"-i"
 argument_list|,
 literal|"-t"
@@ -1608,6 +1673,25 @@ argument_list|,
 literal|"-f"
 argument_list|,
 literal|"root"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"calendar: %s: %s.\n"
+argument_list|,
+name|_PATH_SENDMAIL
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -1616,7 +1700,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* parent -- rewind file, write to pipe input */
+comment|/* parent -- write to pipe input */
 operator|(
 name|void
 operator|)
@@ -1628,44 +1712,55 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|iop
+name|header
+index|[
+literal|1
+index|]
+operator|.
+name|iov_base
 operator|=
-name|fdopen
+name|header
+index|[
+literal|3
+index|]
+operator|.
+name|iov_base
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+name|header
+index|[
+literal|1
+index|]
+operator|.
+name|iov_len
+operator|=
+name|header
+index|[
+literal|3
+index|]
+operator|.
+name|iov_len
+operator|=
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+name|writev
 argument_list|(
 name|pdes
 index|[
 literal|1
 index|]
 argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|iop
+name|header
 argument_list|,
-literal|"From: %s (Reminder Service)\nTo: %s\nSubject: %s's Calendar\nPrecedence: bulk\n\n"
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|,
-name|dayname
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|iop
+literal|7
 argument_list|)
 expr_stmt|;
 while|while
