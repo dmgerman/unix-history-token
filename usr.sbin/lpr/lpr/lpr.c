@@ -1578,6 +1578,13 @@ argument_list|,
 name|person
 argument_list|)
 expr_stmt|;
+name|card
+argument_list|(
+literal|'C'
+argument_list|,
+name|class
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hdr
@@ -1639,13 +1646,6 @@ argument_list|(
 literal|'J'
 argument_list|,
 name|jobname
-argument_list|)
-expr_stmt|;
-name|card
-argument_list|(
-literal|'C'
-argument_list|,
-name|class
 argument_list|)
 expr_stmt|;
 name|card
