@@ -2515,7 +2515,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|err
+operator|&
+literal|0x7f
+operator|)
 operator|==
 name|ATA_E_ILI
 condition|)
@@ -2671,7 +2675,11 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|err
+operator|&
+literal|0x7f
+operator|)
 operator|==
 name|ATA_E_ILI
 condition|)
