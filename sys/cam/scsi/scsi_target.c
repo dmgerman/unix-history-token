@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of a simple Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_target.c,v 1.2 1998/09/15 22:05:42 gibbs Exp $  */
+comment|/*  * Implementation of a simple Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_target.c,v 1.3 1998/10/22 22:16:56 ken Exp $  */
 end_comment
 
 begin_include
@@ -1157,6 +1157,11 @@ name|ccb
 name|immed_ccb
 decl_stmt|;
 name|struct
+name|ccb_pathinq
+modifier|*
+name|cpi
+decl_stmt|;
+name|struct
 name|targ_softc
 modifier|*
 name|softc
@@ -1167,6 +1172,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|cpi
+operator|=
+operator|(
+expr|struct
+name|ccb_pathinq
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 comment|/* Allocate our per-instance private storage */
 name|softc
 operator|=
@@ -1415,6 +1429,19 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* SCSI2 Inquiry Format */
+name|softc
+operator|->
+name|inq_data
+operator|->
+name|flags
+operator|=
+name|cpi
+operator|->
+name|hba_inquiry
+operator|&
+name|PI_SDTR_ABLE
+expr_stmt|;
+comment|/*cpi->hba_inquiry& (PI_SDTR_ABLE|PI_WIDE_16|PI_WIDE_32); */
 name|softc
 operator|->
 name|inq_data
@@ -2585,20 +2612,21 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"GET/SETISTATE for %d\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"GET/SETISTATE for %d\n"
+operator|,
 name|ioc_istate
 operator|->
 name|initiator_id
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2661,17 +2689,17 @@ name|istate
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"pending_ca now %x\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"pending_ca now %x\n"
+operator|,
 name|softc
 operator|->
 name|istate
@@ -2682,6 +2710,7 @@ name|initiator_id
 index|]
 operator|.
 name|pending_ca
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3647,16 +3676,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Queued a SEND buffer\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bufq_insert_tail
@@ -3672,16 +3702,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Queued a RECEIVE buffer\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bufq_insert_tail
@@ -3898,20 +3929,21 @@ name|TARG_FLAG_SEND_EOF
 expr_stmt|;
 else|else
 block|{
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"De-Queued a SEND buffer %ld\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"De-Queued a SEND buffer %ld\n"
+operator|,
 name|bp
 operator|->
 name|b_bcount
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3989,20 +4021,21 @@ name|TARG_FLAG_RECEIVE_EOF
 expr_stmt|;
 else|else
 block|{
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"De-Queued a RECEIVE buffer %ld\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"De-Queued a RECEIVE buffer %ld\n"
+operator|,
 name|bp
 operator|->
 name|b_bcount
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4155,27 +4188,28 @@ name|b_resid
 argument_list|)
 expr_stmt|;
 block|}
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Buffer command: data %x: datacnt %d\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"Buffer command: data %x: datacnt %d\n"
+operator|,
 operator|(
 name|intptr_t
 operator|)
 name|desc
 operator|->
 name|data
-argument_list|,
+operator|,
 name|desc
 operator|->
 name|data_increment
+operator|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -4542,16 +4576,17 @@ name|ccb_atio
 operator|=
 name|atio
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Sending a CTIO\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|xpt_action
@@ -4915,16 +4950,17 @@ name|istate
 operator|->
 name|sense_data
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Saw an inquiry!\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Validate the command.  We don't 				 * support any VPD pages, so complain 				 * if EVPD is set. 				 */
@@ -5280,16 +5316,17 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"No pending CA!\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5332,16 +5369,17 @@ argument_list|,
 name|ascq
 argument_list|)
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Pending UA!\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5473,16 +5511,17 @@ name|flags
 operator||=
 name|CAM_DIR_OUT
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Saw a SEND!\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|atio
@@ -5529,16 +5568,17 @@ name|flags
 operator||=
 name|CAM_DIR_IN
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
 name|periph
 operator|->
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Saw a RECEIVE!\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -5684,18 +5724,17 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
-name|done_ccb
+name|periph
 operator|->
-name|ccb_h
-operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Received completed CTIO\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|atio
@@ -5777,26 +5816,25 @@ name|b_error
 operator|=
 literal|0
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
-name|done_ccb
+name|periph
 operator|->
-name|ccb_h
-operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Buffer I/O Completed - Resid %ld:%d\n"
 argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
+literal|"Buffer I/O Completed - Resid %ld:%d\n"
+operator|,
 name|bp
 operator|->
 name|b_resid
-argument_list|,
+operator|,
 name|desc
 operator|->
 name|data_resid
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Send the buffer back to the client if 			 * either the command has completed or all 			 * buffer space has been consumed. 			 */
@@ -5830,18 +5868,17 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
-name|done_ccb
+name|periph
 operator|->
-name|ccb_h
-operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Completing a buffer\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|biodone
@@ -5881,18 +5918,17 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * Send the original accept TIO back to the 				 * controller to handle more work. 				 */
-name|xpt_print_path
+name|CAM_DEBUG
 argument_list|(
-name|atio
+name|periph
 operator|->
-name|ccb_h
-operator|.
 name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
+name|CAM_DEBUG_SUBTRACE
+argument_list|,
+operator|(
 literal|"Returning ATIO to target\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|xpt_action
