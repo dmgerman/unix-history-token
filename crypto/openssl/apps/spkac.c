@@ -237,12 +237,17 @@ name|pkey
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|apps_startup
 argument_list|()
 expr_stmt|;
@@ -523,6 +528,9 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -556,6 +564,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -705,6 +715,9 @@ argument_list|,
 literal|" -verify        verify SPKAC signature\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -712,6 +725,8 @@ argument_list|,
 literal|" -engine e      use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|end
 goto|;
@@ -748,6 +763,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -759,6 +777,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|keyfile

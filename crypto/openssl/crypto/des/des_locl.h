@@ -420,13 +420,19 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_ASM
+name|OPENSSL_NO_ASM
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|NO_INLINE_ASM
+name|OPENSSL_NO_INLINE_ASM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PEDANTIC
 argument_list|)
 end_elif
 

@@ -1088,6 +1088,10 @@ name|XKU_TIMESTAMP
 value|0x40
 define|#
 directive|define
+name|XKU_DVCS
+value|0x80
+define|#
+directive|define
 name|X509_PURPOSE_DYNAMIC
 value|0x1
 define|#

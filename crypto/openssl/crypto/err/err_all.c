@@ -159,11 +159,22 @@ directive|include
 file|<openssl/dso.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -284,9 +295,14 @@ expr_stmt|;
 name|ERR_load_DSO_strings
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ERR_load_ENGINE_strings
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|ERR_load_OCSP_strings
 argument_list|()
 expr_stmt|;

@@ -714,8 +714,13 @@ literal|" -extfile file   - Configuration file with X509v3 extentions to add\n"
 block|,
 literal|" -crlexts ..     - CRL extension section (override value in config file)\n"
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 literal|" -engine e       - use engine e, possibly a hardware device.\n"
 block|,
+endif|#
+directive|endif
 literal|" -status serial  - Shows certificate status given the serial number\n"
 block|,
 literal|" -updatedb       - Updates db for expired certificates\n"
@@ -1904,12 +1909,17 @@ name|randfile
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|tofree
@@ -3165,6 +3175,9 @@ operator|=
 name|REV_CA_COMPROMISE
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -3198,6 +3211,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 else|else
 block|{
 name|bad
@@ -3263,6 +3278,9 @@ block|}
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -3274,6 +3292,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*****************************************************************/
 name|tofree
 operator|=
@@ -3458,11 +3478,17 @@ if|if
 condition|(
 name|tofree
 condition|)
+block|{
 name|OPENSSL_free
 argument_list|(
 name|tofree
 argument_list|)
 expr_stmt|;
+name|tofree
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -8545,6 +8571,10 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cert_sk
+condition|)
 name|sk_X509_pop_free
 argument_list|(
 name|cert_sk
@@ -8571,6 +8601,8 @@ expr_stmt|;
 if|if
 condition|(
 name|free_key
+operator|&&
+name|key
 condition|)
 name|OPENSSL_free
 argument_list|(

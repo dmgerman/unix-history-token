@@ -125,9 +125,18 @@ name|ts
 operator|==
 name|NULL
 condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_TIME_SET
+argument_list|,
+name|ASN1_R_ERROR_GETTING_TIME
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -392,9 +401,10 @@ name|t
 operator|->
 name|length
 operator|+
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
+comment|/* Include space for a '\0' */
 return|return
 name|ret
 return|;

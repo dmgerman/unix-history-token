@@ -3930,14 +3930,31 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static DES_LONG cbc_cksum_ret=0xB462FEF7L;
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|DES_LONG
 name|cbc_cksum_ret
 init|=
-literal|0xB462FEF7L
+literal|0xF7FE62B4L
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static

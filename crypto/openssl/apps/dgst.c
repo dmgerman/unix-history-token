@@ -306,12 +306,17 @@ name|siglen
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|apps_startup
 argument_list|()
 expr_stmt|;
@@ -684,6 +689,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -715,6 +723,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -945,6 +955,9 @@ argument_list|,
 literal|"-binary         output in binary form\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -952,6 +965,8 @@ argument_list|,
 literal|"-engine e       use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1037,6 +1052,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -1048,6 +1066,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|in
 operator|=
 name|BIO_new

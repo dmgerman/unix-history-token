@@ -285,19 +285,6 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
-name|EC_F_EC_GROUP_GET_EXTRA_DATA
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"EC_GROUP_get_extra_data"
-block|}
-block|,
-block|{
-name|ERR_PACK
-argument_list|(
-literal|0
-argument_list|,
 name|EC_F_EC_GROUP_GET_ORDER
 argument_list|,
 literal|0
@@ -686,12 +673,6 @@ block|{
 name|EC_R_NOT_INITIALIZED
 block|,
 literal|"not initialized"
-block|}
-block|,
-block|{
-name|EC_R_NO_SUCH_EXTRA_DATA
-block|,
-literal|"no such extra data"
 block|}
 block|,
 block|{

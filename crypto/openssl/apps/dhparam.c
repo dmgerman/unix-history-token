@@ -169,12 +169,17 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|DH
 modifier|*
 name|dh
@@ -249,12 +254,18 @@ modifier|*
 name|inrand
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|num
 init|=
@@ -484,6 +495,9 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -517,6 +531,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -815,6 +831,9 @@ argument_list|,
 literal|" numbits       number of bits in to generate (default 512)\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -822,6 +841,8 @@ argument_list|,
 literal|" -engine e     use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -861,6 +882,9 @@ block|}
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -872,6 +896,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|g

@@ -249,12 +249,17 @@ name|lookup
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|cert_ctx
 operator|=
 name|X509_STORE_new
@@ -548,6 +553,9 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -581,6 +589,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -712,6 +722,9 @@ block|}
 else|else
 break|break;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -723,6 +736,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|lookup
 operator|=
 name|X509_STORE_add_lookup
@@ -1010,7 +1025,26 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"usage: verify [-verbose] [-CApath path] [-CAfile file] [-purpose purpose] [-crl_check] [-engine e] cert1 cert2 ...\n"
+literal|"usage: verify [-verbose] [-CApath path] [-CAfile file] [-purpose purpose] [-crl_check]"
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" [-engine e]"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" cert1 cert2 ...\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf

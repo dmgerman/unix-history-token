@@ -156,12 +156,17 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ret
 init|=
@@ -213,12 +218,17 @@ name|passout
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|inrand
@@ -399,6 +409,9 @@ name|f4
 operator|=
 name|RSA_F4
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -432,6 +445,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -744,6 +759,9 @@ argument_list|,
 literal|" -3              use 3 for the E value\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -751,6 +769,8 @@ argument_list|,
 literal|" -engine e       use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -812,6 +832,9 @@ goto|goto
 name|err
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -823,6 +846,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|outfile

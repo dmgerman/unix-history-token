@@ -106,11 +106,22 @@ directive|include
 file|<openssl/ssl.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3189,9 +3200,14 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE_cleanup
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|CRYPTO_cleanup_all_ex_data
 argument_list|()
 expr_stmt|;

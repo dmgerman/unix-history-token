@@ -71,11 +71,22 @@ directive|include
 file|<openssl/txt_db.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -415,6 +426,12 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -447,7 +464,7 @@ directive|define
 name|apps_startup
 parameter_list|()
 define|\
-value|do { _fmode=_O_BINARY; do_pipe_sig(); CRYPTO_malloc_init(); \ 		ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); \ 		ENGINE_load_builtin_engines(); setup_ui_method(); } while(0)
+value|do { _fmode=_O_BINARY; do_pipe_sig(); CRYPTO_malloc_init(); \ 			ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); \ 			ENGINE_load_builtin_engines(); setup_ui_method(); } while(0)
 end_define
 
 begin_else
@@ -461,7 +478,7 @@ directive|define
 name|apps_startup
 parameter_list|()
 define|\
-value|do { _fmode=O_BINARY; do_pipe_sig(); CRYPTO_malloc_init(); \ 		ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); \ 		ENGINE_load_builtin_engines(); setup_ui_method(); } while(0)
+value|do { _fmode=O_BINARY; do_pipe_sig(); CRYPTO_malloc_init(); \ 			ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); \ 			ENGINE_load_builtin_engines(); setup_ui_method(); } while(0)
 end_define
 
 begin_endif
@@ -480,7 +497,7 @@ directive|define
 name|apps_startup
 parameter_list|()
 define|\
-value|do { do_pipe_sig(); OpenSSL_add_all_algorithms(); \ 		ERR_load_crypto_strings(); ENGINE_load_builtin_engines(); \ 		setup_ui_method(); } while(0)
+value|do { do_pipe_sig(); OpenSSL_add_all_algorithms(); \ 			ERR_load_crypto_strings(); ENGINE_load_builtin_engines(); \ 			setup_ui_method(); } while(0)
 end_define
 
 begin_endif
@@ -494,8 +511,100 @@ directive|define
 name|apps_shutdown
 parameter_list|()
 define|\
-value|do { CONF_modules_unload(1); destroy_ui_method(); \ 		EVP_cleanup(); ENGINE_cleanup(); \ 		CRYPTO_cleanup_all_ex_data(); ERR_remove_state(0); \ 		ERR_free_strings(); } while(0)
+value|do { CONF_modules_unload(1); destroy_ui_method(); \ 			EVP_cleanup(); ENGINE_cleanup(); \ 			CRYPTO_cleanup_all_ex_data(); ERR_remove_state(0); \ 			ERR_free_strings(); } while(0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OPENSSL_SYS_MSDOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WIN16
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|OPENSSL_SYS_WIN32
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_O_BINARY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|apps_startup
+parameter_list|()
+define|\
+value|do { _fmode=_O_BINARY; do_pipe_sig(); CRYPTO_malloc_init(); \ 			ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); \ 			setup_ui_method(); } while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|apps_startup
+parameter_list|()
+define|\
+value|do { _fmode=O_BINARY; do_pipe_sig(); CRYPTO_malloc_init(); \ 			ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); \ 			setup_ui_method(); } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|apps_startup
+parameter_list|()
+define|\
+value|do { do_pipe_sig(); OpenSSL_add_all_algorithms(); \ 			ERR_load_crypto_strings(); \ 			setup_ui_method(); } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|apps_shutdown
+parameter_list|()
+define|\
+value|do { CONF_modules_unload(1); destroy_ui_method(); \ 			EVP_cleanup(); \ 			CRYPTO_cleanup_all_ex_data(); ERR_remove_state(0); \ 			ERR_free_strings(); } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -983,6 +1092,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_function_decl
 name|ENGINE
 modifier|*
@@ -1002,6 +1117,11 @@ name|debug
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

@@ -4688,19 +4688,18 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|s
 operator|!=
 name|NULL
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|s
 operator|->
 name|cipher_list
 operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
 return|return
@@ -4748,13 +4747,13 @@ return|;
 block|}
 end_elseif
 
-begin_return
-return|return
+begin_expr_stmt
+unit|} 	return
 operator|(
 name|NULL
 operator|)
-return|;
-end_return
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
@@ -4774,19 +4773,18 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|s
 operator|!=
 name|NULL
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|s
 operator|->
 name|cipher_list_by_id
 operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
 return|return
@@ -4803,12 +4801,6 @@ begin_elseif
 elseif|else
 if|if
 condition|(
-operator|(
-name|s
-operator|!=
-name|NULL
-operator|)
-operator|&&
 operator|(
 name|s
 operator|->
@@ -4840,13 +4832,13 @@ return|;
 block|}
 end_elseif
 
-begin_return
-return|return
+begin_expr_stmt
+unit|} 	return
 operator|(
 name|NULL
 operator|)
-return|;
-end_return
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
@@ -8921,6 +8913,15 @@ block|}
 else|else
 block|{
 comment|/* No session has been established yet, so we have to expect 		 * that s->cert or ret->cert will be changed later -- 		 * they should not both point to the same object, 		 * and thus we can't use SSL_copy_session_id. */
+name|ret
+operator|->
+name|method
+operator|->
+name|ssl_free
+argument_list|(
+name|ret
+argument_list|)
+expr_stmt|;
 name|ret
 operator|->
 name|method
