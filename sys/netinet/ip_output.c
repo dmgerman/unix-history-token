@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94  *	$Id: ip_output.c,v 1.85 1998/12/21 21:36:40 luigi Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94  *	$Id: ip_output.c,v 1.86 1999/02/19 18:32:55 luigi Exp $  */
 end_comment
 
 begin_define
@@ -633,7 +633,7 @@ name|tmp_m
 init|=
 name|m
 decl_stmt|;
-comment|/*              * the packet was already tagged, so part of the              * processing was already done, and we need to go down.              * opt, flags and imo have already been used, and now              * they are used to hold ifp and hlen and NULL, respectively.              */
+comment|/*              * the packet was already tagged, so part of the              * processing was already done, and we need to go down.              * opt, flags and imo have already been used, and now              * they are used to hold ifp, dst and NULL, respectively.              */
 name|rule
 operator|=
 operator|(
@@ -680,10 +680,7 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-operator|&
-name|ro
-operator|->
-name|ro_dst
+name|flags
 expr_stmt|;
 name|ifp
 operator|=
@@ -1858,7 +1855,7 @@ operator|&
 literal|0x10000
 condition|)
 block|{
-comment|/*                      * pass the pkt to dummynet. Need to include                      * pipe number, m, ifp, ro, hlen because these are                      * not recomputed in the next pass.                      * All other parameters have been already used and                      * so they are not needed anymore.                       * XXX note: if the ifp or ro entry are deleted                      * while a pkt is in dummynet, we are in trouble!                      */
+comment|/*                      * pass the pkt to dummynet. Need to include                      * pipe number, m, ifp, ro, dst because these are                      * not recomputed in the next pass.                      * All other parameters have been already used and                      * so they are not needed anymore.                       * XXX note: if the ifp or ro entry are deleted                      * while a pkt is in dummynet, we are in trouble!                      */
 name|dummynet_io
 argument_list|(
 name|off
@@ -1873,7 +1870,7 @@ name|ifp
 argument_list|,
 name|ro
 argument_list|,
-name|hlen
+name|dst
 argument_list|,
 name|rule
 argument_list|)
