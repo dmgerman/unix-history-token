@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.6 83/12/12"
+literal|"@(#)parser1.c	3.7 84/01/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -1502,6 +1502,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* look ahead a bit */
+name|v
+operator|->
+name|v_type
+operator|=
+name|V_ERR
+expr_stmt|;
 if|if
 condition|(
 name|flag
