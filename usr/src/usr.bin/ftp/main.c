@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -872,6 +872,11 @@ block|{
 if|if
 condition|(
 name|feof
+argument_list|(
+name|stdin
+argument_list|)
+operator|||
+name|ferror
 argument_list|(
 name|stdin
 argument_list|)
