@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.40	82/12/17	*/
+comment|/*	vfs_bio.c	4.41	82/12/19	*/
 end_comment
 
 begin_include
@@ -547,8 +547,6 @@ operator||
 name|B_ERROR
 operator||
 name|B_DELWRI
-operator||
-name|B_AGE
 operator|)
 expr_stmt|;
 if|if
@@ -615,7 +613,7 @@ operator|(
 name|bp
 operator|)
 expr_stmt|;
-comment|/* 	 * If the write was synchronous, then await i/o completion. 	 * If the write was "delayed", then we put the buffer on 	 * the q of blocks awaiting i/o completion status. 	 * Otherwise, the i/o must be finished and we check for 	 * an error. 	 */
+comment|/* 	 * If the write was synchronous, then await i/o completion. 	 * If the write was "delayed", then we put the buffer on 	 * the q of blocks awaiting i/o completion status. 	 */
 if|if
 condition|(
 operator|(
@@ -650,16 +648,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_AGE
-expr_stmt|;
-else|else
-name|u
-operator|.
-name|u_error
-operator|=
-name|geterror
-argument_list|(
-name|bp
-argument_list|)
 expr_stmt|;
 block|}
 end_block
