@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.8 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.9 %G%"; */
 end_comment
 
 begin_include
@@ -357,14 +357,21 @@ name|mc68000
 end_ifdef
 
 begin_comment
-comment|/*      *	these magic numbers lifted from pcc/mac2defs      */
+comment|/*      *	these magic numbers lifted from pcc/mac2defs      *	the offsets are for mapping data and address register numbers      *	to linear register numbers.  e.g. d2 ==> r2, and a2 ==> r10.      */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|P2FP
-value|14
+name|DATA_REG_OFFSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDR_REG_OFFSET
+value|8
 end_define
 
 begin_define
@@ -377,8 +384,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|P2AP
-value|14
+name|P2FP
+value|(ADDR_REG_OFFSET + 6)
 end_define
 
 begin_define
@@ -386,6 +393,13 @@ define|#
 directive|define
 name|P2APNAME
 value|"a6"
+end_define
+
+begin_define
+define|#
+directive|define
+name|P2AP
+value|(ADDR_REG_OFFSET + 6)
 end_define
 
 begin_comment
