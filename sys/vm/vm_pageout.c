@@ -1393,6 +1393,13 @@ parameter_list|)
 block|{
 name|vm_object_t
 name|object
+init|=
+name|mc
+index|[
+literal|0
+index|]
+operator|->
+name|object
 decl_stmt|;
 name|int
 name|pageout_status
@@ -1412,6 +1419,13 @@ name|mtx_assert
 argument_list|(
 operator|&
 name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -1475,15 +1489,6 @@ name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
 block|}
-name|object
-operator|=
-name|mc
-index|[
-literal|0
-index|]
-operator|->
-name|object
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -1492,11 +1497,6 @@ argument_list|(
 name|object
 argument_list|,
 name|count
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 name|vm_pager_put_pages
@@ -1524,11 +1524,6 @@ operator|)
 operator|)
 argument_list|,
 name|pageout_status
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -2662,7 +2657,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Decrease registered cache sizes. 	 */
 name|EVENTHANDLER_INVOKE
@@ -4369,6 +4368,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4737,12 +4742,6 @@ name|pass
 decl_stmt|,
 name|s
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize some paging parameters. 	 */
 name|cnt
 operator|.

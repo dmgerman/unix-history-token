@@ -3676,6 +3676,11 @@ name|object
 operator|->
 name|handle
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -3732,6 +3737,11 @@ expr_stmt|;
 name|vn_finished_write
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 block|}

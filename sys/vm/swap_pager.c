@@ -3678,6 +3678,11 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Step 1 	 * 	 * Turn object into OBJT_SWAP 	 * check for bogus sysops 	 * force sync if not pageout process 	 */
 if|if
 condition|(
@@ -4270,6 +4275,11 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4951,11 +4961,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -4980,6 +4985,11 @@ expr_stmt|;
 name|vm_pager_page_unswapped
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5013,11 +5023,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -5042,6 +5047,11 @@ expr_stmt|;
 name|vm_pager_page_unswapped
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 block|}
