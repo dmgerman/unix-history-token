@@ -251,9 +251,6 @@ decl_stmt|;
 name|int
 name|align
 decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
 for|for
 control|(
 name|i
