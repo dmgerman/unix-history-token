@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.146
+literal|3.147
 operator|%
 name|G
 operator|%
@@ -305,6 +305,41 @@ name|bool
 name|canrename
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 	**  Be sure we have enough file descriptors. 	*/
+end_comment
+
+begin_for
+for|for
+control|(
+name|i
+operator|=
+literal|3
+init|;
+name|i
+operator|<
+literal|20
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+end_for
+
+begin_expr_stmt
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	**  Do a quick prescan of the argument list. 	**	We do this to find out if we can potentially thaw the 	**	configuration file.  If not, we do the thaw now so that 	**	the argument processing applies to this run rather than 	**	to the run that froze the configuration. 	*/
