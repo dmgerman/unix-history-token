@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mt.c,v 1.9.2.1 1997/07/30 06:48:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,6 +353,14 @@ block|}
 block|,
 block|{
 literal|"eom"
+block|,
+name|MTEOD
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"eod"
 block|,
 name|MTEOD
 block|,
