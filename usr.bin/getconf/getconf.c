@@ -397,7 +397,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%jd\n"
+literal|"%"
+name|PRIdMAX
+literal|"\n"
 argument_list|,
 name|limitval
 argument_list|)
