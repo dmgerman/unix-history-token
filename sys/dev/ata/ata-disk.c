@@ -2284,7 +2284,9 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|transfer_failed
+goto|;
 block|}
 comment|/* if this is a DMA transfer, start it, return and wait for interrupt */
 if|if
@@ -2356,6 +2358,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ad%d: timeout waiting for DRQ"
@@ -2365,6 +2368,10 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
+goto|goto
+name|transfer_failed
+goto|;
+block|}
 comment|/* output the data */
 if|if
 condition|(
@@ -2451,6 +2458,76 @@ name|int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+name|transfer_failed
+label|:
+name|untimeout
+argument_list|(
+operator|(
+name|timeout_t
+operator|*
+operator|)
+name|ad_timeout
+argument_list|,
+name|request
+argument_list|,
+name|request
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
+name|request
+operator|->
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+name|request
+operator|->
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|request
+operator|->
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|request
+operator|->
+name|bytecount
+expr_stmt|;
+name|devstat_end_transaction_buf
+argument_list|(
+operator|&
+name|adp
+operator|->
+name|stats
+argument_list|,
+name|request
+operator|->
+name|bp
+argument_list|)
+expr_stmt|;
+name|biodone
+argument_list|(
+name|request
+operator|->
+name|bp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|request
+argument_list|,
+name|M_AD
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2514,6 +2591,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ad%d: timeout waiting for status"
@@ -2523,6 +2601,13 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ADR_F_ERROR
+expr_stmt|;
+block|}
 comment|/* do we have a corrected soft error ? */
 if|if
 condition|(
@@ -2573,8 +2658,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|oops
-label|:
 name|printf
 argument_list|(
 literal|"ad%d: %s %s ERROR blk# %d"
@@ -2921,17 +3004,22 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ad%d: read error detected late"
+literal|"ad%d: read error detected (too) late"
 argument_list|,
 name|adp
 operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-goto|goto
-name|oops
-goto|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ADR_F_ERROR
+expr_stmt|;
 block|}
+else|else
+block|{
 comment|/* data ready, read in */
 if|if
 condition|(
@@ -3019,6 +3107,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* finish up transfer */
 if|if
 condition|(
@@ -3083,6 +3172,22 @@ name|ATA_OP_CONTINUES
 return|;
 block|}
 block|}
+comment|/* disarm timeout for this transfer */
+name|untimeout
+argument_list|(
+operator|(
+name|timeout_t
+operator|*
+operator|)
+name|ad_timeout
+argument_list|,
+name|request
+argument_list|,
+name|request
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
 name|request
 operator|->
 name|bp
@@ -3110,22 +3215,6 @@ argument_list|(
 name|request
 operator|->
 name|bp
-argument_list|)
-expr_stmt|;
-comment|/* disarm timeout for this transfer */
-name|untimeout
-argument_list|(
-operator|(
-name|timeout_t
-operator|*
-operator|)
-name|ad_timeout
-argument_list|,
-name|request
-argument_list|,
-name|request
-operator|->
-name|timeout_handle
 argument_list|)
 expr_stmt|;
 name|free

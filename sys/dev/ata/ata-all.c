@@ -1391,7 +1391,7 @@ name|PCIS_STORAGE_IDE
 operator|)
 condition|)
 return|return
-literal|"Unknown PCI ATA controller (generic mode)"
+literal|"Generic PCI ATA controller"
 return|;
 block|}
 return|return
@@ -5817,6 +5817,7 @@ if|if
 condition|(
 operator|!
 operator|(
+operator|(
 name|dmastat
 operator|=
 name|ata_dmastatus
@@ -5826,6 +5827,7 @@ argument_list|)
 operator|)
 operator|&
 name|ATA_BMSTAT_INTERRUPT
+operator|)
 condition|)
 return|return;
 else|else
@@ -8093,15 +8095,7 @@ operator|&
 literal|0x10
 condition|)
 return|return
-operator|(
-name|ap
-operator|->
-name|cblid
-condition|?
 literal|4
-else|:
-literal|2
-operator|)
 return|;
 if|if
 condition|(
@@ -8112,15 +8106,7 @@ operator|&
 literal|0x08
 condition|)
 return|return
-operator|(
-name|ap
-operator|->
-name|cblid
-condition|?
 literal|3
-else|:
-literal|2
-operator|)
 return|;
 if|if
 condition|(

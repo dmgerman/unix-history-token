@@ -1169,15 +1169,15 @@ name|au
 decl_stmt|;
 comment|/* audio page info */
 name|struct
-name|cappage
-name|cap
-decl_stmt|;
-comment|/* capabilities page info */
-name|struct
 name|audiopage
 name|aumask
 decl_stmt|;
 comment|/* audio page mask */
+name|struct
+name|cappage
+name|cap
+decl_stmt|;
+comment|/* capabilities page info */
 struct|struct
 block|{
 comment|/* subchannel info */
