@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: add.h,v 1.5 1995/04/09 15:04:49 jkh Exp $ */
+comment|/* $Id: add.h,v 1.5.4.1 1995/10/09 11:16:17 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -105,7 +105,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|PlayPen
+name|FirstPen
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -114,14 +114,6 @@ begin_decl_stmt
 specifier|extern
 name|add_mode_t
 name|AddMode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|Home
 decl_stmt|;
 end_decl_stmt
 

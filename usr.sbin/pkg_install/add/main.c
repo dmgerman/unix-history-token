@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.7 1995/05/30 03:49:53 rgrimes Exp $"
+literal|"$Id: main.c,v 1.7.4.1 1995/10/09 11:16:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,19 +126,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|PlayPen
+name|FirstPen
 index|[
 name|FILENAME_MAX
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|Home
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +262,7 @@ literal|'t'
 case|:
 name|strcpy
 argument_list|(
-name|PlayPen
+name|FirstPen
 argument_list|,
 name|optarg
 argument_list|)

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26.2.1 1995/08/30 07:49:42 jkh Exp $"
+literal|"$Id: perform.c,v 1.26.2.2 1995/10/09 11:16:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,14 @@ name|Plist
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|Home
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is seriously ugly code following.  Written very fast!  * [And subsequently made even worse..  Sigh!  This code was just born  * to be hacked, I guess.. :) -jkh]  */
 end_comment
@@ -186,7 +194,7 @@ name|FILENAME_MAX
 index|]
 decl_stmt|;
 name|char
-name|home
+name|playpen
 index|[
 name|FILENAME_MAX
 index|]
@@ -210,8 +218,6 @@ name|cfile
 decl_stmt|;
 name|int
 name|code
-init|=
-literal|0
 decl_stmt|;
 name|PackingList
 name|p
@@ -226,18 +232,13 @@ name|isTMP
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Reset some state */
-if|if
-condition|(
-name|Plist
-operator|.
-name|head
-condition|)
-name|free_plist
-argument_list|(
-operator|&
-name|Plist
-argument_list|)
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|code
+operator|=
+literal|0
 expr_stmt|;
 name|LogDir
 index|[
@@ -245,6 +246,17 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|playpen
+argument_list|,
+name|FirstPen
+argument_list|)
+expr_stmt|;
+name|where_to
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Are we coming in for a second pass, everything already extracted? */
 if|if
@@ -317,42 +329,25 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
-name|getcwd
-argument_list|(
-name|home
-argument_list|,
-name|FILENAME_MAX
-argument_list|)
-condition|)
-name|upchuck
-argument_list|(
-literal|"getcwd"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|isURL
 argument_list|(
 name|pkg
 argument_list|)
 condition|)
 block|{
-name|char
-modifier|*
-name|newname
-init|=
+if|if
+condition|(
+operator|!
+operator|(
+name|Home
+operator|=
 name|fileGetURL
 argument_list|(
 name|NULL
 argument_list|,
 name|pkg
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|newname
+operator|)
 condition|)
 block|{
 name|whinge
@@ -370,12 +365,47 @@ name|strcpy
 argument_list|(
 name|pkg_fullname
 argument_list|,
-name|newname
+name|pkg
 argument_list|)
 expr_stmt|;
-name|isTMP
+name|cfile
 operator|=
-name|pkg_fullname
+name|fopen
+argument_list|(
+name|CONTENTS_FNAME
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cfile
+condition|)
+block|{
+name|whinge
+argument_list|(
+literal|"Unable to open table of contents file `%s' - not a package?"
+argument_list|,
+name|CONTENTS_FNAME
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bomb
+goto|;
+block|}
+name|read_plist
+argument_list|(
+operator|&
+name|Plist
+argument_list|,
+name|cfile
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|cfile
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -402,9 +432,7 @@ name|sprintf
 argument_list|(
 name|pkg_fullname
 argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|home
+literal|"./%s"
 argument_list|,
 name|pkg
 argument_list|)
@@ -418,21 +446,19 @@ name|pkg_fullname
 argument_list|)
 condition|)
 block|{
-name|char
-modifier|*
-name|tmp
-init|=
+name|cp
+operator|=
 name|fileFindByPath
 argument_list|(
 name|NULL
 argument_list|,
 name|pkg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|tmp
+name|cp
 condition|)
 block|{
 name|whinge
@@ -450,10 +476,9 @@ name|strcpy
 argument_list|(
 name|pkg_fullname
 argument_list|,
-name|tmp
+name|cp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -483,7 +508,23 @@ name|Home
 operator|=
 name|make_playpen
 argument_list|(
-name|PlayPen
+name|playpen
+argument_list|,
+name|sb
+operator|.
+name|st_size
+operator|*
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Home
+condition|)
+name|whinge
+argument_list|(
+literal|"Unable to make playpen for %d bytes.\n"
 argument_list|,
 name|sb
 operator|.
@@ -494,7 +535,7 @@ argument_list|)
 expr_stmt|;
 name|where_to
 operator|=
-name|PlayPen
+name|playpen
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -689,7 +730,7 @@ name|bomb
 goto|;
 block|}
 block|}
-comment|/* 	 * Apply a crude heuristic to see how much space the package will 	 * take up once it's unpacked.  I've noticed that most packages 	 * compress an average of 75%, so multiply by 4 for good measure. 	 */
+comment|/* 	     * Apply a crude heuristic to see how much space the package will 	     * take up once it's unpacked.  I've noticed that most packages 	     * compress an average of 75%, so multiply by 4 for good measure. 	     */
 if|if
 condition|(
 name|min_free
@@ -706,7 +747,9 @@ condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"Projected size of %d exceeds available free space.\nPlease set your PKG_TMPDIR variable to point to a location with more\nfree space and try again."
+literal|"Projected size of %d exceeds available free space.\n"
+literal|"Please set your PKG_TMPDIR variable to point to a location with more\n"
+literal|"free space and try again."
 argument_list|,
 name|sb
 operator|.
@@ -733,7 +776,7 @@ if|if
 condition|(
 name|where_to
 operator|!=
-name|PlayPen
+name|playpen
 operator|&&
 name|Fake
 condition|)
@@ -773,6 +816,7 @@ condition|)
 goto|goto
 name|bomb
 goto|;
+block|}
 comment|/* If we're running in MASTER mode, just output the plist and return */
 if|if
 condition|(
@@ -851,7 +895,7 @@ name|p
 operator|->
 name|name
 else|:
-name|NULL
+literal|"."
 argument_list|,
 literal|1
 argument_list|)
@@ -897,10 +941,7 @@ name|tmp
 else|:
 name|DEF_LOG_DIR
 argument_list|,
-name|basename_of
-argument_list|(
 name|PkgName
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -951,13 +992,6 @@ operator|->
 name|next
 control|)
 block|{
-name|char
-modifier|*
-name|isTMP
-init|=
-name|NULL
-decl_stmt|;
-comment|/* local copy for depends only */
 if|if
 condition|(
 name|p
@@ -973,7 +1007,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Package `%s' depends on `%s'"
+literal|"Package `%s' depends on `%s'\n"
 argument_list|,
 name|pkg
 argument_list|,
@@ -1014,17 +1048,18 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|" which is not currently loaded"
+literal|"which is not currently loaded.\n"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
+name|Fake
+operator|&&
+operator|!
 name|isURL
 argument_list|(
-name|p
-operator|->
-name|name
+name|pkg
 argument_list|)
 condition|)
 block|{
@@ -1059,35 +1094,47 @@ name|cp
 operator|=
 name|fileFindByPath
 argument_list|(
-name|PkgName
+name|pkg
 argument_list|,
 name|p
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+operator|&&
+name|cp
+condition|)
+name|printf
+argument_list|(
+literal|"Loading it from %s.\n"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
+if|if
+condition|(
+operator|!
+name|Fake
+operator|&&
+operator|(
 name|cp
 operator|=
 name|fileGetURL
 argument_list|(
-name|PkgName
+name|pkg
 argument_list|,
 name|p
 operator|->
 name|name
 argument_list|)
-expr_stmt|;
-name|isTMP
-operator|=
-name|cp
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|cp
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1096,7 +1143,11 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|" but was found - loading:\n"
+literal|"Finished loading %s over FTP.\n"
+argument_list|,
+name|p
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -1106,9 +1157,7 @@ name|Fake
 operator|&&
 name|vsystem
 argument_list|(
-literal|"pkg_add %s"
-argument_list|,
-name|cp
+literal|"(pwd; cat +CONTENTS) | pkg_add -S"
 argument_list|)
 condition|)
 block|{
@@ -1150,22 +1199,12 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* Nuke the temporary URL copy */
-if|if
-condition|(
-name|isTMP
-condition|)
-block|{
-name|unlink
+comment|/* Nuke the temporary playpen */
+name|leave_playpen
 argument_list|(
-name|isTMP
+name|cp
 argument_list|)
 expr_stmt|;
-name|isTMP
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -1367,14 +1406,14 @@ if|if
 condition|(
 name|where_to
 operator|==
-name|PlayPen
+name|playpen
 operator|&&
 operator|!
 name|Fake
 condition|)
 name|extract_plist
 argument_list|(
-name|home
+literal|"."
 argument_list|,
 operator|&
 name|Plist
@@ -1604,10 +1643,7 @@ name|tmp
 else|:
 name|DEF_LOG_DIR
 argument_list|,
-name|basename_of
-argument_list|(
 name|PkgName
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1861,7 +1897,8 @@ name|cfile
 condition|)
 name|whinge
 argument_list|(
-literal|"Warning: Can't open dependency file '%s'!\n\tDependency registration is incomplete."
+literal|"Warning: Can't open dependency file '%s'!\n"
+literal|"\tDependency registration is incomplete."
 argument_list|,
 name|contents
 argument_list|)
@@ -1874,10 +1911,7 @@ name|cfile
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|basename_of
-argument_list|(
 name|PkgName
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2039,16 +2073,15 @@ expr_stmt|;
 name|success
 label|:
 comment|/* delete the packing list contents */
-name|leave_playpen
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|isTMP
-condition|)
-name|unlink
+name|free_plist
 argument_list|(
-name|isTMP
+operator|&
+name|Plist
+argument_list|)
+expr_stmt|;
+name|leave_playpen
+argument_list|(
+name|Home
 argument_list|)
 expr_stmt|;
 return|return
@@ -2214,7 +2247,9 @@ name|LogDir
 argument_list|)
 expr_stmt|;
 name|leave_playpen
-argument_list|()
+argument_list|(
+name|Home
+argument_list|)
 expr_stmt|;
 block|}
 end_function
