@@ -75,9 +75,7 @@ comment|/* #isns in program */
 name|struct
 name|bpf_insn
 name|bpf_prog
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* bpf program */
 block|}
