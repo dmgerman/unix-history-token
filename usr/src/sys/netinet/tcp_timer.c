@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,16 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* before tcp_seq.h, for tcp_random18() */
+end_comment
 
 begin_include
 include|#
@@ -153,7 +163,47 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|tcp_keepcnt
+init|=
+name|TCPTV_KEEPCNT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max idle probes */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tcp_maxpersistidle
+init|=
+name|TCPTV_KEEP_IDLE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max idle time in persist */
+end_comment
+
+begin_decl_stmt
+name|int
 name|tcp_maxidle
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* TUBA_INCLUDE */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_maxpersistidle
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +362,7 @@ name|i
 decl_stmt|;
 name|tcp_maxidle
 operator|=
-name|TCPTV_KEEPCNT
+name|tcp_keepcnt
 operator|*
 name|tcp_keepintvl
 expr_stmt|;
@@ -368,6 +418,12 @@ condition|(
 name|tp
 operator|==
 literal|0
+operator|||
+name|tp
+operator|->
+name|t_state
+operator|==
+name|TCPS_LISTEN
 condition|)
 continue|continue;
 for|for
@@ -493,7 +549,7 @@ literal|0
 condition|)
 name|tcp_iss
 operator|=
-literal|0
+name|TCP_ISSINCR
 expr_stmt|;
 comment|/* XXX */
 endif|#
@@ -599,6 +655,18 @@ literal|64
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_totbackoff
+init|=
+literal|511
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sum of tcp_backoff[] */
+end_comment
 
 begin_comment
 comment|/*  * TCP timer processing.  */
@@ -893,6 +961,51 @@ operator|.
 name|tcps_persisttimeo
 operator|++
 expr_stmt|;
+comment|/* 		 * Hack: if the peer is dead/unreachable, we do not 		 * time out if the window is closed.  After a full 		 * backoff, drop the connection if the idle time 		 * (no responses to probes) reaches the maximum 		 * backoff that we would use if retransmitting. 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rxtshift
+operator|==
+name|TCP_MAXRXTSHIFT
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_idle
+operator|>=
+name|tcp_maxpersistidle
+operator|||
+name|tp
+operator|->
+name|t_idle
+operator|>=
+name|TCP_REXMTVAL
+argument_list|(
+name|tp
+argument_list|)
+operator|*
+name|tcp_totbackoff
+operator|)
+condition|)
+block|{
+name|tcpstat
+operator|.
+name|tcps_persistdrop
+operator|++
+expr_stmt|;
+name|tp
+operator|=
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
+name|ETIMEDOUT
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|tcp_setpersist
 argument_list|(
 name|tp
