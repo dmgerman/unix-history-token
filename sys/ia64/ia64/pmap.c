@@ -1370,7 +1370,7 @@ name|i
 operator|+
 literal|2
 expr_stmt|;
-comment|/* 	 * Figure out a useful size for the VHPT, based on the size of 	 * physical memory and try to locate a region which is large 	 * enough to contain the VHPT (which must be a power of two in 	 * size and aligned to a natural boundary). 	 * Don't use the difference between avail_start and avail_end 	 * as a measure for memory size. The address space is often 	 * enough sparse, causing us to (try to) create a huge VHPT. 	 */
+comment|/* 	 * Figure out a useful size for the VHPT, based on the size of 	 * physical memory and try to locate a region which is large 	 * enough to contain the VHPT (which must be a power of two in 	 * size and aligned to a natural boundary). 	 */
 name|vhpt_size
 operator|=
 literal|15
