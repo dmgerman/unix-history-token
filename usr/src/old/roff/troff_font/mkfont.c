@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfont.c	4.2 %G%"
+literal|"@(#)mkfont.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,7 +336,12 @@ index|[
 name|j
 index|]
 operator|==
-literal|'hy'
+name|PAIR
+argument_list|(
+literal|'h'
+argument_list|,
+literal|'y'
+argument_list|)
 condition|)
 name|hyw
 operator|=
@@ -352,7 +357,12 @@ index|[
 name|j
 index|]
 operator|==
-literal|'em'
+name|PAIR
+argument_list|(
+literal|'e'
+argument_list|,
+literal|'m'
+argument_list|)
 condition|)
 name|emw
 operator|=
