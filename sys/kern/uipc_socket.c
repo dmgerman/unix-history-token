@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -139,6 +145,12 @@ directive|include
 file|<machine/limits.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -156,6 +168,15 @@ name|sopt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -873,6 +894,9 @@ argument_list|,
 name|RLIM_INFINITY
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|so
@@ -945,6 +969,9 @@ argument_list|,
 name|M_ACCF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* INET */
 block|}
 name|crfree
 argument_list|(
@@ -4926,6 +4953,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -5386,6 +5419,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_comment
 comment|/*  * Perhaps this routine, and sooptcopyout(), below, ought to come in  * an additional variant to handle the case where the option value needs  * to be some kind of integer, but not a specific size.  * In addition to their use here, these functions are also called by the  * protocol-level pr_ctloutput() routines.  */
 end_comment
@@ -5581,6 +5623,32 @@ operator|->
 name|sopt_name
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|SO_ACCEPTFILTER
+case|:
+name|error
+operator|=
+name|do_setopt_accept_filter
+argument_list|(
+name|so
+argument_list|,
+name|sopt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+endif|#
+directive|endif
+comment|/* INET */
 case|case
 name|SO_LINGER
 case|:
@@ -6010,26 +6078,6 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-case|case
-name|SO_ACCEPTFILTER
-case|:
-name|error
-operator|=
-name|do_setopt_accept_filter
-argument_list|(
-name|so
-argument_list|,
-name|sopt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|bad
-goto|;
-break|break;
 default|default:
 name|error
 operator|=
@@ -6286,6 +6334,9 @@ operator|->
 name|sopt_name
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|SO_ACCEPTFILTER
 case|:
@@ -6411,6 +6462,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* INET */
 case|case
 name|SO_LINGER
 case|:
