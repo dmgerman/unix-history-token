@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_file.c,v 1.11 2002/05/28 12:57:27 joda Exp $"
+literal|"$Id: keytab_file.c,v 1.11.4.1 2002/10/21 14:35:47 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1328,7 +1328,7 @@ name|krb5_set_error_string
 argument_list|(
 name|context
 argument_list|,
-literal|"open(%s): %s"
+literal|"%s: %s"
 argument_list|,
 name|d
 operator|->
@@ -2036,6 +2036,8 @@ name|O_RDWR
 operator||
 name|O_CREAT
 operator||
+name|O_EXCL
+operator||
 name|O_BINARY
 argument_list|,
 literal|0600
@@ -2695,6 +2697,11 @@ name|found
 init|=
 literal|0
 decl_stmt|;
+name|krb5_error_code
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|fkt_start_seq_get_int
 argument_list|(
 name|context
@@ -2709,6 +2716,16 @@ operator|&
 name|cursor
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* return other error here? */
 while|while
 condition|(
 name|fkt_next_entry_int
@@ -2864,6 +2881,8 @@ operator|&
 name|cursor
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 if|if
 condition|(
 operator|!

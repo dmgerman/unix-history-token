@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kaserver.c,v 1.20 2002/09/09 14:03:02 nectar Exp $"
+literal|"$Id: kaserver.c,v 1.20.2.1 2002/10/21 14:30:51 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2465,6 +2465,17 @@ name|end_time
 operator|-
 name|kdc_time
 expr_stmt|;
+comment|/* end_time - kdc_time can sometimes be non-positive due to slight        time skew between client and server. Let's make sure it is postive */
+if|if
+condition|(
+name|max_life
+operator|<
+literal|1
+condition|)
+name|max_life
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|client_entry
@@ -3672,6 +3683,17 @@ operator|=
 name|end_time
 operator|-
 name|kdc_time
+expr_stmt|;
+comment|/* end_time - kdc_time can sometimes be non-positive due to slight        time skew between client and server. Let's make sure it is postive */
+if|if
+condition|(
+name|max_life
+operator|<
+literal|1
+condition|)
+name|max_life
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(

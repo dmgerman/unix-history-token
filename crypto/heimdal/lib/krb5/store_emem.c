@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: store_emem.c,v 1.12 2002/04/18 14:00:34 joda Exp $"
+literal|"$Id: store_emem.c,v 1.12.4.1 2002/10/21 16:08:55 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -192,25 +192,6 @@ name|sz
 decl_stmt|,
 name|off
 decl_stmt|;
-name|sz
-operator|=
-literal|2
-operator|*
-operator|(
-name|size
-operator|+
-operator|(
-name|s
-operator|->
-name|ptr
-operator|-
-name|s
-operator|->
-name|base
-operator|)
-operator|)
-expr_stmt|;
-comment|/* XXX */
 name|off
 operator|=
 name|s
@@ -220,6 +201,22 @@ operator|-
 name|s
 operator|->
 name|base
+expr_stmt|;
+name|sz
+operator|=
+name|off
+operator|+
+name|size
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|<
+literal|4096
+condition|)
+name|sz
+operator|*=
+literal|2
 expr_stmt|;
 name|base
 operator|=

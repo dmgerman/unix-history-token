@@ -62,7 +62,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: version4.c,v 1.27 2002/10/21 12:35:07 joda Exp $"
+literal|"$Id: version4.c,v 1.26.2.1 2002/10/21 14:52:59 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
