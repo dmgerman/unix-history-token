@@ -2505,6 +2505,15 @@ name|upper
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|priv
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+comment|/* restore h/w csum */
 name|priv
 operator|->
 name|ifp
@@ -2515,7 +2524,6 @@ name|priv
 operator|->
 name|hwassist
 expr_stmt|;
-comment|/* restore h/w csum */
 block|}
 elseif|else
 if|if
