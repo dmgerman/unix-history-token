@@ -11587,6 +11587,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 comment|/* sanity check */
 if|if
 condition|(
@@ -12275,7 +12279,49 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* initialize ? */
+comment|/* initialize */
+block|{
+name|int
+name|i
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|p
+init|=
+operator|(
+name|u_int8_t
+operator|*
+operator|)
+name|sav
+operator|->
+name|iv
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sav
+operator|->
+name|ivlen
+condition|;
+name|i
+operator|++
+control|)
+name|p
+index|[
+name|i
+index|]
+operator|=
+name|key_random
+argument_list|()
+operator|&
+literal|0xff
+expr_stmt|;
+block|}
 break|break;
 else|#
 directive|else
@@ -12322,11 +12368,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* make lifetime for CURRENT */
-block|{
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 name|KMALLOC
 argument_list|(
 name|sav
@@ -12434,7 +12475,6 @@ name|sadb_lifetime_usetime
 operator|=
 literal|0
 expr_stmt|;
-block|}
 comment|/* lifetimes for HARD and SOFT */
 block|{
 specifier|const
