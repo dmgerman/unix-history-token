@@ -1193,6 +1193,27 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|u_int
+name|rss
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|sel
+decl_stmt|;
+asm|__asm __volatile("movl %%ss,%0" : "=rm" (sel));
+return|return
+operator|(
+name|sel
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|void
 name|load_fs
 parameter_list|(

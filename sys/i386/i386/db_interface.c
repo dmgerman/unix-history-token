@@ -165,48 +165,6 @@ name|db_global_jmpbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|__inline
-name|u_short
-name|rss
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_short
-name|ss
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-asm|__asm __volatile("mov %%ss,%0" : "=r" (ss));
-else|#
-directive|else
-error|#
-directive|error
-error|Function rss() needs to get ported to this compiler.
-name|ss
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXXX Fix for other compilers. */
-endif|#
-directive|endif
-return|return
-name|ss
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  *  kdb_trap - field a TRACE or BPT trap  */
 end_comment
