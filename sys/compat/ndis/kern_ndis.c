@@ -1915,6 +1915,9 @@ operator|->
 name|type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notdef
 case|case
 name|SYS_RES_IOPORT
 case|:
@@ -1951,6 +1954,8 @@ operator|->
 name|count
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|SYS_RES_MEMORY
 case|:
@@ -4425,6 +4430,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|NDIS_LOADED
+value|0x42534F44
+end_define
+
 begin_function
 name|int
 name|ndis_load_driver
@@ -4480,6 +4492,27 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
+comment|/* 	 * Only perform the relocation/linking phase once 	 * since the binary image may be shared among multiple 	 * device instances. 	 */
+name|ptr
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|img
+operator|+
+literal|8
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ptr
+operator|!=
+name|NDIS_LOADED
+condition|)
+block|{
 comment|/* Perform text relocation */
 if|if
 condition|(
@@ -4559,6 +4592,12 @@ operator|(
 name|ENOEXEC
 operator|)
 return|;
+block|}
+operator|*
+name|ptr
+operator|=
+name|NDIS_LOADED
+expr_stmt|;
 block|}
 comment|/* Locate the driver entry point */
 name|pe_get_optional_header
