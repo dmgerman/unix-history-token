@@ -65,35 +65,6 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sunos
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/inode.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -105,11 +76,6 @@ include|#
 directive|include
 file|<ufs/ffs/fs.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1862,7 +1828,6 @@ name|void
 name|rollforward
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|req
 modifier|*
@@ -1874,7 +1839,6 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
-specifier|register
 name|struct
 name|slave
 modifier|*
@@ -2411,23 +2375,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|sunos
-name|void
-function_decl|(
-modifier|*
-name|interrupt_save
-function_decl|)
-parameter_list|()
-function_decl|;
-else|#
-directive|else
 name|sig_t
 name|interrupt_save
 decl_stmt|;
-endif|#
-directive|endif
 name|interrupt_save
 operator|=
 name|signal
@@ -3082,7 +3032,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -3355,7 +3304,6 @@ name|void
 name|killall
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3425,7 +3373,6 @@ name|cmd
 parameter_list|,
 name|slave_number
 parameter_list|)
-specifier|register
 name|int
 name|cmd
 decl_stmt|;
@@ -3433,7 +3380,6 @@ name|int
 name|slave_number
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|nread
 decl_stmt|;
@@ -3541,7 +3487,6 @@ operator|==
 name|reqsiz
 condition|)
 block|{
-specifier|register
 name|struct
 name|req
 modifier|*
