@@ -855,13 +855,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|METEOR_GEO_YUV_PLANER
+name|METEOR_GEO_YUV_PLANAR
 value|0x0080000
 end_define
 
 begin_comment
 comment|/* 4-2-2 YUV 16 bits planer */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_GEO_YUV_PLANER
+value|METEOR_GEO_YUV_PLANAR
+end_define
 
 begin_define
 define|#

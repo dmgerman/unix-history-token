@@ -1092,7 +1092,7 @@ name|METEOR_YUV_PACKED
 value|0x00040000
 define|#
 directive|define
-name|METEOR_YUV_PLANER
+name|METEOR_YUV_PLANAR
 value|0x00080000
 define|#
 directive|define
