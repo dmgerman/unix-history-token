@@ -250,7 +250,7 @@ name|VM_PROT_READ
 expr_stmt|;
 name|kva
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
 argument_list|,
@@ -395,11 +395,6 @@ name|error
 operator|=
 name|EFAULT
 expr_stmt|;
-comment|/* 			 * Make sure that there is no residue in 'object' from 			 * an error return on vm_map_lookup. 			 */
-name|object
-operator|=
-name|NULL
-expr_stmt|;
 break|break;
 block|}
 name|m
@@ -458,15 +453,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
-name|EFAULT
-expr_stmt|;
-comment|/* 			 * Make sure that there is no residue in 'object' from 			 * an error return on vm_map_lookup. 			 */
-name|object
-operator|=
-name|NULL
-expr_stmt|;
 name|vm_map_lookup_done
 argument_list|(
 name|tmap
@@ -474,20 +460,19 @@ argument_list|,
 name|out_entry
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EFAULT
+expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Wire the page into memory 		 */
-name|vm_page_wire
+comment|/* 		 * Hold the page in memory. 		 */
+name|vm_page_hold
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We're done with tmap now. 		 * But reference the object first, so that we won't loose 		 * it. 		 */
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
+comment|/* 		 * We're done with tmap now. 		 */
 name|vm_map_lookup_done
 argument_list|(
 name|tmap
@@ -529,22 +514,11 @@ argument_list|(
 name|kva
 argument_list|)
 expr_stmt|;
-comment|/* 		 * release the page and the object 		 */
-name|vm_page_unwire
+comment|/* 		 * Release the page. 		 */
+name|vm_page_unhold
 argument_list|(
 name|m
-argument_list|,
-literal|1
 argument_list|)
-expr_stmt|;
-name|vm_object_deallocate
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-name|object
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 do|while
@@ -560,15 +534,6 @@ operator|>
 literal|0
 condition|)
 do|;
-if|if
-condition|(
-name|object
-condition|)
-name|vm_object_deallocate
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
