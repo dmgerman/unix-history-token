@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.21	81/03/03	*/
+comment|/*	hp.c	4.22	81/03/06	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	Check out handling of spun-down drives and write lock  *	Check RM80 skip sector handling, esp when ECC's occur later  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check interaction with tape driver on same mba  *	Check multiple drive handling  */
+comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	Check RM80 skip sector handling, esp when ECC's occur later  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check interaction with tape driver on same mba  *	Check multiple drive handling  */
 end_comment
 
 begin_include
@@ -1428,7 +1428,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hp%d is write locked\n"
+literal|"hp%d: write locked\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -1475,29 +1475,13 @@ block|{
 name|harderr
 argument_list|(
 name|bp
+argument_list|,
+literal|"hp"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"hp%d%c mbasr=%b er1=%b er2=%b\n"
-argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-literal|'a'
-operator|+
-operator|(
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|&
-literal|07
-operator|)
+literal|"mbasr=%b er1=%b er2=%b\n"
 argument_list|,
 name|mbasr
 argument_list|,
@@ -2029,7 +2013,7 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"soft ecc hp%d%c bn%d\n"
+literal|"hp%d%c: soft ecc bn%d\n"
 argument_list|,
 name|dkunit
 argument_list|(
