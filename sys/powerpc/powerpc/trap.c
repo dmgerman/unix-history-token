@@ -238,46 +238,6 @@ directive|include
 file|<machine/sr.h>
 end_include
 
-begin_comment
-comment|/* These definitions should probably be somewhere else			XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIRSTARG
-value|3
-end_define
-
-begin_comment
-comment|/* first argument is in reg 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NARGREG
-value|8
-end_define
-
-begin_comment
-comment|/* 8 args are in registers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOREARGS
-parameter_list|(
-name|sp
-parameter_list|)
-value|((caddr_t)((int)(sp) + 8))
-end_define
-
-begin_comment
-comment|/* more args go here */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef

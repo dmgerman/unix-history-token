@@ -330,6 +330,46 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Definitions for syscalls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIRSTARG
+value|3
+end_define
+
+begin_comment
+comment|/* first arg in reg 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NARGREG
+value|8
+end_define
+
+begin_comment
+comment|/* 8 args in regs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOREARGS
+parameter_list|(
+name|sp
+parameter_list|)
+value|((caddr_t)((int)(sp) + 8))
+end_define
+
+begin_comment
+comment|/* more args go here */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

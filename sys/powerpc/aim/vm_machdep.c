@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -395,7 +401,34 @@ name|tf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Set up trap frame? */
+comment|/* Set up trap frame. */
+name|tf
+operator|->
+name|fixreg
+index|[
+name|FIRSTARG
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|tf
+operator|->
+name|fixreg
+index|[
+name|FIRSTARG
+operator|+
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|tf
+operator|->
+name|cr
+operator|&=
+operator|~
+literal|0x10000000
+expr_stmt|;
 name|td2
 operator|->
 name|td_frame
