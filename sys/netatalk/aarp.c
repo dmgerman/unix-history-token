@@ -174,6 +174,61 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|aarptab_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|aarptab_mtx
+argument_list|,
+operator|&
+name|aarptab_mtx
+argument_list|,
+literal|"aarptab_mtx"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_LOCK
+parameter_list|()
+value|mtx_lock(&aarptab_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_UNLOCK
+parameter_list|()
+value|mtx_unlock(&aarptab_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&aarptab_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&aarptab_mtx, MA_NOTOWNED)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -194,7 +249,7 @@ name|aat
 parameter_list|,
 name|addr
 parameter_list|)
-value|{ \     int		n; \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for (n = 0; n< AARPTAB_BSIZ; n++, aat++) \ 	if (aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node) \ 	    break; \ 	if (n>= AARPTAB_BSIZ) \ 	    aat = NULL; \ }
+value|{ \     int		n; \     AARPTAB_LOCK_ASSERT(); \     aat =&aarptab[ AARPTAB_HASH(addr) * AARPTAB_BSIZ ]; \     for (n = 0; n< AARPTAB_BSIZ; n++, aat++) \ 	if (aat->aat_ataddr.s_net == (addr).s_net&& \ 	     aat->aat_ataddr.s_node == (addr).s_node) \ 	    break; \ 	if (n>= AARPTAB_BSIZ) \ 	    aat = NULL; \ }
 end_define
 
 begin_define
@@ -342,8 +397,6 @@ name|aat
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
 decl_stmt|;
 name|aarptimer_ch
 operator|=
@@ -364,6 +417,9 @@ expr_stmt|;
 name|aat
 operator|=
 name|aarptab
+expr_stmt|;
+name|AARPTAB_LOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -421,22 +477,15 @@ name|AARPT_KILLI
 operator|)
 condition|)
 continue|continue;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|aarptfree
 argument_list|(
 name|aat
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -612,6 +661,9 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
+name|AARPTAB_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1168,9 +1220,6 @@ name|aarptab
 modifier|*
 name|aat
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|at_broadcast
@@ -1267,9 +1316,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|s
-operator|=
-name|splimp
+name|AARPTAB_LOCK
 argument_list|()
 expr_stmt|;
 name|AARPTAB_LOOK
@@ -1318,16 +1365,14 @@ name|aat_hold
 operator|=
 name|m
 expr_stmt|;
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 name|aarpwhohas
 argument_list|(
 name|ac
 argument_list|,
 name|destsat
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1375,10 +1420,8 @@ name|aat_enaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|AARPTAB_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1408,16 +1451,14 @@ name|aat_hold
 operator|=
 name|m
 expr_stmt|;
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 name|aarpwhohas
 argument_list|(
 name|ac
 argument_list|,
 name|destsat
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2070,6 +2111,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|AARPTAB_LOCK
+argument_list|()
+expr_stmt|;
 name|AARPTAB_LOOK
 argument_list|(
 name|aat
@@ -2096,6 +2140,9 @@ name|aarptfree
 argument_list|(
 name|aat
 argument_list|)
+expr_stmt|;
+name|AARPTAB_UNLOCK
+argument_list|()
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -2156,6 +2203,9 @@ name|aat_hold
 operator|=
 name|NULL
 expr_stmt|;
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 name|sat
 operator|.
 name|sat_len
@@ -2207,6 +2257,10 @@ argument_list|)
 expr_stmt|;
 comment|/* XXX */
 block|}
+else|else
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2282,7 +2336,14 @@ name|aat_flags
 operator||=
 name|ATF_COM
 expr_stmt|;
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
+else|else
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/*      * Don't respond to responses, and never respond if we're      * still probing.      */
 if|if
 condition|(
@@ -2635,6 +2696,9 @@ modifier|*
 name|aat
 parameter_list|)
 block|{
+name|AARPTAB_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|aat
@@ -2722,6 +2786,9 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+name|AARPTAB_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|first
@@ -3541,6 +3608,9 @@ argument_list|,
 name|aarptimer_ch
 argument_list|)
 expr_stmt|;
+name|AARPTAB_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3584,6 +3654,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
