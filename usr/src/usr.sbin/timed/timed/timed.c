@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.2 (Berkeley) %G%"
+literal|"@(#)timed.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2176,6 +2176,11 @@ operator|->
 name|status
 operator|=
 name|SLAVE
+expr_stmt|;
+name|rmnetmachs
+argument_list|(
+name|ntp
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
