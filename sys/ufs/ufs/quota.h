@@ -15,6 +15,23 @@ directive|define
 name|_UFS_UFS_QUOTA_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Definitions for disk quotas imposed on the average user  * (big brother finally hits UNIX).  *  * The following constants define the amount of time given a user before the  * soft limits are treated as hard limits (usually resulting in an allocation  * failure). The timer is started when the user crosses their soft limit, it  * is reset when they go below their soft limit.  */
 end_comment
