@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)fstat.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)fstat.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,7 +268,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -303,6 +317,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -493,7 +513,7 @@ parameter_list|(
 name|d
 parameter_list|)
 define|\
-value|if ((d)> maxfiles) { \ 		free(ofiles); \ 		ofiles = malloc((d) * sizeof(struct file *)); \ 		if (ofiles == NULL) { \ 			fprintf(stderr, "fstat: %s\n", strerror(errno)); \ 			exit(1); \ 		} \ 		maxfiles = (d); \ 	}
+value|if ((d)> maxfiles) { \ 		free(ofiles); \ 		ofiles = malloc((d) * sizeof(struct file *)); \ 		if (ofiles == NULL) { \ 			err(1, NULL); \ 		} \ 		maxfiles = (d); \ 	}
 end_define
 
 begin_comment
@@ -832,11 +852,9 @@ name|optarg
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"fstat: -p requires a process id\n"
+literal|"-p requires a process id"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -878,22 +896,15 @@ name|optarg
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unknown uid\n"
+literal|"%s: unknown uid"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|what
 operator|=
 name|KERN_PROC_UID
@@ -1038,12 +1049,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"fstat: %s\n"
+literal|"%s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -1051,12 +1061,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|notdef
@@ -1071,12 +1075,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"fstat: no namelist: %s\n"
+literal|"no namelist: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -1084,12 +1087,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -1112,12 +1109,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"fstat: %s\n"
+literal|"%s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -1125,12 +1121,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|nflg
@@ -1256,8 +1246,6 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|,
-name|last
 decl_stmt|;
 name|struct
 name|file
@@ -2661,11 +2649,9 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't read mount table at %x\n"
+literal|"can't read mount table at %x"
 argument_list|,
 name|m
 argument_list|)
@@ -2693,25 +2679,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fstat: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|mt
 operator|->
 name|m
@@ -3649,18 +3623,11 @@ name|statbuf
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"fstat: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|filename
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3685,25 +3652,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fstat: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|cur
 operator|->
 name|next

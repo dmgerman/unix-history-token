@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -150,6 +156,7 @@ name|P_
 end_undef
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -158,14 +165,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Use: gencat [-new] [-or] [-lang C|C++|ANSIC]\n"
+literal|"usage: gencat [-new] [-or] [-lang C|C++|ANSIC]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"            catfile msgfile [-h<header-file>]...\n"
+literal|"              catfile msgfile [-h<header-file>]...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -220,10 +232,6 @@ decl_stmt|,
 name|ifd
 decl_stmt|,
 name|i
-decl_stmt|;
-name|FILE
-modifier|*
-name|fptr
 decl_stmt|;
 name|char
 modifier|*
@@ -355,21 +363,16 @@ name|MCLangANSIC
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unrecognized language: %s\n"
+literal|"unrecognized language: %s"
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -395,20 +398,13 @@ condition|(
 operator|!
 name|input
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gencat: Can't write to a header before reading something.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't write to a header before reading something"
 argument_list|)
 expr_stmt|;
-block|}
 operator|++
 name|i
 expr_stmt|;
@@ -445,20 +441,13 @@ if|if
 condition|(
 name|catfile
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gencat: You must specify -new before the catalog file name\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"you must specify -new before the catalog file name"
 argument_list|)
 expr_stmt|;
-block|}
 name|new
 operator|=
 name|True
@@ -490,11 +479,6 @@ else|else
 block|{
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -539,22 +523,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to create a new %s.\n"
+literal|"unable to create a new %s"
 argument_list|,
 name|catfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -592,22 +569,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to create %s.\n"
+literal|"unable to create %s"
 argument_list|,
 name|catfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -638,22 +608,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to truncate %s.\n"
+literal|"unable to truncate %s"
 argument_list|,
 name|catfile
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 else|else
@@ -680,22 +643,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to read %s\n"
+literal|"unable to read %s"
 argument_list|,
 name|input
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|MCParse
 argument_list|(
 name|ifd
@@ -729,11 +685,6 @@ else|else
 block|{
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -825,8 +776,6 @@ init|=
 name|False
 decl_stmt|;
 name|int
-name|c
-decl_stmt|,
 name|len
 decl_stmt|,
 name|tlen
@@ -866,22 +815,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to create header file %s.\n"
+literal|"unable to create header file %s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|MCWriteConst
 argument_list|(
 name|fd
@@ -931,22 +873,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to open temporary file: %s\n"
+literal|"unable to open temporary file: %s"
 argument_list|,
 name|tmpname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|unlink
 argument_list|(
 name|tmpname
@@ -978,22 +913,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to read header file: %s\n"
+literal|"unable to read header file: %s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Backup to the start of the temp file */
 if|if
 condition|(
@@ -1008,22 +936,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to seek in tempfile: %s\n"
+literal|"unable to seek in tempfile: %s"
 argument_list|,
 name|tmpname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Now compare them */
 while|while
 condition|(
@@ -1131,22 +1052,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to seek in tempfile: %s\n"
+literal|"unable to seek in tempfile: %s"
 argument_list|,
 name|tmpname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|fd
@@ -1169,22 +1083,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"gencat: Unable to truncate header file: %s\n"
+literal|"unable to truncate header file: %s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -1216,17 +1123,13 @@ argument_list|)
 operator|!=
 name|len
 condition|)
-block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"gencat: Error writing to header file: %s\n"
+literal|"error writing to header file: %s"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|close
