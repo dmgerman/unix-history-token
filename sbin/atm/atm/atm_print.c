@@ -1432,6 +1432,9 @@ name|printf
 argument_list|(
 literal|"/0x%0lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|addr
@@ -2349,7 +2352,7 @@ block|}
 comment|/* 	 * Print the interface statistics 	 */
 name|printf
 argument_list|(
-literal|"%-9s  %7ld %8ld  %5ld %7ld %8ld  %5ld  %5ld\n"
+literal|"%-9s  %7lld %8lld  %5lld %7lld %8lld  %5lld  %5lld\n"
 argument_list|,
 name|pi
 operator|->

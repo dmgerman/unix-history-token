@@ -1313,31 +1313,31 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* Interface name */
-name|long
+name|u_quad_t
 name|app_ipdus
 decl_stmt|;
 comment|/* PDUs received from I/F */
-name|long
+name|u_quad_t
 name|app_opdus
 decl_stmt|;
 comment|/* PDUs sent to I/F */
-name|long
+name|u_quad_t
 name|app_ibytes
 decl_stmt|;
 comment|/* Bytes received from I/F */
-name|long
+name|u_quad_t
 name|app_obytes
 decl_stmt|;
 comment|/* Bytes sent to I/F */
-name|long
+name|u_quad_t
 name|app_ierrors
 decl_stmt|;
 comment|/* Errors receiving from I/F */
-name|long
+name|u_quad_t
 name|app_oerrors
 decl_stmt|;
 comment|/* Errors sending to I/F */
-name|long
+name|u_quad_t
 name|app_cmderrors
 decl_stmt|;
 comment|/* I/F command errors */

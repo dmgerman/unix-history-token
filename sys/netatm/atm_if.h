@@ -447,31 +447,31 @@ name|caddr_t
 parameter_list|)
 function_decl|;
 comment|/* Interface statistics */
-name|long
+name|u_quad_t
 name|pif_ipdus
 decl_stmt|;
 comment|/* PDUs received from interface */
-name|long
+name|u_quad_t
 name|pif_opdus
 decl_stmt|;
 comment|/* PDUs sent to interface */
-name|long
+name|u_quad_t
 name|pif_ibytes
 decl_stmt|;
 comment|/* Bytes received from interface */
-name|long
+name|u_quad_t
 name|pif_obytes
 decl_stmt|;
 comment|/* Bytes sent to interface */
-name|long
+name|u_quad_t
 name|pif_ierrors
 decl_stmt|;
 comment|/* Errors receiving from interface */
-name|long
+name|u_quad_t
 name|pif_oerrors
 decl_stmt|;
 comment|/* Errors sending to interface */
-name|long
+name|u_quad_t
 name|pif_cmderrors
 decl_stmt|;
 comment|/* Interface command errors */
