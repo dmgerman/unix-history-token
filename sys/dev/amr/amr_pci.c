@@ -1062,7 +1062,7 @@ comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -1103,7 +1103,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -1119,10 +1119,10 @@ argument_list|,
 name|AMR_NSEG
 argument_list|,
 comment|/* maxsize, nsegments */
-name|BUS_SPACE_MAXSIZE_32BIT
+name|MAXBSIZE
 argument_list|,
 comment|/* maxsegsize */
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
 name|busdma_lock_mutex
@@ -1942,7 +1942,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -2196,7 +2196,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR

@@ -423,6 +423,10 @@ define|#
 directive|define
 name|AMR_STATE_CRASHDUMP
 value|(1<<4)
+define|#
+directive|define
+name|AMR_STATE_QUEUE_FRZN
+value|(1<<5)
 comment|/* per-controller queues */
 name|struct
 name|bio_queue_head
@@ -552,6 +556,23 @@ modifier|*
 name|amr_poll_command
 function_decl|)
 parameter_list|(
+name|struct
+name|amr_command
+modifier|*
+name|ac
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|amr_poll_command1
+function_decl|)
+parameter_list|(
+name|struct
+name|amr_softc
+modifier|*
+name|sc
+parameter_list|,
 name|struct
 name|amr_command
 modifier|*
