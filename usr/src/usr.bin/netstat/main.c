@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.16 (Berkeley) %G%"
+literal|"@(#)main.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,9 +338,11 @@ directive|define
 name|ISO_X25
 value|26
 block|{
-literal|"_x25_isopcb"
+comment|/*"_x25_isopcb"*/
+literal|"_file"
 block|}
 block|,
+comment|/* fast gross hack to speed up */
 define|#
 directive|define
 name|N_TPSTAT
@@ -354,7 +356,8 @@ directive|define
 name|N_X25STAT
 value|28
 block|{
-literal|"_x25_stat"
+comment|/*"_x25_stat"*/
+literal|"_file"
 block|}
 block|,
 define|#
@@ -379,6 +382,22 @@ name|N_RTREE
 value|31
 block|{
 literal|"_radix_node_head"
+block|}
+block|,
+define|#
+directive|define
+name|N_CLTP
+value|32
+block|{
+literal|"_cltb"
+block|}
+block|,
+define|#
+directive|define
+name|N_CLTPSTAT
+value|33
+block|{
+literal|"_cltpstat"
 block|}
 block|,
 comment|/* BBN Internet protocol implementation */
@@ -519,6 +538,9 @@ name|esis_stats
 argument_list|()
 decl_stmt|,
 name|clnp_stats
+argument_list|()
+decl_stmt|,
+name|cltp_stats
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -869,6 +891,20 @@ block|,
 name|tp_stats
 block|,
 literal|"tp"
+block|}
+block|,
+block|{
+name|N_CLTP
+block|,
+name|N_CLTPSTAT
+block|,
+literal|1
+block|,
+name|iso_protopr
+block|,
+name|cltp_stats
+block|,
+literal|"cltp"
 block|}
 block|,
 ifdef|#
