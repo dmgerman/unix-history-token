@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ofw/openfirm.h>
 end_include
 
@@ -101,10 +107,7 @@ name|id_ether
 argument_list|,
 name|addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|addr
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
