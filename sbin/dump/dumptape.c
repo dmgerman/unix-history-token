@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/dump/dumptape.c,v 1.3 1993/03/23 00:27:15 cgd Exp $"
+literal|"$Header: /home/cvs/386BSD/src/sbin/dump/dumptape.c,v 1.2 1993/07/22 16:49:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,8 +264,11 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|RDUMP
 end_endif
+
+begin_comment
+comment|/* RDUMP */
+end_comment
 
 begin_function_decl
 name|int
@@ -1030,7 +1033,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-endif|RDUMP
+comment|/* RDUMP */
 name|close
 argument_list|(
 name|tapefd
@@ -1529,7 +1532,7 @@ literal|0
 condition|)
 else|#
 directive|else
-else|RDUMP
+comment|/* RDUMP */
 while|while
 condition|(
 operator|(
@@ -1555,7 +1558,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
-endif|RDUMP
+comment|/* RDUMP */
 block|{
 name|msg
 argument_list|(
@@ -1730,6 +1733,14 @@ literal|"The ENTIRE dump is aborted.\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RDUMP
+name|rmtclose
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|Exit
 argument_list|(
 name|X_ABORT
@@ -2508,7 +2519,7 @@ condition|)
 block|{
 else|#
 directive|else
-else|RDUMP
+comment|/* RDUMP */
 if|if
 condition|(
 operator|(
@@ -2532,7 +2543,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-endif|RDUMP
+comment|/* RDUMP */
 if|if
 condition|(
 name|nwrite
