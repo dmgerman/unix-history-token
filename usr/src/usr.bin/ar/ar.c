@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	4.5 (Berkeley) %G%"
+literal|"@(#)ar.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -52,12 +52,6 @@ begin_include
 include|#
 directive|include
 file|<ar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_decl_stmt
@@ -391,7 +385,7 @@ begin_decl_stmt
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXBSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2407,7 +2401,7 @@ name|tf
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+name|MAXBSIZE
 argument_list|)
 operator|)
 operator|>
@@ -2455,7 +2449,7 @@ name|tf2
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+name|MAXBSIZE
 argument_list|)
 operator|)
 operator|>
@@ -2503,7 +2497,7 @@ name|tf1
 argument_list|,
 name|buf
 argument_list|,
-name|BUFSIZ
+name|MAXBSIZE
 argument_list|)
 operator|)
 operator|>
@@ -2824,7 +2818,7 @@ name|i
 operator|=
 name|o
 operator|=
-name|BUFSIZ
+name|MAXBSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -2923,7 +2917,7 @@ name|larbuf
 operator|.
 name|lar_size
 operator|-=
-name|BUFSIZ
+name|MAXBSIZE
 expr_stmt|;
 block|}
 if|if
