@@ -1275,6 +1275,26 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Do idle pre-zeroing.  */
+if|if
+condition|(
+name|va
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|flags
+operator|&
+name|M_ZERO
+operator|)
+condition|)
+name|bzero
+argument_list|(
+name|va
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
