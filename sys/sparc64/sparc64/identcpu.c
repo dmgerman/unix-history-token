@@ -105,6 +105,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|cpu_impl
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|cpu_identify
@@ -174,16 +180,20 @@ literal|"Sun Microsystems"
 expr_stmt|;
 break|break;
 block|}
-switch|switch
-condition|(
+name|cpu_impl
+operator|=
 name|VER_IMPL
 argument_list|(
 name|vers
 argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|cpu_impl
 condition|)
 block|{
 case|case
-literal|0x01
+name|CPU_IMPL_SPARC64
 case|:
 name|impls
 operator|=
@@ -191,7 +201,7 @@ literal|"SPARC64"
 expr_stmt|;
 break|break;
 case|case
-literal|0x10
+name|CPU_IMPL_ULTRASPARCI
 case|:
 name|impls
 operator|=
@@ -199,7 +209,7 @@ literal|"UltraSparc-I"
 expr_stmt|;
 break|break;
 case|case
-literal|0x11
+name|CPU_IMPL_ULTRASPARCII
 case|:
 name|impls
 operator|=
@@ -207,7 +217,7 @@ literal|"UltraSparc-II"
 expr_stmt|;
 break|break;
 case|case
-literal|0x12
+name|CPU_IMPL_ULTRASPARCIIi
 case|:
 name|impls
 operator|=
@@ -215,7 +225,7 @@ literal|"UltraSparc-IIi"
 expr_stmt|;
 break|break;
 case|case
-literal|0x13
+name|CPU_IMPL_ULTRASPARCIIe
 case|:
 comment|/* V9 Manual says `UltraSparc-e'.  I assume this is wrong. */
 name|impls
