@@ -11,13 +11,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line.c	4.1 (Berkeley) 11/11/83"
+literal|"@(#)line.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_include
