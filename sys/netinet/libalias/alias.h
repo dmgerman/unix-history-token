@@ -412,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|PKT_ALIAS_PUNCH_FW
-value|0x40
+value|0x100
 end_define
 
 begin_endif
