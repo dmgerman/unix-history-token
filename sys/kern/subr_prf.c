@@ -1894,30 +1894,20 @@ name|char
 modifier|*
 name|ksprintn
 parameter_list|(
-name|nbuf
-parameter_list|,
-name|num
-parameter_list|,
-name|base
-parameter_list|,
-name|lenp
-parameter_list|)
 name|char
 modifier|*
 name|nbuf
-decl_stmt|;
+parameter_list|,
 name|uintmax_t
 name|num
-decl_stmt|;
+parameter_list|,
 name|int
 name|base
-decl_stmt|,
-decl|*
+parameter_list|,
+name|int
+modifier|*
 name|lenp
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1970,7 +1960,7 @@ name|p
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	kvprintf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * XXX:  %D  -- Hexdump, takes pointer and separator string:  *		("%6D", ptr, ":")   -> XX:XX:XX:XX:XX:XX  *		("%*D", len, ptr, " " -> XX XX XX XX ...  */
