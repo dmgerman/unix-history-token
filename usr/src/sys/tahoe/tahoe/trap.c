@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.4	86/01/09	*/
+comment|/*	trap.c	1.5	86/07/16	*/
 end_comment
 
 begin_include
@@ -715,7 +715,7 @@ comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our
 operator|(
 name|void
 operator|)
-name|spl8
+name|splclock
 argument_list|()
 expr_stmt|;
 name|setrq
@@ -1471,7 +1471,7 @@ comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our
 operator|(
 name|void
 operator|)
-name|spl8
+name|splclock
 argument_list|()
 expr_stmt|;
 name|setrq
