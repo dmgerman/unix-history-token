@@ -508,6 +508,8 @@ parameter_list|)
 block|{
 name|int
 name|base64
+decl_stmt|,
+name|i
 decl_stmt|;
 name|size_t
 name|n
@@ -1117,11 +1119,11 @@ define|#
 directive|define
 name|OUT_OF_RANGE
 value|do {						\ 	warnx("%s: %s: character out of range: [%d-%d]",		\ 	    filename, buffn, 1 + ' ', 077 + ' ' + 1);			\         return (1);							\ } while (0)
-comment|/* 		 * `n' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
+comment|/* 		 * `i' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
 if|if
 condition|(
 operator|(
-name|n
+name|i
 operator|=
 name|DEC
 argument_list|(
@@ -1138,7 +1140,7 @@ control|(
 operator|++
 name|p
 init|;
-name|n
+name|i
 operator|>
 literal|0
 condition|;
@@ -1146,13 +1148,13 @@ name|p
 operator|+=
 literal|4
 operator|,
-name|n
+name|i
 operator|-=
 literal|3
 control|)
 if|if
 condition|(
-name|n
+name|i
 operator|>=
 literal|3
 condition|)
@@ -1284,7 +1286,7 @@ else|else
 block|{
 if|if
 condition|(
-name|n
+name|i
 operator|>=
 literal|1
 condition|)
@@ -1342,7 +1344,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|n
+name|i
 operator|>=
 literal|2
 condition|)
@@ -1404,7 +1406,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|n
+name|i
 operator|>=
 literal|3
 condition|)
