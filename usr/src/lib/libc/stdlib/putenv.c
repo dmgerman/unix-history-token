@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)putenv.c	8.1 (Berkeley) %G%"
+literal|"@(#)putenv.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,6 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -74,7 +73,6 @@ name|rval
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|p
 operator|=
@@ -83,15 +81,17 @@ argument_list|(
 name|str
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
 if|if
 condition|(
-operator|!
 operator|(
 name|equal
 operator|=
@@ -102,6 +102,8 @@ argument_list|,
 literal|'='
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 operator|(
@@ -114,6 +116,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
