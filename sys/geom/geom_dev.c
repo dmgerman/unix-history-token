@@ -189,11 +189,6 @@ operator|=
 literal|"g_dev"
 block|,
 operator|.
-name|d_maj
-operator|=
-name|GEOM_MAJOR
-block|,
-operator|.
 name|d_flags
 operator|=
 name|D_DISK
@@ -214,6 +209,13 @@ begin_decl_stmt
 specifier|static
 name|g_orphan_t
 name|g_dev_orphan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|g_init_t
+name|g_dev_init
 decl_stmt|;
 end_decl_stmt
 
@@ -243,9 +245,51 @@ operator|.
 name|orphan
 operator|=
 name|g_dev_orphan
+block|,
+operator|.
+name|init
+operator|=
+name|g_dev_init
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|unrhdr
+modifier|*
+name|unithdr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Locked by topology */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|g_dev_init
+parameter_list|(
+name|struct
+name|g_class
+modifier|*
+name|mp
+parameter_list|)
+block|{
+comment|/* XXX: should have a #define MAX_UNIT_MINOR */
+name|unithdr
+operator|=
+name|new_unrhdr
+argument_list|(
+literal|0
+argument_list|,
+literal|0xffffff
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -392,12 +436,6 @@ name|g_consumer
 modifier|*
 name|cp
 decl_stmt|;
-specifier|static
-name|int
-name|unit
-init|=
-name|GEOM_MINOR_PROVIDERS
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -405,6 +443,9 @@ name|struct
 name|cdev
 modifier|*
 name|dev
+decl_stmt|;
+name|u_int
+name|unit
 decl_stmt|;
 name|g_trace
 argument_list|(
@@ -492,6 +533,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: I'm not 100% sure we can call make_dev(9) without Giant 	 * yet.  Once we can, we don't need to drop topology here either. 	 */
+name|unit
+operator|=
+name|alloc_unr
+argument_list|(
+name|unithdr
+argument_list|)
+expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
@@ -511,7 +559,6 @@ argument_list|,
 name|unit2minor
 argument_list|(
 name|unit
-operator|++
 argument_list|)
 argument_list|,
 name|UID_ROOT
@@ -1825,6 +1872,9 @@ name|cdev
 modifier|*
 name|dev
 decl_stmt|;
+name|u_int
+name|unit
+decl_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
@@ -1868,9 +1918,23 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Destroy the struct cdev *so we get no more requests */
+name|unit
+operator|=
+name|dev2unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|free_unr
+argument_list|(
+name|unithdr
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the cows to come home */

@@ -56,31 +56,6 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * We actually have a number of drivers sharing the same major number  * so we coordinate the major/minor usage here  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GEOM_MAJOR
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEOM_MINOR_STATS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEOM_MINOR_PROVIDERS
-value|10
-end_define
-
-begin_comment
 comment|/* geom_dump.c */
 end_comment
 
