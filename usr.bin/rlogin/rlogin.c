@@ -29,24 +29,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)rlogin.c	8.1 (Berkeley) 6/6/93"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static const char sccsid[] = "@(#)rlogin.c	8.1 (Berkeley) 6/6/93";
 endif|#
 directive|endif
 end_endif
@@ -55,9 +51,10 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * rlogin - remote login  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -72,6 +69,10 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * rlogin - remote login  */
+end_comment
 
 begin_include
 include|#
@@ -1418,7 +1419,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown service login/tcp"
+literal|"login/tcp: unknown service"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1529,6 +1530,15 @@ argument_list|(
 name|_PATH_RLOGIN
 argument_list|,
 name|newargv
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"can't exec %s"
+argument_list|,
+name|_PATH_RLOGIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -2039,7 +2049,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"connection closed."
+literal|"connection closed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2055,7 +2065,7 @@ argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"\007connection closed."
+literal|"\007connection closed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2088,7 +2098,7 @@ argument_list|()
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"closed connection."
+literal|"closed connection"
 argument_list|)
 expr_stmt|;
 name|done
@@ -4133,7 +4143,7 @@ argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"\007connection closed."
+literal|"\007connection closed"
 argument_list|)
 expr_stmt|;
 name|done
