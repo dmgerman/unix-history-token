@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.8 83/07/28"
+literal|"@(#)cmd2.c	1.9 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,7 +268,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":%{1-9}                 Select window {1-9}.\r\n"
+literal|":%%{1-9}                 Select window {1-9}.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
