@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)errno.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)errno.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -11,7 +11,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Operation not permitted */
+comment|/* Not owner */
 end_comment
 
 begin_define
@@ -44,7 +44,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Interrupted function call */
+comment|/* Interrupted system call */
 end_comment
 
 begin_define
@@ -55,7 +55,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Input/output error */
+comment|/* I/O error */
 end_comment
 
 begin_define
@@ -110,11 +110,22 @@ value|10
 end_define
 
 begin_comment
-comment|/* No child processes */
+comment|/* No children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EDEADLK
+value|11
+end_define
+
+begin_comment
+comment|/* Resource deadlock avoided */
 end_comment
 
 begin_comment
-comment|/* 11 - was EAGAIN */
+comment|/* 11 was EAGAIN */
 end_comment
 
 begin_define
@@ -125,7 +136,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* Not enough space */
+comment|/* Not enough memory */
 end_comment
 
 begin_define
@@ -167,11 +178,6 @@ begin_comment
 comment|/* Block device required */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -180,8 +186,13 @@ value|16
 end_define
 
 begin_comment
-comment|/* Resource busy */
+comment|/* Device busy */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -202,7 +213,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* Improper link */
+comment|/* Cross-device link */
 end_comment
 
 begin_define
@@ -257,7 +268,7 @@ value|23
 end_define
 
 begin_comment
-comment|/* Too many open files in system */
+comment|/* File table overflow */
 end_comment
 
 begin_define
@@ -279,7 +290,7 @@ value|25
 end_define
 
 begin_comment
-comment|/* Inappropriate I/O control op. */
+comment|/* Inappropriate ioctl for device */
 end_comment
 
 begin_ifndef
@@ -334,7 +345,7 @@ value|29
 end_define
 
 begin_comment
-comment|/* Invalid seek */
+comment|/* Illegal seek */
 end_comment
 
 begin_define
@@ -382,7 +393,7 @@ value|33
 end_define
 
 begin_comment
-comment|/* Domain error */
+comment|/* Argument too large */
 end_comment
 
 begin_define
@@ -403,19 +414,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EDEADLK
-value|35
-end_define
-
-begin_comment
-comment|/* Resource deadlock avoided */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EAGAIN
-value|EDEADLK
+value|35
 end_define
 
 begin_comment
@@ -432,7 +432,7 @@ begin_define
 define|#
 directive|define
 name|EWOULDBLOCK
-value|EDEADLK
+value|EAGAIN
 end_define
 
 begin_comment
@@ -757,6 +757,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -765,7 +769,7 @@ value|63
 end_define
 
 begin_comment
-comment|/* Filename too long */
+comment|/* File name too long */
 end_comment
 
 begin_comment
@@ -804,6 +808,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -944,6 +952,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
