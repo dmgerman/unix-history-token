@@ -6270,6 +6270,32 @@ operator|&
 name|MAC_MLS_FLAGS_BOTH
 condition|)
 block|{
+comment|/* 		 * If the change request modifies both the MLS label single 		 * and range, check that the new single will be in the 		 * new range. 		 */
+if|if
+condition|(
+operator|(
+name|new
+operator|->
+name|mm_flags
+operator|&
+name|MAC_MLS_FLAGS_BOTH
+operator|)
+operator|==
+name|MAC_MLS_FLAGS_BOTH
+operator|&&
+operator|!
+name|mac_mls_single_in_range
+argument_list|(
+name|new
+argument_list|,
+name|new
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 		 * To change the MLS single label on a credential, the 		 * new single label must be in the current range. 		 */
 if|if
 condition|(
@@ -6292,7 +6318,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 		 * To change the MLS range label on a credential, the 		 * new range label must be in the current range. 		 */
+comment|/* 		 * To change the MLS range label on a credential, the 		 * new range must be in the current range. 		 */
 if|if
 condition|(
 name|new
@@ -6340,7 +6366,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 		 * XXXMAC: Additional consistency tests regarding the single 		 * and range of the new label might be performed here. 		 */
 block|}
 return|return
 operator|(
