@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/poll.h>
 end_include
 
@@ -858,6 +864,11 @@ decl_stmt|,
 modifier|*
 name|wpipe
 decl_stmt|;
+name|struct
+name|mtx
+modifier|*
+name|pmtx
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -872,6 +883,23 @@ argument_list|,
 operator|(
 literal|"pipe_zone not initialized"
 operator|)
+argument_list|)
+expr_stmt|;
+name|pmtx
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pmtx
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|rpipe
@@ -903,6 +931,13 @@ expr_stmt|;
 name|pipeclose
 argument_list|(
 name|wpipe
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pmtx
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
@@ -949,6 +984,13 @@ expr_stmt|;
 name|pipeclose
 argument_list|(
 name|wpipe
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pmtx
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
@@ -1098,6 +1140,13 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|pmtx
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1165,6 +1214,15 @@ name|pipe_peer
 operator|=
 name|rpipe
 expr_stmt|;
+name|mtx_init
+argument_list|(
+name|pmtx
+argument_list|,
+literal|"pipe mutex"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|rpipe
 operator|->
 name|pipe_mtxp
@@ -1173,8 +1231,7 @@ name|wpipe
 operator|->
 name|pipe_mtxp
 operator|=
-name|mtx_pool_alloc
-argument_list|()
+name|pmtx
 expr_stmt|;
 name|fdrop
 argument_list|(
@@ -5614,11 +5671,30 @@ name|pipe
 modifier|*
 name|ppipe
 decl_stmt|;
+name|int
+name|hadpeer
+decl_stmt|;
 if|if
 condition|(
 name|cpipe
+operator|==
+name|NULL
 condition|)
-block|{
+return|return;
+name|hadpeer
+operator|=
+literal|0
+expr_stmt|;
+comment|/* partially created pipes won't have a valid mutex. */
+if|if
+condition|(
+name|PIPE_MTX
+argument_list|(
+name|cpipe
+argument_list|)
+operator|!=
+name|NULL
+condition|)
 name|PIPE_LOCK
 argument_list|(
 name|cpipe
@@ -5629,7 +5705,7 @@ argument_list|(
 name|cpipe
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the other side is blocked, wake it up saying that 		 * we want to close it down. 		 */
+comment|/* 	 * If the other side is blocked, wake it up saying that 	 * we want to close it down. 	 */
 while|while
 condition|(
 name|cpipe
@@ -5667,7 +5743,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Disconnect from peer 		 */
+comment|/* 	 * Disconnect from peer 	 */
 if|if
 condition|(
 operator|(
@@ -5681,6 +5757,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|hadpeer
+operator|++
+expr_stmt|;
 name|pipeselwakeup
 argument_list|(
 name|ppipe
@@ -5716,12 +5795,48 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		 * free resources 		 */
+comment|/* 	 * free resources 	 */
+if|if
+condition|(
+name|PIPE_MTX
+argument_list|(
+name|cpipe
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|PIPE_UNLOCK
 argument_list|(
 name|cpipe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hadpeer
+condition|)
+block|{
+name|mtx_destroy
+argument_list|(
+name|PIPE_MTX
+argument_list|(
+name|cpipe
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|PIPE_MTX
+argument_list|(
+name|cpipe
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5746,7 +5861,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
