@@ -1280,6 +1280,24 @@ decl_stmt|;
 if|if
 condition|(
 operator|*
+name|w
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* Zero-length word cannot be matched against */
+operator|*
+name|len
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+operator|*
 name|p
 operator|==
 literal|'\0'
