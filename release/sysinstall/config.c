@@ -2959,7 +2959,7 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-literal|"afterstep"
+literal|"sawfish"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2973,12 +2973,12 @@ name|DITEM_FAILURE
 operator|&&
 name|gotit
 argument_list|(
-literal|"afterstep"
+literal|"sawfish"
 argument_list|)
 condition|)
 name|write_root_xprofile
 argument_list|(
-literal|"gnome-session&\nexec afterstep"
+literal|"gnome-session&\nexec sawfish"
 argument_list|)
 expr_stmt|;
 block|}

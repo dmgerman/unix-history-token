@@ -5436,9 +5436,9 @@ literal|"=kde"
 block|}
 block|,
 block|{
-literal|"3 GNOME + Afterstep"
+literal|"3 GNOME + Sawfish"
 block|,
-literal|"GNOME + Afterstep window manager."
+literal|"GNOME + Sawfish window manager."
 block|,
 name|NULL
 block|,
