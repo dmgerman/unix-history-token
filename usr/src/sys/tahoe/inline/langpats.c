@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	1.5 (Berkeley) %G%"
+literal|"@(#)langpats.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,7 +110,7 @@ literal|0
 block|,
 literal|"_splsoftclock\n"
 block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x8,$8\n"
+literal|"	mfpr	$8,r0\n\ 	mtpr	$0x8,$8\n"
 block|}
 block|,
 block|{
