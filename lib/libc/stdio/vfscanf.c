@@ -386,7 +386,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|va_list
+name|_VA_LIST_
 name|ap
 decl_stmt|;
 end_decl_stmt

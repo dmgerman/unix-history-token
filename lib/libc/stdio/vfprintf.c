@@ -932,7 +932,7 @@ specifier|register
 comment|/* technically illegal, since we do not know what type va_list is */
 endif|#
 directive|endif
-name|va_list
+name|_VA_LIST_
 name|ap
 decl_stmt|;
 block|{
