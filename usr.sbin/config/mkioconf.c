@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkioconf.c,v 1.31 1997/09/15 06:37:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 

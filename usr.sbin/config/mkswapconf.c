@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkswapconf.c,v 1.13 1997/09/15 06:37:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
