@@ -995,7 +995,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_freeze_loopdown
 parameter_list|(
@@ -2409,7 +2409,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|is_lun_enabled
 parameter_list|(
@@ -2426,7 +2426,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|are_any_luns_enabled
 parameter_list|(
@@ -2441,7 +2441,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|tstate_t
 modifier|*
 name|get_lun_statep
@@ -2459,7 +2459,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|rls_lun_statep
 parameter_list|(
@@ -2475,7 +2475,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_psema_sig_rqe
 parameter_list|(
@@ -2490,7 +2490,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|isp_cv_wait_timed_rqe
 parameter_list|(
@@ -2507,7 +2507,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_cv_signal_rqe
 parameter_list|(
@@ -2524,7 +2524,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|isp_vsema_rqe
 parameter_list|(
@@ -2539,7 +2539,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
+name|INLINE
 name|atio_private_data_t
 modifier|*
 name|isp_get_atpd
@@ -2746,7 +2746,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|is_lun_enabled
 parameter_list|(
@@ -2847,7 +2847,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|int
 name|are_any_luns_enabled
 parameter_list|(
@@ -2950,7 +2950,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|tstate_t
 modifier|*
 name|get_lun_statep
@@ -3734,7 +3734,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+name|INLINE
 name|void
 name|destroy_lun_state
 parameter_list|(
@@ -9390,16 +9390,23 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-name|ISP_LOCK
-argument_list|(
-name|isp
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+name|tgt
+operator|>=
+literal|0
+condition|)
+block|{
 name|sdp
 operator|+=
 name|cam_sim_bus
 argument_list|(
 name|sim
+argument_list|)
+expr_stmt|;
+name|ISP_LOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 name|nflags
@@ -9516,6 +9523,7 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 default|default:
