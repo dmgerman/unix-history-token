@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.40 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6579,7 +6579,7 @@ case|case
 name|O_DEFCHARSET
 case|:
 comment|/* default character set for mimefying */
-name|DefCharSet
+name|DefaultCharSet
 operator|=
 name|newstr
 argument_list|(
