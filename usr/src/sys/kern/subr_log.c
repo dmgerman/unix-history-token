@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_log.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_log.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -73,8 +73,7 @@ name|sc_state
 decl_stmt|;
 comment|/* see above for possibilities */
 name|struct
-name|proc
-modifier|*
+name|selinfo
 name|sc_selp
 decl_stmt|;
 comment|/* process waiting on select call */
@@ -277,12 +276,6 @@ expr_stmt|;
 name|logsoftc
 operator|.
 name|sc_state
-operator|=
-literal|0
-expr_stmt|;
-name|logsoftc
-operator|.
-name|sc_selp
 operator|=
 literal|0
 expr_stmt|;
@@ -621,11 +614,15 @@ literal|1
 operator|)
 return|;
 block|}
+name|selrecord
+argument_list|(
+name|p
+argument_list|,
+operator|&
 name|logsoftc
 operator|.
 name|sc_selp
-operator|=
-name|p
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -660,29 +657,14 @@ operator|!
 name|log_open
 condition|)
 return|return;
-if|if
-condition|(
-name|logsoftc
-operator|.
-name|sc_selp
-condition|)
-block|{
 name|selwakeup
 argument_list|(
+operator|&
 name|logsoftc
 operator|.
 name|sc_selp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|logsoftc
-operator|.
-name|sc_selp
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|logsoftc
