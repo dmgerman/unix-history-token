@@ -13,14 +13,6 @@ directive|include
 file|"le.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NLE
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -9753,15 +9745,6 @@ end_endif
 
 begin_comment
 comment|/* !defined(LE_NOLANCE) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NLE> 0 */
 end_comment
 
 end_unit

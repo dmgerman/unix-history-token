@@ -14,14 +14,6 @@ if|#
 directive|if
 name|NSPIGOT
 operator|>
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
-name|NSPIGOT
-operator|>
 literal|1
 end_if
 
@@ -1017,15 +1009,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSPIGOT */
-end_comment
 
 end_unit
 
