@@ -2138,8 +2138,10 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|sis_tag
 decl_stmt|;
-name|int
-name|sis_rx_prod
+name|struct
+name|sis_desc
+modifier|*
+name|sis_rx_pdsc
 decl_stmt|;
 name|int
 name|sis_tx_prod
