@@ -106,6 +106,23 @@ directive|include
 file|<pw_util.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pw_yp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -634,6 +651,22 @@ argument_list|,
 name|uname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|YP
+comment|/* Use the right password information. */
+name|pw
+operator|=
+operator|(
+expr|struct
+name|passwd
+operator|*
+operator|)
+operator|&
+name|local_password
+expr_stmt|;
+endif|#
+directive|endif
 name|uid
 operator|=
 name|getuid
