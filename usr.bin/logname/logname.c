@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -116,6 +118,7 @@ name|char
 modifier|*
 name|argv
 index|[]
+name|__unused
 decl_stmt|;
 block|{
 name|char
