@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.60	83/01/01	*/
+comment|/*	hp.c	4.61	83/01/01	*/
 end_comment
 
 begin_ifdef
@@ -298,9 +298,6 @@ literal|8
 index|]
 init|=
 block|{
-ifndef|#
-directive|ifndef
-name|CAD
 literal|15884
 block|,
 literal|0
@@ -356,65 +353,6 @@ block|,
 literal|82
 block|,
 comment|/* H=cyl 82 thru 561 */
-else|#
-directive|else
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=cyl 0 thru 26 */
-literal|33440
-block|,
-literal|27
-block|,
-comment|/* B=cyl 27 thru 81 */
-literal|495520
-block|,
-literal|0
-block|,
-comment|/* C=cyl 0 thru 814 */
-literal|15884
-block|,
-literal|562
-block|,
-comment|/* D=cyl 562 thru 588 */
-literal|55936
-block|,
-literal|589
-block|,
-comment|/* E=cyl 589 thru 680 */
-ifndef|#
-directive|ifndef
-name|NOBADSECT
-literal|81376
-block|,
-literal|681
-block|,
-comment|/* F=cyl 681 thru 814 */
-literal|153728
-block|,
-literal|562
-block|,
-comment|/* G=cyl 562 thru 814 */
-else|#
-directive|else
-literal|81472
-block|,
-literal|681
-block|,
-literal|153824
-block|,
-literal|562
-block|,
-endif|#
-directive|endif
-literal|291346
-block|,
-literal|82
-block|,
-comment|/* H=cyl 82 thru 561 */
-endif|#
-directive|endif
 block|}
 struct|,
 name|rm80_sizes
@@ -1390,9 +1328,6 @@ operator|=
 name|HPDT_9730
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|CAD
 comment|/* 		 * AMPEX 9300, SI Combination needs a have the drive cleared 		 * before we start.  We do not know why, but tests show 		 * that the recalibrate fixes the problem. 		 */
 case|case
 name|SI9766
@@ -1445,8 +1380,6 @@ operator|=
 name|HPDT_RM03
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 block|}
 break|break;
 block|}
