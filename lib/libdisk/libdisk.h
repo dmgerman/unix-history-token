@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.2 1995/04/29 01:55:23 phk Exp $  *  */
 end_comment
 
 begin_typedef
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_N
-value|static char *chunk_n[] = { \ 	"whole","foo","fat","freebsd","extended","part","unused","reserved"};
+value|static char *chunk_n[] = { \ 	"whole","foo","fat","freebsd","extended","part","unused","reserved",0};
 end_define
 
 begin_struct
@@ -356,6 +356,22 @@ end_function_decl
 
 begin_comment
 comment|/* Create a chunk with the specified paramters 	 */
+end_comment
+
+begin_function_decl
+name|void
+name|All_FreeBSD
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Make one FreeBSD chunk covering the entire disk 	 */
 end_comment
 
 begin_function_decl
