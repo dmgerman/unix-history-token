@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer1.c	4.1 (Berkeley) %G%"
+literal|"@(#)refer1.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,9 +551,6 @@ name|err
 argument_list|(
 literal|"Can't read %s"
 argument_list|,
-operator|(
-name|void
-operator|)
 name|Ifile
 argument_list|)
 expr_stmt|;

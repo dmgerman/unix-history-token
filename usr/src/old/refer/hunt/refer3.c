@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer3.c	4.1 (Berkeley) %G%"
+literal|"@(#)refer3.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,9 +172,6 @@ name|err
 argument_list|(
 literal|"Can't run %s"
 argument_list|,
-operator|(
-name|void
-operator|)
 name|rprog
 argument_list|)
 expr_stmt|;

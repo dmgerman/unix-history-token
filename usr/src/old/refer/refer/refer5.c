@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.4 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -847,9 +847,6 @@ name|err
 argument_list|(
 literal|"Can't get scratch file %s"
 argument_list|,
-operator|(
-name|void
-operator|)
 name|hidenam
 argument_list|)
 expr_stmt|;
