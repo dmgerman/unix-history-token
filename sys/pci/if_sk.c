@@ -209,6 +209,22 @@ directive|include
 file|<pci/xmaciireg.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|sk
+argument_list|,
+name|miibus
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* "controller miibus0" required.  See GENERIC if you get errors here. */
 end_comment
