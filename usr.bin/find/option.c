@@ -9,13 +9,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)option.c	8.2 (Berkeley) 4/16/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)option.c	8.2 (Berkeley) 4/16/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,16 +149,6 @@ name|O_NONE
 block|}
 block|,
 block|{
-literal|"-and"
-block|,
-name|N_AND
-block|,
-name|NULL
-block|,
-name|O_NONE
-block|}
-block|,
-block|{
 literal|"-amin"
 block|,
 name|N_AMIN
@@ -161,6 +156,16 @@ block|,
 name|c_amin
 block|,
 name|O_ARGV
+block|}
+block|,
+block|{
+literal|"-and"
+block|,
+name|N_AND
+block|,
+name|NULL
+block|,
+name|O_NONE
 block|}
 block|,
 block|{
