@@ -4903,7 +4903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For setuid/setgid programs we don't want to people to use that setuidness  * to generate error messages which write to a file which otherwise would  * otherwise be off limits to the proces.  *  * This is a gross hack to plug the hole.  A better solution would involve  * a special vop or other form of generalized access control mechanism.  We  * go ahead and just reject all procfs file systems accesses as dangerous.  *  * Since setugidsafety calls this only for fd 0, 1 and 2, this check is  * sufficient.  We also don't for setugidness since we know we are.  */
+comment|/*  * For setugid programs, we don't want to people to use that setugidness  * to generate error messages which write to a file which otherwise would  * otherwise be off-limits to the process.  *  * This is a gross hack to plug the hole.  A better solution would involve  * a special vop or other form of generalized access control mechanism.  We  * go ahead and just reject all procfs file systems accesses as dangerous.  *  * Since setugidsafety calls this only for fd 0, 1 and 2, this check is  * sufficient.  We also don't for check setugidness since we know we are.  */
 end_comment
 
 begin_function
@@ -5022,6 +5022,10 @@ literal|0
 init|;
 name|i
 operator|<=
+literal|2
+operator|&&
+name|i
+operator|<=
 name|fdp
 operator|->
 name|fd_lastfile
@@ -5038,13 +5042,6 @@ control|)
 block|{
 if|if
 condition|(
-name|i
-operator|>
-literal|2
-condition|)
-break|break;
-if|if
-condition|(
 operator|*
 name|fpp
 operator|!=
@@ -5059,10 +5056,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|fdfp
 operator|&
 name|UF_MAPPED
+operator|)
+operator|!=
+literal|0
 condition|)
 operator|(
 name|void
@@ -5093,7 +5094,7 @@ expr_stmt|;
 operator|*
 name|fdfp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
