@@ -123,6 +123,10 @@ name|file
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|DECL_MAIN_VARIANT
 argument_list|(
 name|node
@@ -151,6 +155,10 @@ name|file
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|DECL_PENDING_INLINE_INFO
 argument_list|(
 name|node
@@ -179,6 +187,10 @@ name|file
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|DECL_TEMPLATE_INFO
 argument_list|(
 name|node

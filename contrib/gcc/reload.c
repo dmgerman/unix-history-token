@@ -26615,11 +26615,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|", can combine"
-argument_list|,
-name|reload_nocombine
-index|[
-name|r
-index|]
 argument_list|)
 expr_stmt|;
 if|if

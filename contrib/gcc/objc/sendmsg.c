@@ -2170,12 +2170,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"arrays: %d = %ld bytes\n"
+literal|"arrays: %d = %lu bytes\n"
 argument_list|,
 name|narrays
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|narrays
 operator|*
@@ -2198,12 +2199,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"buckets: %d = %ld bytes\n"
+literal|"buckets: %d = %lu bytes\n"
 argument_list|,
 name|nbuckets
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|nbuckets
 operator|*
@@ -2226,12 +2228,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"idxtables: %d = %ld bytes\n"
+literal|"idxtables: %d = %lu bytes\n"
 argument_list|,
 name|idxsize
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|idxsize
 operator|*

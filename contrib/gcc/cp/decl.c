@@ -4659,6 +4659,10 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lvl
 operator|->
 name|blocks
@@ -5318,6 +5322,10 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|level
 argument_list|)
 expr_stmt|;
@@ -5360,6 +5368,10 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|current_binding_level
 argument_list|)
 expr_stmt|;
@@ -5376,6 +5388,10 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|class_binding_level
 argument_list|)
 expr_stmt|;
@@ -5392,6 +5408,10 @@ name|stderr
 argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|global_binding_level
 argument_list|)
 expr_stmt|;

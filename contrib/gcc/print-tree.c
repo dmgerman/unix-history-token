@@ -277,7 +277,8 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|HOST_WIDE_INT
+name|void
+operator|*
 operator|)
 name|node
 argument_list|)
@@ -1081,7 +1082,8 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|HOST_WIDE_INT
+name|void
+operator|*
 operator|)
 name|node
 argument_list|)
@@ -2418,7 +2420,8 @@ argument_list|,
 name|HOST_PTR_PRINTF
 argument_list|,
 operator|(
-name|HOST_WIDE_INT
+name|void
+operator|*
 operator|)
 name|DECL_SAVED_INSNS
 argument_list|(

@@ -7,19 +7,11 @@ begin_comment
 comment|/* This file defines machine-independent things specific to a host    running FreeBSD.  This file should not be specified as $xm_file itself;    instead $xm_file should be CPU/xm-freebsd.h, which should include both    CPU/xm-CPU.h and this file xm-freebsd.h.  */
 end_comment
 
-begin_comment
-comment|/* FreeBSD has putenv.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HAVE_PUTENV
 end_define
-
-begin_comment
-comment|/* FreeBSD has strerror.  */
-end_comment
 
 begin_define
 define|#
@@ -35,6 +27,13 @@ begin_define
 define|#
 directive|define
 name|DONT_DECLARE_SYS_SIGLIST
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_PTR_PRINTF
+value|"%p"
 end_define
 
 end_unit
