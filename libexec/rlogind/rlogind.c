@@ -2939,6 +2939,14 @@ modifier|*
 name|dest
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|NO_PAM
+name|int
+name|retval
+decl_stmt|;
+endif|#
+directive|endif
 name|getstr
 argument_list|(
 name|rusername
