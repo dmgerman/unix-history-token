@@ -890,6 +890,10 @@ value|(0x7ff<< 16)
 name|ohci_physaddr_t
 name|ed_tailp
 decl_stmt|;
+define|#
+directive|define
+name|OHCI_TAILMASK
+value|0xfffffffc
 name|ohci_physaddr_t
 name|ed_headp
 decl_stmt|;
