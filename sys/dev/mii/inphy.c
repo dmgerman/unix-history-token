@@ -556,7 +556,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|""
+literal|" "
 argument_list|)
 expr_stmt|;
 if|if
@@ -803,23 +803,14 @@ block|{
 case|case
 name|IFM_AUTO
 case|:
-comment|/* 			 * If we're already in auto mode, just return. 			 */
-if|if
-condition|(
-name|PHY_READ
-argument_list|(
-name|sc
-argument_list|,
-name|MII_BMCR
-argument_list|)
-operator|&
-name|BMCR_AUTOEN
-condition|)
-return|return
-operator|(
+if|#
+directive|if
 literal|0
-operator|)
-return|;
+comment|/* 			 * XXX 			 * we need to differentiate between 'auto media' 			 * and "NWAY autonegotiate enabled".  For now, 			 * just re-start full autodetect again. 			 */
+comment|/* 			 * If we're already in auto mode, just return. 			 */
+block|if (PHY_READ(sc, MII_BMCR)& BMCR_AUTOEN) 				return (0);
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -865,6 +856,20 @@ argument_list|,
 name|ife
 operator|->
 name|ifm_data
+operator||
+operator|(
+name|sc
+operator|->
+name|mii_capabilities
+operator|&
+name|BMSR_ANEG
+condition|?
+name|BMCR_AUTOEN
+operator||
+name|BMCR_STARTNEG
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
