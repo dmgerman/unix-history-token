@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: server.c,v 1.8 1997/11/09 14:18:51 brian Exp $  */
+comment|/*  * $Id: server.c,v 1.9 1997/11/09 22:07:29 brian Exp $  */
 end_comment
 
 begin_include
@@ -193,18 +193,9 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
 name|mode
 operator|&
-operator|(
-name|MODE_AUTO
-operator||
-name|MODE_DEDICATED
-operator||
-name|MODE_DIRECT
-operator|)
-operator|)
+name|MODE_INTER
 condition|)
 block|{
 name|LogPrintf
@@ -528,18 +519,9 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-operator|(
 name|mode
 operator|&
-operator|(
-name|MODE_AUTO
-operator||
-name|MODE_DEDICATED
-operator||
-name|MODE_DIRECT
-operator|)
-operator|)
+name|MODE_INTER
 condition|)
 block|{
 name|LogPrintf
