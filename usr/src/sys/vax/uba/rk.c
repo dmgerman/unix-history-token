@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.23	%G%	*/
+comment|/*	rk.c	4.24	%G%	*/
 end_comment
 
 begin_decl_stmt
@@ -100,7 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubavar.h"
 end_include
 
 begin_include
@@ -234,7 +240,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|rkminfo
 index|[
@@ -245,7 +251,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|rkdinfo
 index|[
@@ -256,7 +262,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|rkip
 index|[
@@ -549,7 +555,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -660,7 +666,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -770,7 +776,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1020,7 +1026,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -1039,7 +1045,7 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
@@ -1446,7 +1452,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -1465,7 +1471,7 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1896,7 +1902,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -1967,7 +1973,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 init|=
@@ -1978,7 +1984,7 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -2640,6 +2646,22 @@ name|as
 operator|&
 literal|1
 condition|)
+block|{
+name|ui
+operator|=
+name|rkip
+index|[
+name|rk11
+index|]
+index|[
+name|unit
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|ui
+condition|)
+block|{
 if|if
 condition|(
 name|rkustart
@@ -2657,6 +2679,40 @@ name|needie
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+name|rkaddr
+operator|->
+name|rkcs1
+operator|=
+name|RK_CERR
+operator||
+name|RK_CDT
+expr_stmt|;
+name|rkaddr
+operator|->
+name|rkcs2
+operator|=
+name|unit
+expr_stmt|;
+name|rkaddr
+operator|->
+name|rkcs1
+operator|=
+name|RK_CDT
+operator||
+name|RK_DCLR
+operator||
+name|RK_GO
+expr_stmt|;
+name|rkwait
+argument_list|(
+name|rkaddr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|um
@@ -2855,7 +2911,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -2895,7 +2951,7 @@ name|b_actf
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 init|=
@@ -3368,13 +3424,13 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3567,7 +3623,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
@@ -3781,7 +3837,7 @@ name|uba
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3829,7 +3885,7 @@ operator|=
 name|phys
 argument_list|(
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 argument_list|,
 name|rkdinfo
@@ -4090,7 +4146,7 @@ operator|<<
 literal|21
 operator|)
 operator||
-name|UBA_MRV
+name|UBAMR_MRV
 expr_stmt|;
 operator|*
 operator|(

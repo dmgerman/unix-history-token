@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.7	81/03/07	*/
+comment|/*	ht.c	4.8	81/03/07	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"ht.h"
+file|"tu.h"
 end_include
 
 begin_if
@@ -78,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mba.h"
+file|"../h/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mbavar.h"
 end_include
 
 begin_include
@@ -150,7 +156,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|htinfo
 index|[
@@ -162,6 +168,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|htdkinit
+argument_list|()
+decl_stmt|,
+name|htattach
+argument_list|()
+decl_stmt|,
+name|htslave
 argument_list|()
 decl_stmt|,
 name|htustart
@@ -181,7 +193,9 @@ name|mba_driver
 name|htdriver
 init|=
 block|{
-name|htdkinit
+name|htattach
+block|,
+name|htslave
 block|,
 name|htustart
 block|,
@@ -192,6 +206,10 @@ block|,
 name|htndtint
 block|,
 name|httypes
+block|,
+literal|"ht"
+block|,
+literal|"tu"
 block|,
 name|htinfo
 block|}
@@ -215,7 +233,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HTUNIT
+name|TUUNIT
 parameter_list|(
 name|dev
 parameter_list|)
@@ -234,6 +252,16 @@ define|#
 directive|define
 name|H_1600BPI
 value|08
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTUNIT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(htunit[TUUNIT(dev)])
 end_define
 
 begin_define
@@ -275,13 +303,30 @@ decl_stmt|;
 name|short
 name|sc_dens
 decl_stmt|;
+name|struct
+name|mba_device
+modifier|*
+name|sc_mi
+decl_stmt|;
+name|int
+name|sc_slave
+decl_stmt|;
 block|}
 name|ht_softc
 index|[
-name|NHT
+name|NTU
 index|]
 struct|;
 end_struct
+
+begin_decl_stmt
+name|short
+name|htunit
+index|[
+name|NTU
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Bits for sc_flags.  */
@@ -325,7 +370,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|htdkinit
+name|htattach
 argument_list|(
 argument|mi
 argument_list|)
@@ -333,7 +378,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -341,6 +386,75 @@ end_decl_stmt
 
 begin_block
 block|{  }
+end_block
+
+begin_macro
+name|htslave
+argument_list|(
+argument|mi
+argument_list|,
+argument|ms
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|mba_device
+modifier|*
+name|mi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mba_slave
+modifier|*
+name|ms
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|ht_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|ht_softc
+index|[
+name|ms
+operator|->
+name|ms_unit
+index|]
+decl_stmt|;
+name|sc
+operator|->
+name|sc_mi
+operator|=
+name|mi
+expr_stmt|;
+name|sc
+operator|->
+name|sc_slave
+operator|=
+name|ms
+operator|->
+name|ms_slave
+expr_stmt|;
+name|htunit
+index|[
+name|ms
+operator|->
+name|ms_unit
+index|]
+operator|=
+name|mi
+operator|->
+name|mi_unit
+expr_stmt|;
+block|}
 end_block
 
 begin_macro
@@ -372,7 +486,7 @@ name|unit
 decl_stmt|;
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -384,7 +498,7 @@ name|sc
 decl_stmt|;
 name|unit
 operator|=
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -393,7 +507,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NHT
+name|NTU
 operator|||
 operator|(
 name|sc
@@ -412,7 +526,10 @@ name|mi
 operator|=
 name|htinfo
 index|[
-name|unit
+name|HTUNIT
+argument_list|(
+name|dev
+argument_list|)
 index|]
 operator|)
 operator|==
@@ -503,9 +620,9 @@ operator|)
 operator||
 name|HTTC_PDP11
 operator||
-name|mi
+name|sc
 operator|->
-name|mi_slave
+name|sc_slave
 expr_stmt|;
 name|sc
 operator|->
@@ -567,7 +684,7 @@ init|=
 operator|&
 name|ht_softc
 index|[
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|dev
 argument_list|)
@@ -719,6 +836,29 @@ operator|&
 name|B_BUSY
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_command
+operator|==
+name|H_REWIND
+operator|&&
+name|bp
+operator|->
+name|b_repcnt
+operator|==
+literal|0
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DONE
+operator|)
+condition|)
+break|break;
 name|bp
 operator|->
 name|b_flags
@@ -844,7 +984,7 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 init|=
@@ -936,7 +1076,7 @@ name|mi
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -974,7 +1114,7 @@ decl_stmt|;
 name|int
 name|unit
 init|=
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1460,7 +1600,7 @@ name|mbasr
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -1519,7 +1659,7 @@ operator|=
 operator|&
 name|ht_softc
 index|[
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1730,9 +1870,9 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ht%d: hard error bn%d mbasr=%b er=%b\n"
+literal|"tu%d: hard error bn%d mbasr=%b er=%b\n"
 argument_list|,
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1869,7 +2009,7 @@ name|mi
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -1917,12 +2057,23 @@ name|ds
 decl_stmt|,
 name|fc
 decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|MBN_SKIP
+operator|)
+return|;
 name|sc
 operator|=
 operator|&
 name|ht_softc
 index|[
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -1992,12 +2143,34 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|H_REWIND
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|H_REWIND
+expr_stmt|;
+return|return
+operator|(
+name|MBN_CONT
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|bp
 operator|==
 operator|&
 name|chtbuf
 index|[
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -2108,9 +2281,9 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ht%d: hard error bn%d er=%b ds=%b\n"
+literal|"tu%d: hard error bn%d er=%b ds=%b\n"
 argument_list|,
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -2153,7 +2326,7 @@ operator|==
 operator|&
 name|chtbuf
 index|[
-name|HTUNIT
+name|TUUNIT
 argument_list|(
 name|bp
 operator|->
@@ -2880,7 +3053,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -2945,7 +3118,7 @@ literal|0
 index|]
 argument_list|,
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 argument_list|)
 expr_stmt|;

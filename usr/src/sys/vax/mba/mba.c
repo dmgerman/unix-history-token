@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.15	81/03/06	*/
+comment|/*	mba.c	4.16	81/03/07	*/
 end_comment
 
 begin_include
@@ -84,7 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mba.h"
+file|"../h/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mbavar.h"
 end_include
 
 begin_include
@@ -109,7 +115,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Start activity on a massbus device.  * We are given the device's mba_info structure and activate  * the device via the unit start routine.  The unit start  * routine may indicate that it is finished (e.g. if the operation  * was a ``sense'' on a tape drive), that the (multi-ported) unit  * is busy (we will get an interrupt later), that it started the  * unit (e.g. for a non-data transfer operation), or that it has  * set up a data transfer operation and we should start the massbus adaptor.  */
+comment|/*  * Start activity on a massbus device.  * We are given the device's mba_device structure and activate  * the device via the unit start routine.  The unit start  * routine may indicate that it is finished (e.g. if the operation  * was a ``sense'' on a tape drive), that the (multi-ported) unit  * is busy (we will get an interrupt later), that it started the  * unit (e.g. for a non-data transfer operation), or that it has  * set up a data transfer operation and we should start the massbus adaptor.  */
 end_comment
 
 begin_expr_stmt
@@ -119,7 +125,7 @@ name|mi
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;
@@ -217,7 +223,7 @@ case|case
 name|MBU_DODATA
 case|:
 comment|/* all ready to do data transfer */
-comment|/* 		 * Queue the device mba_info structure on the massbus 		 * mba_hd structure for processing as soon as the 		 * data path is available. 		 */
+comment|/* 		 * Queue the device mba_device structure on the massbus 		 * mba_hd structure for processing as soon as the 		 * data path is available. 		 */
 name|mhp
 operator|=
 name|mi
@@ -357,7 +363,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -443,11 +449,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%c%d: not ready\n"
+literal|"%s%d: not ready\n"
 argument_list|,
 name|mi
 operator|->
-name|mi_name
+name|mi_driver
+operator|->
+name|md_dname
 argument_list|,
 name|dkunit
 argument_list|(
@@ -663,7 +671,7 @@ name|mh_mba
 decl_stmt|;
 specifier|register
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi
 decl_stmt|;
@@ -922,7 +930,6 @@ operator|<<
 name|drive
 operator|)
 expr_stmt|;
-comment|/* 		 * driver has a handler for non-data transfer 		 * interrupts, give it a chance to tell us that 		 * the operation needs to be redone 		 */
 name|mi
 operator|=
 name|mhp
@@ -939,6 +946,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+comment|/* 		 * If driver has a handler for non-data transfer 		 * interrupts, give it a chance to tell us that 		 * the operation needs to be redone 		 */
 if|if
 condition|(
 name|mi
@@ -983,6 +991,14 @@ name|b_errcnt
 operator|=
 literal|0
 expr_stmt|;
+name|bp
+operator|=
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_actf
+expr_stmt|;
 name|mi
 operator|->
 name|mi_tab
@@ -1014,6 +1030,24 @@ name|mbustart
 argument_list|(
 name|mi
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MBN_SKIP
+case|:
+comment|/* 				 * Ignore (unsolicited interrupt, e.g.) 				 */
+break|break;
+case|case
+name|MBN_CONT
+case|:
+comment|/* 				 * Continue with unit active, e.g. 				 * between first and second rewind 				 * interrupts. 				 */
+name|mi
+operator|->
+name|mi_tab
+operator|.
+name|b_active
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1068,7 +1102,7 @@ name|mi
 argument_list|)
 specifier|register
 expr|struct
-name|mba_info
+name|mba_device
 operator|*
 name|mi
 expr_stmt|;

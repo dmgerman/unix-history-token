@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.22	%G%	*/
+comment|/*	tm.c	4.23	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubavar.h"
 end_include
 
 begin_include
@@ -172,7 +178,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|tmminfo
 index|[
@@ -183,7 +189,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|tmdinfo
 index|[
@@ -210,7 +216,7 @@ end_ifdef
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|tmip
 index|[
@@ -524,7 +530,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -563,7 +569,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -626,7 +632,7 @@ name|unit
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1074,7 +1080,7 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
@@ -1237,7 +1243,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -1277,7 +1283,7 @@ name|sc
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1936,7 +1942,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -2026,7 +2032,7 @@ name|bp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 init|=
@@ -2787,6 +2793,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+return|return;
 name|physio
 argument_list|(
 name|tmstrategy
@@ -2830,6 +2843,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+condition|)
+return|return;
 name|physio
 argument_list|(
 name|tmstrategy
@@ -2869,6 +2889,15 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
+name|unit
+init|=
+name|TMUNIT
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+specifier|register
 name|daddr_t
 name|a
 decl_stmt|;
@@ -2877,7 +2906,24 @@ name|struct
 name|tm_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|NTM
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
+name|sc
+operator|=
 operator|&
 name|tm_softc
 index|[
@@ -2886,7 +2932,7 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
-decl_stmt|;
+expr_stmt|;
 name|a
 operator|=
 name|dbtofsb
@@ -2932,7 +2978,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
@@ -2943,7 +2989,7 @@ name|unit
 expr_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3575,7 +3621,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3640,7 +3686,7 @@ literal|0
 index|]
 argument_list|,
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 argument_list|)
 expr_stmt|;
@@ -3876,10 +3922,10 @@ operator||
 operator|(
 literal|1
 operator|<<
-name|UBA_DPSHIFT
+name|UBAMR_DPSHIFT
 operator|)
 operator||
-name|UBA_MRV
+name|UBAMR_MRV
 operator|)
 expr_stmt|;
 operator|*

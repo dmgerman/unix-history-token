@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.29	81/03/06	*/
+comment|/*	up.c	4.30	81/03/07	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * TODO:  *	Check out handling of spun-down drives and write lock  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check multiple drive handling  *	Check dump code  *	Check unibus reset code  */
+comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * TODO:  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check multiple drive handling  *	Check unibus reset code  *	Check that offset recovery code, etc works  */
 end_comment
 
 begin_define
@@ -112,7 +112,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/uba.h"
+file|"../h/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ubareg.h"
 end_include
 
 begin_include
@@ -323,7 +329,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|upminfo
 index|[
@@ -334,7 +340,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|updinfo
 index|[
@@ -345,7 +351,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|upip
 index|[
@@ -665,7 +671,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -745,7 +751,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -900,7 +906,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -1154,7 +1160,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -1173,13 +1179,9 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
-init|=
-name|ui
-operator|->
-name|ui_mi
 decl_stmt|;
 specifier|register
 name|struct
@@ -1218,6 +1220,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|um
+operator|=
+name|ui
+operator|->
+name|ui_mi
+expr_stmt|;
 name|dk_busy
 operator|&=
 operator|~
@@ -1672,7 +1680,7 @@ name|um
 argument_list|)
 specifier|register
 expr|struct
-name|uba_minfo
+name|uba_ctlr
 operator|*
 name|um
 expr_stmt|;
@@ -1691,7 +1699,7 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -2140,7 +2148,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
@@ -2221,7 +2229,7 @@ name|dp
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 init|=
@@ -2232,7 +2240,7 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -2331,7 +2339,7 @@ goto|goto
 name|doattn
 goto|;
 block|}
-comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_dinfo for the drive.  Select the drive. 	 */
+comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_device for the drive.  Select the drive. 	 */
 name|dp
 operator|=
 name|um
@@ -3015,7 +3023,7 @@ name|ui
 argument_list|)
 specifier|register
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 name|ui
 expr_stmt|;
@@ -3055,7 +3063,7 @@ name|b_actf
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 init|=
@@ -3164,7 +3172,7 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"up%d%c: soft ecc bn%d\n"
+literal|"up%d%c: soft ecc sn%d\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -3521,13 +3529,13 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -3745,7 +3753,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_minfo
+name|uba_ctlr
 modifier|*
 name|um
 decl_stmt|;
@@ -3961,7 +3969,7 @@ name|uba
 decl_stmt|;
 specifier|register
 name|struct
-name|uba_dinfo
+name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
@@ -4009,7 +4017,7 @@ operator|=
 name|phys
 argument_list|(
 expr|struct
-name|uba_dinfo
+name|uba_device
 operator|*
 argument_list|,
 name|updinfo
@@ -4046,22 +4054,11 @@ argument_list|)
 operator|->
 name|uh_physuba
 expr_stmt|;
-if|#
-directive|if
-name|VAX780
-if|if
-condition|(
-name|cpu
-operator|==
-name|VAX_780
-condition|)
 name|ubainit
 argument_list|(
 name|uba
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|upaddr
 operator|=
 operator|(
@@ -4072,6 +4069,30 @@ operator|)
 name|ui
 operator|->
 name|ui_physaddr
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|2000000
+argument_list|)
+expr_stmt|;
+name|num
+operator|=
+name|maxfree
+expr_stmt|;
+name|start
+operator|=
+literal|0
+expr_stmt|;
+name|upaddr
+operator|->
+name|upcs2
+operator|=
+name|unit
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4090,20 +4111,6 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-name|num
-operator|=
-name|maxfree
-expr_stmt|;
-name|start
-operator|=
-literal|0
-expr_stmt|;
-name|upaddr
-operator|->
-name|upcs2
-operator|=
-name|unit
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4286,7 +4293,7 @@ operator|<<
 literal|21
 operator|)
 operator||
-name|UBA_MRV
+name|UBAMR_MRV
 expr_stmt|;
 operator|*
 operator|(
