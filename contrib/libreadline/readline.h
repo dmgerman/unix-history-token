@@ -4,7 +4,7 @@ comment|/* Readline.h -- the names of functions callable from within readline. *
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987, 1989, 1992 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
+comment|/* Copyright (C) 1987-2004 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_comment
@@ -77,16 +77,16 @@ comment|/* Hex-encoded Readline version number. */
 define|#
 directive|define
 name|RL_READLINE_VERSION
-value|0x0403
-comment|/* Readline 4.3 */
+value|0x0500
+comment|/* Readline 5.0 */
 define|#
 directive|define
 name|RL_VERSION_MAJOR
-value|4
+value|5
 define|#
 directive|define
 name|RL_VERSION_MINOR
-value|3
+value|0
 comment|/* Readline data structures. */
 comment|/* Maintaining the state of undo.  We remember individual deletes and inserts    on a chain of things to do. */
 comment|/* The actions that undo knows how to undo.  Notice that UNDO_DELETE means    to insert some text, and UNDO_INSERT means to delete some text.   I.e.,    the code tells undo what to undo, not how to undo it. */
@@ -841,6 +841,18 @@ decl_stmt|;
 specifier|extern
 name|int
 name|rl_unix_word_rubout
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_unix_filename_rubout
 name|PARAMS
 argument_list|(
 operator|(
@@ -1716,6 +1728,20 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|void
+name|rl_vi_start_inserting
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* VI-mode pseudo-bindable commands, used as utility functions. */
 specifier|extern
 name|int
@@ -1923,6 +1949,34 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
+name|rl_bind_key_if_unbound
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|rl_command_func_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_bind_key_if_unbound_in_map
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|rl_command_func_t
+operator|*
+operator|,
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
 name|rl_unbind_function_in_map
 name|PARAMS
 argument_list|(
@@ -1950,7 +2004,54 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|int
-name|rl_set_key
+name|rl_bind_keyseq
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|rl_command_func_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_bind_keyseq_in_map
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|rl_command_func_t
+operator|*
+operator|,
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_bind_keyseq_if_unbound
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|rl_command_func_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_bind_keyseq_if_unbound_in_map
 name|PARAMS
 argument_list|(
 operator|(
@@ -1997,6 +2098,24 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Backwards compatibility, use rl_bind_keyseq_in_map instead. */
+specifier|extern
+name|int
+name|rl_set_key
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|rl_command_func_t
+operator|*
+operator|,
+name|Keymap
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2473,18 +2592,6 @@ argument_list|)
 decl_stmt|;
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-operator|)
-operator|&&
 name|defined
 argument_list|(
 name|USE_VARARGS
@@ -2717,6 +2824,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|rl_tty_set_default_bindings
+name|PARAMS
+argument_list|(
+operator|(
+name|Keymap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|rl_tty_unset_default_bindings
 name|PARAMS
 argument_list|(
 operator|(
@@ -3806,10 +3926,22 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
+comment|/*const*/
 name|char
 modifier|*
 name|rl_completer_word_break_characters
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Hook function to allow an application to set the completion word    break characters before readline breaks up the line.  Allows    position-dependent word break characters. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rl_cpvfunc_t
+modifier|*
+name|rl_completion_word_break_hook
 decl_stmt|;
 end_decl_stmt
 
@@ -3993,6 +4125,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Up to this many items will be displayed in response to a    possible-completions call.  After that, we ask the user if she    is sure she wants to see them all.  The default value is 100. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_completion_query_items
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Character appended to completed words when at the end of the line.  The    default is a space.  Nothing is added if this is '\0'. */
 end_comment
 
@@ -4015,13 +4158,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Up to this many items will be displayed in response to a    possible-completions call.  After that, we ask the user if she    is sure she wants to see them all.  The default value is 100. */
+comment|/* Set to any quote character readline thinks it finds before any application    completion function is called. */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|rl_completion_query_items
+name|rl_completion_quote_character
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set to a non-zero value if readline found quoting anywhere in the word to    be completed; set before any application completion function is called. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_completion_found_quote
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If non-zero, the completion functions don't append any closing quote.    This is set to 0 by rl_complete_internal and may be changed by an    application-specific completion function. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_completion_suppress_quote
 decl_stmt|;
 end_decl_stmt
 
@@ -4317,6 +4482,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_STATE_TTYCSAVED
+value|0x40000
+end_define
+
+begin_comment
+comment|/* tty special chars saved */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_STATE_DONE
 value|0x80000
 end_define
@@ -4430,6 +4606,9 @@ decl_stmt|;
 name|int
 name|catchsigwinch
 decl_stmt|;
+comment|/* search state */
+comment|/* completion state */
+comment|/* options state */
 comment|/* reserved for future expansion, so the struct size doesn't change */
 name|char
 name|reserved
