@@ -452,7 +452,7 @@ name|sotongpcb
 parameter_list|(
 name|so
 parameter_list|)
-value|((struct ngpcb *)so->so_pcb)
+value|((struct ngpcb *)(so)->so_pcb)
 end_define
 
 begin_comment
@@ -1464,19 +1464,6 @@ name|release
 label|:
 if|if
 condition|(
-name|hookname
-operator|!=
-name|NULL
-condition|)
-name|FREE
-argument_list|(
-name|hookname
-argument_list|,
-name|M_NETGRAPH
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|control
 operator|!=
 name|NULL
@@ -1816,14 +1803,10 @@ operator|)
 return|;
 name|pcbp
 operator|=
-operator|(
-expr|struct
-name|ngpcb
-operator|*
-operator|)
+name|sotongpcb
+argument_list|(
 name|so
-operator|->
-name|so_pcb
+argument_list|)
 expr_stmt|;
 comment|/* Allocate node private info */
 name|MALLOC
