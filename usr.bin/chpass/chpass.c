@@ -287,6 +287,8 @@ init|=
 name|NULL
 decl_stmt|,
 name|lpw
+decl_stmt|,
+name|old_pw
 decl_stmt|;
 name|char
 modifier|*
@@ -571,6 +573,7 @@ name|op
 operator|==
 name|NEWEXP
 condition|)
+block|{
 switch|switch
 condition|(
 name|argc
@@ -682,6 +685,24 @@ break|break;
 default|default:
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+comment|/* Make a copy for later verification */
+name|old_pw
+operator|=
+operator|*
+name|pw
+expr_stmt|;
+name|old_pw
+operator|.
+name|pw_gecos
+operator|=
+name|strdup
+argument_list|(
+name|old_pw
+operator|.
+name|pw_gecos
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -860,11 +881,6 @@ comment|/* 	 * The temporary file/file descriptor usage is a little tricky here.
 name|pw_init
 argument_list|()
 expr_stmt|;
-name|pfd
-operator|=
-name|pw_lock
-argument_list|()
-expr_stmt|;
 name|tfd
 operator|=
 name|pw_tmp
@@ -930,6 +946,11 @@ block|{
 endif|#
 directive|endif
 comment|/* YP */
+name|pfd
+operator|=
+name|pw_lock
+argument_list|()
+expr_stmt|;
 name|pw_copy
 argument_list|(
 name|pfd
@@ -937,6 +958,9 @@ argument_list|,
 name|tfd
 argument_list|,
 name|pw
+argument_list|,
+operator|&
+name|old_pw
 argument_list|)
 expr_stmt|;
 if|if
