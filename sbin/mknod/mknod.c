@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mknod.c,v 1.8 1998/07/06 07:06:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,9 +158,9 @@ modifier|*
 name|endp
 decl_stmt|;
 name|long
-name|major
+name|mymajor
 decl_stmt|,
-name|minor
+name|myminor
 decl_stmt|;
 name|mode_t
 name|mode
@@ -226,7 +226,7 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|major
+name|mymajor
 operator|=
 operator|(
 name|long
@@ -278,7 +278,7 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|minor
+name|myminor
 operator|=
 operator|(
 name|long
@@ -330,9 +330,9 @@ name|dev
 operator|=
 name|makedev
 argument_list|(
-name|major
+name|mymajor
 argument_list|,
-name|minor
+name|myminor
 argument_list|)
 expr_stmt|;
 if|if
@@ -344,14 +344,14 @@ argument_list|(
 name|dev
 argument_list|)
 operator|!=
-name|major
+name|mymajor
 operator|||
 name|minor
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
-name|minor
+name|myminor
 condition|)
 name|errx
 argument_list|(
