@@ -207,6 +207,15 @@ struct|;
 end_struct
 
 begin_function_decl
+name|void
+name|agp_flush_cache
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_int8_t
 name|agp_find_caps
 parameter_list|(

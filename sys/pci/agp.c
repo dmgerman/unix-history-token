@@ -294,24 +294,21 @@ begin_comment
 comment|/* Helper functions for implementing chipset mini drivers. */
 end_comment
 
-begin_ifdef
+begin_function
+name|void
+name|agp_flush_cache
+parameter_list|()
+block|{
 ifdef|#
 directive|ifdef
 name|__i386__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|agp_flush_cache
-parameter_list|()
-value|wbinvd()
-end_define
-
-begin_endif
+name|wbinvd
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_function
 name|u_int8_t
