@@ -714,6 +714,8 @@ name|percent
 decl_stmt|;
 name|time_t
 name|tnow
+decl_stmt|,
+name|tdone
 decl_stmt|;
 name|int
 name|deltat
@@ -722,6 +724,28 @@ name|hours
 decl_stmt|,
 name|mins
 decl_stmt|;
+if|if
+condition|(
+name|blockswritten
+operator|>
+name|tapesize
+condition|)
+block|{
+name|setproctitle
+argument_list|(
+literal|"%s: 99.99%% done, finished soon"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
+name|msg
+argument_list|(
+literal|"99.99%% done, finished soon\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -758,6 +782,12 @@ name|blockswritten
 operator|*
 name|tapesize
 expr_stmt|;
+name|tdone
+operator|=
+name|tnow
+operator|+
+name|deltat
+expr_stmt|;
 name|percent
 operator|=
 operator|(
@@ -786,7 +816,7 @@ literal|60
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s: pass %d: %3.2f%% done, finished in %d:%02d"
+literal|"%s: pass %d: %3.2f%% done, finished in %d:%02d at %s"
 argument_list|,
 name|disk
 argument_list|,
@@ -797,6 +827,12 @@ argument_list|,
 name|hours
 argument_list|,
 name|mins
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|tdone
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -821,15 +857,22 @@ condition|)
 return|return;
 name|msg
 argument_list|(
-literal|"%3.2f%% done, finished in %d:%02d\n"
+literal|"%3.2f%% done, finished in %d:%02d at %s"
 argument_list|,
 name|percent
 argument_list|,
 name|hours
 argument_list|,
 name|mins
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|tdone
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
