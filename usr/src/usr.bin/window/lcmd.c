@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.8 83/12/06"
+literal|"@(#)lcmd.c	3.9 84/01/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_cursormodes
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_debug
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -128,6 +135,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_cursormodes
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_debug
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -226,6 +241,14 @@ block|,
 name|l_cursormodes
 block|,
 name|arg_cursormodes
+block|,
+literal|"debug"
+block|,
+literal|1
+block|,
+name|l_debug
+block|,
+name|arg_debug
 block|,
 literal|"escape"
 block|,
