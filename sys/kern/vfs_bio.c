@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.171 1998/08/24 17:47:25 phk Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.172 1998/08/25 14:41:42 phk Exp $  */
 end_comment
 
 begin_comment
@@ -6772,11 +6772,12 @@ block|}
 comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * Normally the vnode is locked so this isn't a problem. 		 * VBLK type I/O requests, however, don't lock the vnode. 		 */
 if|if
 condition|(
-operator|!
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|)
+operator|!=
+name|LK_EXCLUSIVE
 operator|&&
 name|gbincore
 argument_list|(
