@@ -114,6 +114,9 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NDBM
 name|DBM
 modifier|*
 name|dbp
@@ -123,6 +126,8 @@ name|content
 decl_stmt|,
 name|key
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|filename
@@ -380,10 +385,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NDBM
+ifdef|#
+directive|ifdef
+name|NEWDB
 else|else
 block|{
 endif|#
 directive|endif
+comment|/* NEWDB */
 if|if
 condition|(
 operator|(
@@ -573,6 +587,10 @@ name|NEWDB
 block|}
 endif|#
 directive|endif
+comment|/* NEWDB */
+endif|#
+directive|endif
+comment|/* NDBM */
 name|exit
 argument_list|(
 name|EX_OK
