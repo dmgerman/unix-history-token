@@ -162,6 +162,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-v] [-f failprob] [-o offset] [-s size] [-S secsize] dev ..."
 block|}
 block|,
 block|{
@@ -185,6 +187,8 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-v] [-f failprob] prov ..."
 block|}
 block|,
 block|{
@@ -207,64 +211,14 @@ block|}
 block|,
 name|G_OPT_SENTINEL
 block|}
+block|,
+literal|"[-fv] prov ..."
 block|}
 block|,
 name|G_CMD_SENTINEL
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s create [-v] [-f failprob] [-o offset] [-s size] [-S secsize] dev ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s configure [-v] [-f failprob] prov ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s destroy [-fv] prov ...\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 end_unit
 
