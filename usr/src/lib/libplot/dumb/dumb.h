@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)dumb.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)dumb.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * This accepts plot file formats and produces the appropriate plots  * for dumb terminals.  It can also be used for printing terminals and  * lineprinter listings, although there is no way to specify number of  * lines and columns different from your terminal.  This would be easy  * to change, and is left as an exercise for the reader.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#

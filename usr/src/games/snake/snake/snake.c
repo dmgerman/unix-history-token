@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	8.1 (Berkeley) %G%"
+literal|"@(#)snake.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2581,9 +2581,6 @@ literal|8
 index|]
 decl_stmt|;
 name|double
-name|sqrt
-argument_list|()
-decl_stmt|,
 name|v1
 decl_stmt|,
 name|v2

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	8.1 (Berkeley) %G%"
+literal|"@(#)subr.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,14 +100,6 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|double
-name|floor
-parameter_list|()
-function_decl|;
-name|int
-name|abs
-parameter_list|()
-function_decl|;
 name|scale
 argument_list|(
 name|x1
