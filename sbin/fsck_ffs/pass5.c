@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pass5.c,v 1.11 1998/06/15 07:07:19 charnier Exp $"
+literal|"$Id: pass5.c,v 1.12 1998/06/28 19:23:02 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2082,7 +2082,7 @@ condition|)
 continue|continue;
 name|pwarn
 argument_list|(
-literal|"ALLOCATED INODE %d MARKED FREE"
+literal|"ALLOCATED INODE %d MARKED FREE\n"
 argument_list|,
 name|c
 operator|*
@@ -2188,7 +2188,7 @@ condition|)
 continue|continue;
 name|pwarn
 argument_list|(
-literal|"ALLOCATED FRAG %d MARKED FREE"
+literal|"ALLOCATED FRAG %d MARKED FREE\n"
 argument_list|,
 name|c
 operator|*
