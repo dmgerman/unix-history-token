@@ -221,7 +221,7 @@ comment|/*  * pr_idle --  *	Display the idle time.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|pr_idle
 parameter_list|(
 name|idle
@@ -265,6 +265,17 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|days
+operator|>=
+literal|10
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 comment|/* If idle more than an hour, print as HH:MM. */
 elseif|else
@@ -325,6 +336,12 @@ operator|/
 literal|60
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* not idle longer than 9 days */
 block|}
 end_function
 
