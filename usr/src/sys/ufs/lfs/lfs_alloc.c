@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -438,11 +444,18 @@ argument_list|,
 name|vpp
 argument_list|)
 condition|)
+block|{
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 comment|/* Get a pointer to the private mount structure. */
 name|ump
 operator|=
@@ -452,13 +465,33 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the inode. */
-name|ip
-operator|=
-name|VTOI
+name|MALLOC
 argument_list|(
+name|ip
+argument_list|,
+expr|struct
+name|inode
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|inode
+argument_list|)
+argument_list|,
+name|M_LFSNODE
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+operator|(
 operator|*
 name|vpp
-argument_list|)
+operator|)
+operator|->
+name|v_data
+operator|=
+name|ip
 expr_stmt|;
 name|ip
 operator|->
