@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_syscalls.c	7.10 (Berkeley) %G%  */
+comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_syscalls.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_comment
@@ -735,7 +741,7 @@ name|ECONNABORTED
 expr_stmt|;
 break|break;
 block|}
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -748,6 +754,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_SO_ACCEPT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1241,7 +1251,7 @@ name|so_error
 operator|==
 literal|0
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1254,6 +1264,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_SO_ACCEPT2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|u
@@ -2203,6 +2217,8 @@ index|[
 name|MSG_MAXIOVLEN
 index|]
 decl_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
@@ -2224,12 +2240,6 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
 condition|)
 return|return;
 if|if
@@ -2263,6 +2273,13 @@ name|EMSGSIZE
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|msg
+operator|.
+name|msg_iovlen
+operator|&&
+operator|(
 name|u
 operator|.
 name|u_error
@@ -2298,12 +2315,7 @@ index|]
 argument_list|)
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_error
+operator|)
 condition|)
 return|return;
 name|msg
@@ -2724,6 +2736,7 @@ name|u_eosys
 operator|=
 name|RESTARTSYS
 expr_stmt|;
+return|return;
 block|}
 block|}
 else|else
@@ -3122,12 +3135,6 @@ name|len
 expr_stmt|;
 name|msg
 operator|.
-name|msg_accrights
-operator|=
-literal|0
-expr_stmt|;
-name|msg
-operator|.
 name|msg_control
 operator|=
 literal|0
@@ -3451,6 +3458,10 @@ decl_stmt|,
 modifier|*
 name|uiov
 decl_stmt|;
+specifier|register
+name|int
+name|error1
+decl_stmt|;
 name|u
 operator|.
 name|u_error
@@ -3681,9 +3692,7 @@ name|msg_iov
 operator|=
 name|uiov
 expr_stmt|;
-name|u
-operator|.
-name|u_error
+name|error1
 operator|=
 name|copyout
 argument_list|(
@@ -3705,6 +3714,22 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error1
+operator|&&
+name|u
+operator|.
+name|u_error
+operator|==
+literal|0
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|error1
 expr_stmt|;
 block|}
 comment|/* ARGSUSED */
@@ -3980,6 +4005,7 @@ name|u_eosys
 operator|=
 name|RESTARTSYS
 expr_stmt|;
+return|return;
 block|}
 block|}
 else|else
@@ -4900,8 +4926,6 @@ name|wso
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|,
-name|r
 decl_stmt|;
 name|u
 operator|.
@@ -5573,7 +5597,11 @@ name|so
 operator|->
 name|so_state
 operator|&
+operator|(
 name|SS_ISCONNECTED
+operator||
+name|SS_ISCONFIRMING
+operator|)
 operator|)
 operator|==
 literal|0
@@ -5832,11 +5860,37 @@ name|namelen
 operator|>
 name|MLEN
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+if|if
+condition|(
+name|type
+operator|==
+name|MT_SONAME
+operator|&&
+operator|(
+name|u_int
+operator|)
+name|namelen
+operator|<=
+literal|112
+condition|)
+name|namelen
+operator|=
+name|MLEN
+expr_stmt|;
+comment|/* unix domain compat. hack */
+else|else
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|m
 operator|=
 name|m_get
