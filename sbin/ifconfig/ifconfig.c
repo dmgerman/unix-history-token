@@ -929,7 +929,16 @@ argument|iso_addreq
 argument_list|)
 block|}
 block|,
-comment|/*	{ "ether", AF_INET, ether_status, NULL }, XXX - broken */
+block|{
+literal|"ether"
+block|,
+name|AF_INET
+block|,
+name|ether_status
+block|,
+name|NULL
+block|}
+block|,
 block|{
 literal|0
 block|,
@@ -2201,6 +2210,43 @@ condition|(
 name|clearaddr
 condition|)
 block|{
+if|if
+condition|(
+name|rafp
+operator|->
+name|af_ridreq
+operator|==
+name|NULL
+operator|||
+name|rafp
+operator|->
+name|af_difaddr
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"interface %s cannot change %s addresses!"
+argument_list|,
+name|name
+argument_list|,
+name|rafp
+operator|->
+name|af_name
+argument_list|)
+expr_stmt|;
+name|clearaddr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|clearaddr
+condition|)
+block|{
 name|int
 name|ret
 decl_stmt|;
@@ -2260,6 +2306,43 @@ name|Perror
 argument_list|(
 literal|"ioctl (SIOCDIFADDR)"
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|newaddr
+condition|)
+block|{
+if|if
+condition|(
+name|rafp
+operator|->
+name|af_ridreq
+operator|==
+name|NULL
+operator|||
+name|rafp
+operator|->
+name|af_difaddr
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"interface %s cannot change %s addresses!"
+argument_list|,
+name|name
+argument_list|,
+name|rafp
+operator|->
+name|af_name
+argument_list|)
+expr_stmt|;
+name|newaddr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -3059,6 +3142,7 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: Sigh. This is bad, I know.  At this point, we may have 	 * *zero* RTM_NEWADDR's, so we have to "feel the water" before 	 * incrementing the loop.  One day, I might feel inspired enough 	 * to get the top level loop to pass a count down here so we 	 * dont have to mess with this.  -Peter 	 */
 name|myifm
 operator|=
 name|ifm
@@ -3169,6 +3253,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|af_status
+operator|!=
+name|ether_status
+condition|)
 call|(
 modifier|*
 name|p
@@ -3205,6 +3297,14 @@ name|p
 operator|->
 name|af_af
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|af_status
+operator|!=
+name|ether_status
+condition|)
 call|(
 modifier|*
 name|p
@@ -3217,6 +3317,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|afp
+operator|==
+name|NULL
+operator|||
+name|afp
+operator|->
+name|af_status
+operator|==
+name|ether_status
+condition|)
 name|ether_status
 argument_list|()
 expr_stmt|;
@@ -3281,6 +3393,12 @@ if|if
 condition|(
 operator|!
 name|sin
+operator|||
+name|sin
+operator|->
+name|sin_family
+operator|!=
+name|AF_INET
 condition|)
 block|{
 if|if
@@ -3289,13 +3407,7 @@ operator|!
 name|force
 condition|)
 return|return;
-name|warnx
-argument_list|(
-literal|"%s has no AF_INET IFA address!"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* warnx("%s has no AF_INET IFA address!", name); */
 name|sin
 operator|=
 operator|&
@@ -3546,6 +3658,12 @@ if|if
 condition|(
 operator|!
 name|sipx
+operator|||
+name|sipx
+operator|->
+name|sipx_family
+operator|!=
+name|AF_IPX
 condition|)
 block|{
 if|if
@@ -3554,13 +3672,7 @@ operator|!
 name|force
 condition|)
 return|return;
-name|warnx
-argument_list|(
-literal|"%s has no AF_IPX IFA address!"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* warnx("%s has no AF_IPX IFA address!", name); */
 name|sipx
 operator|=
 operator|&
@@ -3725,6 +3837,12 @@ if|if
 condition|(
 operator|!
 name|sns
+operator|||
+name|sns
+operator|->
+name|sns_family
+operator|!=
+name|AF_NS
 condition|)
 block|{
 if|if
@@ -3733,13 +3851,7 @@ operator|!
 name|force
 condition|)
 return|return;
-name|warnx
-argument_list|(
-literal|"%s has no AF_NS IFA address!"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* warnx("%s has no AF_NS IFA address!", name); */
 name|sns
 operator|=
 operator|&
@@ -3904,6 +4016,12 @@ if|if
 condition|(
 operator|!
 name|siso
+operator|||
+name|siso
+operator|->
+name|siso_family
+operator|!=
+name|AF_ISO
 condition|)
 block|{
 if|if
@@ -3912,13 +4030,7 @@ operator|!
 name|force
 condition|)
 return|return;
-name|warnx
-argument_list|(
-literal|"%s has no AF_ISO IFA address!"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+comment|/* warnx("%s has no AF_ISO IFA address!", name); */
 name|siso
 operator|=
 operator|&
