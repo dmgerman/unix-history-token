@@ -1945,7 +1945,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"kvm_read: %s"
+literal|"%s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
