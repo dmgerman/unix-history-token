@@ -4127,8 +4127,11 @@ name|prtrealloc
 condition|)
 name|printf
 argument_list|(
-literal|" %d,"
+literal|" %jd,"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -12060,7 +12063,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: adjust inode %d count by %ld\n"
+literal|"%s: adjust inode %jd count by %jd\n"
 argument_list|,
 name|mp
 operator|->
@@ -12069,12 +12072,15 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|ino_t
+name|intmax_t
 operator|)
 name|cmd
 operator|.
 name|value
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|cmd
 operator|.
 name|size
@@ -12179,7 +12185,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: adjust inode %d block count by %ld\n"
+literal|"%s: adjust inode %jd block count by %jd\n"
 argument_list|,
 name|mp
 operator|->
@@ -12188,12 +12194,15 @@ operator|.
 name|f_mntonname
 argument_list|,
 operator|(
-name|ino_t
+name|intmax_t
 operator|)
 name|cmd
 operator|.
 name|value
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|cmd
 operator|.
 name|size
