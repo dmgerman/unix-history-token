@@ -1,6 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rindex_.c	5.2	%G%  *  * find last occurrence of substring in string  *  * calling sequence:  *	character*(*) substr, string  *	indx = rindex (string, substr)  * where:  *	indx will be the index of the first character of the last occurence  *	of substr in string, or zero if not found.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)rindex_.c	5.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * find last occurrence of substring in string  *  * calling sequence:  *	character*(*) substr, string  *	indx = rindex (string, substr)  * where:  *	indx will be the index of the first character of the last occurence  *	of substr in string, or zero if not found.  */
 end_comment
 
 begin_function

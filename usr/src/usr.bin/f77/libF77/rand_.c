@@ -1,6 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rand_.c	5.4	%G%  *  * Routines to return random values  *  * calling sequence:  *	double precision d, drand  *	i = irand(iflag)  *	x = rand(iflag)  *	d = drand(iflag)  * where:  *	If arg is 1, generator is restarted. If arg is 0, next value  *	is returned. Any other arg is a new seed for the generator.  *	Integer values will range from 0 thru 2147483647.  *	Real values will range from 0.0 thru 1.0  *	(see rand(3))  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)rand_.c	5.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * Routines to return random values  *  * calling sequence:  *	double precision d, drand  *	i = irand(iflag)  *	x = rand(iflag)  *	d = drand(iflag)  * where:  *	If arg is 1, generator is restarted. If arg is 0, next value  *	is returned. Any other arg is a new seed for the generator.  *	Integer values will range from 0 thru 2147483647.  *	Real values will range from 0.0 thru 1.0  *	(see rand(3))  */
 end_comment
 
 begin_if

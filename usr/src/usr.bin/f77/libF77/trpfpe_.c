@@ -1,10 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)trpfpe_.c	5.7 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
 comment|/* #define OLD_BSD if you're running< 4.2 bsd */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trpfpe_.c	5.6	%G%  *  *  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
+comment|/*  *	Fortran floating-point error handler  *  *	Synopsis:  *		call trpfpe (n, retval)  *			causes floating point faults to be trapped, with the  *			first 'n' errors getting a message printed.  *			'retval' is put in place of the bad result.  *		k = fpecnt()  *			causes 'k' to get the number of errors since the  *			last call to trpfpe().  *  *		common /fpeflt/ fpflag  *		logical fpflag  *			fpflag will become .true. on faults  *  *	David Wasley, UCBerkeley, June 1983.  */
 end_comment
 
 begin_include

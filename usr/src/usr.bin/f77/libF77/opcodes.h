@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)opcodes.h	5.1 (Berkeley) %G%  *  * We just define the floating-point opcodes, to ease our minds.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)opcodes.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * We just define the floating-point opcodes, to ease our minds.  */
 end_comment
 
 begin_define

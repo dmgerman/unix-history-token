@@ -1,6 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal_.c	5.3	%G%  *  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 32  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)signal_.c	5.4 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * change the action for a specified signal  *  * calling sequence:  *	integer cursig, signal, savsig  *	external proc  *	cursig = signal(signum, proc, flag)  * where:  *	'cursig' will receive the current value of signal(2)  *	'signum' must be in the range 0<= signum<= 32  *  *	If 'flag' is negative, 'proc' must be an external proceedure name.  *	  *	If 'flag' is 0 or positive, it will be passed to signal(2) as the  *	signal action flag. 0 resets the default action; 1 sets 'ignore'.  *	'flag' may be the value returned from a previous call to signal.  *  * This routine arranges to trap user specified signals so that it can  * pass the signum fortran style - by address. (boo)  */
 end_comment
 
 begin_include
