@@ -119,7 +119,6 @@ specifier|static
 name|int
 name|pcx_init
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|data
@@ -193,7 +192,8 @@ specifier|const
 name|u_char
 modifier|*
 name|zdata
-decl_stmt|,
+decl_stmt|;
+name|u_char
 modifier|*
 name|palette
 decl_stmt|;
@@ -585,7 +585,6 @@ specifier|static
 name|int
 name|pcx_init
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|data
