@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: res_query.c,v 1.12 1997/02/22 15:00:34 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,6 +1316,26 @@ operator|.
 name|options
 operator|&
 name|RES_NOALIASES
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* XXX issetguid() would be better here, but we don't have that. */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|||
+name|getgid
+argument_list|()
+operator|!=
+name|getegid
+argument_list|()
 condition|)
 return|return
 operator|(
