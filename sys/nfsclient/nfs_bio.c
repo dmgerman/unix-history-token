@@ -283,6 +283,9 @@ name|nfsmount
 modifier|*
 name|nmp
 decl_stmt|;
+name|vm_object_t
+name|object
+decl_stmt|;
 name|vm_page_t
 modifier|*
 name|pages
@@ -330,9 +333,13 @@ name|a_count
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|object
+operator|=
 name|vp
 operator|->
 name|v_object
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -403,6 +410,11 @@ operator|->
 name|a_reqpage
 index|]
 decl_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -451,6 +463,11 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -459,6 +476,11 @@ return|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * We use only the kva address for the buffer, but this is extremely 	 * convienient and fast. 	 */
@@ -612,6 +634,11 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -649,6 +676,11 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 name|VM_PAGER_ERROR
 return|;
@@ -661,6 +693,11 @@ operator|-
 name|uio
 operator|.
 name|uio_resid
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
@@ -818,6 +855,11 @@ block|}
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
