@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	8.2 (Berkeley) %G%"
+literal|"@(#)syslog.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,7 @@ name|char
 modifier|*
 name|LogTag
 init|=
-literal|"syslog"
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* mask of priorities to be logged */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Program name, from crt0. */
 end_comment
 
 begin_comment
@@ -476,6 +488,15 @@ condition|)
 name|stdp
 operator|=
 name|p
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|LogTag
+condition|)
+name|LogTag
+operator|=
+name|__progname
 expr_stmt|;
 if|if
 condition|(
