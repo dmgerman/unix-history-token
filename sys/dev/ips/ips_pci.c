@@ -293,6 +293,12 @@ name|ips_issue_cmd
 operator|=
 name|ips_issue_morpheus_cmd
 expr_stmt|;
+name|sc
+operator|->
+name|ips_poll_cmd
+operator|=
+name|ips_morpheus_poll
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -323,6 +329,12 @@ name|ips_issue_cmd
 operator|=
 name|ips_issue_copperhead_cmd
 expr_stmt|;
+name|sc
+operator|->
+name|ips_poll_cmd
+operator|=
+name|ips_copperhead_poll
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -352,6 +364,12 @@ operator|->
 name|ips_issue_cmd
 operator|=
 name|ips_issue_morpheus_cmd
+expr_stmt|;
+name|sc
+operator|->
+name|ips_poll_cmd
+operator|=
+name|ips_morpheus_poll
 expr_stmt|;
 block|}
 else|else
@@ -615,6 +633,8 @@ operator|->
 name|irqres
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|sc
 operator|->
@@ -678,11 +698,10 @@ comment|/* flags     */
 literal|0
 argument_list|,
 comment|/* lockfunc  */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
 comment|/* lockarg   */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|sc
@@ -730,6 +749,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|sema_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cmd_sema
+argument_list|,
+literal|0
+argument_list|,
+literal|"IPS Command Semaphore"
 argument_list|)
 expr_stmt|;
 name|bioq_init
@@ -929,6 +960,22 @@ operator|->
 name|configured
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|queue_mtx
+argument_list|)
+expr_stmt|;
+name|sema_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cmd_sema
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
