@@ -1826,6 +1826,12 @@ begin_comment
 comment|/*  * "Staff-functions"  *  * These functions implement a presently undocumented interface   * used by the sysctl program to walk the tree, and get the type  * so it can print the value.  * This interface is under work and consideration, and should probably  * be killed with a big axe by the first person who can find the time.  * (be aware though, that the proper interface isn't as obvious as it  * may seem, there are various conflicting requirements.  *  * {0,0}	printf the entire MIB-tree.  * {0,1,...}	return the name of the "..." OID.  * {0,2,...}	return the next OID.  * {0,3}	return the OID of the name in "new"  * {0,4,...}	return the kind& format info for the "..." OID.  * {0,5,...}	return the description the "..." OID.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DEBUG
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -2075,6 +2081,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
