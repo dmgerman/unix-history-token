@@ -95,14 +95,22 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+comment|/* make sure stdio is set up */
+if|if
+condition|(
+operator|!
+name|__sdidinit
+condition|)
+name|__sinit
+argument_list|()
+expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|_fseeko
 argument_list|(
 name|fp
@@ -113,9 +121,13 @@ operator|)
 literal|0
 argument_list|,
 name|SEEK_SET
+argument_list|,
+literal|1
 argument_list|)
-expr_stmt|;
-name|clearerr
+operator|==
+literal|0
+condition|)
+name|clearerr_unlocked
 argument_list|(
 name|fp
 argument_list|)
@@ -125,11 +137,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
-comment|/* not required, but seems reasonable */
+comment|/* errno required by POSIX to sense error, don't zero it here */
 block|}
 end_function
 
