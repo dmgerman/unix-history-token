@@ -3419,6 +3419,19 @@ decl_stmt|;
 name|check_status
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"descriptor too large"
+argument_list|)
+expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
