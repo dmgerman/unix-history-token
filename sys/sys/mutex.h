@@ -889,6 +889,38 @@ parameter_list|)
 value|if (!(ex)) panic("Assertion %s failed at %s:%d", \                 what, __FILE__, __LINE__)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPASS3
+parameter_list|(
+name|ex
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", #ex, file, line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPASS4
+parameter_list|(
+name|ex
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", what, file, line)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -915,6 +947,34 @@ parameter_list|(
 name|ex
 parameter_list|,
 name|where
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPASS3
+parameter_list|(
+name|ex
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPASS4
+parameter_list|(
+name|ex
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 end_define
 
@@ -1863,7 +1923,7 @@ init|=
 name|mtxp
 decl_stmt|;
 comment|/* bits only valid on mtx_exit() */
-name|MPASS2
+name|MPASS4
 argument_list|(
 operator|(
 operator|(
@@ -1880,6 +1940,10 @@ operator|==
 literal|0
 argument_list|,
 name|STR_mtx_bad_type
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -2217,7 +2281,7 @@ name|mpp
 init|=
 name|mtxp
 decl_stmt|;
-name|MPASS2
+name|MPASS4
 argument_list|(
 name|mtx_owned
 argument_list|(
@@ -2225,6 +2289,10 @@ name|mpp
 argument_list|)
 argument_list|,
 name|STR_mtx_owned
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|WITNESS_EXIT
@@ -2284,7 +2352,7 @@ name|mpp
 operator|->
 name|mtx_saveintr
 decl_stmt|;
-name|MPASS2
+name|MPASS4
 argument_list|(
 name|mpp
 operator|->
@@ -2293,6 +2361,10 @@ operator|==
 literal|0
 argument_list|,
 name|STR_mtx_recurse
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|_release_lock_quick
