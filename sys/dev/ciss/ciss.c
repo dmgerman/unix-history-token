@@ -1450,6 +1450,176 @@ literal|"HP Smart Array 6400 EM"
 block|}
 block|,
 block|{
+literal|0x0e11
+block|,
+literal|0x409E
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array 6422"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3210
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array V100"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3220
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3222
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3230
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3231
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3232
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3233
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3234
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3235
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3236
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3237
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3238
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3239
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x323A
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x323B
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x323C
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
