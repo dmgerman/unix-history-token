@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ modifier|*
 name|ovfl
 decl_stmt|;
 comment|/* Overflow page buffer header */
-name|int
+name|u_int
 name|addr
 decl_stmt|;
 comment|/* Address of this page */
@@ -284,10 +284,6 @@ name|int
 name|nmaps
 decl_stmt|;
 comment|/* Initial number of bitmaps */
-name|int
-name|exmaps
-decl_stmt|;
-comment|/* Number of extra allocated bitmaps */
 name|int
 name|nbufs
 decl_stmt|;
@@ -607,7 +603,7 @@ name|S
 parameter_list|,
 name|O
 parameter_list|)
-value|((S<< SPLITSHIFT) + O)
+value|((unsigned)((unsigned)S<< SPLITSHIFT) + O)
 end_define
 
 begin_define
