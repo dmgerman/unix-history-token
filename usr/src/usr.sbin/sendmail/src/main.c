@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.23 (Berkeley) %G%"
+literal|"@(#)main.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1248,7 +1248,7 @@ name|OldUmask
 operator|=
 name|umask
 argument_list|(
-literal|0
+literal|022
 argument_list|)
 expr_stmt|;
 end_expr_stmt
