@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.47 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1169,6 +1169,14 @@ name|success_return
 operator|&&
 operator|!
 name|failure_return
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|PRIV_NORECEIPTS
+argument_list|,
+name|PrivacyFlags
+argument_list|)
 operator|&&
 name|strcmp
 argument_list|(
