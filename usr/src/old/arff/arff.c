@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arff.c	4.8 (Berkeley) 81/11/13"
+literal|"@(#)arff.c	4.9 (Berkeley) 82/06/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +105,7 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* name, 3 words in rad50 form */
-name|short
+name|u_short
 name|rt_len
 decl_stmt|;
 comment|/* length of file */
