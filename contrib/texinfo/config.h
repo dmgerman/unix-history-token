@@ -1,14 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+comment|/* config.in.  Generated automatically from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* acconfig.h    This file is in the public domain.     Descriptive text for the C preprocessor macros that    the distributed Autoconf macros can define.    No software package will use all of them; autoheader copies the ones    your configure.in uses into your configuration header file templates.     The entries are in sort -df order: alphabetical, case insensitive,    ignoring punctuation (such as underscores).  Although this order    can split up related entries, it makes it easier to check whether    a given entry is in the file.     Leave the following blank line there!!  Autoheader needs it.  */
+comment|/* acconfig.h    This file is in the public domain.    $Id: acconfig.h,v 1.3 1998/12/06 22:04:03 karl Exp $     Descriptive text for the C preprocessor macros that    the distributed Autoconf macros can define.    No software package will use all of them; autoheader copies the ones    your configure.in uses into your configuration header file templates.     The entries are in sort -df order: alphabetical, case insensitive,    ignoring punctuation (such as underscores).  Although this order    can split up related entries, it makes it easier to check whether    a given entry is in the file.     Leave the following blank line there!!  Autoheader needs it.  */
 end_comment
 
 begin_escape
@@ -73,6 +77,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strcoll function and it is properly defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCOLL
 value|1
 end_define
 
@@ -163,6 +178,14 @@ comment|/* #undef STACK_DIRECTION */
 end_comment
 
 begin_comment
+comment|/* Define if the `S_IS*' macros in<sys/stat.h> do not work properly.  */
+end_comment
+
+begin_comment
+comment|/* #undef STAT_MACROS_BROKEN */
+end_comment
+
+begin_comment
 comment|/* Define if you have the ANSI C header files.  */
 end_comment
 
@@ -185,12 +208,9 @@ begin_comment
 comment|/* Define to 1 if NLS is requested.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ENABLE_NLS
-value|1
-end_define
+begin_comment
+comment|/* #undef ENABLE_NLS */
+end_comment
 
 begin_comment
 comment|/* Define as 1 if you have catgets and don't want to use GNU gettext.  */
@@ -226,28 +246,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_STPCPY */
 end_comment
-
-begin_comment
-comment|/* Define to the name of the distribution.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKAGE
-value|"texinfo"
-end_define
-
-begin_comment
-comment|/* Define to the version of the distribution.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VERSION
-value|"3.12"
-end_define
 
 begin_comment
 comment|/* Define if you have the __argz_count function.  */
@@ -477,6 +475,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strncasecmp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRNCASECMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<argz.h> header file.  */
 end_comment
 
@@ -526,6 +535,17 @@ comment|/* #undef HAVE_MALLOC_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<memory.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMORY_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<ncurses/termcap.h> header file.  */
 end_comment
 
@@ -552,6 +572,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_PWD_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<stdlib.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDLIB_H
 value|1
 end_define
 
@@ -690,14 +721,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<values.h> header file.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_VALUES_H */
-end_comment
-
-begin_comment
 comment|/* Define if you have the bsd library (-lbsd).  */
 end_comment
 
@@ -714,44 +737,77 @@ comment|/* #undef HAVE_LIBI */
 end_comment
 
 begin_comment
-comment|/* Define if you have the z library (-lz).  */
+comment|/* Name of package */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_LIBZ
+name|PACKAGE
+value|"texinfo"
+end_define
+
+begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"4.0"
+end_define
+
+begin_comment
+comment|/* Define if TIOCGWINSZ requires sys/ioctl.h */
+end_comment
+
+begin_comment
+comment|/* #undef GWINSZ_IN_SYS_IOCTL */
+end_comment
+
+begin_comment
+comment|/* Define if this function is declared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_STRERROR
 value|1
 end_define
 
 begin_comment
-comment|/* For gettext (NLS) */
+comment|/* Define if this function is declared. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<libintl.h>
-end_include
-
 begin_define
 define|#
 directive|define
-name|_
-parameter_list|(
-name|String
-parameter_list|)
-value|gettext (String)
+name|HAVE_DECL_STRCASECMP
+value|1
 end_define
 
+begin_comment
+comment|/* Define if this function is declared. */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|N_
-parameter_list|(
-name|String
-parameter_list|)
-value|(String)
+name|HAVE_DECL_STRNCASECMP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if this function is declared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_STRCOLL
+value|1
 end_define
 
 begin_escape
