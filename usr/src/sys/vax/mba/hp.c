@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.73	83/03/19	*/
+comment|/*	hp.c	4.74	83/03/27	*/
 end_comment
 
 begin_ifdef
@@ -612,48 +612,6 @@ literal|8
 index|]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|MONET
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=cyl 0 thru 16 */
-literal|33440
-block|,
-literal|17
-block|,
-comment|/* B=cyl 17 thru 52 */
-literal|808176
-block|,
-literal|0
-block|,
-comment|/* C=cyl 0 thru 841 */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|465456
-block|,
-literal|357
-block|,
-comment|/* G=cyl 357 thru 841 */
-literal|291346
-block|,
-literal|53
-block|,
-comment|/* H=cyl 52 thru 356 */
-else|#
-directive|else
 literal|15884
 block|,
 literal|0
@@ -694,8 +652,6 @@ block|,
 literal|87
 block|,
 comment|/* H=cyl 87 thru 390 */
-endif|#
-directive|endif
 block|}
 struct|,
 name|cdc9300_sizes
