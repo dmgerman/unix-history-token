@@ -1884,6 +1884,17 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|orig_resid
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_read: uio->uio_resid< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|orig_resid
@@ -1895,13 +1906,25 @@ operator|(
 literal|0
 operator|)
 return|;
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_read: uio->uio_offset< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
 operator|->
 name|i_fs
 expr_stmt|;
-comment|/* 	 * The caller is supposed to check if 	 * uio->uio_offset>= 0 and uio->uio_resid>= 0. 	 */
 if|if
 condition|(
 name|uio
@@ -2779,13 +2802,38 @@ name|uio_resid
 argument_list|)
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_resid
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_write: uio->uio_resid< 0"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_write: uio->uio_offset< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|ip
 operator|->
 name|i_fs
 expr_stmt|;
-comment|/* 	 * The caller is supposed to check if 	 * uio->uio_offset>= 0 and uio->uio_resid>= 0. 	 */
 if|if
 condition|(
 operator|(
@@ -4371,6 +4419,17 @@ name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|orig_resid
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_extread: uio->uio_resid< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|orig_resid
@@ -4382,7 +4441,19 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * The caller is supposed to check if 	 * uio->uio_offset>= 0 and uio->uio_resid>= 0. 	 */
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_extread: uio->uio_offset< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|bytesinfile
 operator|=
 name|dp
@@ -4977,7 +5048,32 @@ name|dp
 operator|->
 name|di_extsize
 expr_stmt|;
-comment|/* 	 * The caller is supposed to check if 	 * uio->uio_offset>= 0 and uio->uio_resid>= 0. 	 */
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_extwrite: uio->uio_offset< 0"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|uio
+operator|->
+name|uio_resid
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"ffs_extwrite: uio->uio_resid< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
