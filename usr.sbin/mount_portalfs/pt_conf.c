@@ -54,6 +54,12 @@ name|portal_file
 block|}
 block|,
 block|{
+literal|"pipe"
+block|,
+name|portal_pipe
+block|}
+block|,
+block|{
 literal|"tcp"
 block|,
 name|portal_tcp
