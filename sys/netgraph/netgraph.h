@@ -445,6 +445,9 @@ name|ng_mesg
 modifier|*
 modifier|*
 name|resp
+parameter_list|,
+name|hook_p
+name|lasthook
 parameter_list|)
 function_decl|;
 end_typedef
@@ -521,6 +524,16 @@ name|m
 parameter_list|,
 name|meta_p
 name|meta
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|ret_m
+parameter_list|,
+name|meta_p
+modifier|*
+name|ret_meta
 parameter_list|)
 function_decl|;
 end_typedef
@@ -684,7 +697,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {								\ 		(error) = ng_send_data((hook), (m), (a));		\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
+value|do {								\ 		(error) = ng_send_data((hook), (m), (a), NULL, NULL);	\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -705,7 +718,24 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {								\ 		(error) = ng_send_dataq((hook), (m), (a));		\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
+value|do {								\ 		(error) = ng_send_dataq((hook), (m), (a), NULL, NULL);	\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_SEND_DATA_RET
+parameter_list|(
+name|error
+parameter_list|,
+name|hook
+parameter_list|,
+name|m
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|do {								\ 		struct mbuf *ret_m = NULL;				\ 		meta_p ret_meta = NULL;					\ 		(error) = ng_send_dataq((hook), (m), (a),&ret_m,&ret_meta);\ 		(m) = ret_m;						\ 		(a) = ret_meta;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -1016,6 +1046,10 @@ name|char
 modifier|*
 modifier|*
 name|rtnp
+parameter_list|,
+name|hook_p
+modifier|*
+name|lasthook
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1118,6 +1152,16 @@ name|m
 parameter_list|,
 name|meta_p
 name|meta
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|ret_m
+parameter_list|,
+name|meta_p
+modifier|*
+name|ret_meta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1136,6 +1180,16 @@ name|m
 parameter_list|,
 name|meta_p
 name|meta
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|ret_m
+parameter_list|,
+name|meta_p
+modifier|*
+name|ret_meta
 parameter_list|)
 function_decl|;
 end_function_decl

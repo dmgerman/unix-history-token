@@ -2006,6 +2006,9 @@ name|ng_mesg
 modifier|*
 modifier|*
 name|rptr
+parameter_list|,
+name|hook_p
+name|lasthook
 parameter_list|)
 block|{
 name|priv_p
@@ -3067,6 +3070,16 @@ name|m
 parameter_list|,
 name|meta_p
 name|meta
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|ret_m
+parameter_list|,
+name|meta_p
+modifier|*
+name|ret_meta
 parameter_list|)
 block|{
 name|node_p
@@ -4409,7 +4422,7 @@ name|state
 operator|=
 name|PPPOE_CONNECTED
 expr_stmt|;
-comment|/* 					 * Now we have gone to Connected mode,  					 * Free all resources needed for  					 * negotiation. 					 */
+comment|/* 					 * Now we have gone to Connected mode,  					 * Free all resources needed for  					 * negotiation. Be paranoid about 					 * whether there may be a timeout. 					 */
 name|m_freem
 argument_list|(
 name|sp
@@ -4417,6 +4430,19 @@ operator|->
 name|neg
 operator|->
 name|m
+argument_list|)
+expr_stmt|;
+name|untimeout
+argument_list|(
+name|pppoe_ticker
+argument_list|,
+name|sendhook
+argument_list|,
+name|sp
+operator|->
+name|neg
+operator|->
+name|timeout_handle
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -5045,6 +5071,13 @@ name|int
 name|hooks
 decl_stmt|;
 name|AAA
+name|hooks
+init|=
+name|node
+operator|->
+name|numhooks
+decl_stmt|;
+comment|/* this one already not counted */
 if|if
 condition|(
 name|hook
@@ -5114,6 +5147,7 @@ name|NGM_PPPOE_CLOSE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * According to the spec, if we are connected, 		 * we should send a DISC packet if we are shutting down 		 * a session. 		 */
 if|if
 condition|(
 operator|(
@@ -5368,6 +5402,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * As long as we have somewhere to store teh timeout handle, 		 * we may have a timeout pending.. get rid of it. 		 */
 if|if
 condition|(
 name|sp
@@ -5430,13 +5465,6 @@ name|NULL
 expr_stmt|;
 comment|/* work out how many session hooks there are */
 comment|/* Node goes away on last session hook removal */
-name|hooks
-operator|=
-name|node
-operator|->
-name|numhooks
-expr_stmt|;
-comment|/* this one already not counted */
 if|if
 condition|(
 name|privp
@@ -5456,17 +5484,6 @@ condition|)
 name|hooks
 operator|-=
 literal|1
-expr_stmt|;
-if|if
-condition|(
-name|hooks
-operator|==
-literal|0
-condition|)
-name|ng_rmnode
-argument_list|(
-name|node
-argument_list|)
 expr_stmt|;
 block|}
 if|if

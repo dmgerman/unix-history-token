@@ -152,6 +152,9 @@ name|ng_mesg
 modifier|*
 modifier|*
 name|rptr
+parameter_list|,
+name|hook_p
+name|lasthook
 parameter_list|)
 block|{
 if|if
@@ -210,6 +213,16 @@ name|m
 parameter_list|,
 name|meta_p
 name|meta
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|ret_m
+parameter_list|,
+name|meta_p
+modifier|*
+name|ret_meta
 parameter_list|)
 block|{
 name|int

@@ -1693,6 +1693,9 @@ name|ng_mesg
 modifier|*
 modifier|*
 name|rptr
+parameter_list|,
+name|hook_p
+name|lasthook
 parameter_list|)
 block|{
 specifier|const
@@ -2040,6 +2043,9 @@ decl_stmt|;
 name|node_p
 name|origNode
 decl_stmt|;
+name|hook_p
+name|lasthook
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2055,6 +2061,9 @@ operator|&
 name|origNode
 argument_list|,
 name|NULL
+argument_list|,
+operator|&
+name|lasthook
 argument_list|)
 operator|)
 operator|!=
@@ -2162,6 +2171,16 @@ name|m
 parameter_list|,
 name|meta_p
 name|meta
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|ret_m
+parameter_list|,
+name|meta_p
+modifier|*
+name|ret_meta
 parameter_list|)
 block|{
 specifier|const
