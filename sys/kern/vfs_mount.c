@@ -1118,7 +1118,7 @@ name|opt
 operator|->
 name|len
 operator|=
-name|optlen
+literal|0
 expr_stmt|;
 comment|/* 		 * Do this early, so jumps to "bad" will free the current 		 * option. 		 */
 name|TAILQ_INSERT_TAIL
@@ -1254,6 +1254,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|opt
+operator|->
+name|len
+operator|=
+name|optlen
+expr_stmt|;
 name|opt
 operator|->
 name|value
