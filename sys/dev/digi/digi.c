@@ -10973,7 +10973,7 @@ name|pnum
 expr_stmt|;
 operator|*
 operator|(
-name|ushort
+name|u_short
 operator|*
 operator|)
 operator|(

@@ -191,10 +191,10 @@ value|16
 name|int
 name|opencnt
 decl_stmt|;
-name|ushort
+name|u_short
 name|txbufsize
 decl_stmt|;
-name|ushort
+name|u_short
 name|rxbufsize
 decl_stmt|;
 specifier|volatile
@@ -409,7 +409,7 @@ name|enum
 name|digi_board_status
 name|status
 decl_stmt|;
-name|ushort
+name|u_short
 name|numports
 decl_stmt|;
 comment|/* number of ports on card */

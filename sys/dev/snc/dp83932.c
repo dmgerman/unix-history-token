@@ -3277,7 +3277,7 @@ name|i
 operator|++
 control|)
 block|{
-name|ushort
+name|u_short
 name|ap2
 decl_stmt|,
 name|ap1

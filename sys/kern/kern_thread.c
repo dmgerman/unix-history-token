@@ -5185,7 +5185,7 @@ decl_stmt|;
 name|caddr_t
 name|addr
 decl_stmt|;
-name|uint
+name|u_int
 name|uticks
 decl_stmt|;
 if|if

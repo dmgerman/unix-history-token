@@ -1934,7 +1934,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ushort
+name|u_short
 name|first
 decl_stmt|,
 name|last

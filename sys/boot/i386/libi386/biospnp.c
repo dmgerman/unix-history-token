@@ -1012,7 +1012,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
-name|uint
+name|u_int
 argument_list|)
 expr_stmt|;
 operator|*

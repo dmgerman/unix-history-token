@@ -672,7 +672,7 @@ name|nameidata
 modifier|*
 parameter_list|,
 specifier|const
-name|uint
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -563,13 +563,13 @@ begin_function
 name|void
 name|cpu_mp_add
 parameter_list|(
-name|uint
+name|u_int
 name|acpiid
 parameter_list|,
-name|uint
+name|u_int
 name|apicid
 parameter_list|,
-name|uint
+name|u_int
 name|apiceid
 parameter_list|)
 block|{

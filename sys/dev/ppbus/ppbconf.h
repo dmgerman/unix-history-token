@@ -730,15 +730,15 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* name of the device */
-name|ushort
+name|u_short
 name|mode
 decl_stmt|;
 comment|/* current mode of the device */
-name|ushort
+name|u_short
 name|avm
 decl_stmt|;
 comment|/* available IEEE1284 modes of  					 * the device */
-name|uint
+name|u_int
 name|flags
 decl_stmt|;
 comment|/* flags */

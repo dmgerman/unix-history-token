@@ -1183,7 +1183,7 @@ parameter_list|,
 name|u_long
 name|count
 parameter_list|,
-name|uint
+name|u_int
 name|flags
 parameter_list|)
 function_decl|;
@@ -1321,7 +1321,7 @@ parameter_list|,
 name|u_long
 name|count
 parameter_list|,
-name|uint
+name|u_int
 name|flags
 parameter_list|)
 function_decl|;
@@ -7435,7 +7435,7 @@ parameter_list|,
 name|u_long
 name|count
 parameter_list|,
-name|uint
+name|u_int
 name|flags
 parameter_list|)
 block|{
@@ -8187,7 +8187,7 @@ parameter_list|,
 name|u_long
 name|count
 parameter_list|,
-name|uint
+name|u_int
 name|flags
 parameter_list|)
 block|{
@@ -8934,7 +8934,7 @@ parameter_list|,
 name|u_long
 name|count
 parameter_list|,
-name|uint
+name|u_int
 name|flags
 parameter_list|)
 block|{

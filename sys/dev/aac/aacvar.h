@@ -995,7 +995,7 @@ argument|aac_fibmap
 argument_list|)
 name|aac_fibmap_tqh
 expr_stmt|;
-name|uint
+name|u_int
 name|total_fibs
 decl_stmt|;
 name|struct

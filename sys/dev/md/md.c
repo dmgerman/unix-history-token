@@ -419,13 +419,13 @@ name|uintptr_t
 modifier|*
 name|array
 decl_stmt|;
-name|uint
+name|u_int
 name|total
 decl_stmt|;
-name|uint
+name|u_int
 name|used
 decl_stmt|;
-name|uint
+name|u_int
 name|shift
 decl_stmt|;
 block|}
@@ -560,7 +560,7 @@ name|indir
 modifier|*
 name|new_indir
 parameter_list|(
-name|uint
+name|u_int
 name|shift
 parameter_list|)
 block|{

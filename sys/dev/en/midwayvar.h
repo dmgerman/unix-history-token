@@ -361,7 +361,7 @@ name|void
 modifier|*
 name|rxhand
 decl_stmt|;
-name|uint
+name|u_int
 name|vflags
 decl_stmt|;
 name|uint32_t

@@ -5477,7 +5477,7 @@ name|u_char
 modifier|*
 name|ptr
 parameter_list|,
-name|uint
+name|u_int
 name|length
 parameter_list|,
 name|int

@@ -3015,10 +3015,10 @@ begin_struct
 struct|struct
 name|ifid
 block|{
-name|ushort
+name|u_short
 name|ifid_len
 decl_stmt|;
-name|ushort
+name|u_short
 name|ifid_pad
 decl_stmt|;
 name|int

@@ -2165,11 +2165,11 @@ name|int
 name|shm_segsz
 decl_stmt|;
 comment|/* size of segment (bytes) */
-name|ushort
+name|u_short
 name|shm_cpid
 decl_stmt|;
 comment|/* pid, creator */
-name|ushort
+name|u_short
 name|shm_lpid
 decl_stmt|;
 comment|/* pid, last operation */

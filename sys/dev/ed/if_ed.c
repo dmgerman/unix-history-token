@@ -11455,7 +11455,7 @@ operator|=
 operator|*
 operator|(
 operator|(
-name|ushort
+name|u_short
 operator|*
 operator|)
 name|savebyte

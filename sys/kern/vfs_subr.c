@@ -15456,7 +15456,7 @@ modifier|*
 name|ndp
 decl_stmt|;
 specifier|const
-name|uint
+name|u_int
 name|flags
 decl_stmt|;
 block|{

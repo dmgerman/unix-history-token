@@ -496,11 +496,11 @@ begin_function_decl
 name|void
 name|cpu_mp_add
 parameter_list|(
-name|uint
+name|u_int
 parameter_list|,
-name|uint
+name|u_int
 parameter_list|,
-name|uint
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

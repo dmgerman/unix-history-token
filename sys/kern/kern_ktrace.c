@@ -337,7 +337,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint
+name|u_int
 name|ktr_requestpool
 init|=
 name|KTRACE_REQUEST_POOL
@@ -357,7 +357,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|uint
+name|u_int
 name|ktr_geniosize
 init|=
 name|PAGE_SIZE
@@ -444,10 +444,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|uint
+name|u_int
 name|ktrace_resize_pool
 parameter_list|(
-name|uint
+name|u_int
 name|newsize
 parameter_list|)
 function_decl|;
@@ -722,7 +722,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|uint
+name|u_int
 name|newsize
 decl_stmt|,
 name|oldsize
@@ -768,7 +768,7 @@ name|oldsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint
+name|u_int
 argument_list|)
 argument_list|)
 operator|)
@@ -785,7 +785,7 @@ name|wantsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint
+name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -849,7 +849,7 @@ name|oldsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|uint
+name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -910,10 +910,10 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|uint
+name|u_int
 name|ktrace_resize_pool
 parameter_list|(
-name|uint
+name|u_int
 name|newsize
 parameter_list|)
 block|{
@@ -3768,7 +3768,7 @@ operator|=
 name|data_lengths
 index|[
 operator|(
-name|ushort
+name|u_short
 operator|)
 name|kth
 operator|->

@@ -531,7 +531,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|uint
+name|u_int
 name|addr
 decl_stmt|,
 name|slot

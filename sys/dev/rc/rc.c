@@ -5846,7 +5846,7 @@ name|rc_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint
+name|u_int
 name|chipid
 parameter_list|)
 block|{
