@@ -2118,15 +2118,15 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|char
+modifier|*
+name|iface
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* NETGRAPH */
 name|int
 name|unit
-decl_stmt|;
-name|char
-modifier|*
-name|iface
 decl_stmt|;
 name|printf
 argument_list|(
@@ -5247,11 +5247,7 @@ name|sc
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
+return|return;
 name|bzero
 argument_list|(
 name|sc
