@@ -5552,24 +5552,7 @@ operator|->
 name|esp
 condition|)
 block|{
-name|outb
-argument_list|(
-name|iobase
-operator|+
-name|com_fifo
-argument_list|,
-name|FIFO_DMA_MODE
-operator||
-name|FIFO_ENABLE
-operator||
-name|FIFO_RCV_RST
-operator||
-name|FIFO_XMT_RST
-operator||
-name|FIFO_RX_MEDH
-argument_list|)
-expr_stmt|;
-comment|/* Set 16550 compatibility mode. */
+comment|/* 		 * Set 16550 compatibility mode. 		 * We don't use the ESP_MODE_SCALE bit to increase the 		 * fifo trigger levels because we can't handle large 		 * bursts of input. 		 * XXX flow control should be set in comparam(), not here. 		 */
 name|outb
 argument_list|(
 name|com
@@ -5589,8 +5572,6 @@ name|esp_port
 operator|+
 name|ESP_CMD2
 argument_list|,
-name|ESP_MODE_SCALE
-operator||
 name|ESP_MODE_RTS
 operator||
 name|ESP_MODE_FIFO
@@ -11741,6 +11722,24 @@ name|FIFO_ENABLE
 operator||
 name|FIFO_RX_HIGH
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COM_ESP
+comment|/* 		 * The Hayes ESP card needs the fifo DMA mode bit set 		 * in compatibility mode.  If not, it will interrupt 		 * for each character received. 		 */
+if|if
+condition|(
+name|com
+operator|->
+name|esp
+condition|)
+name|com
+operator|->
+name|fifo_image
+operator||=
+name|FIFO_DMA_MODE
+expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|iobase
@@ -13162,6 +13161,19 @@ name|com
 operator|->
 name|hasfifo
 condition|)
+ifdef|#
+directive|ifdef
+name|COM_ESP
+comment|/* XXX avoid h/w bug. */
+if|if
+condition|(
+operator|!
+name|com
+operator|->
+name|esp
+condition|)
+endif|#
+directive|endif
 comment|/* XXX does this flush everything? */
 name|outb
 argument_list|(
@@ -13246,6 +13258,19 @@ name|com
 operator|->
 name|hasfifo
 condition|)
+ifdef|#
+directive|ifdef
+name|COM_ESP
+comment|/* XXX avoid h/w bug. */
+if|if
+condition|(
+operator|!
+name|com
+operator|->
+name|esp
+condition|)
+endif|#
+directive|endif
 comment|/* XXX does this flush everything? */
 name|outb
 argument_list|(
