@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.21 %G%"
+literal|"@(#)sccs.c	1.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -742,7 +742,7 @@ name|char
 modifier|*
 name|nav
 index|[
-literal|7
+literal|200
 index|]
 decl_stmt|;
 name|char
@@ -750,6 +750,15 @@ modifier|*
 modifier|*
 name|avp
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|extern
+name|bool
+name|unedit
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1120,6 +1129,10 @@ break|break;
 case|case
 name|UNEDIT
 case|:
+name|i
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|avp
@@ -1138,19 +1151,41 @@ condition|;
 name|avp
 operator|++
 control|)
+block|{
+if|if
+condition|(
 name|unedit
 argument_list|(
 operator|*
 name|avp
 argument_list|)
+condition|)
+name|nav
+index|[
+name|i
+operator|++
+index|]
+operator|=
+operator|*
+name|avp
 expr_stmt|;
+block|}
+name|nav
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
 name|xcommand
 argument_list|(
-operator|&
-name|argv
-index|[
-literal|1
-index|]
+name|nav
 argument_list|,
 name|FALSE
 argument_list|,
@@ -2088,24 +2123,19 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  UNEDIT -- unedit a file ** **	Checks to see that the current user is actually editting **	the file and arranges that s/he is not editting it. ** **	Parameters: **		fn -- the name of the file to be unedited. ** **	Returns: **		none. ** **	Side Effects: **		fn is removed **		entries are removed from pfile. */
+comment|/* **  UNEDIT -- unedit a file ** **	Checks to see that the current user is actually editting **	the file and arranges that s/he is not editting it. ** **	Parameters: **		fn -- the name of the file to be unedited. ** **	Returns: **		TRUE -- if the file was successfully unedited. **		FALSE -- if the file was not unedited for some **			reason. ** **	Side Effects: **		fn is removed **		entries are removed from pfile. */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|unedit
-argument_list|(
-argument|fn
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fn
+parameter_list|)
 name|char
 modifier|*
 name|fn
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -2242,7 +2272,11 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 comment|/* turn "s." into "p." */
 operator|*
@@ -2274,7 +2308,11 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 comment|/* 	**  Copy p-file to temp file, doing deletions as needed. 	*/
 name|mktemp
@@ -2443,7 +2481,11 @@ argument_list|,
 name|pfn
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 while|while
 condition|(
@@ -2507,6 +2549,11 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -2517,9 +2564,14 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
