@@ -1452,7 +1452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  Make the same choice for free/contigfree.  */
 end_comment
 
 begin_function
@@ -1482,7 +1482,6 @@ argument_list|(
 literal|"bus_dmamem_free: Invalid map freed\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX There is no "contigfree" and "free" doesn't work */
 if|if
 condition|(
 operator|(
@@ -1505,6 +1504,18 @@ condition|)
 name|free
 argument_list|(
 name|vaddr
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+else|else
+name|contigfree
+argument_list|(
+name|vaddr
+argument_list|,
+name|dmat
+operator|->
+name|maxsize
 argument_list|,
 name|M_DEVBUF
 argument_list|)
