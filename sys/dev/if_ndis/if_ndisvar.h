@@ -238,10 +238,6 @@ name|struct
 name|mtx
 name|ndis_mtx
 decl_stmt|;
-name|struct
-name|mtx
-name|ndis_intrmtx
-decl_stmt|;
 name|device_t
 name|ndis_dev
 decl_stmt|;
@@ -283,6 +279,9 @@ name|ndis_packet
 modifier|*
 modifier|*
 name|ndis_txarray
+decl_stmt|;
+name|ndis_handle
+name|ndis_txpool
 decl_stmt|;
 name|int
 name|ndis_sc
@@ -356,10 +355,6 @@ name|ndis_tmaps
 decl_stmt|;
 name|int
 name|ndis_mmapcnt
-decl_stmt|;
-name|device_object
-modifier|*
-name|ndis_pdo
 decl_stmt|;
 block|}
 struct|;
