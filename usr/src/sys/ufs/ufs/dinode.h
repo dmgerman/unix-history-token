@@ -26,8 +26,15 @@ value|((ino_t)1)
 end_define
 
 begin_comment
-comment|/*  * A dinode contains all the meta-data associated with a UFS file.  * This structure defines the on-disk format of a dinode.  */
+comment|/*  * A dinode contains all the meta-data associated with a UFS file.  * This structure defines the on-disk format of a dinode. Since  * this structure describes an on-disk structure, all its fields  * are defined by types with precise widths.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|int32_t
+name|ufs_daddr_t
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -72,7 +79,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/*   4: Ffs: old user and group ids. */
-name|ino_t
+name|int32_t
 name|inumber
 decl_stmt|;
 comment|/*   4: Lfs: inode number. */
@@ -83,29 +90,38 @@ name|u_int64_t
 name|di_size
 decl_stmt|;
 comment|/*   8: File byte count. */
-name|struct
-name|timespec
+name|int32_t
 name|di_atime
 decl_stmt|;
 comment|/*  16: Last access time. */
-name|struct
-name|timespec
+name|int32_t
+name|di_atimensec
+decl_stmt|;
+comment|/*  20: Last access time. */
+name|int32_t
 name|di_mtime
 decl_stmt|;
 comment|/*  24: Last modified time. */
-name|struct
-name|timespec
+name|int32_t
+name|di_mtimensec
+decl_stmt|;
+comment|/*  28: Last modified time. */
+name|int32_t
 name|di_ctime
 decl_stmt|;
 comment|/*  32: Last inode change time. */
-name|daddr_t
+name|int32_t
+name|di_ctimensec
+decl_stmt|;
+comment|/*  36: Last inode change time. */
+name|ufs_daddr_t
 name|di_db
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
 comment|/*  40: Direct disk blocks. */
-name|daddr_t
+name|ufs_daddr_t
 name|di_ib
 index|[
 name|NIADDR
@@ -186,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|MAXSYMLINKLEN
-value|((NDADDR + NIADDR) * sizeof(daddr_t))
+value|((NDADDR + NIADDR) * sizeof(ufs_daddr_t))
 end_define
 
 begin_comment
