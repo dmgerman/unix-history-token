@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,7 +192,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -207,7 +207,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -381,7 +381,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\tcannot create lock file"
+literal|"\tcannot create lock file\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -682,7 +682,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -697,7 +697,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -1074,7 +1074,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1089,7 +1089,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -1210,7 +1210,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\tcannot enable queuing"
+literal|"\tcannot enable queuing\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1385,7 +1385,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1400,7 +1400,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -1803,7 +1803,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1818,7 +1818,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -2008,7 +2008,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2023,7 +2023,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -2321,7 +2321,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2336,7 +2336,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
@@ -2919,7 +2919,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot open printer description file"
+literal|"cannot open printer description file\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2934,7 +2934,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unknown printer %s"
+literal|"unknown printer %s\n"
 argument_list|,
 name|printer
 argument_list|)
