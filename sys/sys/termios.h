@@ -1382,6 +1382,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|B921600
+value|921600
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXTA
 value|19200
 end_define

@@ -165,6 +165,13 @@ name|B460800
 value|19
 end_define
 
+begin_define
+define|#
+directive|define
+name|B921600
+value|20
+end_define
+
 begin_endif
 endif|#
 directive|endif
