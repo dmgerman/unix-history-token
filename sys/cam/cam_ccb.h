@@ -1749,7 +1749,12 @@ comment|/* Initiator role not supported. */
 name|PIM_NOBUSRESET
 init|=
 literal|0x10
+block|,
 comment|/* User has disabled initial BUS RESET */
+name|PIM_NO_6_BYTE
+init|=
+literal|0x08
+comment|/* Do not send 6-byte commands */
 block|}
 name|pi_miscflag
 typedef|;
