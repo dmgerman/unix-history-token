@@ -934,12 +934,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_asr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"dev/asr/sys_info.h"
 end_include
 
