@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_makeaddr.c	5.3 (Berkeley) %G%"
+literal|"@(#)inet_makeaddr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ name|net
 parameter_list|,
 name|host
 parameter_list|)
-name|int
+name|u_long
 name|net
 decl_stmt|,
 name|host
@@ -112,7 +112,13 @@ operator|&
 name|IN_CLASSB_HOST
 operator|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|net
+operator|<
+literal|16777216L
+condition|)
 name|addr
 operator|=
 operator|(
@@ -126,6 +132,13 @@ name|host
 operator|&
 name|IN_CLASSC_HOST
 operator|)
+expr_stmt|;
+else|else
+name|addr
+operator|=
+name|net
+operator||
+name|host
 expr_stmt|;
 name|addr
 operator|=
