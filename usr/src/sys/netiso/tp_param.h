@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1145,7 +1145,7 @@ name|LOCAL_CREDIT
 parameter_list|(
 name|tpcb
 parameter_list|)
-value|{\     register struct sockbuf *xxsb =&((tpcb)->tp_sock->so_rcv);\     register int xxi = ((xxsb)->sb_hiwat-(xxsb)->sb_cc);\     register int maxcredit = ((tpcb)->tp_xtd_format?0xffff:0xf);\     xxi = (xxi<0) ? 0 : ((xxi)>>(tpcb)->tp_tpdusize);\     xxi = MIN(xxi, maxcredit); \     if (!(tpcb->tp_cebit_off)) { \         (tpcb)->tp_lcredit = ROUND((tpcb)->tp_win_recv); \         if (xxi< (tpcb)->tp_lcredit) { \             (tpcb)->tp_lcredit = xxi; \         } \     } \     else { \         (tpcb)->tp_lcredit = xxi; \     } \ }
+value|{\     register struct sockbuf *xxsb =&((tpcb)->tp_sock->so_rcv);\     register int xxi = sbspace(xxsb);\     xxi = (xxi<0) ? 0 : ((xxi) / (tpcb)->tp_l_tpdusize);\     xxi = min(xxi, (tpcb)->tp_maxlcredit); \     if (!(tpcb->tp_cebit_off)) { \         (tpcb)->tp_lcredit = ROUND((tpcb)->tp_win_recv); \         if (xxi< (tpcb)->tp_lcredit) { \             (tpcb)->tp_lcredit = xxi; \         } \     } \     else { \         (tpcb)->tp_lcredit = xxi; \     } \ }
 end_define
 
 begin_endif
@@ -1159,6 +1159,30 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARGO_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|printf
+value|logpri(LOG_DEBUG),addlog
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

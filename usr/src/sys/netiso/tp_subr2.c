@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -772,6 +772,14 @@ name|tp_peer_acktime
 operator|+
 literal|2
 operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|tp_rsyset
+argument_list|(
+name|tpcb
 argument_list|)
 expr_stmt|;
 block|}
