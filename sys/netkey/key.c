@@ -9695,6 +9695,12 @@ name|id
 operator|)
 argument_list|)
 expr_stmt|;
+name|key_freesp
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* ref gained by key_getsp */
 return|return
 name|key_senderror
 argument_list|(
@@ -10020,6 +10026,12 @@ name|id
 operator|)
 argument_list|)
 expr_stmt|;
+name|key_freesp
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* ref gained by key_getspbyid */
 return|return
 name|key_senderror
 argument_list|(
@@ -10041,7 +10053,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* ref gained by key_getsp */
+comment|/* ref gained by key_getspbyid */
 name|key_sp_unlink
 argument_list|(
 name|sp
@@ -10549,6 +10561,12 @@ operator|->
 name|sadb_msg_pid
 argument_list|)
 expr_stmt|;
+name|key_freesp
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* ref gained by key_getspbyid */
 if|if
 condition|(
 name|n
