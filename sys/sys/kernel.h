@@ -245,6 +245,11 @@ init|=
 literal|0x0000001
 block|,
 comment|/* processed*/
+name|SI_SUB_TUNABLES
+init|=
+literal|0x0700000
+block|,
+comment|/* establish tunable values */
 name|SI_SUB_CONSOLE
 init|=
 literal|0x0800000
@@ -255,11 +260,6 @@ init|=
 literal|0x0800001
 block|,
 comment|/* first use of console*/
-name|SI_SUB_TUNABLES
-init|=
-literal|0x0700000
-block|,
-comment|/* establish tunable values */
 name|SI_SUB_VM
 init|=
 literal|0x1000000
