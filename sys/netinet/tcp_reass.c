@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_input.c	8.5 (Berkeley) 4/10/94  *	$Id: tcp_input.c,v 1.25 1995/05/30 08:09:55 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_input.c	8.5 (Berkeley) 4/10/94  *	$Id: tcp_input.c,v 1.26 1995/06/29 18:11:22 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -7174,10 +7174,6 @@ name|tao_mssopt
 operator|=
 name|offer
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RTV_MTU
-comment|/* if route characteristics exist ... */
 comment|/* 	 * While we're here, check if there's an initial rtt 	 * or rttvar.  Convert from the route-table units 	 * to scaled multiples of the slow timeout timer. 	 */
 if|if
 condition|(
@@ -7237,6 +7233,11 @@ name|TCP_RTT_SCALE
 operator|)
 operator|)
 expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_usedrtt
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -7245,6 +7246,7 @@ name|rt_rmx
 operator|.
 name|rmx_rttvar
 condition|)
+block|{
 name|tp
 operator|->
 name|t_rttvar
@@ -7265,7 +7267,14 @@ name|TCP_RTTVAR_SCALE
 operator|)
 operator|)
 expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_usedrttvar
+operator|++
+expr_stmt|;
+block|}
 else|else
+block|{
 comment|/* default variation is +- 1 rtt */
 name|tp
 operator|->
@@ -7279,6 +7288,7 @@ name|TCP_RTTVAR_SCALE
 operator|/
 name|TCP_RTT_SCALE
 expr_stmt|;
+block|}
 name|TCPT_RANGESET
 argument_list|(
 name|tp
@@ -7333,9 +7343,6 @@ name|tcpiphdr
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-comment|/* RTV_MTU */
 block|{
 name|mss
 operator|=
@@ -7669,9 +7676,6 @@ name|snd_cwnd
 operator|=
 name|mss
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RTV_SSTHRESH
 if|if
 condition|(
 name|rt
@@ -7699,9 +7703,12 @@ operator|.
 name|rmx_ssthresh
 argument_list|)
 expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_usedssthresh
+operator|++
+expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
