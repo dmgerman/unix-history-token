@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ikreg.h	1.1	86/11/29	*/
+comment|/*	ikreg.h	1.2	86/12/11	*/
 end_comment
 
 begin_comment
@@ -337,28 +337,6 @@ name|IKCSR_BITS
 define|\
 value|"\020\1DEV\2FNC1\3FNC2\4FNC3\5TIMO\6BERR\7IENA\10READY\12STATC\13STATB\14STATA\ \15PERR\16ATTN\17ATTF\20DMAF"
 end_define
-
-begin_define
-define|#
-directive|define
-name|IKMOD_STD
-value|0x1
-end_define
-
-begin_comment
-comment|/* std memory map address modifier */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IKVEC_BASE
-value|0x9c
-end_define
-
-begin_comment
-comment|/* base of reserved interrupt vectors */
-end_comment
 
 begin_comment
 comment|/*  * Pulse command register definitions (write-only).  */
