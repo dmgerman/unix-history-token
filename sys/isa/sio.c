@@ -3283,6 +3283,13 @@ block|}
 block|,
 comment|/* GWY6290 - Telepath with x2 Technology */
 block|{
+literal|0x8100e425
+block|,
+name|NULL
+block|}
+block|,
+comment|/* IOD0081 - I-O DATA DEVICE,INC. IFML-560 */
+block|{
 literal|0x21002534
 block|,
 name|NULL
