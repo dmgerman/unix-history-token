@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invert.c	2.3	%G%"
+literal|"@(#)invert.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,6 +525,11 @@ argument_list|,
 name|distinct
 argument_list|,
 name|keys
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
