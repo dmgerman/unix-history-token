@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.4	81/02/08	*/
+comment|/*	mba.c	4.5	81/02/10	*/
 end_comment
 
 begin_comment
@@ -391,12 +391,14 @@ literal|"mbustart"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|VAX
-operator|==
-literal|780
+block|}
+end_block
+
+begin_comment
 comment|/*  * Start an i/o operation on the massbus specified by the argument.  * We peel the first operation off its queue and insure that the drive  * is present and on-line.  We then use the drivers start routine  * (if any) to prepare the drive, setup the massbus map for the transfer  * and start the transfer.  */
+end_comment
+
+begin_expr_stmt
 name|mbstart
 argument_list|(
 name|mhp
@@ -407,6 +409,9 @@ name|mba_hd
 operator|*
 name|mhp
 expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -685,14 +690,26 @@ literal|6
 expr_stmt|;
 block|}
 block|}
+end_block
+
+begin_comment
 comment|/*  * Take an interrupt off of massbus mbanum,  * and dispatch to drivers as appropriate.  */
+end_comment
+
+begin_macro
 name|mbintr
 argument_list|(
 argument|mbanum
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|mbanum
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -819,9 +836,7 @@ expr_stmt|;
 goto|goto
 name|doattn
 goto|;
-include|#
-directive|include
-file|"../h/buf.h"
+block|}
 comment|/* 		 * Clear attention status for drive whose data 		 * transfer completed, and give the dtint driver 		 * routine a chance to say what is next. 		 */
 name|mi
 operator|=
@@ -1247,7 +1262,13 @@ operator||=
 name|MBAIE
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Setup the mapping registers for a transfer.  */
+end_comment
+
+begin_expr_stmt
 name|mbasetup
 argument_list|(
 name|mi
@@ -1258,6 +1279,9 @@ name|mba_info
 operator|*
 name|mi
 expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -1522,8 +1546,14 @@ name|b_un
 operator|.
 name|b_addr
 block|)
-block|]
+end_block
+
+begin_empty_stmt
+unit|]
 empty_stmt|;
+end_empty_stmt
+
+begin_else
 else|else
 name|pte
 operator|=
@@ -1534,6 +1564,9 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+end_else
+
+begin_while
 while|while
 condition|(
 operator|--
@@ -1571,8 +1604,10 @@ operator||
 name|PG_V
 expr_stmt|;
 block|}
-block|}
-operator|*
+end_while
+
+begin_expr_stmt
+unit|} 	*
 operator|(
 name|int
 operator|*
@@ -1582,13 +1617,16 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|vaddr
 operator|)
 return|;
-block|}
-end_block
+end_return
 
+unit|}
 end_unit
 

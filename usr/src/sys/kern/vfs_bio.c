@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.9	%G%	*/
+comment|/*	vfs_bio.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -904,10 +904,8 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|struct
-name|buf
-modifier|*
-name|dp
+name|int
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -929,7 +927,7 @@ name|vm_oublk
 operator|++
 expr_stmt|;
 comment|/* noone paid yet */
-name|dp
+name|flags
 operator|=
 name|bdevsw
 index|[
@@ -941,13 +939,11 @@ name|b_dev
 argument_list|)
 index|]
 operator|.
-name|d_tab
+name|d_flags
 expr_stmt|;
 if|if
 condition|(
-name|dp
-operator|->
-name|b_flags
+name|flags
 operator|&
 name|B_TAPE
 condition|)
