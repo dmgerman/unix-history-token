@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)renice.c	8.1 (Berkeley) 6/9/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)renice.c	8.1 (Berkeley) 6/9/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +88,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -83,11 +109,41 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|donice
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Change the priority (nice) of processes  * or groups of processes which are already  * running.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -128,27 +184,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: renice priority [ [ -p ] pids ] "
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[ [ -g ] pgrps ] [ [ -u ] users ]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|prio
 operator|=
 name|atoi
@@ -280,11 +318,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"renice: %s: unknown user\n"
+literal|"%s: unknown user"
 argument_list|,
 operator|*
 name|argv
@@ -316,11 +352,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"renice: %s: bad value\n"
+literal|"%s: bad value"
 argument_list|,
 operator|*
 name|argv
@@ -351,18 +385,37 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|donice
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
 argument_list|(
-argument|which
+name|stderr
 argument_list|,
-argument|who
-argument_list|,
-argument|prio
+literal|"usage: renice priority [ [ -p ] pids ] [ [ -g ] pgrps ] [ [ -u ] users ]\n"
 argument_list|)
-end_macro
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_function
+name|int
+name|donice
+parameter_list|(
+name|which
+parameter_list|,
+name|who
+parameter_list|,
+name|prio
+parameter_list|)
 name|int
 name|which
 decl_stmt|,
@@ -370,9 +423,6 @@ name|who
 decl_stmt|,
 name|prio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|oldprio
@@ -404,18 +454,11 @@ operator|&&
 name|errno
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"renice: %d: "
+literal|"%d: getpriority"
 argument_list|,
 name|who
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"getpriority"
 argument_list|)
 expr_stmt|;
 return|return
@@ -438,18 +481,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"renice: %d: "
+literal|"%d: setpriority"
 argument_list|,
 name|who
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"setpriority"
 argument_list|)
 expr_stmt|;
 return|return
@@ -475,7 +511,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
