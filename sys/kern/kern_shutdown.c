@@ -1083,7 +1083,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nsyncing disks, buffers remaining... "
+literal|"syncing disks, buffers remaining... "
 argument_list|)
 expr_stmt|;
 name|sync
@@ -1286,11 +1286,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Count only busy local buffers to prevent forcing  		 * a fsck if we're just a client of a wedged NFS server 		 */
 name|nbusy
 operator|=
