@@ -777,7 +777,7 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
-name|DIGITAL
+name|DIGITAL2
 argument_list|,
 name|DEPCMXX
 argument_list|,
