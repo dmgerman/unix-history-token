@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.28 1997/07/17 19:44:56 dyson Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.16 1997/07/18 19:45:41 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_DEFAULT_CONFIG, TEST_CPUSTOP _TEST1 */
+comment|/** TEST_DEFAULT_CONFIG, TEST_TEST1 */
 end_comment
 
 begin_include
@@ -1938,12 +1938,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_CPUSTOP
-argument_list|)
 comment|/* install an inter-CPU IPI for CPU stop/restart */
 name|setidt
 argument_list|(
@@ -1963,16 +1957,13 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/** TEST_CPUSTOP */
 if|#
 directive|if
 name|defined
 argument_list|(
 name|TEST_TEST1
 argument_list|)
-comment|/* install a 'Spurious INTerrupt' vector */
+comment|/* install a "fake hardware INTerrupt" vector */
 name|setidt
 argument_list|(
 name|XTEST1_OFFSET
@@ -6729,35 +6720,6 @@ name|smp_invltlb
 argument_list|()
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_CPUSTOP
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|void
-name|db_printf
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|fmt
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
 comment|/*  * When called the executing CPU will send an IPI to all other CPUs  *  requesting that they halt execution.  *  * Usually (but not necessarily) called with 'other_cpus' as its arg.  *  *  - Signals all CPUs in map to stop.  *  - Waits for each to stop.  *  * Returns:  *  -1: error  *   0: NA  *   1: ok  *  * XXX FIXME: this is not MP-safe, needs a lock to prevent multiple CPUs  *            from executing at same time.  */
 name|int
 name|stop_cpus
@@ -6775,24 +6737,6 @@ return|return
 literal|0
 return|;
 comment|/* send IPI to all CPUs in map */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|db_printf
-argument_list|(
-literal|"\nCPU%d stopping CPUs: 0x%08x\n"
-argument_list|,
-name|cpuid
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
 name|stopped_cpus
 operator|=
 literal|0
@@ -6807,20 +6751,6 @@ argument_list|,
 name|APIC_DELMODE_FIXED
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|db_printf
-argument_list|(
-literal|"  spin\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
 while|while
 condition|(
 name|stopped_cpus
@@ -6829,20 +6759,6 @@ name|map
 condition|)
 comment|/* spin */
 empty_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|db_printf
-argument_list|(
-literal|"  spun\nstopped\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
 return|return
 literal|1
 return|;
@@ -6863,26 +6779,6 @@ condition|)
 return|return
 literal|0
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|db_printf
-argument_list|(
-literal|"\nCPU%d restarting CPUs: 0x%08x (0x%08x)\n"
-argument_list|,
-name|cpuid
-argument_list|,
-name|map
-argument_list|,
-name|stopped_cpus
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
 name|started_cpus
 operator|=
 name|map
@@ -6895,34 +6791,11 @@ condition|)
 comment|/* wait for each to clear its bit */
 comment|/* spin */
 empty_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUG_CPUSTOP
-argument_list|)
-name|db_printf
-argument_list|(
-literal|" restarted\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG_CPUSTOP */
 return|return
 literal|1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** TEST_CPUSTOP */
-end_comment
 
 end_unit
 

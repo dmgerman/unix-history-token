@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.9 1997/07/13 00:48:28 smp Exp smp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.10 1997/07/18 19:45:41 smp Exp smp $  */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_CPUSTOP */
+comment|/** CPUSTOP_ON_DDBBREAK */
 end_comment
 
 begin_endif
@@ -366,26 +366,56 @@ argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+ifdef|#
+directive|ifdef
+name|CPUSTOP_ON_DDBBREAK
 if|#
 directive|if
 name|defined
 argument_list|(
-name|SMP
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
 argument_list|)
-operator|&&
-name|defined
+name|db_printf
 argument_list|(
-name|TEST_CPUSTOP
-argument_list|)
-comment|/* XXX FIXME: we stop all CPUs except ourselves (obviously) */
-name|stop_cpus
-argument_list|(
+literal|"\nCPU%d stopping CPUs: 0x%08x\n"
+argument_list|,
+name|cpuid
+argument_list|,
 name|other_cpus
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/** SMP&& TEST_CPUSTOP */
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+comment|/* We stop all CPUs except ourselves (obviously) */
+name|stop_cpus
+argument_list|(
+name|other_cpus
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+argument_list|)
+name|db_printf
+argument_list|(
+literal|" stopped\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* SMP */
 operator|(
 name|void
 operator|)
@@ -424,18 +454,31 @@ name|db_global_jmpbuf_valid
 operator|=
 name|FALSE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+ifdef|#
+directive|ifdef
+name|CPUSTOP_ON_DDBBREAK
 if|#
 directive|if
 name|defined
 argument_list|(
-name|SMP
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
 argument_list|)
-operator|&&
-name|defined
+name|db_printf
 argument_list|(
-name|TEST_CPUSTOP
+literal|"\nCPU%d restarting CPUs: 0x%08x\n"
+argument_list|,
+name|cpuid
+argument_list|,
+name|stopped_cpus
 argument_list|)
-comment|/* XXX FIXME: restart all the CPUs we previously stopped */
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+comment|/* Restart all the CPUs we previously stopped */
 if|if
 condition|(
 name|stopped_cpus
@@ -452,8 +495,10 @@ argument_list|,
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
-name|cngetc
-argument_list|()
+name|panic
+argument_list|(
+literal|"stop_cpus() failed"
+argument_list|)
 expr_stmt|;
 block|}
 name|restart_cpus
@@ -461,9 +506,26 @@ argument_list|(
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+argument_list|)
+name|db_printf
+argument_list|(
+literal|" restarted\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/** SMP&& TEST_CPUSTOP */
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* SMP */
 name|cnpollc
 argument_list|(
 name|FALSE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: smptests.h,v 1.10 1997/07/15 03:27:12 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: smptests.h,v 1.15 1997/07/18 19:47:48 smp Exp smp $  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ comment|/*  * various 'tests in progress'  */
 end_comment
 
 begin_comment
-comment|/*  * address of POST hardware port  * #define POST_ADDR		0x80  */
+comment|/*  * Address of POST hardware port.  * Defining this enables POSTCODE macros.  * #define POST_ADDR		0x80  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ name|TEST_ALTTIMER
 end_define
 
 begin_comment
-comment|/*  * send 8254 timer INTs to all CPUs in LOPRIO mode  * */
+comment|/*  * Send 8254 timer INTs to all CPUs in LOPRIO mode.  * */
 end_comment
 
 begin_define
@@ -44,13 +44,19 @@ name|TIMER_ALL
 end_define
 
 begin_comment
-comment|/*  * IPI for stop/restart of other CPUs  * #define COUNT_CSHITS #define DEBUG_CPUSTOP  */
+comment|/*  * Send CPUSTOP IPI for stop/restart of other CPUs on DDB break.  *  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TEST_CPUSTOP
+name|CPUSTOP_ON_DDBBREAK
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
 end_define
 
 begin_comment
@@ -84,7 +90,7 @@ name|IGNORE_IDLEPROCS
 end_define
 
 begin_comment
-comment|/*  * misc. counters  * #define COUNT_XINVLTLB_HITS #define COUNT_SPURIOUS_INTS  */
+comment|/*  * misc. counters  * #define COUNT_XINVLTLB_HITS #define COUNT_SPURIOUS_INTS #define COUNT_CSHITS  */
 end_comment
 
 begin_comment
@@ -206,7 +212,11 @@ comment|/* POST_ADDR */
 end_comment
 
 begin_comment
-comment|/*  * these are all temps for debugging CPUSTOP code in mplock.s  * they will (hopefully) go away soon...  * #define GUARD_INTS  */
+comment|/*  * these are all temps for debugging...  * #define GUARD_INTS  */
+end_comment
+
+begin_comment
+comment|/*  * This macro traps unexpected INTs to a specific CPU, eg. GUARD_CPU.  */
 end_comment
 
 begin_ifdef
