@@ -448,6 +448,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|ns_host
 name|ns_thishost
@@ -455,6 +456,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|ns_host
 name|ns_zerohost
@@ -462,6 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|ns_host
 name|ns_broadhost
@@ -469,6 +472,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|ns_net
 name|ns_zeronet
@@ -476,6 +480,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|ns_net
 name|ns_broadnet
@@ -485,7 +490,9 @@ end_decl_stmt
 begin_function_decl
 name|u_short
 name|ns_cksum
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
