@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.8 1995/11/09 08:14:59 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dead_vnops.c	8.1 (Berkeley) 6/10/93  * $Id: dead_vnops.c,v 1.9 1995/11/11 03:36:07 bde Exp $  */
 end_comment
 
 begin_include
@@ -77,6 +77,7 @@ comment|/*  * Prototypes for dead operations on vnodes.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_badop
 name|__P
@@ -89,6 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_ebadf
 name|__P
@@ -101,6 +103,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_lookup
 name|__P
@@ -129,6 +132,7 @@ value|((int (*) __P((struct  vop_mknod_args *)))dead_badop)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_open
 name|__P
@@ -171,6 +175,7 @@ value|((int (*) __P((struct  vop_setattr_args *)))dead_ebadf)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_read
 name|__P
@@ -185,6 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_write
 name|__P
@@ -199,6 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_ioctl
 name|__P
@@ -213,6 +220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_select
 name|__P
@@ -325,6 +333,7 @@ value|((int (*) __P((struct  vop_reclaim_args *)))nullop)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_lock
 name|__P
@@ -346,6 +355,7 @@ value|((int (*) __P((struct  vop_unlock_args *)))nullop)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_bmap
 name|__P
@@ -360,6 +370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_strategy
 name|__P
@@ -374,6 +385,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dead_print
 name|__P
@@ -459,6 +471,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|dead_vnodeop_entries
@@ -966,6 +979,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|dead_vnodeop_opv_desc
@@ -996,6 +1010,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_lookup
 parameter_list|(
@@ -1032,6 +1047,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_open
 parameter_list|(
@@ -1061,6 +1077,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_read
 parameter_list|(
@@ -1120,6 +1137,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_write
 parameter_list|(
@@ -1163,6 +1181,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_ioctl
 parameter_list|(
@@ -1215,6 +1234,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_select
 parameter_list|(
@@ -1241,6 +1261,7 @@ comment|/*  * Just call the device strategy routine  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_strategy
 parameter_list|(
@@ -1313,6 +1334,7 @@ comment|/*  * Wait until the vnode has finished changing state.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_lock
 parameter_list|(
@@ -1365,6 +1387,7 @@ comment|/*  * Wait until the vnode has finished changing state.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_bmap
 parameter_list|(
@@ -1434,6 +1457,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_print
 parameter_list|(
@@ -1464,6 +1488,7 @@ comment|/*  * Empty vnode failed operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_ebadf
 parameter_list|()
@@ -1481,6 +1506,7 @@ comment|/*  * Empty vnode bad operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|dead_badop
 parameter_list|()
