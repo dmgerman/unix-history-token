@@ -87,7 +87,7 @@ name|ADD
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm __volatile \ 		("addl " #n "(%2), %0" : "=r" (sum) : "0" (sum), "r" (w))
+value|__asm __volatile \ 		("addl " #n "(%1), %0" : "+r" (sum) : "r" (w))
 end_define
 
 begin_define
@@ -97,7 +97,7 @@ name|ADDC
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm __volatile \ 		("adcl " #n "(%2), %0" : "=r" (sum) : "0" (sum), "r" (w))
+value|__asm __volatile \ 		("adcl " #n "(%1), %0" : "+r" (sum) : "r" (w))
 end_define
 
 begin_define
@@ -107,14 +107,14 @@ name|LOAD
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm __volatile \ 		("movb " #n "(%1), %0" : "=r" (junk) :           "r" (w))
+value|__asm __volatile \ 		("movb " #n "(%1), %0" : "=r" (junk) : "r" (w))
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOP
-value|__asm __volatile \ 		("adcl         $0, %0" : "=r" (sum) : "0" (sum))
+value|__asm __volatile \ 		("adcl         $0, %0" : "+r" (sum))
 end_define
 
 begin_function
