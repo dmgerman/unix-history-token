@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1328,6 +1328,17 @@ literal|1
 index|]
 operator|=
 name|MOUNT_LFS
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mp
+operator|->
+name|mnt_maxsymlinklen
+operator|=
+name|fs
+operator|->
+name|lfs_maxsymlinklen
 expr_stmt|;
 end_expr_stmt
 
