@@ -4422,7 +4422,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|CDEV_DRIVER_MODULE
+name|DEV_DRIVER_MODULE
 argument_list|(
 name|ums
 argument_list|,
@@ -4433,6 +4433,8 @@ argument_list|,
 name|ums_devclass
 argument_list|,
 name|UMS_CDEV_MAJOR
+argument_list|,
+name|NODEV
 argument_list|,
 name|ums_cdevsw
 argument_list|,

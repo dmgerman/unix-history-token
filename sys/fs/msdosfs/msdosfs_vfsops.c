@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.41 1999/03/28 23:00:33 dt Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.42 1999/05/06 18:12:50 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1603,14 +1603,14 @@ operator|>=
 name|nblkdev
 operator|||
 name|bdevsw
-index|[
+argument_list|(
 name|major
 argument_list|(
 name|devvp
 operator|->
 name|v_rdev
 argument_list|)
-index|]
+argument_list|)
 operator|==
 name|NULL
 condition|)

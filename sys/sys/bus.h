@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus.h,v 1.10 1999/03/29 08:54:19 dfr Exp $  */
+comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus.h,v 1.11 1999/04/16 21:22:54 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -1566,7 +1566,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CDEV_DRIVER_MODULE
+name|DEV_DRIVER_MODULE
 parameter_list|(
 name|name
 parameter_list|,
@@ -1576,35 +1576,10 @@ name|driver
 parameter_list|,
 name|devclass
 parameter_list|,		\
-name|major
-parameter_list|,
-name|devsw
-parameter_list|,
-name|evh
-parameter_list|,
-name|arg
-parameter_list|)
-define|\ 									\
-value|static struct cdevsw_module_data name##_##busname##_cdevsw_mod = {	\     evh, arg, makedev(major, 0),&devsw					\ };									\ 									\ DRIVER_MODULE(name, busname, driver, devclass,				\ 	      cdevsw_module_handler,&name##_##busname##_cdevsw_mod)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDEV_DRIVER_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|busname
-parameter_list|,
-name|driver
-parameter_list|,
-name|devclass
-parameter_list|,		\
-name|bmajor
-parameter_list|,
 name|cmajor
 parameter_list|,
+name|bmajor
+parameter_list|,
 name|devsw
 parameter_list|,
 name|evh
@@ -1612,7 +1587,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\ 									\
-value|static struct bdevsw_module_data name##_##busname##_bdevsw_mod = {	\     evh, arg, makedev(bmajor, 0), makedev(cmajor, 0),&devsw		\ };									\ 									\ DRIVER_MODULE(name, busname, driver, devclass,				\ 	      bdevsw_module_handler,&name##_##busname##_bdevsw_mod)
+value|static struct devsw_module_data name##_##busname##_devsw_mod = {	\     evh, arg, makedev(bmajor, 0), makedev(cmajor, 0),&devsw		\ };									\ 									\ DRIVER_MODULE(name, busname, driver, devclass,				\ 	      devsw_module_handler,&name##_##busname##_devsw_mod)
 end_define
 
 begin_endif

@@ -2055,7 +2055,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|CDEV_DRIVER_MODULE
+name|DEV_DRIVER_MODULE
 argument_list|(
 name|ulpt
 argument_list|,
@@ -2066,6 +2066,8 @@ argument_list|,
 name|ulpt_devclass
 argument_list|,
 name|ULPT_CDEV_MAJOR
+argument_list|,
+name|NODEV
 argument_list|,
 name|ulpt_cdevsw
 argument_list|,

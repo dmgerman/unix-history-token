@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.5 (Berkeley) 1/9/95  * $Id: conf.h,v 1.49 1999/01/21 16:15:53 peter Exp $  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.5 (Berkeley) 1/9/95  * $Id: conf.h,v 1.50 1999/02/25 05:22:28 dillon Exp $  */
 end_comment
 
 begin_ifndef
@@ -607,22 +607,66 @@ specifier|extern
 name|struct
 name|cdevsw
 modifier|*
-name|bdevsw
+name|cdevsw
 index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|cdevsw
-modifier|*
-name|cdevsw
+name|int
+name|bmaj2cmaj
 index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|cdevsw
+operator|*
+name|bdevsw
+argument_list|(
+argument|int maj
+argument_list|)
+block|{ 	struct
+name|cdevsw
+operator|*
+name|c
+operator|=
+name|cdevsw
+index|[
+name|bmaj2cmaj
+index|[
+name|maj
+index|]
+index|]
+block|;
+comment|/* CMAJ zero is the console, which has no strategy so this works */
+if|if
+condition|(
+name|c
+operator|->
+name|d_strategy
+condition|)
+return|return
+operator|(
+name|c
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+end_return
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -631,9 +675,12 @@ begin_comment
 comment|/*  * Line discipline switch table  */
 end_comment
 
-begin_struct
-struct|struct
+begin_macro
+unit|struct
 name|linesw
+end_macro
+
+begin_block
 block|{
 name|l_open_t
 modifier|*
@@ -671,8 +718,11 @@ name|u_char
 name|l_hotchar
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_ifdef
 ifdef|#
@@ -958,47 +1008,7 @@ end_struct_decl
 
 begin_struct
 struct|struct
-name|cdevsw_module_data
-block|{
-name|int
-function_decl|(
-modifier|*
-name|chainevh
-function_decl|)
-parameter_list|(
-name|struct
-name|module
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* next handler */
-name|void
-modifier|*
-name|chainarg
-decl_stmt|;
-comment|/* arg for next event handler */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* device major to use */
-name|struct
-name|cdevsw
-modifier|*
-name|cdevsw
-decl_stmt|;
-comment|/* device functions */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|bdevsw_module_data
+name|devsw_module_data
 block|{
 name|int
 function_decl|(
@@ -1043,11 +1053,13 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CDEV_MODULE
+name|DEV_MODULE
 parameter_list|(
 name|name
 parameter_list|,
-name|major
+name|cmaj
+parameter_list|,
+name|bmaj
 parameter_list|,
 name|devsw
 parameter_list|,
@@ -1056,55 +1068,12 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static struct cdevsw_module_data name##_cdevsw_mod = {			\     evh, arg, major == NODEV ? NODEV : makedev(major, 0),&devsw	\ };									\ 									\ static moduledata_t name##_mod = {					\     #name,								\     cdevsw_module_handler,						\&name##_cdevsw_mod							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE+major)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BDEV_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|bdev
-parameter_list|,
-name|cdev
-parameter_list|,
-name|devsw
-parameter_list|,
-name|evh
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|static struct bdevsw_module_data name##_bdevsw_mod = {			\     evh, arg, bdev == NODEV ? NODEV : makedev(bdev, 0),			\     cdev == NODEV ? NODEV :  makedev(cdev, 0),&devsw			\ };									\ 									\ static moduledata_t name##_mod = {					\     #name,								\     bdevsw_module_handler,						\&name##_bdevsw_mod							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE+cdev)
+value|static struct devsw_module_data name##_devsw_mod = {			\     evh, arg, bmaj == NODEV ? NODEV : makedev(bmaj, 0),			\     cmaj == NODEV ? NODEV :  makedev(cmaj, 0),&devsw			\ };									\ 									\ static moduledata_t name##_mod = {					\     #name,								\     devsw_module_handler,						\&name##_devsw_mod							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE+cmaj*256+bmaj)
 end_define
 
 begin_decl_stmt
 name|int
-name|cdevsw_module_handler
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|module
-operator|*
-name|mod
-operator|,
-name|int
-name|what
-operator|,
-name|void
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|bdevsw_module_handler
+name|devsw_module_handler
 name|__P
 argument_list|(
 operator|(

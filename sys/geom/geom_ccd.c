@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.44 1999/05/06 19:19:30 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.45 1999/05/07 07:03:17 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1050,13 +1050,13 @@ block|}
 end_function
 
 begin_expr_stmt
-name|BDEV_MODULE
+name|DEV_MODULE
 argument_list|(
 name|ccd
 argument_list|,
-name|BDEV_MAJOR
-argument_list|,
 name|CDEV_MAJOR
+argument_list|,
+name|BDEV_MAJOR
 argument_list|,
 name|ccd_cdevsw
 argument_list|,
