@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dblookup.c,v 1.7 1996/04/27 17:50:18 wpaul Exp wpaul $  *  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dblookup.c,v 1.9 1996/05/01 02:33:52 wpaul Exp $  *  */
 end_comment
 
 begin_include
@@ -80,6 +80,28 @@ include|#
 directive|include
 file|"yp_extern.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: yp_dblookup.c,v 1.9 1996/05/01 02:33:52 wpaul Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -235,9 +257,13 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Zorch a single entry in the dbent table and release  * all its resources.  */
+end_comment
+
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|yp_flush
 parameter_list|(
@@ -338,7 +364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close all databases and erase all database names.  * Don't free the memory allocated for each DB entry though: we  * can just reuse it later.  */
+comment|/*  * Close all databases and erase all database names.  */
 end_comment
 
 begin_function
@@ -399,7 +425,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|yp_add_db
 parameter_list|(
@@ -430,12 +456,6 @@ name|struct
 name|dbent
 modifier|*
 name|tmp
-decl_stmt|;
-specifier|static
-name|int
-name|count
-init|=
-literal|0
 decl_stmt|;
 name|tmp
 operator|=
@@ -500,7 +520,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Add the new entry. We allocate memory for the dbent 	 * structure if we need it. We shoudly only end up calling 	 * malloc(2) MAXDB times. Once all the slots are filled, we 	 * hold onto the memory and recycle it. 	 */
+comment|/* 	 * Allocate a new entry. 	 */
 if|if
 condition|(
 name|dbs
@@ -511,20 +531,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|count
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|ypdb_debug
-condition|)
-name|yp_error
-argument_list|(
-literal|"allocating new DB member (%d)"
-argument_list|,
-name|count
-argument_list|)
-expr_stmt|;
 name|dbs
 index|[
 literal|0
@@ -606,7 +612,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|DB
 modifier|*
 name|yp_find_db
@@ -624,6 +630,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|key
+decl_stmt|;
+name|int
+name|size
 decl_stmt|;
 block|{
 specifier|register
@@ -842,18 +851,23 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
-name|snprintf
+name|strcpy
 argument_list|(
 name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"%s/%s"
 argument_list|,
 name|domain
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
 argument_list|,
 name|map
 argument_list|)

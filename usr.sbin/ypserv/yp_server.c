@@ -83,11 +83,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.5 1996/04/26 04:35:53 wpaul Exp wpaul $"
+literal|"$Id: yp_server.c,v 1.9 1996/04/28 04:38:52 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,22 +145,6 @@ modifier|*
 name|order_string
 init|=
 literal|"YP_LAST_MODIFIED"
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|YP_ALL_TIMEOUT
-value|10
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|yp_all_timed_out
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3031,8 +3016,8 @@ name|ypmaplist
 argument_list|)
 argument_list|)
 operator|)
-operator|<
-literal|0
+operator|==
+name|NULL
 condition|)
 block|{
 name|yp_error

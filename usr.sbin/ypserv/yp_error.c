@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All righ
 end_comment
 
 begin_comment
-comment|/*  * error logging/reporting facilities  * stolen from /usr/libexec/mail.local via ypserv  *  * $Id: yp_error.c,v 1.1.1.1 1995/12/16 20:54:17 wpaul Exp $  */
+comment|/*  * error logging/reporting facilities  * stolen from /usr/libexec/mail.local via ypserv  *  * $Id: yp_error.c,v 1.3 1996/05/01 02:36:34 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -24,6 +24,28 @@ include|#
 directive|include
 file|<syslog.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: yp_error.c,v 1.3 1996/05/01 02:36:34 wpaul Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int

@@ -129,7 +129,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_access.c,v 1.1 1996/04/13 07:27:13 wpaul Exp $"
+literal|"$Id: yp_access.c,v 1.7 1996/04/28 04:38:47 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -628,9 +628,12 @@ name|status
 init|=
 literal|0
 decl_stmt|;
+specifier|static
 name|unsigned
 name|long
 name|oldaddr
+init|=
+literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
