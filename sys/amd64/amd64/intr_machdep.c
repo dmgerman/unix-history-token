@@ -610,6 +610,17 @@ name|isrc
 operator|->
 name|is_ithread
 expr_stmt|;
+if|if
+condition|(
+name|it
+operator|==
+name|NULL
+condition|)
+name|ih
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 name|ih
 operator|=
 name|TAILQ_FIRST
