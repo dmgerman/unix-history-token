@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.11 1999/04/22 08:07:44 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.12 1999/05/08 21:58:58 dfr Exp $  */
 end_comment
 
 begin_include
@@ -160,6 +160,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
@@ -171,6 +179,11 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -949,10 +962,6 @@ name|bmaddr_2
 init|=
 literal|0
 decl_stmt|,
-name|sysctrl
-init|=
-literal|0
-decl_stmt|,
 name|irq1
 decl_stmt|,
 name|irq2
@@ -1106,23 +1115,6 @@ operator|=
 name|bmaddr_1
 operator|+
 name|ATA_BM_OFFSET1
-expr_stmt|;
-name|sysctrl
-operator|=
-operator|(
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x20
-argument_list|,
-literal|4
-argument_list|)
-operator|&
-literal|0xfffc
-operator|)
-operator|+
-literal|0x1c
 expr_stmt|;
 name|outb
 argument_list|(
@@ -1502,12 +1494,26 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
+name|RF_SHAREABLE
+operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sysctrl
+operator|!
+name|irq
+condition|)
+name|printf
+argument_list|(
+literal|"ata_pciattach: Unable to alloc interrupt\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|0x4d33105a
 condition|)
 name|bus_setup_intr
 argument_list|(
@@ -1648,6 +1654,13 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+if|if
+condition|(
+name|type
+operator|!=
+literal|0x4d33105a
+condition|)
+block|{
 name|irq
 operator|=
 name|bus_alloc_resource
@@ -1666,14 +1679,21 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
+name|RF_SHAREABLE
+operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|sysctrl
+name|irq
 condition|)
+name|printf
+argument_list|(
+literal|"ata_pciattach: Unable to alloc interrupt\n"
+argument_list|)
+expr_stmt|;
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -1690,6 +1710,7 @@ operator|&
 name|ih
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|printf
 argument_list|(
@@ -2871,9 +2892,6 @@ name|intr_count
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|unit
-decl_stmt|;
 name|scp
 operator|=
 operator|(
@@ -2882,12 +2900,6 @@ name|ata_softc
 operator|*
 operator|)
 name|data
-expr_stmt|;
-name|unit
-operator|=
-name|scp
-operator|->
-name|unit
 expr_stmt|;
 comment|/* find& call the responsible driver to process this interrupt */
 switch|switch
@@ -3002,7 +3014,9 @@ name|printf
 argument_list|(
 literal|"ata%d: unwanted interrupt %d status = %02x\n"
 argument_list|,
-name|unit
+name|scp
+operator|->
+name|lun
 argument_list|,
 name|intr_count
 argument_list|,
