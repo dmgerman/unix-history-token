@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.3 81/11/08 */
+comment|/* mbuf.h 4.4 81/11/14 */
 end_comment
 
 begin_comment
@@ -336,6 +336,10 @@ name|struct
 name|mbuf
 modifier|*
 name|m_get
+argument_list|()
+decl_stmt|,
+modifier|*
+name|m_getclr
 argument_list|()
 decl_stmt|,
 modifier|*

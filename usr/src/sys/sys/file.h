@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.9	81/11/08	*/
+comment|/*	file.h	4.10	81/11/14	*/
 end_comment
 
 begin_comment
@@ -14,21 +14,22 @@ block|{
 name|short
 name|f_flag
 decl_stmt|;
-comment|/* read/write and type (socket or inode) */
+comment|/* see below */
 name|short
 name|f_count
 decl_stmt|;
 comment|/* reference count */
+name|struct
+name|inode
+modifier|*
+name|f_inode
+decl_stmt|;
+comment|/* inode */
 union|union
 block|{
 struct|struct
 name|f_in
 block|{
-name|struct
-name|inode
-modifier|*
-name|fi_inode
-decl_stmt|;
 name|off_t
 name|fi_offset
 decl_stmt|;
@@ -58,13 +59,6 @@ define|#
 directive|define
 name|f_offset
 value|f_un.f_in.fi_offset
-end_define
-
-begin_define
-define|#
-directive|define
-name|f_inode
-value|f_un.f_in.fi_inode
 end_define
 
 begin_define
@@ -166,6 +160,17 @@ end_define
 
 begin_comment
 comment|/* descriptor of a socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPORTAL
+value|0x8
+end_define
+
+begin_comment
+comment|/* descriptor of a portal */
 end_comment
 
 end_unit

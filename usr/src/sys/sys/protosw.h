@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.2	81/11/08	*/
+comment|/*	protosw.h	4.3	81/11/14	*/
 end_comment
 
 begin_comment
-comment|/*  * Protocol switch table.  *  * Each protocol has a handle initializing one of these structures,  * which is used for protocol-protocol and system-protocol communication.  *  * Protocols pass data between themselves as chains of mbufs using  * the pr_input and pr_output hooks.  Pr_input passes data up (towards  * UNIX) and pr_output passes it down (towards the imps).  * The protocol is responsible for the space occupied by any of its  * arguments and must dispose of the space when it is finished with it.  *  * The advise entry is used by lower level protocols to inform  * a higher level protocol of errors and routing advisories and the like.  * Fasttimo is called every 100ms and is typically used to instantaeously  * delay sending ACK's while slowtimo is called every 500ms and is used  * for longer term cleanup.  *  * The drain routine is called if the system is low on buffer space, and  * should throw away non-cricital data.  The userreq routine interfaces  * protocols to the system and is described below.  The sense routine  * returns protocol status into the argument buffer.  This is used by  * the system in providing session-level abstractions out of network  * level protocols, and may also be returned by socket ioctl's.  * The amount of data returned by a sense is limited to the maxsense  * value.  (The space for the sense is allocated by the caller, based on this.)  */
+comment|/*  * Protocol switch table.  *  * Each protocol has a handle initializing one of these structures,  * which is used for protocol-protocol and system-protocol communication.  *  * A protocol is called through the pr_init entry before any other.  * Thereafter it is called every 100ms through the pr_fasttimo entry and  * every 500ms through the pr_slowtimo for timer based actions.  * The system will call the pr_drain entry if it is low on space and  * this should throw away any non-critical data.  *  * Protocols pass data between themselves as chains of mbufs using  * the pr_input and pr_output hooks.  Pr_input passes data up (towards  * UNIX) and pr_output passes it down (towards the imps); control  * information passes up and down on pr_ctlinput and pr_ctloutput.  * The protocol is responsible for the space occupied by any the  * arguments to these entries and must dispose it.  *  * The userreq routine interfaces protocols to the system and is  * described below.  *  * The sense routine returns protocol status into the argument buffer.  * This is used by the system in providing session-level abstractions  * out of network level protocols, and may also be returned by socket ioctl's.  * The amount of data returned by a sense is limited to the maxsense  * value.  (The space for the sense is allocated by the caller, based on this.)  */
 end_comment
 
 begin_struct
@@ -23,18 +23,11 @@ name|short
 name|pr_protocol
 decl_stmt|;
 comment|/* protocol number */
-name|int
+name|short
 name|pr_flags
 decl_stmt|;
 comment|/* see below */
-name|int
-function_decl|(
-modifier|*
-name|pr_init
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* initialization hook */
+comment|/* protocol-protocol hooks */
 name|int
 function_decl|(
 modifier|*
@@ -54,11 +47,49 @@ comment|/* output to protocol (from above) */
 name|int
 function_decl|(
 modifier|*
-name|pr_advise
+name|pr_ctlinput
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* advise about error condition */
+comment|/* control input (from below) */
+name|int
+function_decl|(
+modifier|*
+name|pr_ctloutput
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* control output (from above) */
+comment|/* user-protocol hooks */
+name|int
+function_decl|(
+modifier|*
+name|pr_usrreq
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* user request: see list below */
+name|int
+function_decl|(
+modifier|*
+name|pr_sense
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* sense state of protocol */
+name|int
+name|pr_maxsense
+decl_stmt|;
+comment|/* max size of sense value */
+comment|/* utility hooks */
+name|int
+function_decl|(
+modifier|*
+name|pr_init
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* initialization hook */
 name|int
 function_decl|(
 modifier|*
@@ -83,26 +114,6 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* flush any excess space possible */
-name|int
-function_decl|(
-modifier|*
-name|pr_usrreq
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* user request: see list below */
-name|int
-function_decl|(
-modifier|*
-name|pr_sense
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* sense state of protocol */
-name|int
-name|pr_maxsize
-decl_stmt|;
-comment|/* max size of sense value */
 block|}
 struct|;
 end_struct
@@ -137,6 +148,28 @@ begin_comment
 comment|/* in the current implementation, PR_ADDR needs PR_ATOMIC to work */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PR_CONNREQUIRED
+value|0x04
+end_define
+
+begin_comment
+comment|/* connection required by protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_WANTRCVD
+value|0x08
+end_define
+
+begin_comment
+comment|/* want PRU_RCVD calls */
+end_comment
+
 begin_comment
 comment|/*  * The arguments to usrreq are:  *	(*protosw[].pr_usrreq)(up, req, m, addr);  * where up is a (struct socket *), req is one of these requests,  * m is a optional mbuf chain, and addr is an optional meta-internetwork  * address representation.  The protocol is responsible for  * disposal of the mbuf chain.  A non-zero return from usrreq gives an  * UNIX error number which should be passed to higher level software.  */
 end_comment
@@ -160,7 +193,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* detach protocol to up */
+comment|/* detach protocol from up */
 end_comment
 
 begin_define
@@ -188,30 +221,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRU_ISCONN
+name|PRU_FLUSH
 value|4
 end_define
 
 begin_comment
-comment|/* is connection to peer complete? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRU_ISDISCONN
-value|5
-end_define
-
-begin_comment
-comment|/* is disconnection from peer complete? */
+comment|/* flush data in queues */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRU_SHUTDOWN
-value|6
+value|5
 end_define
 
 begin_comment
@@ -222,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|PRU_RCVD
-value|7
+value|6
 end_define
 
 begin_comment
@@ -233,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SEND
-value|8
+value|7
 end_define
 
 begin_comment
@@ -244,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|PRU_ABORT
-value|9
+value|8
 end_define
 
 begin_comment
@@ -254,50 +276,121 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRU_CLEAR
-value|10
-end_define
-
-begin_comment
-comment|/* network went down: clean up */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PRU_CONTROL
-value|11
+value|9
 end_define
 
 begin_comment
 comment|/* control operations on protocol */
 end_comment
 
+begin_comment
+comment|/* begin for protocols internal use */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|12
+value|10
 end_define
 
 begin_comment
-comment|/* for protocol's use only: fast timeout */
+comment|/* 100ms timeout */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
+value|11
+end_define
+
+begin_comment
+comment|/* 500ms timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_PROTORCV
+value|12
+end_define
+
+begin_comment
+comment|/* receive from below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_PROTOSEND
 value|13
 end_define
 
 begin_comment
-comment|/* for protocol's use only: slow timeout */
+comment|/* send to below */
 end_comment
 
 begin_comment
 comment|/* need some stuff for splice */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_NREQ
+value|14
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PRUREQUESTS
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|prurequests
+index|[]
+init|=
+block|{
+literal|"ATTACH"
+block|,
+literal|"DETACH"
+block|,
+literal|"CONNECT"
+block|,
+literal|"DISCONNECT"
+block|,
+literal|"FLUSH"
+block|,
+literal|"SHUTDOWN"
+block|,
+literal|"RCVD"
+block|,
+literal|"SEND"
+block|,
+literal|"ABORT"
+block|,
+literal|"CONTROL"
+block|,
+literal|"FASTTIMO"
+block|,
+literal|"SLOWTIMO"
+block|,
+literal|"PROTORCV"
+block|,
+literal|"PROTOSND"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -318,11 +411,11 @@ specifier|extern
 name|struct
 name|protosw
 modifier|*
-name|pf_findproto
+name|pffindproto
 argument_list|()
 decl_stmt|,
 modifier|*
-name|pf_findtype
+name|pffindtype
 argument_list|()
 decl_stmt|;
 end_decl_stmt

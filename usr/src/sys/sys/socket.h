@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.4	81/11/08	*/
+comment|/*	socket.h	4.5	81/11/14	*/
 end_comment
 
 begin_comment
-comment|/*  * Externally visible attributes of sockets:  * types and options.  */
+comment|/*  * Externally visible attributes of sockets.  */
+end_comment
+
+begin_comment
+comment|/*  * Socket types.  *  * The kernel implement these abstract (session-layer) socket  * services, with extra protocol on top of network services  * if necessary.  */
 end_comment
 
 begin_define
@@ -52,10 +56,6 @@ comment|/* reliably-delivered message */
 end_comment
 
 begin_comment
-comment|/* ... */
-end_comment
-
-begin_comment
 comment|/*  * Option flags per-socket.  */
 end_comment
 
@@ -73,7 +73,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SO_ACCEPT
+name|SO_ACCEPTCONN
 value|0x02
 end_define
 
@@ -95,7 +95,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SO_INTR
+name|SO_INTNOTIFY
 value|0x08
 end_define
 
@@ -106,7 +106,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SO_NEWFD
+name|SO_NEWFDONCONN
 value|0x10
 end_define
 

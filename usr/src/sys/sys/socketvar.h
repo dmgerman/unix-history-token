@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* socketvar.h 4.2 81/11/08 */
+comment|/* socketvar.h 4.3 81/11/14 */
 end_comment
 
 begin_comment
@@ -19,6 +19,14 @@ name|short
 name|so_options
 decl_stmt|;
 comment|/* from socket call, see socket.h */
+name|short
+name|so_state
+decl_stmt|;
+comment|/* internal state flags SS_*, below */
+name|short
+name|so_isfilerefd
+decl_stmt|;
+comment|/* no file table reference */
 name|caddr_t
 name|so_pcb
 decl_stmt|;
@@ -35,19 +43,19 @@ block|{
 name|short
 name|sb_cc
 decl_stmt|;
-comment|/* characters in buffer */
+comment|/* actual chars in buffer */
 name|short
 name|sb_hiwat
 decl_stmt|;
-comment|/* max chars for buffer */
+comment|/* max actual char count */
 name|short
 name|sb_mbcnt
 decl_stmt|;
-comment|/* # mbufs in use */
+comment|/* chars of mbufs used */
 name|short
 name|sb_mbmax
 decl_stmt|;
-comment|/* max # mbufs to use */
+comment|/* max chars of mbufs to use */
 name|short
 name|sb_lowat
 decl_stmt|;
@@ -116,8 +124,234 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Option bits and socket types are defined in socket.h.  */
+comment|/*  * Socket state bits.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_USERGONE
+value|0x01
+end_define
+
+begin_comment
+comment|/* no file table ref any more */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_ISCONNECTED
+value|0x02
+end_define
+
+begin_comment
+comment|/* socket connected to a peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_ISCONNECTING
+value|0x03
+end_define
+
+begin_comment
+comment|/* in process of connecting to peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_ISDISCONNECTING
+value|0x04
+end_define
+
+begin_comment
+comment|/* in process of disconnecting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_CANTSENDMORE
+value|0x08
+end_define
+
+begin_comment
+comment|/* can't send more data to peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_CANTRCVMORE
+value|0x10
+end_define
+
+begin_comment
+comment|/* can't receive more data from peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_CONNAWAITING
+value|0x20
+end_define
+
+begin_comment
+comment|/* connections awaiting acceptance */
+end_comment
+
+begin_comment
+comment|/*  * Macros for sockets and socket buffering.  */
+end_comment
+
+begin_comment
+comment|/* how much space is there in a socket buffer (so->so_snd or so->so_rcv) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sbspace
+parameter_list|(
+name|sb
+parameter_list|)
+define|\
+value|(MIN((sb)->sb_hiwat-(sb)->sb_cc, ((sb)->sb_mbmax-(sb)->sb_mbcnt)))
+end_define
+
+begin_comment
+comment|/* do we have to send all at once on a socket? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sosendallatonce
+parameter_list|(
+name|so
+parameter_list|)
+define|\
+value|(((so)->so_options& SO_NBIO) || ((so)->so_proto->pr_flags& PR_ATOMIC))
+end_define
+
+begin_comment
+comment|/* can we read something from so? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|soreadable
+parameter_list|(
+name|so
+parameter_list|)
+define|\
+value|((so)->so_rcv.sb_cc || ((so)->so_state& (SS_CANTRCVMORE|SS_CONNAWAITING)))
+end_define
+
+begin_comment
+comment|/* adjust counters in sb reflecting allocation of m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sballoc
+parameter_list|(
+name|sb
+parameter_list|,
+name|m
+parameter_list|)
+value|{ \ 	(sb)->sb_cc += (m)->m_len; \ 	(sb)->sb_mbcnt += MSIZE; \ 	if ((m)->m_off> MMAXOFF) \ 		(sb)->sb_mbcnt += PGSIZE; \ }
+end_define
+
+begin_comment
+comment|/* adjust counters in sb reflecting freeing of m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sbfree
+parameter_list|(
+name|sb
+parameter_list|,
+name|m
+parameter_list|)
+value|{ \ 	(sb)->sb_cc -= (m)->m_len; \ 	(sb)->sb_mbcnt -= MSIZE; \ 	if ((m)->m_off> MMAXOFF) \ 		(sb)->sb_mbcnt -= PGSIZE; \ }
+end_define
+
+begin_comment
+comment|/* set lock on sockbuf sb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sblock
+parameter_list|(
+name|sb
+parameter_list|)
+value|{ \ 	while ((sb)->sb_flags& SB_LOCK) { \ 		(sb)->sb_flags |= SB_WANT; \ 		sleep((caddr_t)&(sb)->sb_flags, PZERO+1); \ 	} \ 	(sb)->sb_flags |= SB_LOCK; \ }
+end_define
+
+begin_comment
+comment|/* release lock on sockbuf sb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sbunlock
+parameter_list|(
+name|sb
+parameter_list|)
+value|{ \ 	(sb)->sb_flags&= ~SB_LOCK; \ 	if ((sb)->sb_flags& SB_WANT) { \ 		(sb)->sb_flags&= ~SB_WANT; \ 		wakeup((caddr_t)&(sb)->sb_flags); \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sorwakeup
+parameter_list|(
+name|so
+parameter_list|)
+value|sbwakeup(&(so)->so_rcv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sowwakeup
+parameter_list|(
+name|so
+parameter_list|)
+value|sbwakeup(&(so)->so_snd)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sb_copy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.8	81/11/08	*/
+comment|/*	dinode.h	4.9	81/11/14	*/
 end_comment
 
 begin_comment
@@ -56,42 +56,59 @@ comment|/* size of file */
 union|union
 block|{
 struct|struct
+name|i_f
 block|{
 name|daddr_t
-name|I_addr
+name|if_addr
 index|[
 name|NADDR
 index|]
 decl_stmt|;
 comment|/* if normal file/directory */
 name|daddr_t
-name|I_lastr
+name|if_lastr
 decl_stmt|;
 comment|/* last read (read-ahead) */
 block|}
 name|i_f
 struct|;
-define|#
-directive|define
-name|i_addr
-value|i_f.I_addr
-define|#
-directive|define
-name|i_lastr
-value|i_f.I_lastr
 struct|struct
+name|i_d
 block|{
 name|daddr_t
-name|I_rdev
+name|id_rdev
 decl_stmt|;
 comment|/* i_addr[0] */
 block|}
 name|i_d
 struct|;
+struct|struct
+name|i_s
+block|{
+name|struct
+name|socket
+modifier|*
+name|is_socket
+decl_stmt|;
+block|}
+name|i_s
+struct|;
+define|#
+directive|define
+name|i_addr
+value|i_f.if_addr
+define|#
+directive|define
+name|i_lastr
+value|i_f.if_lastr
 define|#
 directive|define
 name|i_rdev
-value|i_d.I_rdev
+value|i_d.id_rdev
+define|#
+directive|define
+name|i_socket
+value|i_s.is_socket
 block|}
 name|i_un
 union|;
@@ -302,23 +319,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFDIR
-value|0040000
-end_define
-
-begin_comment
-comment|/* directory */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IFCHR
 value|0020000
 end_define
 
 begin_comment
 comment|/* character special */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFDIR
+value|0040000
+end_define
+
+begin_comment
+comment|/* directory */
 end_comment
 
 begin_define
@@ -341,6 +358,39 @@ end_define
 
 begin_comment
 comment|/* regular */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFSYMREG
+value|0110000
+end_define
+
+begin_comment
+comment|/* regular symbolic link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFSYMDIR
+value|0130000
+end_define
+
+begin_comment
+comment|/* directory symbolic link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFPORTAL
+value|0140000
+end_define
+
+begin_comment
+comment|/* portal */
 end_comment
 
 begin_define
