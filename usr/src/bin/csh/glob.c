@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.27 (Berkeley) %G%"
+literal|"@(#)glob.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2518,6 +2518,12 @@ name|vo
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|trim
+argument_list|(
+name|vl
+argument_list|)
+expr_stmt|;
 name|gargc
 operator|=
 name|vl
