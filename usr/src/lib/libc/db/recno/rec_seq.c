@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_seq.c	5.8 (Berkeley) %G%"
+literal|"@(#)rec_seq.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +166,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 condition|)
 block|{
@@ -198,7 +198,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 condition|)
 block|{
@@ -234,9 +234,9 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 operator||
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 operator|&&
 name|t
@@ -297,9 +297,9 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_EOF
+name|R_EOF
 operator||
-name|BTF_RINMEM
+name|R_INMEM
 argument_list|)
 operator|&&
 operator|(
@@ -370,7 +370,7 @@ name|SET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_SEQINIT
+name|B_SEQINIT
 argument_list|)
 expr_stmt|;
 name|t
