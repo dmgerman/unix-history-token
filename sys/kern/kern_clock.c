@@ -513,6 +513,13 @@ name|need_softclock
 init|=
 literal|0
 decl_stmt|;
+name|CTR0
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"hardclock fired"
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1359,6 +1366,13 @@ modifier|*
 name|frame
 decl_stmt|;
 block|{
+name|CTR0
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"statclock fired"
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
