@@ -829,33 +829,17 @@ begin_define
 define|#
 directive|define
 name|ASS_IEN
-value|MPASS2((alpha_pal_rdps& ALPHA_PSL_IPL_MASK)
+value|MPASS2((alpha_pal_rdps& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_HIGH, STR_IEN)
 end_define
 
-begin_expr_stmt
-operator|==
-name|ALPHA_PSL_IPL_HIGH
-operator|,
-name|STR_IEN
-end_expr_stmt
-
 begin_define
-unit|)
 define|#
 directive|define
 name|ASS_IDIS
-value|MPASS2((alpha_pal_rdps& ALPHA_PSL_IPL_MASK)
+value|MPASS2((alpha_pal_rdps& ALPHA_PSL_IPL_MASK)	\ 			       != ALPHA_PSL_IPL_HIGH, STR_IDIS)
 end_define
 
-begin_expr_stmt
-operator|!=
-name|ALPHA_PSL_IPL_HIGH
-operator|,
-name|STR_IDIS
-end_expr_stmt
-
 begin_endif
-unit|)
 endif|#
 directive|endif
 end_endif
