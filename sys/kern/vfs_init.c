@@ -689,15 +689,9 @@ operator|->
 name|vfs_mount
 operator|!=
 name|NULL
-operator|||
-name|vfsops
-operator|->
-name|vfs_omount
-operator|!=
-name|NULL
 argument_list|,
 operator|(
-literal|"Filesystem %s has no (o)mount op"
+literal|"Filesystem %s has no mount op"
 operator|,
 name|vfc
 operator|->

@@ -195,19 +195,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|cdev
-modifier|*
-name|rootdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* root device */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|rootdevnames
@@ -2572,6 +2559,12 @@ end_empty_stmt
 begin_comment
 comment|/*  * Common `struct cdev *' stuff are declared here to avoid #include poisoning  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|cdev
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|int

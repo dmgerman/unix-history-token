@@ -494,7 +494,7 @@ name|int
 name|mnt_writeopcount
 decl_stmt|;
 comment|/* write syscalls in progress */
-name|int
+name|u_int
 name|mnt_flag
 decl_stmt|;
 comment|/* flags shared with user */
@@ -1075,17 +1075,6 @@ end_define
 
 begin_comment
 comment|/* waiting for unmount to finish */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNTK_WANTRDWR
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* upgrade to read/write requested */
 end_comment
 
 begin_define
@@ -1970,31 +1959,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|vfs_omount_t
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-name|mp
-parameter_list|,
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
 name|vfs_start_t
 parameter_list|(
 name|struct
@@ -2334,10 +2298,6 @@ name|vfs_mount_t
 modifier|*
 name|vfs_mount
 decl_stmt|;
-name|vfs_omount_t
-modifier|*
-name|vfs_omount
-decl_stmt|;
 name|vfs_cmount_t
 modifier|*
 name|vfs_cmount
@@ -2418,23 +2378,6 @@ parameter_list|,
 name|P
 parameter_list|)
 value|(*(MP)->mnt_op->vfs_mount)(MP, P)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VFS_OMOUNT
-parameter_list|(
-name|MP
-parameter_list|,
-name|PATH
-parameter_list|,
-name|DATA
-parameter_list|,
-name|P
-parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_omount)(MP, PATH, DATA, P)
 end_define
 
 begin_define
@@ -2705,28 +2648,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mntarg
-modifier|*
-name|mount_argb
-parameter_list|(
-name|struct
-name|mntarg
-modifier|*
-name|ma
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|kernel_mount
 parameter_list|(
@@ -2776,6 +2697,28 @@ name|val
 parameter_list|,
 name|int
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mntarg
+modifier|*
+name|mount_argb
+parameter_list|(
+name|struct
+name|mntarg
+modifier|*
+name|ma
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl
