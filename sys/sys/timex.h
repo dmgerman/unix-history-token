@@ -378,23 +378,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOD_CLKB
-value|0x4000
+name|MOD_CANSCALE
+value|0x0040
 end_define
 
 begin_comment
-comment|/* set clock B */
+comment|/* kernel can scale offset field */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MOD_CLKA
-value|0x8000
+name|MOD_DOSCALE
+value|0x0080
 end_define
 
 begin_comment
-comment|/* set clock A */
+comment|/* userland wants to scale offset field */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: timepps.h,v 1.1 1998/06/07 19:44:16 phk Exp $  *  * The is a FreeBSD protype version of the "draft-mogul-pps-api-02.txt"   * specification for Pulse Per Second timing interfaces.    *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: timepps.h,v 1.2 1998/06/12 23:15:40 phk Exp $  *  * The is a FreeBSD protype version of the "draft-mogul-pps-api-02.txt"   * specification for Pulse Per Second timing interfaces.    *  */
 end_comment
 
 begin_ifndef
@@ -326,6 +326,48 @@ directive|define
 name|PPS_IOC_WAIT
 value|_IOWR('1', 6, struct pps_wait_args)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|std_pps_ioctl
+name|__P
+argument_list|(
+operator|(
+name|u_long
+name|cmd
+operator|,
+name|caddr_t
+name|data
+operator|,
+name|pps_params_t
+operator|*
+name|pp
+operator|,
+name|pps_info_t
+operator|*
+name|pi
+operator|,
+name|int
+name|ppscap
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#
