@@ -535,7 +535,7 @@ name|pll_trap
 name|P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2439,7 +2439,10 @@ end_comment
 begin_function
 name|RETSIGTYPE
 name|pll_trap
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 block|{
 name|pll_control
 operator|=
