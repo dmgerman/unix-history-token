@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -1649,15 +1655,13 @@ name|outbuf
 parameter_list|, 		\
 name|outbuflen
 parameter_list|)
-value|do {							\ 	char *curptr, *curptr_start, *element_name, *element_temp;	\ 	size_t left, left_start, len;					\ 	int claimed, first, first_start, ignorenotfound;		\ 									\ 	error = 0;							\ 	element_temp = elementlist;					\ 	curptr = outbuf;						\ 	curptr[0] = '\0';						\ 	left = outbuflen;						\ 	first = 1;							\ 	while ((element_name = strsep(&element_temp, ",")) != NULL) {	\ 		curptr_start = curptr;					\ 		left_start = left;					\ 		first_start = first;					\ 		if (element_name[0] == '?') {				\ 			element_name++;					\ 			ignorenotfound = 1;				\ 		} else							\ 			ignorenotfound = 0;				\ 		claimed = 0;						\ 		if (first) {						\ 			len = snprintf(curptr, left, "%s/",		\ 			    element_name);				\ 			first = 0;					\ 		} else							\ 			len = snprintf(curptr, left, ",%s/",		\ 			    element_name);				\ 		if (len>= left) {					\ 			error = EINVAL;
-comment|/* XXXMAC: E2BIG */
-value|\ 			break;						\ 		}							\ 		curptr += len;						\ 		left -= len;						\ 									\ 		MAC_CHECK(externalize_ ## type, label, element_name,	\ 		    curptr, left,&len,&claimed);			\ 		if (error)						\ 			break;						\ 		if (claimed == 1) {					\ 			if (len>= outbuflen) {				\ 				error = EINVAL;
-comment|/* XXXMAC: E2BIG */
-value|\ 				break;					\ 			}						\ 			curptr += len;					\ 			left -= len;					\ 		} else if (claimed == 0&& ignorenotfound) {		\
-comment|/*						\ 			 * Revert addition of the label element		\ 			 * name.					\ 			 */
-value|\ 			curptr = curptr_start;				\ 			*curptr = '\0';					\ 			left = left_start;				\ 			first = first_start;				\ 		} else {						\ 			error = EINVAL;
-comment|/* XXXMAC: ENOLABEL */
-value|\ 			break;						\ 		}							\ 	}								\ } while (0)
+value|do {							\ 	int claimed, first, ignorenotfound, savedlen;			\ 	char *element_name, *element_temp;				\ 	struct sbuf sb;							\ 									\ 	error = 0;							\ 	first = 1;							\ 	sbuf_new(&sb, outbuf, outbuflen, SBUF_FIXEDLEN);		\ 	element_temp = elementlist;					\ 	while ((element_name = strsep(&element_temp, ",")) != NULL) {	\ 		if (element_name[0] == '?') {				\ 			element_name++;					\ 			ignorenotfound = 1;				\ 		 } else							\ 			ignorenotfound = 0;				\ 		savedlen = sbuf_len(&sb);				\ 		if (first) {						\ 			error = sbuf_printf(&sb, "%s/", element_name);	\ 			first = 0;					\ 		} else							\ 			error = sbuf_printf(&sb, ",%s/", element_name);	\ 		if (error == -1) {					\ 			error = EINVAL;
+comment|/* XXX: E2BIG? */
+value|\ 			break;						\ 		}							\ 		claimed = 0;						\ 		MAC_CHECK(externalize_ ## type, label, element_name,	\&sb,&claimed);					\ 		if (error)						\ 			break;						\ 		if (claimed == 0&& ignorenotfound) {			\
+comment|/* Revert last label name. */
+value|\ 			sbuf_setpos(&sb, savedlen);			\ 		} else if (claimed != 1) {				\ 			error = EINVAL;
+comment|/* XXX: ENOLABEL? */
+value|\ 			break;						\ 		}							\ 	}								\ 	sbuf_finish(&sb);						\ } while (0)
 end_define
 
 begin_define
