@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -1051,6 +1051,18 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|bool
+name|fullsmtp
+init|=
+name|bitset
+argument_list|(
+name|M_FULLSMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1115,11 +1127,13 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|fputs
+name|putline
 argument_list|(
 name|buf
 argument_list|,
 name|fp
+argument_list|,
+name|fullsmtp
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Output text of original message 	*/
