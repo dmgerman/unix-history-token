@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	5.5 (Berkeley) %G%"
+literal|"@(#)kill.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,6 +153,7 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|p
 decl_stmt|;
@@ -529,6 +530,7 @@ decl_stmt|;
 specifier|register
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|p
 decl_stmt|;
