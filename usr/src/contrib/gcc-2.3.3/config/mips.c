@@ -429,18 +429,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Next label # for each statment for Silicon Graphics IRIS systems. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sym_lineno
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Non-zero if inside of a function, because the stupid MIPS asm can't    handle .files inside of functions.  */
 end_comment
 
@@ -14336,9 +14324,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|TARGET_GAS
-operator|&&
 name|write_symbols
 operator|==
 name|DBX_DEBUG
@@ -14480,32 +14465,22 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|!
-name|TARGET_GAS
-operator|&&
 name|write_symbols
 operator|==
 name|DBX_DEBUG
 condition|)
 block|{
-operator|++
-name|sym_lineno
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"$LM%d:\n\t%s %d,0,%d,$LM%d\n"
+literal|"\t%s %d,0,%d\n"
 argument_list|,
-name|sym_lineno
-argument_list|,
-name|ASM_STABN_OP
+name|ASM_STABD_OP
 argument_list|,
 name|N_SLINE
 argument_list|,
 name|line
-argument_list|,
-name|sym_lineno
 argument_list|)
 expr_stmt|;
 block|}
