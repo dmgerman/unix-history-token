@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.97 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.98 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1278,10 +1278,10 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
-name|VREF
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_usecount
+operator|++
 expr_stmt|;
 operator|*
 name|vpp
@@ -2739,10 +2739,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|VREF
-argument_list|(
 name|vp
-argument_list|)
+operator|->
+name|v_usecount
+operator|++
 expr_stmt|;
 name|VOP_LOCK
 argument_list|(
@@ -2781,6 +2781,19 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|<=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vref used where vget required"
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_usecount
