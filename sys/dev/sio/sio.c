@@ -8277,6 +8277,30 @@ operator|->
 name|line_status_port
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|line_status
+operator|==
+literal|0xff
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sio%d: spouting nonsense -- disabled.\n"
+argument_list|,
+name|com
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|gone
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* input event? (check first to help avoid overruns) */
 while|while
 condition|(
@@ -8285,6 +8309,30 @@ operator|&
 name|LSR_RCV_MASK
 condition|)
 block|{
+if|if
+condition|(
+name|line_status
+operator|==
+literal|0xff
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sio%d: linestats bogus -- disabled.\n"
+argument_list|,
+name|com
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|gone
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 comment|/* break/unnattached error bits or real input? */
 if|if
 condition|(
