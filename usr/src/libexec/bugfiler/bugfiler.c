@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.14 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2339,7 +2339,9 @@ specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|n
 decl_stmt|;
 name|char
