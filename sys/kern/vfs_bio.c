@@ -10575,14 +10575,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"biodone: foff(%lu)/m->pindex(%d) mismatch\n"
+literal|"biodone: foff(%jd)/m->pindex(%ju) mismatch\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
+name|intmax_t
 operator|)
 name|foff
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|m
 operator|->
 name|pindex
