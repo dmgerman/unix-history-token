@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.2	81/02/26  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.3	81/02/26  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -202,7 +202,7 @@ decl_stmt|;
 name|char
 name|line
 index|[
-literal|80
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|read_files
@@ -213,7 +213,7 @@ name|ifp
 operator|=
 name|fopen
 argument_list|(
-literal|"../unix/makefile"
+literal|"../conf/makefile"
 argument_list|,
 literal|"r"
 argument_list|)
@@ -250,7 +250,7 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-literal|80
+name|BUFSIZ
 argument_list|,
 name|ifp
 argument_list|)
@@ -342,7 +342,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unknown %% thingy in generic makefile %s"
+literal|"Unknown %% construct in generic makefile: %s"
 argument_list|,
 name|line
 argument_list|)
@@ -403,11 +403,29 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"../unix/files"
+literal|"../conf/files"
 argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"../conf/files"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|ftab
 operator|=
 name|NULL
@@ -1309,7 +1327,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\n%s: makefile locore.o ${OBJS} swap%s.o\n"
+literal|"\n%s: makefile locore.o ${OBJS} ioconf.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
@@ -1339,7 +1357,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"@ld -n -o %s -e start -x -T 80000000 locore.o ${OBJS} swap%s.o\n"
+literal|"@ld -n -o %s -e start -x -T 80000000 locore.o ${OBJS} ioconf.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
@@ -1361,7 +1379,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@-symorder ../conf/symbols.sort %s\n"
+literal|"\t@-symorder ../sys/symbols.sort %s\n"
 argument_list|,
 name|fl
 operator|->
@@ -1412,7 +1430,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\nswap%s.o: ../conf/swap%s.c\n"
+literal|"\nswap%s.o: ../dev/swap%s.c\n"
 argument_list|,
 name|fl
 operator|->
@@ -1427,7 +1445,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${CC} -I. -c -S ${COPTS} ../conf/swap%s.c\n"
+literal|"\t${CC} -I. -c -S ${COPTS} ../dev/swap%s.c\n"
 argument_list|,
 name|fl
 operator|->

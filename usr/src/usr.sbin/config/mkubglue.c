@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Make the uba interrupt file ubglue.s  *	mkubglue.c	1.2	81/02/26  */
+comment|/*  * Make the uba interrupt file ubglue.s  *	mkubglue.c	1.3	81/02/26  */
 end_comment
 
 begin_include
@@ -54,6 +54,27 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|path
+argument_list|(
+literal|"ubglue.s"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|dp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	mkheaders.c	1.4	81/02/26  * Make all the .h files for the optional entries  */
+comment|/*  *	mkheaders.c	1.5	81/02/26  * Make all the .h files for the optional entries  */
 end_comment
 
 begin_include
@@ -349,6 +349,24 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|outf
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|outf
@@ -537,6 +555,24 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|outf
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|fl
