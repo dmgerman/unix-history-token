@@ -12795,7 +12795,7 @@ name|scsi_cmd
 operator|->
 name|how
 operator||=
-name|SS_START
+name|SSS_START
 expr_stmt|;
 comment|/* it takes a lot of power to start a drive */
 name|extra_flags
