@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.19 (Berkeley) 83/06/17"
+literal|"@(#)shutdown.c	4.20 (Berkeley) 84/02/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -173,7 +179,7 @@ end_decl_stmt
 
 begin_function_decl
 name|int
-name|do_nothing
+name|timeout
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -350,6 +356,12 @@ end_endif
 begin_decl_stmt
 name|time_t
 name|nowtime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|jmp_buf
+name|alarmbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -816,7 +828,7 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|do_nothing
+name|timeout
 argument_list|)
 expr_stmt|;
 name|setpriority
@@ -1073,6 +1085,14 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|alarmbuf
+argument_list|)
+condition|)
+continue|continue;
 name|strcpy
 argument_list|(
 name|term
@@ -2053,17 +2073,17 @@ block|}
 end_block
 
 begin_macro
-name|do_nothing
+name|timeout
 argument_list|()
 end_macro
 
 begin_block
 block|{
-name|signal
+name|longjmp
 argument_list|(
-name|SIGALRM
+name|alarmbuf
 argument_list|,
-name|do_nothing
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
