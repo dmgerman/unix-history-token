@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -521,6 +521,13 @@ ifdef|#
 directive|ifdef
 name|KTRACE
 comment|/*  	 * release trace file 	 */
+name|p
+operator|->
+name|p_traceflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't trace the vrele() */
 if|if
 condition|(
 name|p
