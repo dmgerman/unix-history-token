@@ -3787,6 +3787,21 @@ operator|&=
 operator|~
 name|IFF_PROMISC
 expr_stmt|;
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s%d: promiscuous mode disabled\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
 block|}
 name|ifr
 operator|.
