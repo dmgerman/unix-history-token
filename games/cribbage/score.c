@@ -1043,7 +1043,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 comment|/* initialize explanation */
 name|score
@@ -1165,7 +1165,7 @@ index|[
 literal|0
 index|]
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 name|strcat
 argument_list|(
@@ -1219,7 +1219,7 @@ index|[
 literal|0
 index|]
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 name|strcat
 argument_list|(
@@ -1247,7 +1247,7 @@ index|[
 literal|0
 index|]
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 name|strcat
 argument_list|(
