@@ -46,17 +46,6 @@ literal|"@(#)rlogin.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -69,6 +58,20 @@ end_comment
 begin_comment
 comment|/*  * rlogin - remote login  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -200,12 +203,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_ifdef
@@ -352,6 +349,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|speeds
@@ -499,6 +497,7 @@ begin_function_decl
 name|void
 name|msg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2246,6 +2245,7 @@ name|writeroob
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -2282,6 +2282,7 @@ name|catch_child
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|union
@@ -2862,11 +2863,10 @@ begin_function
 name|void
 name|sigwinch
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|struct
 name|winsize
@@ -3131,6 +3131,7 @@ name|oob
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3192,6 +3193,9 @@ if|if
 condition|(
 name|rcvcnt
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|rcvbuf
@@ -4122,6 +4126,7 @@ name|lostpeer
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 operator|(
@@ -4157,6 +4162,7 @@ name|copytochild
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 operator|(
@@ -4176,6 +4182,7 @@ begin_function
 name|void
 name|msg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
