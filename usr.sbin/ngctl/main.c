@@ -245,6 +245,9 @@ operator|&
 name|types_cmd
 block|,
 operator|&
+name|write_cmd
+block|,
+operator|&
 name|quit_cmd
 block|,
 name|NULL
