@@ -193,12 +193,6 @@ name|t_dupacks
 decl_stmt|;
 comment|/* consecutive dup acks recd */
 name|struct
-name|tcptemp
-modifier|*
-name|unused
-decl_stmt|;
-comment|/* unused */
-name|struct
 name|callout
 modifier|*
 name|tt_rexmt
