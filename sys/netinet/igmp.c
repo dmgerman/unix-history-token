@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -17,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1567,6 +1579,20 @@ name|rcvif
 operator|=
 name|loif
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_linklayer
+argument_list|(
+name|inm
+operator|->
+name|inm_ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_pkthdr
