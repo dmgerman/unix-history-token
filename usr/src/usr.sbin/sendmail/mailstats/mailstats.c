@@ -15,7 +15,7 @@ operator|)
 name|mailstats
 operator|.
 name|c
-literal|3.4
+literal|3.5
 operator|%
 name|G
 operator|%
@@ -193,7 +193,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6d %10dK "
+literal|"%6ld %10ldK "
 argument_list|,
 name|stat
 operator|.
@@ -212,7 +212,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6d %10dK\n"
+literal|"%6ld %10ldK\n"
 argument_list|,
 name|stat
 operator|.
