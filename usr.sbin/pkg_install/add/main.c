@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.11.2.2 1997/10/09 07:07:47 charnier Exp $"
+literal|"$Id: main.c,v 1.11.2.3 1998/09/08 10:42:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,6 +571,12 @@ argument_list|,
 literal|"/sbin:/usr/sbin:/bin:/usr/bin"
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Set a reasonable umask */
+name|umask
+argument_list|(
+literal|022
 argument_list|)
 expr_stmt|;
 if|if
