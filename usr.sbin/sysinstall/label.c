@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.57 1996/08/03 05:25:56 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.58 1996/08/03 10:11:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1135,6 +1135,21 @@ name|tmp
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|old
+condition|)
+block|{
+name|DialogX
+operator|=
+literal|13
+expr_stmt|;
+name|DialogY
+operator|=
+literal|17
+expr_stmt|;
+block|}
 name|val
 operator|=
 name|msgGetInput
@@ -1149,6 +1164,12 @@ name|NULL
 argument_list|,
 literal|"Please specify a mount point for the partition"
 argument_list|)
+expr_stmt|;
+name|DialogX
+operator|=
+name|DialogY
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1340,13 +1361,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|save
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 specifier|static
 name|unsigned
 name|char
@@ -1364,8 +1378,13 @@ block|,
 literal|"A swap partition."
 block|,     }
 decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
+name|DialogX
+operator|=
+literal|7
+expr_stmt|;
+name|DialogY
+operator|=
+literal|9
 expr_stmt|;
 name|i
 operator|=
@@ -1395,10 +1414,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|restorescr
-argument_list|(
-name|save
-argument_list|)
+name|DialogX
+operator|=
+name|DialogY
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2235,7 +2255,9 @@ begin_function
 specifier|static
 name|void
 name|print_command_summary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|mvprintw
 argument_list|(
@@ -2308,6 +2330,25 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|clear_wins
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+name|wclear
+argument_list|(
+name|ChunkWin
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|diskLabel
 parameter_list|(
@@ -2322,10 +2363,6 @@ decl_stmt|,
 name|key
 init|=
 literal|0
-decl_stmt|,
-name|first_time
-init|=
-literal|1
 decl_stmt|;
 name|Boolean
 name|labeling
@@ -2391,9 +2428,6 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|clear
 argument_list|()
 expr_stmt|;
@@ -2405,19 +2439,9 @@ block|{
 name|print_label_chunks
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|first_time
-condition|)
-block|{
 name|print_command_summary
 argument_list|()
 expr_stmt|;
-name|first_time
-operator|=
-literal|0
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|msg
@@ -2466,6 +2490,9 @@ name|clrtoeol
 argument_list|()
 expr_stmt|;
 block|}
+name|refresh
+argument_list|()
+expr_stmt|;
 name|key
 operator|=
 name|getch
@@ -2493,7 +2520,10 @@ case|case
 literal|'\014'
 case|:
 comment|/* ^L */
-continue|continue;
+name|clear_wins
+argument_list|()
+expr_stmt|;
+break|break;
 case|case
 name|KEY_UP
 case|:
@@ -2596,6 +2626,9 @@ name|systemDisplayHelp
 argument_list|(
 literal|"partition"
 argument_list|)
+expr_stmt|;
+name|clear_wins
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -2763,6 +2796,9 @@ argument_list|(
 literal|"Unable to create the root partition. Too big?"
 argument_list|)
 expr_stmt|;
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 name|tmp
@@ -2918,6 +2954,9 @@ argument_list|(
 literal|"Unable to create the swap partition. Too big?"
 argument_list|)
 expr_stmt|;
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 name|tmp
@@ -3014,6 +3053,9 @@ name|VAR_MIN_SIZE
 operator|)
 argument_list|)
 expr_stmt|;
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 name|tmp
@@ -3104,6 +3146,9 @@ argument_list|,
 name|USR_MIN_SIZE
 argument_list|)
 expr_stmt|;
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 name|tmp
@@ -3146,6 +3191,9 @@ argument_list|(
 literal|"Unable to create the /usr partition.  Not enough space?\n"
 literal|"You will need to partition your disk manually with a custom install!"
 argument_list|)
+expr_stmt|;
+name|clear_wins
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -3269,15 +3317,22 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
+name|DialogX
+operator|=
+literal|3
+expr_stmt|;
+name|DialogY
+operator|=
+literal|1
+expr_stmt|;
 name|val
 operator|=
 name|msgGetInput
 argument_list|(
 name|osize
 argument_list|,
-literal|"Please specify the size for new FreeBSD partition in blocks, or\n"
-literal|"append a trailing `M' for megabytes (e.g. 20M) or `C' for cylinders.\n\n"
-literal|"Space free is %d blocks (%dMB)"
+literal|"Please specify the partition size in blocks or append a trailing M for\n"
+literal|"megabytes or C for cylinders.  %d blocks (%dMB) are free."
 argument_list|,
 name|sz
 argument_list|,
@@ -3285,6 +3340,12 @@ name|sz
 operator|/
 name|ONE_MEG
 argument_list|)
+expr_stmt|;
+name|DialogX
+operator|=
+name|DialogY
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3307,7 +3368,12 @@ operator|)
 operator|<=
 literal|0
 condition|)
+block|{
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|*
@@ -3382,6 +3448,9 @@ operator|/
 name|ONE_MEG
 argument_list|)
 expr_stmt|;
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 name|type
@@ -3395,7 +3464,15 @@ name|type
 operator|==
 name|PART_NONE
 condition|)
+block|{
+name|clear_wins
+argument_list|()
+expr_stmt|;
+name|beep
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|type
@@ -3416,7 +3493,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|clear_wins
+argument_list|()
+expr_stmt|;
+name|beep
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3479,6 +3564,9 @@ literal|"FreeBSD boot code cannot deal with a root partition created\n"
 literal|"in that location.  Please choose another location or smaller\n"
 literal|"size for your root partition and try again!"
 argument_list|)
+expr_stmt|;
+name|clear_wins
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -3552,6 +3640,9 @@ argument_list|(
 literal|"Unable to create the partition. Too big?"
 argument_list|)
 expr_stmt|;
+name|clear_wins
+argument_list|()
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -3592,6 +3683,9 @@ name|disk
 argument_list|,
 name|tmp
 argument_list|)
+expr_stmt|;
+name|clear_wins
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -3652,6 +3746,9 @@ name|record_label_chunks
 argument_list|(
 name|devs
 argument_list|)
+expr_stmt|;
+name|clear_wins
+argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -3881,6 +3978,9 @@ name|record_label_chunks
 argument_list|(
 name|devs
 argument_list|)
+expr_stmt|;
+name|clear
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
@@ -4155,6 +4255,9 @@ argument_list|(
 name|devs
 argument_list|)
 expr_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'W'
@@ -4171,13 +4274,6 @@ literal|"Are you absolutely SURE you want to do this now?"
 argument_list|)
 condition|)
 block|{
-name|WINDOW
-modifier|*
-name|save
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|variable_set2
 argument_list|(
 name|DISK_LABELLED
@@ -4190,12 +4286,10 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|restorescr
-argument_list|(
-name|save
-argument_list|)
-expr_stmt|;
 block|}
+name|clear
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 literal|'|'
@@ -4218,13 +4312,6 @@ name|Device
 modifier|*
 modifier|*
 name|devs
-decl_stmt|;
-name|WINDOW
-modifier|*
-name|save
-init|=
-name|savescr
-argument_list|()
 decl_stmt|;
 name|dialog_clear
 argument_list|()
@@ -4323,18 +4410,13 @@ name|DialogActive
 operator|=
 name|TRUE
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|save
-argument_list|)
-expr_stmt|;
 name|record_label_chunks
 argument_list|(
 name|devs
 argument_list|)
+expr_stmt|;
+name|clear
+argument_list|()
 expr_stmt|;
 block|}
 else|else
