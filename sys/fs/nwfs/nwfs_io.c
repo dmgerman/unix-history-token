@@ -1072,13 +1072,11 @@ name|cred
 parameter_list|,
 name|ioflag
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -1424,7 +1422,6 @@ name|cr
 parameter_list|,
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -1441,13 +1438,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|uio
 modifier|*
 name|uiop
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3014,7 +3009,6 @@ name|int
 name|intrflg
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|nwnode
 modifier|*
