@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.89 1998/10/14 08:31:26 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.90 1998/11/06 02:13:13 peter Exp $ */
 end_comment
 
 begin_comment
@@ -14492,6 +14492,18 @@ block|,
 literal|0x00
 block|,
 literal|0x94
+block|}
+block|}
+block|,
+block|{
+name|tulip_identify_cogent_nic
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0xD1
 block|}
 block|}
 block|,
