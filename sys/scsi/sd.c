@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *	$Id: sd.c,v 1.10 93/08/26 21:09:44 julian Exp Locker: julian $  */
 end_comment
 
 begin_define
@@ -299,6 +299,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SDDEBUG
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|sd_debug
@@ -306,6 +312,15 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*SDDEBUG*/
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -455,6 +470,7 @@ name|sd_start_of_unix
 decl_stmt|;
 comment|/* unix vs dos partitions */
 block|}
+modifier|*
 name|sd_data
 index|[
 name|NSD
@@ -527,21 +543,9 @@ operator|=
 name|next_sd_unit
 operator|++
 expr_stmt|;
-name|sd
-operator|=
-name|sd_data
-operator|+
-name|unit
-expr_stmt|;
-name|dp
-operator|=
-operator|&
-operator|(
-name|sd
-operator|->
-name|params
-operator|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -553,6 +557,9 @@ argument_list|(
 literal|"sdattach: "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	* Check we have the resources for another drive		* 	\*******************************************************/
 if|if
 condition|(
@@ -580,6 +587,73 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|sd_data
+index|[
+name|unit
+index|]
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sd%d: unit already has storage allocated!\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|sd
+operator|=
+name|sd_data
+index|[
+name|unit
+index|]
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sd_data
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sd
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"malloc failed in sd.c\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|dp
+operator|=
+operator|&
+operator|(
+name|sd
+operator|->
+name|params
+operator|)
+expr_stmt|;
 comment|/*******************************************************\ 	* Store information needed to contact our base driver	* 	\*******************************************************/
 name|sd
 operator|->
@@ -783,7 +857,6 @@ operator|->
 name|secsiz
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 	* Set up the bufs for this device			* 	\*******************************************************/
 name|sd
 operator|->
 name|flags
@@ -843,9 +916,13 @@ expr_stmt|;
 name|sd
 operator|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -869,6 +946,9 @@ argument_list|,
 name|part
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	* Check the unit is legal				* 	\*******************************************************/
 if|if
 condition|(
@@ -927,54 +1007,12 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/*******************************************************\ 	* Check that it is still responding and ok.		* 	* "unit attention errors should occur here if the drive	* 	* has been restarted or the pack changed		* 	\*******************************************************/
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|TRACEOPENS
-condition|)
-name|printf
-argument_list|(
-literal|"device is "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+comment|/*******************************************************\ 	* "unit attention" errors should occur here if the 	* 	* drive has been restarted or the pack changed.		* 	* just ingnore the result, it's a decoy instruction	* 	* The error code will act on the error though		* 	* and invalidate any media information we had.		* 	\*******************************************************/
 name|sd_test_unit_ready
 argument_list|(
 name|unit
 argument_list|,
 literal|0
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|TRACEOPENS
-condition|)
-name|printf
-argument_list|(
-literal|"not reponding\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|TRACEOPENS
-condition|)
-name|printf
-argument_list|(
-literal|"ok\n"
 argument_list|)
 expr_stmt|;
 comment|/*******************************************************\ 	* In case it is a funny one, tell it to start		* 	* not needed for  most hard drives (ignore failure)	* 	\*******************************************************/
@@ -987,6 +1025,20 @@ operator||
 name|SCSI_SILENT
 argument_list|)
 expr_stmt|;
+comment|/*******************************************************\ 	* Check that it is still responding and ok.		* 	\*******************************************************/
+if|if
+condition|(
+name|sd_test_unit_ready
+argument_list|(
+name|unit
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -995,9 +1047,35 @@ name|TRACEOPENS
 condition|)
 name|printf
 argument_list|(
-literal|"started "
+literal|"device not reponding\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|SDDEBUG
+if|if
+condition|(
+name|scsi_debug
+operator|&
+name|TRACEOPENS
+condition|)
+name|printf
+argument_list|(
+literal|"device ok\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	* Load the physical device parameters 			* 	\*******************************************************/
 name|sd_get_parms
 argument_list|(
@@ -1017,6 +1095,7 @@ name|secsiz
 operator|!=
 name|SECSIZE
 condition|)
+comment|/* XXX One day...*/
 block|{
 name|printf
 argument_list|(
@@ -1040,6 +1119,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1051,7 +1133,10 @@ argument_list|(
 literal|"Params loaded "
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 	* Load the partition info if not already loaded		* 	\*******************************************************/
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
+comment|/*******************************************************\ 	* Load the partition info if not already loaded		* 	* Lock the pack in					* 	\*******************************************************/
 name|sd_prevent
 argument_list|(
 name|unit
@@ -1063,7 +1148,6 @@ operator||
 name|SCSI_SILENT
 argument_list|)
 expr_stmt|;
-comment|/* who cares if it fails? */
 if|if
 condition|(
 operator|(
@@ -1093,13 +1177,15 @@ operator||
 name|SCSI_SILENT
 argument_list|)
 expr_stmt|;
-comment|/* who cares if it fails? */
 return|return
 operator|(
 name|errcode
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1111,6 +1197,9 @@ argument_list|(
 literal|"Disklabel loaded "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	* Check the partition is legal				* 	\*******************************************************/
 if|if
 condition|(
@@ -1137,6 +1226,9 @@ name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1148,6 +1240,9 @@ argument_list|(
 literal|"ok"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	*  Check that the partition exists			* 	\*******************************************************/
 if|if
 condition|(
@@ -1210,6 +1305,9 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1225,6 +1323,9 @@ argument_list|,
 name|sdqueues
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 return|return
 operator|(
 literal|0
@@ -1552,7 +1653,7 @@ operator|->
 name|b_dev
 argument_list|)
 index|]
-operator|.
+operator|->
 name|sc_sw
 operator|->
 name|scsi_minphys
@@ -1615,9 +1716,13 @@ expr_stmt|;
 name|sd
 operator|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1650,6 +1755,9 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 name|sdminphys
 argument_list|(
 name|bp
@@ -1845,7 +1953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************\ * sdstart looks to see if there is a buf waiting for the device	* * and that the device is not already busy. If both are true,	* * It deques the buf and creates a scsi command to perform the	* * transfer in the buf. The transfer request will call sd_done	* * on completion, which will in turn call this routine again	* * so that the next queued transfer is performed.		* * The bufs are queued by the strategy routine (sdstrategy)	* *								* * This routine is also called after other non-queued requests	* * have been made of the scsi driver, to ensure that the queue	* * continues to be drained.					* *								* * must be called at the correct (highish) spl level		* \***************************************************************/
+comment|/***************************************************************\ * sdstart looks to see if there is a buf waiting for the device	* * and that the device is not already busy. If both are true,	* * It dequeues the buf and creates a scsi command to perform the	* * transfer in the buf. The transfer request will call sd_done	* * on completion, which will in turn call this routine again	* * so that the next queued transfer is performed.		* * The bufs are queued by the strategy routine (sdstrategy)	* *								* * This routine is also called after other non-queued requests	* * have been made of the scsi driver, to ensure that the queue	* * continues to be drained.					* *								* * must be called at the correct (highish) spl level		* \***************************************************************/
 end_comment
 
 begin_comment
@@ -1904,14 +2012,18 @@ modifier|*
 name|sd
 init|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
 name|struct
 name|partition
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1925,7 +2037,10 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 	* See if there is a buf to do and we are not already	* 	* doing one						* 	\*******************************************************/
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
+comment|/*******************************************************\ 	* Check if the device is already running full capacity	* 	\*******************************************************/
 if|if
 condition|(
 operator|!
@@ -1938,6 +2053,7 @@ block|{
 return|return;
 comment|/* none for us, unit already underway */
 block|}
+comment|/*******************************************************\ 	* there is excess capacity, but a special waits 	* 	* It'll need the adapter as soon as we clear out of the	* 	* way and let it run (user level wait).			* 	\*******************************************************/
 if|if
 condition|(
 name|sd_xfer_block_wait
@@ -1945,11 +2061,10 @@ index|[
 name|unit
 index|]
 condition|)
-comment|/* there is one, but a special waits */
 block|{
 return|return;
-comment|/* give the special that's waiting a chance to run */
 block|}
+comment|/*******************************************************\ 	* See if there is a buf with work for us to do..	* 	\*******************************************************/
 name|dp
 operator|=
 operator|&
@@ -1967,11 +2082,13 @@ name|dp
 operator|->
 name|b_actf
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
 comment|/* yes, an assign */
 block|{
+return|return;
+block|}
 name|dp
 operator|->
 name|b_actf
@@ -1980,28 +2097,6 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-block|}
-else|else
-block|{
-return|return;
-block|}
-name|xs
-operator|=
-name|sd_get_xs
-argument_list|(
-name|unit
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* ok we can grab it */
-name|xs
-operator|->
-name|flags
-operator|=
-name|INUSE
-expr_stmt|;
-comment|/* Now ours */
 comment|/*******************************************************\ 	*  If the device has become invalid, abort all the	* 	* reads and writes until all files have been closed and	* 	* re-openned						* 	\*******************************************************/
 if|if
 condition|(
@@ -2015,24 +2110,11 @@ name|SDVALID
 operator|)
 condition|)
 block|{
-name|xs
-operator|->
-name|error
-operator|=
-name|XS_DRIVER_STUFFUP
-expr_stmt|;
-name|sd_done
-argument_list|(
-name|unit
-argument_list|,
-name|xs
-argument_list|)
-expr_stmt|;
-comment|/* clean up (calls sdstart) */
-return|return ;
+goto|goto
+name|bad
+goto|;
 block|}
-comment|/*******************************************************\ 	* We have a buf, now we should move the data into	* 	* a scsi_xfer definition and try start it		* 	\*******************************************************/
-comment|/*******************************************************\ 	*  First, translate the block to absolute		* 	\*******************************************************/
+comment|/*******************************************************\ 	* We have a buf, now we know we are going to go through	* 	* With this thing..					* 	*							* 	*  First, translate the block to absolute		* 	\*******************************************************/
 name|p
 operator|=
 name|sd
@@ -2164,116 +2246,21 @@ operator|&
 literal|0xff
 operator|)
 expr_stmt|;
-comment|/*******************************************************\ 	* Fill out the scsi_xfer structure			* 	*	Note: we cannot sleep as we may be an interrupt	* 	\*******************************************************/
-name|xs
-operator|->
-name|flags
-operator||=
-name|SCSI_NOSLEEP
-expr_stmt|;
-name|xs
-operator|->
-name|adapter
-operator|=
-name|sd
-operator|->
-name|ctlr
-expr_stmt|;
-name|xs
-operator|->
-name|targ
-operator|=
-name|sd
-operator|->
-name|targ
-expr_stmt|;
-name|xs
-operator|->
-name|lu
-operator|=
-name|sd
-operator|->
-name|lu
-expr_stmt|;
-name|xs
-operator|->
-name|retries
-operator|=
-name|SD_RETRIES
-expr_stmt|;
-name|xs
-operator|->
-name|timeout
-operator|=
-literal|10000
-expr_stmt|;
-comment|/* 10000 millisecs for a disk !*/
-name|xs
-operator|->
-name|cmd
-operator|=
-operator|(
-expr|struct
-name|scsi_generic
-operator|*
-operator|)
+comment|/*******************************************************\ 	* Call the routine that chats with the adapter		* 	*	Note: we cannot sleep as we may be an interrupt	* 	\*******************************************************/
+if|if
+condition|(
+name|sd_scsi_cmd
+argument_list|(
+name|unit
+argument_list|,
 operator|&
 name|cmd
-expr_stmt|;
-name|xs
-operator|->
-name|cmdlen
-operator|=
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|cmd
 argument_list|)
-expr_stmt|;
-name|xs
-operator|->
-name|resid
-operator|=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
-name|xs
-operator|->
-name|when_done
-operator|=
-name|sd_done
-expr_stmt|;
-name|xs
-operator|->
-name|done_arg
-operator|=
-name|unit
-expr_stmt|;
-name|xs
-operator|->
-name|done_arg2
-operator|=
-operator|(
-name|int
-operator|)
-name|xs
-expr_stmt|;
-name|xs
-operator|->
-name|error
-operator|=
-name|XS_NOERROR
-expr_stmt|;
-name|xs
-operator|->
-name|bp
-operator|=
-name|bp
-expr_stmt|;
-name|xs
-operator|->
-name|data
-operator|=
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -2283,35 +2270,37 @@ operator|->
 name|b_un
 operator|.
 name|b_addr
-expr_stmt|;
-name|xs
-operator|->
-name|datalen
-operator|=
+argument_list|,
 name|bp
 operator|->
 name|b_bcount
-expr_stmt|;
-comment|/*******************************************************\ 	* Pass all this info to the scsi driver.		* 	\*******************************************************/
-if|if
-condition|(
+argument_list|,
+literal|10000
+argument_list|,
+name|bp
+argument_list|,
+name|SCSI_NOSLEEP
+operator||
 operator|(
-operator|*
 operator|(
-name|sd
+name|bp
 operator|->
-name|sc_sw
-operator|->
-name|scsi_cmd
+name|b_flags
+operator|&
+name|B_READ
 operator|)
+condition|?
+name|SCSI_DATA_IN
+else|:
+name|SCSI_DATA_OUT
 operator|)
-operator|(
-name|xs
-operator|)
+argument_list|)
 operator|!=
 name|SUCCESSFULLY_QUEUED
 condition|)
 block|{
+name|bad
+label|:
 name|printf
 argument_list|(
 literal|"sd%d: oops not queued"
@@ -2319,286 +2308,30 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|xs
-operator|->
-name|error
-operator|=
-name|XS_DRIVER_STUFFUP
-expr_stmt|;
-name|sd_done
-argument_list|(
-name|unit
-argument_list|,
-name|xs
-argument_list|)
-expr_stmt|;
-comment|/* clean up (calls sdstart) */
-block|}
-name|sdqueues
-operator|++
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*******************************************************\ * This routine is called by the scsi interrupt when	* * the transfer is complete. \*******************************************************/
-end_comment
-
-begin_function
-name|int
-name|sd_done
-parameter_list|(
-name|unit
-parameter_list|,
-name|xs
-parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-name|struct
-name|scsi_xfer
-modifier|*
-name|xs
-decl_stmt|;
-block|{
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|retval
-decl_stmt|;
-name|int
-name|retries
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|scsi_debug
-operator|&
-name|PRINTROUTINES
-condition|)
-name|printf
-argument_list|(
-literal|"sd_done%d "
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|xs
-operator|->
-name|flags
-operator|&
-name|INUSE
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"scsi_xfer not in use!"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|=
-name|xs
-operator|->
-name|bp
-condition|)
-block|{
-switch|switch
-condition|(
-name|xs
-operator|->
-name|error
-condition|)
-block|{
-case|case
-name|XS_NOERROR
-case|:
-name|bp
-operator|->
-name|b_error
-operator|=
-literal|0
-expr_stmt|;
-name|bp
-operator|->
-name|b_resid
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-name|XS_SENSE
-case|:
-name|retval
-operator|=
-operator|(
-name|sd_interpret_sense
-argument_list|(
-name|unit
-argument_list|,
-name|xs
-argument_list|)
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|retval
-condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|retval
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|XS_TIMEOUT
-case|:
-name|printf
-argument_list|(
-literal|"sd%d timeout\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-case|case
-name|XS_BUSY
-case|:
-comment|/* should retry */
-comment|/* how? */
-comment|/************************************************/
-comment|/* SHOULD put buf back at head of queue		*/
-comment|/* and decrement retry count in (*xs)		*/
-comment|/* HOWEVER, this should work as a kludge	*/
-comment|/************************************************/
-if|if
-condition|(
-name|xs
-operator|->
-name|retries
-operator|--
-condition|)
-block|{
-name|xs
-operator|->
-name|error
-operator|=
-name|XS_NOERROR
-expr_stmt|;
-name|xs
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ITSDONE
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|*
-operator|(
-name|sd_data
-index|[
-name|unit
-index|]
-operator|.
-name|sc_sw
-operator|->
-name|scsi_cmd
-operator|)
-operator|)
-operator|(
-name|xs
-operator|)
-operator|==
-name|SUCCESSFULLY_QUEUED
-condition|)
-block|{
-comment|/* don't wake the job, ok? */
-return|return;
-block|}
-name|xs
-operator|->
-name|flags
-operator||=
-name|ITSDONE
-expr_stmt|;
-block|}
-comment|/* fall through */
-case|case
-name|XS_DRIVER_STUFFUP
-case|:
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
 name|bp
 operator|->
 name|b_error
 operator|=
 name|EIO
 expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"sd%d: unknown error category from scsi driver\n"
-argument_list|,
-name|unit
-argument_list|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
-block|}
 name|biodone
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|sd_free_xs
-argument_list|(
-name|unit
-argument_list|,
-name|xs
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|sdstart
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* If there's anything waiting.. do it */
+return|return ;
 block|}
-else|else
-comment|/* special has finished */
-block|{
-name|wakeup
-argument_list|(
-name|xs
-argument_list|)
+name|sdqueues
+operator|++
 expr_stmt|;
 block|}
-block|}
-end_function
+end_block
 
 begin_comment
 comment|/*******************************************************\ * Perform special action on behalf of the user		* * Knows about the internals of this device		* \*******************************************************/
@@ -2658,12 +2391,14 @@ argument_list|)
 expr_stmt|;
 name|sd
 operator|=
-operator|&
 name|sd_data
 index|[
 name|unit
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -2677,16 +2412,16 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	* If the device is not valid.. abandon ship		* 	\*******************************************************/
 if|if
 condition|(
 operator|!
 operator|(
-name|sd_data
-index|[
-name|unit
-index|]
-operator|.
+name|sd
+operator|->
 name|flags
 operator|&
 name|SDVALID
@@ -3028,8 +2763,9 @@ modifier|*
 name|sd
 init|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
 comment|/*******************************************************\ 	* If the inflo is already loaded, use it		* 	\*******************************************************/
 if|if
@@ -3059,7 +2795,7 @@ name|disklabel
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 	* make partition 3 the whole disk in case of failure	*   	*   then get pdinfo 					* 	\*******************************************************/
+comment|/*******************************************************\ 	* make partition 3 the whole disk in case of failure	*   	*   then get pdinfo 					* 	* for historical reasons, make part a same as raw part	* 	\*******************************************************/
 name|sd
 operator|->
 name|disklabel
@@ -3211,9 +2947,9 @@ operator|=
 literal|100
 expr_stmt|;
 comment|/* as long as it's not 0 */
-comment|/* readdisklabel divides by it */
+comment|/* readdisklabel divides by it (?)*/
 block|}
-comment|/*******************************************************\ 	* all the generic disklabel extraction routine		* 	\*******************************************************/
+comment|/*******************************************************\ 	* Call the generic disklabel extraction routine		* 	\*******************************************************/
 if|if
 condition|(
 name|errstring
@@ -3265,7 +3001,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*******************************************************\ 	* leave partition 2 "open" for raw I/O 			* 	\*******************************************************/
 name|sd
 operator|->
 name|flags
@@ -3350,7 +3085,11 @@ argument_list|)
 argument_list|,
 literal|2000
 argument_list|,
+name|NULL
+argument_list|,
 name|flags
+operator||
+name|SCSI_DATA_IN
 argument_list|)
 operator|!=
 literal|0
@@ -3476,6 +3215,8 @@ literal|0
 argument_list|,
 literal|100000
 argument_list|,
+name|NULL
+argument_list|,
 name|flags
 argument_list|)
 operator|)
@@ -3484,7 +3225,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*******************************************************\ * Prevent or allow the user to remove the tape		* \*******************************************************/
+comment|/*******************************************************\ * Prevent or allow the user to remove the tape		* * Don't change this status if any partitions are open	* \*******************************************************/
 end_comment
 
 begin_macro
@@ -3514,6 +3255,16 @@ name|struct
 name|scsi_prevent
 name|scsi_cmd
 decl_stmt|;
+if|if
+condition|(
+name|sd_data
+index|[
+name|unit
+index|]
+operator|->
+name|openparts
+condition|)
+return|return;
 name|bzero
 argument_list|(
 operator|&
@@ -3556,6 +3307,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|5000
+argument_list|,
+name|NULL
 argument_list|,
 name|flags
 argument_list|)
@@ -3633,6 +3386,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|2000
+argument_list|,
+name|NULL
 argument_list|,
 name|flags
 argument_list|)
@@ -3810,7 +3565,9 @@ argument_list|)
 argument_list|,
 literal|5000
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|SCSI_DATA_OUT
 argument_list|)
 operator|)
 return|;
@@ -3846,8 +3603,9 @@ modifier|*
 name|sd
 init|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
 name|struct
 name|disk_parms
@@ -3899,6 +3657,9 @@ literal|0
 operator|)
 return|;
 comment|/*******************************************************\ 	* First do a mode sense page 3				* 	\*******************************************************/
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|sd_debug
@@ -3958,7 +3719,11 @@ argument_list|)
 argument_list|,
 literal|2000
 argument_list|,
+name|NULL
+argument_list|,
 name|flags
+operator||
+name|SCSI_DATA_IN
 argument_list|)
 operator|!=
 literal|0
@@ -3971,12 +3736,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"unit %d: %d trk/zone, %d alt_sec/zone, %d alt_trk/zone, %d alt_trk/lun\n"
@@ -4083,6 +3845,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
 comment|/*******************************************************\ 	* do a "mode sense page 4"				* 	\*******************************************************/
 name|bzero
 argument_list|(
@@ -4138,7 +3904,11 @@ argument_list|)
 argument_list|,
 literal|2000
 argument_list|,
+name|NULL
+argument_list|,
 name|flags
+operator||
+name|SCSI_DATA_IN
 argument_list|)
 operator|!=
 literal|0
@@ -4146,17 +3916,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sd%d: could not mode sense (4)"
+literal|"sd%d could not mode sense (4)."
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" using ficticious geometry\n"
+literal|" Using ficticious geometry\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * use adaptec standard ficticious geometry 		 * this depends on controllers and mode (ie, 1542C in 		 * extended bios translation is different 		 */
+comment|/* 		 * use adaptec standard ficticious geometry 		 * this depends on which controller (e.g. 1542C is 		 * different. but we have to put SOMETHING here..) 		 */
 name|sectors
 operator|=
 name|sd_size
@@ -4205,6 +3975,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|sd_debug
@@ -4269,7 +4042,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*******************************************************\ 		* KLUDGE!!(for zone recorded disks)			* 		* give a number of sectors so that sec * trks * cyls	* 		* is<= disk_size 					* 		\*******************************************************/
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
+comment|/*******************************************************\ 		* KLUDGE!!(for zone recorded disks)			* 		* give a number of sectors so that sec * trks * cyls	* 		* is<= disk_size 					* 		* can lead to wasted space! THINK ABOUT THIS !		* 		\*******************************************************/
 name|disk_parms
 operator|->
 name|heads
@@ -4332,11 +4108,11 @@ operator|/=
 operator|(
 name|disk_parms
 operator|->
-name|cyls
+name|heads
 operator|*
 name|disk_parms
 operator|->
-name|heads
+name|cyls
 operator|)
 expr_stmt|;
 name|disk_parms
@@ -4346,6 +4122,7 @@ operator|=
 name|sectors
 expr_stmt|;
 comment|/* dubious on SCSI*/
+comment|/*XXX*/
 block|}
 name|sd
 operator|->
@@ -4362,7 +4139,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************\ * close the device.. only called if we are the LAST	* * occurence of an open device				* \*******************************************************/
+comment|/*******************************************************\ * close the device.. only called if we are the LAST	* * occurence of an open device				* * convenient now but usually a pain			* \*******************************************************/
 end_comment
 
 begin_macro
@@ -4390,6 +4167,11 @@ name|unsigned
 name|int
 name|old_priority
 decl_stmt|;
+name|struct
+name|sd_data
+modifier|*
+name|sd
+decl_stmt|;
 name|unit
 operator|=
 name|UNIT
@@ -4404,11 +4186,15 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|sd
+operator|=
 name|sd_data
 index|[
 name|unit
 index|]
-operator|.
+expr_stmt|;
+name|sd
+operator|->
 name|partflags
 index|[
 name|part
@@ -4417,11 +4203,8 @@ operator|&=
 operator|~
 name|SDOPEN
 expr_stmt|;
-name|sd_data
-index|[
-name|unit
-index|]
-operator|.
+name|sd
+operator|->
 name|openparts
 operator|&=
 operator|~
@@ -4431,19 +4214,6 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|sd_data
-index|[
-name|unit
-index|]
-operator|.
-name|openparts
-operator|==
-literal|0
-condition|)
-comment|/* if all partitions closed */
-block|{
 name|sd_prevent
 argument_list|(
 name|unit
@@ -4455,7 +4225,6 @@ operator||
 name|SCSI_ERR_OK
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -4465,7 +4234,270 @@ block|}
 end_block
 
 begin_comment
-comment|/*******************************************************\ * ask the scsi driver to perform a command for us.	* * Call it through the switch table, and tell it which	* * sub-unit we want, and what target and lu we wish to	* * talk to. Also tell it where to find the command	* * how long int is.					* * Also tell it where to read/write the data, and how	* * long the data is supposed to be			* \*******************************************************/
+comment|/*******************************************************\ * This routine is called by the scsi interrupt when	* * the transfer is complete. \*******************************************************/
+end_comment
+
+begin_function
+name|int
+name|sd_done
+parameter_list|(
+name|unit
+parameter_list|,
+name|xs
+parameter_list|)
+name|int
+name|unit
+decl_stmt|;
+name|struct
+name|scsi_xfer
+modifier|*
+name|xs
+decl_stmt|;
+block|{
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+name|int
+name|retries
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
+if|if
+condition|(
+name|scsi_debug
+operator|&
+name|PRINTROUTINES
+condition|)
+name|printf
+argument_list|(
+literal|"sd_done%d "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
+ifdef|#
+directive|ifdef
+name|PARANOID
+if|if
+condition|(
+operator|!
+operator|(
+name|xs
+operator|->
+name|flags
+operator|&
+name|INUSE
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"scsi_xfer not in use!"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|(
+name|bp
+operator|=
+name|xs
+operator|->
+name|bp
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/***********************************************\ 		* if it's a normal user level request, then ask	* 		* The user level code to handle error checking	* 		* rather than doing it here at interrupt time	* 		\***********************************************/
+name|wakeup
+argument_list|(
+name|xs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/***********************************************\ 	* If it has a buf, we might be working with	* 	* a request from the buffer cache or some other	* 	* piece of code that requires us to process	* 	* errors right now, despite cost		* 	\***********************************************/
+switch|switch
+condition|(
+name|xs
+operator|->
+name|error
+condition|)
+block|{
+case|case
+name|XS_NOERROR
+case|:
+name|bp
+operator|->
+name|b_error
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_resid
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|XS_SENSE
+case|:
+name|retval
+operator|=
+operator|(
+name|sd_interpret_sense
+argument_list|(
+name|unit
+argument_list|,
+name|xs
+argument_list|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|retval
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|XS_BUSY
+case|:
+comment|/*should somehow arange for a 1 sec delay here (how?)*/
+case|case
+name|XS_TIMEOUT
+case|:
+comment|/***********************************************\ 		* If we can, resubmit it to the adapter.	* 		\***********************************************/
+if|if
+condition|(
+name|xs
+operator|->
+name|retries
+operator|--
+condition|)
+block|{
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_NOERROR
+expr_stmt|;
+name|xs
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ITSDONE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+operator|(
+name|sd_data
+index|[
+name|unit
+index|]
+operator|->
+name|sc_sw
+operator|->
+name|scsi_cmd
+operator|)
+operator|)
+operator|(
+name|xs
+operator|)
+operator|==
+name|SUCCESSFULLY_QUEUED
+condition|)
+block|{
+comment|/* don't wake the job, ok? */
+return|return;
+block|}
+name|xs
+operator|->
+name|flags
+operator||=
+name|ITSDONE
+expr_stmt|;
+block|}
+comment|/* fall through */
+case|case
+name|XS_DRIVER_STUFFUP
+case|:
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"sd%d: unknown error category from scsi driver\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*******************************\ 	* tell the owner we're done	* 	* then free our resources	* 	* and see if there's more work	* 	\*******************************/
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|sd_free_xs
+argument_list|(
+name|unit
+argument_list|,
+name|xs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|sdstart
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+comment|/* If there's anything waiting.. do it */
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************\ * ask the scsi driver to perform a command for us.	* * Call it through the switch table, and tell it which	* * sub-unit we want, and what target and lu we wish to	* * talk to. Also tell it where to find the command	* * and how long it is.					* * Also tell it where to read/write the data, and how	* * long the data is supposed to be. If we have  a buf	* * to associate with the transfer, we need that too.	* \*******************************************************/
 end_comment
 
 begin_function
@@ -4483,6 +4515,8 @@ parameter_list|,
 name|datalen
 parameter_list|,
 name|timeout
+parameter_list|,
+name|bp
 parameter_list|,
 name|flags
 parameter_list|)
@@ -4509,6 +4543,11 @@ decl_stmt|;
 name|int
 name|datalen
 decl_stmt|;
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
 block|{
 name|struct
 name|scsi_xfer
@@ -4527,9 +4566,13 @@ modifier|*
 name|sd
 init|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -4543,14 +4586,39 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SDDEBUG*/
+ifdef|#
+directive|ifdef
+name|PARANOID
 if|if
 condition|(
+operator|!
+operator|(
 name|sd
 operator|->
 name|sc_sw
+operator|)
 condition|)
 comment|/* If we have a scsi driver */
 block|{
+comment|/* How we got here is anyone's guess */
+name|printf
+argument_list|(
+literal|"sd%d: not set up\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 name|xs
 operator|=
 name|sd_get_xs
@@ -4561,6 +4629,9 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* should wait unless booting */
+ifdef|#
+directive|ifdef
+name|PARANOID
 if|if
 condition|(
 operator|!
@@ -4581,17 +4652,15 @@ name|EBUSY
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+comment|/*******************************************************\ 	* Fill out the scsi_xfer structure			* 	\*******************************************************/
 name|xs
 operator|->
 name|flags
-operator||=
+operator|=
 name|INUSE
-expr_stmt|;
-comment|/*******************************************************\ 		* Fill out the scsi_xfer structure			* 		\*******************************************************/
-name|xs
-operator|->
-name|flags
-operator||=
+operator||
 name|flags
 expr_stmt|;
 name|xs
@@ -4664,21 +4733,6 @@ name|xs
 operator|->
 name|when_done
 operator|=
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|?
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-literal|0
-else|:
 name|sd_done
 expr_stmt|;
 name|xs
@@ -4696,6 +4750,12 @@ name|int
 operator|)
 name|xs
 expr_stmt|;
+name|xs
+operator|->
+name|bp
+operator|=
+name|bp
+expr_stmt|;
 name|retry
 label|:
 name|xs
@@ -4704,12 +4764,7 @@ name|error
 operator|=
 name|XS_NOERROR
 expr_stmt|;
-name|xs
-operator|->
-name|bp
-operator|=
-literal|0
-expr_stmt|;
+comment|/*******************************************************\ 	* Do the transfer. If we are polling we will return:	* 	* COMPLETE,	Was poll, and sd_done has been called	* 	* HAD_ERROR,	Was poll and an error was encountered	* 	* TRY_AGAIN_LATER, Adapter short resources, try again	* 	*							* 	* if under full steam (interrupts) it will return:	* 	* SUCCESSFULLY_QUEUED, will do a wakeup when complete	* 	* HAD_ERROR,	had an erro before it could queue	* 	* TRY_AGAIN_LATER, (as for polling)			* 	* After the wakeup, we must still check if it succeeded	* 	*							* 	* If we have a bp however, all the error proccessing	* 	* and the buffer code both expect us to return straight	* 	* to them, so as soon as the command is queued, return	* 	\*******************************************************/
 name|retval
 operator|=
 operator|(
@@ -4726,6 +4781,15 @@ operator|(
 name|xs
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+condition|)
+return|return
+name|retval
+return|;
+comment|/* will sleep (or not) elsewhere */
+comment|/*******************************************************\ 	* Only here for non I/O cmds. It's cheaper to process	* 	* the error status here than at interrupt time so	* 	* sd_done will have done nothing except wake us up.	* 	\*******************************************************/
 switch|switch
 condition|(
 name|retval
@@ -4764,10 +4828,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* fall through to check success of completed command */
 case|case
 name|HAD_ERROR
 case|:
-comment|/*printf("err = %d ",xs->error);*/
 switch|switch
 condition|(
 name|xs
@@ -4778,6 +4842,7 @@ block|{
 case|case
 name|XS_NOERROR
 case|:
+comment|/* nearly always hit this one */
 name|retval
 operator|=
 name|ESUCCESS
@@ -4799,13 +4864,9 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|XS_DRIVER_STUFFUP
+name|XS_BUSY
 case|:
-name|retval
-operator|=
-name|EIO
-expr_stmt|;
-break|break;
+comment|/* should sleep 1 sec here */
 case|case
 name|XS_TIMEOUT
 case|:
@@ -4828,33 +4889,9 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|retval
-operator|=
-name|EIO
-expr_stmt|;
-break|break;
 case|case
-name|XS_BUSY
+name|XS_DRIVER_STUFFUP
 case|:
-if|if
-condition|(
-name|xs
-operator|->
-name|retries
-operator|--
-condition|)
-block|{
-name|xs
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ITSDONE
-expr_stmt|;
-goto|goto
-name|retry
-goto|;
-block|}
 name|retval
 operator|=
 name|EIO
@@ -4877,6 +4914,7 @@ break|break;
 case|case
 name|COMPLETE
 case|:
+comment|/* Polling command completed ok */
 name|retval
 operator|=
 name|ESUCCESS
@@ -4885,6 +4923,8 @@ break|break;
 case|case
 name|TRY_AGAIN_LATER
 case|:
+comment|/* adapter resource shortage */
+comment|/* should sleep 1 sec here */
 if|if
 condition|(
 name|xs
@@ -4904,17 +4944,13 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|retval
-operator|=
-name|EIO
-expr_stmt|;
-break|break;
 default|default:
 name|retval
 operator|=
 name|EIO
 expr_stmt|;
 block|}
+comment|/*******************************************************\ 	* we have finished with the xfer stuct, free it and	* 	* check if anyone else needs to be started up.		* 	\*******************************************************/
 name|sd_free_xs
 argument_list|(
 name|unit
@@ -4929,23 +4965,7 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* check if anything is waiting fr the xs */
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"sd%d: not set up\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
+comment|/* check queue */
 return|return
 operator|(
 name|retval
@@ -4986,6 +5006,10 @@ decl_stmt|;
 name|int
 name|silent
 decl_stmt|;
+name|long
+name|int
+name|info
+decl_stmt|;
 comment|/***************************************************************\ 	* If the flags say errs are ok, then always return ok.		* 	\***************************************************************/
 if|if
 condition|(
@@ -5017,6 +5041,68 @@ operator|(
 name|xs
 operator|->
 name|sense
+operator|)
+expr_stmt|;
+name|info
+operator|=
+operator|(
+operator|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|info
+index|[
+literal|0
+index|]
+operator|<<
+literal|24
+operator|)
+operator||
+operator|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|info
+index|[
+literal|1
+index|]
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|info
+index|[
+literal|2
+index|]
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|info
+index|[
+literal|3
+index|]
+operator|)
 operator|)
 expr_stmt|;
 switch|switch
@@ -5086,63 +5172,7 @@ name|printf
 argument_list|(
 literal|"block no. %d (decimal)"
 argument_list|,
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
 name|info
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|3
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5206,63 +5236,7 @@ name|printf
 argument_list|(
 literal|"block no. %d (decimal)"
 argument_list|,
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
 name|info
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|3
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5337,7 +5311,7 @@ name|sd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|flags
 operator|&=
 operator|~
@@ -5353,7 +5327,7 @@ name|sd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|openparts
 condition|)
 block|{
@@ -5398,63 +5372,7 @@ name|printf
 argument_list|(
 literal|"block no. %d (decimal)\n"
 argument_list|,
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
 name|info
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|3
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5480,7 +5398,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sd%d: block wrong state (worm)\n "
+literal|"sd%d: block wrong state (format?)\n "
 argument_list|,
 name|unit
 argument_list|)
@@ -5498,63 +5416,7 @@ name|printf
 argument_list|(
 literal|"block no. %d (decimal)\n"
 argument_list|,
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
 name|info
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|3
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5658,63 +5520,7 @@ name|printf
 argument_list|(
 literal|"block no. %d (decimal)\n"
 argument_list|,
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
 name|info
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|3
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5778,63 +5584,7 @@ name|printf
 argument_list|(
 literal|"block no. %d (decimal)\n"
 argument_list|,
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
 name|info
-index|[
-literal|0
-index|]
-operator|<<
-literal|24
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|1
-index|]
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|2
-index|]
-operator|<<
-literal|8
-operator|)
-operator||
-operator|(
-name|sense
-operator|->
-name|ext
-operator|.
-name|extended
-operator|.
-name|info
-index|[
-literal|3
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5998,12 +5748,22 @@ operator|)
 return|;
 name|sd
 operator|=
-operator|&
 name|sd_data
 index|[
 name|unit
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sd
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -6098,6 +5858,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*#define SCSIDUMP*/
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -6259,9 +6023,20 @@ comment|/* 31 Jul 92*/
 name|sd
 operator|=
 name|sd_data
-operator|+
+index|[
 name|unit
+index|]
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sd
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* was it ever initialized etc. ? */
 if|if
 condition|(
@@ -6700,6 +6475,7 @@ block|}
 else|#
 directive|else
 else|NOT_TRUSTED
+comment|/* lets just talk about this first...*/
 name|printf
 argument_list|(
 literal|"sd%d: dump addr 0x%x, blk %d\n"
@@ -6713,6 +6489,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|NOT_TRUSTED
 if|if
 condition|(
 operator|(
@@ -6780,11 +6557,8 @@ end_function
 begin_else
 else|#
 directive|else
+else|SCSIDUMP
 end_else
-
-begin_comment
-comment|/* No SCSIDUMP CODE */
-end_comment
 
 begin_macro
 name|sddump
@@ -6800,7 +6574,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|20000000
+literal|100000000
 argument_list|)
 expr_stmt|;
 comment|/* 100 seconds */
@@ -6816,6 +6590,7 @@ end_block
 begin_endif
 endif|#
 directive|endif
+endif|SCSIDUMP
 end_endif
 
 end_unit

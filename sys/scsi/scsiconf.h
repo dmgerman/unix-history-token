@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.3 93/08/26 21:09:43 julian Exp Locker: julian $  */
 end_comment
 
 begin_comment
@@ -11,11 +11,6 @@ begin_struct
 struct|struct
 name|scsi_switch
 block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* name of scsi bus controller */
 name|int
 function_decl|(
 modifier|*
@@ -53,10 +48,15 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* see definitions below */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of scsi bus controller */
 name|u_long
 name|spare
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 block|}
@@ -75,7 +75,7 @@ comment|/* maximum number of entries 						queuable to a device by  						the ad
 end_comment
 
 begin_comment
-comment|/* 24 bits of other adapter charcteristics go here */
+comment|/* 24 bits of other adapter characteristics go here */
 end_comment
 
 begin_comment
@@ -178,6 +178,13 @@ name|HAD_ERROR
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|ESCAPE_NOT_SUPPORTED
+value|4
+end_define
+
 begin_struct
 struct|struct
 name|scsi_xfer
@@ -254,6 +261,15 @@ name|struct
 name|scsi_sense_data
 name|sense
 decl_stmt|;
+comment|/* Believe it or not, Some targets fall on the ground with 	 * anything but a certain sense length. 	 */
+name|int
+name|req_sense_length
+decl_stmt|;
+comment|/* Explicit request sense length */
+name|int
+name|status
+decl_stmt|;
+comment|/* SCSI status */
 block|}
 struct|;
 end_struct
@@ -401,6 +417,54 @@ end_define
 begin_comment
 comment|/* This defines a TARGET mode op.	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_ESCAPE
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Escape operation			*/
+end_comment
+
+begin_comment
+comment|/*************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Escape op codes.  This provides an extensible setup for operations    */
+end_comment
+
+begin_comment
+comment|/* that are not scsi commands.  They are intended for modal operations.  */
+end_comment
+
+begin_comment
+comment|/*************************************************************************/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_OP_TARGET
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OP_RESET
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_OP_BDINFO
+value|0x0003
+end_define
 
 begin_comment
 comment|/********************************/
