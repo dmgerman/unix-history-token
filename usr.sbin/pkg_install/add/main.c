@@ -656,14 +656,7 @@ name|argv
 argument_list|)
 operator|)
 condition|)
-name|warnx
-argument_list|(
-literal|"can't find package '%s'"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
+comment|/* let pkg_do() fail later, so that error is reported */
 else|else
 name|pkgs
 index|[
