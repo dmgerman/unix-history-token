@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)crt0.c	4.4 (Berkeley) %G%"
+literal|"@(#)crt0.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,12 +18,39 @@ name|char
 modifier|*
 modifier|*
 name|environ
+init|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_asm
 asm|asm("#define _start start");
 end_asm
+
+begin_asm
+asm|asm("#define _eprol eprol");
+end_asm
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|etext
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|eprol
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|start
@@ -94,6 +121,12 @@ name|kfp
 operator|=
 literal|0
 expr_stmt|;
+name|initcode
+operator|=
+name|initcode
+operator|=
+literal|0
+expr_stmt|;
 else|#
 directive|else
 else|not lint
@@ -145,6 +178,22 @@ name|environ
 operator|=
 name|targv
 expr_stmt|;
+asm|asm("eprol:");
+ifdef|#
+directive|ifdef
+name|MCRT0
+name|monstartup
+argument_list|(
+operator|&
+name|eprol
+argument_list|,
+operator|&
+name|etext
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|MCRT0
 name|exit
 argument_list|(
 name|main
@@ -162,6 +211,66 @@ expr_stmt|;
 block|}
 end_block
 
+begin_asm
+asm|asm("#undef _start");
+end_asm
+
+begin_asm
+asm|asm("#undef _eprol");
+end_asm
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MCRT0
+end_ifdef
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_expr_stmt
+name|exit
+argument_list|(
+name|code
+argument_list|)
+specifier|register
+name|int
+name|code
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* r11 */
+end_comment
+
+begin_block
+block|{
+name|monitor
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|_cleanup
+argument_list|()
+expr_stmt|;
+asm|asm("	movl r11,r0");
+asm|asm("	chmk $1");
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|MCRT0
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRT0
+end_ifdef
+
 begin_comment
 comment|/*  * null mcount, just in case some routine is compiled for profiling  */
 end_comment
@@ -173,6 +282,12 @@ end_asm
 begin_asm
 asm|asm("mcount:	rsb");
 end_asm
+
+begin_endif
+endif|#
+directive|endif
+endif|CRT0
+end_endif
 
 end_unit
 
