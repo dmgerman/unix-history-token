@@ -1015,9 +1015,6 @@ name|usbd_status
 name|err
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|sc
@@ -1124,11 +1121,6 @@ block|{
 name|ucom_cleanup
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1412,11 +1404,6 @@ operator|)
 return|;
 name|fail
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|ucom_cleanup
 argument_list|(
 name|sc
