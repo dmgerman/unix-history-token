@@ -4336,11 +4336,13 @@ begin_decl_stmt
 name|u_long
 name|tcp_recvspace
 init|=
-literal|1024
-operator|*
-literal|64
+literal|57344
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* largest multiple of PAGE_SIZE< 64k */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
