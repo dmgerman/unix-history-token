@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.9 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,7 +303,14 @@ comment|/* 	**  Do sender deletion. 	** 	**	If the sender has the QQUEUEUP flag 
 if|if
 condition|(
 operator|!
-name|MeToo
+name|bitset
+argument_list|(
+name|EF_METOO
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|&&
 operator|!
 name|bitset
@@ -7005,6 +7012,8 @@ argument_list|,
 name|e
 operator|->
 name|e_from
+operator|.
+name|q_paddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -7548,6 +7557,8 @@ argument_list|,
 name|e
 operator|->
 name|e_from
+operator|.
+name|q_paddr
 argument_list|)
 expr_stmt|;
 block|}
