@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.36 1998/07/15 10:11:21 bde Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

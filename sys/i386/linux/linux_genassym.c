@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: linux_genassym.c,v 1.7 1998/02/01 18:47:56 bde Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.31 1998/11/15 15:33:50 bde Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  * $FreeBSD$  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/include/linux/math_emu.h  *  * (C) 1991 Linus Torvalds  *  *	$Id: math_emu.h,v 1.5 1997/02/22 09:32:27 peter Exp $  */
+comment|/*  * linux/include/linux/math_emu.h  *  * (C) 1991 Linus Torvalds  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

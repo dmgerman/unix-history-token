@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.31 1998/08/12 18:16:38 bde Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

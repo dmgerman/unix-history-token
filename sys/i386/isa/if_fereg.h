@@ -4,7 +4,7 @@ comment|/*  * Hardware specification of various 8696x based Ethernet cards.  * C
 end_comment
 
 begin_comment
-comment|/* $Id: if_fereg.h,v 1.5 1997/02/22 09:36:28 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
