@@ -2254,6 +2254,13 @@ decl_stmt|;
 name|int
 name|ctlr
 decl_stmt|;
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 comment|/* flush cache on all devices */
 for|for
 control|(
