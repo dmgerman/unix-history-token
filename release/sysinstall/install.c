@@ -886,6 +886,7 @@ argument_list|(
 name|VAR_NO_WARN
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|msgYesNo
@@ -902,6 +903,7 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
+block|}
 if|if
 condition|(
 name|DITEM_STATUS
