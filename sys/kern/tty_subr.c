@@ -472,7 +472,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"clist_alloc_cblocks: M_NOWAIT malloc failed, trying M_WAITOK\n"
+literal|"cblock_alloc_cblocks: M_NOWAIT malloc failed, trying M_WAITOK\n"
 argument_list|)
 expr_stmt|;
 name|cbp
