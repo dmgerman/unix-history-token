@@ -573,7 +573,7 @@ name|port
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|ores
 operator|->
 name|ai_canonname
 operator|==
@@ -593,7 +593,7 @@ if|if
 condition|(
 name|strlen
 argument_list|(
-name|res
+name|ores
 operator|->
 name|ai_canonname
 argument_list|)
@@ -620,7 +620,7 @@ name|strncpy
 argument_list|(
 name|host
 argument_list|,
-name|res
+name|ores
 operator|->
 name|ai_canonname
 argument_list|,
@@ -734,7 +734,7 @@ name|HOSTNAME_FOUND
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|ores
 operator|->
 name|ai_canonname
 operator|==
@@ -742,7 +742,7 @@ literal|0
 operator|||
 name|strlen
 argument_list|(
-name|res
+name|ores
 operator|->
 name|ai_canonname
 argument_list|)
@@ -763,7 +763,7 @@ name|strncpy
 argument_list|(
 name|host
 argument_list|,
-name|res
+name|ores
 operator|->
 name|ai_canonname
 argument_list|,
