@@ -9598,13 +9598,8 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -9906,6 +9901,9 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 end_function

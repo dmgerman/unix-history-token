@@ -3540,9 +3540,6 @@ argument_list|(
 name|vmspace
 argument_list|)
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pmap_remove_pages
 argument_list|(
 name|vmspace_pmap
@@ -3560,9 +3557,6 @@ argument_list|(
 name|map
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|vm_map_remove
 argument_list|(

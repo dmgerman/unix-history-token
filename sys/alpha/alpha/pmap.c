@@ -7472,9 +7472,6 @@ name|pv
 decl_stmt|,
 name|npv
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PMAP_REMOVE_PAGES_CURPROC_ONLY
@@ -7506,9 +7503,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-name|s
-operator|=
-name|splvm
+name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -7740,11 +7735,6 @@ name|pv
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|pmap_invalidate_all
 argument_list|(
 name|pmap
@@ -7754,6 +7744,9 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 end_function
