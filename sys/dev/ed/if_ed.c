@@ -4095,23 +4095,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Write a test pattern in byte mode. If this fails, then there 	 * probably isn't any memory at 8k - which likely means that the board 	 * is an NE2000. 	 */
-if|if
-condition|(
-name|bcmp
-argument_list|(
-name|test_pattern
-argument_list|,
-name|test_buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|test_pattern
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
 name|ed_pio_writemem
 argument_list|(
 name|sc
@@ -4140,6 +4123,23 @@ name|test_pattern
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|test_pattern
+argument_list|,
+name|test_buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|test_pattern
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* could be either an NE1000 or a Linksys ethernet controller */
 name|linksys
 operator|=
