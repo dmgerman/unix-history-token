@@ -210,7 +210,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|user
 decl_stmt|;
