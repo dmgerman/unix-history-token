@@ -31,39 +31,53 @@ begin_define
 define|#
 directive|define
 name|ROUTE_STATIC
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_DSTMYADDR
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_DSTHISADDR
-value|2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUTE_DSTDNS0
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUTE_DSTDNS1
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_DSTANY
-value|3
+value|0x0f
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_GWHISADDR
-value|4
+value|0x10
 end_define
 
 begin_comment
-comment|/* May be ORd with DST_MYADDR */
+comment|/* May be ORd with DST_* */
 end_comment
 
 begin_struct
@@ -164,9 +178,17 @@ name|in_addr
 parameter_list|,
 name|struct
 name|in_addr
-parameter_list|)
-function_decl|;
+parameter_list|,
+name|struct
+name|in_addr
+type|[
+function_decl|2]
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
