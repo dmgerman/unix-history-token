@@ -778,7 +778,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|getfstab
+name|dump_getfstab
 parameter_list|(
 name|void
 parameter_list|)

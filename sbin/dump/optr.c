@@ -1245,7 +1245,7 @@ end_expr_stmt
 
 begin_function
 name|void
-name|getfstab
+name|dump_getfstab
 parameter_list|(
 name|void
 parameter_list|)
@@ -1619,7 +1619,7 @@ operator|&
 name|tnow
 argument_list|)
 expr_stmt|;
-name|getfstab
+name|dump_getfstab
 argument_list|()
 expr_stmt|;
 comment|/* /etc/fstab input */

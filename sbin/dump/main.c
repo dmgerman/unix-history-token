@@ -1351,7 +1351,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|getfstab
+name|dump_getfstab
 argument_list|()
 expr_stmt|;
 comment|/* /etc/fstab snarfed */
