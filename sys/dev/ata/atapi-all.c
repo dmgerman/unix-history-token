@@ -2345,7 +2345,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"%s: %s - %s asc=%02x ascq=%02x error=%02x\n"
+literal|"%s: %s - %s asc=%02x ascq=%02x "
 argument_list|,
 name|atp
 operator|->
@@ -2378,6 +2378,42 @@ operator|->
 name|sense
 operator|.
 name|ascq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|request
+operator|->
+name|sense
+operator|.
+name|sksv
+condition|)
+name|printf
+argument_list|(
+literal|"sks=%02x %02x %02x "
+argument_list|,
+name|request
+operator|->
+name|sense
+operator|.
+name|sk_specific
+argument_list|,
+name|request
+operator|->
+name|sense
+operator|.
+name|sk_specific1
+argument_list|,
+name|request
+operator|->
+name|sense
+operator|.
+name|sk_specific2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"error=%02x\n"
 argument_list|,
 name|request
 operator|->
