@@ -908,13 +908,6 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"pgrpsess"
-block|,
-operator|&
-name|lock_class_sx
-block|}
-block|,
-block|{
 literal|"proctree"
 block|,
 operator|&

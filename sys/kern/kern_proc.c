@@ -288,13 +288,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sx
-name|pgrpsess_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|mtx
 name|pargs_ref_lock
 decl_stmt|;
@@ -349,14 +342,6 @@ operator|&
 name|proctree_lock
 argument_list|,
 literal|"proctree"
-argument_list|)
-expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|pgrpsess_lock
-argument_list|,
-literal|"pgrpsess"
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1135,7 +1120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Locate a process group by number.  * The caller must hold pgrpsess_lock.  */
+comment|/*  * Locate a process group by number.  * The caller must hold proctree_lock.  */
 end_comment
 
 begin_function
@@ -1157,8 +1142,11 @@ name|pgrp
 modifier|*
 name|pgrp
 decl_stmt|;
-name|PGRPSESS_LOCK_ASSERT
+name|sx_assert
 argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
@@ -1241,8 +1229,11 @@ name|pgrp
 modifier|*
 name|pgrp2
 decl_stmt|;
-name|PGRPSESS_LOCK_ASSERT
+name|sx_assert
 argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
@@ -1482,7 +1473,7 @@ operator|->
 name|pg_members
 argument_list|)
 expr_stmt|;
-comment|/* 	 * As we have an exclusive lock of pgrpsess_lock, 	 * this should not deadlock. 	 */
+comment|/* 	 * As we have an exclusive lock of proctree_lock, 	 * this should not deadlock. 	 */
 name|LIST_INSERT_HEAD
 argument_list|(
 name|PGRPHASH
@@ -1553,8 +1544,11 @@ modifier|*
 name|pgrp
 decl_stmt|;
 block|{
-name|PGRPSESS_LOCK_ASSERT
+name|sx_assert
 argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
@@ -1674,8 +1668,11 @@ name|pgrp
 modifier|*
 name|savepgrp
 decl_stmt|;
-name|PGRPSESS_LOCK_ASSERT
+name|sx_assert
 argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
@@ -1833,8 +1830,13 @@ name|pgrp
 modifier|*
 name|savepgrp
 decl_stmt|;
-name|PGRPSESS_XLOCK
-argument_list|()
+name|sx_assert
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
+name|SX_XLOCKED
+argument_list|)
 expr_stmt|;
 name|savepgrp
 operator|=
@@ -1890,9 +1892,6 @@ argument_list|(
 name|savepgrp
 argument_list|)
 expr_stmt|;
-name|PGRPSESS_XUNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1924,8 +1923,11 @@ name|session
 modifier|*
 name|savesess
 decl_stmt|;
-name|PGRPSESS_LOCK_ASSERT
+name|sx_assert
 argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
@@ -2109,8 +2111,11 @@ name|session
 modifier|*
 name|mysession
 decl_stmt|;
-name|PGRPSESS_LOCK_ASSERT
+name|sx_assert
 argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
 name|SX_LOCKED
 argument_list|)
 expr_stmt|;
@@ -2143,12 +2148,6 @@ operator|=
 name|pgrp
 operator|->
 name|pg_session
-expr_stmt|;
-name|sx_slock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2289,12 +2288,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|sx_sunlock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

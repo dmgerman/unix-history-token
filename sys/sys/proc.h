@@ -130,7 +130,7 @@ file|<vm/uma.h>
 end_include
 
 begin_comment
-comment|/*  * One structure allocated per session.  *  * List of locks  * (m)		locked by s_mtx mtx  * (ps)		locked by pgrpsess_lock sx  * (c)		const until freeing  */
+comment|/*  * One structure allocated per session.  *  * List of locks  * (m)		locked by s_mtx mtx  * (e)		locked by proctree_lock sx  * (c)		const until freeing  */
 end_comment
 
 begin_struct
@@ -146,7 +146,7 @@ name|proc
 modifier|*
 name|s_leader
 decl_stmt|;
-comment|/* (m, ps)	Session leader. */
+comment|/* (m + e)	Session leader. */
 name|struct
 name|vnode
 modifier|*
@@ -188,7 +188,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * One structure allocated per process group.  *  * List of locks  * (m)		locked by pg_mtx mtx  * (ps)		locked by pgrpsess_lock sx  * (c)		const until freeing  */
+comment|/*  * One structure allocated per process group.  *  * List of locks  * (m)		locked by pg_mtx mtx  * (e)		locked by proctree_lock sx  * (c)		const until freeing  */
 end_comment
 
 begin_struct
@@ -201,7 +201,7 @@ argument|pgrp
 argument_list|)
 name|pg_hash
 expr_stmt|;
-comment|/* (ps)		Hash chain. */
+comment|/* (e)		Hash chain. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -209,7 +209,7 @@ argument|proc
 argument_list|)
 name|pg_members
 expr_stmt|;
-comment|/* (m, ps)	Pointer to pgrp members. */
+comment|/* (m + e)	Pointer to pgrp members. */
 name|struct
 name|session
 modifier|*
@@ -316,7 +316,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *      	(exception aiods switch vmspaces, but they are also  *      	marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - locked by pgrpsess_lock sx  *      p - select lock (sellock)  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *      	(exception aiods switch vmspaces, but they are also  *      	marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      p - select lock (sellock)  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
@@ -975,7 +975,7 @@ argument|proc
 argument_list|)
 name|p_pglist
 expr_stmt|;
-comment|/* (g + o) List of processes in pgrp. */
+comment|/* (g + e) List of processes in pgrp. */
 name|struct
 name|proc
 modifier|*
@@ -1144,7 +1144,7 @@ name|pgrp
 modifier|*
 name|p_pgrp
 decl_stmt|;
-comment|/* (c + o) Pointer to process group. */
+comment|/* (c + e) Pointer to process group. */
 name|struct
 name|sysentvec
 modifier|*
@@ -2200,48 +2200,6 @@ parameter_list|)
 value|mtx_assert(&(p)->p_mtx, (type))
 end_define
 
-begin_define
-define|#
-directive|define
-name|PGRPSESS_SLOCK
-parameter_list|()
-value|sx_slock(&pgrpsess_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGRPSESS_XLOCK
-parameter_list|()
-value|sx_xlock(&pgrpsess_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGRPSESS_SUNLOCK
-parameter_list|()
-value|sx_sunlock(&pgrpsess_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGRPSESS_XUNLOCK
-parameter_list|()
-value|sx_xunlock(&pgrpsess_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGRPSESS_LOCK_ASSERT
-parameter_list|(
-name|type
-parameter_list|)
-value|sx_assert(&pgrpsess_lock, (type))
-end_define
-
 begin_comment
 comment|/* Lock and unlock a process group. */
 end_comment
@@ -2519,14 +2477,6 @@ specifier|extern
 name|struct
 name|sx
 name|proctree_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sx
-name|pgrpsess_lock
 decl_stmt|;
 end_decl_stmt
 
