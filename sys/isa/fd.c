@@ -34,6 +34,17 @@ directive|include
 file|"fd.h"
 end_include
 
+begin_comment
+comment|/* Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FT_PROBE
+value|0x1
+end_define
+
 begin_if
 if|#
 directive|if
@@ -2882,6 +2893,14 @@ comment|/* If BIOS says no floppy, or> 2nd device */
 comment|/* Probe for and attach a floppy tape.     */
 if|if
 condition|(
+operator|(
+name|dev
+operator|->
+name|id_flags
+operator|&
+name|FT_PROBE
+operator|)
+operator|&&
 name|ftattach
 argument_list|(
 name|dev
