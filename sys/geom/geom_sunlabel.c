@@ -209,9 +209,6 @@ index|]
 operator|.
 name|sdkp_nsectors
 expr_stmt|;
-name|g_topology_lock
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|g_slice_config
@@ -256,9 +253,6 @@ literal|'a'
 operator|+
 name|i
 argument_list|)
-expr_stmt|;
-name|g_topology_unlock
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -306,9 +300,6 @@ index|]
 operator|.
 name|sdkp_nsectors
 expr_stmt|;
-name|g_topology_lock
-argument_list|()
-expr_stmt|;
 name|g_slice_config
 argument_list|(
 name|gp
@@ -351,9 +342,6 @@ literal|'a'
 operator|+
 name|i
 argument_list|)
-expr_stmt|;
-name|g_topology_unlock
-argument_list|()
 expr_stmt|;
 block|}
 name|ms
@@ -503,9 +491,6 @@ operator|->
 name|offset
 operator|)
 expr_stmt|;
-name|g_topology_unlock
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|g_sunlabel_modify
@@ -516,9 +501,6 @@ name|ms
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-name|g_topology_lock
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -775,9 +757,6 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
-name|g_topology_unlock
-argument_list|()
-expr_stmt|;
 name|gp
 operator|->
 name|dumpconf
@@ -830,6 +809,9 @@ name|provider
 operator|->
 name|mediasize
 expr_stmt|;
+name|g_topology_unlock
+argument_list|()
+expr_stmt|;
 name|buf
 operator|=
 name|g_read_data
@@ -845,6 +827,9 @@ argument_list|,
 operator|&
 name|error
 argument_list|)
+expr_stmt|;
+name|g_topology_lock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -873,9 +858,6 @@ condition|(
 literal|0
 condition|)
 do|;
-name|g_topology_lock
-argument_list|()
-expr_stmt|;
 name|g_access_rel
 argument_list|(
 name|cp
