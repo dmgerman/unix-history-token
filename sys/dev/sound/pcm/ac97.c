@@ -613,7 +613,7 @@ literal|0x414c4720
 block|,
 literal|0
 block|,
-literal|"Realtek Semiconductor ALC650"
+literal|"Realtek ALC650"
 block|,
 literal|0
 block|}
@@ -1229,7 +1229,7 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"AC97 reset timed out."
+literal|"AC97 reset timed out.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2603,7 +2603,9 @@ comment|/* printf("mixch %d, en=%d, b=%d\n", i, codec->mix[i].enable, codec->mix
 block|}
 if|if
 condition|(
-name|bootverbose
+name|codec
+operator|->
+name|id
 condition|)
 block|{
 name|device_printf
@@ -2612,31 +2614,33 @@ name|codec
 operator|->
 name|dev
 argument_list|,
-literal|"ac97 codec id 0x%08x"
+literal|"<%s ac97 codec>\n"
+argument_list|,
+name|codec
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"<unknown ac97 codec> (id=0x%08x)\n"
 argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|codec
-operator|->
-name|id
+name|bootverbose
 condition|)
-name|printf
-argument_list|(
-literal|" (%s)"
-argument_list|,
-name|codec
-operator|->
-name|id
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+block|{
 name|device_printf
 argument_list|(
 name|codec
