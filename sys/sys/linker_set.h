@@ -32,35 +32,11 @@ begin_comment
 comment|/*  * Private macros, not to be used outside this header file.  */
 end_comment
 
-begin_comment
-comment|/* this bit of h0h0magic brought to you by cpp */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|__GNUC__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__GLOBL
-parameter_list|(
-name|sym
-parameter_list|)
-value|__GLOBL2(sym)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__GLOBL2
-parameter_list|(
-name|sym
-parameter_list|)
-value|__asm(".globl " #sym)
-end_define
 
 begin_define
 define|#
@@ -72,7 +48,7 @@ parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|__GLOBL(__CONCAT(__start_set_,set));				\ 	__GLOBL(__CONCAT(__stop_set_,set));				\ 	static void const * const __set_##set##_sym_##sym 		\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
+value|static void const * const __set_##set##_sym_##sym 		\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
 end_define
 
 begin_else
