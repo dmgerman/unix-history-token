@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	1.1 (Berkeley) %G%"
+literal|"@(#)scan.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -453,6 +453,13 @@ name|gdebug
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|oldway
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -669,6 +676,17 @@ literal|'g'
 case|:
 operator|++
 name|gdebug
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+operator|++
+name|gdebug
+expr_stmt|;
+name|oldway
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
