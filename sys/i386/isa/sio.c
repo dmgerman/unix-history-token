@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.46 1994/05/30 03:13:36 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.47 1994/05/30 14:35:41 ache Exp $  */
 end_comment
 
 begin_include
@@ -1726,41 +1726,6 @@ argument_list|,
 name|CFCR_8BITS
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
-name|outb
-argument_list|(
-name|iobase
-operator|+
-name|com_mcr
-argument_list|,
-name|MCR_IENABLE
-argument_list|)
-expr_stmt|;
-comment|/* open gate early */
-name|outb
-argument_list|(
-name|iobase
-operator|+
-name|com_ier
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* ensure edge on next intr */
-name|outb
-argument_list|(
-name|iobase
-operator|+
-name|com_ier
-argument_list|,
-name|IER_ETXRDY
-argument_list|)
-expr_stmt|;
-comment|/* generate interrupt */
-endif|#
-directive|endif
 name|DELAY
 argument_list|(
 operator|(
@@ -1774,19 +1739,69 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/*  	 * Enable the interrupt gate and disable device interupts.  This 	 * should leave the device driving the interrupt line low and 	 * guarantee an edge trigger if an interrupt can be generated. 	 * Attempt to set loopback mode so that we can send a null byte 	 * without annoying any external device. 	 */
-block|outb(iobase + com_mcr, mcr_image | MCR_LOOPBACK); 	outb(iobase + com_ier, 0);
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_mcr
+argument_list|,
+name|mcr_image
+comment|/* | MCR_LOOPBACK */
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_ier
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Attempt to generate an output interrupt.  On 8250's, setting 	 * IER_ETXRDY generates an interrupt independent of the current 	 * setting and independent of whether the THR is empty.  On 16450's, 	 * setting IER_ETXRDY generates an interrupt independent of the 	 * current setting.  On 16550A's, setting IER_ETXRDY only 	 * generates an interrupt when IER_ETXRDY is not already set. 	 */
-block|outb(iobase + com_ier, IER_ETXRDY);
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_ier
+argument_list|,
+name|IER_ETXRDY
+argument_list|)
+expr_stmt|;
 comment|/* 	 * On some 16x50 incompatibles, setting IER_ETXRDY doesn't generate 	 * an interrupt.  They'd better generate one for actually doing 	 * output.  Loopback may be broken on the same incompatibles but 	 * it's unlikely to do more than allow the null byte out. 	 */
-block|outb(iobase + com_data, 0); 	DELAY((1 + 1) * 9600 / 10);
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_data
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+operator|(
+literal|1
+operator|+
+literal|1
+operator|)
+operator|*
+literal|9600
+operator|/
+literal|10
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Turn off loopback mode so that the interrupt gate works again 	 * (MCR_IENABLE was hidden).  This should leave the device driving 	 * an interrupt line high.  It doesn't matter if the interrupt 	 * line oscillates while we are not looking at it, since interrupts 	 * are disabled. 	 * XXX interrupts are NOT disabled for the multiport shared 	 * interrupt case!  isa_configure() enables them after the probe 	 * of the first device on a shared interrupt succeeds. 	 */
-block|outb(iobase + com_mcr, mcr_image);
-endif|#
-directive|endif
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_mcr
+argument_list|,
+name|mcr_image
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check that 	 *	o the CFCR, IER and MCR in UART hold the values written to them 	 *	  (the values happen to be all distinct - this is good for 	 *	  avoiding false positive tests from bus echoes). 	 *	o an output interrupt is generated and its vector is correct. 	 *	o the interrupt goes away when the IIR in the UART is read. 	 */
 if|if
 condition|(
