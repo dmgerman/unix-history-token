@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcopy.c	5.10 (Berkeley) %G%"
+literal|"@(#)bcopy.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,9 @@ operator|==
 name|src
 condition|)
 comment|/* nothing to do */
-return|return;
+goto|goto
+name|done
+goto|;
 comment|/* 	 * Macros: loop-t-times; and loop-t-times, t>0 	 */
 define|#
 directive|define
@@ -418,19 +420,19 @@ name|src
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+name|done
+label|:
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MEMCOPY
-return|return
-operator|(
-name|dst0
-operator|)
-return|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|MEMMOVE
+argument_list|)
 return|return
 operator|(
 name|dst0
@@ -439,8 +441,6 @@ return|;
 else|#
 directive|else
 return|return;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
