@@ -99,6 +99,10 @@ name|ipq_src
 decl_stmt|,
 name|ipq_dst
 decl_stmt|;
+name|u_char
+name|ipq_nfrags
+decl_stmt|;
+comment|/* # frags in this packet */
 ifdef|#
 directive|ifdef
 name|IPDIVERT
