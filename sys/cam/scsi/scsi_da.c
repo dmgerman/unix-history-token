@@ -1074,7 +1074,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"ZORAN"
 block|,
-literal|"COACH DSC"
+literal|"COACH"
 block|,
 literal|"*"
 block|}
@@ -1094,7 +1094,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"HP"
 block|,
-literal|"USB Camera*"
+literal|"USB CAMERA"
 block|,
 literal|"*"
 block|}
