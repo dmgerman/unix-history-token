@@ -191,6 +191,16 @@ define|\
 value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not ready for this; it should be decided at compile time */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -201,6 +211,11 @@ parameter_list|)
 define|\
 value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mexitcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mexitcount\n");				\ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
