@@ -3122,13 +3122,6 @@ name|us_data
 operator|=
 name|mem
 expr_stmt|;
-comment|/* 	 * This is intended to spread data out across cache lines. 	 * 	 * This code doesn't seem to work properly on x86, and on alpha 	 * it makes absolutely no performance difference. I'm sure it could 	 * use some tuning, but sun makes outrageous claims about its 	 * performance. 	 */
-if|#
-directive|if
-literal|0
-block|if (zone->uz_cachemax) { 		slab->us_data += zone->uz_cacheoff; 		zone->uz_cacheoff += UMA_CACHE_INC; 		if (zone->uz_cacheoff> zone->uz_cachemax) 			zone->uz_cacheoff = 0; 	}
-endif|#
-directive|endif
 name|slab
 operator|->
 name|us_freecount
@@ -4286,9 +4279,6 @@ block|{
 name|int
 name|totsize
 decl_stmt|;
-name|int
-name|waste
-decl_stmt|;
 comment|/* Size of the slab struct and free list */
 name|totsize
 operator|=
@@ -4331,53 +4321,6 @@ name|UMA_SLAB_SIZE
 operator|-
 name|totsize
 expr_stmt|;
-name|waste
-operator|=
-name|zone
-operator|->
-name|uz_pgoff
-expr_stmt|;
-name|waste
-operator|-=
-operator|(
-name|zone
-operator|->
-name|uz_ipers
-operator|*
-name|zone
-operator|->
-name|uz_rsize
-operator|)
-expr_stmt|;
-comment|/* 		 * This calculates how much space we have for cache line size 		 * optimizations.  It works by offseting each slab slightly. 		 * Currently it breaks on x86, and so it is disabled. 		 */
-if|if
-condition|(
-name|zone
-operator|->
-name|uz_align
-operator|<
-name|UMA_CACHE_INC
-operator|&&
-name|waste
-operator|>
-name|UMA_CACHE_INC
-condition|)
-block|{
-name|zone
-operator|->
-name|uz_cachemax
-operator|=
-name|waste
-operator|-
-name|UMA_CACHE_INC
-expr_stmt|;
-name|zone
-operator|->
-name|uz_cacheoff
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|totsize
 operator|=
 name|zone
@@ -7890,13 +7833,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * You might think that the delay below would improve performance since 	 * the allocator will give away memory that it may ask for immediately. 	 * Really, it makes things worse, since cpu cycles are so much cheaper 	 * than disk activity. 	 */
-if|#
-directive|if
-literal|0
-block|static struct timeval tv = {0}; 	struct timeval now; 	getmicrouptime(&now); 	if (now.tv_sec> tv.tv_sec + 30) 		tv = now; 	else 		return;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG

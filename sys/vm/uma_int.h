@@ -454,14 +454,6 @@ name|u_int16_t
 name|uz_ppera
 decl_stmt|;
 comment|/* pages per allocation from backend */
-name|u_int16_t
-name|uz_cacheoff
-decl_stmt|;
-comment|/* Next cache offset */
-name|u_int16_t
-name|uz_cachemax
-decl_stmt|;
-comment|/* Max cache offset */
 name|uma_ctor
 name|uz_ctor
 decl_stmt|;
@@ -536,17 +528,6 @@ comment|/* Per cpu caches */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|UMA_CACHE_INC
-value|16
-end_define
-
-begin_comment
-comment|/* How much will we move data */
-end_comment
 
 begin_comment
 comment|/*  * These flags must not overlap with the UMA_ZONE flags specified in uma.h.  */
