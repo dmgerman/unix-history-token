@@ -642,6 +642,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+goto|goto
+name|end2
+goto|;
 block|}
 name|error
 operator|=
