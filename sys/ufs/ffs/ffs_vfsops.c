@@ -712,6 +712,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|fs
+operator|->
+name|fs_flags
+operator|&=
+operator|~
+name|FS_UNCLEAN
+expr_stmt|;
 if|if
 condition|(
 name|fs
@@ -721,6 +728,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fs
+operator|->
+name|fs_flags
+operator||=
+name|FS_UNCLEAN
+expr_stmt|;
 if|if
 condition|(
 name|mp
