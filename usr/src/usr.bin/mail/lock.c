@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lock.c	1.1 %G%"
+literal|"@(#)lock.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 modifier|*
 name|maillock
 init|=
-literal|".lock"
+literal|".mail"
 decl_stmt|;
 end_decl_stmt
 
