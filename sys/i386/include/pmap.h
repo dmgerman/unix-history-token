@@ -500,24 +500,16 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|PDESIZE
-value|sizeof(pd_entry_t)
+name|PTESHIFT
+value|(2)
 end_define
-
-begin_comment
-comment|/* for assembly files */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|PTESIZE
-value|sizeof(pt_entry_t)
+name|PDESHIFT
+value|(2)
 end_define
-
-begin_comment
-comment|/* for assembly files */
-end_comment
 
 begin_comment
 comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
