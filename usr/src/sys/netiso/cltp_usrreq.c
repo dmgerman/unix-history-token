@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)cltp_usrreq.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)cltp_usrreq.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -501,13 +501,21 @@ argument_list|,
 name|len
 argument_list|)
 condition|)
+block|{
+name|cltpstat
+operator|.
+name|cltps_badsum
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|up
 operator|+=
 literal|4
 expr_stmt|;
+continue|continue;
 default|default:
 name|printf
 argument_list|(
@@ -518,6 +526,11 @@ index|[
 literal|0
 index|]
 argument_list|)
+expr_stmt|;
+name|cltpstat
+operator|.
+name|cltps_hdrops
+operator|++
 expr_stmt|;
 goto|goto
 name|bad
@@ -561,9 +574,16 @@ operator|==
 operator|&
 name|cltb
 condition|)
+block|{
+name|cltpstat
+operator|.
+name|cltps_noport
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 if|if
 condition|(
 name|isop
@@ -595,6 +615,12 @@ expr_stmt|;
 name|m
 operator|->
 name|m_len
+operator|-=
+name|hdrlen
+expr_stmt|;
+name|m
+operator|->
+name|m_data
 operator|+=
 name|hdrlen
 expr_stmt|;
@@ -631,6 +657,11 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|cltpstat
+operator|.
+name|cltps_ipackets
+operator|++
+expr_stmt|;
 name|sorwakeup
 argument_list|(
 name|isop
@@ -672,7 +703,9 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -1009,23 +1042,23 @@ index|[
 literal|0
 index|]
 operator|=
-name|UD_TPDU_type
-expr_stmt|;
-name|up
-index|[
-literal|1
-index|]
-operator|=
 name|hdrlen
 operator|-
 literal|1
 expr_stmt|;
 name|up
 index|[
+literal|1
+index|]
+operator|=
+name|UD_TPDU_type
+expr_stmt|;
+name|up
+index|[
 literal|2
 index|]
 operator|=
-name|CLTPOVAL_DST
+name|CLTPOVAL_SRC
 expr_stmt|;
 name|up
 index|[
@@ -1074,7 +1107,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|CLTPOVAL_SRC
+name|CLTPOVAL_DST
 expr_stmt|;
 name|up
 index|[
@@ -1138,7 +1171,7 @@ index|]
 operator|=
 literal|2
 expr_stmt|;
-name|iso_gen_cksum
+name|iso_gen_csum
 argument_list|(
 name|m
 argument_list|,
@@ -1158,6 +1191,11 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+name|cltpstat
+operator|.
+name|cltps_opackets
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|tpclnp_output
