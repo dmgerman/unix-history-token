@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)utils.c	5.1 (Berkeley) %G%  *  * Utah $Hdr: utils.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)utils.c	5.2 (Berkeley) %G%  *  * Utah $Hdr: utils.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	5.1 (Berkeley) %G%"
+literal|"@(#)utils.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -49,36 +73,40 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
 end_include
 
 begin_comment
 comment|/* **  DispPkt -- Display the contents of an RMPCONN packet. ** **	Parameters: **		rconn - packet to be displayed. **		direct - direction packet is going (DIR_*). ** **	Returns: **		Nothing. ** **	Side Effects: **		None. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|DispPkt
-argument_list|(
-argument|rconn
-argument_list|,
-argument|direct
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rconn
+parameter_list|,
+name|direct
+parameter_list|)
 name|RMPCONN
 modifier|*
 name|rconn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|direct
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -748,7 +776,7 @@ argument_list|)
 expr_stmt|;
 comment|/* reset old signal mask */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  GetEtherAddr -- convert an RMP (Ethernet) address into a string. ** **	An RMP BOOT packet has been received.  Look at the type field **	and process Boot Requests, Read Requests, and Boot Complete **	packets.  Any other type will be dropped with a warning msg. ** **	Parameters: **		addr - array of RMP_ADDRLEN bytes. ** **	Returns: **		Pointer to static string representation of `addr'. ** **	Side Effects: **		None. ** **	Warnings: **		- The return value points to a static buffer; it must **		  be copied if it's to be saved. **		- For speed, we assume a u_char consists of 8 bits. */
@@ -876,28 +904,23 @@ begin_comment
 comment|/* **  DispFlnm -- Print a string of bytes to DbgFp (often, a file name). ** **	Parameters: **		size - number of bytes to print. **		flnm - address of first byte. ** **	Returns: **		Nothing. ** **	Side Effects: **		- Characters are sent to `DbgFp'. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|DspFlnm
-argument_list|(
+parameter_list|(
 name|size
-argument_list|,
+parameter_list|,
 name|flnm
-argument_list|)
+parameter_list|)
 specifier|register
-name|u_char
+name|u_int
 name|size
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|flnm
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -951,7 +974,7 @@ name|DbgFp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  NewClient -- allocate memory for a new CLIENT. ** **	Parameters: **		addr - RMP (Ethernet) address of new client. ** **	Returns: **		Ptr to new CLIENT or NULL if we ran out of memory. ** **	Side Effects: **		- Memory will be malloc'd for the new CLIENT. **		- If malloc() fails, a log message will be generated. */
@@ -1014,10 +1037,6 @@ return|;
 block|}
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ctmp
 argument_list|,
 sizeof|sizeof
@@ -1028,16 +1047,8 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|addr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ctmp
 operator|->
@@ -1061,12 +1072,10 @@ begin_comment
 comment|/* **  FreeClient -- free linked list of Clients. ** **	Parameters: **		None. ** **	Returns: **		Nothing. ** **	Side Effects: **		- All malloc'd memory associated with the linked list of **		  CLIENTS will be free'd; `Clients' will be set to NULL. ** **	Warnings: **		- This routine must be called with SIGHUP blocked. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|FreeClients
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|CLIENT
@@ -1097,7 +1106,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  NewStr -- allocate memory for a character array. ** **	Parameters: **		str - null terminated character array. ** **	Returns: **		Ptr to new character array or NULL if we ran out of memory. ** **	Side Effects: **		- Memory will be malloc'd for the new character array. **		- If malloc() fails, a log message will be generated. */
@@ -1320,19 +1329,17 @@ begin_comment
 comment|/* **  FreeConn -- Free memory associated with an RMPCONN connection. ** **	Parameters: **		rtmp - ptr to RMPCONN to be free'd. ** **	Returns: **		Nothing. ** **	Side Effects: **		- Memory associated with `rtmp' may be free'd (or cached). **		- File desc associated with `rtmp->bootfd' will be closed. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|FreeConn
-argument_list|(
+parameter_list|(
 name|rtmp
-argument_list|)
+parameter_list|)
 specifier|register
 name|RMPCONN
-operator|*
+modifier|*
 name|rtmp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 comment|/* 	 *  If the file descriptor is in use, close the file. 	 */
 if|if
@@ -1385,18 +1392,16 @@ name|rtmp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  FreeConns -- free linked list of RMPCONN connections. ** **	Parameters: **		None. ** **	Returns: **		Nothing. ** **	Side Effects: **		- All malloc'd memory associated with the linked list of **		  connections will be free'd; `RmpConns' will be set to NULL. **		- If LastFree is != NULL, it too will be free'd& NULL'd. ** **	Warnings: **		- This routine must be called with SIGHUP blocked. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|FreeConns
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|RMPCONN
@@ -1448,25 +1453,23 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  AddConn -- Add a connection to the linked list of connections. ** **	Parameters: **		rconn - connection to be added. ** **	Returns: **		Nothing. ** **	Side Effects: **		- RmpConn will point to new connection. ** **	Warnings: **		- This routine must be called with SIGHUP blocked. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|AddConn
-argument_list|(
+parameter_list|(
 name|rconn
-argument_list|)
+parameter_list|)
 specifier|register
 name|RMPCONN
-operator|*
+modifier|*
 name|rconn
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1485,7 +1488,7 @@ operator|=
 name|rconn
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  FindConn -- Find a connection in the linked list of connections. ** **	We use the RMP (Ethernet) address as the basis for determining **	if this is the same connection.  According to the Remote Maint **	Protocol, we can only have one connection with any machine. ** **	Parameters: **		rconn - connection to be found. ** **	Returns: **		Matching connection from linked list or NULL if not found. ** **	Side Effects: **		None. ** **	Warnings: **		- This routine must be called with SIGHUP blocked. */
@@ -1579,19 +1582,17 @@ begin_comment
 comment|/* **  RemoveConn -- Remove a connection from the linked list of connections. ** **	Parameters: **		rconn - connection to be removed. ** **	Returns: **		Nothing. ** **	Side Effects: **		- If found, an RMPCONN will cease to exist and it will **		  be removed from the linked list. ** **	Warnings: **		- This routine must be called with SIGHUP blocked. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|RemoveConn
-argument_list|(
+parameter_list|(
 name|rconn
-argument_list|)
+parameter_list|)
 specifier|register
 name|RMPCONN
-operator|*
+modifier|*
 name|rconn
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|RMPCONN
@@ -1679,7 +1680,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

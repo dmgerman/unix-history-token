@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)rbootd.c	5.1 (Berkeley) %G%  *  * Utah $Hdr: rbootd.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)rbootd.c	5.2 (Berkeley) %G%  *  * Utah $Hdr: rbootd.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rbootd.c	5.1 (Berkeley) %G%"
+literal|"@(#)rbootd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -55,7 +55,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -67,7 +91,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
 end_include
 
 begin_comment
@@ -159,14 +189,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -183,26 +207,6 @@ index|[]
 decl_stmt|;
 block|{
 name|int
-name|Exit
-argument_list|()
-decl_stmt|,
-name|ReConfig
-argument_list|()
-decl_stmt|,
-name|DebugOn
-argument_list|()
-decl_stmt|,
-name|DebugOff
-argument_list|()
-decl_stmt|;
-name|int
-name|GetBootFiles
-argument_list|()
-decl_stmt|,
-name|ParseConfig
-argument_list|()
-decl_stmt|;
-name|int
 name|c
 decl_stmt|,
 name|fd
@@ -213,15 +217,6 @@ name|maxfds
 decl_stmt|;
 name|fd_set
 name|rset
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 comment|/* 	 *  Find what name we are running under. 	 */
 name|ProgName
@@ -663,10 +658,6 @@ block|{
 name|char
 modifier|*
 name|errmsg
-decl_stmt|,
-modifier|*
-name|BpfGetIntfName
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1220,12 +1211,10 @@ begin_comment
 comment|/* **  DoTimeout -- Free any connections that have timed out. ** **	Parameters: **		None. ** **	Returns: **		Nothing. ** **	Side Effects: **		- Timed out connections in `RmpConns' will be freed. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|DoTimeout
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|RMPCONN
@@ -1311,7 +1300,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  FindClient -- Find client associated with a packet. ** **	Parameters: **		rconn - the new packet.  ** **	Returns: **		Pointer to client info if found, NULL otherwise. ** **	Side Effects: **		None. ** **	Warnings: **		- This routine must be called with SIGHUP blocked since **		  a reconfigure can invalidate the information returned. */
@@ -1402,7 +1391,7 @@ comment|/* **  Exit -- Log an error message and exit. ** **	Parameters: **		sig 
 end_comment
 
 begin_function
-name|int
+name|void
 name|Exit
 parameter_list|(
 name|sig
@@ -1450,17 +1439,15 @@ comment|/* **  ReConfig -- Get new list of boot files and reread config files. *
 end_comment
 
 begin_function
-name|int
+name|void
 name|ReConfig
-parameter_list|()
-block|{
+parameter_list|(
+name|signo
+parameter_list|)
 name|int
-name|GetBootFiles
-argument_list|()
-decl_stmt|,
-name|ParseConfig
-argument_list|()
+name|signo
 decl_stmt|;
+block|{
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -1503,9 +1490,14 @@ comment|/* **  DebugOff -- Turn off debugging. ** **	Parameters: **		None. ** **
 end_comment
 
 begin_function
-name|int
+name|void
 name|DebugOff
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1533,9 +1525,14 @@ comment|/* **  DebugOn -- Turn on debugging. ** **	Parameters: **		None. ** **	R
 end_comment
 
 begin_function
-name|int
+name|void
 name|DebugOn
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(

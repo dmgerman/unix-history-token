@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)rmpproto.c	5.1 (Berkeley) %G%  *  * Utah $Hdr: rmpproto.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)rmpproto.c	5.2 (Berkeley) %G%  *  * Utah $Hdr: rmpproto.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmpproto.c	5.1 (Berkeley) %G%"
+literal|"@(#)rmpproto.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -55,74 +73,44 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
 
 begin_comment
 comment|/* **  ProcessPacket -- determine packet type and do what's required. ** **	An RMP BOOT packet has been received.  Look at the type field **	and process Boot Requests, Read Requests, and Boot Complete **	packets.  Any other type will be dropped with a warning msg. ** **	Parameters: **		rconn - the new connection **		client - list of files available to this host ** **	Returns: **		Nothing. ** **	Side Effects: **		- If this is a valid boot request, it will be added to **		  the linked list of outstanding requests (RmpConns). **		- If this is a valid boot complete, its associated **		  entry in RmpConns will be deleted. **		- Also, unless we run out of memory, a reply will be **		  sent to the host that sent the packet. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ProcessPacket
-argument_list|(
-argument|rconn
-argument_list|,
-argument|client
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rconn
+parameter_list|,
+name|client
+parameter_list|)
 name|RMPCONN
 modifier|*
 name|rconn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CLIENT
 modifier|*
 name|client
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|int
-name|SendServerID
-argument_list|()
-decl_stmt|,
-name|SendFileNo
-argument_list|()
-decl_stmt|,
-name|SendBootRepl
-argument_list|()
-decl_stmt|;
-name|int
-name|SendReadRepl
-argument_list|()
-decl_stmt|,
-name|BootDone
-argument_list|()
-decl_stmt|;
-name|RMPCONN
-modifier|*
-name|rconnout
-decl_stmt|,
-modifier|*
-name|NewConn
-argument_list|()
-decl_stmt|;
 name|struct
 name|rmp_packet
 modifier|*
 name|rmp
+decl_stmt|;
+name|RMPCONN
+modifier|*
+name|rconnout
 decl_stmt|;
 name|rmp
 operator|=
@@ -328,7 +316,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  SendServerID -- send our host name to who ever requested it. ** **	Parameters: **		rconn - the reply packet to be formatted. ** **	Returns: **		1 on success, 0 on failure. ** **	Side Effects: **		none. */
@@ -345,10 +333,6 @@ modifier|*
 name|rconn
 decl_stmt|;
 block|{
-name|int
-name|SendPacket
-parameter_list|()
-function_decl|;
 specifier|register
 name|struct
 name|rmp_packet
@@ -539,10 +523,6 @@ name|filelist
 index|[]
 decl_stmt|;
 block|{
-name|int
-name|SendPacket
-parameter_list|()
-function_decl|;
 specifier|register
 name|struct
 name|rmp_packet
@@ -754,47 +734,33 @@ begin_comment
 comment|/* **  SendBootRepl -- open boot file and respond to boot request. ** **	Parameters: **		req - RMP BOOT packet containing the request. **		rconn - the reply packet to be formatted. **		filelist - list of files available to the requester. ** **	Returns: **		1 on success, 0 on failure. ** **	Side Effects: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|SendBootRepl
-argument_list|(
-argument|req
-argument_list|,
-argument|rconn
-argument_list|,
-argument|filelist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|req
+parameter_list|,
+name|rconn
+parameter_list|,
+name|filelist
+parameter_list|)
 name|struct
 name|rmp_packet
 modifier|*
 name|req
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|RMPCONN
 modifier|*
 name|rconn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|filelist
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|retval
-decl_stmt|,
-name|SendPacket
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -810,10 +776,6 @@ decl_stmt|;
 name|RMPCONN
 modifier|*
 name|oldconn
-decl_stmt|,
-modifier|*
-name|FindConn
-argument_list|()
 decl_stmt|;
 specifier|register
 name|struct
@@ -1175,7 +1137,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  SendReadRepl -- send a portion of the boot file to the requester. ** **	Parameters: **		rconn - the reply packet to be formatted. ** **	Returns: **		1 on success, 0 on failure. ** **	Side Effects: **		none. */
@@ -1192,27 +1154,12 @@ modifier|*
 name|rconn
 decl_stmt|;
 block|{
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 name|int
 name|retval
-decl_stmt|,
-name|SendPacket
-argument_list|()
 decl_stmt|;
 name|RMPCONN
 modifier|*
 name|oldconn
-decl_stmt|,
-modifier|*
-name|FindConn
-argument_list|()
-decl_stmt|,
-modifier|*
-name|NewConn
-argument_list|()
 decl_stmt|;
 specifier|register
 name|struct
@@ -1640,10 +1587,6 @@ block|{
 name|RMPCONN
 modifier|*
 name|oldconn
-decl_stmt|,
-modifier|*
-name|FindConn
-argument_list|()
 decl_stmt|;
 name|struct
 name|rmp_packet

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	5.1 (Berkeley) %G%  *  * Utah $Hdr: bpf.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * %sccs.include.redist.c%  *  *	@(#)bpf.c	5.2 (Berkeley) %G%  *  * Utah $Hdr: bpf.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bpf.c	5.1 (Berkeley) %G%"
+literal|"@(#)bpf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,25 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -61,13 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -85,15 +61,62 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<ctype.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -1460,21 +1483,16 @@ begin_comment
 comment|/* **  BpfWrite -- Write packet to BPF device. ** **	Parameters: **		rconn - packet to send. ** **	Returns: **		True if write succeeded, False otherwise. ** **	Side Effects: **		None. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|BpfWrite
-argument_list|(
-argument|rconn
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rconn
+parameter_list|)
 name|RMPCONN
 modifier|*
 name|rconn
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1523,18 +1541,16 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* **  BpfOpen -- Close a BPF device. ** **	Parameters: **		None. ** **	Returns: **		Nothing. ** **	Side Effects: **		None. */
+comment|/* **  BpfClose -- Close a BPF device. ** **	Parameters: **		None. ** **	Returns: **		Nothing. ** **	Side Effects: **		None. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|BpfClose
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|ifreq
@@ -1663,7 +1679,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
