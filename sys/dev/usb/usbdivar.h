@@ -1010,7 +1010,7 @@ define|#
 directive|define
 name|SPLUSBCHECK
 define|\
-value|do { int _s = splusb(), _su = splusb(); \ 	     extern int cold; \              if (!cold&& _s != _su) printf("SPLUSBCHECK failed 0x%x!=0x%x, %s:%d\n", \ 				   _s, _su, __FILE__, __LINE__); \ 	     splx(_s); \         } while (0)
+value|do { int _s = splusb(), _su = splusb(); \              if (!cold&& _s != _su) printf("SPLUSBCHECK failed 0x%x!=0x%x, %s:%d\n", \ 				   _s, _su, __FILE__, __LINE__); \ 	     splx(_s); \         } while (0)
 end_define
 
 begin_else
