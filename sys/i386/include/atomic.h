@@ -16,7 +16,7 @@ name|_MACHINE_ATOMIC_H_
 end_define
 
 begin_comment
-comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char*)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char*)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char*)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char*)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short*)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short*)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short*)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short*)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int*)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int*)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int*)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int*)(P) -= (V))  *  * atomic_set_long(P, V)	(*(u_long*)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long*)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long*)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long*)(P) -= (V))  */
+comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char*)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char*)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char*)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char*)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short*)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short*)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short*)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short*)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int*)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int*)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int*)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int*)(P) -= (V))  * atomic_readandclear_int(P)	(return  *(u_int*)P; *(u_int*)P = 0;)  *  * atomic_set_long(P, V)	(*(u_long*)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long*)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long*)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long*)(P) -= (V))  * atomic_readandclear_long(P)	(return  *(u_long*)P; *(u_long*)P = 0;)  */
 end_comment
 
 begin_comment
@@ -46,11 +46,10 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|extern void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v);
+value|void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v);
 end_define
 
 begin_function_decl
-specifier|extern
 name|int
 name|atomic_cmpset_int
 parameter_list|(
@@ -788,7 +787,102 @@ return|;
 block|}
 end_expr_stmt
 
+begin_function
+specifier|static
+name|__inline
+name|u_int
+name|atomic_readandclear_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_int
+name|result
+decl_stmt|;
+asm|__asm __volatile (
+literal|"	xorl	%0,%0 ;		"
+literal|"	xchgl	%1,%0 ;		"
+literal|"# atomic_readandclear_int"
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+comment|/* 0 (result) */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 1 (addr) */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|result
+operator|)
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|u_long
+name|atomic_readandclear_long
+parameter_list|(
+specifier|volatile
+name|u_long
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|u_long
+name|result
+decl_stmt|;
+asm|__asm __volatile (
+literal|"	xorl	%0,%0 ;		"
+literal|"	xchgl	%1,%0 ;		"
+literal|"# atomic_readandclear_int"
+operator|:
+literal|"=&r"
+operator|(
+name|result
+operator|)
+comment|/* 0 (result) */
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|addr
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* 1 (addr) */
+end_comment
+
+begin_return
+return|return
+operator|(
+name|result
+operator|)
+return|;
+end_return
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
