@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pipe.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -46,6 +40,17 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|BIG_PIPE_SIZE
+value|64*1024
+end_define
+
+begin_comment
+comment|/* From sys/pipe.h */
+end_comment
 
 begin_comment
 comment|/*  * Test for the non-blocking big pipe bug (write(2) returning  * EAGAIN while select(2) returns the descriptor as ready for write).  *  * $FreeBSD$  */
