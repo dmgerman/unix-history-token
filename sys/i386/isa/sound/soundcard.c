@@ -51,6 +51,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"uart.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2138,7 +2144,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NSND
+name|NUART
 operator|>
 literal|0
 if|if
