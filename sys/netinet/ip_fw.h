@@ -127,6 +127,10 @@ comment|/* ICMP types bitmap */
 block|}
 name|fw_uar
 union|;
+name|u_int
+name|fw_ipflg
+decl_stmt|;
+comment|/* IP flags word */
 name|u_char
 name|fw_ipopt
 decl_stmt|,
@@ -791,6 +795,10 @@ end_define
 
 begin_comment
 comment|/* All possible flag bits mask		*/
+end_comment
+
+begin_comment
+comment|/*  * Flags for the 'fw_ipflg' field, for comparing values of ip and its protocols.  */
 end_comment
 
 begin_comment
