@@ -272,6 +272,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ipi_level_args
 name|ipi_level_args
@@ -279,6 +280,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ipi_tlb_args
 name|ipi_tlb_args
