@@ -9277,7 +9277,7 @@ name|do_ldstv4
 block|}
 block|,
 comment|/* ARM Architecture 4T.  */
-comment|/* Note: bx (and blx) are required on V5, even if the processor does       not support Thumb.  */
+comment|/* Note: bx (and blx) are required on V5, even if the processor does      not support Thumb.  */
 block|{
 literal|"bx"
 block|,
@@ -38432,7 +38432,14 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-else|else
+comment|/* Note - you cannot convert a subtract of 0 into an 	     add of 0 because the carry flag is set differently.  */
+elseif|else
+if|if
+condition|(
+name|offset
+operator|>
+literal|0
+condition|)
 name|subtract
 operator|=
 literal|0

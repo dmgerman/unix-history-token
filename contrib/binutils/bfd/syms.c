@@ -3462,6 +3462,10 @@ name|true
 expr_stmt|;
 if|if
 condition|(
+name|file_name
+operator|==
+name|NULL
+operator|||
 name|IS_ABSOLUTE_PATH
 argument_list|(
 name|file_name

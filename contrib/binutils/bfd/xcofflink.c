@@ -8983,11 +8983,10 @@ operator|->
 name|contents
 expr_stmt|;
 comment|/* Remove the sections from this object, so that they do not get      included in the link.  */
+name|bfd_section_list_clear
+argument_list|(
 name|abfd
-operator|->
-name|sections
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 name|bfd_xcoff_swap_ldhdr_in
 argument_list|(

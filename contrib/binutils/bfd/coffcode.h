@@ -9104,6 +9104,15 @@ name|target_index
 operator|++
 expr_stmt|;
 block|}
+name|abfd
+operator|->
+name|section_tail
+operator|=
+operator|&
+name|current
+operator|->
+name|next
+expr_stmt|;
 name|free
 argument_list|(
 name|section_list

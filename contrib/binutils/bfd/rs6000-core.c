@@ -575,11 +575,19 @@ begin_comment
 comment|/* Return the c_impl field from struct core_dumpx C.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AIX_CORE_DUMPX_CORE
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_ST_C_IMPL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|AIX_5_CORE
+argument_list|)
+end_if
 
 begin_define
 define|#

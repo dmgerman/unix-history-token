@@ -54,8 +54,7 @@ name|unsigned
 name|short
 name|version
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|prologue_length
 decl_stmt|;
 name|unsigned
@@ -732,8 +731,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|unsigned
-name|int
+name|bfd_vma
 operator|,
 expr|struct
 name|dwarf2_debug
@@ -1587,9 +1585,13 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: DW_FORM_strp offset (%u) greater than or equal to .debug_str size (%u)."
+literal|"Dwarf Error: DW_FORM_strp offset (%lu) greater than or equal to .debug_str size (%lu)."
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 argument_list|,
 name|stash
@@ -2059,8 +2061,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|offset
 decl_stmt|;
 name|struct
@@ -2226,9 +2227,13 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Abbrev offset (%u) greater than or equal to .debug_abbrev size (%u)."
+literal|"Dwarf Error: Abbrev offset (%lu) greater than or equal to .debug_abbrev size (%lu)."
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|offset
 argument_list|,
 name|stash
@@ -3306,7 +3311,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Invalid or unhandled FORM value: %d."
+literal|"Dwarf Error: Invalid or unhandled FORM value: %u."
 argument_list|)
 argument_list|,
 name|form
@@ -4157,7 +4162,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Line offset (%u) greater than or equal to .debug_line size (%u)."
+literal|"Dwarf Error: Line offset (%lu) greater than or equal to .debug_line size (%lu)."
 argument_list|)
 argument_list|,
 name|unit
@@ -5923,7 +5928,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Could not find abbrev number %d."
+literal|"Dwarf Error: Could not find abbrev number %u."
 argument_list|)
 argument_list|,
 name|abbrev_number
@@ -6418,17 +6423,16 @@ modifier|*
 name|unit
 decl_stmt|;
 name|unsigned
-name|short
+name|int
 name|version
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|abbrev_offset
 init|=
 literal|0
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|addr_size
 decl_stmt|;
 name|struct
@@ -6582,7 +6586,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: found dwarf version '%hu', this reader only handles version 2 information."
+literal|"Dwarf Error: found dwarf version '%u', this reader only handles version 2 information."
 argument_list|)
 argument_list|,
 name|version
@@ -6619,6 +6623,10 @@ argument_list|)
 argument_list|,
 name|addr_size
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|bfd_vma
@@ -6717,7 +6725,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Bad abbrev number: %d."
+literal|"Dwarf Error: Bad abbrev number: %u."
 argument_list|)
 argument_list|,
 name|abbrev_number
@@ -6754,7 +6762,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Could not find abbrev number %d."
+literal|"Dwarf Error: Could not find abbrev number %u."
 argument_list|)
 argument_list|,
 name|abbrev_number

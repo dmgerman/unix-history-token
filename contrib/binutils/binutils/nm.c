@@ -5658,6 +5658,10 @@ argument_list|,
 operator|&
 name|lineno
 argument_list|)
+operator|&&
+name|filename
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* We only print the first one we find.  */
