@@ -2628,7 +2628,6 @@ name|chip_type
 operator|==
 name|ED_CHIP_TYPE_WD790
 condition|)
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -2638,7 +2637,6 @@ argument_list|,
 name|ED_WD_MSR_MENB
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 block|}
@@ -2659,6 +2657,7 @@ operator|->
 name|m_next
 control|)
 block|{
+comment|/* XXX  			 * I'm not sure that this bcopy does only 16bit  			 * access 			 */
 name|bcopy
 argument_list|(
 name|mtod
@@ -2729,7 +2728,6 @@ name|chip_type
 operator|==
 name|ED_CHIP_TYPE_WD790
 condition|)
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -2739,7 +2737,6 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-block|}
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -4331,6 +4328,7 @@ name|mem_end
 operator|-
 name|src
 expr_stmt|;
+comment|/* XXX  		 * I'm not sure that this bcopy does only 16bit access 		 */
 comment|/* copy amount up to end of NIC memory */
 if|if
 condition|(
@@ -6476,7 +6474,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Now zero memory and verify that it is clear 	 */
+comment|/* 	 * Now zero memory and verify that it is clear 	 * XXX restricted to 16-bit writes?  Do we need to 	 * XXX enable 16-bit access? 	 */
 name|bzero
 argument_list|(
 name|sc
