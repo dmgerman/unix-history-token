@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	6.1	83/07/29	*/
+comment|/*	tcp_output.c	6.2	83/11/04	*/
 end_comment
 
 begin_include
@@ -1183,6 +1183,7 @@ operator|->
 name|snd_max
 argument_list|)
 condition|)
+block|{
 name|tp
 operator|->
 name|snd_max
@@ -1191,20 +1192,9 @@ name|tp
 operator|->
 name|snd_nxt
 expr_stmt|;
-comment|/* 		 * Time this transmission if not a retransmission and 		 * not currently timing anything. 		 */
+comment|/* 			 * Time this transmission if not a retransmission and 			 * not currently timing anything. 			 */
 if|if
 condition|(
-name|SEQ_GT
-argument_list|(
-name|tp
-operator|->
-name|snd_nxt
-argument_list|,
-name|tp
-operator|->
-name|snd_max
-argument_list|)
-operator|&&
 name|tp
 operator|->
 name|t_rtt
@@ -1228,6 +1218,7 @@ name|snd_nxt
 operator|-
 name|len
 expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Set retransmit timer if not currently set. 		 * Initial value for retransmit timer to tcp_beta*tp->t_srtt. 		 * Initialize shift counter which is used for exponential 		 * backoff of retransmit time. 		 */
 if|if
