@@ -1428,18 +1428,12 @@ operator|=
 literal|"Ross (?) host to PCI bridge"
 expr_stmt|;
 comment|/* just guessing the secondary bus register number ... */
-operator|*
-name|busnum
-operator|=
-name|pci_cfgread
-argument_list|(
-name|cfg
-argument_list|,
-literal|0x45
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|*busnum = pci_cfgread(cfg, 0x45, 1);
+endif|#
+directive|endif
 break|break;
 comment|/* Integrated Micro Solutions -- vendor 0x10e0 */
 case|case
