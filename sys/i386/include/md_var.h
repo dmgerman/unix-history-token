@@ -565,7 +565,7 @@ begin_function_decl
 name|int
 name|is_physical_memory
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|addr
 parameter_list|)
 function_decl|;
