@@ -762,9 +762,7 @@ name|sorwakeup_locked
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					SIGIO_ASSERT(SX_SLOCKED);
-comment|/* XXX */
-value|\ 					if (sb_notify(&(so)->so_rcv))		\ 						sowakeup((so),&(so)->so_rcv);	\ 				} while (0)
+value|do {						\ 					if (sb_notify(&(so)->so_rcv))		\ 						sowakeup((so),&(so)->so_rcv);	\ 				} while (0)
 end_define
 
 begin_define
@@ -774,7 +772,7 @@ name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					SIGIO_SLOCK();				\ 					sorwakeup_locked(so);			\ 					SIGIO_SUNLOCK();			\ 				} while (0)
+value|do {						\ 					sorwakeup_locked(so);			\ 				} while (0)
 end_define
 
 begin_define
@@ -784,9 +782,7 @@ name|sowwakeup_locked
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					SIGIO_ASSERT(SX_SLOCKED);
-comment|/* XXX */
-value|\ 					if (sb_notify(&(so)->so_snd))		\ 						sowakeup((so),&(so)->so_snd);	\ 				} while (0)
+value|do {						\ 					if (sb_notify(&(so)->so_snd))		\ 						sowakeup((so),&(so)->so_snd);	\ 				} while (0)
 end_define
 
 begin_define
@@ -796,7 +792,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 					SIGIO_SLOCK();				\ 					sowwakeup_locked(so);			\ 					SIGIO_SUNLOCK();			\ 				} while (0)
+value|do {						\ 					sowwakeup_locked(so);			\ 				} while (0)
 end_define
 
 begin_ifdef

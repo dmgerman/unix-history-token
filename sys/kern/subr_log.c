@@ -825,6 +825,7 @@ name|NULL
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|logsoftc
 operator|.
 name|sc_sigio

@@ -11511,6 +11511,7 @@ name|NULL
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_sigio
@@ -11613,6 +11614,7 @@ name|NULL
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|t_sigio

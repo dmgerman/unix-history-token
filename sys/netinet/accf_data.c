@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -43,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
 end_include
 
 begin_comment
@@ -141,9 +129,6 @@ name|int
 name|waitflag
 parameter_list|)
 block|{
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -152,12 +137,7 @@ argument_list|(
 name|so
 argument_list|)
 condition|)
-block|{
-name|SIGIO_SUNLOCK
-argument_list|()
-expr_stmt|;
 return|return;
-block|}
 name|so
 operator|->
 name|so_upcall
@@ -177,9 +157,6 @@ name|soisconnected_locked
 argument_list|(
 name|so
 argument_list|)
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 return|return;
 block|}

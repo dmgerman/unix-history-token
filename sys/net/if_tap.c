@@ -2832,6 +2832,7 @@ operator|)
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|tap_sigio

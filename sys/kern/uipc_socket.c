@@ -7417,6 +7417,7 @@ name|NULL
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|so
 operator|->
 name|so_sigio

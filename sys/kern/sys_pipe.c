@@ -1880,6 +1880,7 @@ name|pipe_sigio
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|cpipe
 operator|->
 name|pipe_sigio

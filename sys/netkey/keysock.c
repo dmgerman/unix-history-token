@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -67,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -97,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
 end_include
 
 begin_include
@@ -1811,9 +1793,6 @@ operator|=
 operator|&
 name|key_dst
 expr_stmt|;
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|soisconnected_locked
 argument_list|(
 name|so
@@ -1824,9 +1803,6 @@ operator|->
 name|so_options
 operator||=
 name|SO_USELOOPBACK
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(

@@ -680,7 +680,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|sx
+name|mtx
 struct_decl|;
 end_struct_decl
 
@@ -698,7 +698,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|sx
+name|mtx
 name|sigio_lock
 decl_stmt|;
 end_decl_stmt
@@ -710,33 +710,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIGIO_SLOCK
+name|SIGIO_LOCK
 parameter_list|()
-value|sx_slock(&sigio_lock)
+value|mtx_lock(&sigio_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIGIO_XLOCK
+name|SIGIO_TRYLOCK
 parameter_list|()
-value|sx_xlock(&sigio_lock)
+value|mtx_trylock(&sigio_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIGIO_SUNLOCK
+name|SIGIO_UNLOCK
 parameter_list|()
-value|sx_sunlock(&sigio_lock)
+value|mtx_unlock(&sigio_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIGIO_XUNLOCK
+name|SIGIO_LOCKED
 parameter_list|()
-value|sx_xunlock(&sigio_lock)
+value|mtx_owned(&sigio_lock)
 end_define
 
 begin_define
@@ -744,9 +744,9 @@ define|#
 directive|define
 name|SIGIO_ASSERT
 parameter_list|(
-name|what
+name|type
 parameter_list|)
-value|sx_assert(&sigio_lock, what)
+value|mtx_assert(&sigio_lock, type)
 end_define
 
 begin_comment
@@ -824,6 +824,7 @@ name|pgsigio
 parameter_list|(
 name|struct
 name|sigio
+modifier|*
 modifier|*
 parameter_list|,
 name|int

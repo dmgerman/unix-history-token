@@ -1172,6 +1172,7 @@ name|tun_sigio
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|tp
 operator|->
 name|tun_sigio

@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -248,12 +242,6 @@ name|so
 operator|->
 name|so_head
 decl_stmt|;
-name|SIGIO_ASSERT
-argument_list|(
-name|SX_SLOCKED
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|so
 operator|->
 name|so_state
@@ -336,10 +324,6 @@ operator|&=
 operator|~
 name|SO_ACCEPTFILTER
 expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
-expr_stmt|;
-comment|/* XXX */
 name|so
 operator|->
 name|so_upcall
@@ -352,9 +336,6 @@ name|so_upcallarg
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|SIGIO_SLOCK
-argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -459,9 +440,6 @@ name|so
 operator|->
 name|so_head
 decl_stmt|;
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -543,9 +521,6 @@ name|so_options
 operator|&=
 operator|~
 name|SO_ACCEPTFILTER
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 name|so
 operator|->
@@ -644,9 +619,6 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-name|SIGIO_SUNLOCK
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -663,9 +635,6 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -706,9 +675,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -725,11 +691,6 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|SIGIO_ASSERT
-argument_list|(
-name|SX_LOCKED
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -792,16 +753,10 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|soisdisconnected_locked
 argument_list|(
 name|so
 argument_list|)
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1118,16 +1073,10 @@ condition|(
 name|connstatus
 condition|)
 block|{
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|sorwakeup_locked
 argument_list|(
 name|head
 argument_list|)
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1171,9 +1120,6 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -1184,9 +1130,6 @@ name|sowwakeup_locked
 argument_list|(
 name|so
 argument_list|)
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1203,9 +1146,6 @@ modifier|*
 name|so
 decl_stmt|;
 block|{
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 name|so
 operator|->
 name|so_state
@@ -1216,9 +1156,6 @@ name|sorwakeup_locked
 argument_list|(
 name|so
 argument_list|)
-expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1397,11 +1334,6 @@ modifier|*
 name|sb
 decl_stmt|;
 block|{
-name|SIGIO_ASSERT
-argument_list|(
-name|SX_LOCKED
-argument_list|)
-expr_stmt|;
 name|selwakeup
 argument_list|(
 operator|&
@@ -1463,6 +1395,7 @@ name|NULL
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|so
 operator|->
 name|so_sigio

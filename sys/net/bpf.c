@@ -1953,6 +1953,7 @@ name|bd_sigio
 condition|)
 name|pgsigio
 argument_list|(
+operator|&
 name|d
 operator|->
 name|bd_sigio

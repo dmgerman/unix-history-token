@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/limits.h>
 end_include
 
@@ -480,13 +486,13 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|sx
+name|mtx
 name|sigio_lock
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sx to protect pointers to sigio */
+comment|/* mtx to protect pointers to sigio */
 end_comment
 
 begin_comment
@@ -2449,21 +2455,21 @@ modifier|*
 name|sigio
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
+name|SIGIO_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sigio
 operator|==
 name|NULL
 condition|)
-return|return;
-name|s
-operator|=
-name|splhigh
+block|{
+name|SIGIO_UNLOCK
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
 operator|*
 operator|(
 name|sigio
@@ -2473,10 +2479,8 @@ operator|)
 operator|=
 name|NULL
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|SIGIO_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2600,9 +2604,6 @@ modifier|*
 name|sigiolst
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|sigio
 modifier|*
@@ -2695,9 +2696,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|s
-operator|=
-name|splhigh
+name|SIGIO_LOCK
 argument_list|()
 expr_stmt|;
 operator|*
@@ -2709,10 +2708,8 @@ operator|)
 operator|=
 name|NULL
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|SIGIO_UNLOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2920,8 +2917,6 @@ modifier|*
 name|sigio
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|ret
 decl_stmt|;
 if|if
@@ -3194,9 +3189,7 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splhigh
+name|SIGIO_LOCK
 argument_list|()
 expr_stmt|;
 operator|*
@@ -3204,10 +3197,8 @@ name|sigiop
 operator|=
 name|sigio
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|SIGIO_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -9965,12 +9956,16 @@ argument_list|,
 literal|"filelist lock"
 argument_list|)
 expr_stmt|;
-name|sx_init
+name|mtx_init
 argument_list|(
 operator|&
 name|sigio_lock
 argument_list|,
 literal|"sigio lock"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

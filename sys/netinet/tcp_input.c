@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -99,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sx.h>
 end_include
 
 begin_include
@@ -7032,9 +7020,6 @@ name|ourfinisacked
 condition|)
 block|{
 comment|/* 				 * If we can't receive any more 				 * data, then closing user can proceed. 				 * Starting the timer is contrary to the 				 * specification, but if we don't get a FIN 				 * we'll hang forever. 				 */
-name|SIGIO_SLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -7049,9 +7034,6 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|SIGIO_SUNLOCK
-argument_list|()
-expr_stmt|;
 name|callout_reset
 argument_list|(
 name|tp
@@ -7064,12 +7046,6 @@ name|tcp_timer_2msl
 argument_list|,
 name|tp
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|SIGIO_SUNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 name|tp
