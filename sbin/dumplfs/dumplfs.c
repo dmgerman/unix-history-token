@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)dumplfs.c	8.5 (Berkeley) 5/24/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -104,13 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -122,13 +128,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -474,7 +480,8 @@ literal|"ais:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -557,14 +564,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|special
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Read the first superblock */
@@ -878,12 +882,9 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|get
@@ -934,8 +935,10 @@ name|dip
 operator|<
 name|dpage
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unable to locate ifile inode"
 argument_list|)
 expr_stmt|;
@@ -995,12 +998,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -1150,12 +1150,9 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|get
@@ -1339,12 +1336,9 @@ operator|)
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|get
@@ -1817,8 +1811,6 @@ operator|&
 name|dip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|,
 literal|"mtime "
@@ -1829,8 +1821,6 @@ operator|&
 name|dip
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|,
 literal|"ctime "
@@ -1841,8 +1831,6 @@ operator|&
 name|dip
 operator|->
 name|di_ctime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1990,7 +1978,7 @@ name|FINFO
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|daddr_t
 modifier|*
 name|dp
 decl_stmt|;
@@ -2003,7 +1991,7 @@ name|int
 name|ck
 decl_stmt|;
 name|int
-name|numblocks
+name|numbytes
 decl_stmt|;
 name|struct
 name|dinode
@@ -2012,6 +2000,12 @@ name|inop
 decl_stmt|;
 if|if
 condition|(
+name|sp
+operator|->
+name|ss_magic
+operator|!=
+name|SS_MAGIC
+operator|||
 name|sp
 operator|->
 name|ss_sumsum
@@ -2063,9 +2057,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Segment Summary Info at 0x%lx\n"
+literal|"Segment Summary Info at 0x%lx\tmagic no: 0x%x\n"
 argument_list|,
 name|addr
+argument_list|,
+name|sp
+operator|->
+name|ss_magic
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2126,26 +2124,6 @@ name|ss_create
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|numblocks
-operator|=
-operator|(
-name|sp
-operator|->
-name|ss_ninos
-operator|+
-name|INOPB
-argument_list|(
-name|lfsp
-argument_list|)
-operator|-
-literal|1
-operator|)
-operator|/
-name|INOPB
-argument_list|(
-name|lfsp
-argument_list|)
-expr_stmt|;
 comment|/* Dump out inode disk addresses */
 name|dp
 operator|=
@@ -2180,6 +2158,10 @@ argument_list|(
 literal|"    Inode addresses:"
 argument_list|)
 expr_stmt|;
+name|numbytes
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|dp
@@ -2199,6 +2181,13 @@ name|dp
 operator|--
 control|)
 block|{
+name|numbytes
+operator|+=
+name|lfsp
+operator|->
+name|lfs_bsize
+expr_stmt|;
+comment|/* add bytes for inode block */
 name|printf
 argument_list|(
 literal|"\t0x%X {"
@@ -2363,18 +2352,12 @@ name|i
 operator|++
 control|)
 block|{
-name|numblocks
-operator|+=
-name|fp
-operator|->
-name|fi_nblocks
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"    FINFO for inode: %d version %d nblocks %d\n"
+literal|"    FINFO for inode: %d version %d nblocks %d lastlength %d\n"
 argument_list|,
 name|fp
 operator|->
@@ -2387,6 +2370,10 @@ argument_list|,
 name|fp
 operator|->
 name|fi_nblocks
+argument_list|,
+name|fp
+operator|->
+name|fi_lastlength
 argument_list|)
 expr_stmt|;
 name|dp
@@ -2449,6 +2436,29 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|==
+name|fp
+operator|->
+name|fi_nblocks
+operator|-
+literal|1
+condition|)
+name|numbytes
+operator|+=
+name|fp
+operator|->
+name|fi_lastlength
+expr_stmt|;
+else|else
+name|numbytes
+operator|+=
+name|lfsp
+operator|->
+name|lfs_bsize
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2479,7 +2489,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|numblocks
+name|numbytes
 operator|)
 return|;
 block|}
@@ -2537,7 +2547,7 @@ decl_stmt|;
 name|int
 name|did_one
 decl_stmt|,
-name|nblocks
+name|nbytes
 decl_stmt|,
 name|sb
 decl_stmt|;
@@ -2686,7 +2696,7 @@ block|}
 block|}
 else|else
 block|{
-name|nblocks
+name|nbytes
 operator|=
 name|dump_sum
 argument_list|(
@@ -2713,19 +2723,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nblocks
+name|nbytes
 condition|)
 name|sum_offset
 operator|+=
 name|LFS_SUMMARY_SIZE
 operator|+
-operator|(
-name|nblocks
-operator|<<
-name|lfsp
-operator|->
-name|lfs_bshift
-operator|)
+name|nbytes
 expr_stmt|;
 else|else
 name|sum_offset
@@ -2926,7 +2930,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s0x%X\t%s%d\t%s0x%X\t%s%d\n"
+literal|"%s0x%X\t%s%d\t%s0x%qX\t%s%d\n"
 argument_list|,
 literal|"segmask  "
 argument_list|,
@@ -2958,7 +2962,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s0x%X\t\t%s%d\t%s0x%X\t%s%d\n"
+literal|"%s0x%qX\t\t%s%d\t%s0x%qX\t%s%d\n"
 argument_list|,
 literal|"ffmask   "
 argument_list|,
@@ -3314,12 +3318,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|p
