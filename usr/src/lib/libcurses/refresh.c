@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.16 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,6 +1793,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
+comment|/* why is this here? */
 if|if
 condition|(
 name|win
@@ -1811,6 +1812,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|wx
+operator|+
+name|win
+operator|->
+name|begx
+operator|<
+name|curscr
+operator|->
+name|maxx
+condition|)
+block|{
 name|domvcur
 argument_list|(
 name|ly
@@ -1842,6 +1856,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|ly
 operator|=
 name|win
