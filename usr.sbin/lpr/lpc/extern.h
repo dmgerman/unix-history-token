@@ -54,7 +54,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|down
+name|down_gi
 parameter_list|(
 name|int
 name|_argc
@@ -63,6 +63,18 @@ name|char
 modifier|*
 name|_argv
 index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|down_q
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -310,6 +322,25 @@ name|struct
 name|printer
 modifier|*
 name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
+name|down
+parameter_list|(
+name|int
+name|_argc
+parameter_list|,
+name|char
+modifier|*
+name|_argv
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
