@@ -985,7 +985,7 @@ name|int
 name|signo
 decl_stmt|;
 comment|/* Miscellaneous data. */
-name|char
+name|int
 name|flags
 decl_stmt|;
 define|#
