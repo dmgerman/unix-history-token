@@ -73,6 +73,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netipx/ipx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netipx/ipx_if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netns/ns.h>
 end_include
 
@@ -206,6 +218,10 @@ name|in_ifaddr
 name|in
 decl_stmt|;
 name|struct
+name|ipx_ifaddr
+name|ipx
+decl_stmt|;
+name|struct
 name|ns_ifaddr
 name|ns
 decl_stmt|;
@@ -286,7 +302,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"%-5.5s %-5.5s %-11.11s %-15.15s %8.8s %5.5s"
+literal|"%-5.5s %-5.5s %-13.13s %-15.15s %8.8s %5.5s"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -542,7 +558,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -633,7 +649,7 @@ name|AF_UNSPEC
 case|:
 name|printf
 argument_list|(
-literal|"%-11.11s "
+literal|"%-13.13s "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -736,6 +752,83 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|AF_IPX
+case|:
+block|{
+name|struct
+name|sockaddr_ipx
+modifier|*
+name|sipx
+init|=
+operator|(
+expr|struct
+name|sockaddr_ipx
+operator|*
+operator|)
+name|sa
+decl_stmt|;
+name|u_long
+name|net
+decl_stmt|;
+name|char
+name|netnum
+index|[
+literal|10
+index|]
+decl_stmt|;
+operator|*
+operator|(
+expr|union
+name|ipx_net
+operator|*
+operator|)
+operator|&
+name|net
+operator|=
+name|sipx
+operator|->
+name|sipx_addr
+operator|.
+name|x_net
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|netnum
+argument_list|,
+literal|"%lx"
+argument_list|,
+name|ntohl
+argument_list|(
+name|net
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ipx:%-8s "
+argument_list|,
+name|netnum
+argument_list|)
+expr_stmt|;
+comment|/*				printf("ipx:%-8s ", netname(net, 0L)); */
+name|printf
+argument_list|(
+literal|"%-15s "
+argument_list|,
+name|ipx_phost
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|sipx
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|AF_NS
 case|:
 block|{
@@ -757,7 +850,7 @@ decl_stmt|;
 name|char
 name|netnum
 index|[
-literal|8
+literal|10
 index|]
 decl_stmt|;
 operator|*
@@ -950,7 +1043,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-literal|28
+literal|30
 operator|-
 name|m
 expr_stmt|;

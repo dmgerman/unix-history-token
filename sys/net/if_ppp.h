@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: if_ppp.h,v 1.2 1994/09/23 00:13:20 wollman Exp $  */
+comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: if_ppp.h,v 1.3 1995/05/30 08:08:09 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -145,6 +145,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_IPX
+value|0x2b
+end_define
+
+begin_comment
+comment|/* IPX Datagram (RFC1552) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_VJC_COMP
 value|0x2d
 end_define
@@ -184,6 +195,17 @@ end_define
 
 begin_comment
 comment|/* Link Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_IPXCP
+value|0x802b
+end_define
+
+begin_comment
+comment|/* IPX Control Protocol (RFC1552) */
 end_comment
 
 begin_define
