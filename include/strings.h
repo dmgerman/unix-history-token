@@ -118,6 +118,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BSD_VISIBLE
+end_ifdef
+
 begin_function_decl
 name|int
 name|ffsl
@@ -144,6 +150,11 @@ name|long
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|char
