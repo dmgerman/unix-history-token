@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.3 1993/08/01 17:59:33 mycroft Exp $"
+literal|"$Id: inetd.c,v 1.2 1993/09/23 17:31:38 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3457,17 +3457,30 @@ operator|)
 literal|0
 operator|)
 return|;
+name|arg
+operator|=
+name|skip
+argument_list|(
+operator|&
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|more
+goto|;
 name|sep
 operator|->
 name|se_service
 operator|=
 name|newstr
 argument_list|(
-name|skip
-argument_list|(
-operator|&
-name|cp
-argument_list|)
+name|arg
 argument_list|)
 expr_stmt|;
 name|arg
