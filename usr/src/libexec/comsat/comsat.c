@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)comsat.c	4.1 (Berkeley) %G%"
+literal|"@(#)comsat.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|sleep
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|onalrm
 argument_list|()
 expr_stmt|;
@@ -312,6 +317,11 @@ name|cc
 argument_list|)
 expr_stmt|;
 block|}
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
