@@ -3284,6 +3284,19 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|idesc
+operator|->
+name|ih_flags
+operator|&
+name|INTR_FAST
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|mtx_enter
 argument_list|(
 operator|&
@@ -3318,7 +3331,7 @@ operator|->
 name|it_proc
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We don't do an ast here because we really 			 * don't care when it runs next. 			 * 			 * XXX: should we lower the threads priority? 			 */
+comment|/* 				 * We don't do an ast here because we really 				 * don't care when it runs next. 				 * 				 * XXX: should we lower the threads priority? 				 */
 block|}
 name|mtx_exit
 argument_list|(
@@ -3328,6 +3341,7 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
