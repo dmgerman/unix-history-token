@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.29 1998/07/28 06:25:35 charnier Exp $"
+literal|"$Id: route.c,v 1.30 1999/06/01 13:14:07 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4144,11 +4144,21 @@ name|ifr
 operator|->
 name|ifr_addr
 operator|+
+name|MAX
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|)
 operator|)
 control|)
 block|{

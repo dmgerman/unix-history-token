@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.14 1998/06/20 18:02:16 peter Exp $"
+literal|"$Id: sys-bsd.c,v 1.15 1998/06/21 04:47:21 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6182,11 +6182,21 @@ name|ifr
 operator|->
 name|ifr_addr
 operator|+
+name|MAX
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|)
 operator|)
 control|)
 block|{
@@ -6440,11 +6450,21 @@ name|ifr
 operator|->
 name|ifr_addr
 operator|+
+name|MAX
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|)
 operator|)
 expr_stmt|;
 block|}
@@ -6630,11 +6650,21 @@ name|ifr
 operator|->
 name|ifr_addr
 operator|+
+name|MAX
+argument_list|(
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|->
+name|ifr_addr
+argument_list|)
+argument_list|)
 operator|)
 control|)
 block|{
