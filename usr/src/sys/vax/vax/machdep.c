@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.14	81/02/25	*/
+comment|/*	machdep.c	4.15	81/02/25	*/
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.14) 81/02/25 14:48:03 \n"
+literal|"VM/UNIX (Berkeley Version 4.15) 81/02/25 23:30:34 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1852,13 +1852,17 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|VAX
+name|VAX750
+if|if
+condition|(
+name|cpu
 operator|==
-literal|750
+name|VAX_750
+condition|)
 block|{
 asm|asm("movl r11,r5");
 block|}
-comment|/* where boot flags go on comet */
+comment|/* boot flags go in r5 */
 endif|#
 directive|endif
 for|for

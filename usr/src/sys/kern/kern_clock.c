@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.10	%G%	*/
+comment|/*	kern_clock.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"../h/clock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/cpu.h"
 end_include
 
 begin_include
@@ -514,11 +520,13 @@ name|lbolt
 expr_stmt|;
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 if|if
 condition|(
+name|cpu
+operator|==
+name|VAX_780
+operator|&&
 operator|!
 name|BASEPRI
 argument_list|(
