@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.8 (Berkeley) %G%"
+literal|"@(#)util.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ specifier|static
 name|char
 name|tbuf
 index|[
-literal|10
+literal|50
 index|]
 decl_stmt|;
 if|if
@@ -560,8 +560,6 @@ expr_stmt|;
 name|tval
 operator|+=
 name|day
-operator|-
-literal|1
 expr_stmt|;
 name|tval
 operator|=
