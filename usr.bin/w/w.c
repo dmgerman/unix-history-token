@@ -1931,7 +1931,7 @@ name|hp
 operator|->
 name|h_name
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|p
 argument_list|,
