@@ -154,45 +154,11 @@ name|struct
 name|bootinfo
 modifier|*
 name|bi
-parameter_list|,
-name|UINTN
-name|mapkey
 parameter_list|)
 block|{
 name|u_int64_t
 name|psr
 decl_stmt|;
-name|EFI_STATUS
-name|status
-decl_stmt|;
-name|status
-operator|=
-name|BS
-operator|->
-name|ExitBootServices
-argument_list|(
-name|IH
-argument_list|,
-name|mapkey
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|EFI_ERROR
-argument_list|(
-name|status
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ExitBootServices returned 0x%lx\n"
-argument_list|,
-name|status
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 asm|__asm __volatile("srlz.i;;");
 asm|__asm __volatile("mov cr.ipsr=%0"
 operator|::
@@ -262,6 +228,9 @@ name|psr
 decl_stmt|;
 name|UINTN
 name|mapkey
+decl_stmt|;
+name|EFI_STATUS
+name|status
 decl_stmt|;
 if|if
 condition|(
@@ -341,6 +310,39 @@ operator|&
 name|mapkey
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|BS
+operator|->
+name|ExitBootServices
+argument_list|(
+name|IH
+argument_list|,
+name|mapkey
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ExitBootServices returned 0x%lx\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|psr
+operator|=
+name|disable_ic
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Region 6 is direct mapped UC and region 7 is direct mapped 	 * WC. The details of this is controlled by the Alt {I,D}TLB 	 * handlers. Here we just make sure that they have the largest  	 * possible page size to minimise TLB usage. 	 */
 name|ia64_set_rr
 argument_list|(
@@ -381,11 +383,6 @@ operator|<<
 literal|2
 operator|)
 argument_list|)
-expr_stmt|;
-name|psr
-operator|=
-name|disable_ic
-argument_list|()
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -465,6 +462,10 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_asm
+asm|__asm __volatile("srlz.i;;");
+end_asm
 
 begin_asm
 asm|__asm __volatile("itr.d dtr[%0]=%1;;"
@@ -633,8 +634,6 @@ operator|->
 name|e_entry
 argument_list|,
 name|bi
-argument_list|,
-name|mapkey
 argument_list|)
 expr_stmt|;
 end_expr_stmt
