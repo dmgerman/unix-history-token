@@ -86,13 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -104,13 +116,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<timeconv.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1677,16 +1689,6 @@ name|ino_t
 name|ino
 parameter_list|)
 block|{
-name|struct
-name|ufs1_dinode
-modifier|*
-name|dp1
-decl_stmt|;
-name|struct
-name|ufs2_dinode
-modifier|*
-name|dp2
-decl_stmt|;
 name|int
 name|ind_level
 decl_stmt|,
@@ -3612,7 +3614,7 @@ literal|1
 condition|)
 name|msg
 argument_list|(
-literal|"read error from %s: %s: [block %qd]: count=%d\n"
+literal|"read error from %s: %s: [block %jd]: count=%d\n"
 argument_list|,
 name|disk
 argument_list|,
@@ -3621,6 +3623,9 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|,
 name|size
@@ -3629,10 +3634,13 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"short read error from %s: [block %qd]: count=%d, got=%d\n"
+literal|"short read error from %s: [block %jd]: count=%d, got=%d\n"
 argument_list|,
 name|disk
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|,
 name|size
@@ -3761,7 +3769,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"read error from %s: %s: [sector %qd]: count=%d\n"
+literal|"read error from %s: %s: [sector %jd]: count=%ld\n"
 argument_list|,
 name|disk
 argument_list|,
@@ -3770,6 +3778,9 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|,
 name|dev_bsize
@@ -3779,10 +3790,13 @@ continue|continue;
 block|}
 name|msg
 argument_list|(
-literal|"short read error from %s: [sector %qd]: count=%d, got=%d\n"
+literal|"short read from %s: [sector %jd]: count=%ld, got=%d\n"
 argument_list|,
 name|disk
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blkno
 argument_list|,
 name|dev_bsize

@@ -3593,6 +3593,10 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
+name|wrote
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|eot_count

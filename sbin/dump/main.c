@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -155,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<timeconv.h>
 end_include
 
 begin_include
@@ -421,9 +433,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tmsg
-decl_stmt|;
-name|time_t
-name|t
 decl_stmt|;
 name|spcl
 operator|.
@@ -1749,7 +1758,7 @@ operator|)
 condition|)
 name|quit
 argument_list|(
-literal|"dev_bsize (%d) is not a power of 2"
+literal|"dev_bsize (%ld) is not a power of 2"
 argument_list|,
 name|dev_bsize
 argument_list|)
@@ -2451,8 +2460,11 @@ name|pipeout
 condition|)
 name|msg
 argument_list|(
-literal|"DUMP: %qd tape blocks\n"
+literal|"DUMP: %jd tape blocks\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|spcl
 operator|.
 name|c_tapea
@@ -2461,8 +2473,11 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"DUMP: %qd tape blocks on %d volume%s\n"
+literal|"DUMP: %jd tape blocks on %d volume%s\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|spcl
 operator|.
 name|c_tapea
@@ -2501,12 +2516,16 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"finished in %d seconds, throughput %qd KBytes/sec\n"
+literal|"finished in %d seconds, throughput %jd KBytes/sec\n"
 argument_list|,
 name|tend_writing
 operator|-
 name|tstart_writing
 argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|spcl
 operator|.
 name|c_tapea
@@ -2516,6 +2535,7 @@ name|tend_writing
 operator|-
 name|tstart_writing
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putdumptime
