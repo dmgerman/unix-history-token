@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.337 1999/06/01 18:19:40 jlemon Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.338 1999/06/01 18:25:26 jlemon Exp $  */
 end_comment
 
 begin_include
@@ -5922,7 +5922,23 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* XXX former point of mp_probe() and pmap_bootstrap() */
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* look for the MP hardware - needed for apic addresses */
+name|mp_probe
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* call pmap initialization to make new kernel address space */
+name|pmap_bootstrap
+argument_list|(
+name|first
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Size up each available chunk of physical memory. 	 */
 name|physmap
 index|[
@@ -5957,29 +5973,21 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|pte = (pt_entry_t)vtopte(KERNBASE);
+else|#
+directive|else
 name|pte
 operator|=
 operator|(
 name|pt_entry_t
 operator|)
-name|vtopte
-argument_list|(
-name|KERNBASE
-argument_list|)
+name|CMAP1
 expr_stmt|;
-operator|*
-name|pte
-operator|=
-operator|(
-literal|1
-operator|<<
-name|PAGE_SHIFT
-operator|)
-operator||
-name|PG_RW
-operator||
-name|PG_V
-expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * physmap is in bytes, so when converting to page boundaries, 	 * round up the start address and round down the end address. 	 */
 for|for
 control|(
@@ -6055,12 +6063,24 @@ name|tmp
 decl_stmt|,
 name|page_bad
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int *ptr = 0;
+else|#
+directive|else
 name|int
 modifier|*
 name|ptr
 init|=
-literal|0
+operator|(
+name|int
+operator|*
+operator|)
+name|CADDR1
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * block out kernel memory as not available. 			 */
 if|if
 condition|(
@@ -7582,23 +7602,6 @@ expr_stmt|;
 name|getmemsize
 argument_list|(
 name|first
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* look for the MP hardware - needed for apic addresses */
-name|mp_probe
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* call pmap initialization to make new kernel address space */
-name|pmap_bootstrap
-argument_list|(
-name|first
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* now running on new page tables, configured,and u/iom is accessible */
