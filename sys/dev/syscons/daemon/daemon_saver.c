@@ -621,7 +621,7 @@ name|message
 index|[]
 init|=
 block|{
-literal|"FreeBSD 2.2 STABLE"
+literal|"FreeBSD 3.0 CURRENT"
 block|}
 decl_stmt|;
 specifier|static
@@ -1070,8 +1070,10 @@ name|int
 name|ver
 parameter_list|)
 block|{
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+name|daemon_saver
+argument_list|,
 name|lkmtp
 argument_list|,
 name|cmd
