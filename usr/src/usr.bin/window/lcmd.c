@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.14 84/04/05"
+literal|"@(#)lcmd.c	3.15 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|l_iostat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|l_label
 parameter_list|()
 function_decl|;
@@ -104,6 +111,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_terse
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_time
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -180,6 +194,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|lcmd_arg
+name|arg_iostat
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
 name|arg_label
 index|[]
 decl_stmt|;
@@ -205,6 +227,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_terse
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_time
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -296,6 +326,14 @@ name|l_foreground
 block|,
 name|arg_foreground
 block|,
+literal|"iostat"
+block|,
+literal|1
+block|,
+name|l_iostat
+block|,
+name|arg_iostat
+block|,
 literal|"label"
 block|,
 literal|1
@@ -322,11 +360,19 @@ name|arg_source
 block|,
 literal|"terse"
 block|,
-literal|1
+literal|2
 block|,
 name|l_terse
 block|,
 name|arg_terse
+block|,
+literal|"time"
+block|,
+literal|2
+block|,
+name|l_time
+block|,
+name|arg_time
 block|,
 literal|"unset"
 block|,

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.23 84/04/05"
+literal|"@(#)cmd.c	3.24 84/04/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,13 +406,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'S'
-case|:
-name|c_show
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
 literal|'L'
 case|:
 name|c_list
@@ -710,37 +703,6 @@ name|c_quit
 argument_list|()
 expr_stmt|;
 break|break;
-comment|/* undocumented commands */
-case|case
-literal|'s'
-case|:
-name|c_stat
-argument_list|()
-expr_stmt|;
-break|break;
-ifndef|#
-directive|ifndef
-name|O_4_1A
-case|case
-literal|'t'
-case|:
-name|c_time
-argument_list|(
-name|RUSAGE_SELF
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'T'
-case|:
-name|c_time
-argument_list|(
-name|RUSAGE_CHILDREN
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 comment|/* debugging stuff */
 case|case
 literal|'&'
