@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.17 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2639,13 +2639,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"#include \"hp300/include/pte.h\"\n"
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
