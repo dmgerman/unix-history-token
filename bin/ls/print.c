@@ -539,6 +539,13 @@ name|prevdev
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|dp
+operator|->
+name|list
+operator|==
+name|NULL
+operator|||
 name|dp
 operator|->
 name|list
@@ -546,6 +553,7 @@ operator|->
 name|fts_level
 operator|!=
 name|FTS_ROOTLEVEL
+operator|)
 operator|&&
 operator|(
 name|f_longform
@@ -553,6 +561,7 @@ operator|||
 name|f_size
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -570,6 +579,7 @@ name|blocksize
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|haveacls
 operator|=
 literal|1
@@ -1414,6 +1424,13 @@ name|numrows
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|dp
+operator|->
+name|list
+operator|==
+name|NULL
+operator|||
 name|dp
 operator|->
 name|list
@@ -1421,6 +1438,7 @@ operator|->
 name|fts_level
 operator|!=
 name|FTS_ROOTLEVEL
+operator|)
 operator|&&
 operator|(
 name|f_longform
@@ -1428,6 +1446,7 @@ operator|||
 name|f_size
 operator|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1445,6 +1464,7 @@ name|blocksize
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|base
 operator|=
 literal|0
