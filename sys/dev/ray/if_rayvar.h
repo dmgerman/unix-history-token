@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayvar.h,v 1.1 2000/05/07 15:12:18 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.24 2000/04/24 15:49:20 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -101,6 +101,10 @@ begin_struct
 struct|struct
 name|ray_softc
 block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Device */
 name|struct
 name|arpcom
 name|arpcom
@@ -126,47 +130,57 @@ name|callout_handle
 name|com_timerh
 decl_stmt|;
 comment|/* Handle for command timer	*/
-name|char
-modifier|*
-name|card_type
+name|bus_space_tag_t
+name|am_bst
 decl_stmt|;
-comment|/* Card model name		*/
-name|char
-modifier|*
-name|vendor
+comment|/* Bus space tag for attribute memory */
+name|bus_space_handle_t
+name|am_bsh
 decl_stmt|;
-comment|/* Card manufacturer		*/
+comment|/* Bus space handle for attribute mem */
 name|int
-name|unit
+name|am_rid
 decl_stmt|;
-comment|/* Unit number			*/
-name|caddr_t
-name|maddr
-decl_stmt|;
-comment|/* Shared RAM Address		*/
-name|int
-name|flags
-decl_stmt|;
-comment|/* Start up flags		*/
-if|#
-directive|if
-operator|(
-name|RAY_NEED_CM_REMAPPING
-operator||
-name|RAY_NEED_CM_FIXUP
-operator|)
-name|int
-name|slotnum
-decl_stmt|;
-comment|/* Slot number			*/
+comment|/* Resource id for attribute memory */
 name|struct
-name|mem_desc
-name|md
+name|resource
+modifier|*
+name|am_res
 decl_stmt|;
-comment|/* Map info for common memory	*/
-endif|#
-directive|endif
-comment|/* (RAY_NEED_CM_REMAPPING | RAY_NEED_CM_FIXUP) */
+comment|/* Resource for attribute memory */
+name|bus_space_tag_t
+name|cm_bst
+decl_stmt|;
+comment|/* Bus space tag for common memory */
+name|bus_space_handle_t
+name|cm_bsh
+decl_stmt|;
+comment|/* Bus space handle for common memory */
+name|int
+name|cm_rid
+decl_stmt|;
+comment|/* Resource id for common memory */
+name|struct
+name|resource
+modifier|*
+name|cm_res
+decl_stmt|;
+comment|/* Resource for common memory */
+name|int
+name|irq_rid
+decl_stmt|;
+comment|/* Resource id for irq */
+name|struct
+name|resource
+modifier|*
+name|irq_res
+decl_stmt|;
+comment|/* Resource for irq */
+name|void
+modifier|*
+name|irq_handle
+decl_stmt|;
+comment|/* Handle for irq handler */
 name|u_char
 name|gone
 decl_stmt|;
@@ -244,17 +258,6 @@ comment|/* Antenna/levels	*/
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|ray_softc
-name|ray_softc
-index|[
-name|NRAY
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -581,7 +584,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|(u_int8_t)*((sc)->maddr + (off))
+value|((u_int8_t)bus_space_read_1((sc)->cm_bst, (sc)->cm_bsh, (off)))
 end_define
 
 begin_define
@@ -598,7 +601,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|bcopy((sc)->maddr + (off), (p), (n))
+value|bus_space_read_region_1((sc)->cm_bst, (sc)->cm_bsh, (off), (void *)(p), (n))
 end_define
 
 begin_define
@@ -668,7 +671,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*((sc)->maddr + (off)) = (val)
+value|bus_space_write_1((sc)->cm_bst, (sc)->cm_bsh, (off), (val))
 end_define
 
 begin_define
@@ -685,7 +688,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|bcopy((p), (sc)->maddr + (off), (n))
+value|bus_space_write_region_1((sc)->cm_bst, (sc)->cm_bsh, (off), (void *)(p), (n))
 end_define
 
 begin_define
@@ -866,7 +869,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\     panic("ray%d: %s(%d) " fmt "\n", sc->unit,			\     	__FUNCTION__ , __LINE__ , ##args);			\ } while (0)
+value|do {				\     panic("ray%d: %s(%d) " fmt "\n", device_get_unit((sc)->dev),	\ 	__FUNCTION__ , __LINE__ , ##args);				\ } while (0)
 end_define
 
 begin_define
@@ -881,7 +884,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\     printf("ray%d: %s(%d) " fmt "\n", (sc)->unit,		\     	__FUNCTION__ , __LINE__ , ##args);			\ } while (0)
+value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\         __FUNCTION__ , __LINE__ , ##args);				\ } while (0)
 end_define
 
 begin_ifndef
@@ -996,13 +999,6 @@ end_comment
 begin_comment
 comment|/*  * The driver assumes that the common memory is always mapped in,  * for the moment we ensure this with the following macro at the  * head of each function and by using functions to access attribute  * memory. Hysterical raisins led to the non-"reflexive" approach.  * Roll on NEWCARD and it can all die...  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CARD_MAJOR
-value|50
-end_define
 
 begin_if
 if|#
