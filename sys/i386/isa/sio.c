@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/sio.c,v 1.2 1993/07/15 17:53:12 davidg Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/sio.c,v 1.3 1993/07/18 21:27:57 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1778,12 +1778,6 @@ name|com_mcr
 argument_list|)
 operator|!=
 name|MCR_IENABLE
-operator|||
-operator|!
-name|isa_irq_pending
-argument_list|(
-name|dev
-argument_list|)
 operator|||
 operator|(
 name|inb
