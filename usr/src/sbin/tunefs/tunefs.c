@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tunefs.c	4.2 (Berkeley) %G%"
+literal|"@(#)tunefs.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ end_endif
 begin_comment
 comment|/*  * tunefs: change layout parameters to an existing file system.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -53,6 +47,18 @@ begin_include
 include|#
 directive|include
 file|<sys/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
 end_include
 
 begin_union
@@ -136,6 +142,11 @@ modifier|*
 name|sprintf
 parameter_list|()
 function_decl|;
+name|struct
+name|fstab
+modifier|*
+name|fs
+decl_stmt|;
 name|argc
 operator|--
 operator|,
@@ -159,6 +170,23 @@ name|argc
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|fs
+operator|=
+name|getfsfile
+argument_list|(
+name|special
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fs
+condition|)
+name|special
+operator|=
+name|fs
+operator|->
+name|fs_spec
 expr_stmt|;
 name|again
 label|:
