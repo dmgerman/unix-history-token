@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8875,21 +8875,7 @@ name|mntp
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Discard unneeded vnode, but save its inode. 			 */
-name|ufs_ihashrem
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Discard unneeded vnode, but save its inode. 			 * Note that the lock is carried over in the inode 			 * to the replacement vnode. 			 */
 name|nvp
 operator|->
 name|v_data
@@ -8930,11 +8916,6 @@ operator|->
 name|i_vnode
 operator|=
 name|vp
-expr_stmt|;
-name|ufs_ihashins
-argument_list|(
-name|ip
-argument_list|)
 expr_stmt|;
 block|}
 break|break;

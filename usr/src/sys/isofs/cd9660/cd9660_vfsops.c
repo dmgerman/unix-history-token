@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3374,21 +3374,7 @@ name|mp
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Discard unneeded vnode, but save its iso_node. 			 */
-name|cd9660_ihashrem
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Discard unneeded vnode, but save its iso_node. 			 * Note that the lock is carried over in the iso_node 			 * to the replacement vnode. 			 */
 name|nvp
 operator|->
 name|v_data
@@ -3429,11 +3415,6 @@ operator|->
 name|i_vnode
 operator|=
 name|vp
-expr_stmt|;
-name|cd9660_ihashins
-argument_list|(
-name|ip
-argument_list|)
 expr_stmt|;
 block|}
 break|break;
