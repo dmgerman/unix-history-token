@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)diffdir.c	4.7 (Berkeley) %G%"
+literal|"@(#)diffdir.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2310,11 +2310,45 @@ index|]
 operator|==
 literal|'.'
 condition|)
+block|{
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+comment|/* directory "." */
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|cp
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* directory ".." */
+block|}
 if|if
 condition|(
 name|start
