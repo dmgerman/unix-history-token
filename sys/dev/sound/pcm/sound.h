@@ -246,16 +246,16 @@ directive|define
 name|USING_DEVFS
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|SND_DYNSYSCTL
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
