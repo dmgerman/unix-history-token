@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	7.5 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.27 93/04/20 11:20:38 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	7.6 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.28 93/04/27 14:40:44 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -122,6 +122,15 @@ modifier|*
 name|sc_dma
 decl_stmt|;
 comment|/* register virtual address */
+name|int
+name|sc_dmarev
+decl_stmt|;
+comment|/* revision */
+name|char
+modifier|*
+name|sc_dmafmt
+decl_stmt|;
+comment|/* format for error messages */
 block|}
 struct|;
 end_struct
@@ -958,6 +967,12 @@ argument_list|(
 literal|": rev 1\n"
 argument_list|)
 expr_stmt|;
+name|dsc
+operator|->
+name|sc_dmafmt
+operator|=
+name|DMA_REV1_BITS
+expr_stmt|;
 break|break;
 case|case
 name|DMAREV_2
@@ -967,17 +982,56 @@ argument_list|(
 literal|": rev 2\n"
 argument_list|)
 expr_stmt|;
+name|dsc
+operator|->
+name|sc_dmafmt
+operator|=
+name|DMA_REV2_BITS
+expr_stmt|;
+break|break;
+case|case
+name|DMAREV_3
+case|:
+name|printf
+argument_list|(
+literal|": rev 3\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"WARNING: esp.c not yet updated for rev 3\n"
+argument_list|)
+expr_stmt|;
+name|dsc
+operator|->
+name|sc_dmafmt
+operator|=
+name|DMA_REV3_BITS
+expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|": unknown revision %d\n"
+literal|": unknown revision code 0x%x\n"
 argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
+name|dsc
+operator|->
+name|sc_dmafmt
+operator|=
+name|DMA_REV3_BITS
+expr_stmt|;
+comment|/* cross fingers */
 break|break;
 block|}
+name|dsc
+operator|->
+name|sc_dmarev
+operator|=
+name|rev
+expr_stmt|;
 name|espdoattach
 argument_list|(
 name|dsc
@@ -1922,6 +1976,28 @@ name|sc_dmaactive
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dsc
+operator|->
+name|sc_dmarev
+operator|==
+name|DMAREV_2
+operator|&&
+name|sc
+operator|->
+name|sc_esptype
+operator|!=
+name|ESP100
+condition|)
+name|dma
+operator|->
+name|dma_csr
+operator||=
+name|DMA_TURBO
+expr_stmt|;
 name|dma
 operator|->
 name|dma_csr
@@ -2305,7 +2381,11 @@ name|sc
 operator|->
 name|sc_dmacsr
 argument_list|,
-name|DMA_BITS
+name|sc
+operator|->
+name|sc_dsc
+operator|->
+name|sc_dmafmt
 argument_list|,
 name|sc
 operator|->
