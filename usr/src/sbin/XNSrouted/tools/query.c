@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.6 (Berkeley) %G%"
+literal|"@(#)query.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,11 @@ name|sockaddr_ns
 name|myaddr
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|myaddr
+argument_list|)
+block|,
 name|AF_NS
 block|}
 decl_stmt|;
@@ -451,6 +456,11 @@ name|sockaddr_ns
 name|router
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|myaddr
+argument_list|)
+block|,
 name|AF_NS
 block|}
 decl_stmt|;
@@ -522,15 +532,45 @@ init|=
 operator|*
 name|argv
 decl_stmt|;
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|ns_addr
 name|specific
 decl_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-r"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|flags
+operator|=
+name|MSG_DONTROUTE
+expr_stmt|;
 name|argv
 operator|++
 expr_stmt|;
 name|argc
 operator|--
+expr_stmt|;
+block|}
+name|host
+operator|=
+operator|*
+name|argv
 expr_stmt|;
 name|router
 operator|.
@@ -688,7 +728,7 @@ expr|struct
 name|rip
 argument_list|)
 argument_list|,
-literal|0
+name|flags
 argument_list|,
 operator|&
 name|router
