@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	2.6 (Berkeley) %G%"
+literal|"@(#)langpats.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,17 +113,11 @@ block|,
 block|{
 literal|"0,_splhigh\n"
 block|,
-literal|"	mfpr	$18,r0\n\ 	mtpr	$0x18,$18\n"
-block|}
-block|,
-block|{
-literal|"0,_spl7\n"
-block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x1f,$18\n"
 block|}
 block|,
 block|{
-literal|"0,_splextreme\n"
+literal|"0,_spl7\n"
 block|,
 literal|"	mfpr	$18,r0\n\ 	mtpr	$0x1f,$18\n"
 block|}
