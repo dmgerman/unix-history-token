@@ -88,7 +88,7 @@ else|:
 name|DITEM_FAILURE
 operator|)
 operator||
-name|DITEM_RECREATE
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
