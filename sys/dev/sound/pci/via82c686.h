@@ -22,14 +22,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_MISC
+name|VIA_AC97STATUS
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIA_AC97STATUS_RDY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|VIA_ACLINKCTRL
 value|0x41
 end_define
 
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACLINKENAB
+name|VIA_ACLINK_EN
 value|0x80
 end_define
 
@@ -40,7 +54,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACNOTRST
+name|VIA_ACLINK_NRST
 value|0x40
 end_define
 
@@ -51,7 +65,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACSYNC
+name|VIA_ACLINK_SYNC
 value|0x20
 end_define
 
@@ -62,7 +76,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACVSR
+name|VIA_ACLINK_VSR
 value|0x08
 end_define
 
@@ -73,7 +87,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACSGD
+name|VIA_ACLINK_SGD
 value|0x04
 end_define
 
@@ -84,7 +98,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACFM
+name|VIA_ACLINK_FM
 value|0x02
 end_define
 
@@ -95,13 +109,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VIA_PCICONF_ACSB
+name|VIA_ACLINK_SB
 value|0x01
 end_define
 
 begin_comment
 comment|/* SB enab */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VIA_ACLINK_DESIRED
+value|(VIA_ACLINK_EN|VIA_ACLINK_NRST|VIA_ACLINK_VSR|VIA_ACLINK_SGD)
+end_define
 
 begin_define
 define|#
@@ -272,62 +293,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)<<16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_REG_EXT_AUDIO_ID
-value|0x28
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_CODEC_DOES_VRA
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_CODEC_DOES_MICVRA
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_REG_EXT_AUDIO_STAT
-value|0x2A
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_ENAB_VRA
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_ENAB_MICVRA
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_REG_EXT_DAC_RATE
-value|0x2C
-end_define
-
-begin_define
-define|#
-directive|define
-name|AC97_REG_EXT_ADC_RATE
-value|0x32
 end_define
 
 begin_endif
