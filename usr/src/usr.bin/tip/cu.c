@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cu.c	4.5 (Berkeley) %G%"
+literal|"@(#)cu.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,6 +445,11 @@ argument_list|)
 expr_stmt|;
 name|vinit
 argument_list|()
+expr_stmt|;
+name|setparity
+argument_list|(
+literal|"none"
+argument_list|)
 expr_stmt|;
 name|boolean
 argument_list|(

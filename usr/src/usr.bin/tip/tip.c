@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	4.15 (Berkeley) %G%"
+literal|"@(#)tip.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -519,7 +519,9 @@ argument_list|()
 expr_stmt|;
 comment|/* init variables */
 name|setparity
-argument_list|()
+argument_list|(
+literal|"even"
+argument_list|)
 expr_stmt|;
 comment|/* set the parity table */
 if|if
@@ -2230,8 +2232,17 @@ end_comment
 
 begin_macro
 name|setparity
-argument_list|()
+argument_list|(
+argument|defparity
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|defparity
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2262,7 +2273,7 @@ argument_list|(
 name|PARITY
 argument_list|)
 operator|=
-literal|"even"
+name|defparity
 expr_stmt|;
 name|parity
 operator|=
