@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.36 (Berkeley) %G%"
+literal|"@(#)conf.c	6.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4481,16 +4481,17 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-argument|LOCK_EX
+name|LOCK_EX
 argument_list|,
-argument|type
+name|type
 argument_list|)
+condition|)
 name|lfd
 operator|.
 name|l_type
 operator|=
 name|F_WRLCK
-empty_stmt|;
+expr_stmt|;
 else|else
 name|lfd
 operator|.
