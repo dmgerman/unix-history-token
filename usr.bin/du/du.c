@@ -161,6 +161,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|kflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -222,6 +228,8 @@ name|argv
 expr_stmt|;
 name|aflag
 operator|=
+name|kflag
+operator|=
 name|sflag
 operator|=
 literal|0
@@ -237,7 +245,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"asx"
+literal|"aksx"
 argument_list|)
 operator|)
 operator|!=
@@ -252,6 +260,14 @@ case|case
 literal|'a'
 case|:
 name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|kflag
 operator|=
 literal|1
 expr_stmt|;

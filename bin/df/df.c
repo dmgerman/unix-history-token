@@ -204,6 +204,8 @@ begin_decl_stmt
 name|int
 name|iflag
 decl_stmt|,
+name|kflag
+decl_stmt|,
 name|nflag
 decl_stmt|;
 end_decl_stmt
@@ -261,6 +263,14 @@ name|char
 modifier|*
 name|mntpt
 decl_stmt|;
+name|iflag
+operator|=
+name|kflag
+operator|=
+name|nflag
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -272,7 +282,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"in"
+literal|"ikn"
 argument_list|)
 operator|)
 operator|!=
@@ -287,6 +297,14 @@ case|case
 literal|'i'
 case|:
 name|iflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|kflag
 operator|=
 literal|1
 expr_stmt|;
