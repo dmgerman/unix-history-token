@@ -8,6 +8,10 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/yylex.c,v 2.13 95/03/04 16:10:41 vern Exp $ */
+end_comment
+
+begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 

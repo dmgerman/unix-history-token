@@ -8,6 +8,10 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/tblcmp.c,v 2.11 94/11/05 17:08:28 vern Exp $ */
+end_comment
+
+begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 

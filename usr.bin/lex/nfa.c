@@ -8,6 +8,10 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/nfa.c,v 2.17 95/03/04 16:11:42 vern Exp $ */
+end_comment
+
+begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
