@@ -13559,6 +13559,17 @@ modifier|*
 name|adapter
 parameter_list|)
 block|{
+comment|/* 	 * The first version of 82542 had an errata where when link was forced it 	 * would stay up even up even if the cable was disconnected.  Sequence errors 	 * were used to detect the disconnect and then the driver would unforce the link. 	 * This code in the in the ISR.  For this to work correctly the Sequence error  	 * interrupt had to be enabled all the time. 	 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|==
+name|em_82542_rev2_0
+condition|)
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
@@ -13574,6 +13585,19 @@ operator|&
 operator|~
 name|E1000_IMC_RXSEQ
 operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|IMC
+argument_list|,
+literal|0xffffffff
 argument_list|)
 expr_stmt|;
 return|return;
