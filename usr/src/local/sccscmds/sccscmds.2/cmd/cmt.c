@@ -21,7 +21,7 @@ operator|)
 name|cmt
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1724,9 +1724,11 @@ condition|)
 block|{
 name|p
 operator|=
-name|strend
+name|index
 argument_list|(
 name|line
+argument_list|,
+literal|'\0'
 argument_list|)
 expr_stmt|;
 if|if

@@ -21,7 +21,7 @@ operator|)
 name|snull
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -912,7 +912,7 @@ name|Dhead
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|newp
 argument_list|,
@@ -946,7 +946,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|New_ser_ptr
 argument_list|,
@@ -1055,7 +1055,7 @@ name|dt
 operator|.
 name|d_datetime
 expr_stmt|;
-name|move
+name|bcopy
 argument_list|(
 operator|&
 name|dt
@@ -1563,7 +1563,7 @@ name|Dhead
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|nulldel
 argument_list|,
@@ -2274,7 +2274,7 @@ name|struct
 name|deltab
 name|dt
 decl_stmt|;
-name|move
+name|bcopy
 argument_list|(
 operator|&
 name|ptr
@@ -2318,7 +2318,7 @@ name|ptr
 operator|->
 name|ds_datetime
 expr_stmt|;
-name|move
+name|bcopy
 argument_list|(
 name|ptr
 operator|->

@@ -29,7 +29,7 @@ operator|)
 name|scv
 operator|.
 name|c
-literal|4.4
+literal|4.5
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -830,7 +830,7 @@ literal|'p'
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 operator|&
 name|opkt
@@ -1692,7 +1692,7 @@ name|brp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 name|brp
 argument_list|,
@@ -2272,7 +2272,7 @@ argument_list|(
 literal|"not an SCCS file (53)"
 argument_list|)
 expr_stmt|;
-name|move
+name|bcopy
 argument_list|(
 name|hdr
 argument_list|,
@@ -2386,7 +2386,7 @@ name|rlp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|zero
+name|bzero
 argument_list|(
 operator|*
 name|rlp
@@ -2610,7 +2610,7 @@ name|odt
 operator|->
 name|Dtype
 expr_stmt|;
-name|move
+name|bcopy
 argument_list|(
 name|odt
 operator|->
@@ -2782,18 +2782,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|move
+name|bcopy
 argument_list|(
 name|odt
 operator|->
 name|Dhist
 argument_list|,
-name|strend
+name|index
 argument_list|(
 name|hists
 index|[
 name|ndels
 index|]
+argument_list|,
+literal|'\0'
 argument_list|)
 argument_list|,
 name|n

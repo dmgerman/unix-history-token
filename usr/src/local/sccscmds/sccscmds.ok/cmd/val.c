@@ -359,7 +359,7 @@ operator|)
 name|val
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2174,7 +2174,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|zero
+name|bzero
 argument_list|(
 name|pkt
 argument_list|,

@@ -21,7 +21,7 @@ operator|)
 name|stree
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -585,7 +585,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|zero
+name|bzero
 argument_list|(
 name|tree
 argument_list|,
@@ -623,7 +623,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|zero
+name|bzero
 argument_list|(
 name|pos
 argument_list|,

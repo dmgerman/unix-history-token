@@ -21,7 +21,7 @@ operator|)
 name|rmchg
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -625,7 +625,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	Save requested SID for later checking of 	permissions (by 'permiss'). 	*/
-name|move
+name|bcopy
 argument_list|(
 operator|&
 name|sid
@@ -697,7 +697,7 @@ literal|"nonexistent sid (rc3)"
 argument_list|)
 expr_stmt|;
 comment|/* 	Replace 'sid' with original 'sid' 	requested. 	*/
-name|move
+name|bcopy
 argument_list|(
 operator|&
 name|gpkt
