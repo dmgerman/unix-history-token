@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.21 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -633,7 +633,7 @@ name|t
 init|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)
@@ -2122,6 +2122,31 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_gid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setlogname
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|,
+name|strlen
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"setlogname() failed: %m"
 argument_list|)
 expr_stmt|;
 operator|(
