@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	6.3	84/01/11	*/
+comment|/*	ip_icmp.c	6.4	84/01/31	*/
 end_comment
 
 begin_include
@@ -590,12 +590,6 @@ if|if
 condition|(
 name|icmplen
 operator|<
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-operator|+
 name|ICMP_MINLEN
 condition|)
 block|{
