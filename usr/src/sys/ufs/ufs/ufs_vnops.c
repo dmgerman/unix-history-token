@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.112.1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.118 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5647,7 +5647,7 @@ name|dmode
 operator||=
 name|IFDIR
 expr_stmt|;
-comment|/* 	 * Must simulate part of maknode here to acquire the inode, but 	 * not have it entered in the parent directory. The entry is made 	 * later after writing "." and ".." entries. 	 */
+comment|/* 	 * Must simulate part of ufs_makeinode here to acquire the inode, 	 * but not have it entered in the parent directory. The entry is 	 * made later after writing "." and ".." entries. 	 */
 if|if
 condition|(
 name|error
@@ -9273,6 +9273,33 @@ argument_list|)
 expr_stmt|;
 name|ip
 operator|->
+name|i_gid
+operator|=
+name|pdir
+operator|->
+name|i_gid
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFLNK
+condition|)
+name|ip
+operator|->
+name|i_uid
+operator|=
+name|pdir
+operator|->
+name|i_uid
+expr_stmt|;
+else|else
+name|ip
+operator|->
 name|i_uid
 operator|=
 name|cnp
@@ -9280,14 +9307,6 @@ operator|->
 name|cn_cred
 operator|->
 name|cr_uid
-expr_stmt|;
-name|ip
-operator|->
-name|i_gid
-operator|=
-name|pdir
-operator|->
-name|i_gid
 expr_stmt|;
 ifdef|#
 directive|ifdef
