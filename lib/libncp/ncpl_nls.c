@@ -1282,13 +1282,13 @@ name|i
 decl_stmt|;
 name|ncp_nls
 operator|.
-name|tolower
+name|to_lower
 operator|=
 name|def2lower
 expr_stmt|;
 name|ncp_nls
 operator|.
-name|toupper
+name|to_upper
 operator|=
 name|def2upper
 expr_stmt|;
@@ -1333,7 +1333,7 @@ control|)
 block|{
 name|ncp_nls
 operator|.
-name|tolower
+name|to_lower
 index|[
 name|i
 index|]
@@ -1345,7 +1345,7 @@ argument_list|)
 expr_stmt|;
 name|ncp_nls
 operator|.
-name|toupper
+name|to_upper
 index|[
 name|i
 index|]
