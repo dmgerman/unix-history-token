@@ -1122,6 +1122,23 @@ operator|&
 name|BIO_ERROR
 condition|)
 block|{
+comment|/* 	 * XXX For some reason, the disklabel seems to get zero'd out.  This 	 * will cause diskerr to panic unless we pass in -1 as the blkno. 	 */
+name|int
+name|blkno
+init|=
+operator|(
+name|sc
+operator|->
+name|ad_label
+operator|.
+name|d_nsectors
+operator|)
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
+decl_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
@@ -1139,7 +1156,7 @@ name|bp
 operator|->
 name|bio_driver1
 argument_list|,
-literal|0
+name|blkno
 argument_list|,
 operator|&
 name|sc
@@ -1163,8 +1180,7 @@ name|bio_driver1
 argument_list|,
 literal|0
 argument_list|,
-operator|-
-literal|1
+name|blkno
 argument_list|,
 operator|&
 name|sc
