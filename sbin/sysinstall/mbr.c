@@ -288,9 +288,6 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-name|int
-name|flag
-decl_stmt|;
 if|if
 condition|(
 name|lseek
@@ -347,6 +344,20 @@ operator|*
 name|NDOSPART
 argument_list|)
 expr_stmt|;
+name|buf
+index|[
+literal|510
+index|]
+operator|=
+literal|0x55
+expr_stmt|;
+name|buf
+index|[
+literal|511
+index|]
+operator|=
+literal|0xaa
+expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -363,30 +374,12 @@ literal|1
 condition|)
 name|AskAbort
 argument_list|(
-literal|"Couldn't seek for master boot record read\n"
+literal|"Couldn't seek for master boot record write\n"
 argument_list|)
 expr_stmt|;
-name|flag
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
+name|enable_label
 argument_list|(
 name|fd
-argument_list|,
-name|DIOCWLABEL
-argument_list|,
-operator|&
-name|flag
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|AskAbort
-argument_list|(
-literal|"Couldn't enable writing of labels"
 argument_list|)
 expr_stmt|;
 if|if
@@ -407,27 +400,9 @@ argument_list|(
 literal|"Failed to write master boot record\n"
 argument_list|)
 expr_stmt|;
-name|flag
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
+name|disable_label
 argument_list|(
 name|fd
-argument_list|,
-name|DIOCWLABEL
-argument_list|,
-operator|&
-name|flag
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|AskAbort
-argument_list|(
-literal|"Couldn't disable writing of labels"
 argument_list|)
 expr_stmt|;
 block|}
