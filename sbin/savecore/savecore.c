@@ -3212,6 +3212,9 @@ block|}
 name|spacefree
 operator|=
 operator|(
+operator|(
+name|off_t
+operator|)
 name|fsbuf
 operator|.
 name|f_bavail
