@@ -444,11 +444,13 @@ name|defined
 name|__sparc64__
 end_elif
 
-begin_error
-error|#
-directive|error
-literal|"Sorry, but maintainer is ignorant about sparc64 :)"
-end_error
+begin_define
+define|#
+directive|define
+name|MEMORY_BARRIER
+parameter_list|()
+value|__asm__ volatile("membar #Sync" : : : "memory")
+end_define
 
 begin_else
 else|#
@@ -2847,7 +2849,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*__i386__*/
+comment|/*__i386__, __sparc64__*/
 end_comment
 
 begin_define
@@ -4682,7 +4684,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*__i386__*/
+comment|/*__i386__, __sparc64__*/
 end_comment
 
 begin_define
@@ -37565,14 +37567,11 @@ name|np
 operator|->
 name|targtbl_ba
 operator|=
-name|cpu_to_scr
-argument_list|(
 name|vtobus
 argument_list|(
 name|np
 operator|->
 name|targtbl
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Allocate SCRIPTS areas. 	 */
