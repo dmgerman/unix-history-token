@@ -727,6 +727,13 @@ name|ip6_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_fw_enable
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

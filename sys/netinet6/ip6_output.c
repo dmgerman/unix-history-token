@@ -203,22 +203,11 @@ directive|include
 file|<net/net_osdep.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ip6_fw.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 specifier|static
@@ -2992,12 +2981,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
+name|ip6_fw_enable
+operator|&&
 name|ip6_fw_chk_ptr
 condition|)
 block|{
@@ -3060,8 +3048,6 @@ name|done
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * If the outgoing packet contains a hop-by-hop options header, 	 * it must be examined and processed even by the source node. 	 * (RFC 2460, section 4.) 	 */
 if|if
 condition|(
@@ -5458,9 +5444,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
 case|case
 name|IPV6_FW_ADD
 case|:
@@ -5551,8 +5534,6 @@ name|mp
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=
@@ -6004,9 +5985,6 @@ block|}
 endif|#
 directive|endif
 comment|/* IPSEC */
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
 case|case
 name|IPV6_FW_GET
 case|:
@@ -6075,8 +6053,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
 default|default:
 name|error
 operator|=

@@ -234,22 +234,11 @@ directive|include
 file|<netinet6/in6_prefix.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ip6_fw.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -367,12 +356,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
-end_ifdef
-
 begin_comment
 comment|/* firewall hooks */
 end_comment
@@ -391,10 +374,13 @@ name|ip6_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|int
+name|ip6_fw_enable
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -623,14 +609,6 @@ expr_stmt|;
 name|frag6_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
-name|ip6_fw_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * in many cases, random() here does NOT return random number 	 * as initialization during bootstrap time occur in fixed order. 	 */
 name|microtime
 argument_list|(
@@ -1126,12 +1104,11 @@ name|ip6_nxt
 index|]
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPV6FIREWALL
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
+name|ip6_fw_enable
+operator|&&
 name|ip6_fw_chk_ptr
 condition|)
 block|{
@@ -1179,8 +1156,6 @@ name|m
 condition|)
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Scope check 	 */
 if|if
 condition|(
