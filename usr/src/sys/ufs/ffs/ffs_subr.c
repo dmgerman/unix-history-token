@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ffs_subr.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -994,6 +994,9 @@ name|mask
 decl_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_frag
@@ -1163,8 +1166,9 @@ block|{
 switch|switch
 condition|(
 operator|(
-name|fs
+name|int
 operator|)
+name|fs
 operator|->
 name|fs_frag
 condition|)
@@ -1305,6 +1309,9 @@ begin_block
 block|{
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_frag
