@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lomacio.h>
+file|<security/lomac/lomacio.h>
 end_include
 
 begin_include
