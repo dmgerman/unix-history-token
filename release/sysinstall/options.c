@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: options.c,v 1.14 1995/10/19 15:55:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: options.c,v 1.15 1995/10/19 18:37:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -42,10 +42,10 @@ argument_list|(
 name|OPT_FTP_RESELECT
 argument_list|)
 condition|)
-name|OptFlags
-operator|&=
-operator|~
+name|optionUnset
+argument_list|(
 name|OPT_FTP_RESELECT
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -64,10 +64,10 @@ argument_list|(
 name|OPT_FTP_ABORT
 argument_list|)
 condition|)
-name|OptFlags
-operator|&=
-operator|~
+name|optionUnset
+argument_list|(
 name|OPT_FTP_ABORT
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -196,6 +196,19 @@ name|DEVICE_TYPE_NFS
 case|:
 return|return
 literal|"NFS"
+return|;
+case|case
+name|DEVICE_TYPE_NONE
+case|:
+case|case
+name|DEVICE_TYPE_NETWORK
+case|:
+case|case
+name|DEVICE_TYPE_ANY
+case|:
+default|default:
+return|return
+literal|"<unknown>"
 return|;
 block|}
 block|}
@@ -425,7 +438,7 @@ name|varCheck
 block|}
 block|,
 block|{
-literal|"Media"
+literal|"Media Type"
 block|,
 literal|"The current installation media type."
 block|,
@@ -507,6 +520,22 @@ name|OptFlags
 operator|&
 name|opt
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|optionUnset
+parameter_list|(
+name|int
+name|opt
+parameter_list|)
+block|{
+name|OptFlags
+operator|&=
+operator|~
+name|opt
+expr_stmt|;
 block|}
 end_function
 
@@ -1167,6 +1196,9 @@ continue|continue;
 case|case
 literal|' '
 case|:
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|fire
 argument_list|(
 name|Options
@@ -1175,10 +1207,10 @@ name|currOpt
 index|]
 argument_list|)
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_clear
+name|clear
 argument_list|()
 expr_stmt|;
 continue|continue;
