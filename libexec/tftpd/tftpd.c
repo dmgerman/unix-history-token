@@ -409,6 +409,12 @@ name|passwd
 modifier|*
 name|nobody
 decl_stmt|;
+name|char
+modifier|*
+name|chuser
+init|=
+literal|"nobody"
+decl_stmt|;
 name|openlog
 argument_list|(
 literal|"tftpd"
@@ -431,7 +437,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lns:"
+literal|"lns:u:"
 argument_list|)
 operator|)
 operator|!=
@@ -464,6 +470,14 @@ case|case
 literal|'s'
 case|:
 name|chroot_dir
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|chuser
 operator|=
 name|optarg
 expr_stmt|;
@@ -804,7 +818,7 @@ name|nobody
 operator|=
 name|getpwnam
 argument_list|(
-literal|"nobody"
+name|chuser
 argument_list|)
 operator|)
 operator|==
@@ -815,7 +829,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"nobody: no such user"
+literal|"%s: no such user"
+argument_list|,
+name|chuser
 argument_list|)
 expr_stmt|;
 name|exit
