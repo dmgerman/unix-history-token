@@ -485,13 +485,6 @@ begin_struct
 struct|struct
 name|fxp_cb_nop
 block|{
-name|void
-modifier|*
-name|fill
-index|[
-literal|2
-index|]
-decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|cb_status
@@ -512,13 +505,6 @@ begin_struct
 struct|struct
 name|fxp_cb_ias
 block|{
-name|void
-modifier|*
-name|fill
-index|[
-literal|2
-index|]
-decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|cb_status
@@ -550,13 +536,6 @@ begin_struct
 struct|struct
 name|fxp_cb_config
 block|{
-name|void
-modifier|*
-name|fill
-index|[
-literal|2
-index|]
-decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|cb_status
@@ -977,16 +956,6 @@ begin_struct
 struct|struct
 name|fxp_cb_mcs
 block|{
-name|struct
-name|fxp_cb_tx
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|mb_head
-decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|cb_status
@@ -1028,13 +997,6 @@ begin_struct
 struct|struct
 name|fxp_cb_ucode
 block|{
-name|void
-modifier|*
-name|fill
-index|[
-literal|2
-index|]
-decl_stmt|;
 name|u_int16_t
 name|cb_status
 decl_stmt|;
@@ -1055,25 +1017,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Number of DMA segments in a TxCB. Note that this is carefully  * chosen to make the total struct size an even power of two. It's  * critical that no TxCB be split across a page boundry since  * no attempt is made to allocate physically contiguous memory.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FXP_TXCB_FIXED
-value|16
-end_define
-
-begin_comment
-comment|/* cb_status .. tbd_number */
+comment|/*  * Number of DMA segments in a TxCB.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FXP_NTXSEG
-value|((256 - (sizeof(void *) * 2) - FXP_TXCB_FIXED) / 8)
+value|32
 end_define
 
 begin_struct
@@ -1129,16 +1080,6 @@ begin_struct
 struct|struct
 name|fxp_cb_tx
 block|{
-name|struct
-name|fxp_cb_tx
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|mb_head
-decl_stmt|;
 specifier|volatile
 name|u_int16_t
 name|cb_status

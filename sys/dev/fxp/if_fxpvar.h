@@ -19,6 +19,34 @@ value|128
 end_define
 
 begin_comment
+comment|/*  * Size of the TxCB list.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_TXCB_SZ
+value|(FXP_NTXCB * sizeof(struct fxp_cb_tx))
+end_define
+
+begin_comment
+comment|/*  * Macro to obtain the DMA address of a virtual address in the  * TxCB list based on the base DMA address of the TxCB list.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_TXCB_DMA_ADDR
+parameter_list|(
+name|sc
+parameter_list|,
+name|addr
+parameter_list|)
+define|\
+value|(sc->fxp_desc.cbl_addr + (uintptr_t)addr -			\ 	(uintptr_t)sc->fxp_desc.cbl_list)
+end_define
+
+begin_comment
 comment|/*  * Number of completed TX commands at which point an interrupt  * will be generated to garbage collect the attached buffers.  * Must be at least one less than FXP_NTXCB, and should be  * enough less so that the transmitter doesn't becomes idle  * during the buffer rundown (which would reduce performance).  */
 end_comment
 
@@ -198,36 +226,121 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|vtophys
-end_undef
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)(va))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* __alpha__ */
+comment|/*  * Structures to handle TX and RX descriptors.  */
 end_comment
+
+begin_struct
+struct|struct
+name|fxp_rx
+block|{
+name|struct
+name|fxp_rx
+modifier|*
+name|rx_next
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|rx_mbuf
+decl_stmt|;
+name|bus_dmamap_t
+name|rx_map
+decl_stmt|;
+name|u_int32_t
+name|rx_addr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|fxp_tx
+block|{
+name|struct
+name|fxp_tx
+modifier|*
+name|tx_next
+decl_stmt|;
+name|struct
+name|fxp_cb_tx
+modifier|*
+name|tx_cb
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|tx_mbuf
+decl_stmt|;
+name|bus_dmamap_t
+name|tx_map
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|fxp_desc_list
+block|{
+name|struct
+name|fxp_rx
+name|rx_list
+index|[
+name|FXP_NRFABUFS
+index|]
+decl_stmt|;
+name|struct
+name|fxp_tx
+name|tx_list
+index|[
+name|FXP_NTXCB
+index|]
+decl_stmt|;
+name|struct
+name|fxp_tx
+name|mcs_tx
+decl_stmt|;
+name|struct
+name|fxp_rx
+modifier|*
+name|rx_head
+decl_stmt|;
+name|struct
+name|fxp_rx
+modifier|*
+name|rx_tail
+decl_stmt|;
+name|struct
+name|fxp_tx
+modifier|*
+name|tx_first
+decl_stmt|;
+name|struct
+name|fxp_tx
+modifier|*
+name|tx_last
+decl_stmt|;
+name|struct
+name|fxp_rfa
+modifier|*
+name|rfa_list
+decl_stmt|;
+name|struct
+name|fxp_cb_tx
+modifier|*
+name|cbl_list
+decl_stmt|;
+name|u_int32_t
+name|cbl_addr
+decl_stmt|;
+name|bus_dma_tag_t
+name|rx_tag
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * NOTE: Elements are ordered for optimal cacheline behavior, and NOT  *	 for functional grouping.  */
@@ -279,24 +392,43 @@ name|bus_space_handle_t
 name|sc_sh
 decl_stmt|;
 comment|/* bus space handle */
-name|struct
-name|mbuf
-modifier|*
-name|rfa_headm
+name|bus_dma_tag_t
+name|fxp_mtag
 decl_stmt|;
-comment|/* first mbuf in receive frame area */
-name|struct
-name|mbuf
-modifier|*
-name|rfa_tailm
+comment|/* bus DMA tag for mbufs */
+name|bus_dma_tag_t
+name|fxp_stag
 decl_stmt|;
-comment|/* last mbuf in receive frame area */
-name|struct
-name|fxp_cb_tx
-modifier|*
-name|cbl_first
+comment|/* bus DMA tag for stats */
+name|bus_dmamap_t
+name|fxp_smap
 decl_stmt|;
-comment|/* first active TxCB in list */
+comment|/* bus DMA map for stats */
+name|bus_dma_tag_t
+name|cbl_tag
+decl_stmt|;
+comment|/* DMA tag for the TxCB list */
+name|bus_dmamap_t
+name|cbl_map
+decl_stmt|;
+comment|/* DMA map for the TxCB list */
+name|bus_dma_tag_t
+name|mcs_tag
+decl_stmt|;
+comment|/* DMA tag for the multicast setup */
+name|bus_dmamap_t
+name|mcs_map
+decl_stmt|;
+comment|/* DMA map for the multicast setup */
+name|bus_dmamap_t
+name|spare_map
+decl_stmt|;
+comment|/* spare DMA map */
+name|struct
+name|fxp_desc_list
+name|fxp_desc
+decl_stmt|;
+comment|/* descriptors management struct */
 name|int
 name|tx_queued
 decl_stmt|;
@@ -306,17 +438,15 @@ name|need_mcsetup
 decl_stmt|;
 comment|/* multicast filter needs programming */
 name|struct
-name|fxp_cb_tx
-modifier|*
-name|cbl_last
-decl_stmt|;
-comment|/* last active TxCB in list */
-name|struct
 name|fxp_stats
 modifier|*
 name|fxp_stats
 decl_stmt|;
 comment|/* Pointer to interface stats */
+name|u_int32_t
+name|stats_addr
+decl_stmt|;
+comment|/* DMA address of the stats structure */
 name|int
 name|rx_idle_secs
 decl_stmt|;
@@ -327,17 +457,15 @@ name|stat_ch
 decl_stmt|;
 comment|/* Handle for canceling our stat timeout */
 name|struct
-name|fxp_cb_tx
-modifier|*
-name|cbl_base
-decl_stmt|;
-comment|/* base of TxCB list */
-name|struct
 name|fxp_cb_mcs
 modifier|*
 name|mcsp
 decl_stmt|;
 comment|/* Pointer to mcast setup descriptor */
+name|u_int32_t
+name|mcs_addr
+decl_stmt|;
+comment|/* DMA address of the multicast cmd */
 name|struct
 name|ifmedia
 name|sc_media
