@@ -278,6 +278,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 name|void
 name|auth_encrypt_connect
