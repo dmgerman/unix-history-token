@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtio.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mtio.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -381,6 +381,28 @@ end_define
 
 begin_comment
 comment|/* M4 Data 1/2 9track drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISTK50
+value|0x12
+end_define
+
+begin_comment
+comment|/* DEC SCSI TK50 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISMT02
+value|0x13
+end_define
+
+begin_comment
+comment|/* Emulex MT02 SCSI tape controller */
 end_comment
 
 begin_comment
