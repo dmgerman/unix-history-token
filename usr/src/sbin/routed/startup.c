@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.15 (Berkeley) %G%"
+literal|"@(#)startup.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -1627,7 +1633,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/gateways"
+name|_PATH_GATEWAYS
 argument_list|,
 literal|"r"
 argument_list|)
