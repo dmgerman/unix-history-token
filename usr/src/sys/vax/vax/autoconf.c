@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.7	84/08/28	*/
+comment|/*	autoconf.c	6.8	85/03/07	*/
 end_comment
 
 begin_comment
@@ -634,7 +634,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|VAX_750
+name|VAX750
 if|if
 condition|(
 name|numuba
@@ -2233,6 +2233,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * First configure devices that have unibus memory, 	 * allowing them to allocate the correct map registers. 	 */
+name|ubameminit
+argument_list|(
+name|numuba
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Grab some memory to record the umem address space we allocate, 	 * so we can be sure not to place two devices at the same address. 	 * 	 * We could use just 1/8 of this (we only want a 1 bit flag) but 	 * we are going to give it back anyway, and that would make the 	 * code here bigger (which we can't give back), so ... 	 * 	 * One day, someone will make a unibus with something other than 	 * an 8K i/o address space,& screw this totally. 	 */
 name|ualloc
 operator|=
@@ -2429,6 +2435,8 @@ argument_list|,
 name|um
 operator|->
 name|um_ctlr
+argument_list|,
+name|um
 argument_list|)
 expr_stmt|;
 if|#
@@ -2942,6 +2950,8 @@ name|ud_probe
 call|)
 argument_list|(
 name|reg
+argument_list|,
+name|ui
 argument_list|)
 expr_stmt|;
 if|#
