@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.c	5.8 (Berkeley) 5/12/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         3       00097  * --------------------         -----   ----------------------  *  * 10 Feb 93	Jordan K. Hubbard	Added select entry for com driver  * 10 Feb 93    Julian Elischer		Add empty table entries  *					so we can allocate numbers  * 15 Feb 93    Julian Elischer		Add basic SCSI device entries  * 16 Feb 93    Julian Elischer		add entries for scsi media changer  * 01 Mar 93	Jordan K. Hubbard	Reserve major numbers for codrv, fd, bpf  * 10 Mar 83	Rodney W. Grimes	General clean up of the above patches  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.c	5.8 (Berkeley) 5/12/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         4       00135  * --------------------         -----   ----------------------  *  * 10 Feb 93	Jordan K. Hubbard	Added select entry for com driver  * 10 Feb 93    Julian Elischer		Add empty table entries  *					so we can allocate numbers  * 15 Feb 93    Julian Elischer		Add basic SCSI device entries  * 16 Feb 93    Julian Elischer		add entries for scsi media changer  * 01 Mar 93	Jordan K. Hubbard	Reserve major numbers for codrv, fd, bpf  * 10 Mar 83	Rodney W. Grimes	General clean up of the above patches  * 06 Apr 93	Rodney W. Grimes	Fixed NLPT for LPA driver case, added  *					spkr, dcfclock  */
 end_comment
 
 begin_decl_stmt
@@ -984,7 +984,7 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/*  * If you need a bdev major number, please contact the 386bsd patchkit  * coordinator by sending mail to "patches@whisker.lotus.ie".   * If you assign one yourself it may conflict with someone else.  */
+comment|/*  * If you need a bdev major number, please contact the 386bsd patchkit  * coordinator by sending mail to "patches@cs.montana.edu".   * If you assign one yourself it may conflict with someone else.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1567,13 +1567,91 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"dcfclk.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NDCFCLK
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|dcfclkopen
+argument_list|()
+decl_stmt|,
+name|dcfclkclose
+argument_list|()
+decl_stmt|,
+name|dcfclkread
+argument_list|()
+decl_stmt|,
+name|dcfclkioctl
+argument_list|()
+decl_stmt|,
+name|dcfclkselect
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dcfclkopen
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dcfclkclose
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dcfclkread
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dcfclkioctl
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|dcfclkselect
+value|enxio
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"lpa.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NLPT
+name|NLPA
 operator|>
 literal|0
 end_if
@@ -1632,6 +1710,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"speaker.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSPEAKER
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|spkropen
+argument_list|()
+decl_stmt|,
+name|spkrclose
+argument_list|()
+decl_stmt|,
+name|spkrwrite
+argument_list|()
+decl_stmt|,
+name|spkrioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|spkropen
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spkrclose
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spkrwrite
+value|enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spkrioctl
+value|enxio
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|cdevsw
@@ -1657,6 +1803,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* console */
 name|cnselect
 block|,
 name|enodev
@@ -1682,6 +1829,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* tty */
 name|cttyselect
 block|,
 name|enodev
@@ -1707,6 +1855,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* memory */
 name|mmselect
 block|,
 name|enodev
@@ -1732,6 +1881,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* wd */
 name|seltrue
 block|,
 name|enodev
@@ -1757,6 +1907,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* swap */
 name|enodev
 block|,
 name|enodev
@@ -1782,6 +1933,7 @@ name|nullop
 block|,
 name|pt_tty
 block|,
+comment|/* ttyp */
 name|ttselect
 block|,
 name|enodev
@@ -1807,6 +1959,7 @@ name|nullop
 block|,
 name|pt_tty
 block|,
+comment|/* ptyp */
 name|ptcselect
 block|,
 name|enodev
@@ -1832,6 +1985,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* klog */
 name|logselect
 block|,
 name|enodev
@@ -1857,6 +2011,7 @@ name|comreset
 block|,
 name|com_tty
 block|,
+comment|/* com */
 name|comselect
 block|,
 name|enodev
@@ -1908,6 +2063,7 @@ name|nullop
 block|,
 name|NULL
 block|,
+comment|/* wt */
 name|seltrue
 block|,
 name|enodev
@@ -1959,6 +2115,7 @@ block|,
 operator|&
 name|pccons
 block|,
+comment|/* vga */
 name|ttselect
 block|,
 name|pcmmap
@@ -1989,7 +2146,7 @@ name|nullop
 block|,
 name|NULL
 block|,
-comment|/* scsi disk */
+comment|/* sd */
 name|seltrue
 block|,
 name|enodev
@@ -2018,7 +2175,7 @@ name|nullop
 block|,
 name|NULL
 block|,
-comment|/* scsi disk */
+comment|/* as */
 name|seltrue
 block|,
 name|enodev
@@ -2047,7 +2204,7 @@ name|nullop
 block|,
 name|NULL
 block|,
-comment|/* scsi tape */
+comment|/* st */
 name|seltrue
 block|,
 name|enodev
@@ -2073,7 +2230,7 @@ name|nullop
 block|,
 name|NULL
 block|,
-comment|/* scsi cdrom */
+comment|/* cd */
 name|seltrue
 block|,
 name|enodev
@@ -2125,7 +2282,7 @@ name|enxio
 block|,
 name|NULL
 block|,
-comment|/* scsi 'changer'*/
+comment|/* ch */
 name|enxio
 block|,
 name|enxio
@@ -2290,28 +2447,29 @@ name|NULL
 block|}
 block|,
 block|{
-name|enxio
+name|dcfclkopen
 block|,
-name|enxio
+name|dcfclkclose
 block|,
-name|enxio
+name|dcfclkread
 block|,
-name|enxio
+name|enodev
 block|,
 comment|/*24*/
-name|enxio
+name|dcfclkioctl
 block|,
-name|enxio
+name|enodev
 block|,
-name|enxio
+name|nullop
 block|,
 name|NULL
 block|,
-name|enxio
+comment|/* dcfclk */
+name|dcfclkselect
 block|,
-name|enxio
+name|enodev
 block|,
-name|enxio
+name|NULL
 block|}
 block|,
 block|{
@@ -2340,7 +2498,33 @@ block|,
 name|enodev
 block|}
 block|,
-comment|/*  * If you need a cdev major number, please contact the 386bsd patchkit   * coordinator by sending mail to "patches@whisker.lotus.ie".  * If you assign one yourself it may then conflict with someone else.  */
+block|{
+name|spkropen
+block|,
+name|spkrclose
+block|,
+name|enxio
+block|,
+name|spkrwrite
+block|,
+comment|/*26*/
+name|spkrioctl
+block|,
+name|enxio
+block|,
+name|enxio
+block|,
+name|NULL
+block|,
+comment|/* spkr */
+name|enxio
+block|,
+name|enxio
+block|,
+name|enxio
+block|}
+block|,
+comment|/*  * If you need a cdev major number, please contact the 386bsd patchkit   * coordinator by sending mail to "patches@cs.montana.edu".  * If you assign one yourself it may then conflict with someone else.  */
 block|}
 decl_stmt|;
 end_decl_stmt
