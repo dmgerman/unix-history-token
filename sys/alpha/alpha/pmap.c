@@ -1887,9 +1887,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|int
-name|initial_pvs
-decl_stmt|;
 comment|/* 	 * Allocate memory for random pmap data structures.  Includes the 	 * pv_head_table. 	 */
 for|for
 control|(
@@ -1936,20 +1933,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * init the pv free list 	 */
-name|initial_pvs
-operator|=
-name|vm_page_array_size
-expr_stmt|;
-if|if
-condition|(
-name|initial_pvs
-operator|<
-name|MINPV
-condition|)
-name|initial_pvs
-operator|=
-name|MINPV
-expr_stmt|;
 name|pvzone
 operator|=
 name|uma_zcreate
@@ -1981,7 +1964,7 @@ name|uma_prealloc
 argument_list|(
 name|pvzone
 argument_list|,
-name|initial_pvs
+name|MINPV
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
