@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chflags.c	8.3 (Berkeley) %G%"
+literal|"@(#)chflags.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,11 +521,6 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|FTS_DC
-case|:
-comment|/* Ignore. */
-continue|continue;
 case|case
 name|FTS_DNR
 case|:
