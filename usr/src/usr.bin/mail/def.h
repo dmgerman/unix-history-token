@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)def.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)def.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1193,7 +1193,7 @@ name|trunc
 parameter_list|(
 name|stream
 parameter_list|)
-value|ftruncate(fileno(stream), (long) ftell(stream))
+value|{							\ 	(void)fflush(stream); 						\ 	(void)ftruncate(fileno(stream), (long)ftell(stream));		\ }
 end_define
 
 end_unit
