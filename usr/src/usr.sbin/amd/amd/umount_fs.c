@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)umount_fs.c	5.4 (Berkeley) %G%  *  * $Id: umount_fs.c,v 5.2.2.1 1992/02/09 15:09:10 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)umount_fs.c	5.5 (Berkeley) %G%  *  * $Id: umount_fs.c,v 5.2.2.1 1992/02/09 15:09:10 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -14,16 +14,6 @@ ifdef|#
 directive|ifdef
 name|NEED_UMOUNT_BSD
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_comment
-comment|/* For MNT_NOFORCE */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -61,7 +51,7 @@ name|unmount
 argument_list|(
 name|fs_name
 argument_list|,
-name|MNT_NOFORCE
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
