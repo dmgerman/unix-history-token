@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	@(#)restore.h	3.1	(Berkeley)	83/02/18	*/
+comment|/*	@(#)restore.h	3.2	(Berkeley)	83/02/26	*/
 end_comment
 
 begin_include
@@ -166,6 +166,17 @@ begin_decl_stmt
 specifier|extern
 name|time_t
 name|dumptime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time that this dump begins */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|dumpdate
 decl_stmt|;
 end_decl_stmt
 
@@ -794,14 +805,14 @@ begin_define
 define|#
 directive|define
 name|GOOD
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FAIL
-value|1
+value|0
 end_define
 
 end_unit

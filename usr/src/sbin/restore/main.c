@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.1	(Berkeley)	83/02/18"
+literal|"@(#)main.c	3.2	(Berkeley)	83/02/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,12 @@ end_decl_stmt
 begin_decl_stmt
 name|time_t
 name|dumptime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|dumpdate
 decl_stmt|;
 end_decl_stmt
 
@@ -401,6 +407,7 @@ name|command
 operator|=
 literal|'t'
 expr_stmt|;
+break|break;
 case|case
 literal|'R'
 case|:
@@ -428,6 +435,7 @@ name|command
 operator|=
 literal|'R'
 expr_stmt|;
+break|break;
 case|case
 literal|'r'
 case|:
@@ -455,6 +463,7 @@ name|command
 operator|=
 literal|'r'
 expr_stmt|;
+break|break;
 case|case
 literal|'x'
 case|:
@@ -792,11 +801,6 @@ case|:
 name|setup
 argument_list|()
 expr_stmt|;
-name|extractdirs
-argument_list|(
-name|dirmodefile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dumptime
@@ -865,6 +869,11 @@ name|NODE
 argument_list|)
 expr_stmt|;
 block|}
+name|extractdirs
+argument_list|(
+name|dirmodefile
+argument_list|)
+expr_stmt|;
 name|markremove
 argument_list|()
 expr_stmt|;
