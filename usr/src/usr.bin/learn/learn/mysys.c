@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mysys.c	4.2	(Berkeley)	%G%"
+literal|"@(#)mysys.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ name|sprintf
 argument_list|(
 name|exinit
 argument_list|,
-literal|"EXINIT=set prompt noopt open"
+literal|"EXINIT=set prompt noopt open window=23"
 argument_list|)
 expr_stmt|;
 if|#
@@ -276,7 +276,7 @@ name|sprintf
 argument_list|(
 name|exinit
 argument_list|,
-literal|"%s|set prompt noopt open"
+literal|"%s|set prompt noopt open window=23"
 argument_list|,
 name|envp
 index|[
