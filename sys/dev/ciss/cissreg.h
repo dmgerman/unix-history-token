@@ -1900,6 +1900,15 @@ decl_stmt|;
 name|u_int8_t
 name|drive_rebuilding
 decl_stmt|;
+name|u_int64_t
+name|big_blocks_to_recover
+decl_stmt|;
+name|u_int8_t
+name|res4
+index|[
+literal|28
+index|]
+decl_stmt|;
 block|}
 name|__packed
 struct|;
