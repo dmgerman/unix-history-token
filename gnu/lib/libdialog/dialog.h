@@ -802,7 +802,13 @@ begin_function_decl
 name|int
 name|dialog_dselect
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|dir
+parameter_list|,
+name|char
+modifier|*
+name|fmask
 parameter_list|)
 function_decl|;
 end_function_decl
