@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.9	81/04/24	*/
+comment|/*	vm_meter.c	4.10	81/04/26	*/
 end_comment
 
 begin_include
@@ -138,6 +138,14 @@ name|int
 name|klseql
 init|=
 name|KLSEQL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|klsdist
+init|=
+name|KLSDIST
 decl_stmt|;
 end_decl_stmt
 
