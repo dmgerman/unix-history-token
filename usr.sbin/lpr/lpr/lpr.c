@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.26 1999/01/06 08:25:56 imp Exp $"
+literal|"$Id: lpr.c,v 1.27 1999/01/06 08:33:38 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,6 +427,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* user id */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|Uflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user name specified with -U flag */
 end_comment
 
 begin_decl_stmt
@@ -996,7 +1008,7 @@ comment|/* user name */
 name|hdr
 operator|++
 expr_stmt|;
-name|person
+name|uflag
 operator|=
 name|optarg
 expr_stmt|;
@@ -1245,21 +1257,45 @@ name|max_copies
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the identity of the person doing the lpr using the same 	 * algorithm as lprm.  Actually, not quite -- lprm will override 	 * the login name with "root" if the user is running as root; 	 * the daemon actually checks for the string "root" in its 	 * permission checking.  Sigh. 	 */
-if|if
-condition|(
-operator|(
-name|person
-operator|=
-name|getlogin
-argument_list|()
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
 name|userid
 operator|=
 name|getuid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Uflag
+condition|)
+block|{
+if|if
+condition|(
+name|userid
+operator|!=
+literal|0
+operator|&&
+name|userid
+operator|!=
+name|pp
+operator|->
+name|daemon_user
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"only privileged users may use the `-U' flag"
+argument_list|)
+expr_stmt|;
+name|person
+operator|=
+name|Uflag
+expr_stmt|;
+block|}
+else|else
+block|{
+name|person
+operator|=
+name|getlogin
 argument_list|()
 expr_stmt|;
 if|if
