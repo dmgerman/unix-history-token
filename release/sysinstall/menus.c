@@ -4379,6 +4379,36 @@ block|}
 block|,
 endif|#
 directive|endif
+if|#
+directive|if
+name|__FreeBSD__
+operator|>=
+literal|4
+block|{
+literal|" compat4x"
+block|,
+literal|"FreeBSD 4.x binary compatibility"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_COMPAT4X
+block|}
+block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|{

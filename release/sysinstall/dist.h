@@ -128,43 +128,50 @@ end_endif
 begin_define
 define|#
 directive|define
-name|DIST_XF86
+name|DIST_COMPAT4X
 value|0x02000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_CRYPTO
+name|DIST_XF86
 value|0x04000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_CATPAGES
+name|DIST_CRYPTO
 value|0x08000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_PORTS
+name|DIST_CATPAGES
 value|0x10000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_LOCAL
+name|DIST_PORTS
 value|0x20000
 end_define
 
 begin_define
 define|#
 directive|define
+name|DIST_LOCAL
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_ALL
-value|0x3FFFF
+value|0x7FFFF
 end_define
 
 begin_comment
