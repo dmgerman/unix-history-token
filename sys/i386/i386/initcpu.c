@@ -2042,6 +2042,15 @@ literal|0xf
 operator|)
 operator|==
 literal|0x670
+operator|||
+operator|(
+name|cpu_id
+operator|&
+operator|~
+literal|0xf
+operator|)
+operator|==
+literal|0x680
 operator|)
 condition|)
 block|{
