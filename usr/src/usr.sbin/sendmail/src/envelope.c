@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.19 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1783,14 +1783,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-name|loweraddr
-argument_list|(
-operator|&
-name|e
-operator|->
-name|e_from
-argument_list|)
-expr_stmt|;
 name|SuprErrs
 operator|=
 name|FALSE
