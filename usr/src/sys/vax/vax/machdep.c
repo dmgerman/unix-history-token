@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.56	82/06/26	*/
+comment|/*	machdep.c	4.57	82/07/15	*/
 end_comment
 
 begin_include
@@ -998,7 +998,7 @@ goto|goto
 name|check
 goto|;
 block|}
-comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 * (Unfortunately, VMS keeps local time, so when you run UNIX 	 * and VMS, VMS runs on GMT...). 	 */
+comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 * We must correct for the fact that VMS keeps local time 	 * while UNIX wants GMT. 	 */
 if|if
 condition|(
 name|todr
@@ -1024,8 +1024,6 @@ name|check
 goto|;
 block|}
 comment|/* 	 * Sneak to within 6 month of the time in the filesystem, 	 * by starting with the time of the year suggested by the TODR, 	 * and advancing through succesive years.  Adding the number of 	 * seconds in the current year takes us to the end of the current year 	 * and then around into the next year to the same position. 	 */
-for|for
-control|(
 name|time
 operator|=
 operator|(
@@ -1035,7 +1033,13 @@ name|TODRZERO
 operator|)
 operator|/
 literal|100
-init|;
+operator|+
+name|timezone
+operator|*
+literal|60
+expr_stmt|;
+while|while
+condition|(
 name|time
 operator|<
 name|base
@@ -1043,11 +1047,7 @@ operator|-
 name|SECYR
 operator|/
 literal|2
-condition|;
-name|time
-operator|+=
-name|SECYR
-control|)
+condition|)
 block|{
 if|if
 condition|(
@@ -1062,6 +1062,10 @@ name|SECDAY
 expr_stmt|;
 name|year
 operator|++
+expr_stmt|;
+name|time
+operator|+=
+name|SECYR
 expr_stmt|;
 block|}
 comment|/* 	 * See if we gained/lost two or more days; 	 * if so, assume something is amiss. 	 */
@@ -1141,6 +1145,10 @@ name|unsigned
 name|yrtime
 init|=
 name|time
+operator|-
+name|timezone
+operator|*
+literal|60
 decl_stmt|;
 comment|/* 	 * Whittle the time down to an offset in the current year, 	 * by subtracting off whole years as long as possible. 	 */
 for|for
