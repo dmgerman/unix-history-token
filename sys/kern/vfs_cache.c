@@ -1250,7 +1250,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Delete an entry from its hash list and move it to the front  * of the LRU list for immediate reuse.  */
+comment|/*  * cache_zap():  *  *   Removes a namecache entry from cache, whether it contains an actual  *   pointer to a vnode or if it is just a negative cache entry.  */
 end_comment
 
 begin_function
