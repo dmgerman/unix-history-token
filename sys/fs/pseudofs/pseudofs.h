@@ -357,7 +357,7 @@ parameter_list|,
 name|nodes
 parameter_list|)
 define|\
-value|PFS_NODE("", pfstype_procdir, flags, 0, uid, gid, mode, nodes)
+value|PFS_NODE("", pfstype_procdir, flags, uid, gid, mode, nodes)
 end_define
 
 begin_define
