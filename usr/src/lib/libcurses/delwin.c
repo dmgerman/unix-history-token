@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.3  */
+comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.4  */
 end_comment
 
 begin_macro
