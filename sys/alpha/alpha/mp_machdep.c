@@ -845,16 +845,9 @@ argument_list|)
 expr_stmt|;
 name|sz
 operator|=
-name|round_page
-argument_list|(
-operator|(
-name|UAREA_PAGES
-operator|+
 name|KSTACK_PAGES
-operator|)
 operator|*
 name|PAGE_SIZE
-argument_list|)
 expr_stmt|;
 name|pcpu
 operator|=
