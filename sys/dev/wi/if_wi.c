@@ -1825,12 +1825,27 @@ break|break;
 case|case
 name|WI_NIC_LUCENT
 case|:
+name|printf
+argument_list|(
+literal|"Lucent WaveLAN"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
-name|WI_NIC_LUCENT_ALT
+name|WI_NIC_SONY
 case|:
 name|printf
 argument_list|(
-literal|"Lucent Technologies, WaveLAN/IEEE"
+literal|"Sony"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|WI_NIC_LUCENT_EMBEDDED
+case|:
+name|printf
+argument_list|(
+literal|"Lucent WaveLAN (embedded)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6198,7 +6213,7 @@ name|mcast
 operator|.
 name|wi_type
 operator|=
-name|WI_RID_MCAST
+name|WI_RID_MCAST_LIST
 expr_stmt|;
 name|mcast
 operator|.

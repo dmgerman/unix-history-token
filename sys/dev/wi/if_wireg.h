@@ -1288,12 +1288,14 @@ define|#
 directive|define
 name|WI_NIC_LUCENT
 value|0x0001
-comment|/* Emperically derived */
 define|#
 directive|define
-name|WI_NIC_LUCENT_ALT
+name|WI_NIC_SONY
+value|0x0002
+define|#
+directive|define
+name|WI_NIC_LUCENT_EMBEDDED
 value|0x0005
-comment|/* Emperically derived */
 define|#
 directive|define
 name|WI_NIC_EVB2
@@ -1587,22 +1589,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Station set identification (SSID).  */
+comment|/*  * Station set identification (SSID). (0xFC02, 0xFC04)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_DESIRED_SSID
-value|0xFC02
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_OWN_SSID
-value|0xFC04
-end_define
 
 begin_struct
 struct|struct
@@ -1625,59 +1613,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set communications channel (radio frequency).  */
+comment|/*  * Set our station name. (0xFC0E)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_OWN_CHNL
-value|0xFC03
-end_define
-
-begin_comment
-comment|/*  * Frame data size.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_MAX_DATALEN
-value|0xFC07
-end_define
-
-begin_comment
-comment|/*  * ESS power management enable  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_PM_ENABLED
-value|0xFC09
-end_define
-
-begin_comment
-comment|/*  * ESS max PM sleep internal  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_MAX_SLEEP
-value|0xFC0C
-end_define
-
-begin_comment
-comment|/*  * Set our station name.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_NODENAME
-value|0xFC0E
-end_define
 
 begin_struct
 struct|struct
@@ -1699,23 +1636,9 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|WI_RID_AUTH_CNTL
-value|0xFC2A
-end_define
-
 begin_comment
-comment|/*  * Multicast addresses to be put in filter. We're  * allowed up to 16 addresses in the filter.  */
+comment|/*  * Multicast addresses to be put in filter. We're  * allowed up to 16 addresses in the filter. (0xFC80)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_MCAST
-value|0xFC80
-end_define
 
 begin_struct
 struct|struct
@@ -1737,64 +1660,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Create IBSS.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_CREATE_IBSS
-value|0xFC81
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_FRAG_THRESH
-value|0xFC82
-end_define
-
-begin_define
-define|#
-directive|define
-name|WI_RID_RTS_THRESH
-value|0xFC83
-end_define
-
-begin_comment
-comment|/*  * TX rate control  * 0 == Fixed 1mbps  * 1 == Fixed 2mbps  * 2 == auto fallback  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_TX_RATE
-value|0xFC84
-end_define
-
-begin_comment
-comment|/*  * promiscuous mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_PROMISC
-value|0xFC85
-end_define
-
-begin_comment
-comment|/*  * Auxiliary Timer tick interval  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WI_RID_TICK_TIME
-value|0xFCE0
-end_define
 
 begin_comment
 comment|/*  * Information frame types.  */
