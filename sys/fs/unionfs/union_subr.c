@@ -5356,11 +5356,10 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|vnode
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|lvp
 expr_stmt|;
 name|fp

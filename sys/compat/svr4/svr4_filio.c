@@ -466,14 +466,11 @@ condition|)
 block|{
 name|so
 operator|=
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|)
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 expr_stmt|;
 name|DPRINTF
 argument_list|(

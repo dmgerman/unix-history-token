@@ -2661,7 +2661,9 @@ name|uintptr_t
 operator|)
 name|xf
 operator|->
-name|xf_data
+name|xun_data
+operator|.
+name|generic
 operator|%
 name|HASHSIZE
 argument_list|)
@@ -2693,7 +2695,9 @@ name|socket
 operator|==
 name|xf
 operator|->
-name|xf_data
+name|xun_data
+operator|.
+name|socket
 condition|)
 break|break;
 if|if

@@ -1302,7 +1302,9 @@ name|s
 argument_list|,
 name|f
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1958,7 +1960,9 @@ name|s
 argument_list|,
 name|f
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1982,7 +1986,9 @@ name|u_long
 operator|)
 name|f
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 argument_list|,
 operator|(
 name|u_long

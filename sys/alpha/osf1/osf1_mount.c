@@ -810,14 +810,11 @@ return|;
 name|mp
 operator|=
 operator|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|vnode
 operator|)
 operator|->
 name|v_mount

@@ -12045,14 +12045,11 @@ operator|)
 return|;
 name|vn_start_write
 argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|vnode
 argument_list|,
 operator|&
 name|mp

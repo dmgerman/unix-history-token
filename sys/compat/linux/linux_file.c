@@ -1259,14 +1259,11 @@ return|;
 block|}
 name|vp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|vnode
 expr_stmt|;
 if|if
 condition|(

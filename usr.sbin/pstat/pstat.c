@@ -2165,13 +2165,11 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|fp
 operator|->
-name|xf_data
+name|xun_data
+operator|.
+name|generic
 argument_list|)
 expr_stmt|;
 operator|(

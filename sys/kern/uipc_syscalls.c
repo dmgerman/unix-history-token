@@ -604,7 +604,9 @@ else|else
 block|{
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 operator|=
 name|so
 expr_stmt|;
@@ -1436,7 +1438,9 @@ expr_stmt|;
 comment|/* file descriptor reference */
 name|nfp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 operator|=
 name|so
 expr_stmt|;
@@ -2338,7 +2342,9 @@ name|fd
 expr_stmt|;
 name|fp1
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 operator|=
 name|so1
 expr_stmt|;
@@ -2370,7 +2376,9 @@ argument_list|)
 expr_stmt|;
 name|fp2
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 operator|=
 name|so2
 expr_stmt|;

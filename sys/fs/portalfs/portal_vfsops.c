@@ -381,14 +381,11 @@ return|;
 block|}
 name|so
 operator|=
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|)
 name|fp
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 expr_stmt|;
 comment|/* XXX race against userland */
 if|if
@@ -778,11 +775,6 @@ return|;
 comment|/* 	 * Shutdown the socket.  This will cause the select in the 	 * daemon to wake up, and then the accept will get ECONNABORTED 	 * which it interprets as a request to go and bury itself. 	 */
 name|soshutdown
 argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-operator|)
 name|VFSTOPORTAL
 argument_list|(
 name|mp
@@ -790,7 +782,9 @@ argument_list|)
 operator|->
 name|pm_server
 operator|->
-name|f_data
+name|un_data
+operator|.
+name|socket
 argument_list|,
 literal|2
 argument_list|)
