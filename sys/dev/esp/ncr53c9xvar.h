@@ -173,6 +173,17 @@ value|11
 end_define
 
 begin_comment
+comment|/* XXX Max tag depth.  Should this be defined in the register header? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCR_TAG_DEPTH
+value|256
+end_define
+
+begin_comment
 comment|/*  * ECB. Holds additional information for each SCSI command Comments: We  * need a separate scsi command block because we may need to overwrite it  * with a request sense command.  Basicly, we refrain from fiddling with  * the scsipi_xfer struct (except do the expected updating of return values).  * We'll generally update: xs->{flags,resid,error,sense,status} and  * occasionally xs->retries.  */
 end_comment
 
@@ -180,26 +191,36 @@ begin_struct
 struct|struct
 name|ncr53c9x_ecb
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|ncr53c9x_ecb
-argument_list|)
-name|chain
-expr_stmt|;
-name|union
-name|ccb
-modifier|*
-name|ccb
-decl_stmt|;
-comment|/* SCSI xfer ctrl block from above */
+comment|/* These fields are preserved between alloc and free */
 name|struct
 name|ncr53c9x_softc
 modifier|*
 name|sc
 decl_stmt|;
 name|int
+name|tag_id
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
+name|union
+name|ccb
+modifier|*
+name|ccb
+decl_stmt|;
+comment|/* SCSI xfer ctrl block from above */
+name|TAILQ_ENTRY
+argument_list|(
+argument|ncr53c9x_ecb
+argument_list|)
+name|free_links
+expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|ncr53c9x_ecb
+argument_list|)
+name|chain
+expr_stmt|;
 define|#
 directive|define
 name|ECB_ALLOC
@@ -384,7 +405,7 @@ name|ncr53c9x_ecb
 modifier|*
 name|queued
 index|[
-literal|256
+name|NCR_TAG_DEPTH
 index|]
 decl_stmt|;
 block|}
@@ -1183,6 +1204,18 @@ name|mtx
 name|sc_lock
 decl_stmt|;
 comment|/* driver mutex */
+name|struct
+name|ncr53c9x_ecb
+modifier|*
+name|ecb_array
+decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ncr53c9x_ecb
+argument_list|)
+name|free_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
