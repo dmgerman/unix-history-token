@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.34 1995/04/14 01:35:59 wpaul Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.35 1995/04/14 21:26:48 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -121,7 +121,7 @@ name|RB_SERIAL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nNo keyboard found.\n"
+literal|"\nNo keyboard found."
 argument_list|)
 expr_stmt|;
 block|}
@@ -136,7 +136,7 @@ name|RB_SERIAL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nSerial console forced.\n"
+literal|"\nSerial console forced."
 argument_list|)
 expr_stmt|;
 endif|#
@@ -346,19 +346,6 @@ decl_stmt|;
 name|unsigned
 name|pad
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|REDUNDANT
-name|unsigned
-name|char
-name|tmpbuf
-index|[
-literal|4096
-index|]
-decl_stmt|;
-comment|/* we need to load the first 4k here */
-endif|#
-directive|endif
 name|read
 argument_list|(
 operator|(
@@ -430,72 +417,21 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/*  * With the current scheme of things, addr can never be less than ouraddr,  * so this next bit of code is largely irrelevant. Taking it out saves lots  * of space.  */
-ifdef|#
-directive|ifdef
-name|REDUNDANT
 if|if
 condition|(
 name|addr
 operator|<
-name|ouraddr
+literal|0x00100000
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|addr
-operator|+
-name|head
-operator|.
-name|a_text
-operator|+
-name|head
-operator|.
-name|a_data
-operator|)
-operator|>
-name|ouraddr
-condition|)
-block|{
+comment|/* 		 * Bail out, instead of risking to damage the BIOS 		 * variables, the loader, or the adapter memory area. 		 * We don't support loading below 1 MB any more. 		 */
 name|printf
 argument_list|(
-literal|"kernel overlaps loader\n"
+literal|"Start address too low\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-operator|(
-name|addr
-operator|+
-name|head
-operator|.
-name|a_text
-operator|+
-name|head
-operator|.
-name|a_data
-operator|+
-name|head
-operator|.
-name|a_bss
-operator|)
-operator|>
-literal|0xa0000
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bss exceeds 640k limit\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"text=0x%x "
@@ -507,44 +443,7 @@ argument_list|)
 expr_stmt|;
 comment|/********************************************************/
 comment|/* LOAD THE TEXT SEGMENT				*/
-ifdef|#
-directive|ifdef
-name|REDUNDANT
-comment|/* don't clobber the first 4k yet (BIOS NEEDS IT) 	*/
 comment|/********************************************************/
-name|read
-argument_list|(
-name|tmpbuf
-argument_list|,
-literal|4096
-argument_list|)
-expr_stmt|;
-name|addr
-operator|+=
-literal|4096
-expr_stmt|;
-name|xread
-argument_list|(
-name|addr
-argument_list|,
-name|head
-operator|.
-name|a_text
-operator|-
-literal|4096
-argument_list|)
-expr_stmt|;
-name|addr
-operator|+=
-name|head
-operator|.
-name|a_text
-operator|-
-literal|4096
-expr_stmt|;
-else|#
-directive|else
-comment|/* Assume we're loading high, so that the BIOS isn't in the way. */
 name|xread
 argument_list|(
 operator|(
@@ -564,8 +463,6 @@ name|head
 operator|.
 name|a_text
 expr_stmt|;
-endif|#
-directive|endif
 comment|/********************************************************/
 comment|/* Load the Initialised data after the text		*/
 comment|/********************************************************/
@@ -626,58 +523,7 @@ operator|.
 name|a_bss
 argument_list|)
 expr_stmt|;
-comment|/*  * This doesn't do us any good anymore either.  * XXX however, we should be checking that we don't load over the top of  * ourselves or into nonexistent memory.  A full symbol table is unlikely  * to fit on 4MB machines.  */
-ifdef|#
-directive|ifdef
-name|REDUNDANT
-if|if
-condition|(
-operator|(
-name|addr
-operator|<
-name|ouraddr
-operator|)
-operator|&&
-operator|(
-operator|(
-name|addr
-operator|+
-name|head
-operator|.
-name|a_bss
-operator|)
-operator|>
-name|ouraddr
-operator|)
-condition|)
-block|{
-name|pbzero
-argument_list|(
-name|addr
-argument_list|,
-name|ouraddr
-operator|-
-operator|(
-name|int
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|pbzero
-argument_list|(
-name|addr
-argument_list|,
-name|head
-operator|.
-name|a_bss
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
+comment|/*  * XXX however, we should be checking that we don't load ... into  * nonexistent memory.  A full symbol table is unlikely to fit on 4MB  * machines.  */
 name|pbzero
 argument_list|(
 operator|(
@@ -691,8 +537,6 @@ operator|.
 name|a_bss
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|addr
 operator|+=
 name|head
@@ -921,39 +765,6 @@ argument_list|,
 name|part
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|REDUNDANT
-comment|/****************************************************************/
-comment|/* copy that first page and overwrite any BIOS variables	*/
-comment|/****************************************************************/
-comment|/* Under no circumstances overwrite precious BIOS variables! */
-name|pcpy
-argument_list|(
-name|tmpbuf
-argument_list|,
-name|startaddr
-argument_list|,
-literal|0x400
-argument_list|)
-expr_stmt|;
-name|pcpy
-argument_list|(
-name|tmpbuf
-operator|+
-literal|0x500
-argument_list|,
-name|startaddr
-operator|+
-literal|0x500
-argument_list|,
-literal|4096
-operator|-
-literal|0x500
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|bootinfo
 operator|.
 name|bi_version
