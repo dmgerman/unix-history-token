@@ -1611,7 +1611,7 @@ parameter_list|,
 name|err
 parameter_list|)
 define|\
-value|IFQ_HANDOFF_ADJ(ifq, m, 0, err)
+value|IFQ_HANDOFF_ADJ(ifp, m, 0, err)
 end_define
 
 begin_define
