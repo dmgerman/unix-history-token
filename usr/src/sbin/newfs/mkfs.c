@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.23 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3758,6 +3758,9 @@ name|utime
 expr_stmt|;
 name|wtfs
 argument_list|(
+operator|(
+name|int
+operator|)
 name|SBOFF
 operator|/
 name|sectorsize
