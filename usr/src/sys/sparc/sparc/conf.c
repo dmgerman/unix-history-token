@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.3 (Berkeley) %G%  *  * from: $Header: conf.c,v 1.12 92/06/17 05:22:00 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.4 (Berkeley) %G%  *  * from: $Header: conf.c,v 1.14 92/11/26 03:04:49 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -886,6 +886,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|openprom
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* open, close, ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cdev_openprom_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), error_read, error_write, \ 	dev_init(c,n,ioctl), 0, 0, 0, error_select, 0, 0 }
+end_define
+
 begin_include
 include|#
 directive|include
@@ -1271,10 +1295,14 @@ name|audio
 argument_list|)
 block|,
 comment|/* 69: /dev/audio */
-name|cdev_notdef
-argument_list|()
+name|cdev_openprom_init
+argument_list|(
+literal|1
+argument_list|,
+name|openprom
+argument_list|)
 block|,
-comment|/* 70 */
+comment|/* 70: /dev/openprom */
 name|cdev_notdef
 argument_list|()
 block|,
