@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -250,6 +250,18 @@ argument_list|(
 literal|"swapvp"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nswap
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: no swap space found\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|error
@@ -1039,24 +1051,24 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * First of all chunks. 			 * Cannot free a zero-index block in a resource 			 * map so we waste the first block. 			 */
+comment|/* 			 * First of all chunks... initialize the swapmap. 			 * Don't use the first cluster of the device 			 * in case it starts with a label or boot block. 			 */
 name|rminit
 argument_list|(
 name|swapmap
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
 name|blk
 operator|-
-literal|1
+name|ctod
+argument_list|(
+name|CLSIZE
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
-literal|1
+name|vsbase
+operator|+
+name|ctod
+argument_list|(
+name|CLSIZE
+argument_list|)
 argument_list|,
 literal|"swap"
 argument_list|,
