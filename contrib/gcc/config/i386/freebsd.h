@@ -578,7 +578,7 @@ parameter_list|,
 name|LOG
 parameter_list|)
 define|\
-value|do {									\   if ((LOG)!=0) {							\     if (in_text_section())						\       fprintf ((FILE), "\t.p2align %d,0x90\n", (LOG));			\     else								\       fprintf ((FILE), "\t.p2align %d\n", (LOG));			\   }									\   } while (0)
+value|do {					     				\     if ((LOG)!=0) {							\       if (in_text_section())						\ 	fprintf ((FILE), "\t.p2align %d,0x90\n", (LOG));		\       else								\ 	fprintf ((FILE), "\t.p2align %d\n", (LOG));			\     }									\   } while (0)
 end_define
 
 begin_undef
