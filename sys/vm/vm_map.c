@@ -598,8 +598,6 @@ literal|"thrd_sleep"
 argument_list|,
 literal|0
 argument_list|,
-name|LK_CANRECURSE
-operator||
 name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
@@ -1862,8 +1860,6 @@ literal|"thrd_sleep"
 argument_list|,
 literal|0
 argument_list|,
-name|LK_CANRECURSE
-operator||
 name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
