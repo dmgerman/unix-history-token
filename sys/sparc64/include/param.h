@@ -12,7 +12,7 @@ define|#
 directive|define
 name|TODO
 define|\
-value|panic("implement " __func__)
+value|panic("implement %s", __func__)
 end_define
 
 begin_comment
@@ -235,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_8K
-value|(1<<PAGE_SHIFT_8K)
+value|(1UL<<PAGE_SHIFT_8K)
 end_define
 
 begin_define
@@ -256,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_64K
-value|(1<<PAGE_SHIFT_64K)
+value|(1UL<<PAGE_SHIFT_64K)
 end_define
 
 begin_define
@@ -277,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_512K
-value|(1<<PAGE_SHIFT_512K)
+value|(1UL<<PAGE_SHIFT_512K)
 end_define
 
 begin_define
@@ -298,7 +298,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE_4M
-value|(1<<PAGE_SHIFT_4M)
+value|(1UL<<PAGE_SHIFT_4M)
 end_define
 
 begin_define
@@ -690,6 +690,46 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((unsigned long)(x) * (PAGE_SIZE / 1024))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_EQUAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|_ASSERT_EQUAL(x, y, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ASSERT_EQUAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|__ASSERT_EQUAL(x, y, z)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ASSERT_EQUAL
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|typedef char __assert ## z[(x) == (y) ? 1 : -1]
 end_define
 
 begin_endif
