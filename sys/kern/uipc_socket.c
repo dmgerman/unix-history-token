@@ -949,10 +949,10 @@ argument_list|,
 name|M_ACCF
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* INET */
-block|}
 name|crfree
 argument_list|(
 name|so
