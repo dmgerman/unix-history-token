@@ -686,7 +686,7 @@ value|(((x) + PAGE_MASK)>> PAGE_SHIFT)
 end_define
 
 begin_comment
-comment|/* bytes to disk blocks */
+comment|/*  * btodb() is messy and perhaps slow because `bytes' may be an off_t.  We  * want to shift an unsigned type to avoid sign extension and we don't  * want to widen `bytes' unnecessarily.  Assume that the result fits in  * a daddr_t.  */
 end_comment
 
 begin_define
@@ -694,9 +694,11 @@ define|#
 directive|define
 name|btodb
 parameter_list|(
-name|x
+name|bytes
 parameter_list|)
-value|((x)>> DEV_BSHIFT)
+comment|/* calculates (bytes / DEV_BSIZE) */
+define|\
+value|(daddr_t)((unsigned long)(bytes)>> DEV_BSHIFT)
 end_define
 
 begin_define
@@ -704,9 +706,11 @@ define|#
 directive|define
 name|dbtob
 parameter_list|(
-name|x
+name|db
 parameter_list|)
-value|((x)<< DEV_BSHIFT)
+comment|/* calculates (db * DEV_BSIZE) */
+define|\
+value|((off_t)(db)<< DEV_BSHIFT)
 end_define
 
 begin_comment
