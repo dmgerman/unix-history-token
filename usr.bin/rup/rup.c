@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rup.c,v 1.5 1993/08/02 17:55:42 mycroft Exp $"
+literal|"$Id: rup.c,v 1.6 1993/09/23 18:37:28 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -75,6 +81,22 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|FSHIFT
+end_undef
+
+begin_comment
+comment|/* Use protocol's shift and scale values */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|FSCALE
+end_undef
 
 begin_include
 include|#
@@ -526,23 +548,11 @@ name|printf
 argument_list|(
 literal|" %2d:%02d%cm  up %9.9s%9.9s load average: %.2f %.2f %.2f\n"
 argument_list|,
-operator|(
 name|host_time
 operator|.
 name|tm_hour
-operator|>
+operator|%
 literal|12
-operator|)
-condition|?
-name|host_time
-operator|.
-name|tm_hour
-operator|-
-literal|12
-else|:
-name|host_time
-operator|.
-name|tm_hour
 argument_list|,
 name|host_time
 operator|.
@@ -758,7 +768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s: %s: %s\n"
 argument_list|,
 name|argv0
 argument_list|,
