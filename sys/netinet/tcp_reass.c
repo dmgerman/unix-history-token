@@ -753,7 +753,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|(((!callout_active(tp->tt_delack)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0))&&			\ 	    (tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
+value|((!callout_active(tp->tt_delack)&&				\ 	    (tp->t_flags& TF_RXWIN0SENT) == 0)&&			\ 	    (tcp_delack_enabled || (tp->t_flags& TF_NEEDSYN)))
 end_define
 
 begin_function
@@ -3815,11 +3815,7 @@ name|tp
 operator|->
 name|t_flags
 operator||=
-operator|(
 name|TF_ACKNOW
-operator||
-name|TF_NEEDSYN
-operator|)
 expr_stmt|;
 name|tcpstat
 operator|.
@@ -4563,12 +4559,9 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|check_delack
+goto|;
 block|}
 block|}
 elseif|else
@@ -4738,12 +4731,9 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|check_delack
+goto|;
 block|}
 block|}
 comment|/* 	 * Calculate amount of space in receive window, 	 * and then do TCP input processing. 	 * Receive window is amount of space in rcv queue, 	 * but not less than advertised window. 	 */
@@ -8426,7 +8416,8 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-elseif|else
+name|check_delack
+label|:
 if|if
 condition|(
 name|tp
