@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * make.c --  *	The functions which perform the examination of targets and  *	their suitability for creation  *  * Interface:  *	Make_Run 	    	Initialize things for the module and recreate  *	    	  	    	whatever needs recreating. Returns TRUE if  *	    	    	    	work was (or would have been) done and FALSE  *	    	  	    	otherwise.  *  *	Make_Update	    	Update all parents of a given child. Performs  *	    	  	    	various bookkeeping chores like the updating  *	    	  	    	of the cmtime field of the parent, filling  *	    	  	    	of the IMPSRC context variable, etc. It will  *	    	  	    	place the parent on the toBeMade queue if it  *	    	  	    	should be.  *  *	Make_TimeStamp	    	Function to set the parent's cmtime field  *	    	  	    	based on a child's modification time.  *  *	Make_DoAllVar	    	Set up the various local variables for a  *	    	  	    	target, including the .ALLSRC variable, making  *	    	  	    	sure that any variable that needs to exist  *	    	  	    	at the very least has the empty value.  *  *	Make_OODate 	    	Determine if a target is out-of-date.  *  *	Make_HandleUse		See if a child is a .USE node for a parent  *				and perform the .USE actions if so.  */
+comment|/*  * make.c  *	The functions which perform the examination of targets and  *	their suitability for creation  *  * Interface:  *	Make_Run	Initialize things for the module and recreate  *			whatever needs recreating. Returns TRUE if  *			work was (or would have been) done and FALSE  *			otherwise.  *  *	Make_Update	Update all parents of a given child. Performs  *			various bookkeeping chores like the updating  *			of the cmtime field of the parent, filling  *			of the IMPSRC context variable, etc. It will  *			place the parent on the toBeMade queue if it should be.  *  *	Make_TimeStamp	Function to set the parent's cmtime field  *			based on a child's modification time.  *  *	Make_DoAllVar	Set up the various local variables for a  *			target, including the .ALLSRC variable, making  *			sure that any variable that needs to exist  *			at the very least has the empty value.  *  *	Make_OODate	Determine if a target is out-of-date.  *  *	Make_HandleUse	See if a child is a .USE node for a parent  *			and perform the .USE actions if so.  */
 end_comment
 
 begin_include
@@ -109,16 +109,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Number of nodes to be processed. If this is non-zero when Job_Empty()  * returns TRUE, there's a cycle in the graph.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
 name|numNodes
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Number of nodes to be processed. If this 				 * is non-zero when Job_Empty() returns 				 * TRUE, there's a cycle in the graph */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -131,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_TimeStamp --  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via LST_FOREACH.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  *-----------------------------------------------------------------------  */
+comment|/**  * Make_TimeStamp  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via LST_FOREACH.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  */
 end_comment
 
 begin_function
@@ -176,7 +176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_OODate --  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.  *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  *-----------------------------------------------------------------------  */
+comment|/**  * Make_OODate  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.  *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  */
 end_comment
 
 begin_function
@@ -195,7 +195,7 @@ name|LstNode
 modifier|*
 name|ln
 decl_stmt|;
-comment|/*      * Certain types of targets needn't even be sought as their datedness      * doesn't depend on their modification time...      */
+comment|/* 	 * Certain types of targets needn't even be sought as their datedness 	 * doesn't depend on their modification time... 	 */
 if|if
 condition|(
 operator|(
@@ -259,7 +259,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * A target is remade in one of the following circumstances:      *	its modification time is smaller than that of its youngest child      *	    and it would actually be run (has commands or type OP_NOP)      *	it's the object of a force operator      *	it has no children, was on the lhs of an operator and doesn't exist      *	    already.      *      * Libraries are only considered out-of-date if the archive module says      * they are.      *      * These weird rules are brought to you by Backward-Compatability and      * the strange people who wrote 'Make'.      */
+comment|/* 	 * A target is remade in one of the following circumstances: 	 *	its modification time is smaller than that of its youngest child 	 *	    and it would actually be run (has commands or type OP_NOP) 	 *	it's the object of a force operator 	 *	it has no children, was on the lhs of an operator and doesn't 	 *	    exist already. 	 * 	 * Libraries are only considered out-of-date if the archive module says 	 * they are. 	 * 	 * These weird rules are brought to you by Backward-Compatibility and 	 * the strange people who wrote 'Make'. 	 */
 if|if
 condition|(
 name|gn
@@ -269,7 +269,7 @@ operator|&
 name|OP_USE
 condition|)
 block|{
-comment|/* 	 * If the node is a USE node it is *never* out of date 	 * no matter *what*. 	 */
+comment|/* 		 * If the node is a USE node it is *never* out of date 		 * no matter *what*. 		 */
 name|DEBUGF
 argument_list|(
 name|MAKE
@@ -303,7 +303,7 @@ literal|"library..."
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * always out of date if no children and :: target 	 */
+comment|/* 		 * always out of date if no children and :: target 		 */
 name|oodate
 operator|=
 name|Arch_LibOODate
@@ -340,7 +340,7 @@ operator|&
 name|OP_JOIN
 condition|)
 block|{
-comment|/* 	 * A target with the .JOIN attribute is only considered 	 * out-of-date if any of its children was out-of-date. 	 */
+comment|/* 		 * A target with the .JOIN attribute is only considered 		 * out-of-date if any of its children was out-of-date. 		 */
 name|DEBUGF
 argument_list|(
 name|MAKE
@@ -373,7 +373,7 @@ name|OP_PHONY
 operator|)
 condition|)
 block|{
-comment|/* 	 * A node which is the object of the force (!) operator or which has 	 * the .EXEC attribute is always considered out-of-date. 	 */
+comment|/* 		 * A node which is the object of the force (!) operator or 		 * which has the .EXEC attribute is always considered 		 * out-of-date. 		 */
 if|if
 condition|(
 name|gn
@@ -472,7 +472,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 	 * A node whose modification time is less than that of its 	 * youngest child or that has no children (cmtime == 0) and 	 * either doesn't exist (mtime == 0) or was the object of a 	 * :: operator is out-of-date. Why? Because that's the way Make does 	 * it. 	 */
+comment|/* 		 * A node whose modification time is less than that of its 		 * youngest child or that has no children (cmtime == 0) and 		 * either doesn't exist (mtime == 0) or was the object of a 		 * :: operator is out-of-date. Why? Because that's the way 		 * Make does it. 		 */
 if|if
 condition|(
 name|gn
@@ -536,7 +536,7 @@ name|oodate
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*      * If the target isn't out-of-date, the parents need to know its      * modification time. Note that targets that appear to be out-of-date      * but aren't, because they have no commands and aren't of type OP_NOP,      * have their mtime stay below their children's mtime to keep parents from      * thinking they're out-of-date.      */
+comment|/* 	 * If the target isn't out-of-date, the parents need to know its 	 * modification time. Note that targets that appear to be out-of-date 	 * but aren't, because they have no commands and aren't of type OP_NOP, 	 * have their mtime stay below their children's mtime to keep parents 	 * from thinking they're out-of-date. 	 */
 if|if
 condition|(
 operator|!
@@ -572,7 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_HandleUse --  *	Function called by Make_Run and SuffApplyTransform on the downward  *	pass to handle .USE and transformation nodes. A callback function  *	for LST_FOREACH, it implements the .USE and transformation  *	functionality by copying the node's commands, type flags  *	and children to the parent node. Should be called before the  *	children are enqueued to be looked at.  *  *	A .USE node is much like an explicit transformation rule, except  *	its commands are always added to the target node, even if the  *	target already has commands.  *  * Results:  *	returns 0.  *  * Side Effects:  *	Children and commands may be added to the parent and the parent's  *	type may be changed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Make_HandleUse  *	Function called by Make_Run and SuffApplyTransform on the downward  *	pass to handle .USE and transformation nodes. A callback function  *	for LST_FOREACH, it implements the .USE and transformation  *	functionality by copying the node's commands, type flags  *	and children to the parent node. Should be called before the  *	children are enqueued to be looked at.  *  *	A .USE node is much like an explicit transformation rule, except  *	its commands are always added to the target node, even if the  *	target already has commands.  *  * Results:  *	returns 0.  *  * Side Effects:  *	Children and commands may be added to the parent and the parent's  *	type may be changed.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -630,7 +630,7 @@ name|commands
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * .USE or transformation and target has no commands -- append 	     * the child's commands to the parent. 	     */
+comment|/* 			 * .USE or transformation and target has no commands -- 			 * append the child's commands to the parent. 			 */
 name|Lst_Concat
 argument_list|(
 operator|&
@@ -738,7 +738,7 @@ operator||
 name|OP_TRANSFORM
 operator|)
 expr_stmt|;
-comment|/* 	 * This child node is now "made", so we decrement the count of 	 * unmade children in the parent... We also remove the child 	 * from the parent's list to accurately reflect the number of decent 	 * children the parent has. This is used by Make_Run to decide 	 * whether to queue the parent or examine its children... 	 */
+comment|/* 		 * This child node is now "made", so we decrement the count of 		 * unmade children in the parent... We also remove the child 		 * from the parent's list to accurately reflect the number of 		 * decent children the parent has. This is used by Make_Run to 		 * decide whether to queue the parent or examine its children... 		 */
 if|if
 condition|(
 name|cgn
@@ -764,7 +764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_Update  --  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Make_Update  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  */
 end_comment
 
 begin_function
@@ -820,7 +820,7 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-comment|/*      * If the child was actually made, see what its modification time is      * now -- some rules won't actually update the file. If the file still      * doesn't exist, make its mtime now.      */
+comment|/* 	 * If the child was actually made, see what its modification time is 	 * now -- some rules won't actually update the file. If the file still 	 * doesn't exist, make its mtime now. 	 */
 if|if
 condition|(
 name|cgn
@@ -833,7 +833,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|RECHECK
-comment|/* 	 * We can't re-stat the thing, but we can at least take care of rules 	 * where a target depends on a source that actually creates the 	 * target, but only if it has changed, e.g. 	 * 	 * parse.h : parse.o 	 * 	 * parse.o : parse.y 	 *  	yacc -d parse.y 	 *  	cc -c y.tab.c 	 *  	mv y.tab.o parse.o 	 *  	cmp -s y.tab.h parse.h || mv y.tab.h parse.h 	 * 	 * In this case, if the definitions produced by yacc haven't changed 	 * from before, parse.h won't have been updated and cgn->mtime will 	 * reflect the current modification time for parse.h. This is 	 * something of a kludge, I admit, but it's a useful one.. 	 * XXX: People like to use a rule like 	 * 	 * FRC: 	 * 	 * To force things that depend on FRC to be made, so we have to 	 * check for gn->children being empty as well... 	 */
+comment|/* 		 * We can't re-stat the thing, but we can at least take care 		 * of rules where a target depends on a source that actually 		 * creates the target, but only if it has changed, e.g. 		 * 		 * parse.h : parse.o 		 * 		 * parse.o : parse.y 		 *  	yacc -d parse.y 		 *  	cc -c y.tab.c 		 *  	mv y.tab.o parse.o 		 *  	cmp -s y.tab.h parse.h || mv y.tab.h parse.h 		 * 		 * In this case, if the definitions produced by yacc haven't 		 * changed from before, parse.h won't have been updated and 		 * cgn->mtime will reflect the current modification time for 		 * parse.h. This is something of a kludge, I admit, but it's a 		 * useful one.. 		 * XXX: People like to use a rule like 		 * 		 * FRC: 		 * 		 * To force things that depend on FRC to be made, so we have to 		 * check for gn->children being empty as well... 		 */
 if|if
 condition|(
 operator|!
@@ -863,8 +863,8 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* 	 * This is what Make does and it's actually a good thing, as it 	 * allows rules like 	 * 	 *	cmp -s y.tab.h parse.h || cp y.tab.h parse.h 	 * 	 * to function as intended. Unfortunately, thanks to the stateless 	 * nature of NFS (by which I mean the loose coupling of two clients 	 * using the same file from a common server), there are times 	 * when the modification time of a file created on a remote 	 * machine will not be modified before the local stat() implied by 	 * the Dir_MTime occurs, thus leading us to believe that the file 	 * is unchanged, wreaking havoc with files that depend on this one. 	 * 	 * I have decided it is better to make too much than to make too 	 * little, so this stuff is commented out unless you're sure it's ok. 	 * -- ardeb 1/12/88 	 */
-comment|/* 	 * Christos, 4/9/92: If we are  saving commands pretend that 	 * the target is made now. Otherwise archives with ... rules 	 * don't work! 	 */
+comment|/* 		 * This is what Make does and it's actually a good thing, as it 		 * allows rules like 		 * 		 *	cmp -s y.tab.h parse.h || cp y.tab.h parse.h 		 * 		 * to function as intended. Unfortunately, thanks to the 		 * stateless nature of NFS (by which I mean the loose coupling 		 * of two clients using the same file from a common server), 		 * there are times when the modification time of a file created 		 * on a remote machine will not be modified before the local 		 * stat() implied by the Dir_MTime occurs, thus leading us to 		 * believe that the file is unchanged, wreaking havoc with 		 * files that depend on this one. 		 * 		 * I have decided it is better to make too much than to make too 		 * little, so this stuff is commented out unless you're sure 		 * it's ok. 		 * -- ardeb 1/12/88 		 */
+comment|/* 		 * Christos, 4/9/92: If we are  saving commands pretend that 		 * the target is made now. Otherwise archives with ... rules 		 * don't work! 		 */
 if|if
 condition|(
 name|noExecute
@@ -1027,7 +1027,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Queue the node up -- any unmade predecessors will 		 * be dealt with in MakeStartJobs. 		 */
+comment|/* 				 * Queue the node up -- any unmade predecessors 				 * will be dealt with in MakeStartJobs. 				 */
 name|Lst_EnQueue
 argument_list|(
 operator|&
@@ -1059,7 +1059,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * Deal with successor nodes. If any is marked for making and has an unmade      * count of 0, has not been made and isn't in the examination queue,      * it means we need to place it in the queue as it restrained itself      * before.      */
+comment|/* 	 * Deal with successor nodes. If any is marked for making and has an 	 * unmade count of 0, has not been made and isn't in the examination 	 * queue, it means we need to place it in the queue as it restrained 	 * itself before. 	 */
 for|for
 control|(
 name|ln
@@ -1132,7 +1132,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Set the .PREFIX and .IMPSRC variables for all the implied parents      * of this node.      */
+comment|/* 	 * Set the .PREFIX and .IMPSRC variables for all the implied parents 	 * of this node. 	 */
 name|cpref
 operator|=
 name|Var_Value
@@ -1212,7 +1212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_DoAllVar --  *	Set up the ALLSRC and OODATE variables. Sad to say, it must be  *	done separately, rather than while traversing the graph. This is  *	because Make defined OODATE to contain all sources whose modification  *	times were later than that of the target, *not* those sources that  *	were out-of-date. Since in both compatibility and native modes,  *	the modification time of the parent isn't found until the child  *	has been dealt with, we have to wait until now to fill in the  *	variable. As for ALLSRC, the ordering is important and not  *	guaranteed when in native mode, so it must be set here, too.  *  * Results:  *	None  *  * Side Effects:  *	The ALLSRC and OODATE variables of the given node is filled in.  *	If the node is a .JOIN node, its TARGET variable will be set to  * 	match its ALLSRC variable.  *-----------------------------------------------------------------------  */
+comment|/**  * Make_DoAllVar  *	Set up the ALLSRC and OODATE variables. Sad to say, it must be  *	done separately, rather than while traversing the graph. This is  *	because Make defined OODATE to contain all sources whose modification  *	times were later than that of the target, *not* those sources that  *	were out-of-date. Since in both compatibility and native modes,  *	the modification time of the parent isn't found until the child  *	has been dealt with, we have to wait until now to fill in the  *	variable. As for ALLSRC, the ordering is important and not  *	guaranteed when in native mode, so it must be set here, too.  *  * Side Effects:  *	The ALLSRC and OODATE variables of the given node is filled in.  *	If the node is a .JOIN node, its TARGET variable will be set to  * 	match its ALLSRC variable.  */
 end_comment
 
 begin_function
@@ -1477,7 +1477,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * MakeStartJobs --  *	Start as many jobs as possible.  *  * Results:  *	If the query flag was given to pmake, no job will be started,  *	but as soon as an out-of-date target is found, this function  *	returns TRUE. At all other times, this function returns FALSE.  *  * Side Effects:  *	Nodes are removed from the toBeMade queue and job table slots  *	are filled.  *  *-----------------------------------------------------------------------  */
+comment|/**  * MakeStartJobs  *	Start as many jobs as possible.  *  * Results:  *	If the query flag was given to pmake, no job will be started,  *	but as soon as an out-of-date target is found, this function  *	returns TRUE. At all other times, this function returns FALSE.  *  * Side Effects:  *	Nodes are removed from the toBeMade queue and job table slots  *	are filled.  */
 end_comment
 
 begin_function
@@ -1527,7 +1527,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure any and all predecessors that are going to be made, 	 * have been. 	 */
+comment|/* 		 * Make sure any and all predecessors that are going to be made, 		 * have been. 		 */
 if|if
 condition|(
 operator|!
@@ -1595,7 +1595,8 @@ argument_list|(
 name|MAKE
 argument_list|,
 operator|(
-literal|"predecessor %s not made yet.\n"
+literal|"predecessor %s not made "
+literal|"yet.\n"
 operator|,
 name|pgn
 operator|->
@@ -1606,7 +1607,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	     * If ln isn't NULL, there's a predecessor as yet unmade, so we 	     * just drop this node on the floor. When the node in question 	     * has been made, it will notice this node as being ready to 	     * make but as yet unmade and will place the node on the queue. 	     */
+comment|/* 			 * If ln isn't NULL, there's a predecessor as yet 			 * unmade, so we just drop this node on the floor. 			 * When the node in question has been made, it will 			 * notice this node as being ready to make but as yet 			 * unmade and will place the node on the queue. 			 */
 if|if
 condition|(
 name|ln
@@ -1685,7 +1686,7 @@ operator|&
 name|OP_JOIN
 condition|)
 block|{
-comment|/* 		 * Even for an up-to-date .JOIN node, we need it to have its 		 * context variables so references to it get the correct 		 * value for .TARGET when building up the context variables 		 * of its parent(s)... 		 */
+comment|/* 				 * Even for an up-to-date .JOIN node, we need 				 * it to have its context variables so 				 * references to it get the correct value for 				 * .TARGET when building up the context 				 * variables of its parent(s)... 				 */
 name|Make_DoAllVar
 argument_list|(
 name|gn
@@ -1708,7 +1709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * MakePrintStatus --  *	Print the status of a top-level node, viz. it being up-to-date  *	already or not created due to an error in a lower level.  *	Callback function for Make_Run via LST_FOREACH.  If gn->unmade is  *	nonzero and that is meant to imply a cycle in the graph, then  *	cycle is TRUE.  *  * Side Effects:  *	A message may be printed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * MakePrintStatus  *	Print the status of a top-level node, viz. it being up-to-date  *	already or not created due to an error in a lower level.  *	Callback function for Make_Run via LST_FOREACH.  If gn->unmade is  *	nonzero and that is meant to imply a cycle in the graph, then  *	cycle is TRUE.  *  * Side Effects:  *	A message may be printed.  */
 end_comment
 
 begin_function
@@ -1762,7 +1763,7 @@ condition|(
 name|cycle
 condition|)
 block|{
-comment|/* 	     * If printing cycles and came to one that has unmade children, 	     * print out the cycle by recursing on its children. Note a 	     * cycle like: 	     *	a : b 	     *	b : c 	     *	c : b 	     * will cause this to erroneously complain about a being in 	     * the cycle, but this is a good approximation. 	     */
+comment|/* 			 * If printing cycles and came to one that has unmade 			 * children, print out the cycle by recursing on its 			 * children. Note a cycle like: 			 *	a : b 			 *	b : c 			 *	c : b 			 * will cause this to erroneously complain about a 			 * being in the cycle, but this is a good approximation. 			 */
 if|if
 condition|(
 name|gn
@@ -1861,7 +1862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_Run --  *	Initialize the nodes to remake and the list of nodes which are  *	ready to be made by doing a breadth-first traversal of the graph  *	starting from the nodes in the given list. Once this traversal  *	is finished, all the 'leaves' of the graph are in the toBeMade  *	queue.  *	Using this queue and the Job module, work back up the graph,  *	calling on MakeStartJobs to keep the job table as full as  *	possible.  *  * Results:  *	TRUE if work was done. FALSE otherwise.  *  * Side Effects:  *	The make field of all nodes involved in the creation of the given  *	targets is set to 1. The toBeMade list is set to contain all the  *	'leaves' of these subgraphs.  *-----------------------------------------------------------------------  */
+comment|/**  * Make_Run  *	Initialize the nodes to remake and the list of nodes which are  *	ready to be made by doing a breadth-first traversal of the graph  *	starting from the nodes in the given list. Once this traversal  *	is finished, all the 'leaves' of the graph are in the toBeMade  *	queue.  *	Using this queue and the Job module, work back up the graph,  *	calling on MakeStartJobs to keep the job table as full as  *	possible.  *  * Results:  *	TRUE if work was done. FALSE otherwise.  *  * Side Effects:  *	The make field of all nodes involved in the creation of the given  *	targets is set to 1. The toBeMade list is set to contain all the  *	'leaves' of these subgraphs.  */
 end_comment
 
 begin_function
@@ -1914,7 +1915,7 @@ name|numNodes
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Make an initial downward pass over the graph, marking nodes to be made      * as we go down. We call Suff_FindDeps to find where a node is and      * to get some children for it if it has none and also has no commands.      * If the node is a leaf, we stick it on the toBeMade queue to      * be looked at in a minute, otherwise we add its children to our queue      * and go on about our business.      */
+comment|/* 	 * Make an initial downward pass over the graph, marking nodes to be 	 * made as we go down. We call Suff_FindDeps to find where a node is and 	 * to get some children for it if it has none and also has no commands. 	 * If the node is a leaf, we stick it on the toBeMade queue to 	 * be looked at in a minute, otherwise we add its children to our queue 	 * and go on about our business. 	 */
 while|while
 condition|(
 operator|!
@@ -1950,7 +1951,7 @@ expr_stmt|;
 name|numNodes
 operator|++
 expr_stmt|;
-comment|/* 	     * Apply any .USE rules before looking for implicit dependencies 	     * to make sure everything has commands that should... 	     */
+comment|/* 			 * Apply any .USE rules before looking for implicit 			 * dependencies to make sure everything has commands 			 * that should... 			 */
 name|LST_FOREACH
 argument_list|(
 argument|ln
@@ -2042,7 +2043,7 @@ condition|(
 name|queryFlag
 condition|)
 block|{
-comment|/* 	 * We wouldn't do any work unless we could start some jobs in the 	 * next loop... (we won't actually start any, of course, this is just 	 * to see if any of the targets was out of date) 	 */
+comment|/* 		 * We wouldn't do any work unless we could start some jobs in 		 * the next loop... (we won't actually start any, of course, 		 * this is just to see if any of the targets was out of date) 		 */
 return|return
 operator|(
 name|MakeStartJobs
@@ -2052,12 +2053,12 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 	 * Initialization. At the moment, no jobs are running and until some 	 * get started, nothing will happen since the remaining upward 	 * traversal of the graph is performed by the routines in job.c upon 	 * the finishing of a job. So we fill the Job table as much as we can 	 * before going into our loop. 	 */
+comment|/* 		 * Initialization. At the moment, no jobs are running and 		 * until some get started, nothing will happen since the 		 * remaining upward traversal of the graph is performed by the 		 * routines in job.c upon the finishing of a job. So we fill 		 * the Job table as much as we can before going into our loop. 		 */
 name|MakeStartJobs
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*      * Main Loop: The idea here is that the ending of jobs will take      * care of the maintenance of data structures and the waiting for output      * will cause us to be idle most of the time while our children run as      * much as possible. Because the job table is kept as full as possible,      * the only time when it will be empty is when all the jobs which need      * running have been run, so that is the end condition of this loop.      * Note that the Job module will exit if there were any errors unless the      * keepgoing flag was given.      */
+comment|/* 	 * Main Loop: The idea here is that the ending of jobs will take 	 * care of the maintenance of data structures and the waiting for output 	 * will cause us to be idle most of the time while our children run as 	 * much as possible. Because the job table is kept as full as possible, 	 * the only time when it will be empty is when all the jobs which need 	 * running have been run, so that is the end condition of this loop. 	 * Note that the Job module will exit if there were any errors unless 	 * the keepgoing flag was given. 	 */
 while|while
 condition|(
 operator|!
@@ -2090,7 +2091,7 @@ operator|=
 name|Job_Finish
 argument_list|()
 expr_stmt|;
-comment|/*      * Print the final status of each target. E.g. if it wasn't made      * because some inferior reported an error.      */
+comment|/* 	 * Print the final status of each target. E.g. if it wasn't made 	 * because some inferior reported an error. 	 */
 name|errors
 operator|=
 operator|(
