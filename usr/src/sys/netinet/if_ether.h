@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.h	6.1	83/07/29	*/
+comment|/*	if_ether.h	6.2	83/09/26	*/
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|ETHERPUP_PUPTYPE
-value|0x0400
+value|0x0200
 end_define
 
 begin_comment
