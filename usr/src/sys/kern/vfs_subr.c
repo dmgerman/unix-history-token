@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.99 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.100 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,6 +77,18 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -3075,8 +3087,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* patch to print out busy vnodes */
+comment|/* print out busy vnodes */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug1
+init|=
+block|{
+literal|"busyprt"
+block|,
+operator|&
+name|busyprt
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|vflush
