@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.65 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: channels.h,v 1.68 2002/06/10 22:28:41 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -514,6 +514,46 @@ define|#
 directive|define
 name|CHAN_CLOSE_RCVD
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_EOF_SENT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_EOF_RCVD
+value|0x08
+end_define
+
+begin_comment
+comment|/* check whether 'efd' is still in use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_EFD_INPUT_ACTIVE
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|(compat20&& c->extended_usage == CHAN_EXTENDED_READ&& \ 	(c->efd != -1 || \ 	buffer_len(&c->extended)> 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANNEL_EFD_OUTPUT_ACTIVE
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|(compat20&& c->extended_usage == CHAN_EXTENDED_WRITE&& \ 	((c->efd != -1&& !(c->flags& (CHAN_EOF_RCVD|CHAN_CLOSE_RCVD))) || \ 	buffer_len(&c->extended)> 0))
 end_define
 
 begin_comment
@@ -1130,37 +1170,6 @@ name|void
 name|auth_request_forwarding
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|auth_get_socket_name
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|auth_sock_cleanup_proc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|auth_input_request_forwarding
-parameter_list|(
-name|struct
-name|passwd
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: servconf.c,v 1.101 2002/02/04 12:15:25 markus Exp $"
+literal|"$OpenBSD: servconf.c,v 1.111 2002/06/20 23:05:55 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -165,6 +165,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|IPv4or6
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use of privilege separation or not */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_privsep
 decl_stmt|;
 end_decl_stmt
 
@@ -477,6 +488,13 @@ literal|1
 expr_stmt|;
 name|options
 operator|->
+name|compression
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|options
+operator|->
 name|allow_tcp_forwarding
 operator|=
 operator|-
@@ -596,6 +614,12 @@ operator|->
 name|authorized_keys_file2
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* Needs to be accessable in many places */
+name|use_privsep
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -1091,16 +1115,7 @@ name|options
 operator|->
 name|kerberos_authentication
 operator|=
-operator|(
-name|access
-argument_list|(
-name|KEYFILE
-argument_list|,
-name|R_OK
-argument_list|)
-operator|==
 literal|0
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1178,8 +1193,7 @@ name|options
 operator|->
 name|afs_token_passing
 operator|=
-name|k_hasafs
-argument_list|()
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -1257,6 +1271,21 @@ operator|->
 name|use_login
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|compression
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|compression
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1429,6 +1458,18 @@ name|authorized_keys_file
 operator|=
 name|_PATH_SSH_USER_PERMITTED_KEYS
 expr_stmt|;
+comment|/* Turn privilege separation on by default */
+if|if
+condition|(
+name|use_privsep
+operator|==
+operator|-
+literal|1
+condition|)
+name|use_privsep
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1536,6 +1577,8 @@ name|sUseLogin
 block|,
 name|sAllowTcpForwarding
 block|,
+name|sCompression
+block|,
 name|sAllowUsers
 block|,
 name|sDenyUsers
@@ -1579,6 +1622,8 @@ block|,
 name|sAuthorizedKeysFile
 block|,
 name|sAuthorizedKeysFile2
+block|,
+name|sUsePrivilegeSeparation
 block|,
 name|sDeprecated
 block|}
@@ -1876,6 +1921,12 @@ name|sUseLogin
 block|}
 block|,
 block|{
+literal|"compression"
+block|,
+name|sCompression
+block|}
+block|,
+block|{
 literal|"keepalive"
 block|,
 name|sKeepAlives
@@ -1987,6 +2038,12 @@ block|{
 literal|"authorizedkeysfile2"
 block|,
 name|sAuthorizedKeysFile2
+block|}
+block|,
+block|{
+literal|"useprivilegeseparation"
+block|,
+name|sUsePrivilegeSeparation
 block|}
 block|,
 block|{
@@ -3666,6 +3723,19 @@ goto|goto
 name|parse_flag
 goto|;
 case|case
+name|sCompression
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|compression
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+case|case
 name|sGatewayPorts
 case|:
 name|intptr
@@ -3834,6 +3904,17 @@ operator|&
 name|options
 operator|->
 name|allow_tcp_forwarding
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+case|case
+name|sUsePrivilegeSeparation
+case|:
+name|intptr
+operator|=
+operator|&
+name|use_privsep
 expr_stmt|;
 goto|goto
 name|parse_flag

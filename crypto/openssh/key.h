@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: key.h,v 1.18 2002/02/24 19:14:59 markus Exp $	*/
+comment|/*	$OpenBSD: key.h,v 1.19 2002/03/18 17:23:31 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -132,6 +132,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|key_free
+parameter_list|(
+name|Key
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Key
+modifier|*
+name|key_demote
 parameter_list|(
 name|Key
 modifier|*

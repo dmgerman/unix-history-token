@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: xmalloc.h,v 1.8 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: xmalloc.h,v 1.9 2002/06/19 00:27:55 deraadt Exp $	*/
 end_comment
 
 begin_comment

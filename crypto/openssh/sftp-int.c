@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-int.c,v 1.44 2002/02/13 00:59:23 djm Exp $"
+literal|"$OpenBSD: sftp-int.c,v 1.46 2002/03/30 18:51:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -808,7 +808,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
+while|while
 condition|(
 name|waitpid
 argument_list|(
@@ -822,6 +822,12 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+condition|)
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
 condition|)
 name|fatal
 argument_list|(
@@ -4623,8 +4629,18 @@ operator|&
 name|pwd
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|xfree
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
 block|}
 name|setvbuf
 argument_list|(

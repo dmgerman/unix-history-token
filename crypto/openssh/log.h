@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.6 2002/02/22 12:20:34 markus Exp $	*/
+comment|/*	$OpenBSD: log.h,v 1.7 2002/05/19 20:54:52 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ name|SYSLOG_FACILITY_NOT_SET
 init|=
 operator|-
 literal|1
-block|, }
+block|}
 name|SyslogFacility
 typedef|;
 end_typedef
@@ -82,7 +82,7 @@ name|SYSLOG_LEVEL_NOT_SET
 init|=
 operator|-
 literal|1
-block|, }
+block|}
 name|LogLevel
 typedef|;
 end_typedef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pathnames.h,v 1.11 2002/02/09 17:37:34 deraadt Exp $	*/
+comment|/*	$OpenBSD: pathnames.h,v 1.13 2002/05/23 19:24:30 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -264,6 +264,17 @@ value|"/usr/X11R6/bin/ssh-askpass"
 end_define
 
 begin_comment
+comment|/* Location of ssh-keysign for hostbased authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_SSH_KEY_SIGN
+value|"/usr/libexec/ssh-keysign"
+end_define
+
+begin_comment
 comment|/* xauth for X11 forwarding */
 end_comment
 
@@ -312,6 +323,17 @@ define|#
 directive|define
 name|_PATH_LS
 value|"ls"
+end_define
+
+begin_comment
+comment|/* chroot directory for unprivileged user when UsePrivilegeSeparation=yes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_PRIVSEP_CHROOT_DIR
+value|"/var/empty"
 end_define
 
 end_unit

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compat.c,v 1.61 2002/03/06 00:24:39 markus Exp $"
+literal|"$OpenBSD: compat.c,v 1.63 2002/04/10 08:21:47 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,6 +160,8 @@ operator||
 name|SSH_OLD_DHGEX
 operator||
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
@@ -172,6 +174,8 @@ operator||
 name|SSH_OLD_DHGEX
 operator||
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
@@ -182,6 +186,8 @@ operator||
 name|SSH_OLD_DHGEX
 operator||
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
@@ -193,6 +199,8 @@ operator||
 name|SSH_OLD_DHGEX
 operator||
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
@@ -203,18 +211,32 @@ block|,
 name|SSH_OLD_DHGEX
 operator||
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
 literal|"OpenSSH_2.5.3*"
 block|,
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
+block|}
+block|,
+block|{
+literal|"OpenSSH_2.*,"
+literal|"OpenSSH_3.0*,"
+literal|"OpenSSH_3.1*"
+block|,
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
 literal|"Sun_SSH_1.0*"
 block|,
 name|SSH_BUG_NOREKEY
+operator||
+name|SSH_BUG_EXTEOF
 block|}
 block|,
 block|{
@@ -406,15 +428,27 @@ literal|"1.2.21*,"
 literal|"1.2.22*"
 block|,
 name|SSH_BUG_IGNOREMSG
+operator||
+name|SSH_BUG_K5USER
 block|}
 block|,
 block|{
 literal|"1.3.2*"
 block|,
+comment|/* F-Secure */
 name|SSH_BUG_IGNOREMSG
+operator||
+name|SSH_BUG_K5USER
 block|}
 block|,
-comment|/* f-secure */
+block|{
+literal|"1.2.1*,"
+literal|"1.2.2*,"
+literal|"1.2.3*"
+block|,
+name|SSH_BUG_K5USER
+block|}
+block|,
 block|{
 literal|"*SSH Compatible Server*"
 block|,

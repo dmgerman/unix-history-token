@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: nchan.c,v 1.44 2002/01/21 23:27:10 markus Exp $"
+literal|"$OpenBSD: nchan.c,v 1.47 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1129,6 +1129,12 @@ operator|->
 name|self
 argument_list|)
 expr_stmt|;
+name|c
+operator|->
+name|flags
+operator||=
+name|CHAN_EOF_RCVD
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -1254,6 +1260,12 @@ argument_list|)
 expr_stmt|;
 name|packet_send
 argument_list|()
+expr_stmt|;
+name|c
+operator|->
+name|flags
+operator||=
+name|CHAN_EOF_SENT
 expr_stmt|;
 break|break;
 default|default:
@@ -1419,6 +1431,12 @@ name|output
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|CHANNEL_EFD_OUTPUT_ACTIVE
+argument_list|(
+name|c
+argument_list|)
 condition|)
 name|chan_obuf_empty
 argument_list|(
@@ -1570,17 +1588,26 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 	 * we have to delay the close message if the efd (for stderr) is 	 * still active 	 */
 if|if
 condition|(
 operator|(
-operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_EXTEOF
+operator|)
+operator|&&
 name|c
 operator|->
 name|extended_usage
+operator|==
+name|CHAN_EXTENDED_WRITE
+operator|&&
+name|c
+operator|->
+name|efd
 operator|!=
-name|CHAN_EXTENDED_IGNORE
-operator|)
+operator|-
+literal|1
 operator|&&
 name|buffer_len
 argument_list|(
@@ -1591,18 +1618,11 @@ name|extended
 argument_list|)
 operator|>
 literal|0
-operator|)
-if|#
-directive|if
-literal|0
-condition||| ((c->extended_usage == CHAN_EXTENDED_READ)&& 	    c->efd != -1)
-endif|#
-directive|endif
 condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"channel %d: active efd: %d len %d type %s"
+literal|"channel %d: active efd: %d len %d"
 argument_list|,
 name|c
 operator|->
@@ -1619,21 +1639,12 @@ name|c
 operator|->
 name|extended
 argument_list|)
-argument_list|,
-name|c
-operator|->
-name|extended_usage
-operator|==
-name|CHAN_EXTENDED_READ
-condition|?
-literal|"read"
-else|:
-literal|"write"
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 operator|!
@@ -1715,7 +1726,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-block|}
 block|}
 return|return
 literal|0

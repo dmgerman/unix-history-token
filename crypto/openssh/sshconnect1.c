@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.48 2002/02/11 16:15:46 markus Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.51 2002/05/23 19:24:30 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1900,6 +1900,19 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|auth
+operator|.
+name|length
+operator|>=
+name|MAX_KTXT_LEN
+condition|)
+name|fatal
+argument_list|(
+literal|"Kerberos v4: Malformed response from server"
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|auth
@@ -3742,7 +3755,7 @@ condition|)
 name|log
 argument_list|(
 literal|"WARNING: Encryption is disabled! "
-literal|"Reponse will be transmitted in clear text."
+literal|"Response will be transmitted in clear text."
 argument_list|)
 expr_stmt|;
 name|response
@@ -4855,13 +4868,9 @@ name|char
 modifier|*
 name|host
 parameter_list|,
-name|Key
+name|Sensitive
 modifier|*
-modifier|*
-name|keys
-parameter_list|,
-name|int
-name|nkeys
+name|sensitive
 parameter_list|)
 block|{
 ifdef|#
@@ -5167,6 +5176,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|sensitive
+operator|->
 name|nkeys
 condition|;
 name|i
@@ -5175,6 +5186,8 @@ control|)
 block|{
 if|if
 condition|(
+name|sensitive
+operator|->
 name|keys
 index|[
 name|i
@@ -5182,6 +5195,8 @@ index|]
 operator|!=
 name|NULL
 operator|&&
+name|sensitive
+operator|->
 name|keys
 index|[
 name|i
@@ -5195,6 +5210,8 @@ name|try_rhosts_rsa_authentication
 argument_list|(
 name|local_user
 argument_list|,
+name|sensitive
+operator|->
 name|keys
 index|[
 name|i

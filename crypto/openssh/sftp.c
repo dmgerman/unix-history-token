@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.26 2002/02/12 12:32:27 djm Exp $"
+literal|"$OpenBSD: sftp.c,v 1.29 2002/04/02 17:37:48 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -823,6 +823,20 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|log_init
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|ll
+argument_list|,
+name|SYSLOG_FACILITY_USER
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sftp_direct
@@ -974,20 +988,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|log_init
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|ll
-argument_list|,
-name|SYSLOG_FACILITY_USER
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|addargs
 argument_list|(
 operator|&
@@ -1163,7 +1163,7 @@ argument_list|(
 name|infile
 argument_list|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|waitpid
 argument_list|(
@@ -1176,6 +1176,12 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+condition|)
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINTR
 condition|)
 name|fatal
 argument_list|(

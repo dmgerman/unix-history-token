@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: readpass.c,v 1.26 2002/02/13 00:39:15 markus Exp $"
+literal|"$OpenBSD: readpass.c,v 1.27 2002/03/26 15:58:46 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -569,12 +569,23 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|RP_ALLOW_EOF
+condition|)
+return|return
+name|NULL
+return|;
 return|return
 name|xstrdup
 argument_list|(
 literal|""
 argument_list|)
 return|;
+block|}
 name|ret
 operator|=
 name|xstrdup

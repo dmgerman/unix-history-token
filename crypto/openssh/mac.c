@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: mac.c,v 1.4 2002/01/25 22:07:40 markus Exp $"
+literal|"$OpenBSD: mac.c,v 1.5 2002/05/16 22:02:50 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,6 +66,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 function_decl|(

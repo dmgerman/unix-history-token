@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: uidswap.c,v 1.19 2001/12/19 07:18:56 deraadt Exp $"
+literal|"$OpenBSD: uidswap.c,v 1.22 2002/05/28 21:24:00 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -127,16 +127,25 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"temporarily_use_uid: %d/%d (e=%d)"
+literal|"temporarily_use_uid: %u/%u (e=%u)"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|pw
 operator|->
 name|pw_uid
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|pw
 operator|->
 name|pw_gid
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|saved_euid
 argument_list|)
 expr_stmt|;
@@ -276,14 +285,6 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|pw
-operator|->
-name|pw_gid
-operator|=
-name|pw
-operator|->
-name|pw_gid
 expr_stmt|;
 if|if
 condition|(
@@ -475,7 +476,7 @@ name|temporarily_use_uid_effective
 condition|)
 name|fatal
 argument_list|(
-literal|"restore_uid: temporarily_use_uid effective"
+literal|"permanently_set_uid: temporarily_use_uid effective"
 argument_list|)
 expr_stmt|;
 if|if

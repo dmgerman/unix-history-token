@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.48 2002/02/28 15:46:33 markus Exp $"
+literal|"$OpenBSD: authfile.c,v 1.49 2002/05/23 19:24:30 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1947,7 +1947,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|Key
 modifier|*
 name|key_load_private_pem

@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ttymodes.c,v 1.16 2001/12/27 20:39:58 markus Exp $"
+literal|"$OpenBSD: ttymodes.c,v 1.18 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -886,7 +886,6 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1194,7 +1193,7 @@ operator|!
 name|compat20
 condition|)
 block|{
-comment|/* 				 * SSH1: 				 * Opcodes 1 to 127 are defined to have 				 * a one-byte argument.   				 * Opcodes 128 to 159 are defined to have   				 * an integer argument.   				 */
+comment|/* 				 * SSH1: 				 * Opcodes 1 to 127 are defined to have 				 * a one-byte argument. 				 * Opcodes 128 to 159 are defined to have 				 * an integer argument. 				 */
 if|if
 condition|(
 name|opcode
@@ -1362,7 +1361,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

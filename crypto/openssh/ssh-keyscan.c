@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.35 2002/03/04 18:30:23 stevesk Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.36 2002/06/16 21:30:58 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3050,9 +3050,11 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|tq
-operator|.
-name|tqh_first
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3280,9 +3282,11 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|tq
-operator|.
-name|tqh_first
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -3332,11 +3336,12 @@ name|c_fd
 decl_stmt|;
 name|c
 operator|=
+name|TAILQ_NEXT
+argument_list|(
 name|c
-operator|->
+argument_list|,
 name|c_link
-operator|.
-name|tqe_next
+argument_list|)
 expr_stmt|;
 name|conrecycle
 argument_list|(

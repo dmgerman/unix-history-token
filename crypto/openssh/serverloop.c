@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: serverloop.c,v 1.98 2002/02/06 14:55:16 markus Exp $"
+literal|"$OpenBSD: serverloop.c,v 1.102 2002/06/11 05:46:20 mpech Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1275,24 +1275,6 @@ operator|&
 name|tv
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|tvp
-operator|!=
-name|NULL
-condition|)
-name|debug3
-argument_list|(
-literal|"tvp!=NULL kid %d mili %d"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|child_terminated
-argument_list|,
-name|max_time_milliseconds
-argument_list|)
-expr_stmt|;
 comment|/* Wait for something to happen, or the timeout to expire. */
 name|ret
 operator|=
@@ -2651,6 +2633,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
 name|wait_pid
 operator|=
 name|waitpid
@@ -2663,13 +2648,15 @@ name|wait_status
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|)
+operator|<
+literal|0
+condition|)
 if|if
 condition|(
-name|wait_pid
-operator|==
-operator|-
-literal|1
+name|errno
+operator|!=
+name|EINTR
 condition|)
 name|packet_disconnect
 argument_list|(
@@ -2681,7 +2668,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|wait_pid
@@ -2690,10 +2676,16 @@ name|pid
 condition|)
 name|error
 argument_list|(
-literal|"Strange, wait returned pid %d, expected %d"
+literal|"Strange, wait returned pid %ld, expected %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|wait_pid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pid
 argument_list|)
 expr_stmt|;
@@ -2855,6 +2847,22 @@ argument_list|,
 name|WNOHANG
 argument_list|)
 operator|)
+operator|>
+literal|0
+operator|||
+operator|(
+name|pid
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINTR
+operator|)
+condition|)
+if|if
+condition|(
+name|pid
 operator|>
 literal|0
 condition|)
@@ -3079,7 +3087,9 @@ argument_list|()
 expr_stmt|;
 comment|/* free remaining sessions, e.g. remove wtmp entries */
 name|session_destroy_all
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh.h,v 1.64 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: ssh.h,v 1.70 2002/06/03 12:04:07 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ value|100
 end_define
 
 begin_comment
-comment|/*  * Major protocol version.  Different version indicates major incompatiblity  * that prevents communication.  *  * Minor protocol version.  Different version indicates minor incompatibility  * that does not prevent interoperation.  */
+comment|/*  * Major protocol version.  Different version indicates major incompatibility  * that prevents communication.  *  * Minor protocol version.  Different version indicates minor incompatibility  * that does not prevent interoperation.  */
 end_comment
 
 begin_define
@@ -185,6 +185,28 @@ define|#
 directive|define
 name|SSH_ESCAPECHAR_NONE
 value|-2
+end_define
+
+begin_comment
+comment|/*  * unprivileged user when UsePrivilegeSeparation=yes;  * sshd will change its privileges to this user and its  * primary group.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_PRIVSEP_USER
+value|"sshd"
+end_define
+
+begin_comment
+comment|/* Minimum modulus size (n) for RSA keys. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_RSA_MINIMUM_MODULUS_SIZE
+value|768
 end_define
 
 begin_endif
