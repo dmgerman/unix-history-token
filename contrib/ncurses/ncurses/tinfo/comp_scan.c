@@ -781,6 +781,9 @@ argument_list|(
 literal|"empty longname field"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 elseif|else
 if|if
 condition|(
@@ -802,6 +805,8 @@ argument_list|(
 literal|"older tic versions may treat the description field as an alias"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

@@ -62,6 +62,29 @@ name|BC
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|_nc_termcap
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffer to copy out */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/***************************************************************************  *  * tgetent(bufp, term)  *  * In termcap, this function reads in the entry for terminal `term' into the  * buffer pointed to by bufp. It must be called before any of the functions  * below are called.  * In this terminfo emulation, tgetent() simply calls setupterm() (which  * does a bit more than tgetent() in termcap does), and returns its return  * value (1 if successful, 0 if no terminal with the given name could be  * found, or -1 if no terminal descriptions have been installed on the  * system).  The bufp argument is ignored.  *  ***************************************************************************/
 end_comment
@@ -187,6 +210,30 @@ directive|include
 file|<capdefaults.c>
 comment|/* LINT_PREPRO #endif*/
 block|}
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+comment|/* 	 * This is a REALLY UGLY hack. Basically, if we originate with 	 * a termcap source, try and copy it out. 	 */
+if|if
+condition|(
+name|bufp
+operator|&&
+name|_nc_termcap
+index|[
+literal|0
+index|]
+condition|)
+name|strncpy
+argument_list|(
+name|bufp
+argument_list|,
+name|_nc_termcap
+argument_list|,
+literal|1024
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|returnCode
 argument_list|(
 name|errcode
