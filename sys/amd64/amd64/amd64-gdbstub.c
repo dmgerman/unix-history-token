@@ -55,6 +55,20 @@ directive|include
 file|"opt_ddb.h"
 end_include
 
+begin_function_decl
+name|void
+name|gdb_handle_exception
+parameter_list|(
+name|db_regs_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -88,20 +102,6 @@ end_else
 begin_comment
 comment|/************************************************************************/
 end_comment
-
-begin_function_decl
-name|void
-name|gdb_handle_exception
-parameter_list|(
-name|db_regs_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern
