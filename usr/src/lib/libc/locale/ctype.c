@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctype.c	5.7 (Berkeley) %G%"
+literal|"@(#)ctype.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,19 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_ctype_
+init|=
+name|__ctype
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Backward compatibility. */
+end_comment
 
 begin_decl_stmt
 name|char
