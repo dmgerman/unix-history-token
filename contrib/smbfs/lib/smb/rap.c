@@ -697,7 +697,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|ENOMEM
 return|;
 name|bzero
 argument_list|(
