@@ -491,24 +491,40 @@ operator|->
 name|interrupted
 condition|)
 block|{
+if|if
+condition|(
+name|num
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Return partial success: */
+name|ret
+operator|=
+name|num
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Return an error: */
+name|errno
+operator|=
+name|EINTR
+expr_stmt|;
 name|ret
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* 			 * If performing a non-blocking write or if an 			 * error occurred, just return whatever the write 			 * syscall did: 			 */
+block|}
+comment|/* 			 * If performing a non-blocking write, 			 * just return whatever the write syscall did: 			 */
 block|}
 elseif|else
 if|if
 condition|(
 operator|!
 name|blocking
-operator|||
-name|n
-operator|<
-literal|0
 condition|)
 block|{
 comment|/* A non-blocking call might return zero: */
@@ -517,6 +533,31 @@ operator|=
 name|n
 expr_stmt|;
 break|break;
+comment|/* 			 * If there was an error, return partial success 			 * (if any bytes were written) or else the error: 			 */
+block|}
+elseif|else
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|num
+operator|>
+literal|0
+condition|)
+name|ret
+operator|=
+name|num
+expr_stmt|;
+else|else
+name|ret
+operator|=
+name|n
+expr_stmt|;
 comment|/* Check if the write has completed: */
 block|}
 elseif|else
