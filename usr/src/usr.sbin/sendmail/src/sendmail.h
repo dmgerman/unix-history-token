@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.66 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.65		%G%"
+literal|"@(#)sendmail.h	8.66		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,7 +430,7 @@ modifier|*
 name|q_mailer
 decl_stmt|;
 comment|/* mailer to use */
-name|u_short
+name|u_long
 name|q_flags
 decl_stmt|;
 comment|/* status flags, see below */
@@ -497,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|QDONTSEND
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -508,7 +508,7 @@ begin_define
 define|#
 directive|define
 name|QBADADDR
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -519,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|QGOODUID
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -530,7 +530,7 @@ begin_define
 define|#
 directive|define
 name|QPRIMARY
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -541,7 +541,7 @@ begin_define
 define|#
 directive|define
 name|QQUEUEUP
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -552,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|QSENT
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -563,18 +563,18 @@ begin_define
 define|#
 directive|define
 name|QNOTREMOTE
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
-comment|/* not an address for remote forwarding */
+comment|/* address not for remote forwarding */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QSELFREF
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -585,7 +585,7 @@ begin_define
 define|#
 directive|define
 name|QVERIFIED
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -596,33 +596,99 @@ begin_define
 define|#
 directive|define
 name|QREPORT
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
-comment|/* report this address in return message */
+comment|/* report this addr in return message */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QBOGUSSHELL
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
-comment|/* this entry has an invalid shell listed */
+comment|/* user has no valid shell listed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QUNSAFEADDR
-value|0x0800
+value|0x00000800
 end_define
 
 begin_comment
-comment|/* address aquired through an unsafe path */
+comment|/* address aquired via unsafe path */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QPINGONSUCCESS
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* give return on successful delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QPINGONFAILURE
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* give return on failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QPINGONDELAY
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* give return on message delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QHASRETPARAM
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* RCPT command had RET argument */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QNOBODYRETURN
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* don't return message body */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QRELAYED
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* relayed to non-DSN aware mailer */
 end_comment
 
 begin_define
@@ -1651,6 +1717,17 @@ begin_comment
 comment|/* convert from 8 to 7 bits */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCIF_DSN
+value|0x0800
+end_define
+
+begin_comment
+comment|/* DSN extension supported */
+end_comment
+
 begin_comment
 comment|/* states */
 end_comment
@@ -1946,6 +2023,11 @@ modifier|*
 name|e_origrcpt
 decl_stmt|;
 comment|/* original recipient (one only) */
+name|char
+modifier|*
+name|e_envid
+decl_stmt|;
+comment|/* envelope id from MAIL FROM: line */
 name|time_t
 name|e_dtime
 decl_stmt|;

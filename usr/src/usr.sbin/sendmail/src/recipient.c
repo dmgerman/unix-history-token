@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.50 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,21 @@ define|#
 directive|define
 name|MAXRCRSN
 value|10
+end_define
+
+begin_comment
+comment|/* maximum levels of alias recursion */
+end_comment
+
+begin_comment
+comment|/* q_flags bits inherited from ctladdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QINHERITEDBITS
+value|(QPINGONSUCCESS|QPINGONFAILURE|QPINGONDELAY|QHASRETPARAM|QNOBODYRETURN)
 end_define
 
 begin_function

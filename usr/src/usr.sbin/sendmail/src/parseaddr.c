@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.38 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5941,6 +5941,13 @@ sizeof|sizeof
 expr|*
 name|a
 argument_list|)
+expr_stmt|;
+comment|/* set up default error return flags */
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QPINGONFAILURE
 expr_stmt|;
 comment|/* figure out what net/mailer to use */
 if|if

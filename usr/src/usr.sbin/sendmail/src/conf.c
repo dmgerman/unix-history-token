@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.112 (Berkeley) %G%"
+literal|"@(#)conf.c	8.113 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1713,6 +1713,12 @@ expr_stmt|;
 name|svcno
 operator|++
 expr_stmt|;
+name|lk
+operator|=
+name|lk
+operator|->
+name|next
+expr_stmt|;
 block|}
 return|return
 name|svcno
@@ -1738,11 +1744,20 @@ decl_stmt|;
 name|int
 name|svc
 decl_stmt|;
-name|svc
+name|svcinfo
 operator|=
 name|getsvc
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|svcinfo
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|punt
+goto|;
 if|if
 condition|(
 name|strcmp
@@ -1874,11 +1889,9 @@ directive|endif
 case|case
 name|SVC_LAST
 case|:
+return|return
 name|svcno
-operator|=
-name|SVC_PATHSIZE
-expr_stmt|;
-break|break;
+return|;
 block|}
 block|}
 return|return
@@ -2069,7 +2082,11 @@ return|return
 name|svcno
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* if the service file doesn't work, use an absolute fallback */
+name|punt
+label|:
 if|if
 condition|(
 name|strcmp
@@ -2165,8 +2182,6 @@ return|return
 operator|-
 literal|1
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
