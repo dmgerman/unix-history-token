@@ -3024,9 +3024,6 @@ operator|&&
 operator|!
 name|groupmember
 argument_list|(
-operator|(
-name|gid_t
-operator|)
 name|gid
 argument_list|,
 name|cred
