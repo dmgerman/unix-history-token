@@ -2710,7 +2710,7 @@ name|malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|Malloc(x, NULL 0)
+value|Malloc(x, NULL, 0)
 end_define
 
 begin_define
