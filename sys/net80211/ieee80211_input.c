@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -3135,6 +3141,12 @@ name|more_frag
 condition|)
 block|{
 comment|/* more to come, save */
+name|ni
+operator|->
+name|ni_rxfragstamp
+operator|=
+name|ticks
+expr_stmt|;
 name|ni
 operator|->
 name|ni_rxfrag
