@@ -34,11 +34,9 @@ name|unsigned
 name|long
 name|___runetype
 parameter_list|(
-name|c
-parameter_list|)
 name|__ct_rune_t
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|lim
