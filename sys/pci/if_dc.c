@@ -9867,12 +9867,6 @@ name|DC_TX_LIST_CNT
 operator|-
 literal|1
 expr_stmt|;
-name|ifp
-operator|->
-name|if_mpsafe
-operator|=
-name|IS_MPSAFE
-expr_stmt|;
 comment|/* 	 * Do MII setup. If this is a 21143, check for a PHY on the 	 * MII bus after applying any necessary fixups to twiddle the 	 * GPIO bits. If we don't end up finding a PHY, restore the 	 * old selection (SIA only or SIA/SYM) and attach the dcphy 	 * driver instead. 	 */
 if|if
 condition|(

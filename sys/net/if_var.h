@@ -298,10 +298,6 @@ name|if_capenable
 decl_stmt|;
 comment|/* enabled features */
 name|int
-name|if_mpsafe
-decl_stmt|;
-comment|/* XXX TEMPORARY */
-name|int
 name|if_ipending
 decl_stmt|;
 comment|/* interrupts pending */
@@ -1057,17 +1053,6 @@ operator|&&
 operator|!
 name|active
 condition|)
-block|{
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_mpsafe
-condition|)
-block|{
-name|DROP_GIANT_NOSWITCH
-argument_list|()
-expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -1078,24 +1063,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
-call|(
-modifier|*
-name|ifp
-operator|->
-name|if_start
-call|)
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 return|return
 operator|(
 literal|1
