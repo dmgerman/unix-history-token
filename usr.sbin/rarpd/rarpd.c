@@ -193,7 +193,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/* Cast a struct sockaddr to a structaddr_in */
+comment|/* Cast a struct sockaddr to a struct sockaddr_in */
 end_comment
 
 begin_define
