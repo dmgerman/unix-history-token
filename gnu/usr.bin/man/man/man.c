@@ -613,10 +613,6 @@ modifier|*
 name|tmp
 decl_stmt|;
 specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
 name|mkprogname
@@ -1237,16 +1233,6 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|getopt
-parameter_list|()
-function_decl|;
 specifier|extern
 name|void
 name|downcase
