@@ -17887,7 +17887,7 @@ name|REQ_LINE
 argument_list|(
 literal|"Checkin-prog"
 argument_list|,
-name|serve_checkin_prog
+name|serve_noop
 argument_list|,
 literal|0
 argument_list|)
@@ -17896,7 +17896,7 @@ name|REQ_LINE
 argument_list|(
 literal|"Update-prog"
 argument_list|,
-name|serve_update_prog
+name|serve_noop
 argument_list|,
 literal|0
 argument_list|)
