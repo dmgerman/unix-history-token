@@ -1,20 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.70 1997/07/20 14:09:49 bde Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.71 1997/09/21 21:40:49 gibbs Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
-comment|/* don't laugh.. look for main() */
 end_comment
 
 begin_include
@@ -32,7 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -44,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -57,6 +53,18 @@ begin_include
 include|#
 directive|include
 file|<machine/stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_debug.h>
 end_include
 
 begin_include
@@ -76,64 +84,6 @@ include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsiconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_debug.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*KERNEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NAHA
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*KERNEL */
-end_comment
 
 begin_include
 include|#
@@ -1877,12 +1827,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1962,15 +1906,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2011,61 +1946,6 @@ end_define
 
 begin_comment
 comment|/* time to wait for reset (mSec) */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_function
-name|main
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"size of aha_data is %d\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aha_data
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"size of aha_ccb is %d\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aha_ccb
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"size of aha_mbx is %d\n"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|aha_mbx
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*KERNEL */
 end_comment
 
 begin_comment
@@ -3702,6 +3582,10 @@ literal|0
 init|;
 name|i
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|tab
@@ -3713,6 +3597,7 @@ name|tab
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|;
 name|i
@@ -7746,15 +7631,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 end_unit
 
