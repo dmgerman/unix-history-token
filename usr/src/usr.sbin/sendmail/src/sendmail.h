@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.9 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.10 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.9		%G%"
+literal|"@(#)sendmail.h	5.10		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2818,8 +2818,8 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|short
-name|nmx
+name|int
+name|Nmx
 decl_stmt|;
 end_decl_stmt
 
@@ -2843,7 +2843,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|mxhosts
+name|MxHosts
 index|[
 name|MAXMXHOSTS
 operator|+

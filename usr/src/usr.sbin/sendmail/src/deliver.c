@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.11 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1304,13 +1304,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|nmx
+name|Nmx
 operator|=
 name|getmxrr
 argument_list|(
 name|host
 argument_list|,
-name|mxhosts
+name|MxHosts
 argument_list|,
 name|MAXMXHOSTS
 argument_list|,
@@ -1324,7 +1324,7 @@ block|{
 comment|/* 			 * Map errors into standard values 			 */
 if|if
 condition|(
-name|nmx
+name|Nmx
 operator|==
 operator|-
 literal|1
@@ -1336,7 +1336,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|nmx
+name|Nmx
 operator|==
 operator|-
 literal|3
@@ -1359,11 +1359,11 @@ expr_stmt|;
 else|#
 directive|else
 else|MXDOMAIN
-name|nmx
+name|Nmx
 operator|=
 literal|1
 expr_stmt|;
-name|mxhosts
+name|MxHosts
 index|[
 literal|0
 index|]
@@ -2483,7 +2483,7 @@ literal|0
 init|;
 name|j
 operator|<
-name|nmx
+name|Nmx
 condition|;
 name|j
 operator|++
@@ -2491,7 +2491,7 @@ control|)
 block|{
 name|CurHostName
 operator|=
-name|mxhosts
+name|MxHosts
 index|[
 name|j
 index|]
@@ -2504,7 +2504,7 @@ name|st
 operator|=
 name|stab
 argument_list|(
-name|mxhosts
+name|MxHosts
 index|[
 name|j
 index|]
@@ -2532,7 +2532,7 @@ name|i
 operator|=
 name|makeconnection
 argument_list|(
-name|mxhosts
+name|MxHosts
 index|[
 name|j
 index|]
@@ -2570,7 +2570,7 @@ name|i
 operator|=
 name|makeconnection
 argument_list|(
-name|mxhosts
+name|MxHosts
 index|[
 name|j
 index|]
@@ -2606,7 +2606,7 @@ name|st
 operator|=
 name|stab
 argument_list|(
-name|mxhosts
+name|MxHosts
 index|[
 name|j
 index|]
