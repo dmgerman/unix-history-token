@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -146,15 +146,15 @@ begin_struct
 struct|struct
 name|ktr_syscall
 block|{
-name|short
+name|int
 name|ktr_code
 decl_stmt|;
 comment|/* syscall number */
-name|short
-name|ktr_narg
+name|int
+name|ktr_argsize
 decl_stmt|;
-comment|/* number of arguments */
-comment|/* 	 * followed by ktr_narg ints 	 */
+comment|/* size of arguments */
+comment|/* 	 * followed by ktr_argsize/sizeof(register_t) 'register_t's 	 */
 block|}
 struct|;
 end_struct
