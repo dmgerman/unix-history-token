@@ -149,7 +149,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|((v)&= ~(1<< (n)))
+value|((v)&= ~((unsigned long)1<< (n)))
 end_define
 
 begin_define
@@ -161,7 +161,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|((v) |= 1<< (n))
+value|((v) |= (unsigned long)1<< (n))
 end_define
 
 begin_define
@@ -173,7 +173,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|((v)& (1<< (n)))
+value|(((v)& ((unsigned long)1<< (n))) != 0)
 end_define
 
 begin_define
@@ -204,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|STATEVARS
-value|int dummy
+value|long dummy
 end_define
 
 begin_comment
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|onestate
-value|int
+value|long
 end_define
 
 begin_define
@@ -265,7 +265,7 @@ name|o
 parameter_list|,
 name|n
 parameter_list|)
-value|((o) = (unsigned)1<< (n))
+value|((o) = (unsigned long)1<< (n))
 end_define
 
 begin_define
@@ -287,7 +287,7 @@ name|v
 parameter_list|,
 name|o
 parameter_list|)
-value|((v)& (o))
+value|(((v)& (o)) != 0)
 end_define
 
 begin_comment
@@ -309,7 +309,7 @@ name|src
 parameter_list|,
 name|n
 parameter_list|)
-value|((dst) |= ((unsigned)(src)&(here))<< (n))
+value|((dst) |= ((unsigned long)(src)&(here))<< (n))
 end_define
 
 begin_define
@@ -323,7 +323,7 @@ name|src
 parameter_list|,
 name|n
 parameter_list|)
-value|((dst) |= ((unsigned)(src)&(here))>> (n))
+value|((dst) |= ((unsigned long)(src)&(here))>> (n))
 end_define
 
 begin_define
@@ -335,7 +335,7 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|((v)& ((unsigned)here>> (n)))
+value|(((v)& ((unsigned long)here>> (n))) != 0)
 end_define
 
 begin_comment
@@ -561,7 +561,7 @@ begin_define
 define|#
 directive|define
 name|STATEVARS
-value|int vn; char *space
+value|long vn; char *space
 end_define
 
 begin_define
@@ -600,7 +600,7 @@ begin_define
 define|#
 directive|define
 name|onestate
-value|int
+value|long
 end_define
 
 begin_define

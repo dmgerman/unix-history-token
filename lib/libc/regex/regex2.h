@@ -45,14 +45,14 @@ begin_define
 define|#
 directive|define
 name|OPRMASK
-value|0xf8000000
+value|0xf8000000L
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPDMASK
-value|0x07ffffff
+value|0x07ffffffL
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|OEND
-value|(1<<OPSHIFT)
+value|(1L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|OCHAR
-value|(2<<OPSHIFT)
+value|(2L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|OBOL
-value|(3<<OPSHIFT)
+value|(3L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|OEOL
-value|(4<<OPSHIFT)
+value|(4L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -150,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|OANY
-value|(5<<OPSHIFT)
+value|(5L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -161,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|OANYOF
-value|(6<<OPSHIFT)
+value|(6L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -172,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|OBACK_
-value|(7<<OPSHIFT)
+value|(7L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -183,7 +183,7 @@ begin_define
 define|#
 directive|define
 name|O_BACK
-value|(8<<OPSHIFT)
+value|(8L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -194,7 +194,7 @@ begin_define
 define|#
 directive|define
 name|OPLUS_
-value|(9<<OPSHIFT)
+value|(9L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -205,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|O_PLUS
-value|(10<<OPSHIFT)
+value|(10L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -216,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|OQUEST_
-value|(11<<OPSHIFT)
+value|(11L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -227,7 +227,7 @@ begin_define
 define|#
 directive|define
 name|O_QUEST
-value|(12<<OPSHIFT)
+value|(12L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -238,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|OLPAREN
-value|(13<<OPSHIFT)
+value|(13L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -249,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|ORPAREN
-value|(14<<OPSHIFT)
+value|(14L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -260,7 +260,7 @@ begin_define
 define|#
 directive|define
 name|OCH_
-value|(15<<OPSHIFT)
+value|(15L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|OOR1
-value|(16<<OPSHIFT)
+value|(16L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|OOR2
-value|(17<<OPSHIFT)
+value|(17L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -293,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|O_CH
-value|(18<<OPSHIFT)
+value|(18L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|OBOW
-value|(19<<OPSHIFT)
+value|(19L<<OPSHIFT)
 end_define
 
 begin_comment
@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|OEOW
-value|(20<<OPSHIFT)
+value|(20L<<OPSHIFT)
 end_define
 
 begin_comment
