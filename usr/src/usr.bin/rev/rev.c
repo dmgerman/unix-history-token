@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rev.c	8.1 (Berkeley) %G%"
+literal|"@(#)rev.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +245,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|fp
 argument_list|,
@@ -257,6 +257,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|p
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+operator|--
+name|len
+expr_stmt|;
 name|t
 operator|=
 name|p
