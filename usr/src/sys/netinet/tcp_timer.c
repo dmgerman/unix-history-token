@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	6.3	84/10/18	*/
+comment|/*	tcp_timer.c	6.3	84/10/31	*/
 end_comment
 
 begin_include
@@ -695,7 +695,30 @@ name|tp
 operator|->
 name|snd_una
 expr_stmt|;
-comment|/* this only transmits one segment! */
+comment|/* 		 * If timing a segment in this window, stop the timer. 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rtt
+operator|&&
+name|SEQ_GT
+argument_list|(
+name|tp
+operator|->
+name|t_rtseq
+argument_list|,
+name|tp
+operator|->
+name|snd_una
+argument_list|)
+condition|)
+name|tp
+operator|->
+name|t_rtt
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
