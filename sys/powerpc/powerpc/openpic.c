@@ -815,6 +815,8 @@ operator|)
 operator|>>
 name|OPENPIC_FEATURE_LAST_CPU_SHIFT
 operator|)
+operator|+
+literal|1
 expr_stmt|;
 name|sc
 operator|->
@@ -829,6 +831,8 @@ operator|)
 operator|>>
 name|OPENPIC_FEATURE_LAST_IRQ_SHIFT
 operator|)
+operator|+
+literal|1
 expr_stmt|;
 name|device_set_desc
 argument_list|(
@@ -879,7 +883,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Version %s, supports up to %d CPUs and up to %d irqs\n"
+literal|"Version %s, supports %d CPUs and %d irqs\n"
 argument_list|,
 name|sc
 operator|->
@@ -888,14 +892,10 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ncpu
-operator|+
-literal|1
 argument_list|,
 name|sc
 operator|->
 name|sc_nirq
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|sc
@@ -941,6 +941,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_nirq
+operator|-
+literal|1
 argument_list|)
 operator|!=
 literal|0
