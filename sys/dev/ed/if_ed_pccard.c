@@ -438,7 +438,9 @@ name|sc
 operator|->
 name|port_rid
 argument_list|,
-literal|1
+name|sc
+operator|->
+name|port_used
 argument_list|)
 expr_stmt|;
 if|if
@@ -455,7 +457,9 @@ name|sc
 operator|->
 name|mem_rid
 argument_list|,
-literal|1
+name|sc
+operator|->
+name|mem_used
 argument_list|)
 expr_stmt|;
 name|ed_alloc_irq

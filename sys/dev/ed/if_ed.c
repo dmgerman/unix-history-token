@@ -6167,7 +6167,7 @@ name|sc
 operator|->
 name|port_used
 operator|=
-literal|1
+name|size
 expr_stmt|;
 return|return
 operator|(
@@ -6267,7 +6267,7 @@ name|sc
 operator|->
 name|mem_used
 operator|=
-literal|1
+name|size
 expr_stmt|;
 return|return
 operator|(
