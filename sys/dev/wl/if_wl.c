@@ -1059,7 +1059,6 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-specifier|register
 name|short
 name|base
 init|=
@@ -1370,7 +1369,6 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
-specifier|register
 name|short
 name|base
 init|=
@@ -1390,7 +1388,6 @@ name|id
 operator|->
 name|id_unit
 decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -1877,7 +1874,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -2071,7 +2067,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -2655,7 +2650,6 @@ modifier|*
 name|xsc
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -2824,7 +2818,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -2981,7 +2974,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -3455,7 +3447,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -3824,7 +3815,6 @@ name|u_short
 name|fd_p
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -3835,7 +3825,6 @@ argument_list|(
 name|unit
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -4566,7 +4555,6 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|ifreq
 modifier|*
@@ -4586,7 +4574,6 @@ name|ifp
 operator|->
 name|if_unit
 decl_stmt|;
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -5632,7 +5619,6 @@ name|int
 name|unit
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -6200,7 +6186,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -6535,7 +6520,6 @@ name|u_short
 name|fd_p
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -6943,7 +6927,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -6954,13 +6937,11 @@ argument_list|(
 name|unit
 argument_list|)
 decl_stmt|;
-specifier|register
 name|u_short
 name|xmtdata_p
 init|=
 name|OFFSET_TBUF
 decl_stmt|;
-specifier|register
 name|u_short
 name|xmtshort_p
 decl_stmt|;
@@ -6971,7 +6952,6 @@ name|tm_p
 init|=
 name|m
 decl_stmt|;
-specifier|register
 name|struct
 name|ether_header
 modifier|*
@@ -7906,7 +7886,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -8247,7 +8226,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -8395,7 +8373,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -8576,7 +8553,6 @@ block|{
 name|configure_t
 name|configure
 decl_stmt|;
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -9154,7 +9130,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -9466,11 +9441,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|u_short
 name|cmd
 decl_stmt|;
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -9631,7 +9604,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -10143,7 +10115,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -10504,7 +10475,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -10987,7 +10957,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
@@ -11084,7 +11053,6 @@ name|int
 name|w_insertcache
 decl_stmt|;
 comment|/* computed index for cache entry storage */
-specifier|register
 name|struct
 name|wl_softc
 modifier|*
