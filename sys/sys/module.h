@@ -549,7 +549,7 @@ name|int
 name|modnext
 parameter_list|(
 name|int
-name|modid
+name|_modid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -559,7 +559,7 @@ name|int
 name|modfnext
 parameter_list|(
 name|int
-name|modid
+name|_modid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -569,12 +569,12 @@ name|int
 name|modstat
 parameter_list|(
 name|int
-name|modid
+name|_modid
 parameter_list|,
 name|struct
 name|module_stat
 modifier|*
-name|stat
+name|_stat
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -586,7 +586,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
+name|_name
 parameter_list|)
 function_decl|;
 end_function_decl
