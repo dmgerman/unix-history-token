@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.28 1997/11/18 14:08:51 bde Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.29 1997/12/06 13:24:37 bde Exp $ */
 end_comment
 
 begin_include
@@ -574,6 +574,8 @@ block|,
 name|pppstart
 block|,
 name|ttymodem
+block|,
+name|PPP_FLAG
 block|}
 decl_stmt|;
 end_decl_stmt
