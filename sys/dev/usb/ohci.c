@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.94 2000/11/10 14:11:49 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.96 2000/12/29 01:24:55 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: ftp://ftp.compaq.com/pub/supportinformation/papers/hcir1_0a.exe  * USB spec: http://www.usb.org/developers/data/usb11.pdf  */
+comment|/*  * USB Open Host Controller driver.  *  * OHCI spec: http://www.compaq.com/productinfo/development/openhci.html  * USB spec: http://www.usb.org/developers/data/usbspec.zip  */
 end_comment
 
 begin_include

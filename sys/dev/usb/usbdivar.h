@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.60 2000/12/28 10:40:36 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.61 2001/01/18 20:28:23 jdolecek Exp $	*/
 end_comment
 
 begin_comment
