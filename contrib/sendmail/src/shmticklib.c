@@ -3,72 +3,24 @@ begin_comment
 comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: shmticklib.c,v 8.6 2000/02/26 01:32:27 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: shmticklib.c,v 8.14 2001/09/11 04:05:16 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_if
 if|#
 directive|if
 name|_FFR_SHM_STATUS
 end_if
-
-begin_if
-if|#
-directive|if
-name|SFIO
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sfio/stdio.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !SFIO */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SFIO */
-end_comment
 
 begin_include
 include|#
@@ -93,9 +45,6 @@ include|#
 directive|include
 file|"statusd_shm.h"
 end_include
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SHMTICK -- increment a shared memory variable ** **	Parameters: **		inc_me -- identity of shared memory segment **		what -- which variable to increment ** **	Returns: **		none */

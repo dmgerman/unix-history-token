@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -9,30 +9,12 @@ directive|include
 file|<sendmail.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: alias.c,v 8.142.4.11 2001/05/03 17:24:01 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: alias.c,v 8.211 2001/11/12 22:52:18 ca Exp $"
+argument_list|)
+end_macro
 
 begin_define
 define|#
@@ -86,13 +68,13 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
@@ -161,7 +143,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"alias(%s)\n"
 argument_list|,
@@ -220,29 +202,20 @@ comment|/* Look for owner of alias */
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpyn
 argument_list|(
 name|obuf
-argument_list|,
-literal|"owner-"
 argument_list|,
 sizeof|sizeof
 name|obuf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strlcat
-argument_list|(
-name|obuf
+argument_list|,
+literal|2
+argument_list|,
+literal|"owner-"
 argument_list|,
 name|a
 operator|->
 name|q_user
-argument_list|,
-sizeof|sizeof
-name|obuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -253,6 +226,10 @@ name|obuf
 argument_list|,
 operator|&
 name|status
+argument_list|,
+name|a
+operator|->
+name|q_host
 argument_list|)
 operator|!=
 name|NULL
@@ -281,8 +258,12 @@ name|a
 operator|->
 name|q_user
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
@@ -301,6 +282,10 @@ name|q_user
 argument_list|,
 operator|&
 name|status
+argument_list|,
+name|a
+operator|->
+name|q_host
 argument_list|)
 expr_stmt|;
 if|if
@@ -332,10 +317,22 @@ name|e
 operator|->
 name|e_message
 operator|=
-name|newstr
-argument_list|(
 literal|"alias database unavailable"
-argument_list|)
+expr_stmt|;
+comment|/* XXX msg only per recipient? */
+if|if
+condition|(
+name|a
+operator|->
+name|q_message
+operator|==
+name|NULL
+condition|)
+name|a
+operator|->
+name|q_message
+operator|=
+literal|"alias database unavailable"
 expr_stmt|;
 return|return;
 block|}
@@ -356,7 +353,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s (%s, %s) aliased to %s\n"
 argument_list|,
@@ -452,7 +449,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"alias: QS_EXPANDED "
 argument_list|)
@@ -461,7 +458,7 @@ name|printaddr
 argument_list|(
 name|a
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 block|}
@@ -541,19 +538,6 @@ operator|=
 name|QS_OK
 expr_stmt|;
 comment|/* 	**  Look for owner of alias 	*/
-operator|(
-name|void
-operator|)
-name|strlcpy
-argument_list|(
-name|obuf
-argument_list|,
-literal|"owner-"
-argument_list|,
-sizeof|sizeof
-name|obuf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -576,9 +560,6 @@ operator|->
 name|q_user
 argument_list|)
 operator|>
-operator|(
-name|SIZE_T
-operator|)
 sizeof|sizeof
 name|obuf
 operator|-
@@ -587,11 +568,11 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcpy
 argument_list|(
 name|obuf
 argument_list|,
-literal|"owner"
+literal|"owner-owner"
 argument_list|,
 sizeof|sizeof
 name|obuf
@@ -601,16 +582,20 @@ else|else
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcpyn
 argument_list|(
 name|obuf
+argument_list|,
+sizeof|sizeof
+name|obuf
+argument_list|,
+literal|2
+argument_list|,
+literal|"owner-"
 argument_list|,
 name|a
 operator|->
 name|q_user
-argument_list|,
-sizeof|sizeof
-name|obuf
 argument_list|)
 expr_stmt|;
 name|owner
@@ -621,6 +606,10 @@ name|obuf
 argument_list|,
 operator|&
 name|status
+argument_list|,
+name|a
+operator|->
+name|q_host
 argument_list|)
 expr_stmt|;
 if|if
@@ -650,8 +639,12 @@ name|a
 operator|->
 name|q_owner
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|owner
 argument_list|)
 expr_stmt|;
@@ -664,11 +657,16 @@ name|e_xfp
 operator|!=
 name|NULL
 condition|)
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
 name|e
 operator|->
 name|e_xfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"Message delivered to mailing list %s\n"
 argument_list|,
@@ -694,11 +692,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  ALIASLOOKUP -- look up a name in the alias file. ** **	Parameters: **		name -- the name to look up. **		pstat -- a pointer to a place to put the status. ** **	Returns: **		the value of name. **		NULL if unknown. ** **	Side Effects: **		none. ** **	Warnings: **		The return value will be trashed across calls. */
+comment|/* **  ALIASLOOKUP -- look up a name in the alias file. ** **	Parameters: **		name -- the name to look up. **		pstat -- a pointer to a place to put the status. **		av -- argument for %1 expansion. ** **	Returns: **		the value of name. **		NULL if unknown. ** **	Side Effects: **		none. ** **	Warnings: **		The return value will be trashed across calls. */
 end_comment
 
 begin_function
@@ -710,6 +705,8 @@ parameter_list|(
 name|name
 parameter_list|,
 name|pstat
+parameter_list|,
+name|av
 parameter_list|)
 name|char
 modifier|*
@@ -719,6 +716,10 @@ name|int
 modifier|*
 name|pstat
 decl_stmt|;
+name|char
+modifier|*
+name|av
+decl_stmt|;
 block|{
 specifier|static
 name|MAP
@@ -727,6 +728,22 @@ name|map
 init|=
 name|NULL
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_ALIAS_DETAIL
+name|int
+name|i
+decl_stmt|;
+name|char
+modifier|*
+name|argv
+index|[
+literal|4
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ALIAS_DETAIL */
 if|if
 condition|(
 name|map
@@ -772,7 +789,7 @@ expr_stmt|;
 comment|/* special case POstMastER -- always use lower case */
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|name
 argument_list|,
@@ -785,6 +802,81 @@ name|name
 operator|=
 literal|"postmaster"
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_ALIAS_DETAIL
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|argv
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|name
+expr_stmt|;
+name|argv
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|av
+expr_stmt|;
+comment|/* XXX '+' is hardwired here as delimiter! */
+if|if
+condition|(
+name|av
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|av
+operator|==
+literal|'+'
+condition|)
+name|argv
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|av
+operator|+
+literal|1
+expr_stmt|;
+name|argv
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+call|(
+modifier|*
+name|map
+operator|->
+name|map_class
+operator|->
+name|map_lookup
+call|)
+argument_list|(
+name|map
+argument_list|,
+name|name
+argument_list|,
+name|argv
+argument_list|,
+name|pstat
+argument_list|)
+return|;
+else|#
+directive|else
+comment|/* _FFR_ALIAS_DETAIL */
 return|return
 call|(
 modifier|*
@@ -804,11 +896,11 @@ argument_list|,
 name|pstat
 argument_list|)
 return|;
+endif|#
+directive|endif
+comment|/* _FFR_ALIAS_DETAIL */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SETALIAS -- set up an alias map ** **	Called when reading configuration file. ** **	Parameters: **		spec -- the alias specification ** **	Returns: **		none. */
@@ -852,7 +944,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"setalias(%s)\n"
 argument_list|,
@@ -932,7 +1024,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -967,7 +1059,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -1077,7 +1169,7 @@ block|{
 name|bool
 name|quoted
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 for|for
 control|(
@@ -1151,7 +1243,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  map %s:%s %s\n"
 argument_list|,
@@ -1226,6 +1318,12 @@ name|s
 operator|->
 name|s_mapclass
 expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_ALIAS
+expr_stmt|;
 if|if
 condition|(
 name|map
@@ -1245,8 +1343,6 @@ operator|->
 name|map_mflags
 operator||=
 name|MF_VALID
-operator||
-name|MF_ALIAS
 expr_stmt|;
 name|AliasFileMap
 operator|->
@@ -1264,11 +1360,8 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  ALIASWAIT -- wait for distinguished @:@ token to appear. ** **	This can decide to reopen or rebuild the alias file ** **	Parameters: **		map -- a pointer to the map descriptor for this alias file. **		ext -- the filename extension (e.g., ".db") for the **			database file. **		isopen -- if set, the database is already open, and we **			should check for validity; otherwise, we are **			just checking to see if it should be created. ** **	Returns: **		TRUE -- if the database is open when we return. **		FALSE -- if the database is closed when we return. */
+comment|/* **  ALIASWAIT -- wait for distinguished @:@ token to appear. ** **	This can decide to reopen or rebuild the alias file ** **	Parameters: **		map -- a pointer to the map descriptor for this alias file. **		ext -- the filename extension (e.g., ".db") for the **			database file. **		isopen -- if set, the database is already open, and we **			should check for validity; otherwise, we are **			just checking to see if it should be created. ** **	Returns: **		true -- if the database is open when we return. **		false -- if the database is closed when we return. */
 end_comment
 
 begin_function
@@ -1296,7 +1389,7 @@ block|{
 name|bool
 name|attimeout
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|time_t
 name|mtime
@@ -1322,7 +1415,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"aliaswait(%s:%s)\n"
 argument_list|,
@@ -1368,6 +1461,19 @@ specifier|auto
 name|int
 name|st
 decl_stmt|;
+name|unsigned
+name|int
+name|sleeptime
+init|=
+literal|2
+decl_stmt|;
+name|unsigned
+name|int
+name|loopcount
+init|=
+literal|0
+decl_stmt|;
+comment|/* only used for debugging */
 name|time_t
 name|toolong
 init|=
@@ -1375,12 +1481,6 @@ name|curtime
 argument_list|()
 operator|+
 name|SafeAlias
-decl_stmt|;
-name|unsigned
-name|int
-name|sleeptime
-init|=
-literal|2
 decl_stmt|;
 while|while
 condition|(
@@ -1416,7 +1516,7 @@ block|{
 comment|/* we timed out */
 name|attimeout
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -1430,13 +1530,20 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|dprintf
+block|{
+name|loopcount
+operator|++
+expr_stmt|;
+name|sm_dprintf
 argument_list|(
-literal|"aliaswait: sleeping for %u seconds\n"
+literal|"aliaswait: sleeping for %u seconds (loopcount = %u)\n"
 argument_list|,
 name|sleeptime
+argument_list|,
+name|loopcount
 argument_list|)
 expr_stmt|;
+block|}
 name|map
 operator|->
 name|map_mflags
@@ -1527,7 +1634,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"aliaswait: not rebuildable\n"
 argument_list|)
@@ -1567,7 +1674,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"aliaswait: no source file\n"
 argument_list|)
@@ -1589,14 +1696,17 @@ name|stb
 operator|.
 name|st_mtime
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpyn
 argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%s%s"
+literal|2
 argument_list|,
 name|map
 operator|->
@@ -1632,126 +1742,6 @@ operator|||
 name|attimeout
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|_FFR_REMOVE_AUTOREBUILD
-comment|/* database is out of date */
-if|if
-condition|(
-name|AutoRebuild
-operator|&&
-name|stb
-operator|.
-name|st_ino
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|stb
-operator|.
-name|st_uid
-operator|==
-name|geteuid
-argument_list|()
-operator|||
-operator|(
-name|geteuid
-argument_list|()
-operator|==
-literal|0
-operator|&&
-name|stb
-operator|.
-name|st_uid
-operator|==
-name|TrustedUid
-operator|)
-operator|)
-condition|)
-block|{
-name|bool
-name|oldSuprErrs
-decl_stmt|;
-name|message
-argument_list|(
-literal|"auto-rebuilding alias database %s"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|oldSuprErrs
-operator|=
-name|SuprErrs
-expr_stmt|;
-name|SuprErrs
-operator|=
-name|TRUE
-expr_stmt|;
-if|if
-condition|(
-name|isopen
-condition|)
-block|{
-name|map
-operator|->
-name|map_mflags
-operator||=
-name|MF_CLOSING
-expr_stmt|;
-name|map
-operator|->
-name|map_class
-operator|->
-name|map_close
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
-name|map
-operator|->
-name|map_mflags
-operator|&=
-operator|~
-operator|(
-name|MF_OPEN
-operator||
-name|MF_WRITABLE
-operator||
-name|MF_CLOSING
-operator|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|rebuildaliases
-argument_list|(
-name|map
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|isopen
-operator|=
-name|map
-operator|->
-name|map_class
-operator|->
-name|map_open
-argument_list|(
-name|map
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
-name|SuprErrs
-operator|=
-name|oldSuprErrs
-expr_stmt|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 name|LogLevel
@@ -1776,37 +1766,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* !_FFR_REMOVE_AUTOREBUILD */
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|3
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-name|NOQID
-argument_list|,
-literal|"alias database %s out of date"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|message
-argument_list|(
-literal|"Warning: alias database %s out of date"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !_FFR_REMOVE_AUTOREBUILD */
 block|}
 name|map
 operator|->
@@ -1821,11 +1780,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  REBUILDALIASES -- rebuild the alias database. ** **	Parameters: **		map -- the database to rebuild. **		automatic -- set if this was automatically generated. ** **	Returns: **		TRUE if successful; FALSE otherwise. ** **	Side Effects: **		Reads the text version of the database, builds the **		DBM or DB version. */
+comment|/* **  REBUILDALIASES -- rebuild the alias database. ** **	Parameters: **		map -- the database to rebuild. **		automatic -- set if this was automatically generated. ** **	Returns: **		true if successful; false otherwise. ** **	Side Effects: **		Reads the text version of the database, builds the **		DBM or DB version. */
 end_comment
 
 begin_function
@@ -1845,19 +1801,19 @@ name|bool
 name|automatic
 decl_stmt|;
 block|{
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|af
 decl_stmt|;
 name|bool
 name|nolock
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|bool
 name|success
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|long
 name|sff
@@ -1897,7 +1853,7 @@ name|map_cflags
 argument_list|)
 condition|)
 return|return
-name|FALSE
+name|false
 return|;
 if|if
 condition|(
@@ -2016,7 +1972,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Can't open %s: %s\n"
 argument_list|,
@@ -2024,7 +1980,7 @@ name|map
 operator|->
 name|map_file
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|saveerr
 argument_list|)
@@ -2053,7 +2009,7 @@ name|map
 operator|->
 name|map_file
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|saveerr
 argument_list|)
@@ -2064,12 +2020,12 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 name|nolock
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -2082,9 +2038,13 @@ argument_list|)
 operator|||
 name|fstat
 argument_list|(
-name|fileno
+name|sm_io_getinfo
 argument_list|(
 name|af
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|,
 operator|&
@@ -2114,7 +2074,7 @@ name|map
 operator|->
 name|map_file
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -2130,9 +2090,13 @@ operator|&&
 operator|!
 name|lockfile
 argument_list|(
-name|fileno
+name|sm_io_getinfo
 argument_list|(
 name|af
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|,
 name|map
@@ -2170,9 +2134,13 @@ name|void
 operator|)
 name|lockfile
 argument_list|(
-name|fileno
+name|sm_io_getinfo
 argument_list|(
 name|af
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
 argument_list|)
 argument_list|,
 name|map
@@ -2188,9 +2156,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|af
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|errno
@@ -2198,12 +2168,12 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 name|oldsigint
 operator|=
-name|setsignal
+name|sm_signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -2212,7 +2182,7 @@ argument_list|)
 expr_stmt|;
 name|oldsigquit
 operator|=
-name|setsignal
+name|sm_signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -2224,7 +2194,7 @@ directive|ifdef
 name|SIGTSTP
 name|oldsigtstp
 operator|=
-name|setsignal
+name|sm_signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -2290,8 +2260,7 @@ name|map
 operator|->
 name|map_pid
 operator|=
-name|getpid
-argument_list|()
+name|CurrentPid
 expr_stmt|;
 name|readaliases
 argument_list|(
@@ -2302,12 +2271,12 @@ argument_list|,
 operator|!
 name|automatic
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|success
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 else|else
@@ -2321,7 +2290,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Can't create database for %s: %s\n"
 argument_list|,
@@ -2329,7 +2298,7 @@ name|map
 operator|->
 name|map_file
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -2354,9 +2323,11 @@ comment|/* close the file, thus releasing locks */
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|af
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 comment|/* add distinguished entries and close the database */
@@ -2405,7 +2376,7 @@ comment|/* restore the old signals */
 operator|(
 name|void
 operator|)
-name|setsignal
+name|sm_signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -2415,7 +2386,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|setsignal
+name|sm_signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -2428,7 +2399,7 @@ name|SIGTSTP
 operator|(
 name|void
 operator|)
-name|setsignal
+name|sm_signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -2443,9 +2414,6 @@ name|success
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		map -- the alias database descriptor. **		af -- file to read the aliases from. **		announcestats -- announce statistics regarding number of **			aliases, longest alias, etc. **		logstats -- lot the same info. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
@@ -2468,7 +2436,7 @@ name|MAP
 modifier|*
 name|map
 decl_stmt|;
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|af
 decl_stmt|;
@@ -2530,18 +2498,20 @@ literal|0
 expr_stmt|;
 name|skipping
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|af
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|line
 argument_list|,
 sizeof|sizeof
 name|line
-argument_list|,
-name|af
 argument_list|)
 operator|!=
 name|NULL
@@ -2567,6 +2537,7 @@ argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
+comment|/* XXX what if line="a\\" ? */
 while|while
 condition|(
 name|p
@@ -2591,8 +2562,12 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|af
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|p
 argument_list|,
 name|SPACELEFT
@@ -2601,8 +2576,6 @@ name|line
 argument_list|,
 name|p
 argument_list|)
-argument_list|,
-name|af
 argument_list|)
 operator|==
 name|NULL
@@ -2636,7 +2609,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|feof
+name|sm_io_eof
 argument_list|(
 name|af
 argument_list|)
@@ -2657,13 +2630,15 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|af
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 operator|&&
 name|c
 operator|!=
@@ -2673,7 +2648,7 @@ continue|continue;
 comment|/* skip any continuation lines */
 name|skipping
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -2693,7 +2668,7 @@ literal|'\0'
 case|:
 name|skipping
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 case|case
@@ -2714,13 +2689,13 @@ argument_list|)
 expr_stmt|;
 name|skipping
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
 name|skipping
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 comment|/* 		**  Process the LHS 		**	Find the colon separator, and parse the address. 		**	It should resolve to a local name -- this will 		**	be checked later (we want to optionally do 		**	parsing of the RHS first to maximize error 		**	detection). 		*/
 for|for
@@ -2780,6 +2755,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|CurEnv
+argument_list|,
+name|true
 argument_list|)
 operator|==
 name|NULL
@@ -2926,6 +2903,8 @@ operator|&
 name|delimptr
 argument_list|,
 name|CurEnv
+argument_list|,
+name|true
 argument_list|)
 operator|==
 name|NULL
@@ -2953,15 +2932,17 @@ block|}
 comment|/* see if there should be a continuation line */
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|af
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|feof
+name|sm_io_eof
 argument_list|(
 name|af
 argument_list|)
@@ -2969,11 +2950,13 @@ condition|)
 operator|(
 name|void
 operator|)
-name|ungetc
+name|sm_io_ungetc
 argument_list|(
-name|c
-argument_list|,
 name|af
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 if|if
@@ -2990,8 +2973,12 @@ break|break;
 comment|/* read continuation line */
 if|if
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|af
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|p
 argument_list|,
 sizeof|sizeof
@@ -3002,8 +2989,6 @@ name|p
 operator|-
 name|line
 operator|)
-argument_list|,
-name|af
 argument_list|)
 operator|==
 name|NULL
@@ -3025,7 +3010,7 @@ operator|==
 name|NULL
 operator|&&
 operator|!
-name|feof
+name|sm_io_eof
 argument_list|(
 name|af
 argument_list|)
@@ -3041,13 +3026,15 @@ condition|(
 operator|(
 name|c
 operator|=
-name|fgetc
+name|sm_io_getc
 argument_list|(
 name|af
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 operator|&&
 name|c
 operator|!=
@@ -3056,7 +3043,7 @@ condition|)
 continue|continue;
 name|skipping
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -3095,7 +3082,7 @@ block|}
 comment|/* 		**  Insert alias into symbol table or database file. 		** 		**	Special case pOStmaStER -- always make it lower case. 		*/
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|al
 operator|.
@@ -3217,51 +3204,19 @@ operator|=
 name|rhssize
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|al
-operator|.
-name|q_paddr
-operator|!=
-name|NULL
-condition|)
-name|sm_free
-argument_list|(
-name|al
-operator|.
-name|q_paddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|al
-operator|.
-name|q_host
-operator|!=
-name|NULL
-condition|)
-name|sm_free
-argument_list|(
-name|al
-operator|.
-name|q_host
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|al
-operator|.
-name|q_user
-operator|!=
-name|NULL
-condition|)
-name|sm_free
-argument_list|(
-name|al
-operator|.
-name|q_user
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	**  address strings are now stored in the envelope rpool, 	**  and therefore cannot be freed. 	*/
+block|if (al.q_paddr != NULL) 			sm_free(al.q_paddr);
+comment|/* disabled */
+block|if (al.q_host != NULL) 			sm_free(al.q_host);
+comment|/* disabled */
+block|if (al.q_user != NULL) 			sm_free(al.q_user);
+comment|/* disabled */
+endif|#
+directive|endif
+comment|/* 0 */
 block|}
 name|CurEnv
 operator|->
@@ -3324,9 +3279,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Parameters: **		user -- the name of the user who's mail we would like **			to forward to.  It must have been verified -- **			i.e., the q_home field must have been filled **			in. **		sendq -- a pointer to the head of the send queue to **			put this user's aliases in. **		aliaslevel -- the current alias nesting depth. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		New names are added to send queues. */
 end_comment
@@ -3381,7 +3333,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"forward(%s)\n"
 argument_list|,
@@ -3415,6 +3367,18 @@ condition|)
 return|return;
 if|if
 condition|(
+name|ForwardPath
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|ForwardPath
+operator|==
+literal|'\0'
+condition|)
+return|return;
+if|if
+condition|(
 name|user
 operator|->
 name|q_home
@@ -3435,37 +3399,52 @@ literal|"/no/such/directory"
 expr_stmt|;
 block|}
 comment|/* good address -- look for .forward file in home */
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'z'
 argument_list|,
 name|user
 operator|->
 name|q_home
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'u'
 argument_list|,
 name|user
 operator|->
 name|q_user
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'h'
 argument_list|,
 name|user
 operator|->
 name|q_host
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -3483,7 +3462,7 @@ argument_list|)
 expr_stmt|;
 name|got_transient
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 for|for
 control|(
@@ -3578,7 +3557,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"forward: trying %s\n"
 argument_list|,
@@ -3591,7 +3570,7 @@ name|include
 argument_list|(
 name|buf
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
 name|user
 argument_list|,
@@ -3621,7 +3600,7 @@ block|{
 comment|/* we may have to suspend this message */
 name|got_transient
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -3632,7 +3611,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"forward: transient error on %s\n"
 argument_list|,
@@ -3668,7 +3647,7 @@ literal|"forward %s: transient error: %s"
 argument_list|,
 name|buf
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|err
 argument_list|)
@@ -3754,7 +3733,7 @@ literal|"forward: %s: %s"
 argument_list|,
 name|buf
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|err
 argument_list|)
@@ -3791,7 +3770,7 @@ literal|"forward %s: %s"
 argument_list|,
 name|buf
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|err
 argument_list|)
@@ -3807,7 +3786,7 @@ literal|"forward: %s: %s"
 argument_list|,
 name|buf
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|err
 argument_list|)

@@ -20,6 +20,12 @@ name|_LIBMILTER_H
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -42,30 +48,14 @@ parameter_list|)
 value|= x
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|MilterlId
-index|[]
-init|=
-literal|"@(#)$Id: libmilter.h,v 8.3.6.16 2001/06/07 23:21:35 geir Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_IDSTR
+argument_list|(
+argument|MilterlId
+argument_list|,
+literal|"@(#)$Id: libmilter.h,v 8.32 2001/11/29 02:21:02 ca Exp $"
+argument_list|)
+end_macro
 
 begin_else
 else|#
@@ -127,33 +117,6 @@ directive|include
 file|"libmilter/milter.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"sendmail/cdefs.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! __P */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"sendmail/useful.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -168,7 +131,14 @@ begin_define
 define|#
 directive|define
 name|INVALID_SOCKET
-value|-1
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|closesocket
+value|close
 end_define
 
 begin_define
@@ -182,7 +152,17 @@ name|b
 parameter_list|,
 name|l
 parameter_list|)
-value|(read(s, b, l))
+value|read(s, b, l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MI_SOCK_READ_FAIL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)< 0)
 end_define
 
 begin_define
@@ -196,7 +176,7 @@ name|b
 parameter_list|,
 name|l
 parameter_list|)
-value|(write(s, b, l))
+value|write(s, b, l)
 end_define
 
 begin_define
@@ -328,6 +308,12 @@ begin_comment
 comment|/* checking whether to terminate */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MI_SOMAXCONN
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -368,6 +354,15 @@ begin_comment
 comment|/* SOMAXCONN */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! MI_SOMAXCONN */
+end_comment
+
 begin_comment
 comment|/* maximum number of repeated failures in mi_listener() */
 end_comment
@@ -403,6 +398,17 @@ end_define
 
 begin_comment
 comment|/* accept() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_FAILS_S
+value|16
+end_define
+
+begin_comment
+comment|/* select() */
 end_comment
 
 begin_comment
@@ -506,6 +512,13 @@ define|#
 directive|define
 name|smi_log
 value|syslog
+end_define
+
+begin_define
+define|#
+directive|define
+name|sm_dprintf
+value|printf
 end_define
 
 begin_define
@@ -708,6 +721,26 @@ name|char
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mi_inet_pton
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

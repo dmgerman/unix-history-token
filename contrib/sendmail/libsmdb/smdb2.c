@@ -3,30 +3,18 @@ begin_comment
 comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: smdb2.c,v 8.53.2.1.2.7 2001/02/14 04:07:24 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: smdb2.c,v 8.69 2001/09/12 21:19:12 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -98,9 +86,6 @@ name|SMDB_DB2_DATABASE
 typedef|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_TYPE_TO_DB2_TYPE -- Translates smdb database type to db2 type. ** **	Parameters: **		type -- The type to translate. ** **	Returns: **		The DB2 type that corresponsds to the passed in SMDB type. **		Returns -1 if there is no equivalent type. ** */
 end_comment
@@ -161,9 +146,6 @@ name|DB_UNKNOWN
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  DB2_ERROR_TO_SMDB -- Translates db2 errors to smdbe errors ** **	Parameters: **		error -- The error to translate. ** **	Returns: **		The SMDBE error corresponding to the db2 error. **		If we don't have a corresponding error, it returs errno. ** */
@@ -333,15 +315,13 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_PUT_FLAGS_TO_DB2_FLAGS -- Translates smdb put flags to db2 put flags. ** **	Parameters: **		flags -- The flags to translate. ** **	Returns: **		The db2 flags that are equivalent to the smdb flags. ** **	Notes: **		Any invalid flags are ignored. ** */
 end_comment
 
 begin_function
-name|u_int
+name|unsigned
+name|int
 name|smdb_put_flags_to_db2_flags
 parameter_list|(
 name|flags
@@ -375,9 +355,6 @@ name|return_flags
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SMDB_CURSOR_GET_FLAGS_TO_DB2 -- Translates smdb cursor get flags to db2 **	getflags. ** **	Parameters: **		flags -- The flags to translate. ** **	Returns: **		The db2 flags that are equivalent to the smdb flags. ** **	Notes: **		-1 is returned if flag is unknown. ** */
@@ -431,6 +408,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* **  Except for smdb_db_open, the rest of these functions correspond to the **  interface laid out in smdb.h. */
+end_comment
+
 begin_function
 name|SMDB_DB2_DATABASE
 modifier|*
@@ -474,10 +455,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ** Except for smdb_db_open, the rest of these function correspond to the ** interface laid out in smdb.h. */
-end_comment
-
 begin_function
 name|int
 name|smdb2_close
@@ -489,6 +466,9 @@ modifier|*
 name|database
 decl_stmt|;
 block|{
+name|int
+name|result
+decl_stmt|;
 name|SMDB_DB2_DATABASE
 modifier|*
 name|db2
@@ -517,6 +497,20 @@ operator|)
 operator|->
 name|smdb2_db
 decl_stmt|;
+name|result
+operator|=
+name|db2_error_to_smdb
+argument_list|(
+name|db
+operator|->
+name|close
+argument_list|(
+name|db
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|db2
@@ -545,17 +539,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|db2_error_to_smdb
-argument_list|(
-name|db
-operator|->
-name|close
-argument_list|(
-name|db
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
+name|result
 return|;
 block|}
 end_function
@@ -578,7 +562,8 @@ name|SMDB_DBENT
 modifier|*
 name|key
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -601,6 +586,9 @@ decl_stmt|;
 name|DBT
 name|dbkey
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -753,7 +741,8 @@ name|SMDB_DBENT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -781,6 +770,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -792,6 +784,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -887,7 +882,8 @@ name|SMDB_DBENT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -912,6 +908,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -923,6 +922,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1101,7 +1103,8 @@ name|SMDB_DATABASE
 modifier|*
 name|database
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -1281,6 +1284,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1292,6 +1298,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1422,6 +1431,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1433,6 +1445,9 @@ sizeof|sizeof
 name|dbdata
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1731,6 +1746,9 @@ name|params
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -2144,9 +2162,6 @@ begin_comment
 comment|/* DB_VERSION_MAJOR> 2 */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_DB_OPEN -- Opens a db database. ** **	Parameters: **		database -- An unallocated database pointer to a pointer. **		db_name -- The name of the database without extension. **		mode -- File permisions for a created database. **		mode_mask -- Mode bits that must match on an opened database. **		sff -- Flags for safefile. **		type -- The type of database to open **			See smdb_type_to_db2_type for valid types. **		user_info -- User information for file permissions. **		db_params -- **			An SMDB_DBPARAMS struct including params. These **			are processed according to the type of the **			database. Currently supported params (only for **			HASH type) are: **			   num_elements **			   cache_size ** **	Returns: **		SMDBE_OK -- Success, other errno: **		SMDBE_MALLOC -- Cannot allocate memory. **		SMDBE_BAD_OPEN -- db_open didn't return an error, but **				 somehow the DB pointer is NULL. **		Anything else: translated error from db2 */
 end_comment
@@ -2204,7 +2219,7 @@ block|{
 name|bool
 name|lockcreated
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|int
 name|result
@@ -2319,7 +2334,7 @@ argument_list|)
 condition|)
 name|lockcreated
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|result
 operator|=

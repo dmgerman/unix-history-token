@@ -3,41 +3,35 @@ begin_comment
 comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sendmail.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: milter.c,v 8.50.4.53 2001/08/15 02:01:03 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: milter.c,v 8.185 2001/11/21 02:21:15 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_if
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 end_if
 
 begin_include
 include|#
 directive|include
-file|<sendmail.h>
+file|<libmilter/mfapi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libmilter/mfdef.h>
 end_include
 
 begin_include
@@ -75,26 +69,11 @@ begin_comment
 comment|/* NETINET || NETINET6 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SM_FD_SET
-value|FD_SET
-end_define
-
-begin_define
-define|#
-directive|define
-name|SM_FD_ISSET
-value|FD_ISSET
-end_define
-
-begin_define
-define|#
-directive|define
-name|SM_FD_SETSIZE
-value|FD_SETSIZE
-end_define
+begin_include
+include|#
+directive|include
+file|<sm/fdset.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -118,6 +97,9 @@ argument_list|(
 operator|(
 expr|struct
 name|milter
+operator|*
+operator|,
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)
@@ -241,9 +223,13 @@ define|#
 directive|define
 name|MILTER_CHECK_REPLYCODE
 parameter_list|(
-define|default) \ 	if (response == NULL || \ 	    strlen(response) + 1 != (size_t) rlen || \ 	    rlen< 3 || \ 	    (response[0] != '4'&& response[0] != '5') || \ 	    !isascii(response[1]) || !isdigit(response[1]) || \ 	    !isascii(response[2]) || !isdigit(response[2])) \ 	{ \ 		if (response != NULL) \ 			sm_free(response); \ 		response = newstr(default); \ 	} \ 	else \ 	{ \ 		char *ptr = response; \  \
+define|default) \ 	if (response == NULL || \ 	    strlen(response) + 1 != (size_t) rlen || \ 	    rlen< 3 || \ 	    (response[0] != '4'&& response[0] != '5') || \ 	    !isascii(response[1]) || !isdigit(response[1]) || \ 	    !isascii(response[2]) || !isdigit(response[2])) \ 	{ \ 		if (response != NULL) \ 			sm_free(response);
+comment|/* XXX */
+define|\ 		response = newstr(default); \ 	} \ 	else \ 	{ \ 		char *ptr = response; \  \
 comment|/* Check for unprotected %'s in the string */
-define|\ 		while (*ptr != '\0') \ 		{ \ 			if (*ptr == '%'&& *++ptr != '%') \ 			{ \ 				sm_free(response); \ 				response = newstr(default); \ 				break; \ 			} \ 			ptr++; \ 		} \ 	}
+define|\ 		while (*ptr != '\0') \ 		{ \ 			if (*ptr == '%'&& *++ptr != '%') \ 			{ \ 				sm_free(response);
+comment|/* XXX */
+define|\ 				response = newstr(default); \ 				break; \ 			} \ 			ptr++; \ 		} \ 	}
 end_define
 
 begin_define
@@ -254,11 +240,11 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|{ \ 	int save_errno = errno; \  \ 	if (tTd(64, 5)) \ 	{ \ 		dprintf(msg, dfname, errstring(save_errno)); \ 		dprintf("\n"); \ 	} \ 	if (LogLevel> 0) \ 		sm_syslog(LOG_ERR, e->e_id, msg, dfname, errstring(save_errno)); \ 	if (SuperSafe) \ 	{ \ 		if (e->e_dfp != NULL) \ 		{ \ 			(void) fclose(e->e_dfp); \ 			e->e_dfp = NULL; \ 		} \ 		e->e_flags&= ~EF_HAS_DF; \ 	} \ 	errno = save_errno; \ }
+value|{ \ 	int save_errno = errno; \  \ 	if (tTd(64, 5)) \ 	{ \ 		sm_dprintf(msg, dfname, sm_errstring(save_errno)); \ 		sm_dprintf("\n"); \ 	} \ 	if (MilterLogLevel> 0) \ 		sm_syslog(LOG_ERR, e->e_id, msg, dfname, sm_errstring(save_errno)); \ 	if (SuperSafe == SAFE_REALLY) \ 	{ \ 		if (e->e_dfp != NULL) \ 		{ \ 			(void) sm_io_close(e->e_dfp, SM_TIME_DEFAULT); \ 			e->e_dfp = NULL; \ 		} \ 		e->e_flags&= ~EF_HAS_DF; \ 	} \ 	errno = save_errno; \ }
 end_define
 
 begin_comment
-comment|/* **  MILTER_TIMEOUT -- make sure socket is ready in time ** **	Parameters: **		routine -- routine name for debug/logging **		secs -- number of seconds in timeout **		write -- waiting to read or write? ** **	Assumes 'm' is a milter structure for the current socket. */
+comment|/* **  MILTER_TIMEOUT -- make sure socket is ready in time ** **	Parameters: **		routine -- routine name for debug/logging **		secs -- number of seconds in timeout **		write -- waiting to read or write? **		started -- whether this is part of a previous sequence ** **	Assumes 'm' is a milter structure for the current socket. */
 end_comment
 
 begin_define
@@ -271,17 +257,16 @@ parameter_list|,
 name|secs
 parameter_list|,
 name|write
+parameter_list|,
+name|started
 parameter_list|)
 define|\
-value|{ \ 	int ret; \ 	int save_errno; \ 	fd_set fds; \ 	struct timeval tv; \  \ 	if (SM_FD_SETSIZE != 0&& m->mf_sock>= SM_FD_SETSIZE) \ 	{ \ 		if (tTd(64, 5)) \ 			dprintf("%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				routine, m->mf_name, m->mf_sock, SM_FD_SETSIZE); \ 		if (LogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				  routine, m->mf_name, m->mf_sock, SM_FD_SETSIZE); \ 		milter_error(m); \ 		return NULL; \ 	} \  \ 	FD_ZERO(&fds); \ 	SM_FD_SET(m->mf_sock,&fds); \ 	tv.tv_sec = secs; \ 	tv.tv_usec = 0; \ 	ret = select(m->mf_sock + 1, \ 		     write ? NULL :&fds, \ 		     write ?&fds : NULL, \ 		     NULL,&tv); \  \ 	switch (ret) \ 	{ \ 	  case 0: \ 		if (tTd(64, 5)) \ 			dprintf("%s(%s): timeout\n", routine, m->mf_name); \ 		if (LogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, "%s(%s): timeout\n", \ 				  routine, m->mf_name); \ 		milter_error(m); \ 		return NULL; \  \ 	  case -1: \ 		save_errno = errno; \ 		if (tTd(64, 5)) \ 			dprintf("%s(%s): select: %s\n", \ 				routine,  m->mf_name, errstring(save_errno)); \ 		if (LogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "%s(%s): select: %s\n", \ 				  routine, m->mf_name, errstring(save_errno)); \ 		milter_error(m); \ 		return NULL; \  \ 	  default: \ 		if (SM_FD_ISSET(m->mf_sock,&fds)) \ 			break; \ 		if (tTd(64, 5)) \ 			dprintf("%s(%s): socket not ready\n", \ 				routine, m->mf_name); \ 		if (LogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "%s(%s): socket not ready\n", \ 				  m->mf_name, routine); \ 		milter_error(m); \ 		return NULL; \ 	} \ }
+value|{ \ 	int ret; \ 	int save_errno; \ 	fd_set fds; \ 	struct timeval tv; \  \ 	if (SM_FD_SETSIZE> 0&& m->mf_sock>= SM_FD_SETSIZE) \ 	{ \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				   (routine), m->mf_name, m->mf_sock, \ 				   SM_FD_SETSIZE); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) %d is larger than FD_SETSIZE %d", \ 				  m->mf_name, (routine), m->mf_sock, \ 				  SM_FD_SETSIZE); \ 		milter_error(m, e); \ 		return NULL; \ 	} \  \ 	FD_ZERO(&fds); \ 	SM_FD_SET(m->mf_sock,&fds); \ 	tv.tv_sec = (secs); \ 	tv.tv_usec = 0; \ 	ret = select(m->mf_sock + 1, \ 		     (write) ? NULL :&fds, \ 		     (write) ?&fds : NULL, \ 		     NULL,&tv); \  \ 	switch (ret) \ 	{ \ 	  case 0: \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): timeout\n", (routine), \ 				   m->mf_name); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): %s %s %s %s", \ 				  m->mf_name, "timeout", \ 				  started ? "during" : "before", \ 				  "data", (routine)); \ 		milter_error(m, e); \ 		return NULL; \  \ 	  case -1: \ 		save_errno = errno; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): select: %s\n", (routine), \ 				   m->mf_name, sm_errstring(save_errno)); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): select(%s): %s", \ 				  m->mf_name, (routine), \ 				  sm_errstring(save_errno)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \  \ 	  default: \ 		if (SM_FD_ISSET(m->mf_sock,&fds)) \ 			break; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket not ready\n", \ 				(routine), m->mf_name); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) not ready", \ 				  m->mf_name, (routine)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \ 	} \ }
 end_define
 
 begin_comment
 comment|/* **  Low level functions */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_READ -- read from a remote milter filter ** **	Parameters: **		m -- milter to read from. **		cmd -- return param for command read. **		rlen -- return length of response string. **		to -- timeout in seconds. **		e -- current envelope. ** **	Returns: **		response string (may be NULL) */
@@ -332,6 +317,11 @@ name|ssize_t
 name|len
 decl_stmt|,
 name|curl
+decl_stmt|;
+name|bool
+name|started
+init|=
+name|false
 decl_stmt|;
 name|curl
 operator|=
@@ -387,18 +377,28 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_read(%s): timeout before data read\n"
+literal|"milter_read (%s): %s %s %s"
 argument_list|,
 name|m
 operator|->
 name|mf_name
+argument_list|,
+literal|"timeout"
+argument_list|,
+name|started
+condition|?
+literal|"during"
+else|:
+literal|"before"
+argument_list|,
+literal|"data read"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -410,16 +410,28 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_read(%s): timeout before data read\n"
+literal|"Milter (%s): %s %s %s"
 argument_list|,
 name|m
 operator|->
 name|mf_name
+argument_list|,
+literal|"timeout"
+argument_list|,
+name|started
+condition|?
+literal|"during"
+else|:
+literal|"before"
+argument_list|,
+literal|"data read"
 argument_list|)
 expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -438,11 +450,13 @@ name|now
 expr_stmt|;
 name|MILTER_TIMEOUT
 argument_list|(
-literal|"milter_read"
+literal|"read"
 argument_list|,
 name|to
 argument_list|,
-name|FALSE
+name|false
+argument_list|,
+name|started
 argument_list|)
 expr_stmt|;
 block|}
@@ -484,7 +498,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_read(%s): read returned %ld: %s\n"
 argument_list|,
@@ -497,7 +511,7 @@ name|long
 operator|)
 name|len
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -505,7 +519,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -517,7 +531,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_read(%s): read returned %ld: %s"
+literal|"Milter (%s): read returned %ld: %s"
 argument_list|,
 name|m
 operator|->
@@ -528,7 +542,7 @@ name|long
 operator|)
 name|len
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -537,12 +551,18 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
+name|started
+operator|=
+name|true
+expr_stmt|;
 name|curl
 operator|+=
 name|len
@@ -575,9 +595,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_read(%s): read returned %ld, expecting %ld\n"
+literal|"milter_read(%s): cmd read returned %ld, expecting %ld\n"
 argument_list|,
 name|m
 operator|->
@@ -596,7 +616,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -608,7 +628,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_read(%s): read returned %ld, expecting %ld"
+literal|"milter_read(%s): cmd read returned %ld, expecting %ld"
 argument_list|,
 name|m
 operator|->
@@ -628,6 +648,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -776,7 +798,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_read(%s): timeout before data read\n"
 argument_list|,
@@ -787,7 +809,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -799,7 +821,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_read(%s): timeout before data read\n"
+literal|"Milter read(%s): timeout before data read"
 argument_list|,
 name|m
 operator|->
@@ -809,6 +831,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -868,7 +892,7 @@ argument_list|,
 literal|25
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_read(%s): expecting %ld bytes\n"
 argument_list|,
@@ -898,7 +922,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_read(%s): read size %ld out of range\n"
 argument_list|,
@@ -914,7 +938,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -941,6 +965,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -990,6 +1016,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return
 name|NULL
 return|;
@@ -1003,7 +1030,7 @@ argument_list|,
 literal|50
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_read(%s): Returning %*s\n"
 argument_list|,
@@ -1029,9 +1056,6 @@ name|buf
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_WRITE -- write to a remote milter filter ** **	Parameters: **		m -- milter to read from. **		cmd -- command to send. **		buf -- optional command data. **		len -- length of buf. **		to -- timeout in seconds. **		e -- current envelope. ** **	Returns: **		buf if successful, NULL otherwise **		Not actually used anywhere but function prototype **			must match milter_read() */
@@ -1102,6 +1126,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|bool
+name|started
+init|=
+name|false
+decl_stmt|;
 if|if
 condition|(
 name|len
@@ -1122,7 +1151,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_write(%s): length %ld out of range\n"
 argument_list|,
@@ -1138,7 +1167,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -1165,6 +1194,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -1180,7 +1211,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_write(%s): cmd %c, len %ld\n"
 argument_list|,
@@ -1250,11 +1281,13 @@ argument_list|()
 expr_stmt|;
 name|MILTER_TIMEOUT
 argument_list|(
-literal|"milter_write"
+literal|"write"
 argument_list|,
 name|to
 argument_list|,
-name|TRUE
+name|true
+argument_list|,
+name|started
 argument_list|)
 expr_stmt|;
 block|}
@@ -1297,9 +1330,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_write(%s): write(%c) returned %ld, expected %ld: %s\n"
+literal|"milter_write (%s): write(%c) returned %ld, expected %ld: %s\n"
 argument_list|,
 name|m
 operator|->
@@ -1317,7 +1350,7 @@ name|long
 operator|)
 name|sl
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -1325,7 +1358,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -1337,7 +1370,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_write(%s): write(%c) returned %ld, expected %ld: %s"
+literal|"Milter (%s): write(%c) returned %ld, expected %ld: %s"
 argument_list|,
 name|m
 operator|->
@@ -1355,7 +1388,7 @@ name|long
 operator|)
 name|sl
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -1364,6 +1397,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -1392,7 +1427,7 @@ argument_list|,
 literal|50
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_write(%s): Sending %*s\n"
 argument_list|,
@@ -1407,6 +1442,10 @@ name|len
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+name|started
+operator|=
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -1441,9 +1480,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_write(%s): timeout before data send\n"
+literal|"milter_write(%s): timeout before data write\n"
 argument_list|,
 name|m
 operator|->
@@ -1452,7 +1491,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -1464,7 +1503,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_write(%s): timeout before data send\n"
+literal|"Milter (%s): timeout before data write"
 argument_list|,
 name|m
 operator|->
@@ -1474,6 +1513,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -1490,11 +1531,13 @@ name|writestart
 expr_stmt|;
 name|MILTER_TIMEOUT
 argument_list|(
-literal|"milter_write"
+literal|"write"
 argument_list|,
 name|to
 argument_list|,
-name|TRUE
+name|true
+argument_list|,
+name|started
 argument_list|)
 expr_stmt|;
 block|}
@@ -1537,7 +1580,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_write(%s): write(%c) returned %ld, expected %ld: %s\n"
 argument_list|,
@@ -1557,7 +1600,7 @@ name|long
 operator|)
 name|sl
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -1565,7 +1608,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -1577,7 +1620,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_write(%s): write(%c) returned %ld, expected %ld: %s"
+literal|"Milter (%s): write(%c) returned %ld, expected %ld: %s"
 argument_list|,
 name|m
 operator|->
@@ -1595,7 +1638,7 @@ name|long
 operator|)
 name|len
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -1604,6 +1647,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -1619,9 +1664,6 @@ end_function
 begin_comment
 comment|/* **  Utility functions */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_OPEN -- connect to remote milter filter ** **	Parameters: **		m -- milter to connect to. **		parseonly -- parse but don't connect. **		e -- current envelope. ** **	Returns: **		connected socket if sucessful&& !parseonly, **		0 upon parse success if parseonly, **		-1 otherwise. */
@@ -1725,7 +1767,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: empty or missing socket information\n"
 argument_list|,
@@ -1750,7 +1792,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -1762,7 +1804,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: empty or missing socket information"
+literal|"Milter (%s): empty or missing socket information"
 argument_list|,
 name|m
 operator|->
@@ -1772,6 +1814,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -1869,7 +1913,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: no valid socket protocols available"
+literal|"Milter (%s): no valid socket protocols available"
 argument_list|,
 name|m
 operator|->
@@ -1879,6 +1923,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -1901,7 +1947,7 @@ name|NETUNIX
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -1910,7 +1956,7 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -1936,7 +1982,7 @@ name|NETINET
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -1962,7 +2008,7 @@ name|NETINET6
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -2010,7 +2056,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: unknown socket type %s\n"
 argument_list|,
@@ -2039,7 +2085,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2051,7 +2097,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: unknown socket type %s"
+literal|"Milter (%s): unknown socket type %s"
 argument_list|,
 name|m
 operator|->
@@ -2063,6 +2109,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -2146,7 +2194,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: local socket name %s too long\n"
 argument_list|,
@@ -2179,7 +2227,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2191,7 +2239,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: local socket name %s too long"
+literal|"Milter (%s): local socket name %s too long"
 argument_list|,
 name|m
 operator|->
@@ -2203,6 +2251,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -2251,9 +2301,14 @@ name|OpMode
 operator|==
 name|MD_FGDAEMON
 condition|)
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"WARNING: X%s: local socket name %s missing\n"
 argument_list|,
@@ -2287,7 +2342,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: local socket name %s unsafe\n"
 argument_list|,
@@ -2336,7 +2391,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2348,7 +2403,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: local socket name %s unsafe"
+literal|"Milter (%s): local socket name %s unsafe"
 argument_list|,
 name|m
 operator|->
@@ -2360,6 +2415,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -2370,7 +2427,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|addr
 operator|.
@@ -2408,7 +2465,7 @@ operator|||
 name|NETINET6
 if|if
 condition|(
-name|FALSE
+name|false
 if|#
 directive|if
 name|NETINET
@@ -2439,7 +2496,8 @@ directive|endif
 comment|/* NETINET6 */
 condition|)
 block|{
-name|u_short
+name|unsigned
+name|short
 name|port
 decl_stmt|;
 comment|/* Parse port@host */
@@ -2468,7 +2526,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: bad address %s (expected port@host)\n"
 argument_list|,
@@ -2497,7 +2555,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2509,7 +2567,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: bad address %s (expected port@host)"
+literal|"Milter (%s): bad address %s (expected port@host)"
 argument_list|,
 name|m
 operator|->
@@ -2521,6 +2579,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -2552,7 +2612,8 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_short
+name|unsigned
+name|short
 operator|)
 name|atoi
 argument_list|(
@@ -2574,7 +2635,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: invalid port number %s\n"
 argument_list|,
@@ -2603,7 +2664,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2615,7 +2676,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: invalid port number %s"
+literal|"Milter (%s): invalid port number %s"
 argument_list|,
 name|m
 operator|->
@@ -2627,6 +2688,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -2671,7 +2734,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: unknown port name %s\n"
 argument_list|,
@@ -2704,7 +2767,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2716,7 +2779,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: unknown port name %s"
+literal|"Milter (%s): unknown port name %s"
 argument_list|,
 name|m
 operator|->
@@ -2728,6 +2791,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -2782,7 +2847,7 @@ block|{
 name|bool
 name|found
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|#
 directive|if
@@ -2860,7 +2925,7 @@ name|port
 expr_stmt|;
 name|found
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 endif|#
@@ -2893,7 +2958,7 @@ name|sa_family
 operator|==
 name|AF_INET6
 operator|&&
-name|inet_pton
+name|anynet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -2932,7 +2997,7 @@ name|port
 expr_stmt|;
 name|found
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 endif|#
@@ -2958,7 +3023,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: Invalid numeric domain spec \"%s\"\n"
 argument_list|,
@@ -2987,7 +3052,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -2999,7 +3064,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: Invalid numeric domain spec \"%s\""
+literal|"Milter (%s): Invalid numeric domain spec \"%s\""
 argument_list|,
 name|m
 operator|->
@@ -3011,6 +3076,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -3030,7 +3097,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: Invalid numeric domain spec \"%s\"\n"
 argument_list|,
@@ -3059,7 +3126,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -3071,7 +3138,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: Invalid numeric domain spec \"%s\""
+literal|"Milter (%s): Invalid numeric domain spec \"%s\""
 argument_list|,
 name|m
 operator|->
@@ -3083,6 +3150,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -3126,7 +3195,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: Unknown host name %s\n"
 argument_list|,
@@ -3159,7 +3228,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -3171,7 +3240,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: Unknown host name %s"
+literal|"Milter (%s): Unknown host name %s"
 argument_list|,
 name|m
 operator|->
@@ -3183,6 +3252,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -3309,7 +3380,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: Unknown protocol for %s (%d)\n"
 argument_list|,
@@ -3346,7 +3417,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -3358,7 +3429,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: Unknown protocol for %s (%d)"
+literal|"Milter (%s): Unknown protocol for %s (%d)"
 argument_list|,
 name|m
 operator|->
@@ -3374,12 +3445,12 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 name|freehostent
 argument_list|(
@@ -3388,7 +3459,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 operator|-
 literal|1
@@ -3410,7 +3481,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: unknown socket protocol\n"
 argument_list|,
@@ -3435,7 +3506,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|10
 condition|)
@@ -3447,7 +3518,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: unknown socket protocol"
+literal|"Milter (%s): unknown socket protocol"
 argument_list|,
 name|m
 operator|->
@@ -3457,6 +3528,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -3478,8 +3551,6 @@ name|SMFS_READY
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 if|if
 condition|(
@@ -3494,7 +3565,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 literal|0
 return|;
@@ -3525,9 +3596,9 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_open(%s): Trying to open filter in state %c\n"
+literal|"Milter (%s): Trying to open filter in state %c\n"
 argument_list|,
 name|m
 operator|->
@@ -3544,12 +3615,12 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 if|if
 condition|(
@@ -3564,7 +3635,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 operator|-
 literal|1
@@ -3612,15 +3683,15 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"X%s: error creating socket: %s\n"
+literal|"Milter (%s): error creating socket: %s\n"
 argument_list|,
 name|m
 operator|->
 name|mf_name
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -3628,7 +3699,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -3640,13 +3711,13 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: error creating socket: %s"
+literal|"Milter (%s): error creating socket: %s"
 argument_list|,
 name|m
 operator|->
 name|mf_name
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -3655,12 +3726,12 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 if|if
 condition|(
@@ -3675,7 +3746,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 operator|-
 literal|1
@@ -3691,7 +3762,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|EVENT
+name|SM_EVENT
 modifier|*
 name|ev
 init|=
@@ -3713,7 +3784,7 @@ literal|0
 condition|)
 name|ev
 operator|=
-name|setevent
+name|sm_setevent
 argument_list|(
 name|m
 operator|->
@@ -3754,7 +3825,7 @@ name|ev
 operator|!=
 name|NULL
 condition|)
-name|clrevent
+name|sm_clrevent
 argument_list|(
 name|ev
 argument_list|)
@@ -3793,9 +3864,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_open(%s): %s failed: %s\n"
+literal|"milter_open (%s): open %s failed: %s\n"
 argument_list|,
 name|m
 operator|->
@@ -3803,7 +3874,7 @@ name|mf_name
 argument_list|,
 name|at
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -3811,9 +3882,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
-operator|>=
-literal|14
+name|MilterLogLevel
+operator|>
+literal|13
 condition|)
 name|sm_syslog
 argument_list|(
@@ -3823,7 +3894,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_open(%s): %s failed: %s"
+literal|"Milter (%s): open %s failed: %s"
 argument_list|,
 name|m
 operator|->
@@ -3831,7 +3902,7 @@ name|mf_name
 argument_list|,
 name|at
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -3945,7 +4016,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: Unknown protocol for %s (%d)\n"
 argument_list|,
@@ -3962,7 +4033,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -3974,7 +4045,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: Unknown protocol for %s (%d)"
+literal|"Milter (%s): Unknown protocol for %s (%d)"
 argument_list|,
 name|m
 operator|->
@@ -3990,12 +4061,12 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 name|freehostent
 argument_list|(
@@ -4004,7 +4075,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 operator|-
 literal|1
@@ -4029,7 +4100,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: error connecting to filter: %s\n"
 argument_list|,
@@ -4037,7 +4108,7 @@ name|m
 operator|->
 name|mf_name
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -4045,7 +4116,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -4057,13 +4128,13 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"X%s: error connecting to filter: %s"
+literal|"Milter (%s): error connecting to filter: %s"
 argument_list|,
 name|m
 operator|->
 name|mf_name
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -4076,12 +4147,12 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 if|if
 condition|(
@@ -4096,7 +4167,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 operator|-
 literal|1
@@ -4110,8 +4181,6 @@ name|SMFS_OPEN
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 if|if
 condition|(
@@ -4132,7 +4201,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 name|sock
 return|;
@@ -4159,9 +4228,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_SETUP -- setup structure for a mail filter ** **	Parameters: **		line -- the options line. ** **	Returns: **		none */
@@ -4323,7 +4389,7 @@ operator|=
 operator|(
 name|time_t
 operator|)
-literal|0
+literal|300
 expr_stmt|;
 name|m
 operator|->
@@ -4601,7 +4667,7 @@ name|milter_open
 argument_list|(
 name|m
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -4647,16 +4713,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MILTER_PARSE_LIST -- parse option list into an array ** **	Called when reading configuration file. ** **	Parameters: **		spec -- the filter list. **		list -- the array to fill in. **		max -- the maximum number of entries in list. ** **	Returns: **		none */
+comment|/* **  MILTER_CONFIG -- parse option list into an array and check config ** **	Called when reading configuration file. ** **	Parameters: **		spec -- the filter list. **		list -- the array to fill in. **		max -- the maximum number of entries in list. ** **	Returns: **		none */
 end_comment
 
 begin_function
 name|void
-name|milter_parse_list
+name|milter_config
 parameter_list|(
 name|spec
 parameter_list|,
@@ -4766,6 +4829,21 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|_FFR_MILTER_PERDAEMON
+name|p
+operator|=
+name|strpbrk
+argument_list|(
+name|p
+argument_list|,
+literal|";,"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* _FFR_MILTER_PERDAEMON */
 name|p
 operator|=
 name|strpbrk
@@ -4775,6 +4853,9 @@ argument_list|,
 literal|","
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_PERDAEMON */
 if|if
 condition|(
 name|p
@@ -4836,11 +4917,20 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* if not set, set to LogLevel */
+if|if
+condition|(
+name|MilterLogLevel
+operator|==
+operator|-
+literal|1
+condition|)
+name|MilterLogLevel
+operator|=
+name|LogLevel
+expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_PARSE_TIMEOUTS -- parse timeout list ** **	Called when reading configuration file. ** **	Parameters: **		spec -- the timeout list. **		m -- milter to set. ** **	Returns: **		none */
@@ -5024,9 +5114,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|sm_dprintf
 argument_list|(
-literal|"X%s: %c=%ld\n"
+literal|"X%s: %c=%lu\n"
 argument_list|,
 name|m
 operator|->
@@ -5035,7 +5125,8 @@ argument_list|,
 name|fcode
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|m
 operator|->
@@ -5072,9 +5163,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|sm_dprintf
 argument_list|(
-literal|"X%s: %c=%ld\n"
+literal|"X%s: %c=%lu\n"
 argument_list|,
 name|m
 operator|->
@@ -5083,7 +5174,8 @@ argument_list|,
 name|fcode
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|m
 operator|->
@@ -5120,9 +5212,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|sm_dprintf
 argument_list|(
-literal|"X%s: %c=%ld\n"
+literal|"X%s: %c=%lu\n"
 argument_list|,
 name|m
 operator|->
@@ -5131,7 +5223,8 @@ argument_list|,
 name|fcode
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|m
 operator|->
@@ -5168,9 +5261,9 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|sm_dprintf
 argument_list|(
-literal|"X%s: %c=%ld\n"
+literal|"X%s: %c=%lu\n"
 argument_list|,
 name|m
 operator|->
@@ -5179,7 +5272,8 @@ argument_list|,
 name|fcode
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|m
 operator|->
@@ -5200,7 +5294,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|sm_dprintf
 argument_list|(
 literal|"X%s: %c unknown\n"
 argument_list|,
@@ -5232,9 +5326,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MILTER_SET_OPTION -- set an individual milter option ** **	Parameters: **		name -- the name of the option. **		val -- the value of the option. **		sticky -- if set, don't let other setoptions override **			this value. ** **	Returns: **		none. */
 end_comment
@@ -5260,7 +5351,8 @@ modifier|*
 name|mo_name
 decl_stmt|;
 comment|/* long name of milter option */
-name|u_char
+name|unsigned
+name|char
 name|mo_code
 decl_stmt|;
 comment|/* code for option */
@@ -5307,6 +5399,16 @@ block|{
 literal|"macros.envrcpt"
 block|,
 name|MO_MACROS_ENVRCPT
+block|}
+block|,
+define|#
+directive|define
+name|MO_LOGLEVEL
+value|0x05
+block|{
+literal|"loglevel"
+block|,
+name|MO_LOGLEVEL
 block|}
 block|,
 block|{
@@ -5378,7 +5480,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_set_option(%s = %s)"
 argument_list|,
@@ -5405,7 +5507,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|mo
 operator|->
@@ -5426,6 +5528,7 @@ name|mo_name
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"milter_set_option: invalid Milter option %s"
@@ -5433,6 +5536,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* 	**  See if this option is preset for us. 	*/
 if|if
 condition|(
@@ -5465,7 +5570,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (ignored)\n"
 argument_list|)
@@ -5488,7 +5593,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5500,6 +5605,17 @@ operator|->
 name|mo_code
 condition|)
 block|{
+case|case
+name|MO_LOGLEVEL
+case|:
+name|MilterLogLevel
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|MO_MACROS_CONNECT
 case|:
@@ -5728,11 +5844,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MILTER_REOPEN_DF -- open& truncate the df file (for replbody) ** **	Parameters: **		e -- current envelope. ** **	Returns: **		0 if succesful, -1 otherwise */
+comment|/* **  MILTER_REOPEN_DF -- open& truncate the data file (for replbody) ** **	Parameters: **		e -- current envelope. ** **	Returns: **		0 if succesful, -1 otherwise */
 end_comment
 
 begin_function
@@ -5756,7 +5869,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|dfname
 argument_list|,
@@ -5764,20 +5877,22 @@ name|queuename
 argument_list|(
 name|e
 argument_list|,
-literal|'d'
+name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
 name|dfname
 argument_list|)
 expr_stmt|;
-comment|/* 	**  In SuperSafe mode, e->e_dfp is a read-only FP so 	**  close and reopen writable (later close and reopen 	**  read only again). 	** 	**  In !SuperSafe mode, e->e_dfp still points at the 	**  buffered file I/O descriptor, still open for writing 	**  so there isn't as much work to do, just truncate it 	**  and go. 	*/
+comment|/* 	**  In SuperSafe == SAFE_REALLY mode, e->e_dfp is a read-only FP so 	**  close and reopen writable (later close and reopen 	**  read only again). 	** 	**  In SuperSafe != SAFE_REALLY mode, e->e_dfp still points at the 	**  buffered file I/O descriptor, still open for writing 	**  so there isn't as much work to do, just truncate it 	**  and go. 	*/
 if|if
 condition|(
 name|SuperSafe
+operator|==
+name|SAFE_REALLY
 condition|)
 block|{
-comment|/* close read-only df */
+comment|/* close read-only data file */
 if|if
 condition|(
 name|bitset
@@ -5799,11 +5914,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|e
@@ -5822,11 +5939,17 @@ name|e
 operator|->
 name|e_dfp
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|dfname
 argument_list|,
-literal|"w+"
+name|SM_IO_RDWR
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -5835,7 +5958,7 @@ condition|)
 block|{
 name|MILTER_DF_ERROR
 argument_list|(
-literal|"milter_reopen_df: fopen %s: %s"
+literal|"milter_reopen_df: sm_io_open %s: %s"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5875,11 +5998,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MILTER_RESET_DF -- re-open read-only the df file (for replbody) ** **	Parameters: **		e -- current envelope. ** **	Returns: **		0 if succesful, -1 otherwise */
+comment|/* **  MILTER_RESET_DF -- re-open read-only the data file (for replbody) ** **	Parameters: **		e -- current envelope. ** **	Returns: **		0 if succesful, -1 otherwise */
 end_comment
 
 begin_function
@@ -5906,7 +6026,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|dfname
 argument_list|,
@@ -5914,7 +6034,7 @@ name|queuename
 argument_list|(
 name|e
 argument_list|,
-literal|'d'
+name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -5923,16 +6043,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fflush
+name|sm_io_flush
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|!=
 literal|0
 operator|||
-name|ferror
+name|sm_io_error
 argument_list|(
 name|e
 operator|->
@@ -5953,8 +6075,9 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
 name|SuperSafe
+operator|!=
+name|SAFE_REALLY
 condition|)
 block|{
 comment|/* skip next few clauses */
@@ -5966,11 +6089,15 @@ condition|(
 operator|(
 name|afd
 operator|=
-name|fileno
+name|sm_io_getinfo
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|>=
@@ -5997,11 +6124,13 @@ block|}
 elseif|else
 if|if
 condition|(
-name|fclose
+name|sm_io_close
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|<
 literal|0
@@ -6025,11 +6154,17 @@ name|e
 operator|->
 name|e_dfp
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|dfname
 argument_list|,
-literal|"r"
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -6059,11 +6194,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MILTER_CAN_DELRCPTS -- can any milter filters delete recipients? ** **	Parameters: **		none ** **	Returns: **		TRUE if any filter deletes recipients, FALSE otherwise */
+comment|/* **  MILTER_CAN_DELRCPTS -- can any milter filters delete recipients? ** **	Parameters: **		none ** **	Returns: **		true if any filter deletes recipients, false otherwise */
 end_comment
 
 begin_function
@@ -6074,7 +6206,7 @@ block|{
 name|bool
 name|can
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|int
 name|i
@@ -6088,7 +6220,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_can_delrcpts:"
 argument_list|)
@@ -6134,7 +6266,7 @@ condition|)
 block|{
 name|can
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -6148,15 +6280,15 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
 name|can
 condition|?
-literal|"TRUE"
+literal|"true"
 else|:
-literal|"FALSE"
+literal|"false"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6164,9 +6296,6 @@ name|can
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_QUIT_FILTER -- close down a single filter ** **	Parameters: **		m -- milter structure of filter to close down. **		e -- current envelope. ** **	Returns: **		none */
@@ -6200,9 +6329,30 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_quit_filter(%s)\n"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|18
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): quit filter"
 argument_list|,
 name|m
 operator|->
@@ -6326,9 +6476,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MILTER_ABORT_FILTER -- tell filter to abort current message ** **	Parameters: **		m -- milter structure of filter to abort. **		e -- current envelope. ** **	Returns: **		none */
 end_comment
@@ -6361,9 +6508,30 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_abort_filter(%s)\n"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): abort filter"
 argument_list|,
 name|m
 operator|->
@@ -6428,9 +6596,6 @@ name|SMFS_DONE
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_SEND_MACROS -- provide macros to the filters ** **	Parameters: **		m -- milter to send macros to. **		macros -- macros to send for filter smfi_getsymval(). **		cmd -- which command the macros are associated with. **		e -- current envelope (for macro access). ** **	Returns: **		none */
@@ -6533,8 +6698,6 @@ name|macros
 index|[
 name|i
 index|]
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6580,6 +6743,13 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+return|return;
 name|buf
 operator|=
 operator|(
@@ -6626,8 +6796,6 @@ name|macros
 index|[
 name|i
 index|]
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -6662,7 +6830,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_send_macros(%s, %c): %s=%s\n"
 argument_list|,
@@ -6683,7 +6851,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|bp
 argument_list|,
@@ -6713,7 +6881,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|bp
 argument_list|,
@@ -6766,11 +6934,9 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_SEND_COMMAND -- send a command and return the response for a filter ** **	Parameters: **		m -- current milter filter **		command -- command to send. **		data -- optional command data. **		sz -- length of buf. **		e -- current envelope (for e->e_id). **		state -- return state word. ** **	Returns: **		response string (may be NULL) */
@@ -6824,8 +6990,13 @@ decl_stmt|;
 name|ssize_t
 name|rlen
 decl_stmt|;
-name|u_long
+name|unsigned
+name|long
 name|skipflag
+decl_stmt|;
+name|char
+modifier|*
+name|action
 decl_stmt|;
 name|char
 modifier|*
@@ -6844,7 +7015,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_send_command(%s): cmd %c len %ld\n"
 argument_list|,
@@ -6876,6 +7047,10 @@ name|skipflag
 operator|=
 name|SMFIP_NOCONNECT
 expr_stmt|;
+name|action
+operator|=
+literal|"connect"
+expr_stmt|;
 name|defresponse
 operator|=
 literal|"554 Command rejected"
@@ -6887,6 +7062,10 @@ case|:
 name|skipflag
 operator|=
 name|SMFIP_NOHELO
+expr_stmt|;
+name|action
+operator|=
+literal|"helo"
 expr_stmt|;
 name|defresponse
 operator|=
@@ -6900,6 +7079,10 @@ name|skipflag
 operator|=
 name|SMFIP_NOMAIL
 expr_stmt|;
+name|action
+operator|=
+literal|"mail"
+expr_stmt|;
 name|defresponse
 operator|=
 literal|"550 5.7.1 Command rejected"
@@ -6911,6 +7094,10 @@ case|:
 name|skipflag
 operator|=
 name|SMFIP_NORCPT
+expr_stmt|;
+name|action
+operator|=
+literal|"rcpt"
 expr_stmt|;
 name|defresponse
 operator|=
@@ -6924,6 +7111,10 @@ name|skipflag
 operator|=
 name|SMFIP_NOHDRS
 expr_stmt|;
+name|action
+operator|=
+literal|"header"
+expr_stmt|;
 name|defresponse
 operator|=
 literal|"550 5.7.1 Command rejected"
@@ -6936,6 +7127,10 @@ name|skipflag
 operator|=
 name|SMFIP_NOBODY
 expr_stmt|;
+name|action
+operator|=
+literal|"body"
+expr_stmt|;
 name|defresponse
 operator|=
 literal|"554 5.7.1 Command rejected"
@@ -6947,6 +7142,10 @@ case|:
 name|skipflag
 operator|=
 name|SMFIP_NOEOH
+expr_stmt|;
+name|action
+operator|=
+literal|"eoh"
 expr_stmt|;
 name|defresponse
 operator|=
@@ -6975,6 +7174,10 @@ name|skipflag
 operator|=
 literal|0
 expr_stmt|;
+name|action
+operator|=
+literal|"default"
+expr_stmt|;
 name|defresponse
 operator|=
 literal|"550 5.7.1 Command rejected"
@@ -7000,6 +7203,7 @@ condition|)
 return|return
 name|NULL
 return|;
+comment|/* send the command to the filter */
 operator|(
 name|void
 operator|)
@@ -7042,6 +7246,7 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* get the response from the filter */
 name|response
 operator|=
 name|milter_read
@@ -7092,7 +7297,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_send_command(%s): returned %c\n"
 argument_list|,
@@ -7119,16 +7324,127 @@ argument_list|(
 name|defresponse
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHROUGH */
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, action=%s, reject=%s"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|action
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|rcmd
+expr_stmt|;
+break|break;
 case|case
 name|SMFIR_REJECT
 case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, action=%s, reject"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|action
+argument_list|)
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|rcmd
+expr_stmt|;
+break|break;
 case|case
 name|SMFIR_DISCARD
 case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, action=%s, discard"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|action
+argument_list|)
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|rcmd
+expr_stmt|;
+break|break;
 case|case
 name|SMFIR_TEMPFAIL
 case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, action=%s, tempfail"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|action
+argument_list|)
+expr_stmt|;
 operator|*
 name|state
 operator|=
@@ -7162,6 +7478,29 @@ name|mf_state
 operator|=
 name|SMFS_DONE
 expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, action=%s, accepted"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|action
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SMFIR_CONTINUE
@@ -7179,12 +7518,35 @@ name|mf_state
 operator|=
 name|SMFS_INMSG
 expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|12
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, action=%s, continue"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|action
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Invalid response to command */
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -7196,11 +7558,13 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_send_command(%s): returned bogus response %c"
+literal|"milter_send_command(%s): action=%s returned bogus response %c"
 argument_list|,
 name|m
 operator|->
 name|mf_name
+argument_list|,
+name|action
 argument_list|,
 name|rcmd
 argument_list|)
@@ -7208,6 +7572,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7229,6 +7595,7 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|response
 operator|=
 name|NULL
@@ -7239,9 +7606,6 @@ name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_COMMAND -- send a command and return the response for each filter ** **	Parameters: **		command -- command to send. **		data -- optional command data. **		sz -- length of buf. **		macros -- macros to send for filter smfi_getsymval(). **		e -- current envelope (for macro access). **		state -- return state word. ** **	Returns: **		response string (may be NULL) */
@@ -7298,6 +7662,11 @@ name|response
 init|=
 name|NULL
 decl_stmt|;
+name|time_t
+name|tn
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -7307,7 +7676,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_command: cmd %c len %ld\n"
 argument_list|,
@@ -7438,6 +7807,17 @@ empty_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|21
+condition|)
+name|tn
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 name|response
 operator|=
 name|milter_send_command
@@ -7457,6 +7837,42 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|MilterLogLevel
+operator|>
+literal|21
+condition|)
+block|{
+comment|/* log the time it took for the command per filter */
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): time command (%c), %d"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|command
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|tn
+operator|-
+name|curtime
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|*
 name|state
 operator|!=
@@ -7469,9 +7885,6 @@ name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_NEGOTIATE -- get version and flags from filter ** **	Parameters: **		m -- milter filter structure. **		e -- current envelope. ** **	Returns: **		0 on success, -1 otherwise */
@@ -7539,7 +7952,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -7551,7 +7964,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): impossible state"
+literal|"Milter (%s): negotiate, impossible state"
 argument_list|,
 name|m
 operator|->
@@ -7561,6 +7974,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -7734,7 +8149,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): returned %c instead of %c\n"
 argument_list|,
@@ -7749,7 +8164,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -7761,7 +8176,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): returned %c instead of %c"
+literal|"Milter (%s): negotiate: returned %c instead of %c"
 argument_list|,
 name|m
 operator|->
@@ -7783,9 +8198,12 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -7814,7 +8232,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): did not return valid info\n"
 argument_list|,
@@ -7825,7 +8243,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -7837,7 +8255,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): did not return valid info"
+literal|"Milter (%s): negotiate: did not return valid info"
 argument_list|,
 name|m
 operator|->
@@ -7855,9 +8273,12 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -7900,7 +8321,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): did not return enough info\n"
 argument_list|,
@@ -7911,7 +8332,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -7923,7 +8344,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): did not return enough info"
+literal|"Milter (%s): negotiate: did not return enough info"
 argument_list|,
 name|m
 operator|->
@@ -7941,9 +8362,12 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -7998,6 +8422,7 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|response
 operator|=
 name|NULL
@@ -8054,7 +8479,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): version %lu != MTA milter version %d\n"
 argument_list|,
@@ -8071,7 +8496,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -8083,7 +8508,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): version %ld != MTA milter version %d"
+literal|"Milter (%s): negotiate: version %ld != MTA milter version %d"
 argument_list|,
 name|m
 operator|->
@@ -8099,6 +8524,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -8131,7 +8558,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): filter abilities 0x%lx != MTA milter abilities 0x%lx\n"
 argument_list|,
@@ -8144,14 +8571,15 @@ operator|->
 name|mf_fflags
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|SMFI_CURR_ACTS
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -8163,7 +8591,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): filter abilities 0x%lx != MTA milter abilities 0x%lx\n"
+literal|"Milter (%s): negotiate: filter abilities 0x%lx != MTA milter abilities 0x%lx"
 argument_list|,
 name|m
 operator|->
@@ -8174,7 +8602,8 @@ operator|->
 name|mf_fflags
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|SMFI_CURR_ACTS
 argument_list|)
@@ -8182,6 +8611,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -8214,7 +8645,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): protocol abilities 0x%lx != MTA milter abilities 0x%lx\n"
 argument_list|,
@@ -8227,14 +8658,15 @@ operator|->
 name|mf_pflags
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|SMFI_CURR_PROT
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -8246,7 +8678,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_negotiate(%s): protocol abilities 0x%lx != MTA milter abilities 0x%lx\n"
+literal|"Milter (%s): negotiate: protocol abilities 0x%lx != MTA milter abilities 0x%lx"
 argument_list|,
 name|m
 operator|->
@@ -8257,7 +8689,8 @@ operator|->
 name|mf_pflags
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|SMFI_CURR_PROT
 argument_list|)
@@ -8265,6 +8698,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 return|return
@@ -8281,7 +8716,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_negotiate(%s): version %lu, fflags 0x%lx, pflags 0x%lx\n"
 argument_list|,
@@ -8307,9 +8742,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_PER_CONNECTION_CHECK -- checks on per-connection commands ** **	Reduce code duplication by putting these checks in one place ** **	Parameters: **		e -- current envelope. ** **	Returns: **		none */
@@ -8377,9 +8809,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MILTER_ERROR -- Put a milter filter into error state ** **	Parameters: **		m -- the broken filter. ** **	Returns: **		none */
 end_comment
@@ -8390,11 +8819,17 @@ name|void
 name|milter_error
 parameter_list|(
 name|m
+parameter_list|,
+name|e
 parameter_list|)
 name|struct
 name|milter
 modifier|*
 name|m
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
 comment|/* 	**  We could send a quit here but 	**  we may have gotten here due to 	**  an I/O error so we don't want 	**  to try to make things worse. 	*/
@@ -8431,11 +8866,29 @@ name|mf_state
 operator|=
 name|SMFS_ERROR
 expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): to error state"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_HEADERS -- send headers to a single milter filter ** **	Parameters: **		m -- current filter. **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) */
@@ -8477,6 +8930,27 @@ name|HDR
 modifier|*
 name|h
 decl_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|17
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): headers, send"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|h
@@ -8546,7 +9020,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_headers: %s: %s\n"
 argument_list|,
@@ -8559,6 +9033,31 @@ operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|21
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): header, %s"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|strlen
@@ -8579,6 +9078,13 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+continue|continue;
 name|buf
 operator|=
 operator|(
@@ -8590,7 +9096,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -8632,6 +9141,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|m
@@ -8653,14 +9163,32 @@ name|SMFIR_CONTINUE
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|17
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): headers, sent"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
 return|return
 name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_BODY -- send the body to a filter ** **	Parameters: **		m -- current filter. **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) */
@@ -8730,7 +9258,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_body\n"
 argument_list|)
@@ -8758,14 +9286,20 @@ name|SMFIR_TEMPFAIL
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"milter_body: %s/df%s: rewind error"
+literal|"milter_body: %s/%cf%s: rewind error"
 argument_list|,
 name|qid_printqueue
 argument_list|(
 name|e
 operator|->
-name|e_queuedir
+name|e_qgrp
+argument_list|,
+name|e
+operator|->
+name|e_qdir
 argument_list|)
+argument_list|,
+name|DATAFL_LETTER
 argument_list|,
 name|e
 operator|->
@@ -8776,6 +9310,27 @@ return|return
 name|NULL
 return|;
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|17
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): body, send"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|buf
@@ -8785,15 +9340,17 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getc
+name|sm_io_getc
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+name|SM_IO_EOF
 condition|)
 block|{
 comment|/*  Change LF to CRLF */
@@ -8950,7 +9507,7 @@ block|}
 comment|/* check for read errors */
 if|if
 condition|(
-name|ferror
+name|sm_io_error
 argument_list|(
 name|e
 operator|->
@@ -8992,6 +9549,7 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|response
 operator|=
 name|NULL
@@ -9000,14 +9558,20 @@ block|}
 block|}
 name|syserr
 argument_list|(
-literal|"milter_body: %s/df%s: read error"
+literal|"milter_body: %s/%cf%s: read error"
 argument_list|,
 name|qid_printqueue
 argument_list|(
 name|e
 operator|->
-name|e_queuedir
+name|e_qgrp
+argument_list|,
+name|e
+operator|->
+name|e_qdir
 argument_list|)
+argument_list|,
+name|DATAFL_LETTER
 argument_list|,
 name|e
 operator|->
@@ -9068,6 +9632,27 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|17
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): body, sent"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
 return|return
 name|response
 return|;
@@ -9077,9 +9662,6 @@ end_function
 begin_comment
 comment|/* **  Actions */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_ADDHEADER -- Add the supplied header to the message ** **	Parameters: **		response -- encoded form of header/value. **		rlen -- length of response. **		e -- current envelope. ** **	Returns: **		none */
@@ -9125,7 +9707,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_addheader: "
 argument_list|)
@@ -9147,7 +9729,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"NULL response\n"
 argument_list|)
@@ -9182,7 +9764,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"didn't follow protocol (total len)\n"
 argument_list|)
@@ -9231,7 +9813,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"didn't follow protocol (part len)\n"
 argument_list|)
@@ -9255,7 +9837,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"empty field name\n"
 argument_list|)
@@ -9283,7 +9865,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|h
 operator|->
@@ -9349,9 +9931,32 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Replace default header %s value with %s\n"
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter change: default header %s value with %s"
 argument_list|,
 name|h
 operator|->
@@ -9387,9 +9992,30 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Add %s: %s\n"
+argument_list|,
+name|response
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter add: header: %s: %s"
 argument_list|,
 name|response
 argument_list|,
@@ -9407,18 +10033,12 @@ name|val
 argument_list|,
 name|H_USER
 argument_list|,
-operator|&
 name|e
-operator|->
-name|e_header
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_CHANGEHEADER -- Change the supplied header in the message ** **	Parameters: **		response -- encoded form of header/index/value. **		rlen -- length of response. **		e -- current envelope. ** **	Returns: **		none */
@@ -9475,7 +10095,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_changeheader: "
 argument_list|)
@@ -9497,7 +10117,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"NULL response\n"
 argument_list|)
@@ -9532,7 +10152,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"didn't follow protocol (total len)\n"
 argument_list|)
@@ -9615,7 +10235,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"didn't follow protocol (part len)\n"
 argument_list|)
@@ -9639,7 +10259,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"empty field name\n"
 argument_list|)
@@ -9671,7 +10291,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|h
 operator|->
@@ -9773,7 +10393,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Delete (noop) %s:\n"
 argument_list|,
@@ -9793,7 +10413,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Add %s: %s\n"
 argument_list|,
@@ -9813,10 +10433,7 @@ name|val
 argument_list|,
 name|H_USER
 argument_list|,
-operator|&
 name|e
-operator|->
-name|e_header
 argument_list|)
 expr_stmt|;
 block|}
@@ -9840,7 +10457,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Delete%s %s: %s\n"
 argument_list|,
@@ -9870,9 +10487,97 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"Change%s %s: from %s to %s\n"
+argument_list|,
+name|h
+operator|==
+name|sysheader
+condition|?
+literal|" (default header)"
+else|:
+literal|""
+argument_list|,
+name|field
+argument_list|,
+name|h
+operator|->
+name|h_value
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
+name|h
+operator|->
+name|h_value
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|val
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter delete: header %s %s: %s"
+argument_list|,
+name|h
+operator|==
+name|sysheader
+condition|?
+literal|" (default header)"
+else|:
+literal|""
+argument_list|,
+name|field
+argument_list|,
+name|h
+operator|->
+name|h_value
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
+name|h
+operator|->
+name|h_value
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter change: header %s %s: from %s to %s"
 argument_list|,
 name|h
 operator|==
@@ -9914,10 +10619,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|e
-operator|->
-name|e_msgsize
-operator|-=
+name|size_t
+name|l
+decl_stmt|;
+name|l
+operator|=
 name|strlen
 argument_list|(
 name|h
@@ -9925,13 +10631,28 @@ operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
-name|sm_free
-argument_list|(
-name|h
+if|if
+condition|(
+name|l
+operator|>
+name|e
 operator|->
-name|h_value
-argument_list|)
+name|e_msgsize
+condition|)
+name|e
+operator|->
+name|e_msgsize
+operator|=
+literal|0
 expr_stmt|;
+else|else
+name|e
+operator|->
+name|e_msgsize
+operator|-=
+name|l
+expr_stmt|;
+comment|/* rpool, don't free: sm_free(h->h_value); XXX */
 block|}
 if|if
 condition|(
@@ -9948,10 +10669,12 @@ name|h
 operator|!=
 name|sysheader
 condition|)
-name|e
-operator|->
-name|e_msgsize
-operator|-=
+block|{
+name|size_t
+name|l
+decl_stmt|;
+name|l
+operator|=
 name|strlen
 argument_list|(
 name|h
@@ -9961,6 +10684,28 @@ argument_list|)
 operator|+
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|>
+name|e
+operator|->
+name|e_msgsize
+condition|)
+name|e
+operator|->
+name|e_msgsize
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|e
+operator|->
+name|e_msgsize
+operator|-=
+name|l
+expr_stmt|;
+block|}
 name|h
 operator|->
 name|h_value
@@ -10000,9 +10745,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MILTER_ADDRCPT -- Add the supplied recipient to the message ** **	Parameters: **		response -- encoded form of recipient address. **		rlen -- length of response. **		e -- current envelope. ** **	Returns: **		none */
 end_comment
@@ -10039,7 +10781,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_addrcpt: "
 argument_list|)
@@ -10061,7 +10803,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"NULL response\n"
 argument_list|)
@@ -10097,18 +10839,26 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"didn't follow protocol (total len %d != rlen %d)\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|response
 argument_list|)
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|rlen
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10122,9 +10872,28 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter add: rcpt: %s"
 argument_list|,
 name|response
 argument_list|)
@@ -10151,9 +10920,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_DELRCPT -- Delete the supplied recipient from the message ** **	Parameters: **		response -- encoded form of recipient address. **		rlen -- length of response. **		e -- current envelope. ** **	Returns: **		none */
@@ -10191,7 +10957,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_delrcpt: "
 argument_list|)
@@ -10213,7 +10979,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"NULL response\n"
 argument_list|)
@@ -10249,7 +11015,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"didn't follow protocol (total len)\n"
 argument_list|)
@@ -10265,9 +11031,28 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter delete: rcpt %s"
 argument_list|,
 name|response
 argument_list|)
@@ -10291,11 +11076,8 @@ return|return;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MILTER_REPLBODY -- Replace the current df file with new body ** **	Parameters: **		response -- encoded form of new body. **		rlen -- length of response. **		newfilter -- if first time called by a new filter **		e -- current envelope. ** **	Returns: **		0 upon success, -1 upon failure */
+comment|/* **  MILTER_REPLBODY -- Replace the current data file with new body ** **	Parameters: **		response -- encoded form of new body. **		rlen -- length of response. **		newfilter -- if first time called by a new filter **		e -- current envelope. ** **	Returns: **		0 upon success, -1 upon failure */
 end_comment
 
 begin_function
@@ -10342,12 +11124,12 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_replbody\n"
 argument_list|)
 expr_stmt|;
-comment|/* If a new filter, reset previous character and truncate df */
+comment|/* If a new filter, reset previous character and truncate data file */
 if|if
 condition|(
 name|newfilter
@@ -10367,7 +11149,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|dfname
 argument_list|,
@@ -10375,7 +11157,7 @@ name|queuename
 argument_list|(
 name|e
 argument_list|,
-literal|'d'
+name|DATAFL_LETTER
 argument_list|)
 argument_list|,
 sizeof|sizeof
@@ -10387,7 +11169,7 @@ name|prevchar
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Get the current df information */
+comment|/* Get the current data file information */
 if|if
 condition|(
 name|bitset
@@ -10415,11 +11197,15 @@ name|st
 decl_stmt|;
 name|afd
 operator|=
-name|fileno
+name|sm_io_getinfo
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10445,14 +11231,32 @@ operator|.
 name|st_size
 expr_stmt|;
 block|}
-comment|/* truncate current df file */
+comment|/* truncate current data file */
 if|if
 condition|(
-name|bftruncate
+name|sm_io_getinfo
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_IO_WHAT_ISTYPE
+argument_list|,
+name|BF_FILE_TYPE
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|sm_io_setinfo
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_BF_TRUNCATE
+argument_list|,
+name|NULL
 argument_list|)
 operator|<
 literal|0
@@ -10460,7 +11264,7 @@ condition|)
 block|{
 name|MILTER_DF_ERROR
 argument_list|(
-literal|"milter_reopen_df: bftruncate %s: %s"
+literal|"milter_replbody: sm_io truncate %s: %s"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10468,8 +11272,109 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
 else|else
 block|{
+name|int
+name|err
+decl_stmt|;
+if|#
+directive|if
+name|NOFTRUNCATE
+comment|/* XXX: Not much we can do except rewind it */
+name|err
+operator|=
+name|sm_io_error
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_io_flush
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|)
+expr_stmt|;
+comment|/* 			**  Clear error if tried to fflush() 			**  a read-only file pointer and 			**  there wasn't a previous error. 			*/
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+name|sm_io_clearerr
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|)
+expr_stmt|;
+comment|/* errno is set implicitly by fseek() before return */
+name|err
+operator|=
+name|sm_io_seek
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* NOFTRUNCATE */
+name|err
+operator|=
+name|ftruncate
+argument_list|(
+name|sm_io_getinfo
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_IO_WHAT_FD
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NOFTRUNCATE */
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+block|{
+name|MILTER_DF_ERROR
+argument_list|(
+literal|"milter_replbody: sm_io ftruncate %s: %s"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|prevsize
@@ -10492,7 +11397,25 @@ operator|-=
 name|prevsize
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|newfilter
+operator|&&
+name|MilterLogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter message: body replaced"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|response
@@ -10511,13 +11434,15 @@ block|{
 operator|(
 name|void
 operator|)
-name|putc
+name|sm_io_putc
 argument_list|(
-name|prevchar
-argument_list|,
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|prevchar
 argument_list|)
 expr_stmt|;
 name|e
@@ -10570,13 +11495,15 @@ block|{
 operator|(
 name|void
 operator|)
-name|putc
+name|sm_io_putc
 argument_list|(
-name|prevchar
-argument_list|,
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
+name|prevchar
 argument_list|)
 expr_stmt|;
 name|e
@@ -10640,16 +11567,18 @@ block|}
 operator|(
 name|void
 operator|)
-name|putc
+name|sm_io_putc
 argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|response
 index|[
 name|i
 index|]
-argument_list|,
-name|e
-operator|->
-name|e_dfp
 argument_list|)
 expr_stmt|;
 name|e
@@ -10668,11 +11597,8 @@ begin_comment
 comment|/* **  MTA callouts */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  MILTER_INIT -- open and negotiate with all of the filters ** **	Parameters: **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		none */
+comment|/* **  MILTER_INIT -- open and negotiate with all of the filters ** **	Parameters: **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		true iff at least one filter is active */
 end_comment
 
 begin_comment
@@ -10680,7 +11606,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|milter_init
 parameter_list|(
 name|e
@@ -10708,7 +11634,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_init\n"
 argument_list|)
@@ -10718,6 +11644,37 @@ name|state
 operator|=
 name|SMFIR_CONTINUE
 expr_stmt|;
+if|if
+condition|(
+name|InputFilters
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: no active filter"
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 for|for
 control|(
 name|i
@@ -10753,7 +11710,7 @@ name|milter_open
 argument_list|(
 name|m
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
 name|e
 argument_list|)
@@ -10807,9 +11764,40 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_init(%s): failed to %s\n"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|m
+operator|->
+name|mf_sock
+operator|<
+literal|0
+condition|?
+literal|"open"
+else|:
+literal|"negotiate"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|0
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): init failed to %s"
 argument_list|,
 name|m
 operator|->
@@ -10830,6 +11818,8 @@ comment|/* if negotation failure, close socket */
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|MILTER_CHECK_ERROR
@@ -10838,6 +11828,37 @@ argument|continue
 argument_list|)
 empty_stmt|;
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter (%s): init success to %s"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|m
+operator|->
+name|mf_sock
+operator|<
+literal|0
+condition|?
+literal|"open"
+else|:
+literal|"negotiate"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	**  If something temp/perm failed with one of the filters, 	**  we won't be using any of them, so clear any existing 	**  connections. 	*/
 if|if
@@ -10852,11 +11873,11 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+return|return
+name|true
+return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_CONNECT -- send connection info to milter filters ** **	Parameters: **		hostname -- hostname of remote machine. **		addr -- address of remote machine. **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) */
@@ -10894,7 +11915,8 @@ block|{
 name|char
 name|family
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|port
 decl_stmt|;
 name|char
@@ -10938,11 +11960,28 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_connect(%s)\n"
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: connect to filters"
 argument_list|)
 expr_stmt|;
 comment|/* gather data */
@@ -11264,6 +12303,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 comment|/* 	**  If this message connection is done for, 	**  close the filters. 	*/
 if|if
 condition|(
@@ -11272,11 +12312,30 @@ name|state
 operator|!=
 name|SMFIR_CONTINUE
 condition|)
+block|{
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: connect, ending"
+argument_list|)
+expr_stmt|;
 name|milter_quit
 argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|milter_per_connection_check
 argument_list|(
@@ -11326,6 +12385,7 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|response
 operator|=
 name|NULL
@@ -11337,9 +12397,6 @@ name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_HELO -- send SMTP HELO/EHLO command info to milter filters ** **	Parameters: **		helo -- argument to SMTP HELO/EHLO command. **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) */
@@ -11385,14 +12442,14 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_helo(%s)\n"
 argument_list|,
 name|helo
 argument_list|)
 expr_stmt|;
-comment|/* HELO/EHLO can come after encryption is negotiated */
+comment|/* HELO/EHLO can come at any point */
 for|for
 control|(
 name|i
@@ -11485,9 +12542,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MILTER_ENVFROM -- send SMTP MAIL command info to milter filters ** **	Parameters: **		args -- SMTP MAIL command args (args[0] == sender). **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) */
 end_comment
@@ -11544,7 +12598,7 @@ literal|10
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_envfrom:"
 argument_list|)
@@ -11565,7 +12619,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -11575,7 +12629,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -11596,6 +12650,23 @@ operator|*
 name|state
 operator|=
 name|SMFIR_REJECT
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: reject, no sender"
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -11694,6 +12765,22 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+block|{
+operator|*
+name|state
+operator|=
+name|SMFIR_TEMPFAIL
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|buf
 operator|=
 operator|(
@@ -11729,7 +12816,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|bp
 argument_list|,
@@ -11757,6 +12844,25 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|14
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: senders: %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 comment|/* send it over */
 name|response
 operator|=
@@ -11780,18 +12886,38 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 comment|/* 	**  If filter rejects/discards a per message command, 	**  abort the other filters since we are done with the 	**  current message. 	*/
 name|MILTER_CHECK_DONE_MSG
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+operator|&&
+operator|*
+name|state
+operator|==
+name|SMFIR_REJECT
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: reject, senders"
+argument_list|)
 expr_stmt|;
 return|return
 name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_ENVRCPT -- send SMTP RCPT command info to milter filters ** **	Parameters: **		args -- SMTP MAIL command args (args[0] == recipient). **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) */
@@ -11849,7 +12975,7 @@ literal|10
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_envrcpt:"
 argument_list|)
@@ -11870,7 +12996,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -11880,7 +13006,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -11901,6 +13027,23 @@ operator|*
 name|state
 operator|=
 name|SMFIR_REJECT
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: reject, no rcpt"
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -11939,6 +13082,22 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+block|{
+operator|*
+name|state
+operator|=
+name|SMFIR_TEMPFAIL
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|buf
 operator|=
 operator|(
@@ -11974,7 +13133,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|bp
 argument_list|,
@@ -12002,6 +13161,25 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|14
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: rcpts: %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 comment|/* send it over */
 name|response
 operator|=
@@ -12025,14 +13203,12 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return
 name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_DATA -- send message headers/body and gather final message results ** **	Parameters: **		e -- current envelope. **		state -- return state from response. ** **	Returns: **		response string (may be NULL) ** **	Side effects: **		- Uses e->e_dfp for access to the body **		- Can call the various milter action routines to **		  modify the envelope or message. */
@@ -12070,27 +13246,27 @@ block|{
 name|bool
 name|replbody
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 comment|/* milter_replbody() called? */
 name|bool
 name|replfailed
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 comment|/* milter_replbody() failed? */
 name|bool
 name|rewind
 init|=
-name|FALSE
+name|false
 decl_stmt|;
-comment|/* rewind df file? */
+comment|/* rewind data file? */
 name|bool
 name|dfopen
 init|=
-name|FALSE
+name|false
 decl_stmt|;
-comment|/* df open for writing? */
+comment|/* data file open for writing? */
 name|bool
 name|newfilter
 decl_stmt|;
@@ -12125,7 +13301,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_data\n"
 argument_list|)
@@ -12187,7 +13363,7 @@ name|SMFIR_CONTINUE
 expr_stmt|;
 name|newfilter
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* previous problem? */
 if|if
@@ -12288,7 +13464,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_data: eoh\n"
 argument_list|)
@@ -12337,7 +13513,7 @@ condition|)
 block|{
 name|rewind
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|response
 operator|=
@@ -12427,7 +13603,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_data(%s): EOM ACK/NAK timeout\n"
 argument_list|,
@@ -12438,7 +13614,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -12450,7 +13626,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"milter_data(%s): EOM ACK/NAK timeout\n"
+literal|"milter_data(%s): EOM ACK/NAK timeout"
 argument_list|,
 name|m
 operator|->
@@ -12460,6 +13636,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|MILTER_CHECK_ERROR
@@ -12509,7 +13687,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_data(%s): state %c\n"
 argument_list|,
@@ -12536,6 +13714,29 @@ argument_list|(
 literal|"554 5.7.1 Command rejected"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|12
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, reject=%s"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
 operator|*
 name|state
 operator|=
@@ -12551,12 +13752,100 @@ break|break;
 case|case
 name|SMFIR_REJECT
 case|:
+comment|/* log msg at end of function */
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|12
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, reject"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|rcmd
+expr_stmt|;
+name|m
+operator|->
+name|mf_state
+operator|=
+name|SMFS_DONE
+expr_stmt|;
+break|break;
 case|case
 name|SMFIR_DISCARD
 case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|12
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, discard"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|rcmd
+expr_stmt|;
+name|m
+operator|->
+name|mf_state
+operator|=
+name|SMFS_DONE
+expr_stmt|;
+break|break;
 case|case
 name|SMFIR_TEMPFAIL
 case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|12
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, tempfail"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
 operator|*
 name|state
 operator|=
@@ -12602,6 +13891,119 @@ case|case
 name|SMFIR_PROGRESS
 case|:
 break|break;
+if|#
+directive|if
+name|_FFR_QUARANTINE
+case|case
+name|SMFIR_QUARANTINE
+case|:
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|SMFIF_QUARANTINE
+argument_list|,
+name|m
+operator|->
+name|mf_fflags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter_data(%s): lied about quarantining, honoring request anyway"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|response
+operator|==
+name|NULL
+condition|)
+name|response
+operator|=
+name|newstr
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"milter=%s, quarantine=%s"
+argument_list|,
+name|m
+operator|->
+name|mf_name
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_quarmsg
+operator|=
+name|sm_rpool_strdup_x
+argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
+name|response
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{quarantine}"
+argument_list|)
+argument_list|,
+name|e
+operator|->
+name|e_quarmsg
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 case|case
 name|SMFIR_ADDHEADER
 case|:
@@ -12620,7 +14022,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|9
 condition|)
@@ -12668,7 +14070,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|9
 condition|)
@@ -12716,7 +14118,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|9
 condition|)
@@ -12764,7 +14166,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|9
 condition|)
@@ -12812,7 +14214,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -12833,7 +14235,7 @@ argument_list|)
 expr_stmt|;
 name|replfailed
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -12861,17 +14263,17 @@ condition|)
 block|{
 name|replfailed
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 block|}
 name|dfopen
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|rewind
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -12891,22 +14293,22 @@ literal|0
 condition|)
 name|replfailed
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|newfilter
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|replbody
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 break|break;
 default|default:
 comment|/* Invalid response to command */
 if|if
 condition|(
-name|LogLevel
+name|MilterLogLevel
 operator|>
 literal|0
 condition|)
@@ -12930,6 +14332,8 @@ expr_stmt|;
 name|milter_error
 argument_list|(
 name|m
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12950,6 +14354,7 @@ argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|response
 operator|=
 name|NULL
@@ -12988,7 +14393,7 @@ argument_list|)
 expr_stmt|;
 name|replbody
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 if|if
@@ -13036,23 +14441,11 @@ name|state
 operator|=
 name|SMFIR_TEMPFAIL
 expr_stmt|;
-if|if
-condition|(
-name|response
-operator|!=
-name|NULL
-condition|)
-block|{
-name|sm_free
+name|SM_FREE_CLR
 argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
-name|response
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -13062,11 +14455,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|e
 operator|->
 name|e_dfp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|e
@@ -13084,12 +14479,12 @@ name|EF_HAS_DF
 expr_stmt|;
 name|dfopen
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 name|rewind
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 if|if
@@ -13146,23 +14541,11 @@ name|state
 operator|=
 name|SMFIR_TEMPFAIL
 expr_stmt|;
-if|if
-condition|(
-name|response
-operator|!=
-name|NULL
-condition|)
-block|{
-name|sm_free
+name|SM_FREE_CLR
 argument_list|(
 name|response
 argument_list|)
 expr_stmt|;
-name|response
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 block|}
 name|errno
 operator|=
@@ -13170,14 +14553,20 @@ name|save_errno
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"milter_data: %s/df%s: read error"
+literal|"milter_data: %s/%cf%s: read error"
 argument_list|,
 name|qid_printqueue
 argument_list|(
 name|e
 operator|->
-name|e_queuedir
+name|e_qgrp
+argument_list|,
+name|e
+operator|->
+name|e_qdir
 argument_list|)
+argument_list|,
+name|DATAFL_LETTER
 argument_list|,
 name|e
 operator|->
@@ -13188,14 +14577,33 @@ block|}
 name|MILTER_CHECK_DONE_MSG
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|10
+operator|&&
+operator|*
+name|state
+operator|==
+name|SMFIR_REJECT
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: reject, data"
+argument_list|)
+expr_stmt|;
 return|return
 name|response
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  MILTER_QUIT -- informs the filter(s) we are done and closes connection(s) ** **	Parameters: **		e -- current envelope. ** **	Returns: **		none */
@@ -13224,9 +14632,13 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"milter_quit\n"
+literal|"milter_quit(%s)\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 for|for
@@ -13258,9 +14670,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  MILTER_ABORT -- informs the filter(s) that we are aborting current message ** **	Parameters: **		e -- current envelope. ** **	Returns: **		none */
 end_comment
@@ -13288,7 +14697,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"milter_abort\n"
 argument_list|)
@@ -13353,7 +14762,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_MILTER */
+comment|/* MILTER */
 end_comment
 
 end_unit

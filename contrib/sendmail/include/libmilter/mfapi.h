@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.13.4.12 2000/09/09 02:11:48 ca Exp $  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.35 2001/10/09 19:05:24 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -20,6 +20,18 @@ name|_LIBMILTER_MFAPI_H
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libmilter/mfdef.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -38,12 +50,6 @@ ifndef|#
 directive|ifndef
 name|_SOCK_ADDR
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
 
 begin_define
 define|#
@@ -117,120 +123,6 @@ name|smfiDesc_ptr
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|SMFI_VERSION
-value|2
-end_define
-
-begin_comment
-comment|/* version number */
-end_comment
-
-begin_comment
-comment|/* **  What the filter might do -- values to be ORed together for **  smfiDesc.xxfi_flags. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIF_ADDHDRS
-value|0x00000001L
-end_define
-
-begin_comment
-comment|/* filter may add headers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIF_CHGBODY
-value|0x00000002L
-end_define
-
-begin_comment
-comment|/* filter may replace body */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIF_MODBODY
-value|SMFIF_CHGBODY
-end_define
-
-begin_comment
-comment|/* backwards compatible */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIF_ADDRCPT
-value|0x00000004L
-end_define
-
-begin_comment
-comment|/* filter may add recipients */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIF_DELRCPT
-value|0x00000008L
-end_define
-
-begin_comment
-comment|/* filter may delete recipients */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFIF_CHGHDRS
-value|0x00000010L
-end_define
-
-begin_comment
-comment|/* filter may change/delete headers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFI_V1_ACTS
-value|0x0000000FL
-end_define
-
-begin_comment
-comment|/* The actions of V1 filter */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFI_V2_ACTS
-value|0x0000001FL
-end_define
-
-begin_comment
-comment|/* The actions of V2 filter */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMFI_CURR_ACTS
-value|SMFI_V2_ACTS
-end_define
-
-begin_comment
-comment|/* The current version */
-end_comment
-
 begin_comment
 comment|/* **  Type which callbacks should return to indicate message status. **  This may take on one of the SMFIS_* values listed below. */
 end_comment
@@ -241,10 +133,6 @@ name|int
 name|sfsistat
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* **  structure describing one milter */
-end_comment
 
 begin_if
 if|#
@@ -370,6 +258,10 @@ begin_comment
 comment|/* __P */
 end_comment
 
+begin_comment
+comment|/* **  structure describing one milter */
+end_comment
+
 begin_struct
 struct|struct
 name|smfiDesc
@@ -383,7 +275,8 @@ name|int
 name|xxfi_version
 decl_stmt|;
 comment|/* version code -- do not change */
-name|u_long
+name|unsigned
+name|long
 name|xxfi_flags
 decl_stmt|;
 comment|/* flags */
@@ -499,7 +392,8 @@ operator|(
 name|SMFICTX
 operator|*
 operator|,
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
 name|size_t
@@ -629,6 +523,124 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|SMFI_VERSION
+value|2
+end_define
+
+begin_comment
+comment|/* version number */
+end_comment
+
+begin_comment
+comment|/* **  What the filter might do -- values to be ORed together for **  smfiDesc.xxfi_flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_NONE
+value|0x00000000L
+end_define
+
+begin_comment
+comment|/* no flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_ADDHDRS
+value|0x00000001L
+end_define
+
+begin_comment
+comment|/* filter may add headers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_CHGBODY
+value|0x00000002L
+end_define
+
+begin_comment
+comment|/* filter may replace body */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_MODBODY
+value|SMFIF_CHGBODY
+end_define
+
+begin_comment
+comment|/* backwards compatible */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_ADDRCPT
+value|0x00000004L
+end_define
+
+begin_comment
+comment|/* filter may add recipients */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_DELRCPT
+value|0x00000008L
+end_define
+
+begin_comment
+comment|/* filter may delete recipients */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFIF_CHGHDRS
+value|0x00000010L
+end_define
+
+begin_comment
+comment|/* filter may change/delete headers */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFIF_QUARANTINE
+value|0x00000020L
+end_define
+
+begin_comment
+comment|/* filter may quarantine envelope */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
 begin_comment
 comment|/* **  Continue processing message/connection. */
 end_comment
@@ -753,8 +765,8 @@ comment|/* body block */
 end_comment
 
 begin_comment
-unit|extern sfsistat	xxfi_body __P((SMFICTX *, u_char *, size_t));
-comment|/* **  xxfi_body(ctx, bodyp, bodylen) Invoked for each body chunk. There may **  be multiple body chunks passed to the filter. End-of-lines are **  represented as received from SMTP (normally Carriage-Return/Line-Feed). ** **	u_char *bodyp; Pointer to body data **	size_t bodylen; Length of body data */
+unit|extern sfsistat	xxfi_body __P((SMFICTX *, unsigned char *, size_t));
+comment|/* **  xxfi_body(ctx, bodyp, bodylen) Invoked for each body chunk. There may **  be multiple body chunks passed to the filter. End-of-lines are **  represented as received from SMTP (normally Carriage-Return/Line-Feed). ** **	unsigned char *bodyp; Pointer to body data **	size_t bodylen; Length of body data */
 end_comment
 
 begin_comment
@@ -849,6 +861,49 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_MULTILINE
+end_if
+
+begin_comment
+comment|/* **  Alternatively, smfi_setmlreply can be called if a multi-line SMTP reply **  is needed. */
+end_comment
+
+begin_decl_stmt
+name|LIBMILTER_API
+name|int
+name|smfi_setmlreply
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MULTILINE */
+end_comment
 
 begin_comment
 comment|/* **  Set the specific reply code to be used in response to the active **  command. If not specified, a generic reply code is used. ** **	SMFICTX *ctx; Opaque context structure **	char *rcode; The three-digit (RFC 821) SMTP reply code to be **		returned, e.g., ``551''. **	char *xcode; The extended (RFC 2034) reply code, e.g., ``5.7.6''. **	char *message; The text part of the SMTP reply. */
@@ -960,7 +1015,8 @@ operator|(
 name|SMFICTX
 operator|*
 operator|,
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
 name|int
@@ -975,6 +1031,44 @@ end_comment
 
 begin_comment
 comment|/* **  If the message is aborted (for example, if the SMTP sender sends the **  envelope but then does a QUIT or RSET before the data is sent), **  xxfi_abort is called. This can be used to reset state. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_comment
+comment|/* **  Quarantine an envelope ** **	SMFICTX *ctx; Opaque context structure **	char *reason: explanation */
+end_comment
+
+begin_decl_stmt
+name|LIBMILTER_API
+name|int
+name|smfi_quarantine
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+name|ctx
+operator|,
+name|char
+operator|*
+name|reason
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
 end_comment
 
 begin_comment

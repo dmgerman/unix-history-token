@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -31,31 +31,6 @@ define|#
 directive|define
 name|EXTERN
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|SmailId
-index|[]
-init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.70 2001/08/14 23:08:12 ca Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
 
 begin_else
 else|#
@@ -88,214 +63,520 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EX_OK
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|EX_OK
+end_undef
+
+begin_comment
+comment|/* for SVr4.2 SMP */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EX_OK */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"sendmail/sendmail.h"
+end_include
+
+begin_comment
+comment|/* profiling? */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|SFIO
+name|MONCONTROL
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_PROF
+parameter_list|(
+name|x
+parameter_list|)
+value|moncontrol(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* MONCONTROL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_PROF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MONCONTROL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_DEFINE
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_macro
+name|SM_UNUSED
+argument_list|(
+argument|static char SmailId[]
+argument_list|)
+end_macro
+
+begin_expr_stmt
+operator|=
+literal|"@(#)$Id: sendmail.h,v 8.902 2002/01/09 00:10:11 ca Exp $"
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! lint */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _DEFINE */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"bf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/exc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/heap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/debug.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/rpool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/io.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/path.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/mbdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/errstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/shm.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOG */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+operator|||
+name|NETUNIX
+operator|||
+name|NETISO
+operator|||
+name|NETNS
+operator|||
+name|NETX25
 end_if
 
 begin_include
 include|#
 directive|include
-file|<sfio/stdio.h>
+file|<sys/socket.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET || NETINET6 || NETUNIX || NETISO || NETNS || NETX25 */
+end_comment
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|SFIO_VERSION
-argument_list|)
-operator|&&
-name|SFIO_VERSION
-operator|>
-literal|20000000L
+name|NETUNIX
 end_if
 
-begin_decl_stmt
-name|ERROR
-name|README
-range|:
-name|SFIO
-literal|2000
-name|does
-name|not
-name|work
-name|with
-name|sendmail
-decl_stmt|,
-name|use
-name|SFIO
-decl|1999
-name|instead
-operator|.
-endif|#
-directive|endif
-comment|/* defined(SFIO_VERSION)&& SFIO_VERSION> 20000000L */
-endif|#
-directive|endif
-comment|/* SFIO */
-include|#
-directive|include
-file|<stddef.h>
-include|#
-directive|include
-file|<stdlib.h>
-if|#
-directive|if
-operator|!
-name|SFIO
-include|#
-directive|include
-file|<stdio.h>
-endif|#
-directive|endif
-comment|/* !SFIO */
-include|#
-directive|include
-file|<ctype.h>
-include|#
-directive|include
-file|<setjmp.h>
-include|#
-directive|include
-file|<string.h>
-include|#
-directive|include
-file|<time.h>
-ifdef|#
-directive|ifdef
-name|EX_OK
-undef|#
-directive|undef
-name|EX_OK
-comment|/* for SVr4.2 SMP */
-endif|#
-directive|endif
-comment|/* EX_OK */
-include|#
-directive|include
-file|<sysexits.h>
-include|#
-directive|include
-file|"sendmail/sendmail.h"
-include|#
-directive|include
-file|"bf.h"
-include|#
-directive|include
-file|"timers.h"
-ifdef|#
-directive|ifdef
-name|LOG
-include|#
-directive|include
-file|<syslog.h>
-endif|#
-directive|endif
-comment|/* LOG */
-if|#
-directive|if
-name|NETINET
-operator|||
-name|NETINET6
-operator|||
-name|NETUNIX
-operator|||
-name|NETISO
-operator|||
-name|NETNS
-operator|||
-name|NETX25
-include|#
-directive|include
-file|<sys/socket.h>
-endif|#
-directive|endif
-comment|/* NETINET || NETINET6 || NETUNIX || NETISO || NETNS || NETX25 */
-if|#
-directive|if
-name|NETUNIX
+begin_include
 include|#
 directive|include
 file|<sys/un.h>
+end_include
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NETUNIX */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NETINET
 operator|||
 name|NETINET6
+end_if
+
+begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NETINET || NETINET6 */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NETINET6
+end_if
+
+begin_comment
 comment|/* **  There is no standard yet for IPv6 includes. **  Specify OS specific implementation in conf.h */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NETINET6 */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NETISO
+end_if
+
+begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
+end_include
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NETISO */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NETNS
+end_if
+
+begin_include
 include|#
 directive|include
 file|<netns/ns.h>
+end_include
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NETNS */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NETX25
+end_if
+
+begin_include
 include|#
 directive|include
 file|<netccitt/x25.h>
+end_include
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NETX25 */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|NAMED_BIND
+end_if
+
+begin_include
 include|#
 directive|include
 file|<arpa/nameser.h>
+end_include
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|NOERROR
+end_ifdef
+
+begin_undef
 undef|#
 directive|undef
 name|NOERROR
+end_undef
+
+begin_comment
 comment|/* avoid<sys/streams.h> conflict */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NOERROR */
+end_comment
+
+begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NAMED_BIND */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SM_SET_H_ERRNO
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SM_SET_H_ERRNO
+parameter_list|(
+name|err
+parameter_list|)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* NAMED_BIND */
-ifdef|#
-directive|ifdef
+end_comment
+
+begin_if
+if|#
+directive|if
 name|HESIOD
+end_if
+
+begin_include
 include|#
 directive|include
 file|<hesiod.h>
+end_include
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -308,69 +589,97 @@ name|defined
 argument_list|(
 name|HESIOD_INTERFACES
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|HESIOD_INIT
-comment|/* support for the new interface */
-endif|#
-directive|endif
-comment|/* !defined(HES_ER_OK) || defined(HESIOD_INTERFACES) */
-endif|#
-directive|endif
-comment|/* HESIOD */
-if|#
-directive|if
-name|STARTTLS
-if|#
-directive|if
-operator|!
-name|SFIO
-operator|&&
-operator|!
-name|_FFR_TLS_TOREK
-name|ERROR
-name|README
-range|:
-name|STARTTLS
-name|requires
-name|SFIO
-endif|#
-directive|endif
-comment|/* !SFIO&& !_FFR_TLS_TOREK */
-if|#
-directive|if
-name|SFIO
-operator|&&
-name|_FFR_TLS_TOREK
-name|ERROR
-name|README
-operator|:
-name|Can
-name|not
-end_decl_stmt
+end_define
 
-begin_do
-do|do
-name|both
-name|SFIO
-name|and
-name|_FFR_TLS_TOREK
+begin_comment
+comment|/* support for the new interface */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-comment|/* SFIO&& _FFR_TLS_TOREK */
+end_endif
+
+begin_comment
+comment|/* !defined(HES_ER_OK) || defined(HESIOD_INTERFACES) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HESIOD */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|STARTTLS
+end_if
+
+begin_include
 include|#
 directive|include
 file|<openssl/ssl.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|TLS_NO_RSA
+end_if
+
+begin_define
+define|#
+directive|define
+name|RSA_KEYLENGTH
+value|512
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
+comment|/* !TLS_NO_RSA */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* STARTTLS */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|SASL
+end_if
+
+begin_comment
 comment|/* include the sasl include files if we have them */
+end_comment
+
+begin_include
 include|#
 directive|include
 file|<sasl.h>
+end_include
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -387,30 +696,54 @@ name|defined
 argument_list|(
 name|SASL_VERSION_STEP
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|SASL_VERSION
 value|(SASL_VERSION_MAJOR * 10000)  + (SASL_VERSION_MINOR * 100) + SASL_VERSION_STEP
+end_define
+
+begin_if
 if|#
 directive|if
 name|SASL
 operator|==
 literal|1
+end_if
+
+begin_undef
 undef|#
 directive|undef
 name|SASL
+end_undef
+
+begin_define
 define|#
 directive|define
 name|SASL
 value|SASL_VERSION
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* SASL == 1 */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|SASL
 operator|!=
 name|SASL_VERSION
+end_if
+
+begin_decl_stmt
 name|ERROR
 name|README
 range|:
@@ -472,91 +805,251 @@ operator|:
 name|see
 name|README
 operator|!
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* SASL == 1 */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* defined(SASL_VERSION_MAJOR)&& defined(SASL_VERSION_MINOR)&& defined(SASL_VERSION_STEP) */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* SASL */
+end_comment
+
+begin_comment
 comment|/* **  Following are "sort of" configuration constants, but they should **  be pretty solid on most architectures today.  They have to be **  defined after<arpa/nameser.h> because some versions of that **  file also define them.  In all cases, we can't use sizeof because **  some systems (e.g., Crays) always treat everything as being at **  least 64 bits. */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|INADDRSZ
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|INADDRSZ
 value|4
+end_define
+
+begin_comment
 comment|/* size of an IPv4 address in bytes */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! INADDRSZ */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|IN6ADDRSZ
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|IN6ADDRSZ
 value|16
+end_define
+
+begin_comment
 comment|/* size of an IPv6 address in bytes */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! IN6ADDRSZ */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|INT16SZ
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|INT16SZ
 value|2
+end_define
+
+begin_comment
 comment|/* size of a 16 bit integer in bytes */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! INT16SZ */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|INT32SZ
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|INT32SZ
 value|4
+end_define
+
+begin_comment
 comment|/* size of a 32 bit integer in bytes */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! INT32SZ */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|INADDR_LOOPBACK
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|INADDR_LOOPBACK
 value|0x7f000001
+end_define
+
+begin_comment
 comment|/* loopback address */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! INADDR_LOOPBACK */
+end_comment
+
+begin_comment
 comment|/* **  Error return from inet_addr(3), in case not defined in /usr/include. */
+end_comment
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|INADDR_NONE
+end_ifndef
+
+begin_define
 define|#
 directive|define
 name|INADDR_NONE
 value|0xffffffff
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* ! INADDR_NONE */
+end_comment
+
+begin_comment
+comment|/* **  An 'argument class' describes the storage allocation status **  of an object pointed to by an argument to a function. */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|A_HEAP
+block|,
+comment|/* the storage was allocated by malloc, and the 		 * ownership of the storage is ceded by the caller 		 * to the called function. */
+name|A_TEMP
+block|,
+comment|/* The storage is temporary, and is only guaranteed 		 * to be valid for the duration of the function call. */
+name|A_PERM
+comment|/* The storage is 'permanent': this might mean static 		 * storage, or rpool storage. */
+block|}
+name|ARGCLASS_T
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* forward references for prototypes */
+end_comment
+
+begin_typedef
 typedef|typedef
 name|struct
 name|envelope
 name|ENVELOPE
 typedef|;
-do|typedef struct mailer	MAILER;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mailer
+name|MAILER
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|queuegrp
+name|QUEUEGRP
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* **  Address structure. **	Addresses are stored internally in this structure. */
-do|struct address
+end_comment
+
+begin_struct
+struct|struct
+name|address
 block|{
 name|char
 modifier|*
@@ -584,7 +1077,8 @@ modifier|*
 name|q_mailer
 decl_stmt|;
 comment|/* mailer to use */
-name|u_long
+name|unsigned
+name|long
 name|q_flags
 decl_stmt|;
 comment|/* status flags, see below */
@@ -629,6 +1123,23 @@ modifier|*
 name|q_tchain
 decl_stmt|;
 comment|/* temporary use chain */
+if|#
+directive|if
+name|PIPELINING
+name|struct
+name|address
+modifier|*
+name|q_pchain
+decl_stmt|;
+comment|/* chain for pipelining */
+endif|#
+directive|endif
+comment|/* PIPELINING */
+name|char
+modifier|*
+name|q_finalrcpt
+decl_stmt|;
+comment|/* Final-Recipient: DSN header */
 name|char
 modifier|*
 name|q_orcpt
@@ -657,174 +1168,445 @@ name|short
 name|q_state
 decl_stmt|;
 comment|/* address state, see below */
-name|short
-name|q_specificity
+name|char
+modifier|*
+name|q_signature
 decl_stmt|;
-comment|/* how "specific" this address is */
+comment|/* MX-based sorting value */
+name|int
+name|q_qgrp
+decl_stmt|;
+comment|/* index into queue groups */
+name|int
+name|q_qdir
+decl_stmt|;
+comment|/* queue directory inside group */
+name|char
+modifier|*
+name|q_message
+decl_stmt|;
+comment|/* error message */
 block|}
-do|;  typedef struct address ADDRESS;
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|address
+name|ADDRESS
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* bit values for q_flags */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QGOODUID
 value|0x00000001
+end_define
+
+begin_comment
 comment|/* the q_uid q_gid fields are good */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QPRIMARY
 value|0x00000002
+end_define
+
+begin_comment
 comment|/* set from RCPT or argv */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QNOTREMOTE
 value|0x00000004
+end_define
+
+begin_comment
 comment|/* address not for remote forwarding */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QSELFREF
 value|0x00000008
+end_define
+
+begin_comment
 comment|/* this address references itself */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QBOGUSSHELL
 value|0x00000010
+end_define
+
+begin_comment
 comment|/* user has no valid shell listed */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QUNSAFEADDR
 value|0x00000020
+end_define
+
+begin_comment
 comment|/* address acquired via unsafe path */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QPINGONSUCCESS
 value|0x00000040
+end_define
+
+begin_comment
 comment|/* give return on successful delivery */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QPINGONFAILURE
 value|0x00000080
+end_define
+
+begin_comment
 comment|/* give return on failure */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QPINGONDELAY
 value|0x00000100
+end_define
+
+begin_comment
 comment|/* give return on message delay */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QHASNOTIFY
 value|0x00000200
-comment|/* propogate notify parameter */
+end_define
+
+begin_comment
+comment|/* propagate notify parameter */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QRELAYED
 value|0x00000400
+end_define
+
+begin_comment
 comment|/* DSN: relayed to non-DSN aware sys */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QEXPANDED
 value|0x00000800
+end_define
+
+begin_comment
 comment|/* DSN: undergone list expansion */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QDELIVERED
 value|0x00001000
+end_define
+
+begin_comment
 comment|/* DSN: successful final delivery */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QDELAYED
 value|0x00002000
+end_define
+
+begin_comment
 comment|/* DSN: message delayed */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QALIAS
 value|0x00004000
+end_define
+
+begin_comment
 comment|/* expanded alias */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QBYTRACE
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* DeliverBy: trace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QBYNDELAY
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* DeliverBy: notify, delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QBYNRELAY
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* DeliverBy: notify, relayed */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QTHISPASS
 value|0x40000000
+end_define
+
+begin_comment
 comment|/* temp: address set this pass */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QRCPTOK
 value|0x80000000
+end_define
+
+begin_comment
 comment|/* recipient() processed address */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|Q_PINGFLAGS
 value|(QPINGONSUCCESS|QPINGONFAILURE|QPINGONDELAY)
+end_define
+
+begin_comment
 comment|/* values for q_state */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_OK
 value|0
+end_define
+
+begin_comment
 comment|/* address ok (for now)/not yet tried */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_SENT
 value|1
+end_define
+
+begin_comment
 comment|/* good address, delivery complete */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_BADADDR
 value|2
+end_define
+
+begin_comment
 comment|/* illegal address */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_QUEUEUP
 value|3
+end_define
+
+begin_comment
 comment|/* save address in queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QS_RETRY
+value|4
+end_define
+
+begin_comment
+comment|/* retry delivery for next MX */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_VERIFIED
-value|4
+value|5
+end_define
+
+begin_comment
 comment|/* verified, but not expanded */
+end_comment
+
+begin_comment
+comment|/* **  Notice: all of the following values are variations of QS_DONTSEND. **	If new states are added, they must be inserted in the proper place! **	See the macro definition of QS_IS_DEAD() down below. */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_DONTSEND
-value|5
+value|6
+end_define
+
+begin_comment
 comment|/* don't send to this address */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_EXPANDED
-value|6
-comment|/* QS_DONTSEND: expanded */
+value|7
+end_define
+
+begin_comment
+comment|/* expanded */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_SENDER
-value|7
-comment|/* QS_DONTSEND: message sender (MeToo) */
+value|8
+end_define
+
+begin_comment
+comment|/* message sender (MeToo) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_CLONED
-value|8
-comment|/* QS_DONTSEND: addr cloned to split envelope */
+value|9
+end_define
+
+begin_comment
+comment|/* addr cloned to split envelope */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_DISCARDED
-value|9
-comment|/* QS_DONTSEND: rcpt discarded (EF_DISCARD) */
+value|10
+end_define
+
+begin_comment
+comment|/* rcpt discarded (EF_DISCARD) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_REPLACED
-value|10
-comment|/* QS_DONTSEND: maplocaluser()/UserDB replaced */
+value|11
+end_define
+
+begin_comment
+comment|/* maplocaluser()/UserDB replaced */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_REMOVED
-value|11
-comment|/* QS_DONTSEND: removed (removefromlist()) */
+value|12
+end_define
+
+begin_comment
+comment|/* removed (removefromlist()) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_DUPLICATE
-value|12
-comment|/* QS_DONTSEND: duplicate suppressed */
+value|13
+end_define
+
+begin_comment
+comment|/* duplicate suppressed */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_INCLUDED
-value|13
-comment|/* QS_DONTSEND: :include: delivery */
+value|14
+end_define
+
+begin_comment
+comment|/* :include: delivery */
+end_comment
+
+begin_comment
 comment|/* address state testing primitives */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QS_IS_OK
@@ -832,6 +1614,9 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_OK)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_SENT
@@ -839,6 +1624,9 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_SENT)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_BADADDR
@@ -846,6 +1634,9 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_BADADDR)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_QUEUEUP
@@ -853,6 +1644,19 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_QUEUEUP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QS_IS_RETRY
+parameter_list|(
+name|s
+parameter_list|)
+value|((s) == QS_RETRY)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_VERIFIED
@@ -860,6 +1664,9 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_VERIFIED)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_EXPANDED
@@ -867,6 +1674,9 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_EXPANDED)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_REMOVED
@@ -874,56 +1684,105 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s) == QS_REMOVED)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_UNDELIVERED
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == QS_OK || \ 				 (s) == QS_QUEUEUP || \ 				 (s) == QS_VERIFIED)
+value|((s) == QS_OK || \ 				 (s) == QS_QUEUEUP || \ 				 (s) == QS_RETRY || \ 				 (s) == QS_VERIFIED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QS_IS_UNMARKED
+parameter_list|(
+name|s
+parameter_list|)
+value|((s) == QS_OK || \ 				 (s) == QS_RETRY)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_SENDABLE
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == QS_OK || \ 				 (s) == QS_QUEUEUP)
+value|((s) == QS_OK || \ 				 (s) == QS_QUEUEUP || \ 				 (s) == QS_RETRY)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_ATTEMPTED
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == QS_QUEUEUP || \ 				 (s) == QS_SENT)
+value|((s) == QS_QUEUEUP || \ 				 (s) == QS_RETRY || \ 				 (s) == QS_SENT)
+end_define
+
+begin_define
 define|#
 directive|define
 name|QS_IS_DEAD
 parameter_list|(
 name|s
 parameter_list|)
-value|((s) == QS_DONTSEND || \ 				 (s) == QS_CLONED || \ 				 (s) == QS_SENDER || \ 				 (s) == QS_DISCARDED || \ 				 (s) == QS_REPLACED || \ 				 (s) == QS_REMOVED || \ 				 (s) == QS_DUPLICATE || \ 				 (s) == QS_INCLUDED || \ 				 (s) == QS_EXPANDED)
+value|((s)>= QS_DONTSEND)
+end_define
+
+begin_define
 define|#
 directive|define
 name|NULLADDR
 value|((ADDRESS *) NULL)
-do|extern ADDRESS	NullAddress;
-comment|/* a null (template) address [main.c] */
-comment|/* functions */
-do|extern void	cataddr __P((char **
-operator|,
-do|char **
-operator|,
-do|char *
-operator|,
-do|int
-operator|,
-do|int
-end_do
+end_define
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+specifier|extern
+name|ADDRESS
+name|NullAddress
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a null (template) address [main.c] */
+end_comment
+
+begin_comment
+comment|/* functions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cataddr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1009,6 +1868,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1038,6 +1899,8 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1066,7 +1929,8 @@ name|char
 operator|*
 operator|*
 operator|,
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -1156,6 +2020,8 @@ name|int
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1204,6 +2070,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|MILTER
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1224,6 +2096,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MILTER */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1250,8 +2131,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_comment
+comment|/* macro to simplify the common call to rewrite() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REWRITE
+parameter_list|(
+name|pvp
+parameter_list|,
+name|rs
+parameter_list|,
+name|env
+parameter_list|)
+value|rewrite(pvp, rs, 0, env, MAXATOM)
+end_define
 
 begin_comment
 comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The argument vector is expanded before actual use.  All **	words except the first are passed through the macro **	processor. */
@@ -1364,16 +2260,14 @@ name|time_t
 name|m_wait
 decl_stmt|;
 comment|/* timeout to wait for end */
-if|#
-directive|if
-name|_FFR_DYNAMIC_TOBUF
 name|int
 name|m_maxrcpt
 decl_stmt|;
 comment|/* max recipients per envelope client-side */
-endif|#
-directive|endif
-comment|/* _FFR_DYNAMIC_TOBUF */
+name|short
+name|m_qgrp
+decl_stmt|;
+comment|/* queue group for this mailer */
 block|}
 struct|;
 end_struct
@@ -1390,7 +2284,7 @@ value|'a'
 end_define
 
 begin_comment
-comment|/* run Extended SMTP protocol */
+comment|/* run Extended SMTP */
 end_comment
 
 begin_define
@@ -1794,6 +2688,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_DIALDELAY
+value|'Z'
+end_define
+
+begin_comment
+comment|/* apply dial delay sleeptime */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_NOMX
 value|'0'
 end_define
@@ -1811,6 +2716,17 @@ end_define
 
 begin_comment
 comment|/* don't send null bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_FSMTP
+value|'2'
+end_define
+
+begin_comment
+comment|/* force SMTP (no ESMTP even if offered) */
 end_comment
 
 begin_define
@@ -1998,8 +2914,875 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_decl_stmt
+specifier|extern
+name|void
+name|makequeue
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|runqueueevent
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|FileMailer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to *file* mailer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|InclMailer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to *include* mailer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|LocalMailer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to local mailer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|ProgMailer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to program mailer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|Mailer
+index|[
+name|MAXMAILERS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* **  Queue group definition structure. **	Every queue group known to the system is declared in this structure. **	It defines the basic pathname of the queue group, some flags **	associated with it, and the argument vector to pass to it. */
+end_comment
+
+begin_struct
+struct|struct
+name|qpaths_s
+block|{
+name|char
+modifier|*
+name|qp_name
+decl_stmt|;
+comment|/* name of queue dir, relative path */
+name|short
+name|qp_subdirs
+decl_stmt|;
+comment|/* use subdirs? */
+name|short
+name|qp_fsysidx
+decl_stmt|;
+comment|/* file system index of this directory */
+if|#
+directive|if
+name|SM_CONF_SHM
+name|int
+name|qp_idx
+decl_stmt|;
+comment|/* index into array for queue information */
+endif|#
+directive|endif
+comment|/* SM_CONF_SHM */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|qpaths_s
+name|QPATHS
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|queuegrp
+block|{
+name|char
+modifier|*
+name|qg_name
+decl_stmt|;
+comment|/* symbolic name of this queue group */
+comment|/* 	**  For now this is the same across all queue groups. 	**  Otherwise we have to play around with chdir(). 	*/
+name|char
+modifier|*
+name|qg_qdir
+decl_stmt|;
+comment|/* common component of queue directory */
+name|short
+name|qg_index
+decl_stmt|;
+comment|/* queue number internally, index in Queue[] */
+name|int
+name|qg_maxqrun
+decl_stmt|;
+comment|/* max # of jobs in 1 queuerun */
+name|int
+name|qg_numqueues
+decl_stmt|;
+comment|/* number of queues in this queue */
+comment|/* 	**  qg_queueintvl == 0 denotes that no individual value is used. 	**  Whatever accesses this must deal with "<= 0" as 	**  "not set, use appropriate default". 	*/
+name|time_t
+name|qg_queueintvl
+decl_stmt|;
+comment|/* interval for queue runs */
+name|QPATHS
+modifier|*
+name|qg_qpaths
+decl_stmt|;
+comment|/* list of queue directories */
+name|BITMAP256
+name|qg_flags
+decl_stmt|;
+comment|/* status flags, see below */
+name|short
+name|qg_nice
+decl_stmt|;
+comment|/* niceness for queue run */
+name|int
+name|qg_wgrp
+decl_stmt|;
+comment|/* Assigned to this work group */
+name|int
+name|qg_maxlist
+decl_stmt|;
+comment|/* max items in work queue for this group */
+name|int
+name|qg_curnum
+decl_stmt|;
+comment|/* current number of queue for queue runs */
+name|int
+name|qg_maxrcpt
+decl_stmt|;
+comment|/* max recipients per envelope, 0==no limit */
+if|#
+directive|if
+literal|0
+block|short	qg_sortorder;
+comment|/* how do we sort this queuerun */
+block|long	qg_wkrcptfact;
+comment|/* multiplier for # recipients -> priority */
+block|long	qg_qfactor;
+comment|/* slope of queue function */
+block|bool	qg_doqueuerun;
+comment|/* XXX flag is it time to do a queuerun */
+endif|#
+directive|endif
+comment|/* 0 */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* bits for qg_flags (XXX: unused as of now) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QD_DEFINED
+value|((char) 1)
+end_define
+
+begin_comment
+comment|/* queue group has been defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QD_FORK
+value|'f'
+end_define
+
+begin_comment
+comment|/* fork queue runs */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|filesys_update
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_ANY_FREE_FS
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|filesys_free
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_ANY_FREE_FS */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SASL
+end_if
+
+begin_comment
+comment|/* **  SASL */
+end_comment
+
+begin_comment
+comment|/* lines in authinfo file or index into SASL_AI_T */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_WRONG
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SASL_USER
+value|0
+end_define
+
+begin_comment
+comment|/* authorization id (user) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_AUTHID
+value|1
+end_define
+
+begin_comment
+comment|/* authentication id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_PASSWORD
+value|2
+end_define
+
+begin_comment
+comment|/* password fuer authid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_DEFREALM
+value|3
+end_define
+
+begin_comment
+comment|/* realm to use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_MECHLIST
+value|4
+end_define
+
+begin_comment
+comment|/* list of mechanisms to try */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_ID_REALM
+value|5
+end_define
+
+begin_comment
+comment|/* authid@defrealm */
+end_comment
+
+begin_comment
+comment|/* **  Current mechanism; this is just used to convey information between **  invocation of SASL callback functions. **  It must be last in the list, because it's not allocated by us **  and hence we don't free() it. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_MECH
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SASL_ENTRIES
+value|7
+end_define
+
+begin_comment
+comment|/* number of entries in array */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_USER_BIT
+value|(1<< SASL_USER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SASL_AUTHID_BIT
+value|(1<< SASL_AUTHID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SASL_PASSWORD_BIT
+value|(1<< SASL_PASSWORD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SASL_DEFREALM_BIT
+value|(1<< SASL_DEFREALM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SASL_MECHLIST_BIT
+value|(1<< SASL_MECHLIST)
+end_define
+
+begin_comment
+comment|/* authenticated? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_NOT_AUTH
+value|0
+end_define
+
+begin_comment
+comment|/* not authenticated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_PROC_AUTH
+value|1
+end_define
+
+begin_comment
+comment|/* in process of authenticating */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_IS_AUTH
+value|2
+end_define
+
+begin_comment
+comment|/* authenticated */
+end_comment
+
+begin_comment
+comment|/* SASL options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_AUTH_AUTH
+value|0x1000
+end_define
+
+begin_comment
+comment|/* use auth= only if authenticated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SASL_SEC_MASK
+value|0x0fff
+end_define
+
+begin_comment
+comment|/* mask for SASL_SEC_* values: sasl.h */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|SASL_SEC_NOPLAINTEXT
+operator|&
+name|SASL_SEC_MASK
+operator|)
+operator|==
+literal|0
+operator|||
+expr|\
+operator|(
+name|SASL_SEC_NOACTIVE
+operator|&
+name|SASL_SEC_MASK
+operator|)
+operator|==
+literal|0
+operator|||
+expr|\
+operator|(
+name|SASL_SEC_NODICTIONARY
+operator|&
+name|SASL_SEC_MASK
+operator|)
+operator|==
+literal|0
+operator|||
+expr|\
+operator|(
+name|SASL_SEC_FORWARD_SECRECY
+operator|&
+name|SASL_SEC_MASK
+operator|)
+operator|==
+literal|0
+operator|||
+expr|\
+operator|(
+name|SASL_SEC_NOANONYMOUS
+operator|&
+name|SASL_SEC_MASK
+operator|)
+operator|==
+literal|0
+operator|||
+expr|\
+operator|(
+name|SASL_SEC_PASS_CREDENTIALS
+operator|&
+name|SASL_SEC_MASK
+operator|)
+operator|==
+literal|0
+end_if
+
+begin_label
+name|ERROR
+label|:
+end_label
+
+begin_expr_stmt
+name|change
+name|SASL_SEC_MASK_
+name|notify
+name|sendmail
+operator|.
+name|org
+operator|!
+endif|#
+directive|endif
+comment|/* SASL_SEC_NOPLAINTEXT& SASL_SEC_MASK) == 0 ... */
+define|#
+directive|define
+name|MAXOUTLEN
+value|1024
+comment|/* length of output buffer */
+comment|/* functions */
+specifier|extern
+name|char
+operator|*
+name|intersect
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|SM_RPOOL_T
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|iteminlist
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|proxy_policy
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SASL
+operator|>
+literal|10515
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|safesaslfile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SASL> 10515 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|safesaslfile
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL> 10515 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sasl_decode64
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sasl_encode64
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|unsigned
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|stop_sasl_client
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* structure to store authinfo */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|SASL_AI_T
+index|[
+name|SASL_ENTRIES
+index|]
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|AuthMechanisms
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* AUTH mechanisms */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|SASLInfo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with AUTH info */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|SASLOpts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* options for SASL */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxSLBits
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max. encryption bits for SASL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL */
+end_comment
+
+begin_comment
+comment|/* **  Structure to store macros. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|SM_RPOOL_T
+modifier|*
+name|mac_rpool
+decl_stmt|;
+comment|/* resource pool */
+name|BITMAP256
+name|mac_allocated
+decl_stmt|;
+comment|/* storage has been alloc()? */
+name|char
+modifier|*
+name|mac_table
+index|[
+name|MAXMACROID
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* macros */
+block|}
+name|MACROS_T
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|EXTERN
+name|MACROS_T
+name|GlobalMacros
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Information about currently open connections to mailers, or to **  hosts that we have looked up recently. */
@@ -2018,7 +3801,8 @@ end_macro
 
 begin_block
 block|{
-name|u_long
+name|unsigned
+name|long
 name|mci_flags
 decl_stmt|;
 comment|/* flag bits, see below */
@@ -2046,35 +3830,16 @@ name|long
 name|mci_maxsize
 decl_stmt|;
 comment|/* max size this server will accept */
-if|#
-directive|if
-name|SFIO
-name|Sfio_t
+name|SM_FILE_T
 modifier|*
 name|mci_in
 decl_stmt|;
 comment|/* input side of connection */
-name|Sfio_t
+name|SM_FILE_T
 modifier|*
 name|mci_out
 decl_stmt|;
 comment|/* output side of connection */
-else|#
-directive|else
-comment|/* SFIO */
-name|FILE
-modifier|*
-name|mci_in
-decl_stmt|;
-comment|/* input side of connection */
-name|FILE
-modifier|*
-name|mci_out
-decl_stmt|;
-comment|/* output side of connection */
-endif|#
-directive|endif
-comment|/* SFIO */
 name|pid_t
 name|mci_pid
 decl_stmt|;
@@ -2109,7 +3874,7 @@ name|time_t
 name|mci_lastuse
 decl_stmt|;
 comment|/* last usage time */
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|mci_statfile
 decl_stmt|;
@@ -2119,9 +3884,46 @@ modifier|*
 name|mci_heloname
 decl_stmt|;
 comment|/* name to use as HELO arg */
+name|long
+name|mci_min_by
+decl_stmt|;
+comment|/* minimum DELIVERBY */
+name|bool
+name|mci_retryrcpt
+decl_stmt|;
+comment|/* tempfail for at least one rcpt */
+name|char
+modifier|*
+name|mci_tolist
+decl_stmt|;
+comment|/* list of valid recipients */
+name|SM_RPOOL_T
+modifier|*
+name|mci_rpool
+decl_stmt|;
+comment|/* resource pool */
+if|#
+directive|if
+name|PIPELINING
+name|int
+name|mci_okrcpts
+decl_stmt|;
+comment|/* number of valid recipients */
+name|ADDRESS
+modifier|*
+name|mci_nextaddr
+decl_stmt|;
+comment|/* next address for pipelined status */
+endif|#
+directive|endif
+comment|/* PIPELINING */
 if|#
 directive|if
 name|SASL
+name|SASL_AI_T
+name|mci_sai
+decl_stmt|;
+comment|/* authentication info */
 name|bool
 name|mci_sasl_auth
 decl_stmt|;
@@ -2158,6 +3960,10 @@ comment|/* SSL connection */
 endif|#
 directive|endif
 comment|/* STARTTLS */
+name|MACROS_T
+name|mci_macro
+decl_stmt|;
+comment|/* macro definitions */
 block|}
 end_block
 
@@ -2180,15 +3986,8 @@ begin_comment
 comment|/* this entry is valid */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MCIF_TEMP
-value|0x00000002
-end_define
-
 begin_comment
-comment|/* don't cache this connection */
+comment|/* 0x00000002 unused, was MCIF_TEMP */
 end_comment
 
 begin_define
@@ -2367,6 +4166,17 @@ begin_comment
 comment|/* ENHANCEDSTATUSCODES supported */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCIF_PIPELINED
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* PIPELINING supported */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -2430,6 +4240,43 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MCIF_DLVR_BY
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* DELIVERBY */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_IGNORE_EXT_ON_HELO
+end_if
+
+begin_define
+define|#
+directive|define
+name|MCIF_HELO
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* we used HELO: ignore extensions */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_IGNORE_EXT_ON_HELO */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MCIF_ONLY_EHLO
 value|0x10000000
 end_define
@@ -2478,19 +4325,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCIS_ACTIVE
+name|MCIS_MAIL
 value|3
 end_define
 
 begin_comment
-comment|/* message being sent */
+comment|/* MAIL command sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_RCPT
+value|4
+end_define
+
+begin_comment
+comment|/* RCPT commands being sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_DATA
+value|5
+end_define
+
+begin_comment
+comment|/* DATA command sent */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MCIS_QUITING
-value|4
+value|6
 end_define
 
 begin_comment
@@ -2501,7 +4370,7 @@ begin_define
 define|#
 directive|define
 name|MCIS_SSD
-value|5
+value|7
 end_define
 
 begin_comment
@@ -2512,7 +4381,7 @@ begin_define
 define|#
 directive|define
 name|MCIS_ERROR
-value|6
+value|8
 end_define
 
 begin_comment
@@ -2751,8 +4620,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxMciCache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum entries in MCI cache */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|MciCacheTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum idle time on connections */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|MciInfoTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* how long 'til we retry down hosts */
+end_comment
 
 begin_comment
 comment|/* **  Header structure. **	This structure is used internally to store header items. */
@@ -2778,11 +4677,13 @@ modifier|*
 name|h_link
 decl_stmt|;
 comment|/* the next header */
-name|u_char
+name|unsigned
+name|char
 name|h_macro
 decl_stmt|;
 comment|/* include header if macro defined */
-name|u_long
+name|unsigned
+name|long
 name|h_flags
 decl_stmt|;
 comment|/* status bits, see below */
@@ -2815,7 +4716,8 @@ modifier|*
 name|hi_field
 decl_stmt|;
 comment|/* the name of the field */
-name|u_long
+name|unsigned
+name|long
 name|hi_flags
 decl_stmt|;
 comment|/* status bits, see below */
@@ -3095,7 +4997,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* header from qf file */
+comment|/* header from queue file */
 end_comment
 
 begin_comment
@@ -3117,8 +5019,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|HDR
-operator|*
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)
@@ -3127,7 +5028,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|unsigned
+name|long
 name|chompheader
 name|__P
 argument_list|(
@@ -3183,6 +5085,9 @@ argument_list|(
 operator|(
 name|HDR
 operator|*
+operator|,
+name|SM_RPOOL_T
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3197,6 +5102,8 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
+operator|,
+name|bool
 operator|,
 name|bool
 operator|)
@@ -3266,9 +5173,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  Performance monitoring */
 end_comment
@@ -3321,9 +5225,6 @@ parameter_list|)
 value|{ if (tTd(98, l)) poptimer(&t); }
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  Envelope structure. **	This structure defines the message itself.  There is usually **	only one of these -- for the message that we originally read **	and which is our primary interest -- but other envelopes can **	be generated during processing.  For example, error messages **	will have their own envelope. */
 end_comment
@@ -3349,7 +5250,7 @@ name|char
 modifier|*
 name|e_to
 decl_stmt|;
-comment|/* the target person */
+comment|/* (list of) target person(s) */
 name|ADDRESS
 name|e_from
 decl_stmt|;
@@ -3380,6 +5281,12 @@ name|long
 name|e_msgsize
 decl_stmt|;
 comment|/* size of the message in bytes */
+name|char
+modifier|*
+name|e_msgid
+decl_stmt|;
+comment|/* message id (for logging) */
+name|unsigned
 name|long
 name|e_flags
 decl_stmt|;
@@ -3467,7 +5374,7 @@ modifier|*
 name|e_bodytype
 decl_stmt|;
 comment|/* type of message body */
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|e_dfp
 decl_stmt|;
@@ -3478,15 +5385,35 @@ name|e_id
 decl_stmt|;
 comment|/* code for this entry in queue */
 name|int
-name|e_queuedir
+name|e_qgrp
+decl_stmt|;
+comment|/* queue group (index into queues) */
+name|int
+name|e_qdir
 decl_stmt|;
 comment|/* index into queue directories */
-name|FILE
+name|int
+name|e_dfqgrp
+decl_stmt|;
+comment|/* data file queue group index */
+name|int
+name|e_dfqdir
+decl_stmt|;
+comment|/* data file queue directory index */
+name|int
+name|e_xfqgrp
+decl_stmt|;
+comment|/* queue group (index into queues) */
+name|int
+name|e_xfqdir
+decl_stmt|;
+comment|/* index into queue directories (xf) */
+name|SM_FILE_T
 modifier|*
 name|e_xfp
 decl_stmt|;
 comment|/* transcript file */
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|e_lockfp
 decl_stmt|;
@@ -3495,12 +5422,27 @@ name|char
 modifier|*
 name|e_message
 decl_stmt|;
-comment|/* error message */
+comment|/* error message; readonly; NULL, or 					 * static storage, or allocated from 					 * e_rpool */
 name|char
 modifier|*
 name|e_statmsg
 decl_stmt|;
-comment|/* stat msg (changes per delivery) */
+comment|/* stat msg (changes per delivery). 					 * readonly. NULL or allocated from 					 * e_rpool. */
+if|#
+directive|if
+name|_FFR_QUARANTINE
+name|char
+modifier|*
+name|e_quarmsg
+decl_stmt|;
+comment|/* why envelope is quarantined */
+name|char
+name|e_qfletter
+decl_stmt|;
+comment|/* queue file letter on disk */
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 name|char
 modifier|*
 name|e_msgboundary
@@ -3532,33 +5474,25 @@ comment|/* number of delivery attempts */
 name|dev_t
 name|e_dfdev
 decl_stmt|;
-comment|/* df file's device, for crash recov */
+comment|/* data file device (crash recovery) */
 name|ino_t
 name|e_dfino
 decl_stmt|;
-comment|/* df file's ino, for crash recovery */
-name|char
-modifier|*
+comment|/* data file inode (crash recovery) */
+name|MACROS_T
 name|e_macro
-index|[
-name|MAXMACROID
-operator|+
-literal|1
-index|]
 decl_stmt|;
 comment|/* macro definitions */
-name|char
+name|MCI
 modifier|*
-name|e_if_macros
-index|[
-literal|2
-index|]
+name|e_mci
 decl_stmt|;
-comment|/* HACK: incoming interface info */
+comment|/* connection info */
 name|char
 modifier|*
 name|e_auth_param
 decl_stmt|;
+comment|/* readonly; NULL or static storage or 					 * allocated from e_rpool */
 name|TIMERS
 name|e_timers
 decl_stmt|;
@@ -3577,6 +5511,19 @@ comment|/* current delay */
 endif|#
 directive|endif
 comment|/* _FFR_QUEUEDELAY */
+name|long
+name|e_deliver_by
+decl_stmt|;
+comment|/* deliver by */
+name|int
+name|e_dlvr_flag
+decl_stmt|;
+comment|/* deliver by flag */
+name|SM_RPOOL_T
+modifier|*
+name|e_rpool
+decl_stmt|;
+comment|/* resource pool for this envelope */
 block|}
 struct|;
 end_struct
@@ -3824,7 +5771,7 @@ value|0x0200000L
 end_define
 
 begin_comment
-comment|/* set when df file is instantiated */
+comment|/* set when data file is instantiated */
 end_comment
 
 begin_define
@@ -3871,20 +5818,133 @@ begin_comment
 comment|/* message is too big */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EF_SPLIT
+value|0x4000000L
+end_define
+
 begin_comment
-comment|/* values for e_if_macros */
+comment|/* envelope has been split */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EIF_ADDR
-value|0
+name|EF_UNSAFE
+value|0x8000000L
 end_define
 
 begin_comment
-comment|/* ${if_addr} */
+comment|/* unsafe: read from untrusted source */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DLVR_NOTIFY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLVR_RETURN
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLVR_TRACE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DLVR_NOTIFY
+parameter_list|(
+name|e
+parameter_list|)
+value|(((e)->e_dlvr_flag& DLVR_NOTIFY) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DLVR_RETURN
+parameter_list|(
+name|e
+parameter_list|)
+value|(((e)->e_dlvr_flag& DLVR_RETURN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DLVR_TRACE
+parameter_list|(
+name|e
+parameter_list|)
+value|(((e)->e_dlvr_flag& DLVR_TRACE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DLVR_BY
+parameter_list|(
+name|e
+parameter_list|)
+value|((e)->e_dlvr_flag != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BODYTYPE_NONE
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BODYTYPE_7BIT
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BODYTYPE_8BITMIME
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BODYTYPE_ILLEGAL
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BODYTYPE_VALID
+parameter_list|(
+name|b
+parameter_list|)
+value|((b) == BODYTYPE_7BIT || (b) == BODYTYPE_8BITMIME)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|ENVELOPE
+name|BlankEnvelope
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* functions */
@@ -3901,6 +5961,9 @@ name|ENVELOPE
 operator|*
 operator|,
 name|bool
+operator|,
+name|SM_RPOOL_T
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3915,6 +5978,8 @@ argument_list|(
 operator|(
 name|ENVELOPE
 operator|*
+operator|,
+name|bool
 operator|,
 name|bool
 operator|)
@@ -3934,6 +5999,9 @@ name|ENVELOPE
 operator|*
 operator|,
 name|ENVELOPE
+operator|*
+operator|,
+name|SM_RPOOL_T
 operator|*
 operator|)
 argument_list|)
@@ -3996,9 +6064,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  Message priority classes. ** **	The message class is read directly from the Priority: header **	field in the message. ** **	CurEnv->e_msgpriority is the number of bytes in the message plus **	the creation time (so that jobs ``tend'' to be ordered correctly), **	adjusted by the message class, the number of recipients, and the **	amount of time the message has been sitting around.  This number **	is used to order the queue.  Higher values mean LOWER priority. ** **	Each priority class point is worth WkClassFact priority points; **	each recipient is worth WkRecipFact priority points.  Each time **	we reprocess a message the priority is adjusted by WkTimeFact. **	WkTimeFact should normally decrease the priority so that jobs **	that have historically failed will be run later; thanks go to **	Jay Lepreau at Utah for pointing out the error in my thinking. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
 end_comment
@@ -4020,8 +6085,27 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
+begin_decl_stmt
+name|EXTERN
+name|int
+name|NumPriorities
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer into Priorities */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|priority
+name|Priorities
+index|[
+name|MAXPRIORITIES
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Rewrite rules. */
@@ -4069,7 +6153,7 @@ begin_define
 define|#
 directive|define
 name|MATCHZANY
-value|((u_char)0220)
+value|((unsigned char)0220)
 end_define
 
 begin_comment
@@ -4080,7 +6164,7 @@ begin_define
 define|#
 directive|define
 name|MATCHANY
-value|((u_char)0221)
+value|((unsigned char)0221)
 end_define
 
 begin_comment
@@ -4091,7 +6175,7 @@ begin_define
 define|#
 directive|define
 name|MATCHONE
-value|((u_char)0222)
+value|((unsigned char)0222)
 end_define
 
 begin_comment
@@ -4102,7 +6186,7 @@ begin_define
 define|#
 directive|define
 name|MATCHCLASS
-value|((u_char)0223)
+value|((unsigned char)0223)
 end_define
 
 begin_comment
@@ -4113,7 +6197,7 @@ begin_define
 define|#
 directive|define
 name|MATCHNCLASS
-value|((u_char)0224)
+value|((unsigned char)0224)
 end_define
 
 begin_comment
@@ -4124,7 +6208,7 @@ begin_define
 define|#
 directive|define
 name|MATCHREPL
-value|((u_char)0225)
+value|((unsigned char)0225)
 end_define
 
 begin_comment
@@ -4139,7 +6223,7 @@ begin_define
 define|#
 directive|define
 name|CANONNET
-value|((u_char)0226)
+value|((unsigned char)0226)
 end_define
 
 begin_comment
@@ -4150,7 +6234,7 @@ begin_define
 define|#
 directive|define
 name|CANONHOST
-value|((u_char)0227)
+value|((unsigned char)0227)
 end_define
 
 begin_comment
@@ -4161,7 +6245,7 @@ begin_define
 define|#
 directive|define
 name|CANONUSER
-value|((u_char)0230)
+value|((unsigned char)0230)
 end_define
 
 begin_comment
@@ -4172,7 +6256,7 @@ begin_define
 define|#
 directive|define
 name|CALLSUBR
-value|((u_char)0231)
+value|((unsigned char)0231)
 end_define
 
 begin_comment
@@ -4187,7 +6271,7 @@ begin_define
 define|#
 directive|define
 name|CONDIF
-value|((u_char)0232)
+value|((unsigned char)0232)
 end_define
 
 begin_comment
@@ -4198,7 +6282,7 @@ begin_define
 define|#
 directive|define
 name|CONDELSE
-value|((u_char)0233)
+value|((unsigned char)0233)
 end_define
 
 begin_comment
@@ -4209,7 +6293,7 @@ begin_define
 define|#
 directive|define
 name|CONDFI
-value|((u_char)0234)
+value|((unsigned char)0234)
 end_define
 
 begin_comment
@@ -4224,7 +6308,7 @@ begin_define
 define|#
 directive|define
 name|HOSTBEGIN
-value|((u_char)0235)
+value|((unsigned char)0235)
 end_define
 
 begin_comment
@@ -4235,7 +6319,7 @@ begin_define
 define|#
 directive|define
 name|HOSTEND
-value|((u_char)0236)
+value|((unsigned char)0236)
 end_define
 
 begin_comment
@@ -4250,7 +6334,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUPBEGIN
-value|((u_char)0205)
+value|((unsigned char)0205)
 end_define
 
 begin_comment
@@ -4261,7 +6345,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUPEND
-value|((u_char)0206)
+value|((unsigned char)0206)
 end_define
 
 begin_comment
@@ -4276,7 +6360,7 @@ begin_define
 define|#
 directive|define
 name|MACROEXPAND
-value|((u_char)0201)
+value|((unsigned char)0201)
 end_define
 
 begin_comment
@@ -4287,7 +6371,7 @@ begin_define
 define|#
 directive|define
 name|MACRODEXPAND
-value|((u_char)0202)
+value|((unsigned char)0202)
 end_define
 
 begin_comment
@@ -4328,7 +6412,8 @@ name|char
 name|metaname
 decl_stmt|;
 comment|/* external code (after $) */
-name|u_char
+name|unsigned
+name|char
 name|metaval
 decl_stmt|;
 comment|/* internal code (as above) */
@@ -4355,24 +6440,159 @@ begin_comment
 comment|/* functions */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SM_HEAP_CHECK
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|void
-name|define
+name|macdefine_tagged
 name|__P
 argument_list|(
 operator|(
+name|MACROS_T
+operator|*
+name|_mac
+operator|,
+name|ARGCLASS_T
+name|_vclass
+operator|,
 name|int
+name|_id
 operator|,
 name|char
 operator|*
+name|_value
 operator|,
-name|ENVELOPE
+name|char
+operator|*
+name|_file
+operator|,
+name|int
+name|_line
+operator|,
+name|int
+name|_group
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|macdefine
+parameter_list|(
+name|mac
+parameter_list|,
+name|c
+parameter_list|,
+name|id
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|macdefine_tagged(mac,c,id,v,__FILE__,__LINE__,sm_heap_group())
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SM_HEAP_CHECK */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|macdefine
+name|__P
+argument_list|(
+operator|(
+name|MACROS_T
+operator|*
+name|_mac
+operator|,
+name|ARGCLASS_T
+name|_vclass
+operator|,
+name|int
+name|_id
+operator|,
+name|char
+operator|*
+name|_value
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|macdefine_tagged
+parameter_list|(
+name|mac
+parameter_list|,
+name|c
+parameter_list|,
+name|id
+parameter_list|,
+name|v
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|,
+name|grp
+parameter_list|)
+value|macdefine(mac,c,id,v)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_HEAP_CHECK */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|macset
+name|__P
+argument_list|(
+operator|(
+name|MACROS_T
+operator|*
+operator|,
+name|int
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|macget
+parameter_list|(
+name|mac
+parameter_list|,
+name|i
+parameter_list|)
+value|(mac)->mac_table[i]
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -4399,7 +6619,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|macid
+name|macid_parse
 name|__P
 argument_list|(
 operator|(
@@ -4413,6 +6633,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|macid
+parameter_list|(
+name|name
+parameter_list|)
+value|macid_parse(name, NULL)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -4472,6 +6702,42 @@ name|int
 operator|,
 name|char
 operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rscap
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4543,9 +6809,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  Name canonification short circuit. ** **	If the name server for a host is down, the process of trying to **	canonify the name can hang.  This is similar to (but alas, not **	identical to) looking up the name for delivery.  This stab type **	caches the result of the name server lookup so we don't hang **	multiple times. */
 end_comment
@@ -4584,6 +6847,10 @@ modifier|*
 name|nc_cname
 decl_stmt|;
 comment|/* the canonical name */
+name|time_t
+name|nc_exp
+decl_stmt|;
+comment|/* entry expires at */
 block|}
 end_block
 
@@ -4607,6 +6874,35 @@ comment|/* entry valid */
 end_comment
 
 begin_comment
+comment|/* hostsignature structure */
+end_comment
+
+begin_struct
+struct|struct
+name|hostsig_t
+block|{
+name|char
+modifier|*
+name|hs_sig
+decl_stmt|;
+comment|/* hostsignature */
+name|time_t
+name|hs_exp
+decl_stmt|;
+comment|/* entry expires at */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|hostsig_t
+name|HOSTSIG_T
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* functions */
 end_comment
 
@@ -4623,6 +6919,9 @@ operator|,
 name|int
 operator|,
 name|bool
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4642,7 +6941,13 @@ name|char
 operator|*
 operator|*
 operator|,
-name|u_short
+name|unsigned
+name|short
+operator|*
+operator|,
+name|bool
+operator|,
+name|int
 operator|*
 operator|,
 name|bool
@@ -4654,8 +6959,37 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|hostsignature
+name|__P
+argument_list|(
+operator|(
+name|MAILER
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|getfallbackmxrr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Mapping functions ** **	These allow arbitrary mappings in the config file.  The idea **	(albeit not the implementation) comes from IDA sendmail. */
@@ -4701,6 +7035,11 @@ modifier|*
 name|map_class
 decl_stmt|;
 comment|/* the class of this map */
+name|MAPCLASS
+modifier|*
+name|map_orgclass
+decl_stmt|;
+comment|/* the original class of this map */
 name|char
 modifier|*
 name|map_mname
@@ -4733,11 +7072,13 @@ modifier|*
 name|map_valcolnm
 decl_stmt|;
 comment|/* value column name */
-name|u_char
+name|unsigned
+name|char
 name|map_keycolno
 decl_stmt|;
 comment|/* key column number */
-name|u_char
+name|unsigned
+name|char
 name|map_valcolno
 decl_stmt|;
 comment|/* value column number */
@@ -4773,6 +7114,14 @@ name|time_t
 name|map_mtime
 decl_stmt|;
 comment|/* last database modification time */
+name|time_t
+name|map_timeout
+decl_stmt|;
+comment|/* timeout for map accesses */
+name|int
+name|map_retry
+decl_stmt|;
+comment|/* # of retries for map accesses */
 name|pid_t
 name|map_pid
 decl_stmt|;
@@ -4965,15 +7314,8 @@ begin_comment
 comment|/* implicit: underlying NDBM database */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MF_UNSAFEDB
-value|0x00004000
-end_define
-
 begin_comment
-comment|/* this map is world writable */
+comment|/* 0x00004000	*/
 end_comment
 
 begin_define
@@ -5042,22 +7384,37 @@ begin_comment
 comment|/* successful only if match one key */
 end_comment
 
+begin_comment
+comment|/*			0x00200000	   available for use */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MF_NOREWRITE
-value|0x00200000
+name|MF_FILECLASS
+value|0x00400000
 end_define
 
 begin_comment
-comment|/* don't rewrite result, return as-is */
+comment|/* this is a file class map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_OPENBOGUS
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* open failed, don't call map_close */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MF_CLOSING
-value|0x00400000
+value|0x01000000
 end_define
 
 begin_comment
@@ -5110,6 +7467,67 @@ end_define
 begin_comment
 comment|/* member map returns temp failure */
 end_comment
+
+begin_comment
+comment|/* macros to handle MapTempFail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIT_IS_MTP
+value|0x01
+end_define
+
+begin_comment
+comment|/* temp.failure occurred */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIT_ASK_MTP
+value|0x02
+end_define
+
+begin_comment
+comment|/* do we care about MapTempFail? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESET_MAPTEMPFAIL
+value|MapTempFail = 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_MAPTEMPFAIL
+value|MapTempFail = BIT_ASK_MTP
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_MAPTEMPFAIL
+value|MapTempFail |= BIT_IS_MTP
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_MAPTEMPFAIL
+value|bitset(BIT_IS_MTP, MapTempFail)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASK_MAPTEMPFAIL
+value|bitset(BIT_ASK_MTP, MapTempFail)
+end_define
 
 begin_comment
 comment|/* **  The class of a map -- essentially the functions to call */
@@ -5278,6 +7696,17 @@ begin_comment
 comment|/* file name is optional */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCF_NOTPERSIST
+value|0x0010
+end_define
+
+begin_comment
+comment|/* don't keep map open all the time */
+end_comment
+
 begin_comment
 comment|/* functions */
 end_comment
@@ -5289,7 +7718,7 @@ name|closemaps
 name|__P
 argument_list|(
 operator|(
-name|void
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5494,6 +7923,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|SM_RPOOL_T
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5508,109 +7940,15 @@ begin_comment
 comment|/* USERDB */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  LDAP related items */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|LDAPMAP
-end_ifdef
-
-begin_struct
-struct|struct
-name|ldapmap_struct
-block|{
-comment|/* needed for ldap_open or ldap_init */
-name|char
-modifier|*
-name|ldap_host
-decl_stmt|;
-name|int
-name|ldap_port
-decl_stmt|;
-comment|/* options set in ld struct before ldap_bind_s */
-name|int
-name|ldap_deref
-decl_stmt|;
-name|time_t
-name|ldap_timelimit
-decl_stmt|;
-name|int
-name|ldap_sizelimit
-decl_stmt|;
-name|int
-name|ldap_options
-decl_stmt|;
-comment|/* args for ldap_bind_s */
-name|LDAP
-modifier|*
-name|ldap_ld
-decl_stmt|;
-name|char
-modifier|*
-name|ldap_binddn
-decl_stmt|;
-name|char
-modifier|*
-name|ldap_secret
-decl_stmt|;
-name|int
-name|ldap_method
-decl_stmt|;
-comment|/* args for ldap_search */
-name|char
-modifier|*
-name|ldap_base
-decl_stmt|;
-name|int
-name|ldap_scope
-decl_stmt|;
-name|char
-modifier|*
-name|ldap_filter
-decl_stmt|;
-name|char
-modifier|*
-name|ldap_attr
-index|[
-name|LDAPMAP_MAX_ATTR
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|bool
-name|ldap_attrsonly
-decl_stmt|;
-comment|/* args for ldap_result */
-name|struct
-name|timeval
-name|ldap_timeout
-decl_stmt|;
-name|LDAPMessage
-modifier|*
-name|ldap_res
-decl_stmt|;
-comment|/* Linked list of maps sharing the same LDAP binding */
-name|MAP
-modifier|*
-name|ldap_next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|ldapmap_struct
-name|LDAPMAP_STRUCT
-typedef|;
-end_typedef
+end_if
 
 begin_comment
 comment|/* struct defining LDAP Auth Methods */
@@ -5719,18 +8057,21 @@ begin_comment
 comment|/* LDAPMAP */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  PH related items */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|PH_MAP
-end_ifdef
+end_if
+
+begin_include
+include|#
+directive|include
+file|<phclient.h>
+end_include
 
 begin_struct
 struct|struct
@@ -5746,20 +8087,19 @@ modifier|*
 name|ph_field_list
 decl_stmt|;
 comment|/* list of fields to search for match */
-name|FILE
+name|PH
 modifier|*
-name|ph_to_server
+name|ph
 decl_stmt|;
-name|FILE
-modifier|*
-name|ph_from_server
-decl_stmt|;
+comment|/* PH server handle */
 name|int
-name|ph_sockfd
+name|ph_fastclose
 decl_stmt|;
+comment|/* send "quit" command on close */
 name|time_t
 name|ph_timeout
 decl_stmt|;
+comment|/* timeout interval */
 block|}
 struct|;
 end_struct
@@ -5772,13 +8112,6 @@ name|PH_MAP_STRUCT
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_PH_MAP_FIELDS
-value|"alias callsign name spacedname"
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -5788,30 +8121,9 @@ begin_comment
 comment|/* PH_MAP */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  Process List (proclist) */
 end_comment
-
-begin_struct
-struct|struct
-name|procs
-block|{
-name|pid_t
-name|proc_pid
-decl_stmt|;
-name|char
-modifier|*
-name|proc_task
-decl_stmt|;
-name|int
-name|proc_type
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
@@ -5916,6 +8228,10 @@ name|char
 operator|*
 operator|,
 name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5941,7 +8257,10 @@ name|proc_list_display
 name|__P
 argument_list|(
 operator|(
-name|FILE
+name|SM_FILE_T
+operator|*
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -5950,12 +8269,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|proc_list_drop
 name|__P
 argument_list|(
 operator|(
 name|pid_t
+operator|,
+name|int
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5990,8 +8314,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_decl_stmt
+specifier|extern
+name|void
+name|proc_list_signal
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Symbol table definitions */
@@ -6007,13 +8343,9 @@ name|s_name
 decl_stmt|;
 comment|/* name to be entered */
 name|short
-name|s_type
+name|s_symtype
 decl_stmt|;
 comment|/* general type (see below) */
-name|short
-name|s_len
-decl_stmt|;
-comment|/* length of this entry */
 name|struct
 name|symtab
 modifier|*
@@ -6049,8 +8381,7 @@ name|MAP
 name|sv_map
 decl_stmt|;
 comment|/* mapping function */
-name|char
-modifier|*
+name|HOSTSIG_T
 name|sv_hostsig
 decl_stmt|;
 comment|/* host signature */
@@ -6083,8 +8414,8 @@ name|MAXMAPSTACK
 index|]
 decl_stmt|;
 comment|/* service switch */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|LDAPMAP
 name|MAP
 modifier|*
@@ -6096,7 +8427,7 @@ directive|endif
 comment|/* LDAPMAP */
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 name|struct
 name|milter
 modifier|*
@@ -6105,7 +8436,12 @@ decl_stmt|;
 comment|/* milter filter name */
 endif|#
 directive|endif
-comment|/* _FFR_MILTER */
+comment|/* MILTER */
+name|QUEUEGRP
+modifier|*
+name|sv_queue
+decl_stmt|;
+comment|/* pointer to queue */
 block|}
 name|s_value
 union|;
@@ -6268,11 +8604,11 @@ begin_comment
 comment|/* special header flags */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|LDAPMAP
-end_ifdef
+end_if
 
 begin_define
 define|#
@@ -6297,7 +8633,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 end_if
 
 begin_define
@@ -6317,7 +8653,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_MILTER */
+comment|/* MILTER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_QUEUE
+value|15
+end_define
+
+begin_comment
+comment|/* a queue entry */
+end_comment
+
+begin_comment
+comment|/* This entry must be last */
 end_comment
 
 begin_define
@@ -6422,11 +8773,11 @@ name|s_header
 value|s_value.sv_header
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|LDAPMAP
-end_ifdef
+end_if
 
 begin_define
 define|#
@@ -6447,7 +8798,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 end_if
 
 begin_define
@@ -6463,8 +8814,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_MILTER */
+comment|/* MILTER */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|s_quegrp
+value|s_value.sv_queue
+end_define
 
 begin_comment
 comment|/* opcodes to stab */
@@ -6539,139 +8897,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  STRUCT EVENT -- event queue. ** **	Maintained in sorted order. ** **	We store the pid of the process that set this event to insure **	that when we fork we will not take events intended for the parent. */
-end_comment
-
-begin_struct
-struct|struct
-name|event
-block|{
-name|time_t
-name|ev_time
-decl_stmt|;
-comment|/* time of the function call */
-name|void
-argument_list|(
-argument|*ev_func
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* function to call */
-name|int
-name|ev_arg
-decl_stmt|;
-comment|/* argument to ev_func */
-name|pid_t
-name|ev_pid
-decl_stmt|;
-comment|/* pid that set this event */
-name|struct
-name|event
-modifier|*
-name|ev_link
-decl_stmt|;
-comment|/* link to next item */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|event
-name|EVENT
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* functions */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|clrevent
-name|__P
-argument_list|(
-operator|(
-name|EVENT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|clear_events
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|EVENT
-modifier|*
-name|setevent
-name|__P
-argument_list|(
-operator|(
-name|time_t
-operator|,
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|EVENT
-modifier|*
-name|sigsafe_setevent
-name|__P
-argument_list|(
-operator|(
-name|time_t
-operator|,
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  Operation, send, error, and MIME modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  It's setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The error mode tells how to return errors. */
+comment|/* **  Operation, send, error, and MIME modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  Its setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The error mode tells how to return errors. */
 end_comment
 
 begin_define
@@ -6776,6 +9003,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MD_PRINTNQE
+value|'P'
+end_define
+
+begin_comment
+comment|/* print number of entries in queue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MD_FREEZE
 value|'z'
 end_define
@@ -6815,6 +9053,10 @@ end_define
 
 begin_comment
 comment|/* queue run */
+end_comment
+
+begin_comment
+comment|/* Note: see also include/sendmail/pathnames.h: GET_CLIENT_CF */
 end_comment
 
 begin_comment
@@ -6875,6 +9117,16 @@ end_define
 begin_comment
 comment|/* verify only (used internally) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WILL_BE_QUEUED
+parameter_list|(
+name|m
+parameter_list|)
+value|((m) == SM_QUEUE || (m) == SM_DEFER)
+end_define
 
 begin_comment
 comment|/* used only as a parameter to sendall */
@@ -7133,18 +9385,18 @@ begin_define
 define|#
 directive|define
 name|PRIV_NEEDMAILHELO
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
-comment|/* insist on HELO for MAIL, at least */
+comment|/* insist on HELO for MAIL */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRIV_NEEDEXPNHELO
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -7155,7 +9407,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NEEDVRFYHELO
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -7166,62 +9418,51 @@ begin_define
 define|#
 directive|define
 name|PRIV_NOEXPN
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
-comment|/* disallow EXPN command entirely */
+comment|/* disallow EXPN command */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRIV_NOVRFY
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
-comment|/* disallow VRFY command entirely */
+comment|/* disallow VRFY command */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRIV_AUTHWARNINGS
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
-comment|/* flag possible authorization probs */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRIV_NORECEIPTS
-value|0x0040
-end_define
-
-begin_comment
-comment|/* disallow return receipts */
+comment|/* flag possible auth probs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRIV_NOVERB
-value|0x0100
+value|0x00000040
 end_define
 
 begin_comment
-comment|/* disallow VERB command entirely */
+comment|/* disallow VERB command */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRIV_RESTRICTMAILQ
-value|0x1000
+value|0x00010000
 end_define
 
 begin_comment
@@ -7232,7 +9473,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_RESTRICTQRUN
-value|0x2000
+value|0x00020000
 end_define
 
 begin_comment
@@ -7242,23 +9483,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRIV_NOETRN
-value|0x4000
+name|PRIV_RESTRICTEXPAND
+value|0x00040000
 end_define
 
 begin_comment
-comment|/* disallow ETRN command entirely */
+comment|/* restrict alias/forward expansion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NOETRN
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* disallow ETRN command */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PRIV_NOBODYRETN
-value|0x8000
+value|0x00100000
 end_define
 
 begin_comment
 comment|/* do not return bodies on bounces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NORECEIPTS
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* disallow return receipts */
 end_comment
 
 begin_comment
@@ -7269,7 +9532,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_GOAWAY
-value|(0x0fff& ~PRIV_NORECEIPTS)
+value|0x0000ffff
 end_define
 
 begin_comment
@@ -7285,13 +9548,26 @@ modifier|*
 name|pv_name
 decl_stmt|;
 comment|/* name of privacy flag */
-name|u_short
+name|unsigned
+name|long
 name|pv_flag
 decl_stmt|;
 comment|/* numeric level */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|EXTERN
+name|unsigned
+name|long
+name|PrivacyFlags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* privacy flags */
+end_comment
 
 begin_comment
 comment|/* **  Flags passed to remotename, parseaddr, allocaddr, and buildaddr. */
@@ -7690,6 +9966,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|anynet_pton
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -7713,12 +10009,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|DAEMON
-end_if
 
 begin_decl_stmt
 specifier|extern
@@ -7747,36 +10037,18 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DAEMON */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* NETINET || NETINET6 || NETUNIX || NETISO || NETNS || NETX25 */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 end_if
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  Mail Filters (milter) */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<libmilter/milter.h>
-end_include
 
 begin_define
 define|#
@@ -7846,15 +10118,18 @@ name|BITMAP256
 name|mf_flags
 decl_stmt|;
 comment|/* MTA flags */
-name|u_long
+name|unsigned
+name|long
 name|mf_fvers
 decl_stmt|;
 comment|/* filter version */
-name|u_long
+name|unsigned
+name|long
 name|mf_fflags
 decl_stmt|;
 comment|/* filter flags */
-name|u_long
+name|unsigned
+name|long
 name|mf_pflags
 decl_stmt|;
 comment|/* protocol flags */
@@ -7989,17 +10264,6 @@ begin_comment
 comment|/* ready for action */
 end_comment
 
-begin_comment
-comment|/* 32-bit type used by milter */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|SM_INT32
-name|mi_int32
-typedef|;
-end_typedef
-
 begin_decl_stmt
 name|EXTERN
 name|struct
@@ -8020,14 +10284,63 @@ name|InputFilterList
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MilterLogLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_PERDAEMON
+end_if
+
+begin_comment
+comment|/* functions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setup_daemon_milters
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_MILTER */
+comment|/* _FFR_MILTER_PERDAEMON */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MILTER */
+end_comment
+
+begin_comment
+comment|/* **  32-bit type used by milter **  (needed by libmilter even if MILTER isn't defined) */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|SM_INT32
+name|mi_int32
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* **  Vendor codes ** **	Vendors can customize sendmail to add special behaviour, **	generally for back compatibility.  Ideally, this should **	be set up in the .cf file using the "V" command.  However, **	it's quite reasonable for some vendors to want the default **	be their old version; this can be set using **		-DVENDOR_DEFAULT=VENDOR_xxx **	in the Makefile. ** **	Vendors should apply to sendmail@sendmail.org for **	unique vendor codes. */
@@ -8088,6 +10401,17 @@ begin_comment
 comment|/* Sendmail, Inc. specific config syntax */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VENDOR_DEC
+value|6
+end_define
+
+begin_comment
+comment|/* Compaq, DEC, Digital */
+end_comment
+
 begin_comment
 comment|/* prototypes for vendor-specific hook routines */
 end_comment
@@ -8141,19 +10465,12 @@ block|}
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  Additional definitions */
 end_comment
 
 begin_comment
-comment|/* d_flags, see daemon.c */
-end_comment
-
-begin_comment
-comment|/* general rule: lower case: required, upper case: No */
+comment|/* **  d_flags, see daemon.c **  general rule: lower case: required, upper case: No */
 end_comment
 
 begin_define
@@ -8211,32 +10528,6 @@ begin_comment
 comment|/* fq sender address required (cf) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_TLS_CLT1
-end_if
-
-begin_define
-define|#
-directive|define
-name|D_CLTNOTLS
-value|'S'
-end_define
-
-begin_comment
-comment|/* don't use STARTTLS in client */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_TLS_CLT1 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -8248,6 +10539,32 @@ begin_comment
 comment|/* fq recipient address required (cf) */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_SMTP_SSL
+end_if
+
+begin_define
+define|#
+directive|define
+name|D_SMTPS
+value|'s'
+end_define
+
+begin_comment
+comment|/* SMTP over SSL (smtps) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SMTP_SSL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -8257,6 +10574,17 @@ end_define
 
 begin_comment
 comment|/* unqualified address is ok (cf) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_NOAUTH
+value|'A'
+end_define
+
+begin_comment
+comment|/* no AUTH */
 end_comment
 
 begin_define
@@ -8284,6 +10612,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|D_NOTLS
+value|'S'
+end_define
+
+begin_comment
+comment|/* don't use STARTTLS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|D_ETRNONLY
 value|((char)0x01)
 end_define
@@ -8292,412 +10631,1123 @@ begin_comment
 comment|/* allow only ETRN (disk low) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|D_OPTIONAL
+value|'O'
+end_define
+
 begin_comment
-comment|/* Flags for submitmode */
+comment|/* optional socket */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SUBMIT_UNKNOWN
-value|0x0000
+name|D_DISABLE
+value|((char)0x02)
 end_define
 
 begin_comment
-comment|/* unknown agent type */
+comment|/* optional socket disabled */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SUBMIT_MTA
-value|0x0001
+name|D_ISSET
+value|((char)0x03)
 end_define
 
 begin_comment
-comment|/* act like a message transfer agent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SUBMIT_MSA
-value|0x0002
-end_define
-
-begin_comment
-comment|/* act like a message submission agent */
+comment|/* this client struct is set */
 end_comment
 
 begin_if
-if|#
-directive|if
-name|SASL
-end_if
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  SASL */
-end_comment
-
-begin_comment
-comment|/* authenticated? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SASL_NOT_AUTH
-value|0
-end_define
-
-begin_comment
-comment|/* not authenticated */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SASL_PROC_AUTH
-value|1
-end_define
-
-begin_comment
-comment|/* in process of authenticating */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SASL_IS_AUTH
-value|2
-end_define
-
-begin_comment
-comment|/* authenticated */
-end_comment
-
-begin_comment
-comment|/* SASL options */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SASL_AUTH_AUTH
-value|0x1000
-end_define
-
-begin_comment
-comment|/* use auth= only if authenticated */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_SASL_OPTS
-end_if
-
-begin_define
-define|#
-directive|define
-name|SASL_SEC_MASK
-value|0x0fff
-end_define
-
-begin_comment
-comment|/* mask for SASL_SEC_* values: sasl.h */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|SASL_SEC_NOPLAINTEXT
-operator|&
-name|SASL_SEC_MASK
-operator|)
-operator|==
-literal|0
-operator|||
-expr|\
-operator|(
-name|SASL_SEC_NOACTIVE
-operator|&
-name|SASL_SEC_MASK
-operator|)
-operator|==
-literal|0
-operator|||
-expr|\
-operator|(
-name|SASL_SEC_NODICTIONARY
-operator|&
-name|SASL_SEC_MASK
-operator|)
-operator|==
-literal|0
-operator|||
-expr|\
-operator|(
-name|SASL_SEC_FORWARD_SECRECY
-operator|&
-name|SASL_SEC_MASK
-operator|)
-operator|==
-literal|0
-operator|||
-expr|\
-operator|(
-name|SASL_SEC_NOANONYMOUS
-operator|&
-name|SASL_SEC_MASK
-operator|)
-operator|==
-literal|0
-operator|||
-expr|\
-operator|(
-name|SASL_SEC_PASS_CREDENTIALS
-operator|&
-name|SASL_SEC_MASK
-operator|)
-operator|==
-literal|0
-end_if
-
-begin_label
-name|ERROR
-label|:
-end_label
-
-begin_expr_stmt
-name|change
-name|SASL_SEC_MASK_
-name|notify
-name|sendmail
-operator|.
-name|org
-operator|!
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* _FFR_SASL_OPTS */
-define|#
-directive|define
-name|MAXOUTLEN
-value|1024
-comment|/* length of output buffer */
-endif|#
-directive|endif
-comment|/* SASL */
 if|#
 directive|if
 name|STARTTLS
+end_if
+
+begin_comment
 comment|/* **  TLS */
+end_comment
+
+begin_comment
 comment|/* what to do in the TLS initialization */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_NONE
 value|0x00000000
+end_define
+
+begin_comment
 comment|/* no requirements... */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CERT_EX
 value|0x00000001
+end_define
+
+begin_comment
 comment|/* CERT must exist */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CERT_UNR
 value|0x00000002
+end_define
+
+begin_comment
 comment|/* CERT must be g/o unreadable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_KEY_EX
 value|0x00000004
+end_define
+
+begin_comment
 comment|/* KEY must exist */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_KEY_UNR
 value|0x00000008
+end_define
+
+begin_comment
 comment|/* KEY must be g/o unreadable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CERTP_EX
 value|0x00000010
+end_define
+
+begin_comment
 comment|/* CA CERT PATH must exist */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CERTP_UNR
 value|0x00000020
+end_define
+
+begin_comment
 comment|/* CA CERT PATH must be g/o unreadable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CERTF_EX
 value|0x00000040
+end_define
+
+begin_comment
 comment|/* CA CERT FILE must exist */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CERTF_UNR
 value|0x00000080
+end_define
+
+begin_comment
 comment|/* CA CERT FILE must be g/o unreadable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_RSA_TMP
 value|0x00000100
+end_define
+
+begin_comment
 comment|/* RSA TMP must be generated */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_USE_KEY
 value|0x00000200
+end_define
+
+begin_comment
 comment|/* private key must usable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_USE_CERT
 value|0x00000400
+end_define
+
+begin_comment
 comment|/* certificate must be usable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_VRFY_PATH
 value|0x00000800
+end_define
+
+begin_comment
 comment|/* load verify path must succeed */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_VRFY_LOC
 value|0x00001000
+end_define
+
+begin_comment
 comment|/* load verify default must succeed */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CACHE
 value|0x00002000
+end_define
+
+begin_comment
 comment|/* require cache */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_TRY_DH
 value|0x00004000
+end_define
+
+begin_comment
 comment|/* try DH certificate */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_REQ_DH
 value|0x00008000
+end_define
+
+begin_comment
 comment|/* require DH certificate */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_DHPAR_EX
 value|0x00010000
+end_define
+
+begin_comment
 comment|/* require DH parameters */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_DHPAR_UNR
 value|0x00020000
+end_define
+
+begin_comment
 comment|/* DH param. must be g/o unreadable */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_DH512
 value|0x00040000
+end_define
+
+begin_comment
 comment|/* generate 512bit DH param */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_DH1024
 value|0x00080000
+end_define
+
+begin_comment
 comment|/* generate 1024bit DH param */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_DH2048
 value|0x00100000
+end_define
+
+begin_comment
 comment|/* generate 2048bit DH param */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_I_NO_VRFY
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* do not require authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_I_KEY_OUNR
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* KEY must be o unreadable */
+end_comment
+
+begin_comment
+comment|/* require server cert */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_I_SRV_CERT
+value|(TLS_I_CERT_EX | TLS_I_KEY_EX | \ 			  TLS_I_KEY_UNR | TLS_I_KEY_OUNR | \ 			  TLS_I_CERTP_EX | TLS_I_CERTF_EX | \ 			  TLS_I_USE_KEY | TLS_I_USE_CERT)
+end_define
+
+begin_comment
 comment|/* server requirements */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_SRV
-value|(TLS_I_CERT_EX | TLS_I_KEY_EX | TLS_I_KEY_UNR | \ 			 TLS_I_CERTP_EX | TLS_I_CERTF_EX | TLS_I_RSA_TMP | \ 			 TLS_I_USE_KEY | TLS_I_USE_CERT | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | \ 			 TLS_I_DH512)
+value|(TLS_I_SRV_CERT | TLS_I_RSA_TMP | TLS_I_VRFY_PATH | \ 			 TLS_I_VRFY_LOC | TLS_I_TRY_DH | TLS_I_DH512)
+end_define
+
+begin_comment
 comment|/* client requirements */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|TLS_I_CLT
-value|(TLS_I_KEY_UNR)
+value|(TLS_I_KEY_UNR | TLS_I_KEY_OUNR)
+end_define
+
+begin_define
 define|#
 directive|define
 name|TLS_AUTH_OK
 value|0
+end_define
+
+begin_define
 define|#
 directive|define
 name|TLS_AUTH_NO
 value|1
+end_define
+
+begin_define
 define|#
 directive|define
 name|TLS_AUTH_FAIL
 value|(-1)
+end_define
+
+begin_comment
+comment|/* functions */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|init_tls_library
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|inittls
+name|__P
+argument_list|(
+operator|(
+name|SSL_CTX
+operator|*
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|bool
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|initclttls
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setclttls
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|initsrvtls
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tls_get_info
+name|__P
+argument_list|(
+operator|(
+name|SSL
+operator|*
+operator|,
+name|bool
+operator|,
+name|char
+operator|*
+operator|,
+name|MACROS_T
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|endtls
+name|__P
+argument_list|(
+operator|(
+name|SSL
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|tlslogerr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|CACERTpath
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* path to CA certificates (dir. with hashes) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|CACERTfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with CA certificate */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|CltCERTfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with client certificate */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|Cltkeyfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with client private key */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_TLS_1
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|CipherList
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of ciphers */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|DHParams5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with DH parameters (512) */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_TLS_1 */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|DHParams
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with DH parameters */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|RandFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* source of random data */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|SrvCERTfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with server certificate */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|Srvkeyfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file with server private key */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|unsigned
+name|long
+name|TLS_Srv_Opts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TLS server options */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* STARTTLS */
+end_comment
+
+begin_comment
 comment|/* **  Queue related items */
+end_comment
+
+begin_comment
+comment|/* queue file names */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_define
+define|#
+directive|define
+name|ANYQFL_LETTER
+value|'?'
+end_define
+
+begin_define
+define|#
+directive|define
+name|QUARQF_LETTER
+value|'h'
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
+begin_comment
+comment|/* Before quarantining, ANYQF == NORMQF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ANYQFL_LETTER
+value|'q'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATAFL_LETTER
+value|'d'
+end_define
+
+begin_define
+define|#
+directive|define
+name|XSCRPT_LETTER
+value|'x'
+end_define
+
+begin_define
+define|#
+directive|define
+name|NORMQF_LETTER
+value|'q'
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEWQFL_LETTER
+value|'t'
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMPQF_LETTER
+value|'T'
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOSEQF_LETTER
+value|'Q'
+end_define
+
+begin_comment
 comment|/* queue sort order */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QSO_BYPRIORITY
 value|0
+end_define
+
+begin_comment
 comment|/* sort by message priority */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QSO_BYHOST
 value|1
+end_define
+
+begin_comment
 comment|/* sort by first host name */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QSO_BYTIME
 value|2
+end_define
+
+begin_comment
 comment|/* sort by submission time */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QSO_BYFILENAME
 value|3
+end_define
+
+begin_comment
 comment|/* sort by file name only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QSO_RANDOM
+value|4
+end_define
+
+begin_comment
+comment|/* sort in random order */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QSO_BYMODTIME
+value|5
+end_define
+
+begin_comment
+comment|/* sort by modification time */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_RHS
+end_if
+
+begin_define
+define|#
+directive|define
+name|QSO_BYSHUFFLE
+value|6
+end_define
+
+begin_comment
+comment|/* sort by shuffled host name */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_RHS */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|_FFR_QUEUEDELAY
+end_if
+
+begin_define
 define|#
 directive|define
 name|QD_LINEAR
 value|0
+end_define
+
+begin_comment
 comment|/* linear (old) delay alg */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QD_EXP
 value|1
+end_define
+
+begin_comment
 comment|/* exponential delay alg */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* _FFR_QUEUEDELAY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOQGRP
+value|(-1)
+end_define
+
+begin_comment
+comment|/* no queue group (yet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENVQGRP
+value|(-2)
+end_define
+
+begin_comment
+comment|/* use queue group of envelope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOAQGRP
+value|(-3)
+end_define
+
+begin_comment
+comment|/* no queue group in addr (yet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISVALIDQGRP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 0)
+end_define
+
+begin_comment
+comment|/* valid queue group? */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NOQDIR
 value|(-1)
+end_define
+
+begin_comment
 comment|/* no queue directory (yet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENVQDIR
+value|(-2)
+end_define
+
+begin_comment
+comment|/* use queue directory of envelope */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOAQDIR
+value|(-3)
+end_define
+
+begin_comment
+comment|/* no queue directory in addr (yet) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISVALIDQDIR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>= 0)
+end_define
+
+begin_comment
+comment|/* valid queue directory? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS_QUEUEGROUP
+value|"queuegroup"
+end_define
+
+begin_comment
+comment|/* ruleset for queue group selection */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|NOW
 value|((time_t) (-1))
+end_define
+
+begin_comment
 comment|/* queue return: now */
+end_comment
+
+begin_comment
+comment|/* SuperSafe values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFE_NO
+value|0
+end_define
+
+begin_comment
+comment|/* no fsync(): don't use... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFE_INTERACTIVE
+value|1
+end_define
+
+begin_comment
+comment|/* limit fsync() in -odi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFE_REALLY
+value|2
+end_define
+
+begin_comment
+comment|/* always fsync() */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_comment
+comment|/* QueueMode bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QM_NORMAL
+value|' '
+end_define
+
+begin_define
+define|#
+directive|define
+name|QM_QUARANTINE
+value|'Q'
+end_define
+
+begin_define
+define|#
+directive|define
+name|QM_LOST
+value|'L'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
+begin_comment
 comment|/* Queue Run Limitations */
-expr|struct
+end_comment
+
+begin_struct
+struct|struct
 name|queue_char
 block|{
 name|char
-operator|*
+modifier|*
 name|queue_match
-block|;
+decl_stmt|;
 comment|/* string to match */
-block|struct
+name|bool
+name|queue_negate
+decl_stmt|;
+comment|/* or not match, if set */
+name|struct
 name|queue_char
-operator|*
+modifier|*
 name|queue_next
-block|; }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -8706,6 +11756,283 @@ name|queue_char
 name|QUEUE_CHAR
 typedef|;
 end_typedef
+
+begin_decl_stmt
+name|EXTERN
+name|int
+specifier|volatile
+name|CurRunners
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current number of runner children */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxQueueRun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum number of jobs in one queue run */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxQueueChildren
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max # of forked queue children */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxRunnersPerQueue
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max # proc's active in queue group */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|NiceQueueRun
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* nice queue runs to this value */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|NumQueue
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of queue groups */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|QueueFileMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mode on files in mail queue */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|QueueMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* which queue items to act upon */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|QueueSortOrder
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* queue sorting order algorithm */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|MinQueueAge
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* min delivery interval */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|QueueIntvl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* intervals between running the queue */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|QueueDir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* location of queue directory */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUEUEDELAY
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|QueueAlg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* algorithm for queue delays */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|QueueInitDelay
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* initial queue delay */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|QueueMaxDelay
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum queue delay */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUEUEDELAY */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|QUEUE_CHAR
+modifier|*
+name|QueueLimitId
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue run to id */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|QUEUE_CHAR
+modifier|*
+name|QueueLimitQuarantine
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue run to quarantine reason */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|QUEUE_CHAR
+modifier|*
+name|QueueLimitRecipient
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue run to rcpt */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|QUEUE_CHAR
+modifier|*
+name|QueueLimitSender
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue run to sender */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|QUEUEGRP
+modifier|*
+name|Queue
+index|[
+name|MAXQUEUEGROUPS
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* queue groups */
+end_comment
 
 begin_comment
 comment|/* functions */
@@ -8735,6 +12062,35 @@ argument_list|(
 operator|(
 name|ADDRESS
 operator|*
+operator|,
+name|SM_RPOOL_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cleanup_queues
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|doqueuerun
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8773,12 +12129,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|multiqueue_cache
+name|int
+name|name2qid
 name|__P
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8808,10 +12165,43 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|quarantine_queue
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -8841,6 +12231,8 @@ name|ENVELOPE
 operator|*
 operator|,
 name|bool
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8856,6 +12248,31 @@ operator|(
 name|bool
 operator|,
 name|bool
+operator|,
+name|bool
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|run_work_group
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|bool
+operator|,
+name|bool
+operator|,
+name|bool
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8864,6 +12281,35 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|set_def_queueval
+name|__P
+argument_list|(
+operator|(
+name|QUEUEGRP
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|setup_queues
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
 name|setnewqueue
 name|__P
 argument_list|(
@@ -8902,6 +12348,85 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|print_single_queue
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|REQUIRES_DIR_FSYNC
+end_if
+
+begin_define
+define|#
+directive|define
+name|SYNC_DIR
+parameter_list|(
+name|path
+parameter_list|,
+name|panic
+parameter_list|)
+value|sync_dir(path, panic)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sync_dir
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* REQUIRES_DIR_FSYNC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_DIR
+parameter_list|(
+name|path
+parameter_list|,
+name|panic
+parameter_list|)
+value|((void) 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* REQUIRES_DIR_FSYNC */
+end_comment
 
 begin_comment
 comment|/* **  Timeouts ** **	Indicated values are the MINIMUM per RFC 1123 section 5.3.2. */
@@ -8953,6 +12478,10 @@ name|to_connect
 decl_stmt|;
 comment|/* initial connection timeout (later tries) */
 name|time_t
+name|to_aconnect
+decl_stmt|;
+comment|/* all connections timeout (MX and A records) */
+name|time_t
 name|to_rset
 decl_stmt|;
 comment|/* RSET command */
@@ -8980,6 +12509,30 @@ name|time_t
 name|to_control
 decl_stmt|;
 comment|/* process a control socket command */
+name|time_t
+name|to_lhlo
+decl_stmt|;
+comment|/* LMTP: LHLO command */
+if|#
+directive|if
+name|SASL
+name|time_t
+name|to_auth
+decl_stmt|;
+comment|/* AUTH dialogue [10m] */
+endif|#
+directive|endif
+comment|/* SASL */
+if|#
+directive|if
+name|STARTTLS
+name|time_t
+name|to_starttls
+decl_stmt|;
+comment|/* STARTTLS dialogue [10m] */
+endif|#
+directive|endif
+comment|/* STARTTLS */
 comment|/* following are per message */
 name|time_t
 name|to_q_return
@@ -9109,6 +12662,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* **  Interface probing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPI_PROBENONE
+value|0
+end_define
+
+begin_comment
+comment|/* Don't probe any interfaces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPI_PROBEALL
+value|1
+end_define
+
+begin_comment
+comment|/* Probe all interfaces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPI_SKIPLOOPBACK
+value|2
+end_define
+
+begin_comment
+comment|/* Don't probe loopback interfaces */
+end_comment
+
+begin_comment
 comment|/* **  Trace information */
 end_comment
 
@@ -9125,7 +12715,7 @@ name|flag
 parameter_list|,
 name|level
 parameter_list|)
-value|(tTdvect[flag]>= (u_char)level)
+value|(tTdvect[flag]>= (unsigned char)level)
 end_define
 
 begin_define
@@ -9144,7 +12734,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_char
+name|unsigned
+name|char
 name|tTdvect
 index|[
 literal|100
@@ -9155,172 +12746,6 @@ end_decl_stmt
 begin_comment
 comment|/* trace vector */
 end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  Critical signal sections */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PEND_SIGHUP
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEND_SIGINT
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEND_SIGTERM
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEND_SIGUSR1
-value|0x0008
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENTER_CRITICAL
-parameter_list|()
-value|InCriticalSection++
-end_define
-
-begin_define
-define|#
-directive|define
-name|LEAVE_CRITICAL
-parameter_list|()
-define|\
-value|do									\ {									\ 	if (InCriticalSection> 0)					\ 		InCriticalSection--;					\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHECK_CRITICAL
-parameter_list|(
-name|sig
-parameter_list|)
-define|\
-value|do									\ {									\ 	if (InCriticalSection> 0&& (sig) != 0)			\ 	{								\ 		pend_signal((sig));					\ 		return SIGFUNC_RETURN;					\ 	}								\ } while (0)
-end_define
-
-begin_comment
-comment|/* reset signal in case System V semantics */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS5SIGNALS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FIX_SYSV_SIGNAL
-parameter_list|(
-name|sig
-parameter_list|,
-name|handler
-parameter_list|)
-define|\
-value|{									\ 	if ((sig) != 0)							\ 		(void) setsignal((sig), (handler));			\ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SYS5SIGNALS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIX_SYSV_SIGNAL
-parameter_list|(
-name|sig
-parameter_list|,
-name|handler
-parameter_list|)
-value|{
-comment|/* EMPTY */
-value|}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYS5SIGNALS */
-end_comment
-
-begin_comment
-comment|/* variables */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|u_int
-specifier|volatile
-name|InCriticalSection
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*>0 if in a critical section */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-specifier|volatile
-name|PendingSignal
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pending signal to resend */
-end_comment
-
-begin_comment
-comment|/* functions */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|pend_signal
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  Miscellaneous information. */
@@ -9335,6 +12760,27 @@ define|#
 directive|define
 name|NOQID
 value|"*~*"
+end_define
+
+begin_comment
+comment|/* use id or NOQID (to avoid NOQUEUE in logfile) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_ID
+parameter_list|(
+name|id
+parameter_list|)
+value|((id) == NULL ? NOQID : (id))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURHOSTNAME
+value|(CurHostName == NULL ? "local" : CurHostName)
 end_define
 
 begin_comment
@@ -9381,8 +12827,37 @@ parameter_list|)
 value|d = s
 end_define
 
-begin_escape
-end_escape
+begin_comment
+comment|/* free a pointer if it isn't NULL and set it to NULL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_FREE_CLR
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|if ((p) != NULL) \ 			{ \ 				sm_free(p); \ 				(p) = NULL; \ 			} \ 			else
+end_define
+
+begin_comment
+comment|/* **  Update a permanent string variable with a new value. **  The old value is freed, the new value is strdup'ed. ** **  We use sm_pstrdup_x to duplicate the string because it raises **  an exception on error, and because it allocates "permanent storage" **  which is not expected to be freed before process exit. **  The latter is important for memory leak analysis. ** **  If an exception occurs while strdup'ing the new value, **  then the variable remains set to the old value. **  That's why the strdup must occur before we free the old value. ** **  The macro uses a do loop so that this idiom will work: **	if (...) **		PSTRSET(var, val1); **	else **		PSTRSET(var, val2); */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSTRSET
+parameter_list|(
+name|var
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|do \ 	{ \ 		char *_newval = sm_pstrdup_x(val); \ 		if (var != NULL) \ 			sm_free(var); \ 		var = _newval; \ 	} while (0)
+end_define
 
 begin_comment
 comment|/* **  Global variables. */
@@ -9399,33 +12874,6 @@ begin_comment
 comment|/* allow syntax errors on HELO command */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|_FFR_REMOVE_AUTOREBUILD
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|AutoRebuild
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* auto-rebuild the alias database as needed */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_FFR_REMOVE_AUTOREBUILD */
-end_comment
-
 begin_decl_stmt
 name|EXTERN
 name|bool
@@ -9440,17 +12888,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|ChownAlwaysSafe
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* treat chown(2) as safe */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|ColonOkInAddr
 decl_stmt|;
 end_decl_stmt
@@ -9458,6 +12895,22 @@ end_decl_stmt
 begin_comment
 comment|/* single colon legal in address */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_USE_SUN_NSSWITCH_
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_USE_DEC_SVC_CONF_
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|EXTERN
@@ -9468,6 +12921,15 @@ end_decl_stmt
 
 begin_comment
 comment|/* configuration file has been read */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(_USE_SUN_NSSWITCH_)&& !defined(_USE_DEC_SVC_CONF_) */
 end_comment
 
 begin_decl_stmt
@@ -9490,19 +12952,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* running with OutChannel redirected to xf */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-specifier|volatile
-name|DoQueueRun
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* non-interrupt time queue run needed */
+comment|/* running with OutChannel redirect to transcript file */
 end_comment
 
 begin_decl_stmt
@@ -9536,17 +12986,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* don't read lock support files */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|DontProbeInterfaces
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't probe interfaces for names */
 end_comment
 
 begin_decl_stmt
@@ -9651,34 +13090,12 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|InChild
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* true if running in an SMTP subprocess */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|LogUsrErrs
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* syslog user errors (e.g., SMTP RCPT cmd) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|MapOpenErr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* error opening a non-optional map */
 end_comment
 
 begin_decl_stmt
@@ -9750,6 +13167,29 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+name|ResNoAliases
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't use $HOSTALIASES */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+specifier|volatile
+name|RestartWorkGroup
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* daemon needs to restart some work groups */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
 name|RrtImpliesDsn
 decl_stmt|;
 end_decl_stmt
@@ -9813,6 +13253,32 @@ begin_comment
 comment|/* single thread hosts on delivery */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_SOFT_BOUNCE
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SoftBounce
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* replace 5xy by 4xy (for testing) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SOFT_BOUNCE */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|bool
@@ -9823,17 +13289,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* stop sending output */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|SuperSafe
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* be extra careful, even if expensive */
 end_comment
 
 begin_decl_stmt
@@ -9858,11 +13313,16 @@ begin_comment
 comment|/* if we are the best MX, try host directly */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|_FFR_WORKAROUND_BROKEN_NAMESERVERS
-end_if
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|UseMSP
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail submission: group writable queue ok? */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -9875,15 +13335,6 @@ begin_comment
 comment|/* some nameservers return SERVFAIL on AAAA queries */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_WORKAROUND_BROKEN_NAMESERVERS */
-end_comment
-
 begin_decl_stmt
 name|EXTERN
 name|bool
@@ -9893,17 +13344,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* use Errors-To: header (back compat) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|UseHesiod
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* using Hesiod -- interpret Hesiod errors */
 end_comment
 
 begin_decl_stmt
@@ -9948,6 +13388,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* substitution for<lwsp> */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|BadRcptThrottle
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Throttle rejected RCPTs per SMTP message */
 end_comment
 
 begin_decl_stmt
@@ -10020,6 +13471,28 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|DelayLA
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* load average to delay connections */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|DontProbeInterfaces
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't probe interfaces for names */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
 name|Errors
 decl_stmt|;
 end_decl_stmt
@@ -10037,6 +13510,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* exit status code */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|FastSplit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fast initial splitting of envelopes */
 end_comment
 
 begin_decl_stmt
@@ -10141,17 +13625,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|MaxMciCache
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum entries in MCI cache */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|MaxMimeFieldLength
 decl_stmt|;
 end_decl_stmt
@@ -10169,17 +13642,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* maximum MIME header length */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|MaxQueueRun
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum number of jobs in one queue run */
 end_comment
 
 begin_decl_stmt
@@ -10222,43 +13684,56 @@ name|NoRecipientAction
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|EXTERN
-name|int
-name|NumPriorities
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pointer into Priorities */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|u_short
-name|PrivacyFlags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* privacy flags */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|_FFR_QUEUE_FILE_MODE
+name|SM_CONF_SHM
 end_if
 
 begin_decl_stmt
 name|EXTERN
 name|int
-name|QueueFileMode
+name|Numfilesys
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mode on qf/tf/df files */
+comment|/* number of queue file systems */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+modifier|*
+name|PNumFileSys
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NumFileSys
+value|(*PNumFileSys)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SM_CONF_SHM */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|NumFileSys
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of queue file systems */
 end_comment
 
 begin_endif
@@ -10267,7 +13742,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_QUEUE_FILE_MODE */
+comment|/* SM_CONF_SHM */
 end_comment
 
 begin_decl_stmt
@@ -10284,23 +13759,23 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|QueueSortOrder
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue sorting order algorithm */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|RefuseLA
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* load average refusing connections are */
+comment|/* load average refusing connections */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|SuperSafe
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* be extra careful, even if expensive */
 end_comment
 
 begin_decl_stmt
@@ -10360,6 +13835,65 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|gid_t
+name|EffGid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* effective gid */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SM_CONF_SHM
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|key_t
+name|ShmKey
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* shared memory key */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_CONF_SHM */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|pid_t
+name|CurrentPid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current process id */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|pid_t
+name|DaemonPid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* process id of daemon */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|uid_t
 name|DefUid
 decl_stmt|;
@@ -10410,18 +13944,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* size of buffer for in-core df */
+comment|/* size of buf for in-core data file */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|size_t
-name|XscriptFileBufferSize
+name|time_t
+name|DeliverByMin
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* size of buffer for in-core xf */
+comment|/* deliver by minimum time */
 end_comment
 
 begin_decl_stmt
@@ -10433,50 +13967,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* delay between dial-on-demand tries */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|MciCacheTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum idle time on connections */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|MciInfoTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* how long 'til we retry down hosts */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|MinQueueAge
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* min delivery interval */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|QueueIntvl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* intervals between running the queue */
 end_comment
 
 begin_decl_stmt
@@ -10503,13 +13993,13 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|time_t
-name|ServiceCacheTime
+name|size_t
+name|XscriptFileBufferSize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time service switch was cached */
+comment|/* size of buf for in-core transcript file */
 end_comment
 
 begin_decl_stmt
@@ -10587,218 +14077,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* priority offset each time this job is run */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|SASL
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|AuthMechanisms
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* AUTH mechanisms */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|SASLInfo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with AUTH info */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SASL */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|SASLOpts
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* options for SASL */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|STARTTLS
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|CACERTpath
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* path to CA certificates (dir. with hashes) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|CACERTfile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with CA certificate */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|SrvCERTfile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with server certificate */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|Srvkeyfile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with server private key */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|CltCERTfile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with client certificate */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|Cltkeyfile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with client private key */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|DHParams
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with DH parameters */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|RandFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* source of random data */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_TLS_1
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|DHParams5
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file with DH parameters (512) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|CipherList
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of ciphers */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_TLS_1 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STARTTLS */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|ConfFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location of configuration file [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -10958,6 +14236,18 @@ comment|/* path to /etc/hosts file */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Mbdb
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mailbox database type */
+end_comment
+
+begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
@@ -11027,66 +14317,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* process title prefix */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|QueueDir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location of queue directory */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_FFR_QUEUEDELAY
-end_if
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|QueueAlg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* algorithm for queue delays */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|QueueInitDelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* initial queue delay */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|QueueMaxDelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maximum queue delay */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _FFR_QUEUEDELAY */
 end_comment
 
 begin_decl_stmt
@@ -11271,11 +14501,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* input environment */
-end_comment
-
-begin_comment
-comment|/* saved user environment */
+comment|/* saved user (input) environment */
 end_comment
 
 begin_decl_stmt
@@ -11302,15 +14528,9 @@ begin_comment
 comment|/* DontBlameSendmail bits */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|SFIO
-end_if
-
 begin_decl_stmt
 name|EXTERN
-name|Sfio_t
+name|SM_FILE_T
 modifier|*
 name|InChannel
 decl_stmt|;
@@ -11322,7 +14542,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Sfio_t
+name|SM_FILE_T
 modifier|*
 name|OutChannel
 decl_stmt|;
@@ -11332,51 +14552,9 @@ begin_comment
 comment|/* output connection */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SFIO */
-end_comment
-
 begin_decl_stmt
 name|EXTERN
-name|FILE
-modifier|*
-name|InChannel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* input connection */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|FILE
-modifier|*
-name|OutChannel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* output connection */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SFIO */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|TrafficLogFile
 decl_stmt|;
@@ -11386,11 +14564,11 @@ begin_comment
 comment|/* file in which to log all traffic */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|HESIOD
-end_ifdef
+end_if
 
 begin_decl_stmt
 name|EXTERN
@@ -11423,115 +14601,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|MAILER
-modifier|*
-name|LocalMailer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to local mailer */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|MAILER
-modifier|*
-name|ProgMailer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to program mailer */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|MAILER
-modifier|*
-name|FileMailer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to *file* mailer */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|MAILER
-modifier|*
-name|InclMailer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to *include* mailer */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|QUEUE_CHAR
-modifier|*
-name|QueueLimitRecipient
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* limit queue run to rcpt */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|QUEUE_CHAR
-modifier|*
-name|QueueLimitSender
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* limit queue run to sender */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|QUEUE_CHAR
-modifier|*
-name|QueueLimitId
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* limit queue run to id */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|MAILER
-modifier|*
-name|Mailer
-index|[
-name|MAXMAILERS
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|EXTERN
-name|struct
-name|rewrite
-modifier|*
-name|RewriteRules
-index|[
-name|MAXRWSETS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|EXTERN
 name|char
 modifier|*
 name|RuleSetNames
@@ -11561,10 +14630,11 @@ end_decl_stmt
 begin_decl_stmt
 name|EXTERN
 name|struct
-name|priority
-name|Priorities
+name|rewrite
+modifier|*
+name|RewriteRules
 index|[
-name|MAXPRIORITIES
+name|MAXRWSETS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -11604,411 +14674,19 @@ comment|/* address of host we are talking to */
 end_comment
 
 begin_decl_stmt
-name|EXTERN
-name|jmp_buf
-name|TopFrame
+specifier|extern
+specifier|const
+name|SM_EXC_TYPE_T
+name|EtypeQuickAbort
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* branch-to-top-of-loop-on-error frame */
+comment|/* type of a QuickAbort exception */
 end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|TIMERS
-name|Timers
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* **  Declarations of useful functions */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|SASL
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|intersect
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|iteminlist
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|proxy_policy
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|SASL
-operator|>
-literal|10515
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|safesaslfile
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SASL> 10515 */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|safesaslfile
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SASL> 10515 */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sasl_decode64
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sasl_encode64
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SASL */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|STARTTLS
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|apps_ssl_info_cb
-name|__P
-argument_list|(
-operator|(
-name|SSL
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|init_tls_library
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|inittls
-name|__P
-argument_list|(
-operator|(
-name|SSL_CTX
-operator|*
-operator|*
-operator|,
-name|u_long
-operator|,
-name|bool
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|initclttls
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|initsrvtls
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tls_get_info
-name|__P
-argument_list|(
-operator|(
-name|SSL
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
-operator|,
-name|bool
-operator|,
-name|char
-operator|*
-operator|,
-name|bool
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|endtls
-name|__P
-argument_list|(
-operator|(
-name|SSL
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|endtlsclt
-name|__P
-argument_list|(
-operator|(
-name|MCI
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|tlslogerr
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|tls_rand_init
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STARTTLS */
 end_comment
 
 begin_comment
@@ -12076,6 +14754,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|PRINTFLIKE
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 name|message
 name|__P
 argument_list|(
@@ -12093,6 +14777,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|PRINTFLIKE
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 name|nmessage
 name|__P
 argument_list|(
@@ -12110,6 +14800,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|PRINTFLIKE
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 name|syserr
 name|__P
 argument_list|(
@@ -12127,6 +14823,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|PRINTFLIKE
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
 name|usrerrenh
 name|__P
 argument_list|(
@@ -12147,6 +14849,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|PRINTFLIKE
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 name|usrerr
 name|__P
 argument_list|(
@@ -12277,7 +14985,7 @@ operator|(
 name|MAP
 operator|*
 operator|,
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|,
 name|bool
@@ -12374,6 +15082,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|PRINTFLIKE
+argument_list|(
+literal|3
+argument_list|,
+literal|4
+argument_list|)
 name|sm_syslog
 name|__P
 argument_list|(
@@ -12422,6 +15136,9 @@ operator|,
 name|time_t
 operator|,
 name|ENVELOPE
+operator|*
+operator|,
+name|ADDRESS
 operator|*
 operator|)
 argument_list|)
@@ -12531,6 +15248,11 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|,
+name|time_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12686,6 +15408,11 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|,
+name|time_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12744,6 +15471,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
+name|int
+operator|,
 name|char
 operator|*
 operator|,
@@ -12753,6 +15482,24 @@ name|bool
 operator|,
 name|ENVELOPE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|pid_t
+name|doworklist
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|bool
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12827,6 +15574,42 @@ begin_comment
 comment|/* stats */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|STATS_NORMAL
+value|'n'
+end_define
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_define
+define|#
+directive|define
+name|STATS_QUARANTINE
+value|'q'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATS_REJECT
+value|'r'
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -12840,7 +15623,7 @@ operator|,
 name|ADDRESS
 operator|*
 operator|,
-name|bool
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12935,7 +15718,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 end_if
 
 begin_comment
@@ -12945,7 +15728,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
-name|milter_parse_list
+name|milter_config
 name|__P
 argument_list|(
 operator|(
@@ -13011,7 +15794,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|milter_init
 name|__P
 argument_list|(
@@ -13166,7 +15949,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_MILTER */
+comment|/* MILTER */
 end_comment
 
 begin_decl_stmt
@@ -13179,19 +15962,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|allsignals
-name|__P
-argument_list|(
-operator|(
-name|bool
+operator|,
+name|SM_RPOOL_T
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13303,6 +16076,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|check_bodytype
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|buildfname
 name|__P
@@ -13317,6 +16104,32 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|chkclientmodifiers
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|chkdaemonmodifiers
+name|__P
+argument_list|(
+operator|(
 name|int
 operator|)
 argument_list|)
@@ -13433,6 +16246,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|SM_CONF_SHM
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cleanup_shm
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_CONF_SHM */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -13453,7 +16294,7 @@ name|collect
 name|__P
 argument_list|(
 operator|(
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|,
 name|bool
@@ -13499,6 +16340,9 @@ operator|*
 operator|*
 operator|,
 name|bool
+operator|,
+name|SM_RPOOL_T
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13582,6 +16426,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|_FFR_CONTROL_MSTAT
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|disk_status
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_CONTROL_MSTAT */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|bool
@@ -13595,6 +16471,9 @@ operator|,
 name|int
 operator|,
 name|bool
+operator|,
+name|int
+operator|*
 operator|,
 name|int
 operator|*
@@ -13683,7 +16562,8 @@ argument_list|(
 operator|(
 name|long
 operator|,
-name|bool
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13706,6 +16586,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|fatal_error
+name|__P
+argument_list|(
+operator|(
+name|SM_EXC_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|fgetfolded
@@ -13717,7 +16611,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|)
 argument_list|)
@@ -13759,9 +16653,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|passwd
-modifier|*
+name|int
 name|finduser
 name|__P
 argument_list|(
@@ -13770,6 +16662,9 @@ name|char
 operator|*
 operator|,
 name|bool
+operator|*
+operator|,
+name|SM_MBDB_T
 operator|*
 operator|)
 argument_list|)
@@ -13783,6 +16678,8 @@ name|finis
 name|__P
 argument_list|(
 operator|(
+name|bool
+operator|,
 name|bool
 operator|,
 specifier|volatile
@@ -13833,12 +16730,6 @@ operator|&&
 name|NEEDSGETIPNODE
 end_if
 
-begin_if
-if|#
-directive|if
-name|_FFR_FREEHOSTENT
-end_if
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -13860,16 +16751,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FFR_FREEHOSTENT */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEEDSGETIPNODE&& NETINET6 */
+comment|/* NETINET6&& NEEDSGETIPNODE */
 end_comment
 
 begin_decl_stmt
@@ -13915,29 +16797,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|getcfname
+name|int
+name|getdtsize
 name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|getextenv
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13946,11 +16811,28 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|getdtsize
+name|getla
 name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|getmodifiers
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|BITMAP256
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14171,6 +17053,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|logundelrcpts
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|lower
 name|__P
@@ -14224,13 +17127,44 @@ name|char
 operator|*
 operator|,
 specifier|volatile
-name|u_int
+name|unsigned
+name|int
 operator|,
 name|MCI
 operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|makeworkgroups
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mark_work_group_restart
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14311,6 +17245,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|pickqdir
+name|__P
+argument_list|(
+operator|(
+name|QUEUEGRP
+operator|*
+name|qg
+operator|,
+name|long
+name|fsize
+operator|,
+name|ENVELOPE
+operator|*
+name|e
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|pintvl
@@ -14348,6 +17304,23 @@ name|__P
 argument_list|(
 operator|(
 name|MAILER
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|printnqe
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|,
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -14461,7 +17434,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|,
 name|ENVELOPE
@@ -14531,6 +17504,31 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|restart_daemon
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|restart_marked_work_groups
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|bool
 name|rfc822_string
 name|__P
@@ -14545,28 +17543,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|FILE
-modifier|*
-name|safefopen
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
+name|bool
 name|savemail
 name|__P
 argument_list|(
@@ -14683,6 +17660,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|set_op_mode
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|setoption
 name|__P
 argument_list|(
@@ -14764,7 +17754,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|FILE
+name|SM_FILE_T
 operator|*
 operator|,
 name|time_t
@@ -14788,7 +17778,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14840,40 +17830,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|sm_dopr
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|sm_free
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|hostent
 modifier|*
@@ -14912,13 +17868,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|sm_getla
 name|__P
 argument_list|(
 operator|(
-name|ENVELOPE
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14979,12 +17934,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|SIGFUNC_DECL
-name|sm_signal_noop
+name|pid_t
+name|sm_wait
 name|__P
 argument_list|(
 operator|(
 name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14992,18 +17948,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|sm_strcasecmp
+name|bool
+name|split_by_recipient
 name|__P
 argument_list|(
 operator|(
-specifier|const
-name|char
+name|ENVELOPE
 operator|*
-operator|,
-specifier|const
-name|char
-operator|*
+name|e
 operator|)
 argument_list|)
 decl_stmt|;
@@ -15024,14 +17976,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|bool
-name|strcontainedin
+name|char
+modifier|*
+name|str2prt
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
 name|char
 operator|*
 operator|)
@@ -15041,11 +17991,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|stripquotes
+name|bool
+name|strcontainedin
 name|__P
 argument_list|(
 operator|(
+name|bool
+operator|,
+name|char
+operator|*
+operator|,
 name|char
 operator|*
 operator|)
@@ -15087,6 +18042,41 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|_FFR_BESTMX_BETTER_TRUNCATION
+operator|||
+name|_FFR_DNSMAP_MULTI
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|truncate_at_delim
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_BESTMX_BETTER_TRUNCATION || _FFR_DNSMAP_MULTI */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -15108,13 +18098,28 @@ name|tTsetup
 name|__P
 argument_list|(
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|,
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|SIGFUNC_DECL
+name|tick
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -15176,6 +18181,79 @@ end_endif
 
 begin_comment
 comment|/* !HASUNSETENV */
+end_comment
+
+begin_comment
+comment|/* update file system information: +/- some blocks */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SM_CONF_SHM
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|upd_qs
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|bool
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|updfs
+parameter_list|(
+name|e
+parameter_list|,
+name|delete
+parameter_list|,
+name|avail
+parameter_list|)
+value|upd_qs(e, delete, avail)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SM_CONF_SHM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|updfs
+parameter_list|(
+name|e
+parameter_list|,
+name|delete
+parameter_list|,
+name|avail
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SM_CONF_SHM */
 end_comment
 
 begin_decl_stmt
@@ -15269,6 +18347,50 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|SM_HEAP_CHECK
+end_if
+
+begin_define
+define|#
+directive|define
+name|xalloc
+parameter_list|(
+name|size
+parameter_list|)
+value|xalloc_tagged(size, __FILE__, __LINE__)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|xalloc_tagged
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SM_HEAP_CHECK */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -15283,38 +18405,14 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xcalloc
-name|__P
-argument_list|(
-operator|(
-name|size_t
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xrealloc
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* SM_HEAP_CHECK */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -15365,7 +18463,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|xunlink
 name|__P
 argument_list|(
@@ -15398,7 +18496,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SENDMAIL_H */
+comment|/* ! _SENDMAIL_H */
 end_comment
 
 end_unit

@@ -1,32 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: timers.c,v 8.13.16.1 2000/10/09 01:06:45 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: timers.c,v 8.24 2001/09/11 04:05:17 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_if
 if|#
@@ -135,7 +123,7 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 if|#
 directive|if
 literal|0
@@ -143,12 +131,17 @@ decl|if (!tTd(98, 30)) 		return;
 endif|#
 directive|endif
 comment|/* 0 */
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|msg
 argument_list|)
 decl_stmt|;
-name|vsnprintf
+operator|(
+name|void
+operator|)
+name|sm_vsnprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -160,7 +153,10 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 name|sm_syslog
 argument_list|(
@@ -175,7 +171,8 @@ argument_list|,
 name|buf
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 operator|&
 name|CurEnv
@@ -700,7 +697,8 @@ argument_list|(
 literal|"Timer@0x%lx already on stack, index=%d, NTimers=%d"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|ptimer
 argument_list|,
@@ -841,7 +839,8 @@ argument_list|(
 literal|"poptimer: odd pop (timer=0x%lx, index=%d, NTimers=%d)"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|ptimer
 argument_list|,
@@ -881,7 +880,10 @@ index|[
 literal|40
 index|]
 decl_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|buf
 argument_list|,

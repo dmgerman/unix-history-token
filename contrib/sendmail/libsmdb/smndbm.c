@@ -1,32 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sm/gen.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: smndbm.c,v 8.40.4.3 2000/10/05 22:27:50 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: smndbm.c,v 8.50 2001/09/11 04:04:53 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_include
 include|#
@@ -127,9 +115,6 @@ name|SMDB_DBM_CURSOR
 typedef|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SMDB_PUT_FLAGS_TO_NDBM_FLAGS -- Translates smdb put flags to ndbm put flags. ** **	Parameters: **		flags -- The flags to translate. ** **	Returns: **		The ndbm flags that are equivalent to the smdb flags. ** **	Notes: **		Any invalid flags are ignored. ** */
 end_comment
@@ -175,11 +160,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  smdbm_malloc_database -- Create and initialize SMDB_DBM_DATABASE ** **	Parameters: **		None ** **	Returns: **		A pointer to an allocated SMDB_DBM_DATABASE or NULL ** */
+comment|/* **  Except for smdb_ndbm_open, the rest of these function correspond to the **  interface laid out in smdb.h. */
 end_comment
 
 begin_function
@@ -230,7 +212,7 @@ name|db
 operator|->
 name|smndbm_cursor_in_use
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 return|return
@@ -238,10 +220,6 @@ name|db
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ** Except for smdb_ndbm_open, the rest of these function correspond to the ** interface laid out in smdb.h. */
-end_comment
 
 begin_function
 name|int
@@ -338,7 +316,8 @@ name|SMDB_DBENT
 modifier|*
 name|key
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -364,6 +343,9 @@ decl_stmt|;
 name|datum
 name|dbkey
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -557,7 +539,8 @@ name|SMDB_DBENT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -582,6 +565,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -593,6 +579,9 @@ sizeof|sizeof
 name|dbkey
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -716,7 +705,8 @@ name|SMDB_DBENT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -747,6 +737,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -758,6 +751,9 @@ sizeof|sizeof
 name|dbkey
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1009,7 +1005,8 @@ name|SMDB_DATABASE
 modifier|*
 name|database
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -1064,7 +1061,7 @@ name|db
 operator|->
 name|smndbm_cursor_in_use
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|free
 argument_list|(
@@ -1094,7 +1091,8 @@ name|SMDB_CURSOR
 modifier|*
 name|cursor
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|flags
 decl_stmt|;
 block|{
@@ -1246,6 +1244,9 @@ name|dbkey
 decl_stmt|,
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1257,6 +1258,9 @@ sizeof|sizeof
 name|dbkey
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1519,6 +1523,9 @@ decl_stmt|;
 name|datum
 name|dbdata
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -1673,7 +1680,7 @@ name|db
 operator|->
 name|smndbm_cursor_in_use
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|dbm_cursor
 operator|=
@@ -1775,11 +1782,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  SMDB_NDBM_OPEN -- Opens a ndbm database. ** **	Parameters: **		database -- An unallocated database pointer to a pointer. **		db_name -- The name of the database without extension. **		mode -- File permisions on a created database. **		mode_mask -- Mode bits that much match on an opened database. **		sff -- Flags to safefile. **		type -- The type of database to open. **			Only SMDB_NDBM is supported. **		user_info -- Information on the user to use for file **			    permissions. **		db_params -- **			No params are supported. ** **	Returns: **		SMDBE_OK -- Success, otherwise errno: **		SMDBE_MALLOC -- Cannot allocate memory. **		SMDBE_UNSUPPORTED -- The type is not supported. **		SMDBE_GDBM_IS_BAD -- We have detected GDBM and we don't **				    like it. **		SMDBE_BAD_OPEN -- dbm_open failed and errno was not set. **		Anything else: errno */
+comment|/* **  SMDB_NDBM_OPEN -- Opens a ndbm database. ** **	Parameters: **		database -- An unallocated database pointer to a pointer. **		db_name -- The name of the database without extension. **		mode -- File permisions on a created database. **		mode_mask -- Mode bits that much match on an opened database. **		sff -- Flags to safefile. **		type -- The type of database to open. **			Only SMDB_NDBM is supported. **		user_info -- Information on the user to use for file **			    permissions. **		db_params -- No params are supported. ** **	Returns: **		SMDBE_OK -- Success, otherwise errno: **		SMDBE_MALLOC -- Cannot allocate memory. **		SMDBE_UNSUPPORTED -- The type is not supported. **		SMDBE_GDBM_IS_BAD -- We have detected GDBM and we don't **				    like it. **		SMDBE_BAD_OPEN -- dbm_open failed and errno was not set. **		Anything else: errno */
 end_comment
 
 begin_function
