@@ -73,6 +73,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -87,18 +93,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -187,11 +189,9 @@ specifier|static
 name|void
 name|putppt
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
