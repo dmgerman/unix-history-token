@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unix.c,v 1.5 1997/08/25 16:55:00 wollman Exp $"
+literal|"$Id: unix.c,v 1.6 1998/05/15 20:19:21 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,6 +560,15 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|s
+parameter_list|,
+name|e
+parameter_list|)
+value|((char *)&((s *)0)->e - (char *)((s *)0))
 name|unp
 operator|=
 operator|&
@@ -700,6 +709,14 @@ argument_list|,
 name|sa
 operator|->
 name|sun_len
+operator|-
+name|offsetof
+argument_list|(
+expr|struct
+name|sockaddr_un
+argument_list|,
+name|sun_path
+argument_list|)
 argument_list|,
 name|sa
 operator|->
