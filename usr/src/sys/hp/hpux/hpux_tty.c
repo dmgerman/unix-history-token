@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"sys/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/filedesc.h"
 end_include
 
 begin_include
@@ -1701,6 +1707,8 @@ return|return
 operator|(
 name|getsettty
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|fdes
@@ -1764,6 +1772,8 @@ return|return
 operator|(
 name|getsettty
 argument_list|(
+name|p
+argument_list|,
 name|uap
 operator|->
 name|fdes
@@ -1786,6 +1796,8 @@ end_comment
 begin_macro
 name|getsettty
 argument_list|(
+argument|p
+argument_list|,
 argument|fdes
 argument_list|,
 argument|com
@@ -1793,6 +1805,14 @@ argument_list|,
 argument|cmarg
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1810,6 +1830,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
 specifier|register
 name|struct
 name|file
@@ -1830,21 +1860,25 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|unsigned
 operator|)
 name|fdes
+operator|)
 operator|>=
-name|NOFILE
+name|fdp
+operator|->
+name|fd_maxfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|fdes
-index|]
+argument_list|)
 operator|)
 operator|==
 name|NULL
