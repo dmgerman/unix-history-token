@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)spline.c	4.5 (Berkeley) %G%"
+literal|"@(#)spline.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1559,11 +1559,32 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Bad agrument\n"
+literal|"spline: illegal option -- %c\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: spline [-aknpx]\n"
 argument_list|)
 expr_stmt|;
 name|exit
