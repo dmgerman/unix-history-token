@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -148,11 +142,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|hup
 argument_list|()
 decl_stmt|,
 name|fkexit
+argument_list|()
+decl_stmt|,
+name|timer
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -536,7 +533,7 @@ argument_list|)
 expr_stmt|;
 name|toall
 argument_list|(
-name|sendmsg
+name|sndmsg
 argument_list|)
 expr_stmt|;
 name|signal
@@ -667,6 +664,8 @@ name|EINTR
 condition|)
 name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"recvfrom: %m"
 argument_list|)
 expr_stmt|;
@@ -882,6 +881,8 @@ condition|)
 block|{
 name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"socket: %m"
 argument_list|)
 expr_stmt|;
@@ -915,6 +916,11 @@ name|bind
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sns
 argument_list|,
 sizeof|sizeof
@@ -922,8 +928,6 @@ argument_list|(
 operator|*
 name|sns
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -933,6 +937,8 @@ condition|)
 block|{
 name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"bind: %m"
 argument_list|)
 expr_stmt|;
@@ -993,6 +999,8 @@ condition|)
 block|{
 name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"setsockopt SEE HEADERS: %m"
 argument_list|)
 expr_stmt|;
@@ -1030,6 +1038,8 @@ condition|)
 block|{
 name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"setsockopt SET HEADER: %m"
 argument_list|)
 expr_stmt|;
@@ -1064,6 +1074,8 @@ condition|)
 block|{
 name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"setsockopt SO_BROADCAST: %m"
 argument_list|)
 expr_stmt|;
@@ -1085,12 +1097,10 @@ begin_comment
 comment|/*  * Fork and exit on EMT-- for profiling.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fkexit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1105,7 +1115,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.7 (Berkeley) %G%"
+literal|"@(#)output.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|sendmsg
+name|sndmsg
 argument_list|(
 argument|dst
 argument_list|,
