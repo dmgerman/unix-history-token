@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_format[] = "@(#)format.h	1.1";  *  * format parser definitions  */
+comment|/* char id_format[] = "@(#)format.h	1.2";  *  * format parser definitions  */
 end_comment
 
 begin_struct
@@ -280,6 +280,13 @@ end_define
 begin_comment
 comment|/*** NOT STANDARD FORTRAN ***/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FMTUNKN
+value|-1
+end_define
 
 begin_define
 define|#
