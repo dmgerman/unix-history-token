@@ -113,14 +113,6 @@ value|"nwfs"
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 name|mount_point
@@ -665,7 +657,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"volume name too long: %s\n"
+literal|"volume name too long: %s"
 argument_list|,
 name|tmp
 argument_list|)
@@ -818,7 +810,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"an error occured while parsing '%s'"
+literal|"an error occurred while parsing '%s'"
 argument_list|,
 name|argv
 index|[
@@ -876,7 +868,8 @@ literal|"V:c:d:f:g:l:n:o:u:w:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -921,7 +914,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"volume too long: %s\n"
+literal|"volume too long: %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1228,7 +1221,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Unknown namespace '%s'"
+literal|"unknown namespace '%s'"
 argument_list|,
 name|nsp
 argument_list|)
@@ -1740,7 +1733,7 @@ condition|)
 block|{
 name|ncp_error
 argument_list|(
-literal|"could not convert handle to refernce."
+literal|"could not convert handle to reference"
 argument_list|,
 name|error
 argument_list|)
@@ -1800,7 +1793,11 @@ name|ncp_error
 argument_list|(
 literal|"mount error: %s"
 argument_list|,
-name|errno
+name|error
+argument_list|,
+name|mdata
+operator|.
+name|mount_point
 argument_list|)
 expr_stmt|;
 name|ncp_disconnect
@@ -1835,25 +1832,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"usage: %s [connection options] [options] \n"
-literal|"       /server:user/volume[/path] mount-point\n\n"
+name|stderr
 argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"see ncplogin(1) for details on connection options\n"
-literal|"    -A host        Netware/IP host address\n"
-literal|"    -u uid         uid the mounted files get\n"
-literal|"    -g gid         gid the mounted files get\n"
-literal|"    -f mode        permission the files get\n"
-literal|"    -d mode        permission the dirs get\n"
-literal|"    -h             print this help text\n"
-literal|"    -v             print nwfs version number\n"
-literal|"\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: mount_nwfs [-Chv] -S server -U user [-connection options]"
+argument_list|,
+literal|"                  -V volume [-M mode] [-c case] [-d mode] [-f mode]"
+argument_list|,
+literal|"                  [-g gid] [-l locale] [-n os2] [-u uid] [-w scheme]"
+argument_list|,
+literal|"                  node"
+argument_list|,
+literal|"       mount_nwfs [-options] /server:user/volume[/path] node"
 argument_list|)
 expr_stmt|;
 name|exit
