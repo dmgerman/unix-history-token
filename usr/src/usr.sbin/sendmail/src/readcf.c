@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.7 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2188,6 +2188,30 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
+name|NetName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of home (local) network */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMTP
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIZ
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
 name|WizWord
 decl_stmt|;
 end_decl_stmt
@@ -2196,17 +2220,17 @@ begin_comment
 comment|/* the stored wizard password */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|NetName
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+endif|WIZ
+end_endif
 
-begin_comment
-comment|/* name of home (local) network */
-end_comment
+begin_endif
+endif|#
+directive|endif
+endif|SMTP
+end_endif
 
 begin_macro
 name|setoption
@@ -2923,7 +2947,10 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|SMTP
+ifdef|#
+directive|ifdef
+name|WIZ
 case|case
 literal|'W'
 case|:
@@ -2938,7 +2965,10 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|DEBUG
+endif|WIZ
+endif|#
+directive|endif
+endif|SMTP
 case|case
 literal|'x'
 case|:
