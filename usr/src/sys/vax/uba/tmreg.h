@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tmreg.h	4.5	81/03/09	*/
+comment|/*	tmreg.h	4.6	82/02/03	*/
 end_comment
 
 begin_comment
@@ -9,7 +9,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|device
+name|tmdevice
 block|{
 name|u_short
 name|tmer
