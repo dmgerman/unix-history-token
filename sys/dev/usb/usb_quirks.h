@@ -30,6 +30,11 @@ directive|define
 name|UQ_HUB_POWER
 value|0x04
 comment|/* does not respond correctly to get 				   device status; use get hub status. */
+define|#
+directive|define
+name|UQ_NO_STRINGS
+value|0x08
+comment|/* string descriptors are broken. */
 block|}
 struct|;
 end_struct

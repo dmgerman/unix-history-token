@@ -938,12 +938,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|uhubcf_configuration
+value|cf_loc[UHUBCF_CONFIGURATION]
+end_define
+
+begin_define
+define|#
+directive|define
+name|uhubcf_interface
+value|cf_loc[UHUBCF_INTERFACE]
+end_define
+
+begin_define
+define|#
+directive|define
 name|UHUB_UNK_PORT
 value|UHUBCF_PORT_DEFAULT
 end_define
 
 begin_comment
 comment|/* wildcarded 'port' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UHUB_UNK_CONFIGURATION
+value|UHUBCF_CONFIGURATION_DEFAULT
+end_define
+
+begin_comment
+comment|/* wildcarded 'configuration' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UHUB_UNK_INTERFACE
+value|UHUBCF_INTERFACE_DEFAULT
+end_define
+
+begin_comment
+comment|/* wildcarded 'interface' */
 end_comment
 
 begin_comment

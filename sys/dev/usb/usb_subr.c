@@ -544,15 +544,32 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* NWH added fetching of language 	 * See 9.6.5 (spec v1.0) 	 */
+if|if
+condition|(
+name|dev
+operator|->
+name|quirks
+operator|->
+name|uq_flags
+operator|&
+name|UQ_NO_STRINGS
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|req
 operator|.
 name|bmRequestType
 operator|=
 name|UT_READ_DEVICE
 expr_stmt|;
+comment|/* fetch default language */
 name|req
 operator|.
 name|bRequest
@@ -585,7 +602,7 @@ name|req
 operator|.
 name|wLength
 argument_list|,
-literal|4
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* only first word in bString */
@@ -623,7 +640,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* NWH end */
 name|req
 operator|.
 name|bmRequestType
@@ -874,51 +890,6 @@ name|kdp
 decl_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|dev
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"usbd_devinfo_vp: dev not set\n"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|!
-name|v
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"usbd_devinfo_vp: v not set\n"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|!
-name|p
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"usbd_devinfo_vp: p not set\n"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|vendor
 operator|=
 name|usbd_get_string
@@ -1206,18 +1177,9 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%s"
+literal|"%s %s"
 argument_list|,
 name|vendor
-argument_list|)
-expr_stmt|;
-name|cp
-operator|+=
-name|sprintf
-argument_list|(
-name|cp
-argument_list|,
-literal|" %s"
 argument_list|,
 name|product
 argument_list|)
@@ -1306,7 +1268,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|" (addr %d)"
+literal|" addr %d"
 argument_list|,
 name|dev
 operator|->
@@ -2949,11 +2911,6 @@ decl_stmt|;
 name|usbd_status
 name|r
 decl_stmt|;
-operator|*
-name|pipe
-operator|=
-name|NULL
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -4458,7 +4415,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s at %s"
+literal|"%s, %s"
 argument_list|,
 name|devinfo
 argument_list|,
@@ -4481,6 +4438,40 @@ argument_list|,
 name|uaa
 operator|->
 name|port
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|configno
+operator|!=
+name|UHUB_UNK_CONFIGURATION
+condition|)
+name|printf
+argument_list|(
+literal|" configuration %d"
+argument_list|,
+name|uaa
+operator|->
+name|configno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|ifaceno
+operator|!=
+name|UHUB_UNK_INTERFACE
+condition|)
+name|printf
+argument_list|(
+literal|" interface %d"
+argument_list|,
+name|uaa
+operator|->
+name|ifaceno
 argument_list|)
 expr_stmt|;
 return|return
@@ -4525,6 +4516,7 @@ name|aux
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|uaa
 operator|->
 name|port
@@ -4544,6 +4536,51 @@ operator|!=
 name|uaa
 operator|->
 name|port
+operator|)
+operator|||
+operator|(
+name|uaa
+operator|->
+name|configno
+operator|!=
+name|UHUB_UNK_CONFIGURATION
+operator|&&
+name|cf
+operator|->
+name|uhubcf_configuration
+operator|!=
+name|UHUB_UNK_CONFIGURATION
+operator|&&
+name|cf
+operator|->
+name|uhubcf_configuration
+operator|!=
+name|uaa
+operator|->
+name|configno
+operator|)
+operator|||
+operator|(
+name|uaa
+operator|->
+name|ifaceno
+operator|!=
+name|UHUB_UNK_INTERFACE
+operator|&&
+name|cf
+operator|->
+name|uhubcf_interface
+operator|!=
+name|UHUB_UNK_INTERFACE
+operator|&&
+name|cf
+operator|->
+name|uhubcf_interface
+operator|!=
+name|uaa
+operator|->
+name|ifaceno
+operator|)
 condition|)
 return|return
 literal|0

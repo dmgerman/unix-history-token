@@ -2257,17 +2257,6 @@ name|td_token
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-operator|&&
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-block|printf("  Link=0x%08lx,Status=0x%08lx\n  errcnt=%d,actlen=%d,pid=%02x,addr=%d,endpt=%d,D=%d,maxlen=%d\n",  			(long)p->td->td_link, 			(long)p->td->td_status, 		       UHCI_TD_GET_ERRCNT(p->td->td_status), 		       UHCI_TD_GET_ACTLEN(p->td->td_status), 		       UHCI_TD_GET_PID(p->td->td_token), 		       UHCI_TD_GET_DEVADDR(p->td->td_token), 		       UHCI_TD_GET_ENDPT(p->td->td_token), 		       UHCI_TD_GET_DT(p->td->td_token), 		       UHCI_TD_GET_MAXLEN(p->td->td_token));
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3321,11 +3310,28 @@ name|uhcidebug
 operator|>
 literal|9
 condition|)
+block|{
+name|DEVICE_MSG
+argument_list|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|,
+operator|(
+literal|"uhci_intr %p\n"
+operator|,
+name|sc
+operator|)
+argument_list|)
+expr_stmt|;
 name|uhci_dumpregs
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|status
@@ -3944,6 +3950,8 @@ name|UHCI_TD_ERROR
 operator|)
 operator|&&
 name|uhcidebug
+operator|>
+literal|10
 condition|)
 block|{
 name|printf
@@ -4004,14 +4012,7 @@ condition|)
 block|{
 name|DPRINTFN
 argument_list|(
-operator|-
-literal|1
-operator|+
-operator|(
-name|status
-operator|==
-name|UHCI_TD_STALLED
-operator|)
+literal|10
 argument_list|,
 operator|(
 literal|"uhci_ii_done: error, status 0x%b\n"
@@ -4025,17 +4026,6 @@ literal|"\20\22BITSTUFF\23CRCTO\24NAK\25BABBLE\26DBUFFER\27STALLED\30ACTIVE"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-operator|&&
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-block|DPRINTFN(-1+(status==UHCI_TD_STALLED), 			("uhci_ii_done: error, status 0x%08lx\n", (long)status));
-endif|#
-directive|endif
 if|if
 condition|(
 name|status
@@ -7260,7 +7250,7 @@ name|s
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|1
+literal|5
 argument_list|,
 operator|(
 literal|"uhci_device_control type=0x%02x, request=0x%02x, wValue=0x%04x, wIndex=0x%04x len=%d, addr=%d, endpt=%d\n"

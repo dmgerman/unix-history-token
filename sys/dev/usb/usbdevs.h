@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdevs.h,v 1.6 1998/10/05 02:31:13 mark Exp $	*/
+comment|/*	$NetBSD: usbdevs.h,v 1.8 1998/12/02 22:51:50 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.5 1998/10/05 02:30:17 mark Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.8 1998/12/02 22:49:51 augustss Exp   */
 end_comment
 
 begin_comment
@@ -35,6 +35,21 @@ end_define
 
 begin_comment
 comment|/* Eastman Kodak */
+end_comment
+
+begin_comment
+comment|/* Computer Access Technology Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_CATC
+value|0x0423
+end_define
+
+begin_comment
+comment|/* CATC */
 end_comment
 
 begin_define
@@ -81,6 +96,21 @@ begin_comment
 comment|/* Cherry */
 end_comment
 
+begin_comment
+comment|/* Behavior Technology Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_BTC
+value|0x046e
+end_define
+
+begin_comment
+comment|/* BTC */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -111,7 +141,40 @@ value|0x04b4
 end_define
 
 begin_comment
-comment|/* Cypress Semicondutor */
+comment|/* Cypress Semiconductor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_3COM
+value|0x04c1
+end_define
+
+begin_comment
+comment|/* 3Com */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_JAZZ
+value|0x04fa
+end_define
+
+begin_comment
+comment|/* Jazz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_ATEN
+value|0x0557
+end_define
+
+begin_comment
+comment|/* ATen */
 end_comment
 
 begin_define
@@ -123,6 +186,17 @@ end_define
 
 begin_comment
 comment|/* EIZO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_AGILER
+value|0x056e
+end_define
+
+begin_comment
+comment|/* Agiler */
 end_comment
 
 begin_define
@@ -226,6 +300,21 @@ comment|/* Digital Science DC260 */
 end_comment
 
 begin_comment
+comment|/* CATC products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CATC_ANDROMEDA
+value|0x1237
+end_define
+
+begin_comment
+comment|/* Andromeda hub */
+end_comment
+
+begin_comment
 comment|/* Nanao products */
 end_comment
 
@@ -319,6 +408,21 @@ comment|/* My3000 hub */
 end_comment
 
 begin_comment
+comment|/* Behavior Technology Corporation products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BTC_BTC7932
+value|0x6782
+end_define
+
+begin_comment
+comment|/* Keyboard with mouse port */
+end_comment
+
+begin_comment
 comment|/* Philips products */
 end_comment
 
@@ -360,6 +464,36 @@ comment|/* QuickCam */
 end_comment
 
 begin_comment
+comment|/* 3Com products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_3COM_USR56K
+value|0x3021
+end_define
+
+begin_comment
+comment|/* U.S.Robotics 56000 Voice USB Modem */
+end_comment
+
+begin_comment
+comment|/* Jazz products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_JAZZ_J6502
+value|0x4201
+end_define
+
+begin_comment
+comment|/* J-6502 speakers */
+end_comment
+
+begin_comment
 comment|/* Cypress Semiconduuctor products */
 end_comment
 
@@ -372,6 +506,36 @@ end_define
 
 begin_comment
 comment|/* mouse */
+end_comment
+
+begin_comment
+comment|/* ATen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ATEN_UC1284
+value|0x2001
+end_define
+
+begin_comment
+comment|/* Parallel printer adapter */
+end_comment
+
+begin_comment
+comment|/* Agiler products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_AGILER_MOUSE29UO
+value|0x0002
+end_define
+
+begin_comment
+comment|/* mouse 29UO */
 end_comment
 
 begin_comment

@@ -3627,7 +3627,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* NWH XXX ??? */
+comment|/* NWH XXX Should we not return something ? */
 block|}
 elif|#
 directive|elif

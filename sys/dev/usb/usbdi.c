@@ -3915,7 +3915,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"usbd_transfer_cb: short xfer %d< %d\n"
+literal|"usbd_transfer_cb: short xfer %d+1<%d+1 (bytes)\n"
 operator|,
 name|reqh
 operator|->
@@ -4028,7 +4028,7 @@ name|pipe
 operator|->
 name|curreqh
 operator|=
-name|reqh
+name|nreqh
 expr_stmt|;
 name|r
 operator|=

@@ -210,7 +210,10 @@ name|usbd_device_handle
 name|dev
 operator|,
 name|int
-name|i
+name|ifcno
+operator|,
+name|int
+name|repid
 operator|,
 name|int
 name|size
