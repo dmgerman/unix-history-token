@@ -119,7 +119,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,

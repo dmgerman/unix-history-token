@@ -319,7 +319,7 @@ argument_list|()
 expr_stmt|;
 name|fd
 operator|=
-name|open
+name|_libc_open
 argument_list|(
 literal|"/dev/urandom"
 argument_list|,
@@ -338,7 +338,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|read
+name|_libc_read
 argument_list|(
 name|fd
 argument_list|,
@@ -354,7 +354,7 @@ name|rnd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)

@@ -261,7 +261,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|socket
 argument_list|)

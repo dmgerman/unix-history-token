@@ -634,7 +634,7 @@ operator|(
 operator|*
 name|doopen
 operator|=
-name|open
+name|_libc_open
 argument_list|(
 name|path
 argument_list|,

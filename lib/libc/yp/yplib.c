@@ -1559,7 +1559,7 @@ argument_list|,
 name|sock
 argument_list|)
 expr_stmt|;
-name|close
+name|_libc_close
 argument_list|(
 name|save
 argument_list|)
@@ -1659,7 +1659,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|open
+name|_libc_open
 argument_list|(
 name|path
 argument_list|,
@@ -1673,7 +1673,7 @@ condition|)
 block|{
 comment|/* no binding file, YP is dead. */
 comment|/* Try to bring it back to life. */
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1791,7 +1791,7 @@ operator|.
 name|iov_len
 condition|)
 block|{
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1892,7 +1892,7 @@ name|dom_server_addr
 operator|.
 name|sin_port
 expr_stmt|;
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1905,7 +1905,7 @@ else|else
 block|{
 comment|/* no lock on binding file, YP is dead. */
 comment|/* Try to bring it back to life. */
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)
@@ -2230,7 +2230,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|sleep
+name|_libc_sleep
 argument_list|(
 name|_yplib_timeout
 operator|/
@@ -2442,7 +2442,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|fcntl
+name|_libc_fcntl
 argument_list|(
 name|ysd
 operator|->
@@ -2704,7 +2704,7 @@ argument_list|,
 name|sock
 argument_list|)
 expr_stmt|;
-name|close
+name|_libc_close
 argument_list|(
 name|save
 argument_list|)

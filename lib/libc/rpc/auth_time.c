@@ -7,7 +7,7 @@ literal|"@(#)auth_time.c	1.4	92/11/10 SMI"
 end_pragma
 
 begin_comment
-comment|/*  *	auth_time.c  *  * This module contains the private function __rpc_get_time_offset()  * which will return the difference in seconds between the local system's  * notion of time and a remote server's notion of time. This must be  * possible without calling any functions that may invoke the name  * service. (netdir_getbyxxx, getXbyY, etc). The function is used in the  * synchronize call of the authdes code to synchronize clocks between  * NIS+ clients and their servers.  *  * Note to minimize the amount of duplicate code, portions of the  * synchronize() function were folded into this code, and the synchronize  * call becomes simply a wrapper around this function. Further, if this  * function is called with a timehost it *DOES* recurse to the name  * server so don't use it in that mode if you are doing name service code.  *  *	Copyright (c) 1992 Sun Microsystems Inc.  *	All rights reserved.  *  * Side effects :  *	When called a client handle to a RPCBIND process is created  *	and destroyed. Two strings "netid" and "uaddr" are malloc'd  *	and returned. The SIGALRM processing is modified only if  *	needed to deal with TCP connections.  *  * NOTE: This code has had the crap beaten out it in order to convert  *       it from TI-RPC back to TD-RPC for use on FreeBSD.  */
+comment|/*  *	auth_time.c  *  * This module contains the private function __rpc_get_time_offset()  * which will return the difference in seconds between the local system's  * notion of time and a remote server's notion of time. This must be  * possible without calling any functions that may invoke the name  * service. (netdir_getbyxxx, getXbyY, etc). The function is used in the  * synchronize call of the authdes code to synchronize clocks between  * NIS+ clients and their servers.  *  * Note to minimize the amount of duplicate code, portions of the  * synchronize() function were folded into this code, and the synchronize  * call becomes simply a wrapper around this function. Further, if this  * function is called with a timehost it *DOES* recurse to the name  * server so don't use it in that mode if you are doing name service code.  *  *	Copyright (c) 1992 Sun Microsystems Inc.  *	All rights reserved.  *  * Side effects :  *	When called a client handle to a RPCBIND process is created  *	and destroyed. Two strings "netid" and "uaddr" are malloc'd  *	and returned. The SIGALRM processing is modified only if  *	needed to deal with TCP connections.  *  * NOTE: This code has had the crap beaten out it in order to convert  *       it from TI-RPC back to TD-RPC for use on FreeBSD.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1947,7 +1947,7 @@ goto|;
 block|}
 name|res
 operator|=
-name|read
+name|_libc_read
 argument_list|(
 name|s
 argument_list|,
@@ -2005,7 +2005,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)
@@ -2064,7 +2064,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)

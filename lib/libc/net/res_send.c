@@ -1794,7 +1794,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|read
+name|_libc_read
 argument_list|(
 name|s
 argument_list|,
@@ -1982,7 +1982,7 @@ operator|&&
 operator|(
 name|n
 operator|=
-name|read
+name|_libc_read
 argument_list|(
 name|s
 argument_list|,
@@ -2092,7 +2092,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|read
+name|_libc_read
 argument_list|(
 name|s
 argument_list|,
@@ -2487,7 +2487,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|s1
 argument_list|)
@@ -3782,7 +3782,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)

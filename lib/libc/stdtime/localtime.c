@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). ** ** $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -1742,7 +1742,7 @@ condition|(
 operator|(
 name|fid
 operator|=
-name|open
+name|_libc_open
 argument_list|(
 name|name
 argument_list|,
@@ -1810,7 +1810,7 @@ name|ttisgmtcnt
 decl_stmt|;
 name|i
 operator|=
-name|read
+name|_libc_read
 argument_list|(
 name|fid
 argument_list|,
@@ -1822,7 +1822,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|close
+name|_libc_close
 argument_list|(
 name|fid
 argument_list|)

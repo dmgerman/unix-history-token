@@ -98,7 +98,7 @@ literal|1000000
 expr_stmt|;
 return|return
 operator|(
-name|nanosleep
+name|_libc_nanosleep
 argument_list|(
 operator|&
 name|time_to_sleep

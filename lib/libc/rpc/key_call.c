@@ -4,7 +4,7 @@ comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1986-1991 by Sun Microsystems Inc.   */
+comment|/*  * Copyright (c) 1986-1991 by Sun Microsystems Inc.   *  * $FreeBSD$  */
 end_comment
 
 begin_empty
@@ -1719,7 +1719,7 @@ operator|&
 name|fd
 argument_list|)
 condition|)
-name|fcntl
+name|_libc_fcntl
 argument_list|(
 name|fd
 argument_list|,

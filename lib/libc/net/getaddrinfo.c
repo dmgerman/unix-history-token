@@ -2248,7 +2248,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)
@@ -2658,7 +2658,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)

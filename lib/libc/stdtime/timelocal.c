@@ -456,7 +456,7 @@ argument_list|)
 expr_stmt|;
 name|fd
 operator|=
-name|open
+name|_libc_open
 argument_list|(
 name|filename
 argument_list|,
@@ -569,7 +569,7 @@ name|st_size
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|_libc_read
 argument_list|(
 name|fd
 argument_list|,
@@ -592,7 +592,7 @@ name|bad_lbuf
 goto|;
 if|if
 condition|(
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)
@@ -707,7 +707,7 @@ label|:
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)

@@ -597,7 +597,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 operator|*
 name|sockp
@@ -765,7 +765,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 operator|*
 name|sockp
@@ -2164,7 +2164,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|ct
 operator|->
@@ -2554,7 +2554,7 @@ switch|switch
 condition|(
 name|len
 operator|=
-name|read
+name|_libc_read
 argument_list|(
 name|ct
 operator|->
@@ -2676,7 +2676,7 @@ condition|(
 operator|(
 name|i
 operator|=
-name|write
+name|_libc_write
 argument_list|(
 name|ct
 operator|->

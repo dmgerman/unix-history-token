@@ -234,7 +234,7 @@ directive|define
 name|INIT_MMAP
 parameter_list|()
 define|\
-value|{ if ((fdzero=open("/dev/zero", O_RDWR, 0000)) == -1) \ 	    wrterror("open of /dev/zero"); }
+value|{ if ((fdzero = _libc_open("/dev/zero", O_RDWR, 0000)) == -1) \ 	    wrterror("open of /dev/zero"); }
 end_define
 
 begin_define
@@ -1114,7 +1114,7 @@ name|q
 init|=
 literal|" error: "
 decl_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1126,7 +1126,7 @@ name|__progname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1138,7 +1138,7 @@ name|malloc_func
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1150,7 +1150,7 @@ name|q
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1197,7 +1197,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1209,7 +1209,7 @@ name|__progname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1221,7 +1221,7 @@ name|malloc_func
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1233,7 +1233,7 @@ name|q
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|write
+name|_libc_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,

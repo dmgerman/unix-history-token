@@ -323,7 +323,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|crp
 operator|->

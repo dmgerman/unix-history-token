@@ -194,7 +194,7 @@ name|n
 decl_stmt|;
 name|fd
 operator|=
-name|open
+name|_libc_open
 argument_list|(
 name|name
 argument_list|,
@@ -227,7 +227,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1044,7 +1044,7 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|read
+name|_libc_read
 argument_list|(
 name|fd
 argument_list|,
@@ -1407,7 +1407,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|_libc_read
 argument_list|(
 name|fd
 argument_list|,

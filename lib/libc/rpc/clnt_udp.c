@@ -2758,7 +2758,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|cu
 operator|->

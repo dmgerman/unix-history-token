@@ -212,7 +212,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)
@@ -280,7 +280,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)
@@ -445,7 +445,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|close
+name|_libc_close
 argument_list|(
 name|s
 argument_list|)

@@ -76,7 +76,7 @@ end_include
 begin_function
 name|unsigned
 name|int
-name|sleep
+name|__sleep
 parameter_list|(
 name|seconds
 parameter_list|)
@@ -106,7 +106,7 @@ name|seconds
 operator|-
 name|INT_MAX
 operator|+
-name|sleep
+name|__sleep
 argument_list|(
 name|INT_MAX
 argument_list|)
@@ -126,7 +126,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|nanosleep
+name|_libc_nanosleep
 argument_list|(
 operator|&
 name|time_to_sleep
@@ -173,6 +173,26 @@ return|;
 comment|/* round up */
 block|}
 end_function
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__sleep
+argument_list|,
+name|_libc_sleep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_libc_sleep
+argument_list|,
+name|sleep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
