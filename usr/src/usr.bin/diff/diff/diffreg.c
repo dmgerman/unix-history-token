@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.20 %G%"
+literal|"@(#)diffreg.c 4.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1472,6 +1472,16 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|stb1
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFREG
+operator|||
 operator|!
 name|strcmp
 argument_list|(
@@ -1541,6 +1551,16 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|stb2
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFREG
+operator|||
 operator|!
 name|strcmp
 argument_list|(
