@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)decode.c	5.4 (Berkeley) %G%"
+literal|"@(#)decode.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,12 +526,6 @@ block|,
 literal|0
 block|,
 name|A_HELP
-block|,
-literal|'V'
-block|,
-literal|0
-block|,
-name|A_VERSION
 block|,
 literal|'q'
 block|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.6 (Berkeley) %G%"
+literal|"@(#)command.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,14 +170,6 @@ specifier|extern
 name|char
 modifier|*
 name|every_first_cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|version
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,21 +1568,6 @@ name|error
 argument_list|(
 name|eq_message
 argument_list|()
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|A_VERSION
-case|:
-comment|/* 			 * Print version number, without the "@(#)". 			 */
-name|cmd_exec
-argument_list|()
-expr_stmt|;
-name|error
-argument_list|(
-name|version
-operator|+
-literal|4
 argument_list|)
 expr_stmt|;
 break|break;
