@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.11 1997/06/01 11:35:04 brian Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $Id: pred.c,v 1.12 1997/06/09 03:27:35 brian Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment
@@ -550,6 +550,8 @@ name|u_char
 name|bufp
 index|[
 name|MAX_MTU
+operator|+
+literal|2
 index|]
 decl_stmt|;
 name|u_short
@@ -827,6 +829,8 @@ operator|=
 name|mballoc
 argument_list|(
 name|MAX_MTU
+operator|+
+literal|2
 argument_list|,
 name|MB_IPIN
 argument_list|)
