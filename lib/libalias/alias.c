@@ -864,6 +864,7 @@ name|ip_p
 operator|==
 name|IPPROTO_ICMP
 condition|)
+block|{
 if|if
 condition|(
 name|ic2
@@ -900,6 +901,7 @@ name|link
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 else|else
 name|link
 operator|=

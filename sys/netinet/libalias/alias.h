@@ -4,7 +4,7 @@ comment|/*lint -save -library Flexelint comment for external headers */
 end_comment
 
 begin_comment
-comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution.      $Id$ */
+comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution.      $Id: alias.h,v 1.7 1998/01/16 12:56:07 bde Exp $ */
 end_comment
 
 begin_ifndef
@@ -101,6 +101,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
 begin_function_decl
 specifier|extern
 name|void
@@ -114,6 +120,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Packet Handling */
@@ -517,6 +528,12 @@ name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
 value|0x20
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
 begin_comment
 comment|/* If PKT_ALIAS_PUNCH_FW is set, active FTP and IRC DCC connections    will create a 'hole' in the firewall to allow the transfers to    work.  Where (IPFW "line-numbers") the hole is created is    controlled by PacketAliasSetFWBase(base, size). The hole will be    attached to that particular alias_link, so when the link goes away    so do the hole.  */
 end_comment
@@ -527,6 +544,11 @@ directive|define
 name|PKT_ALIAS_PUNCH_FW
 value|0x40
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Return Codes */

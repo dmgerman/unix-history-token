@@ -778,6 +778,12 @@ begin_comment
 comment|/* call to PacketAliasIn/Out().    */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -807,6 +813,11 @@ end_comment
 begin_comment
 comment|/* flag.                           */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 outgoing packets     StartPointOut()          -- port table initial search point for                                 incoming packets      Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
@@ -873,6 +884,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
 begin_comment
 comment|/* Firewall control */
 end_comment
@@ -909,6 +926,11 @@ name|link
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Log file control */
@@ -2148,12 +2170,17 @@ operator|&
 name|LINK_PERMANENT
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
 comment|/* Delete associatied firewall hole, if any */
 name|ClearFWHole
 argument_list|(
 name|link
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Adjust output table pointers */
 name|link_last
 operator|=
@@ -3014,6 +3041,9 @@ argument_list|,
 name|link_type
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
 if|if
 condition|(
 name|new_link
@@ -3049,6 +3079,8 @@ name|new_link
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|DeleteLink
 argument_list|(
 name|old_link
@@ -6400,9 +6432,14 @@ expr_stmt|;
 name|UninitPacketAliasLog
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
 name|UninitPunchFW
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -6457,6 +6494,9 @@ name|UninitPacketAliasLog
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
 comment|/* Start punching holes in the firewall? */
 if|if
 condition|(
@@ -6487,6 +6527,8 @@ name|UninitPunchFW
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Other flags can be set/cleared without special action */
 name|packetAliasMode
 operator|=
@@ -6521,6 +6563,12 @@ name|newDefaultLink
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
 
 begin_comment
 comment|/*****************   Code to support firewall punching.  This shouldn't really be in this   file, but making variables global is evil too.   ****************/
@@ -7406,6 +7454,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

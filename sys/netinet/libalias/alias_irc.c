@@ -1065,6 +1065,9 @@ name|iCopy
 argument_list|,
 literal|"%lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|htonl
 argument_list|(
 name|alias_address
