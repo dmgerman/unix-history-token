@@ -31,6 +31,9 @@ define|#
 directive|define
 name|DEVT_NET
 value|2
+name|EFI_HANDLE
+name|d_handle
+decl_stmt|;
 union|union
 block|{
 struct|struct
@@ -147,6 +150,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|devsw
+name|efifs_dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|devsw
 name|efi_disk
 decl_stmt|;
 end_decl_stmt
@@ -156,6 +167,18 @@ specifier|extern
 name|struct
 name|netif_driver
 name|efi_net
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Wrapper over EFI filesystems. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fs_ops
+name|efi_fsops
 decl_stmt|;
 end_decl_stmt
 
