@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hexdump.c	5.1 (Berkeley) %G%"
+literal|"@(#)hexdump.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,7 +193,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bcde:f:n:os:v"
+literal|"bcde:f:n:os:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -388,6 +388,20 @@ case|:
 name|vflag
 operator|=
 name|ALL
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|add
+argument_list|(
+literal|"\"%07.7_Ax\n\""
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\"%07.7_ax \" 8/2 \"%04x \" \"\\n\""
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
