@@ -1391,7 +1391,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_flag& (VFREE|VDOOMED))&&	\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
+value|(!((vp)->v_flag& (VFREE|VDOOMED|VXLOCK))&&	\ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
 end_define
 
 begin_define

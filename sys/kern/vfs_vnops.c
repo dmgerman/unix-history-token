@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/limits.h>
 end_include
 
@@ -3398,8 +3404,10 @@ name|v_vxproc
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"VXLOCK interlock avoided in vn_lock\n"
 argument_list|)
 expr_stmt|;
