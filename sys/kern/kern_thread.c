@@ -1923,7 +1923,7 @@ name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
-comment|/* Serialize killing KSE */
+comment|/* Serialize removing upcall */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1940,7 +1940,7 @@ condition|(
 operator|(
 name|kg
 operator|->
-name|kg_kses
+name|kg_numupcalls
 operator|==
 literal|1
 operator|)
