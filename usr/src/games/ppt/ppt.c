@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ppt.c	5.1 (Berkeley) %G%"
+literal|"@(#)ppt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,10 +65,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|main
 parameter_list|(
@@ -89,6 +85,11 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -97,6 +98,39 @@ argument_list|(
 literal|"___________"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+while|while
+condition|(
+name|p
+operator|=
+operator|*
+operator|++
+name|argv
+condition|)
+for|for
+control|(
+init|;
+operator|*
+name|p
+condition|;
+operator|++
+name|p
+control|)
+name|putppt
+argument_list|(
+operator|(
+name|int
+operator|)
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 while|while
 condition|(
 operator|(
