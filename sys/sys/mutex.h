@@ -1166,7 +1166,7 @@ parameter_list|,
 name|what
 parameter_list|)
 define|\
-value|_mtx_assert((m), (what), LOCK_FILE, LOCK_LINE)
+value|_mtx_assert((m), (what), __FILE__, __LINE__)
 end_define
 
 begin_define
