@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.31 (Berkeley) %G%"
+literal|"@(#)util.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2469,8 +2469,6 @@ case|:
 comment|/* Apollo: net file locked */
 endif|#
 directive|endif
-break|break;
-default|default:
 continue|continue;
 block|}
 break|break;
