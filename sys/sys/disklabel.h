@@ -1145,6 +1145,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Structure used internally to retrieve information about a partition  * on a disk.  */
 end_comment
@@ -1166,6 +1172,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* DOS partition table -- located in boot block */
@@ -1537,6 +1548,12 @@ begin_comment
 comment|/* set, update disk */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1547,6 +1564,11 @@ end_define
 begin_comment
 comment|/* get partition */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
