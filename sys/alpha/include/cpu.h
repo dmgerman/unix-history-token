@@ -952,6 +952,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Return contents of in-cpu fast counter as a sort of "bogo-time"  * for non-critical timing.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|get_cyclecount
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|alpha_rpcc
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
