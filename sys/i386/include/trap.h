@@ -293,23 +293,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FPE_INTDIV
+name|FPE_INTOVF
 value|1
 end_define
 
 begin_comment
-comment|/* integer divide by zero */
+comment|/* integer overflow */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FPE_INTOVF
+name|FPE_INTDIV
 value|2
 end_define
 
 begin_comment
-comment|/* integer overflow */
+comment|/* integer divide by zero */
 end_comment
 
 begin_define
