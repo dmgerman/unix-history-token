@@ -427,6 +427,9 @@ decl_stmt|;
 name|int
 name|atio_count
 decl_stmt|;
+name|int
+name|inot_count
+decl_stmt|;
 block|}
 name|tstate_t
 typedef|;
