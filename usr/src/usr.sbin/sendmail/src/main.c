@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.27 (Berkeley) %G%"
+literal|"@(#)main.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,7 +702,21 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|i
+operator|!=
+name|STDIN_FILENO
+operator|&&
+name|i
+operator|!=
+name|STDOUT_FILENO
+operator|&&
+name|i
+operator|!=
+name|STDERR_FILENO
+condition|)
 operator|(
 name|void
 operator|)
@@ -711,7 +725,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_expr_stmt
 name|i
