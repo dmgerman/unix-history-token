@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.10	(Berkeley)	83/05/03"
+literal|"@(#)symtab.c	3.11	(Berkeley)	83/05/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -2604,7 +2604,6 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 name|char
-operator|*
 argument_list|)
 argument_list|,
 operator|(
