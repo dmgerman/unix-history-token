@@ -2535,6 +2535,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|CPUSTOP_ON_DDBBREAK
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+end_define
+
 begin_comment
 comment|/*  *  ddb_trap - field a kernel trap  */
 end_comment
@@ -2613,6 +2625,70 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * XXX Should switch to DDB's own stack, here. 	 */
+name|s
+operator|=
+name|cpu_critical_enter
+argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+ifdef|#
+directive|ifdef
+name|CPUSTOP_ON_DDBBREAK
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+argument_list|)
+name|db_printf
+argument_list|(
+literal|"CPU%d stopping CPUs: 0x%08x..."
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+comment|/* We stop all CPUs except ourselves (obviously) */
+name|stop_cpus
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+argument_list|)
+name|db_printf
+argument_list|(
+literal|" stopped.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* SMP */
 name|ddb_regs
 operator|=
 operator|*
@@ -2639,17 +2715,6 @@ operator|)
 expr_stmt|;
 asm|__asm __volatile("flushrs");
 comment|/* so we can look at them */
-name|s
-operator|=
-name|cpu_critical_enter
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|db_printf("stopping %x\n", PCPU_GET(other_cpus)); 	stop_cpus(PCPU_GET(other_cpus)); 	db_printf("stopped_cpus=%x\n", stopped_cpus);
-endif|#
-directive|endif
 name|db_active
 operator|++
 expr_stmt|;
@@ -2691,21 +2756,100 @@ expr_stmt|;
 name|db_active
 operator|--
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+ifdef|#
+directive|ifdef
+name|CPUSTOP_ON_DDBBREAK
 if|#
 directive|if
-literal|0
-block|restart_cpus(stopped_cpus);
-endif|#
-directive|endif
-name|cpu_critical_exit
+name|defined
 argument_list|(
-name|s
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+argument_list|)
+name|db_printf
+argument_list|(
+literal|"CPU%d restarting CPUs: 0x%08x..."
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+name|stopped_cpus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+comment|/* Restart all the CPUs we previously stopped */
+if|if
+condition|(
+name|stopped_cpus
+operator|!=
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
+operator|&&
+name|smp_started
+operator|!=
+literal|0
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"whoa, other_cpus: 0x%08x, stopped_cpus: 0x%08x\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|other_cpus
+argument_list|)
+argument_list|,
+name|stopped_cpus
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"stop_cpus() failed"
+argument_list|)
+expr_stmt|;
+block|}
+name|restart_cpus
+argument_list|(
+name|stopped_cpus
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+argument_list|)
+name|db_printf
+argument_list|(
+literal|" restarted.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* VERBOSE_CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* CPUSTOP_ON_DDBBREAK */
+endif|#
+directive|endif
+comment|/* SMP */
 operator|*
 name|regs
 operator|=
 name|ddb_regs
+expr_stmt|;
+name|cpu_critical_exit
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Tell caller "We HAVE handled the trap." 	 */
 return|return
@@ -3136,6 +3280,9 @@ name|ia64_fc
 argument_list|(
 name|addr
 argument_list|)
+expr_stmt|;
+name|ia64_sync_i
+argument_list|()
 expr_stmt|;
 block|}
 end_function
