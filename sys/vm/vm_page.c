@@ -2112,7 +2112,7 @@ specifier|static
 name|vm_page_t
 name|vm_page_select_cache
 parameter_list|(
-name|vm_pindex_t
+name|int
 name|color
 parameter_list|)
 block|{
@@ -2139,8 +2139,6 @@ argument_list|(
 name|PQ_CACHE
 argument_list|,
 name|color
-operator|&
-name|PQ_L2_MASK
 argument_list|,
 name|FALSE
 argument_list|)
@@ -2199,47 +2197,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_select_free:  *  *	Find a free or zero page, with specified preference.   *  *	This routine must be called at splvm().  *	This routine may not block.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|vm_page_t
-name|vm_page_select_free
-parameter_list|(
-name|vm_pindex_t
-name|color
-parameter_list|,
-name|boolean_t
-name|prefer_zero
-parameter_list|)
-block|{
-name|vm_page_t
-name|m
-decl_stmt|;
-name|m
-operator|=
-name|vm_pageq_find
-argument_list|(
-name|PQ_FREE
-argument_list|,
-name|color
-operator|&
-name|PQ_L2_MASK
-argument_list|,
-name|prefer_zero
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|m
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *  *	This routine may not block.  *  *	Additional special handling is required when called from an  *	interrupt (VM_ALLOC_INTERRUPT).  We are not allowed to mess with  *	the page cache in this case.  */
 end_comment
 
@@ -2265,10 +2222,9 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
-name|vm_pindex_t
-name|color
-decl_stmt|;
 name|int
+name|color
+decl_stmt|,
 name|flags
 decl_stmt|,
 name|page_req
@@ -2320,17 +2276,23 @@ argument_list|)
 expr_stmt|;
 name|color
 operator|=
+operator|(
 name|pindex
 operator|+
 name|object
 operator|->
 name|pg_color
+operator|)
+operator|&
+name|PQ_L2_MASK
 expr_stmt|;
 block|}
 else|else
 name|color
 operator|=
 name|pindex
+operator|&
+name|PQ_L2_MASK
 expr_stmt|;
 comment|/* 	 * The pager is allowed to eat deeper into the free page list. 	 */
 if|if
@@ -2413,8 +2375,10 @@ block|{
 comment|/* 		 * Allocate from the free queue if the number of free pages 		 * exceeds the minimum for the request class. 		 */
 name|m
 operator|=
-name|vm_page_select_free
+name|vm_pageq_find
 argument_list|(
+name|PQ_FREE
+argument_list|,
 name|color
 argument_list|,
 operator|(
