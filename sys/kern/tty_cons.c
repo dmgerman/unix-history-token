@@ -2566,6 +2566,7 @@ condition|(
 operator|!
 name|db_active
 operator|||
+operator|!
 operator|(
 name|cn
 operator|->
@@ -2670,6 +2671,7 @@ condition|(
 operator|!
 name|db_active
 operator|||
+operator|!
 operator|(
 name|cn
 operator|->
