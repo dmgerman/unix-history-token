@@ -7883,6 +7883,16 @@ decl_stmt|,
 modifier|*
 name|obj
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mac_biba_enabled
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|subj
 operator|=
 name|SLOT
