@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)networkdelta.c	8.2 (Berkeley) %G%"
+literal|"@(#)networkdelta.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,7 +56,7 @@ name|median
 name|__P
 argument_list|(
 operator|(
-name|float
+name|double
 operator|,
 name|float
 operator|*
@@ -479,7 +479,7 @@ specifier|static
 name|long
 name|median
 parameter_list|(
-name|a
+name|a0
 parameter_list|,
 name|eps_ptr
 parameter_list|,
@@ -489,8 +489,8 @@ name|xlim
 parameter_list|,
 name|gnuf
 parameter_list|)
-name|float
-name|a
+name|double
+name|a0
 decl_stmt|;
 comment|/* initial guess for the median */
 name|float
@@ -527,6 +527,11 @@ block|{
 name|long
 modifier|*
 name|xptr
+decl_stmt|;
+name|float
+name|a
+init|=
+name|a0
 decl_stmt|;
 name|float
 name|ap
