@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.3 1994/09/27 20:42:56 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.4 1994/09/28 16:45:14 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -6728,7 +6728,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -6736,6 +6736,10 @@ operator|)
 name|dep
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"msdlck"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

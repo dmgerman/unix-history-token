@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.2 1994/09/17 13:24:17 davidg Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.3 1994/10/02 17:35:27 phk Exp $ */
 end_comment
 
 begin_comment
@@ -258,7 +258,10 @@ name|semlock_holder
 operator|!=
 name|p
 condition|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -271,6 +274,10 @@ name|PZERO
 operator|-
 literal|4
 operator|)
+argument_list|,
+literal|"semsys"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4150,7 +4157,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -4163,6 +4173,10 @@ name|PZERO
 operator|-
 literal|4
 operator|)
+argument_list|,
+literal|"semext"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

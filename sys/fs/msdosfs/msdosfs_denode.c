@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.1 1994/09/19 15:41:41 dfr Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.2 1994/09/27 20:42:44 phk Exp $ */
 end_comment
 
 begin_comment
@@ -273,7 +273,10 @@ name|de_flag
 operator||=
 name|DE_WANTED
 expr_stmt|;
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -281,6 +284,10 @@ operator|)
 name|dep
 argument_list|,
 name|PINOD
+argument_list|,
+literal|"msdhgt"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
