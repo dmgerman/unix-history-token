@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.110 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.111 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4996,7 +4996,7 @@ comment|/*  * Seek system call.  */
 end_comment
 
 begin_macro
-name|__lseek
+name|lseek
 argument_list|(
 argument|p
 argument_list|,
@@ -5211,8 +5211,22 @@ return|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
+
 begin_comment
-comment|/*  * Old lseek system call.  *  * XXX should be COMPAT_43, but too much breaks.  */
+comment|/*  * Old lseek system call.  */
 end_comment
 
 begin_struct
@@ -5233,7 +5247,7 @@ struct|;
 end_struct
 
 begin_macro
-name|lseek
+name|olseek
 argument_list|(
 argument|p
 argument_list|,
@@ -5332,6 +5346,15 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
 
 begin_comment
 comment|/*  * Check access permissions.  */
@@ -6649,6 +6672,138 @@ sizeof|sizeof
 argument_list|(
 name|sb
 argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Pathconf system call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pathconf_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_macro
+name|pathconf
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|pathconf_args
+modifier|*
+name|uap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|error
+decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|;
+name|NDINIT
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|LOOKUP
+argument_list|,
+name|FOLLOW
+operator||
+name|LOCKLEAF
+argument_list|,
+name|UIO_USERSPACE
+argument_list|,
+name|uap
+operator|->
+name|fname
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|=
+name|namei
+argument_list|(
+operator|&
+name|nd
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|error
+operator|=
+name|VOP_PATHCONF
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|,
+name|uap
+operator|->
+name|name
+argument_list|,
+name|retval
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -8453,7 +8608,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|__truncate
+name|truncate
 argument_list|(
 argument|p
 argument_list|,
@@ -8682,7 +8837,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|__ftruncate
+name|ftruncate
 argument_list|(
 argument|p
 argument_list|,
