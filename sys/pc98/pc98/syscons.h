@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.7.2.5 1997/10/13 09:00:26 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.7.2.6 1998/01/04 09:51:33 kato Exp $  */
 end_comment
 
 begin_ifndef
@@ -884,10 +884,15 @@ modifier|*
 name|cursor_oldpos
 decl_stmt|;
 comment|/* cursor old buffer position */
+ifndef|#
+directive|ifndef
+name|PC98
 name|u_short
 name|cursor_saveunder
 decl_stmt|;
 comment|/* saved chars under cursor */
+endif|#
+directive|endif
 name|char
 name|cursor_start
 decl_stmt|;
@@ -959,6 +964,10 @@ name|u_char
 name|border
 decl_stmt|;
 comment|/* border color */
+name|u_char
+name|initial_mode
+decl_stmt|;
+comment|/* initial mode */
 name|u_char
 name|mode
 decl_stmt|;
@@ -1118,6 +1127,38 @@ parameter_list|(
 name|char
 modifier|*
 name|palette
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|add_scrn_saver
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|this
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|remove_scrn_saver
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|this
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
