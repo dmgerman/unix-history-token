@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.9 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,6 +531,8 @@ block|,
 name|COMM
 operator||
 name|LJUST
+operator||
+name|USER
 block|,
 name|command
 block|,
