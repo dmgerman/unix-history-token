@@ -527,6 +527,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|B_00000100
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Available flag. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|B_DONE
 value|0x00000200
 end_define
@@ -637,12 +648,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_RAW
+name|B_00080000
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* Set by physio for raw transfers. */
+comment|/* Available flag. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_00100000
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -653,7 +675,7 @@ value|0x00200000
 end_define
 
 begin_comment
-comment|/* Needs writing later. */
+comment|/* Needs writing later (in EXT2FS). */
 end_comment
 
 begin_define
@@ -670,12 +692,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_WANT
+name|B_00800000
 value|0x00800000
 end_define
 
 begin_comment
-comment|/* Used by vm_pager.c */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -692,12 +714,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_XXX
+name|B_02000000
 value|0x02000000
 end_define
 
 begin_comment
-comment|/* Debugging flag. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -770,7 +792,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40autochain\37cluster\36vmio\35ram\34ordered" \ 	"\33paging\32xxx\31writeinprog\30want\27relbuf\26dirty" \ 	"\25read\24raw\23phys\22clusterok\21malloc\20nocache" \ 	"\17locked\16inval\15scanned\14error\13eintr\12done\11freebuf" \ 	"\10delwri\7call\6cache\4direct\3async\2needcommit\1age"
+value|"\20\40b31\37cluster\36vmio\35ram\34b27" \ 	"\33paging\32b25\31writeinprog\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23phys\22clusterok\21malloc\20nocache\17locked\16inval" \ 	"\15scanned\14nowdrain\13eintr\12done\11b8\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
 end_define
 
 begin_comment
