@@ -535,6 +535,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|chrootdir
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|dowtmp
 init|=
@@ -6493,10 +6500,6 @@ endif|#
 directive|endif
 name|char
 modifier|*
-name|chrootdir
-decl_stmt|;
-name|char
-modifier|*
 name|residue
 init|=
 name|NULL
@@ -7202,7 +7205,7 @@ argument_list|(
 name|chrootdir
 argument_list|)
 expr_stmt|;
-comment|/* so it can be freed */
+comment|/* make it permanent */
 if|if
 condition|(
 name|chrootdir
@@ -7277,25 +7280,6 @@ name|homedir
 operator|++
 expr_stmt|;
 comment|/* skip '.' */
-comment|/* so chrootdir can be freed later */
-if|if
-condition|(
-operator|(
-name|homedir
-operator|=
-name|strdup
-argument_list|(
-name|homedir
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|fatalerror
-argument_list|(
-literal|"Ran out of memory."
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -7735,15 +7719,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|chrootdir
-condition|)
-name|free
-argument_list|(
-name|chrootdir
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|residue
 condition|)
 name|free
@@ -7765,15 +7740,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|chrootdir
-condition|)
-name|free
-argument_list|(
-name|chrootdir
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|residue
@@ -15576,6 +15542,22 @@ argument_list|,
 literal|" (wd: %s)"
 argument_list|,
 name|wd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|guest
+operator|||
+name|dochroot
+condition|)
+name|appendf
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+literal|" (chroot: %s)"
+argument_list|,
+name|chrootdir
 argument_list|)
 expr_stmt|;
 name|syslog
