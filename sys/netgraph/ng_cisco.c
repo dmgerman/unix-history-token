@@ -1528,9 +1528,8 @@ name|h
 operator|->
 name|address
 operator|=
-name|CISCO_MULTICAST
+name|CISCO_UNICAST
 expr_stmt|;
-comment|/* broadcast address */
 name|h
 operator|->
 name|control
