@@ -2210,6 +2210,11 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|kernel_object
+argument_list|)
+expr_stmt|;
 name|bogus_page
 operator|=
 name|vm_page_alloc
@@ -2227,6 +2232,11 @@ name|PAGE_SHIFT
 operator|)
 argument_list|,
 name|VM_ALLOC_NORMAL
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|kernel_object
 argument_list|)
 expr_stmt|;
 name|cnt
@@ -12988,6 +12998,11 @@ block|{
 name|tryagain
 label|:
 comment|/* 		 * note: must allocate system pages since blocking here 		 * could intefere with paging I/O, no matter which 		 * process we are. 		 */
+name|vm_object_lock
+argument_list|(
+name|kernel_object
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|vm_page_alloc
@@ -13007,6 +13022,11 @@ argument_list|,
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_WIRED
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|kernel_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -13069,10 +13089,16 @@ index|]
 operator|=
 name|p
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 name|bp
