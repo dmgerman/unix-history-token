@@ -388,6 +388,10 @@ name|dontlecho
 decl_stmt|,
 comment|/* do we suppress local echoing right now? */
 name|globalmode
+decl_stmt|,
+name|clienteof
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -8847,6 +8851,12 @@ name|ttyiring
 argument_list|)
 operator|&&
 operator|(
+name|clienteof
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
 name|shell_active
 operator|==
 literal|0
@@ -8862,6 +8872,12 @@ argument_list|(
 operator|&
 name|ttyiring
 argument_list|)
+operator|&&
+operator|(
+name|clienteof
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
