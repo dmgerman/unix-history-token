@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.7 (Berkeley) %G%"
+literal|"@(#)strings.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,10 +594,6 @@ argument_list|(
 operator|*
 name|head
 argument_list|)
-operator|+
-name|head
-operator|->
-name|a_text
 expr_stmt|;
 if|if
 condition|(
@@ -617,6 +613,10 @@ name|DO_EVERYTHING
 argument_list|()
 name|read_len
 operator|=
+name|head
+operator|->
+name|a_text
+operator|+
 name|head
 operator|->
 name|a_data
