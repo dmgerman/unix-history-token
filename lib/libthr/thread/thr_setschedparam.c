@@ -54,9 +54,6 @@ modifier|*
 name|param
 parameter_list|)
 block|{
-name|pthread_t
-name|curthread
-decl_stmt|;
 name|int
 name|old_prio
 decl_stmt|,
@@ -116,11 +113,6 @@ operator|(
 name|ENOTSUP
 operator|)
 return|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 comment|/* Find the thread in the list of active threads: */
 if|if
 condition|(

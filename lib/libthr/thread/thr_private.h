@@ -177,6 +177,17 @@ value|_thread_printf(STDOUT_FILENO, args)
 end_define
 
 begin_comment
+comment|/*  * Currently executing thread.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|curthread
+value|_get_curthread()
+end_define
+
+begin_comment
 comment|/*  * State change macro without scheduling queue change:  */
 end_comment
 
@@ -1619,7 +1630,6 @@ name|void
 name|GIANT_LOCK
 parameter_list|(
 name|pthread_t
-name|curthread
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1629,7 +1639,6 @@ name|void
 name|GIANT_UNLOCK
 parameter_list|(
 name|pthread_t
-name|curthread
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1708,20 +1717,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|pthread
-modifier|*
-name|_get_curthread_slow
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|pthread
-modifier|*
+name|pthread_t
 name|_get_curthread
 parameter_list|(
 name|void
@@ -2138,7 +2134,7 @@ begin_function_decl
 name|void
 name|_thread_start
 parameter_list|(
-name|void
+name|pthread_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -44,14 +44,6 @@ modifier|*
 name|thread_return
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 name|int
 name|ret
 init|=

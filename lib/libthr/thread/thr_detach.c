@@ -39,9 +39,6 @@ name|pthread_t
 name|pthread
 parameter_list|)
 block|{
-name|pthread_t
-name|curthread
-decl_stmt|;
 if|if
 condition|(
 name|pthread
@@ -74,11 +71,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 name|pthread
 operator|->
 name|attr

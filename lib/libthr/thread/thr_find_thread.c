@@ -34,9 +34,6 @@ name|pthread
 parameter_list|)
 block|{
 name|pthread_t
-name|curthread
-decl_stmt|;
-name|pthread_t
 name|pthread1
 decl_stmt|;
 if|if
@@ -56,11 +53,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 name|GIANT_LOCK
 argument_list|(
 name|curthread

@@ -59,14 +59,6 @@ name|pthread_addr_t
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 name|int
 name|f_debug
 decl_stmt|;

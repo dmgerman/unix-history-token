@@ -328,14 +328,6 @@ name|struct
 name|pthread_state_data
 name|psd
 decl_stmt|;
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 name|__siginfohandler_t
 modifier|*
 name|handler

@@ -357,14 +357,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 name|void
 modifier|*
 name|data
@@ -674,22 +666,16 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|pthread
-decl_stmt|;
 name|int
 name|ret
 init|=
 literal|0
 decl_stmt|;
-comment|/* Point to the running thread: */
+name|pthread_t
 name|pthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
+init|=
+name|curthread
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -831,21 +817,15 @@ name|pthread_key_t
 name|key
 parameter_list|)
 block|{
-name|struct
+name|pthread_t
 name|pthread
-modifier|*
-name|pthread
+init|=
+name|curthread
 decl_stmt|;
 name|void
 modifier|*
 name|data
 decl_stmt|;
-comment|/* Point to the running thread: */
-name|pthread
-operator|=
-name|_get_curthread
-argument_list|()
-expr_stmt|;
 comment|/* Check if there is specific data: */
 if|if
 condition|(

@@ -757,9 +757,6 @@ modifier|*
 name|sem
 parameter_list|)
 block|{
-name|pthread_t
-name|curthread
-decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -767,11 +764,6 @@ name|_SEM_CHECK_VALIDITY
 argument_list|(
 name|sem
 argument_list|)
-expr_stmt|;
-name|curthread
-operator|=
-name|_get_curthread
-argument_list|()
 expr_stmt|;
 comment|/* 	 * sem_post() is required to be safe to call from within signal 	 * handlers.  Thus, we must defer signals. 	 */
 name|pthread_mutex_lock

@@ -151,14 +151,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 comment|/* 	 * POSIX states that cancellation/termination of a thread should 	 * not release any visible resources (such as mutexes) and that 	 * it is the applications responsibility.  Resources that are 	 * internal to the threads library, including file and fd locks, 	 * are not visible to the application and need to be released. 	 */
 comment|/* Unlock all private mutexes: */
 name|_mutex_unlock_private
@@ -179,14 +171,6 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
