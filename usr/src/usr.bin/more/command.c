@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.14 (Berkeley) %G%"
+literal|"@(#)command.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,10 +26,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * User-level command processor.  */
 end_comment
 
 begin_include
@@ -268,26 +264,26 @@ begin_comment
 comment|/* Search for matches (1) or non-matches (0) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMD_RESET
+value|cp = cmdbuf
+end_define
+
 begin_comment
-comment|/*  * Reset command buffer (to empty).  */
+comment|/* reset command buffer to empty */
 end_comment
 
-begin_macro
-name|cmd_reset
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|cp
-operator|=
-name|cmdbuf
-expr_stmt|;
-block|}
-end_block
+begin_define
+define|#
+directive|define
+name|CMD_EXEC
+value|lower_left(); flush()
+end_define
 
 begin_comment
-comment|/*  * Backspace in command buffer.  */
+comment|/* backspace in command buffer. */
 end_comment
 
 begin_expr_stmt
@@ -295,19 +291,23 @@ specifier|static
 name|cmd_erase
 argument_list|()
 block|{
+comment|/* 	 * backspace past beginning of the string: this usually means 	 * abort the command. 	 */
 if|if
 condition|(
 name|cp
 operator|==
 name|cmdbuf
 condition|)
-comment|/* 		 * Backspace past beginning of the string: 		 * this usually means abort the command. 		 */
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 end_expr_stmt
+
+begin_comment
+comment|/* erase an extra character, for the carat. */
+end_comment
 
 begin_if
 if|if
@@ -320,7 +320,6 @@ name|cp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Erase an extra character, for the carat. 		 */
 name|backspace
 argument_list|()
 expr_stmt|;
@@ -352,7 +351,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * Set up the display to start a new multi-character command.  */
+comment|/* set up the display to start a new multi-character command. */
 end_comment
 
 begin_expr_stmt
@@ -402,7 +401,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Process a single character of a multi-character command, such as  * a number, or the pattern of a search command.  */
+comment|/*  * process a single character of a multi-character command, such as  * a number, or the pattern of a search command.  */
 end_comment
 
 begin_expr_stmt
@@ -597,91 +596,48 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * Return the number currently in the command buffer.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|cmd_int
-parameter_list|()
-block|{
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
-name|cp
-operator|=
-name|cmdbuf
-expr_stmt|;
-return|return
-operator|(
-name|atoi
-argument_list|(
-name|cmdbuf
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Move the cursor to lower left before executing a command.  * This looks nicer if the command takes a long time before  * updating the screen.  */
-end_comment
-
-begin_expr_stmt
-specifier|static
-name|cmd_exec
-argument_list|()
-block|{
-name|lower_left
-argument_list|()
-block|;
-name|flush
-argument_list|()
-block|; }
+begin_macro
 name|prompt
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|extern
 name|int
-name|terseprompt
-block|,
 name|linenums
-block|;
+decl_stmt|;
 specifier|extern
 name|char
-operator|*
+modifier|*
 name|current_name
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|firstsearch
-block|,
-operator|*
+decl_stmt|,
+modifier|*
 name|next_name
-block|;
+decl_stmt|;
 name|off_t
 name|len
-block|,
+decl_stmt|,
 name|pos
-block|,
+decl_stmt|,
 name|ch_length
 argument_list|()
-block|,
+decl_stmt|,
 name|position
 argument_list|()
-block|,
+decl_stmt|,
 name|forw_line
 argument_list|()
-block|;
+decl_stmt|;
 name|char
 name|pbuf
 index|[
 literal|40
 index|]
-block|;
+decl_stmt|;
 comment|/* 	 * if nothing is displayed yet, display starting from line 1; 	 * if search string provided, go there instead. 	 */
 if|if
 condition|(
@@ -733,9 +689,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_elseif
 elseif|else
 if|if
 condition|(
@@ -744,13 +697,7 @@ condition|)
 name|repaint
 argument_list|()
 expr_stmt|;
-end_elseif
-
-begin_comment
 comment|/* if no -e flag and we've hit EOF on the last file, quit. */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -767,25 +714,13 @@ condition|)
 name|quit
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* select the proper prompt and display it. */
-end_comment
-
-begin_expr_stmt
 name|lower_left
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|clear_eol
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|longprompt
@@ -939,16 +874,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|terseprompt
-condition|)
-name|putchr
-argument_list|(
-literal|':'
-argument_list|)
-expr_stmt|;
 else|else
 block|{
 name|so_enter
@@ -975,7 +900,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|": END (%s)"
+literal|": END (next file: %s)"
 argument_list|,
 name|next_name
 argument_list|)
@@ -1023,36 +948,30 @@ name|so_exit
 argument_list|()
 expr_stmt|;
 block|}
-end_if
-
-begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_comment
-unit|}
-comment|/*  * Get command character.  */
+comment|/* get command character. */
 end_comment
 
-begin_macro
-unit|static
+begin_expr_stmt
+specifier|static
 name|getcc
 argument_list|()
-end_macro
-
-begin_block
 block|{
 specifier|extern
 name|int
 name|cmdstack
-decl_stmt|;
+block|;
 name|int
 name|ch
-decl_stmt|;
+block|;
 comment|/* left over from error() routine. */
 if|if
 condition|(
@@ -1073,6 +992,9 @@ name|ch
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|cp
@@ -1108,51 +1030,56 @@ literal|'g'
 operator|)
 return|;
 block|}
+end_if
+
+begin_return
 return|return
 operator|(
 name|getchr
 argument_list|()
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
-comment|/*  * Execute a multicharacter command.  */
+unit|}
+comment|/* execute a multicharacter command. */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
+unit|static
 name|exec_mca
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|extern
 name|int
 name|file
-block|;
+decl_stmt|;
 specifier|extern
 name|char
-operator|*
+modifier|*
 name|tagfile
-block|;
+decl_stmt|;
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p
-block|;
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|glob
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 operator|*
 name|cp
 operator|=
 literal|'\0'
-block|;
-name|cmd_exec
-argument_list|()
-block|;
+expr_stmt|;
+name|CMD_EXEC
+expr_stmt|;
 switch|switch
 condition|(
 name|mca
@@ -1271,26 +1198,23 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
-comment|/*  * Add a character to a multi-character command.  */
+comment|/* add a character to a multi-character command. */
 end_comment
 
-begin_macro
-unit|static
+begin_expr_stmt
+specifier|static
 name|mca_char
 argument_list|(
 argument|c
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|c
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1344,10 +1268,19 @@ name|werase_char
 condition|)
 block|{
 comment|/* 			 * Not part of the number. 			 * Treat as a normal command character. 			 */
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 name|number
 operator|=
-name|cmd_int
-argument_list|()
+name|atoi
+argument_list|(
+name|cmdbuf
+argument_list|)
+expr_stmt|;
+name|CMD_RESET
 expr_stmt|;
 name|mca
 operator|=
@@ -1373,7 +1306,6 @@ operator|==
 literal|'\r'
 condition|)
 block|{
-comment|/* 		 * Execute the command. 		 */
 name|exec_mca
 argument_list|()
 expr_stmt|;
@@ -1383,7 +1315,7 @@ name|MCA_DONE
 operator|)
 return|;
 block|}
-comment|/* 	 * Append the char to the command buffer. 	 */
+comment|/* append the char to the command buffer. */
 if|if
 condition|(
 name|cmd_char
@@ -1391,13 +1323,11 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
-comment|/* 		 * Abort the multi-char command. 		 */
 return|return
 operator|(
 name|MCA_DONE
 operator|)
 return|;
-comment|/* 	 * Need another character. 	 */
 return|return
 operator|(
 name|MCA_MORE
@@ -1471,8 +1401,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * Display prompt and accept a character. 		 */
-name|cmd_reset
-argument_list|()
+name|CMD_RESET
 expr_stmt|;
 if|if
 condition|(
@@ -1539,7 +1468,7 @@ case|:
 comment|/* 				 * Not a multi-char command 				 * (at least, not anymore). 				 */
 break|break;
 block|}
-comment|/* 		 * Decode the command character and decide what to do. 		 */
+comment|/* decode the command character and decide what to do. */
 switch|switch
 condition|(
 name|action
@@ -1553,7 +1482,7 @@ block|{
 case|case
 name|A_DIGIT
 case|:
-comment|/* 			 * First digit of a number. 			 */
+comment|/* first digit of a number */
 name|start_mca
 argument_list|(
 name|A_DIGIT
@@ -1567,20 +1496,20 @@ goto|;
 case|case
 name|A_F_SCREEN
 case|:
-comment|/* 			 * Forward one screen. 			 */
+comment|/* forward one screen */
+name|CMD_EXEC
+expr_stmt|;
 if|if
 condition|(
 name|number
 operator|<=
 literal|0
-condition|)
+operator|&&
+operator|(
 name|number
 operator|=
 name|sc_window
-expr_stmt|;
-if|if
-condition|(
-name|number
+operator|)
 operator|<=
 literal|0
 condition|)
@@ -1589,9 +1518,6 @@ operator|=
 name|sc_height
 operator|-
 literal|1
-expr_stmt|;
-name|cmd_exec
-argument_list|()
 expr_stmt|;
 name|forward
 argument_list|(
@@ -1604,20 +1530,20 @@ break|break;
 case|case
 name|A_B_SCREEN
 case|:
-comment|/* 			 * Backward one screen. 			 */
+comment|/* backward one screen */
+name|CMD_EXEC
+expr_stmt|;
 if|if
 condition|(
 name|number
 operator|<=
 literal|0
-condition|)
+operator|&&
+operator|(
 name|number
 operator|=
 name|sc_window
-expr_stmt|;
-if|if
-condition|(
-name|number
+operator|)
 operator|<=
 literal|0
 condition|)
@@ -1626,9 +1552,6 @@ operator|=
 name|sc_height
 operator|-
 literal|1
-expr_stmt|;
-name|cmd_exec
-argument_list|()
 expr_stmt|;
 name|backward
 argument_list|(
@@ -1641,22 +1564,17 @@ break|break;
 case|case
 name|A_F_LINE
 case|:
-comment|/* 			 * Forward N (default 1) line. 			 */
-if|if
-condition|(
-name|number
-operator|<=
-literal|0
-condition|)
-name|number
-operator|=
-literal|1
-expr_stmt|;
-name|cmd_exec
-argument_list|()
+comment|/* forward N (default 1) line */
+name|CMD_EXEC
 expr_stmt|;
 name|forward
 argument_list|(
+name|number
+operator|<=
+literal|0
+condition|?
+literal|1
+else|:
 name|number
 argument_list|,
 literal|0
@@ -1666,22 +1584,17 @@ break|break;
 case|case
 name|A_B_LINE
 case|:
-comment|/* 			 * Backward N (default 1) line. 			 */
-if|if
-condition|(
-name|number
-operator|<=
-literal|0
-condition|)
-name|number
-operator|=
-literal|1
-expr_stmt|;
-name|cmd_exec
-argument_list|()
+comment|/* backward N (default 1) line */
+name|CMD_EXEC
 expr_stmt|;
 name|backward
 argument_list|(
+name|number
+operator|<=
+literal|0
+condition|?
+literal|1
+else|:
 name|number
 argument_list|,
 literal|0
@@ -1691,7 +1604,9 @@ break|break;
 case|case
 name|A_F_SCROLL
 case|:
-comment|/* 			 * Forward N lines  			 * (default same as last 'd' or 'u' command). 			 */
+comment|/* forward N lines */
+name|CMD_EXEC
+expr_stmt|;
 if|if
 condition|(
 name|number
@@ -1701,9 +1616,6 @@ condition|)
 name|scroll
 operator|=
 name|number
-expr_stmt|;
-name|cmd_exec
-argument_list|()
 expr_stmt|;
 name|forward
 argument_list|(
@@ -1716,7 +1628,9 @@ break|break;
 case|case
 name|A_B_SCROLL
 case|:
-comment|/* 			 * Forward N lines  			 * (default same as last 'd' or 'u' command). 			 */
+comment|/* backward N lines */
+name|CMD_EXEC
+expr_stmt|;
 if|if
 condition|(
 name|number
@@ -1726,9 +1640,6 @@ condition|)
 name|scroll
 operator|=
 name|number
-expr_stmt|;
-name|cmd_exec
-argument_list|()
 expr_stmt|;
 name|backward
 argument_list|(
@@ -1741,7 +1652,7 @@ break|break;
 case|case
 name|A_FREPAINT
 case|:
-comment|/* 			 * Flush buffers, then repaint screen. 			 * Don't flush the buffers on a pipe! 			 */
+comment|/* flush buffers and repaint */
 if|if
 condition|(
 operator|!
@@ -1759,13 +1670,12 @@ name|clr_linenum
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 case|case
 name|A_REPAINT
 case|:
 comment|/* repaint the screen */
-name|cmd_exec
-argument_list|()
+name|CMD_EXEC
 expr_stmt|;
 name|repaint
 argument_list|()
@@ -1774,7 +1684,9 @@ break|break;
 case|case
 name|A_GOLINE
 case|:
-comment|/* 			 * Go to line N, default beginning of file. 			 */
+comment|/* go to line N, default 1 */
+name|CMD_EXEC
+expr_stmt|;
 if|if
 condition|(
 name|number
@@ -1785,9 +1697,6 @@ name|number
 operator|=
 literal|1
 expr_stmt|;
-name|cmd_exec
-argument_list|()
-expr_stmt|;
 name|jump_back
 argument_list|(
 name|number
@@ -1797,7 +1706,9 @@ break|break;
 case|case
 name|A_PERCENT
 case|:
-comment|/* 			 * Go to a specified percentage into the file. 			 */
+comment|/* go to percent of file */
+name|CMD_EXEC
+expr_stmt|;
 if|if
 condition|(
 name|number
@@ -1808,6 +1719,7 @@ name|number
 operator|=
 literal|0
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|number
@@ -1818,9 +1730,6 @@ name|number
 operator|=
 literal|100
 expr_stmt|;
-name|cmd_exec
-argument_list|()
-expr_stmt|;
 name|jump_percent
 argument_list|(
 name|number
@@ -1830,9 +1739,8 @@ break|break;
 case|case
 name|A_GOEND
 case|:
-comment|/* 			 * Go to line N, default end of file. 			 */
-name|cmd_exec
-argument_list|()
+comment|/* go to line N, default end */
+name|CMD_EXEC
 expr_stmt|;
 if|if
 condition|(
@@ -1869,10 +1777,10 @@ expr_stmt|;
 case|case
 name|A_F_SEARCH
 case|:
+comment|/* search for a pattern */
 case|case
 name|A_B_SEARCH
 case|:
-comment|/* 			 * Search for a pattern. 			 * Accept chars of the pattern until \n. 			 */
 if|if
 condition|(
 name|number
@@ -1918,7 +1826,7 @@ operator|==
 literal|'!'
 condition|)
 block|{
-comment|/* 				 * Invert the sense of the search. 				 * Set wsearch to 0 and get a new 				 * character for the start of the pattern. 				 */
+comment|/* 				 * Invert the sense of the search; set wsearch 				 * to 0 and get a new character for the start 				 * of the pattern. 				 */
 name|start_mca
 argument_list|(
 name|action
@@ -1950,7 +1858,7 @@ goto|;
 case|case
 name|A_AGAIN_SEARCH
 case|:
-comment|/* 			 * Repeat previous search. 			 */
+comment|/* repeat previous search */
 if|if
 condition|(
 name|number
@@ -1996,8 +1904,7 @@ else|:
 literal|"!?"
 argument_list|)
 expr_stmt|;
-name|cmd_exec
-argument_list|()
+name|CMD_EXEC
 expr_stmt|;
 operator|(
 name|void
@@ -2023,7 +1930,7 @@ break|break;
 case|case
 name|A_HELP
 case|:
-comment|/* 			 * Help. 			 */
+comment|/* help */
 name|lower_left
 argument_list|()
 expr_stmt|;
@@ -2035,8 +1942,7 @@ argument_list|(
 literal|"help"
 argument_list|)
 expr_stmt|;
-name|cmd_exec
-argument_list|()
+name|CMD_EXEC
 expr_stmt|;
 name|help
 argument_list|()
@@ -2045,9 +1951,8 @@ break|break;
 case|case
 name|A_TAGFILE
 case|:
-comment|/* tag a new file; get the file name */
-name|cmd_reset
-argument_list|()
+comment|/* tag a new file */
+name|CMD_RESET
 expr_stmt|;
 name|start_mca
 argument_list|(
@@ -2068,8 +1973,7 @@ case|case
 name|A_FILE_LIST
 case|:
 comment|/* show list of file names */
-name|cmd_exec
-argument_list|()
+name|CMD_EXEC
 expr_stmt|;
 name|showlist
 argument_list|()
@@ -2081,9 +1985,8 @@ break|break;
 case|case
 name|A_EXAMINE
 case|:
-comment|/* edit a new file; get the file name */
-name|cmd_reset
-argument_list|()
+comment|/* edit a new file */
+name|CMD_RESET
 expr_stmt|;
 name|start_mca
 argument_list|(
@@ -2103,7 +2006,7 @@ goto|;
 case|case
 name|A_VISUAL
 case|:
-comment|/* 			 * Invoke an editor on the input file. 			 */
+comment|/* invoke the editor */
 if|if
 condition|(
 name|ispipe
@@ -2116,8 +2019,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|cmd_exec
-argument_list|()
+name|CMD_EXEC
 expr_stmt|;
 name|editfile
 argument_list|()
@@ -2136,7 +2038,7 @@ break|break;
 case|case
 name|A_NEXT_FILE
 case|:
-comment|/* 			 * Examine next file. 			 */
+comment|/* examine next file */
 if|if
 condition|(
 name|number
@@ -2156,7 +2058,7 @@ break|break;
 case|case
 name|A_PREV_FILE
 case|:
-comment|/* 			 * Examine previous file. 			 */
+comment|/* examine previous file */
 if|if
 condition|(
 name|number
@@ -2176,7 +2078,7 @@ break|break;
 case|case
 name|A_SETMARK
 case|:
-comment|/* 			 * Set a mark. 			 */
+comment|/* set a mark */
 name|lower_left
 argument_list|()
 expr_stmt|;
@@ -2215,7 +2117,7 @@ break|break;
 case|case
 name|A_GOMARK
 case|:
-comment|/* 			 * Go to a mark. 			 */
+comment|/* go to mark */
 name|lower_left
 argument_list|()
 expr_stmt|;
@@ -2254,7 +2156,7 @@ break|break;
 case|case
 name|A_PREFIX
 case|:
-comment|/* 			 * The command is incomplete (more chars are needed). 			 * Display the current char so the user knows 			 * what's going on and get another character. 			 */
+comment|/* 			 * The command is incomplete (more chars are needed). 			 * Display the current char so the user knows what's 			 * going on and get another character. 			 */
 if|if
 condition|(
 name|mca
@@ -2265,7 +2167,7 @@ name|start_mca
 argument_list|(
 name|A_PREFIX
 argument_list|,
-literal|"& "
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
